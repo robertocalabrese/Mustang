@@ -80,4 +80,12 @@ package require Tk
 package require Img
 package require msgcat
 
+# Set the application name, prettyname and version.
+# The developer should overrule these variables values with its own application name, prettyname and version.
+set ::APP_NAME       Mustang
+set ::APP_PRETTYNAME "Mustang $::MUSTANG_VERSION"
+set ::APP_VERSION    $::MUSTANG_VERSION
+
+# Note: The variable '::MUSTANG_VERSION' is defined in the pkgIndex file located in the root folder of the Mustang package.
+
 #*EOF*
