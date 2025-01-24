@@ -304,6 +304,12 @@ proc ::Mustang::init {} {
     #
     # ['enabled' or 'disabled']
     set ::NOTIFICATIONS "enabled"
+
+    # ::PALETTES
+    #
+    # It's a list that specifies all the available palettes.
+    # This list is case sensitive.
+    set ::PALETTES [list ALL]
 }
 
 #*EOF*
