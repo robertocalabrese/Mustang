@@ -415,6 +415,17 @@ proc ::Mustang::init {} {
     set ::sRGB(unadapted,Yr) 0.21264461762001413
     set ::sRGB(unadapted,Yg) 0.7151663725690272
     set ::sRGB(unadapted,Yb) 0.07218900981095855
+
+    # RGB_XYZ and XYZ_RGB matrices.
+    #
+    #   | a1  b1  c1 |
+    #   | a2  b2  c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+    #   | a3  b3  c3 |
+    #
+    # If a chromatic adaptation is needed (like in this case, from 'D65' to 'D50'), the 'RGB_XYZ' and
+    # 'XYZ_RGB' data must be allready chromatically adapted.
+    set ::sRGB(RGB_XYZ) [list 0.43603515625000000 0.22248840332031250 0.01391601562500000 0.38511657714843750 0.71690368652343750 0.09706115722656250 0.14305114746093750 0.06060791015625000 0.71391296386718750]
+    set ::sRGB(XYZ_RGB) [list 3.134274306471669 -0.978795574325203 0.071978551323668 -1.617274016967423 1.916161596468483 -0.2289898906034097 -0.4907348029960735 0.03345405023031962 1.4057483687096277]
 }
 
 #*EOF*
