@@ -1,0 +1,3 @@
+Mustang is a free and open-source GUI toolkit for Tcl/Tk `9.0.1` and above that runs in every major operative systems (Windows, macOS and Linux).
+\
+Every Tcl library is supported while Tk libraries supports may vary. As a rule of thumb, any Tk library that doesn't use widgets directly (like the `Img` package) are fully supported, others like `BWidgets` or `tklib` may not be fully supported or not supported at all.
