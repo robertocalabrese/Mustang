@@ -249,6 +249,21 @@ proc ::Mustang::init {} {
     # It's an integer that specifies the number of pixels per inch of the screen
     # where '.' is initially placed.
     set ::DPI [expr { round([tk scaling]*72.0) }]
+
+    # ::FOCUS_MODEL
+    #
+    # This variable changes the focus model for the application.
+    #
+    # Implicit method:
+    #    Whenever the mouse enters a window, Mustang will automatically give it the input focus.
+    #    The focus command may be used to move the focus to a window other than the one under the mouse,
+    #    but as soon as the mouse moves into a new window the focus will jump to that window.
+    #
+    # Explicit method.
+    #    The user has to click on a window to give it the focus.
+    #
+    # ['implicit' or 'explicit']
+    set ::FOCUS_MODEL "explicit"
 }
 
 #*EOF*
