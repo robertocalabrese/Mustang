@@ -88,4 +88,36 @@ set ::APP_VERSION    $::MUSTANG_VERSION
 
 # Note: The variable '::MUSTANG_VERSION' is defined in the pkgIndex file located in the root folder of the Mustang package.
 
+# Get the family, weight and slant of the TkFixedFont and register them as the Mustang MonospaceFont ones.
+set ::FONT(Monospace,family) [font configure TkFixedFont -family]
+set ::FONT(Monospace,weight) [font configure TkFixedFont -weight]
+set ::FONT(Monospace,slant)  [font configure TkFixedFont -slant]
+
+# Get the family, weight and slant of the TkDefaultFont and register them as the Mustang NormalFont ones.
+set ::FONT(Normal,family) [font configure TkDefaultFont -family]
+set ::FONT(Normal,weight) [font configure TkDefaultFont -weight]
+set ::FONT(Normal,slant)  [font configure TkDefaultFont -slant]
+
+# Get/Set the Mustang MonospaceFont and NormalFont sizes.
+switch -- [tk windowingsystem] {
+    aqua {
+        set ::FONT(Monospace,size) [font configure TkFixedFont -size]
+        set ::FONT(Normal,size)    [font configure TkDefaultFont -size]
+    }
+    win32 {
+        set ::FONT(Monospace,size) 8
+        set ::FONT(Normal,size)    6
+    }
+    default {
+        set ::FONT(Monospace,size) 10
+        set ::FONT(Normal,size)    10
+    }
+}
+
+# Set the family, weight, slant and size of the Mustang BiggestFont.
+set ::FONT(Biggest,family) $::FONT(Normal,family)
+set ::FONT(Biggest,size)   [expr { $::FONT(Normal,size)+1 }]
+set ::FONT(Biggest,weight) $::FONT(Normal,weight)
+set ::FONT(Biggest,slant)  $::FONT(Normal,slant)
+
 #*EOF*
