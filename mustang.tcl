@@ -197,6 +197,13 @@ proc ::Mustang::init {} {
     set ::ADDRESS(classtype,TEXT)        [list ]
     set ::ADDRESS(classtype,TOPLEVEL)    [list ]
     set ::ADDRESS(classtype,TREEVIEW)    [list ]
+
+    # Initialize some more ::ADDRESS lists.
+    set ::ADDRESS(longs)              [list ]
+    set ::ADDRESS(complex,containers) [list ]
+    set ::ADDRESS(simple,containers)  [list ]
+    set ::ADDRESS(scrollable)         [list ]
+    set ::ADDRESS(shorts)             [list ]
 }
 
 #*EOF*
