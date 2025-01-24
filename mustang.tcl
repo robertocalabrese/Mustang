@@ -158,4 +158,11 @@ set ::SVG(icon,warning) [image create photo  -format [list svg -scale 1.0] \
 package provide Mustang $::MUSTANG_VERSION
 namespace eval ::Mustang {}
 
+## init
+#
+# Initialize Mustang.
+#
+# It doesn't return anything.
+proc ::Mustang::init {} {}
+
 #*EOF*
