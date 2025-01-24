@@ -205,6 +205,22 @@ proc ::Mustang::init {} {
     set ::ADDRESS(scrollable)         [list ]
     set ::ADDRESS(shorts)             [list ]
 
+    # Initialize the tables for all available palettes color families.
+    dict set ::TABLE(ALL,family) all         [list ]
+    dict set ::TABLE(ALL,family) gray        [list ]
+    dict set ::TABLE(ALL,family) red         [list ]
+    dict set ::TABLE(ALL,family) orange      [list ]
+    dict set ::TABLE(ALL,family) yellow      [list ]
+    dict set ::TABLE(ALL,family) yellowgreen [list ]
+    dict set ::TABLE(ALL,family) green       [list ]
+    dict set ::TABLE(ALL,family) greencyan   [list ]
+    dict set ::TABLE(ALL,family) cyan        [list ]
+    dict set ::TABLE(ALL,family) cyanblue    [list ]
+    dict set ::TABLE(ALL,family) blue        [list ]
+    dict set ::TABLE(ALL,family) bluepurple  [list ]
+    dict set ::TABLE(ALL,family) purple      [list ]
+    dict set ::TABLE(ALL,family) purplered   [list ]
+
     # ::ACCENT
     #
     # It's a string that specifies the current accent color.
