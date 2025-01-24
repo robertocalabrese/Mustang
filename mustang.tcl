@@ -338,6 +338,14 @@ proc ::Mustang::init {} {
     #
     # ['jump' or 'page']
     set ::SCROLLBAR_ACTION jump
+
+    # ::SCROLLSPEED
+    #
+    # It's an integer that specifies how big is a scroll unit.
+    # A scroll unit rappresents the distance to travel (in pixels) for a single tick of the mouse wheel.
+    #
+    # [1.0,100.0]
+    set ::SCROLLSPEED 50
 }
 
 #*EOF*
