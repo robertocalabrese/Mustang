@@ -310,6 +310,13 @@ proc ::Mustang::init {} {
     # It's a list that specifies all the available palettes.
     # This list is case sensitive.
     set ::PALETTES [list ALL]
+
+    # ::POPUPS
+    #
+    # It's a boolean that specifies the popups state.
+    #
+    # ['enabled' or 'disabled']
+    set ::POPUPS "enabled"
 }
 
 #*EOF*
