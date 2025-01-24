@@ -229,6 +229,13 @@ proc ::Mustang::init {} {
     #
     # ['standard' or 'intent']
     set ::CIE "standard"
+
+    # ::COLORSCHEME
+    #
+    # It's a string that specifies the current colorscheme.
+    #
+    # ['light' or 'dark']
+    set ::COLORSCHEME "light"
 }
 
 #*EOF*
