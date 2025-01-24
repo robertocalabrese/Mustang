@@ -169,6 +169,34 @@ proc ::Mustang::init {} {
 
     # Hide the initial toplevel created by Tk.
     wm withdraw .
+
+    # Initialize all the widgets classtypes ::ADDRESS lists.
+    set ::ADDRESS(classtype,BUTTON)      [list ]
+    set ::ADDRESS(classtype,CANVAS)      [list ]
+    set ::ADDRESS(classtype,CHECKBUTTON) [list ]
+    set ::ADDRESS(classtype,COMBOBOX)    [list ]
+    set ::ADDRESS(classtype,ENTRY)       [list ]
+    set ::ADDRESS(classtype,FRAME)       [list ]
+    set ::ADDRESS(classtype,LABEL)       [list ]
+    set ::ADDRESS(classtype,LABELFRAME)  [list ]
+    set ::ADDRESS(classtype,LISTBOX)     [list ]
+    set ::ADDRESS(classtype,MENU)        [list ]
+    set ::ADDRESS(classtype,MENUBUTTON)  [list ]
+    set ::ADDRESS(classtype,NOTEBOOK)    [list ]
+    set ::ADDRESS(classtype,PALETTE)     [list ]
+    set ::ADDRESS(classtype,PANEDWINDOW) [list ]
+    set ::ADDRESS(classtype,POINT)       [list ]
+    set ::ADDRESS(classtype,POPUP)       [list ]
+    set ::ADDRESS(classtype,PROGRESSBAR) [list ]
+    set ::ADDRESS(classtype,RADIOBUTTON) [list ]
+    set ::ADDRESS(classtype,SCALE)       [list ]
+    set ::ADDRESS(classtype,SCROLLBAR)   [list ]
+    set ::ADDRESS(classtype,SEPARATOR)   [list ]
+    set ::ADDRESS(classtype,SIZEGRIP)    [list ]
+    set ::ADDRESS(classtype,SPINBOX)     [list ]
+    set ::ADDRESS(classtype,TEXT)        [list ]
+    set ::ADDRESS(classtype,TOPLEVEL)    [list ]
+    set ::ADDRESS(classtype,TREEVIEW)    [list ]
 }
 
 #*EOF*
