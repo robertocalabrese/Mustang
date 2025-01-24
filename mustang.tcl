@@ -269,6 +269,20 @@ proc ::Mustang::init {} {
     #
     # It's a list that specifies all the font families available at the start of the application.
     set ::FONT_FAMILIES [font families -displayof .]
+
+    # ::LANGUAGES
+    #
+    # It's a string that specifies the available languages.
+    # It must follow the 'ISO 639-1' specifications.
+    set ::LANGUAGES [list ]
+    foreach path [glob -type f -nocomplain -directory [file join $::BISON_DIR msgs] -- *.msg] {
+        set lang [string tolower [file rootname [file tail $path]]]
+        switch -- $lang {
+            root    { continue }
+            default { lappend ::LANGUAGES $lang }
+        }
+    }
+    ::msgcat::mcload [file join $::BISON_DIR msgs]
 }
 
 #*EOF*
