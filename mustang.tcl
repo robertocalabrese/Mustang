@@ -382,6 +382,16 @@ proc ::Mustang::init {} {
     #   | a2  b2  c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
     #   | a3  b3  c3 |
     set ::sRGB(chromaticity) [list 0.63999938964843750 0.33000183105468750 1.00000000000000000 0.30000305175781250 0.60000610351562500 1.00000000000000000 0.14999389648437500 0.05999755859375000 1.00000000000000000]
+
+    # Whitepoint D65 xyz.
+    set ::sRGB(whitepoint,x) 0.31270049247729637
+    set ::sRGB(whitepoint,y) 0.32900093876915815
+    set ::sRGB(whitepoint,z) 0.3582985687535455
+
+    # Whitepoint D65 XYZ.
+    set ::sRGB(whitepoint,X) 0.95045471191406250
+    set ::sRGB(whitepoint,Y) 1.0
+    set ::sRGB(whitepoint,Z) 1.08905029296875000
 }
 
 #*EOF*
