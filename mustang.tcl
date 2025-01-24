@@ -283,6 +283,14 @@ proc ::Mustang::init {} {
         }
     }
     ::msgcat::mcload [file join $::BISON_DIR msgs]
+
+    # Note: The Mustang language packs are defined in the global namespace.
+    #
+    #       App developers that wants that Mustang autotranslates their application texts,
+    #       should define their message catalog in the global namespace as well.
+    #
+    #       3rd party package developers should use the widget '-textvariable' option
+    #       instead of the '-text' one, and manage their translation internally.
 }
 
 #*EOF*
