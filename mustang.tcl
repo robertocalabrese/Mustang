@@ -163,6 +163,9 @@ namespace eval ::Mustang {}
 # Initialize Mustang.
 #
 # It doesn't return anything.
-proc ::Mustang::init {} {}
+proc ::Mustang::init {} {
+    # Set the actual internal name of the application.
+    tk appname [string tolower $::APP_NAME]
+}
 
 #*EOF*
