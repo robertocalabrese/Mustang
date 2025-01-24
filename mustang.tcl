@@ -392,6 +392,11 @@ proc ::Mustang::init {} {
     set ::sRGB(whitepoint,X) 0.95045471191406250
     set ::sRGB(whitepoint,Y) 1.0
     set ::sRGB(whitepoint,Z) 1.08905029296875000
+
+    # PCS D50 xyz.
+    set ::sRGB(PCS,x) 0.345702914918791
+    set ::sRGB(PCS,y) 0.3585385966799326
+    set ::sRGB(PCS,z) 0.2957584884012764
 }
 
 #*EOF*
