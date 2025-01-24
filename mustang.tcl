@@ -358,6 +358,11 @@ proc ::Mustang::init {} {
     #
     # It's a string that specifies the current theme name.
     set ::THEME "halo"
+
+    # ::THEMES
+    #
+    # It's a list that specifies the available themes names.
+    set ::THEMES [list halo vintage]
 }
 
 #*EOF*
