@@ -329,6 +329,15 @@ proc ::Mustang::init {} {
         0   { set ::SCALING 100.0 }
         1   { set ::SCALING $::tk::scalingPct }
     }
+
+    # ::SCROLLBAR_ACTION
+    #
+    # It's a string that specifies how each scrollbar reacts when a click happens on the trough.
+    #    jump --> The thumb will jump to the selected location.
+    #    page --> The thumb will scroll one page down, up, left or right.
+    #
+    # ['jump' or 'page']
+    set ::SCROLLBAR_ACTION jump
 }
 
 #*EOF*
