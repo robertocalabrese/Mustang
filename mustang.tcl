@@ -353,6 +353,11 @@ proc ::Mustang::init {} {
     #
     # ['ongoing', 'done']
     set ::TEMP(init,state) ongoing
+
+    # ::THEME
+    #
+    # It's a string that specifies the current theme name.
+    set ::THEME "halo"
 }
 
 #*EOF*
