@@ -166,6 +166,9 @@ namespace eval ::Mustang {}
 proc ::Mustang::init {} {
     # Set the actual internal name of the application.
     tk appname [string tolower $::APP_NAME]
+
+    # Hide the initial toplevel created by Tk.
+    wm withdraw .
 }
 
 #*EOF*
