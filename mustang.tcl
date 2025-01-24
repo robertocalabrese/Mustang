@@ -75,4 +75,9 @@
 #
 #       These are extraordinary cases, and you may never encounter them.
 
+# Load the Mustang dependencies.
+package require Tk
+package require Img
+package require msgcat
+
 #*EOF*
