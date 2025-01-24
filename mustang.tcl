@@ -264,6 +264,11 @@ proc ::Mustang::init {} {
     #
     # ['implicit' or 'explicit']
     set ::FOCUS_MODEL "explicit"
+
+    # FONT_FAMILIES
+    #
+    # It's a list that specifies all the font families available at the start of the application.
+    set ::FONT_FAMILIES [font families -displayof .]
 }
 
 #*EOF*
