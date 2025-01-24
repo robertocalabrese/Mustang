@@ -346,6 +346,13 @@ proc ::Mustang::init {} {
     #
     # [1.0,100.0]
     set ::SCROLLSPEED 50
+
+    # ::TEMP(init,state)
+    #
+    # It's a string that specifies the Mustang initialization state.
+    #
+    # ['ongoing', 'done']
+    set ::TEMP(init,state) ongoing
 }
 
 #*EOF*
