@@ -291,6 +291,12 @@ proc ::Mustang::init {} {
     #
     #       3rd party package developers should use the widget '-textvariable' option
     #       instead of the '-text' one, and manage their translation internally.
+
+    # ::LANGUAGE
+    #
+    # It's a string that specifies the current language.
+    # It must follow the 'ISO 639-1' specifications.
+    set ::LANGUAGE [::msgcat::mclocale]
 }
 
 #*EOF*
