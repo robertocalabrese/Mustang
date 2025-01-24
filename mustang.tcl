@@ -204,6 +204,13 @@ proc ::Mustang::init {} {
     set ::ADDRESS(simple,containers)  [list ]
     set ::ADDRESS(scrollable)         [list ]
     set ::ADDRESS(shorts)             [list ]
+
+    # ::ACCENT
+    #
+    # It's a string that specifies the current accent color.
+    #
+    # ['blue', 'cyan', 'green', 'orange', 'purple', 'red', 'yellow' or 'custom']
+    set ::ACCENT "blue"
 }
 
 #*EOF*
