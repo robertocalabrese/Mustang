@@ -363,6 +363,15 @@ proc ::Mustang::init {} {
     #
     # It's a list that specifies the available themes names.
     set ::THEMES [list halo vintage]
+
+    # ::UNION
+    #
+    # It's a character that specifies the current union symbol inside a shortcut that links two
+    # or more keys together (like 'Ctrl+C', 'Ctrl-C' or 'Ctrl C' for copy).
+    # It's used inside menus popups and contextual menus.
+    #
+    # ['+', '-' or 'space']
+    set ::UNION "+"
 }
 
 #*EOF*
