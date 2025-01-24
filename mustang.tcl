@@ -211,6 +211,16 @@ proc ::Mustang::init {} {
     #
     # ['blue', 'cyan', 'green', 'orange', 'purple', 'red', 'yellow' or 'custom']
     set ::ACCENT "blue"
+
+    # ::ARCH
+    #
+    # It's a string that specifies the operating system architecture.
+    #
+    # ['32 bit' or '64 bit']
+    switch -- $::tcl_platform(pointerSize) {
+        8   { set ::ARCH "64 bit" }
+        4   { set ::ARCH "32 bit" }
+    }
 }
 
 #*EOF*
