@@ -221,6 +221,14 @@ proc ::Mustang::init {} {
         8   { set ::ARCH "64 bit" }
         4   { set ::ARCH "32 bit" }
     }
+
+    # ::CIE
+    #
+    # It's a string that specifies the current CIE standard.
+    # This value is used in color model conversions like XYZ-->RGB, RGB-->XYZ, ...
+    #
+    # ['standard' or 'intent']
+    set ::CIE "standard"
 }
 
 #*EOF*
