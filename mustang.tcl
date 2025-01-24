@@ -236,6 +236,13 @@ proc ::Mustang::init {} {
     #
     # ['light' or 'dark']
     set ::COLORSCHEME "light"
+
+    # ::DEPTH
+    #
+    # It's an integer that specifies the current color depth.
+    #
+    # ['8', '12' or '16']
+    set ::DEPTH 8
 }
 
 #*EOF*
