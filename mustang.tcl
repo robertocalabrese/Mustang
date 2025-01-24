@@ -317,6 +317,18 @@ proc ::Mustang::init {} {
     #
     # ['enabled' or 'disabled']
     set ::POPUPS "enabled"
+
+    # ::SCALING
+    #
+    # It's a percentage that specifies the scaling factor of the screen.
+    # It can be provided with or without the '%' symbol.
+    # It's always registered without the '%' symbol.
+    #
+    # [25%-300%]
+    switch -- [info exists ::tk::scalingPct] {
+        0   { set ::SCALING 100.0 }
+        1   { set ::SCALING $::tk::scalingPct }
+    }
 }
 
 #*EOF*
