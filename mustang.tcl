@@ -243,6 +243,12 @@ proc ::Mustang::init {} {
     #
     # ['8', '12' or '16']
     set ::DEPTH 8
+
+    # ::DPI
+    #
+    # It's an integer that specifies the number of pixels per inch of the screen
+    # where '.' is initially placed.
+    set ::DPI [expr { round([tk scaling]*72.0) }]
 }
 
 #*EOF*
