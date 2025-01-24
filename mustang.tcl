@@ -297,6 +297,13 @@ proc ::Mustang::init {} {
     # It's a string that specifies the current language.
     # It must follow the 'ISO 639-1' specifications.
     set ::LANGUAGE [::msgcat::mclocale]
+
+    # ::NOTIFICATIONS
+    #
+    # It's a boolean that specifies the notifications state.
+    #
+    # ['enabled' or 'disabled']
+    set ::NOTIFICATIONS "enabled"
 }
 
 #*EOF*
