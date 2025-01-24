@@ -376,7 +376,7 @@ proc ::Mustang::init {} {
     # Note: The following data has been exctracted or computed from the icc profile 'sRGB_v4.icc' located in the colormath folder.
     #       This icc profile is not directly used by Mustang, it's here for completeness.
 
-    # sRGB D65 Chromaticity matrix.
+    # sRGB Chromaticity matrix.
     #
     #   | a1  b1  c1 |
     #   | a2  b2  c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
