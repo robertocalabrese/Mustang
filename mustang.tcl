@@ -15,4 +15,10 @@
 # ::TABLE   --> It's an array that contains all the Mustang tables.
 # ::TEMP    --> It's an array that contains all the Mustang temporary variables.
 
+## EXIT CODES
+#
+#   0 --> The exit was not caused by an error.
+#   1 --> The exit was caused by an error generated for an expected reason.
+#   2 --> The exit was caused by an error generated for an unexpected reason.
+
 #*EOF*
