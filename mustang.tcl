@@ -489,6 +489,9 @@ proc ::Mustang::init {} {
             }
         }
     }
+
+    # Create the Mustang config folder.
+    file mkdir [file join $::CONFIG_DIR mustang]
 }
 
 #*EOF*
