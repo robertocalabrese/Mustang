@@ -492,6 +492,9 @@ proc ::Mustang::init {} {
 
     # Create the Mustang config folder.
     file mkdir [file join $::CONFIG_DIR mustang]
+
+    # Load the default palette file.
+    ::_LOAD_PALETTE [file join $::MUSTANG_DIR palettes "Classic.txt"]
 }
 
 #*EOF*
