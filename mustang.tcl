@@ -450,6 +450,8 @@ proc ::Mustang::init {} {
     # Load the accent colors.
     source -encoding utf-8 [file join $::MUSTANG_DIR "accent_colors.tcl"]
 
+    # Note: The variable '::MUSTANG_DIR' is defined in the pkgIndex file located in the root folder of the Mustang package.
+
     # Set the user folders.
     switch -- [tk windowingsystem] {
         aqua {
