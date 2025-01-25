@@ -449,6 +449,44 @@ proc ::Mustang::init {} {
 
     # Load the accent colors.
     source -encoding utf-8 [file join $::MUSTANG_DIR "accent_colors.tcl"]
+
+    # Set the user folders.
+    switch -- [tk windowingsystem] {
+        aqua {
+            set ::HOME_DIR   [file nativename $::env(HOME)]
+            set ::CACHE_DIR  [file nativename [file join $::HOME_DIR Library Caches]]
+            set ::CONFIG_DIR [file nativename [file join $::HOME_DIR Library "Application Support"]]
+            set ::DATA_DIR   [file nativename [file join $::HOME_DIR Library Preferences]]
+        }
+        win32 {
+            set ::HOME_DIR   [file nativename $::env(HOME)]
+            set ::CONFIG_DIR [file nativename $::env(LOCALAPPDATA)]
+            set ::CACHE_DIR  [file nativename [file join $::CONFIG_DIR cache]]
+            set ::DATA_DIR   [file nativename $::env(APPDATA)]
+
+            # Set some usefull Windows folders.
+            set ::WIN_DISK   [file nativename $::env(SystemDrive)]
+            set ::WIN_DIR    [file nativename $::env(SystemRoot)]
+        }
+        default {
+            set ::HOME_DIR $::env(HOME)
+
+            switch -- [info exists ::env(XDG_CACHE_HOME)] {
+                0   { set ::CACHE_DIR [file nativename [file join $::HOME_DIR ".cache"]] }
+                1   { set ::CACHE_DIR [file nativename $::env(XDG_CACHE_HOME)] }
+            }
+
+            switch -- [info exists ::env(XDG_CONFIG_HOME)] {
+                0   { set ::CONFIG_DIR [file nativename [file join $::HOME_DIR ".config"]] }
+                1   { set ::CONFIG_DIR [file nativename $::env(XDG_CONFIG_HOME)] }
+            }
+
+            switch -- [info exists ::env(XDG_DATA_HOME)] {
+                0   { set ::DATA_DIR [file nativename [file join $::HOME_DIR ".local" share]] }
+                1   { set ::DATA_DIR [file nativename $::env(XDG_DATA_HOME)] }
+            }
+        }
+    }
 }
 
 #*EOF*
