@@ -16,8 +16,8 @@
 #                 HEXA12 --> Hexadecimal at 12 bit with 4 channels (red, green,blue and alpha)
 #                 HEXA16 --> Hexadecimal at 16 bit with 4 channels (red, green,blue and alpha)
 #
-# fallback    Should be a string that specifies the fallback value to return if the color provided is invalid.
-#             If not provided, defaults to INVALID.
+# fallback    Optional, should be a string that specifies the fallback value to return if the color provided is invalid.
+#             If not provided, defaults to 'INVALID'.
 #
 # Return the validated color in its hexadecimal longform or its fallback value.
 proc ::_CHECK_COLORNAME { colorname hextype { fallback INVALID } } {
