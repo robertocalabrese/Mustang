@@ -236,5 +236,6 @@ proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
                 default { return $fallback }
             }
         }
+        default { return $fallback }
     }
 }
