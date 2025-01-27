@@ -205,22 +205,6 @@ proc ::Mustang::init {} {
     set ::ADDRESS(scrollable)         [list ]
     set ::ADDRESS(shorts)             [list ]
 
-    # Initialize the tables for all available palettes color families.
-    dict set ::TABLE(ALL,family) all         [list ]
-    dict set ::TABLE(ALL,family) gray        [list ]
-    dict set ::TABLE(ALL,family) red         [list ]
-    dict set ::TABLE(ALL,family) orange      [list ]
-    dict set ::TABLE(ALL,family) yellow      [list ]
-    dict set ::TABLE(ALL,family) yellowgreen [list ]
-    dict set ::TABLE(ALL,family) green       [list ]
-    dict set ::TABLE(ALL,family) greencyan   [list ]
-    dict set ::TABLE(ALL,family) cyan        [list ]
-    dict set ::TABLE(ALL,family) cyanblue    [list ]
-    dict set ::TABLE(ALL,family) blue        [list ]
-    dict set ::TABLE(ALL,family) bluepurple  [list ]
-    dict set ::TABLE(ALL,family) purple      [list ]
-    dict set ::TABLE(ALL,family) purplered   [list ]
-
     # ::ACCENT
     #
     # It's a string that specifies the current accent color.
@@ -492,6 +476,22 @@ proc ::Mustang::init {} {
 
     # Create the Mustang config folder.
     file mkdir [file join $::CONFIG_DIR mustang]
+
+    # Initialize the tables for all available palettes color families.
+    set ::TABLE(ALL,all)         [list ]
+    set ::TABLE(ALL,gray)        [list ]
+    set ::TABLE(ALL,red)         [list ]
+    set ::TABLE(ALL,orange)      [list ]
+    set ::TABLE(ALL,yellow)      [list ]
+    set ::TABLE(ALL,yellowgreen) [list ]
+    set ::TABLE(ALL,green)       [list ]
+    set ::TABLE(ALL,greencyan)   [list ]
+    set ::TABLE(ALL,cyan)        [list ]
+    set ::TABLE(ALL,cyanblue)    [list ]
+    set ::TABLE(ALL,blue)        [list ]
+    set ::TABLE(ALL,bluepurple)  [list ]
+    set ::TABLE(ALL,purple)      [list ]
+    set ::TABLE(ALL,purplered)   [list ]
 
     # Load the default palette file.
     ::_LOAD_PALETTE [file join $::MUSTANG_DIR palettes "Classic.txt"]
