@@ -111,5 +111,13 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['enabled' or 'disabled'\]"
         chan puts $channel "NOTIFICATIONS: $::NOTIFICATIONS"
         chan puts $channel ""
+
+        chan puts $channel "# POPUPS"
+        chan puts $channel "#"
+        chan puts $channel "# It's a boolean that specifies the popups state."
+        chan puts $channel "#"
+        chan puts $channel "# \['enabled' or 'disabled'\]"
+        chan puts $channel "POPUPS: $::POPUPS"
+        chan puts $channel ""
     }
 }
