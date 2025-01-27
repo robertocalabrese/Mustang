@@ -162,5 +162,20 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# It's a string that specifies the current theme name."
         chan puts $channel "THEME: $::THEME"
         chan puts $channel ""
+
+        switch -- $::UNION {
+            " " { set union space }
+            "-" { set union "-"   }
+            "+" { set union "+"   }
+        }
+
+        chan puts $channel "# UNION"
+        chan puts $channel "#"
+        chan puts $channel "# It's a character that specifies the current union symbol inside a shortcut that links two"
+        chan puts $channel "# or more keys together (like 'Ctrl+C', 'Ctrl-C' or 'Ctrl C' for copy)."
+        chan puts $channel "# It's used inside menus popups and/or contextual menus."
+        chan puts $channel "#"
+        chan puts $channel "# \['+', '-' or 'space'\]"
+        chan puts $channel "UNION: $union"
     }
 }
