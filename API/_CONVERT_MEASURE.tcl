@@ -33,4 +33,19 @@
 #       1/25.4    = 0.03937007874015748
 #
 # Return the converted measure or the fallback value.
-proc ::_CONVERT_MEASURE { measure to { fallback INVALID } } {}
+proc ::_CONVERT_MEASURE { measure to { fallback INVALID } } {
+    # Check the 'to' value.
+    switch -- $to {
+        centimeter  -
+        centimeters { set to pixels }
+        inch        -
+        inches      { set to inches }
+        millimeter  -
+        millimeters { set to millimeters }
+        pixel       -
+        pixels      { set to pixels }
+        point       -
+        points      { set to points }
+        default     { return $fallback }
+    }
+}
