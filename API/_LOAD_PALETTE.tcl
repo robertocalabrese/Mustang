@@ -100,6 +100,15 @@ proc ::_LOAD_PALETTE { filepath } {
 
                     lappend ::TABLE($palette,all)     $colorname
                     lappend ::TABLE($palette,$family) $colorname
+
+                    # Register the colorname data for all the available palettes.
+                    set ::TABLE(ALL,$colorname,8)      $color_8bit
+                    set ::TABLE(ALL,$colorname,12)     $color_12bit
+                    set ::TABLE(ALL,$colorname,16)     $color_16bit
+                    set ::TABLE(ALL,$colorname,family) $family
+
+                    lappend ::TABLE(ALL,all)     $colorname
+                    lappend ::TABLE(ALL,$family) $colorname
                 }
             }
         }
