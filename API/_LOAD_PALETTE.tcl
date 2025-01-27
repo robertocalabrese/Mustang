@@ -113,4 +113,9 @@ proc ::_LOAD_PALETTE { filepath } {
             }
         }
     }
+
+    # Check if all the colorname specified in the palette file were ignored.
+    switch -- [info exists ::TABLE($palette,all)] {
+        0   { return }
+    }
 }
