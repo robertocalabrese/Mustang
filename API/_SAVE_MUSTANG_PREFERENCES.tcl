@@ -13,5 +13,13 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "#"
         chan puts $channel "# [clock format [clock seconds] -format [list %d %B %Y - %H:%M:%S]]"
         chan puts $channel ""
+
+        chan puts $channel "# ACCENT"
+        chan puts $channel "#"
+        chan puts $channel "# It's a string that specifies the current accent color."
+        chan puts $channel "#"
+        chan puts $channel "# \['blue', 'cyan', 'green', 'orange', 'purple', 'red', 'yellow' or 'custom'\]"
+        chan puts $channel "ACCENT: $::ACCENT"
+        chan puts $channel ""
     }
 }
