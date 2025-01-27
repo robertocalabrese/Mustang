@@ -72,5 +72,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HSB]
         }
+        HSIA {
+            foreach { hue saturation intensity alpha } $colors {
+                lappend results $hue $saturation $intensity
+            }
+            return [list $results HSI]
+        }
     }
 }
