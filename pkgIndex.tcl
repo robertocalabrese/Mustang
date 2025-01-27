@@ -3,6 +3,7 @@
 # Country:    🅸🆃🅰🅻🆈
 
 # Load the Mustang version.
+set dir [file nativename $dir]
 try {
     open [file join $dir "version.txt"] r
 } on error {} {
