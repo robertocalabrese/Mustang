@@ -70,6 +70,27 @@ proc ::_LOAD_PALETTE { filepath } {
                         }
                         default { set color_16bit $value }
                     }
+
+                    # Check the colorname family value.
+                    switch -- $family {
+                        gray        -
+                        red         -
+                        orange      -
+                        yellow      -
+                        yellowgreen -
+                        green       -
+                        greencyan   -
+                        cyan        -
+                        cyanblue    -
+                        blue        -
+                        bluepurple  -
+                        purple      -
+                        purplered   {}
+                        default     {
+                            # Skip the entire line.
+                            continue
+                        }
+                    }
                 }
             }
         }
