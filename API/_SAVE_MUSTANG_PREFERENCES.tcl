@@ -55,5 +55,12 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['8', '12' or '16'\]"
         chan puts $channel "DEPTH: $::DEPTH"
         chan puts $channel ""
+
+        chan puts $channel "# DPI"
+        chan puts $channel "#"
+        chan puts $channel "# It's an integer that specifies the number of pixels per inch of the screen"
+        chan puts $channel "# where the application is initially placed."
+        chan puts $channel "DPI: $::DPI"
+        chan puts $channel ""
     }
 }
