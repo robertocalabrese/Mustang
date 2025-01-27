@@ -26,4 +26,13 @@
 # Returns a list with two elements.
 # The first element contains all the resulting colors (with alpha channels) while
 # the second element is the new color model in which they are expressed.
-proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {}
+proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
+    switch -- $colormodel {
+        HEX8 {
+            foreach color $colors {
+                lappend results [string cat $color "ff"]
+            }
+            return [list $results HEXA8]
+        }
+    }
+}
