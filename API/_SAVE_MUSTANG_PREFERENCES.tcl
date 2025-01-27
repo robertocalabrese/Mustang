@@ -62,5 +62,21 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# where the application is initially placed."
         chan puts $channel "DPI: $::DPI"
         chan puts $channel ""
+
+        chan puts $channel "# ::FOCUS_MODEL"
+        chan puts $channel "#"
+        chan puts $channel "# Change the focus model for the application."
+        chan puts $channel "#"
+        chan puts $channel "# Implicit method:"
+        chan puts $channel "#    Whenever the mouse enters a window, Mustang will automatically give it the input focus."
+        chan puts $channel "#    The focus command may be used to move the focus to a window other than the one under the mouse,"
+        chan puts $channel "#    but as soon as the mouse moves into a new window the focus will jump to that window."
+        chan puts $channel "#"
+        chan puts $channel "# Explicit method."
+        chan puts $channel "#    The 'User' has to click on a window to give it the focus."
+        chan puts $channel "#"
+        chan puts $channel "# \['implicit' or 'explicit'\]"
+        chan puts $channel "FOCUS_MODEL: $::FOCUS_MODEL"
+        chan puts $channel ""
     }
 }
