@@ -58,5 +58,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results RGBA12]
         }
+        RGB16 {
+            foreach { red green blue } $colors {
+                lappend results $red $green $blue 65535
+            }
+            return [list $results RGBA16]
+        }
     }
 }
