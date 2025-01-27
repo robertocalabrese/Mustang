@@ -40,5 +40,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HEXA12]
         }
+        HEX16 {
+            foreach color $colors {
+                lappend results [string cat $color "ffff"]
+            }
+            return [list $results HEXA16]
+        }
     }
 }
