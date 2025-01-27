@@ -60,6 +60,16 @@ proc ::_LOAD_PALETTE { filepath } {
                         }
                         default { set color_12bit $value }
                     }
+
+                    # Check the colorname hexadecimal value at 16bit.
+                    set value [::_CHECK_HEX $color_16bit HEX16]
+                    switch -- $value {
+                        INVALID {
+                            # Skip the entire line.
+                            continue
+                        }
+                        default { set color_16bit $value }
+                    }
                 }
             }
         }
