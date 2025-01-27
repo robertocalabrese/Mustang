@@ -35,5 +35,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HEX8]
         }
+        HEXA12 {
+            foreach color $colors {
+                lappend results [string range $color 0 end-3]
+            }
+            return [list $results HEX12]
+        }
     }
 }
