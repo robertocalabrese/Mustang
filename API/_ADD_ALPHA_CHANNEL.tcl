@@ -64,5 +64,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results RGBA16]
         }
+        HSB {
+            foreach { hue saturation brightness } $colors {
+                lappend results $hue $saturation $brightness 100.0
+            }
+            return [list $results HSBA]
+        }
     }
 }
