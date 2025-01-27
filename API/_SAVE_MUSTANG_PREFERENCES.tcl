@@ -156,5 +156,11 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
         chan puts $channel "SMALLEST_FONT: $::FONT(Smallest,family) $::FONT(Smallest,size)"
         chan puts $channel ""
+
+        chan puts $channel "# THEME"
+        chan puts $channel "#"
+        chan puts $channel "# It's a string that specifies the current theme name."
+        chan puts $channel "THEME: $::THEME"
+        chan puts $channel ""
     }
 }
