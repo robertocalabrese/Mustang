@@ -4,24 +4,24 @@
 #
 # Where:
 #
-# colors        Should be a list containing all the colors involved.
+# colors       Should be a list containing all the colors involved.
 #
-# colormodel    Should be a string indicating the color model in which the colors are provided.
-#               Allowed color models are all the Mustang supported color model that do not have an alpha channel, in other words:
-#                   HEX or HEX8
-#                   HEX12
-#                   HEX16
-#                   RGB or RGB8
-#                   RGB12
-#                   RGB16
-#                   HSB
-#                   HSI
-#                   HSL
-#                   HSP
-#                   XYZ
-#                   xyY
-#                   Lab
-#                   Luv
+# colormodel   Should be a string indicating the color model in which the colors are provided.
+#              Allowed color models are all the Mustang supported color model that do not have an alpha channel, in other words:
+#                  HEX or HEX8
+#                  HEX12
+#                  HEX16
+#                  RGB or RGB8
+#                  RGB12
+#                  RGB16
+#                  HSB
+#                  HSI
+#                  HSL
+#                  HSP
+#                  XYZ
+#                  xyY
+#                  Lab
+#                  Luv
 #
 # Returns a list with two elements.
 # The first element contains all the resulting colors (with alpha channels) while
