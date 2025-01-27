@@ -39,5 +39,13 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['standard' or 'intent'\]"
         chan puts $channel "CIE: $::CIE"
         chan puts $channel ""
+
+        chan puts $channel "# COLORSCHEME"
+        chan puts $channel "#"
+        chan puts $channel "# It's a string that specifies the current colorscheme."
+        chan puts $channel "#"
+        chan puts $channel "# \['light' or 'dark'\]"
+        chan puts $channel "COLORSCHEME: $::COLORSCHEME"
+        chan puts $channel ""
     }
 }
