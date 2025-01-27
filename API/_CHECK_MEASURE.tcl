@@ -12,7 +12,7 @@
 #                p --> points
 #            If there is no unit, the measure will be assumed to be in pixels.
 #
-# fallback   Optional. Should be a string that specifies the fallback value to return if the measure provided is invalid.
+# fallback   Optional, should be a string that specifies the fallback value to return if the measure provided is invalid.
 #            If not provided, defaults to 'INVALID'.
 #
 # Return the checked measure or the fallback value.
