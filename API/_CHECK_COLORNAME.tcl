@@ -27,4 +27,15 @@ proc ::_CHECK_COLORNAME { colorname hextype { fallback INVALID } } {
         -1      { return $fallback }
         default { set colorname [lindex $::TABLE(ALL,all) $index] }
     }
+
+    # Return the correct hexadecimal value of the colorname provided.
+    switch -nocase -- $hextype {
+        HEX8    { return $::TABLE(ALL,$colorname,8) }
+        HEX12   { return $::TABLE(ALL,$colorname,12) }
+        HEX16   { return $::TABLE(ALL,$colorname,16) }
+        HEXA8   { return [string cat $::TABLE(ALL,$colorname,8) "ff"] }
+        HEXA12  { return [string cat $::TABLE(ALL,$colorname,12) "fff"] }
+        HEXA16  { return [string cat $::TABLE(ALL,$colorname,16) "ffff"] }
+        default { return $fallback }
+    }
 }
