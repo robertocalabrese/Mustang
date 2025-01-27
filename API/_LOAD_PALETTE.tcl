@@ -118,4 +118,10 @@ proc ::_LOAD_PALETTE { filepath } {
     switch -- [info exists ::TABLE($palette,all)] {
         0   { return }
     }
+
+    # Register the palette name into the available ones.
+    lappend ::PALETTES $palette
+
+    # Order the palettes alphabetically.
+    set ::PALETTES [lsort -increasing -dictionary $::PALETTES]
 }
