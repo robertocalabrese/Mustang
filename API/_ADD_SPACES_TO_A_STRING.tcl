@@ -8,7 +8,7 @@
 #
 # maxLength   Should be a positive integer that specifies the maximum length allowed for the string.
 #
-# gap         Should be a positive integer that specifies the column distancer (in space characters).
+# gap         Optional, should be a positive integer that specifies the column distancer (in space characters).
 #             If not provided, defaults to '3'.
 #
 # Return a new string.
