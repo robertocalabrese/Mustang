@@ -42,4 +42,11 @@ proc ::_CHECK_MEASURE { measure { fallback INVALID } } {
         }
         default { return $fallback }
     }
+
+    # Check the measure value.
+    if { [string is double -strict $measure] && ( $measure >= 0 ) } {
+        return [string cat $measure $unit]
+    } else {
+        return $fallback
+    }
 }
