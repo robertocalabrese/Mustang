@@ -47,5 +47,13 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['light' or 'dark'\]"
         chan puts $channel "COLORSCHEME: $::COLORSCHEME"
         chan puts $channel ""
+
+        chan puts $channel "# DEPTH"
+        chan puts $channel "#"
+        chan puts $channel "# It's an integer that specifies the current color depth."
+        chan puts $channel "#"
+        chan puts $channel "# \['8', '12' or '16'\]"
+        chan puts $channel "DEPTH: $::DEPTH"
+        chan puts $channel ""
     }
 }
