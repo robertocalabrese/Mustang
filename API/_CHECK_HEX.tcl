@@ -9,12 +9,12 @@
 #
 # hextype    Should be a string that specifies the color model in which the color is provided.
 #            Allowed values are:
-#                HEX8   --> Hexadecimal at 8  bit with 3 channels (red, green and blue)
-#                HEX12  --> Hexadecimal at 12 bit with 3 channels (red, green and blue)
-#                HEX16  --> Hexadecimal at 16 bit with 3 channels (red, green and blue)
-#                HEXA8  --> Hexadecimal at 8  bit with 4 channels (red, green,blue and alpha)
-#                HEXA12 --> Hexadecimal at 12 bit with 4 channels (red, green,blue and alpha)
-#                HEXA16 --> Hexadecimal at 16 bit with 4 channels (red, green,blue and alpha)
+#                HEX or HEX8   --> Hexadecimal at 8  bit with 3 channels (red, green and blue)
+#                HEX12         --> Hexadecimal at 12 bit with 3 channels (red, green and blue)
+#                HEX16         --> Hexadecimal at 16 bit with 3 channels (red, green and blue)
+#                HEXA or HEXA8 --> Hexadecimal at 8  bit with 4 channels (red, green,blue and alpha)
+#                HEXA12        --> Hexadecimal at 12 bit with 4 channels (red, green,blue and alpha)
+#                HEXA16        --> Hexadecimal at 16 bit with 4 channels (red, green,blue and alpha)
 #
 #            If an hexadecimal color is specified with a number of channels different than the hextype
 #            provided (but '3' or '4' nonetheless), the alpha channel will be added or subtracted,
@@ -32,6 +32,7 @@ proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
     }
 
     switch -nocase -- $hextype {
+        HEX  -
         HEX8 {
             switch -- [string length $color] {
                 3   -
@@ -113,6 +114,7 @@ proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
                 default { return $fallback }
             }
         }
+        HEXA  -
         HEXA8 {
             switch -- [string length $color] {
                 3   {
