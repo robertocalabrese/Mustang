@@ -91,6 +91,15 @@ proc ::_LOAD_PALETTE { filepath } {
                             continue
                         }
                     }
+
+                    # Register the colorname data for the current palette.
+                    set ::TABLE($palette,$colorname,8)      $color_8bit
+                    set ::TABLE($palette,$colorname,12)     $color_12bit
+                    set ::TABLE($palette,$colorname,16)     $color_16bit
+                    set ::TABLE($palette,$colorname,family) $family
+
+                    lappend ::TABLE($palette,all)     $colorname
+                    lappend ::TABLE($palette,$family) $colorname
                 }
             }
         }
