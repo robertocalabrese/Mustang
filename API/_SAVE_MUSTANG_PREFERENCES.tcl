@@ -119,5 +119,14 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['enabled' or 'disabled'\]"
         chan puts $channel "POPUPS: $::POPUPS"
         chan puts $channel ""
+
+        chan puts $channel "# SCALING"
+        chan puts $channel "#"
+        chan puts $channel "# It's a percentage that specifies the scaling factor of the screen."
+        chan puts $channel "# It can be provided with or without the '%' symbol."
+        chan puts $channel "#"
+        chan puts $channel "# \[25.0%,300.0%\]"
+        chan puts $channel "SCALING: $::SCALING"
+        chan puts $channel ""
     }
 }
