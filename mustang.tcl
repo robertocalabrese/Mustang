@@ -479,7 +479,7 @@ proc ::Mustang::init {} {
 
     # Load the API functions.
     set API_LIST [list [file join $::MUSTANG_DIR API "_ADD_ALPHA_CHANNEL.tcl"] \
-                       [file join $::MUSTANG_DIR API "_ALIGN_STRING_TO_COLUMN.tcl"] \
+                       [file join $::MUSTANG_DIR API "_ADD_SPACES_TO_A_STRING.tcl"] \
                        [file join $::MUSTANG_DIR API "_CENTER_ON_THE_SCREEN.tcl"] \
                        [file join $::MUSTANG_DIR API "_CHECK_AND_REACT.tcl"] \
                        [file join $::MUSTANG_DIR API "_CHECK_COLORNAME.tcl"] \
