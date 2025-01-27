@@ -6,7 +6,7 @@
 #
 # colors        Should be a list containing all the colors involved.
 #
-# colormodel    Should be a string indicating the color model in which the color are provided.
+# colormodel    Should be a string indicating the color model in which the colors are provided.
 #               Allowed color models are all the Mustang supported color model that do not have an alpha channel, in other words:
 #                   HEX or HEX8
 #                   HEX12
