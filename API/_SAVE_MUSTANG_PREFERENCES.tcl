@@ -8,5 +8,10 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         open [file join $::CONFIG_DIR mustang mustang.conf] w
     } on error { errortext errorcode } {
         return $errortext
-    } on ok { channel } {}
+    } on ok { channel } {
+        chan puts $channel "# Mustang $::MUSTANG_VERSION configuration file."
+        chan puts $channel "#"
+        chan puts $channel "# [clock format [clock seconds] -format [list %d %B %Y - %H:%M:%S]]"
+        chan puts $channel ""
+    }
 }
