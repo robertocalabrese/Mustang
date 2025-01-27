@@ -88,5 +88,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HSPA]
         }
+        XYZ {
+            foreach { X Y Z } $colors {
+                lappend results $X $Y $Z 1.0
+            }
+            return [list $results XYZA]
+        }
     }
 }
