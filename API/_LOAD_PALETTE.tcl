@@ -34,6 +34,12 @@ proc ::_LOAD_PALETTE { filepath } {
                     set color_12bit [lindex $line 2]
                     set color_16bit [lindex $line 3]
                     set family      [string tolower [lindex $line 4]]
+
+                    # Check that colorname is not allready known or an empty string.
+                    if { ($colorname in $::TABLE(ALL,all)) || ($colorname eq "") } {
+                        # Skip the entire line.
+                        continue
+                    }
                 }
             }
         }
