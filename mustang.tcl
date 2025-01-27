@@ -247,7 +247,7 @@ proc ::Mustang::init {} {
     # ::DPI
     #
     # It's an integer that specifies the number of pixels per inch of the screen
-    # where '.' is initially placed.
+    # where the application is initially placed.
     set ::DPI [expr { round([tk scaling]*72.0) }]
 
     # ::FOCUS_MODEL
