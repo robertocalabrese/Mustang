@@ -12,4 +12,11 @@
 #             If not provided, defaults to '3'.
 #
 # Return a new string.
-proc ::_ADD_SPACES_TO_A_STRING { STRING maxLength { gap 3 } } {}
+proc ::_ADD_SPACES_TO_A_STRING { STRING maxLength { gap 3 } } {
+    # Check the maxlength and gap values.
+    foreach value [list $maxLength $gap] {
+        switch -- [string is integer -strict $value] {
+            0   { return $STRING }
+        }
+    }
+}
