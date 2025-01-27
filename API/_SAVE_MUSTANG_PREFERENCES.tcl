@@ -103,5 +103,13 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
         chan puts $channel "NORMAL_FONT: $::FONT(Normal,family) $::FONT(Normal,size)"
         chan puts $channel ""
+
+        chan puts $channel "# NOTIFICATIONS"
+        chan puts $channel "#"
+        chan puts $channel "# It's a boolean that specifies the notifications state."
+        chan puts $channel "#"
+        chan puts $channel "# \['enabled' or 'disabled'\]"
+        chan puts $channel "NOTIFICATIONS: $::NOTIFICATIONS"
+        chan puts $channel ""
     }
 }
