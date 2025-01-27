@@ -22,4 +22,8 @@ proc ::_CENTER_A_TOPLEVEL_ON_THE_SCREEN { w } {
     # Get the screen dimension.
     set screenwidth  [_winfo screenwidth  $w]
     set screenheight [_winfo screenheight $w]
+
+    # Compute the new toplevel coordinates.
+    set x [expr { round(ceil(($screenwidth-$width)*0.5)) }]
+    set y [expr { round(ceil(($screenheight-$height)*0.5)) }]
 }
