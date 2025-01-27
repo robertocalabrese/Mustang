@@ -177,5 +177,10 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "#"
         chan puts $channel "# \['+', '-' or 'space'\]"
         chan puts $channel "UNION: $union"
+
+        chan flush $channel
+        chan close $channel
+
+        return "success"
     }
 }
