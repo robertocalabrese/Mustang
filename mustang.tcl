@@ -477,6 +477,38 @@ proc ::Mustang::init {} {
     # Create the Mustang config folder.
     file mkdir [file join $::CONFIG_DIR mustang]
 
+    # Load the API functions.
+    set API_LIST [list [file join $::MUSTANG_DIR API "_ADD_ALPHA_CHANNEL.tcl"] \
+                       [file join $::MUSTANG_DIR API "_ALIGN_STRING_TO_COLUMN.tcl"] \
+                       [file join $::MUSTANG_DIR API "_CENTER_ON_THE_SCREEN.tcl"] \
+                       [file join $::MUSTANG_DIR API "_CHECK_AND_REACT.tcl"] \
+                       [file join $::MUSTANG_DIR API "_CHECK_COLORNAME.tcl"] \
+                       [file join $::MUSTANG_DIR API "_CHECK_HEX.tcl"] \
+                       [file join $::MUSTANG_DIR API "_CHECK_MEASURE.tcl"] \
+                       [file join $::MUSTANG_DIR API "_CONVERT_MEASURE.tcl"] \
+                       [file join $::MUSTANG_DIR API "_DEVELOPER_ERROR.tcl"] \
+                       [file join $::MUSTANG_DIR API "_FORCE_PLACE_PROPAGATION.tcl"] \
+                       [file join $::MUSTANG_DIR API "_LOAD_PALETTE.tcl"] \
+                       [file join $::MUSTANG_DIR API "_REFRESH_THEME.tcl"] \
+                       [file join $::MUSTANG_DIR API "_REMOVE_ALPHA_CHANNEL.tcl"] \
+                       [file join $::MUSTANG_DIR API "_SAVE_PREFERENCES.tcl"] \
+                       [file join $::MUSTANG_DIR API "_SCROLL_PARENT_X.tcl"] \
+                       [file join $::MUSTANG_DIR API "_SCROLL_PARENT_Y.tcl"] \
+                       [file join $::MUSTANG_DIR API "_SCROLL_WIDGET_X.tcl"] \
+                       [file join $::MUSTANG_DIR API "_SCROLL_WIDGET_Y.tcl"] \
+                       [file join $::MUSTANG_DIR API "_TRANSLATE_COLORS.tcl"] \
+                       [file join $::MUSTANG_DIR API "_TRAVERSE_IN.tcl"] \
+                       [file join $::MUSTANG_DIR API "_USER_ERROR.tcl"]];
+
+    foreach ::path $API_LIST {
+        try {
+            apply { {} { source -encoding utf-8 $::path }}
+        } on error { errortext errorcode } {
+            chan puts "Unable to load '[file rootname [file tail $::path]]'."
+            exit 2
+        }
+    }
+
     # Initialize the tables for all available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
