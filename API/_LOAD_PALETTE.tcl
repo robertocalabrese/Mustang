@@ -40,6 +40,16 @@ proc ::_LOAD_PALETTE { filepath } {
                         # Skip the entire line.
                         continue
                     }
+
+                    # Check the colorname hexadecimal value at 8bit.
+                    set value [::_CHECK_HEX $color_8bit HEX8]
+                    switch -- $value {
+                        INVALID {
+                            # Skip the entire line.
+                            continue
+                        }
+                        default { set color_8bit $value }
+                    }
                 }
             }
         }
