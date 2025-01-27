@@ -20,5 +20,22 @@ proc ::_LOAD_PALETTE { filepath } {
         # Read the entire file.
         set file_content [split [chan read $channel] "\n"]
         chan close $channel
+
+        # Scan the file content line by line.
+        foreach line $file_content {
+            # Skip any empty or commented lines.
+            switch -- [string index [string trim $line] 0] {
+                ""      -
+                "#"     { continue }
+                default {
+                    # Get the color data.
+                    set colorname   [string trim [lindex $line 0]]
+                    set color_8bit  [lindex $line 1]
+                    set color_12bit [lindex $line 2]
+                    set color_16bit [lindex $line 3]
+                    set family      [string tolower [lindex $line 4]]
+                }
+            }
+        }
     }
 }
