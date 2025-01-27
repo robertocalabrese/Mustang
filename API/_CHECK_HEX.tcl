@@ -24,4 +24,10 @@
 #            If not provided, defaults to INVALID.
 #
 # Return the validated color in its hexadecimal longform or its fallback value.
-proc ::_CHECK_HEX { color hextype { fallback INVALID } } {}
+proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
+    # Check if color is expressed in hexadecimal format.
+    set color [string tolower [string trimleft $color "#"]]
+    switch -- [string is xdigit -strict $color] {
+        0   { return $fallback }
+    }
+}
