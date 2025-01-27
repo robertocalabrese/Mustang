@@ -20,8 +20,8 @@
 #            provided (but '3' or '4' nonetheless), the alpha channel will be added or subtracted,
 #            to reflect the hextype specified.
 #
-# fallback   Should be a string that specifies the fallback value to return if the color provided is invalid.
-#            If not provided, defaults to INVALID.
+# fallback   Optional, should be a string that specifies the fallback value to return if the color provided is invalid.
+#            If not provided, defaults to 'INVALID'.
 #
 # Return the validated color in its hexadecimal longform or its fallback value.
 proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
