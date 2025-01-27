@@ -94,5 +94,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results XYZA]
         }
+        xyY {
+            foreach { x y Y } $colors {
+                lappend results $x $y $Y 1.0
+            }
+            return [list $results xyYA]
+        }
     }
 }
