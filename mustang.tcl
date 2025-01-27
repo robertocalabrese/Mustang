@@ -252,7 +252,7 @@ proc ::Mustang::init {} {
 
     # ::FOCUS_MODEL
     #
-    # This variable changes the focus model for the application.
+    # Change the focus model for the application.
     #
     # Implicit method:
     #    Whenever the mouse enters a window, Mustang will automatically give it the input focus.
