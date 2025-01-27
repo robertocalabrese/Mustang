@@ -16,4 +16,30 @@
 #            If not provided, defaults to 'INVALID'.
 #
 # Return the checked measure or the fallback value.
-proc ::_CHECK_MEASURE { measure { fallback INVALID } } {}
+proc ::_CHECK_MEASURE { measure { fallback INVALID } } {
+    # Check the last digit of the measure provided.
+    switch -- [string index $measure end] {
+        0   -
+        1   -
+        2   -
+        3   -
+        4   -
+        5   -
+        6   -
+        7   -
+        8   -
+        9   {
+            # The measure have no unit, its value is assumed to be in pixels.
+            set unit ""
+        }
+        c   -
+        i   -
+        m   -
+        p   {
+            # The measure have a valid unit, separate its value from its unit.
+            set measure [string range $measure 0 end-1]
+            set unit    [string index $measure end]
+        }
+        default { return $fallback }
+    }
+}
