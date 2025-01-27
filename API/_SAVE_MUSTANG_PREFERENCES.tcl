@@ -78,5 +78,12 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['implicit' or 'explicit'\]"
         chan puts $channel "FOCUS_MODEL: $::FOCUS_MODEL"
         chan puts $channel ""
+
+        chan puts $channel "# LANGUAGE"
+        chan puts $channel "#"
+        chan puts $channel "# It's a string that specifies the current language."
+        chan puts $channel "# It must follow the 'ISO 639-1' specifications."
+        chan puts $channel "LANGUAGE: $::LANGUAGE"
+        chan puts $channel ""
     }
 }
