@@ -1,6 +1,6 @@
 # _ADD_ALPHA_CHANNEL
 #
-# Adds the alpha channel to the colors provided.
+# Add the alpha channel to the colors provided.
 #
 # Where:
 #
@@ -23,7 +23,7 @@
 #                  Lab
 #                  Luv
 #
-# Returns a list with two elements.
+# Return a list with two elements.
 # The first element contains all the resulting colors (with alpha channels) while
 # the second element is the new color model in which they are expressed.
 proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
