@@ -85,5 +85,14 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# It must follow the 'ISO 639-1' specifications."
         chan puts $channel "LANGUAGE: $::LANGUAGE"
         chan puts $channel ""
+
+        chan puts $channel "# MONOSPACE_FONT"
+        chan puts $channel "#"
+        chan puts $channel "# It's a list that specifies the monospace font to use (both family and size)."
+        chan puts $channel "# If the size argument is a positive number, it is interpreted as a size in points."
+        chan puts $channel "# If size is a negative number, its absolute value is interpreted as a size in pixels."
+        chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
+        chan puts $channel "MONOSPACE_FONT: $::FONT(Monospace,family) $::FONT(Monospace,size)"
+        chan puts $channel ""
     }
 }
