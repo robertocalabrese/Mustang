@@ -19,4 +19,16 @@ proc ::_ADD_SPACES_TO_A_STRING { STRING maxLength { gap 3 } } {
             0   { return $STRING }
         }
     }
+
+    # Add spaces to the string provided.
+    if { ($maxLength > 0) && ($gap > 0) } {
+        set i 0
+        set limit [expr { $maxLength+$gap-[string length $STRING] }]
+        while { $i < $limit } {
+            append STRING " "
+            incr i
+        }
+    }
+
+    return $STRING
 }
