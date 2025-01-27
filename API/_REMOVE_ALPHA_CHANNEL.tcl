@@ -90,5 +90,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HSP]
         }
+        XYZA {
+            foreach { X Y Z A } $colors {
+                lappend results $X $Y $Z
+            }
+            return [list $results XYZ]
+        }
     }
 }
