@@ -491,7 +491,7 @@ proc ::Mustang::init {} {
                        [file join $::MUSTANG_DIR API "_LOAD_PALETTE.tcl"] \
                        [file join $::MUSTANG_DIR API "_REFRESH_THEME.tcl"] \
                        [file join $::MUSTANG_DIR API "_REMOVE_ALPHA_CHANNEL.tcl"] \
-                       [file join $::MUSTANG_DIR API "_SAVE_PREFERENCES.tcl"] \
+                       [file join $::MUSTANG_DIR API "_SAVE_MUSTANG_PREFERENCES.tcl"] \
                        [file join $::MUSTANG_DIR API "_SCROLL_PARENT_X.tcl"] \
                        [file join $::MUSTANG_DIR API "_SCROLL_PARENT_Y.tcl"] \
                        [file join $::MUSTANG_DIR API "_SCROLL_WIDGET_X.tcl"] \
