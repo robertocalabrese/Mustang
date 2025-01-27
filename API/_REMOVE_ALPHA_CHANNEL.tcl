@@ -84,5 +84,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HSL]
         }
+        HSPA {
+            foreach { hue saturation perceived_brightness alpha } $colors {
+                lappend results $hue $saturation $perceived_brightness
+            }
+            return [list $results HSP]
+        }
     }
 }
