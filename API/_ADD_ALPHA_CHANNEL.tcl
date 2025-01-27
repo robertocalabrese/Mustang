@@ -106,5 +106,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results LabA]
         }
+        Luv {
+            foreach { L u v } $colors {
+                lappend results $L $u $v 100.0
+            }
+            return [list $results LuvA]
+        }
     }
 }
