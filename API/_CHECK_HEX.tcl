@@ -154,5 +154,46 @@ proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
                 default { return $fallback }
             }
         }
+        HEXA12 {
+            switch -- [string length $color] {
+                3   {
+                    # Color is expressed as shortform without any alpha channel.
+                    set red   [string index $color 0]
+                    set green [string index $color 1]
+                    set blue  [string index $color 2]
+
+                    # Return the color longform with an added alpha channel ('fff').
+                    return [string cat "#" \
+                                       $red   $red   $red  \
+                                       $green $green $green \
+                                       $blue  $blue  $blue \
+                                       "fff"];
+                }
+                4   {
+                    # Color is expressed as shortform with alpha channel.
+                    set red   [string index $color 0]
+                    set green [string index $color 1]
+                    set blue  [string index $color 2]
+                    set alpha [string index $color 3]
+
+                    # Return the color longform with its alpha channel.
+                    return [string cat "#" \
+                                       $red   $red   $red  \
+                                       $green $green $green \
+                                       $blue  $blue  $blue \
+                                       $alpha $alpha $alpha];
+
+                }
+                9   {
+                    # Return the color longform with an added alpha channel ('fff').
+                    return [string cat "#" $color "fff"]
+                }
+                12  {
+                    # Return the color longform as is, with its alpha channel.
+                    return [string cat "#" $color]
+                }
+                default { return $fallback }
+            }
+        }
     }
 }
