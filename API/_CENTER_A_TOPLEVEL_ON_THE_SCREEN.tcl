@@ -26,4 +26,15 @@ proc ::_CENTER_A_TOPLEVEL_ON_THE_SCREEN { w } {
     # Compute the new toplevel coordinates.
     set x [expr { round(ceil(($screenwidth-$width)*0.5)) }]
     set y [expr { round(ceil(($screenheight-$height)*0.5)) }]
+
+    # Safeguards.
+    if { $x < 0 } {
+        set x     0
+        set width $screenwidth
+    }
+
+    if { $y < 0 } {
+        set y      0
+        set height $screenheight
+    }
 }
