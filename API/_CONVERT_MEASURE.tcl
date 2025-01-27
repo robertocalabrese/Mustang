@@ -48,4 +48,52 @@ proc ::_CONVERT_MEASURE { measure to { fallback INVALID } } {
         points      { set to points }
         default     { return $fallback }
     }
+
+    # Check the measure provided and extract its unit.
+    set unit [string index $measure end]
+    switch -- $unit {
+        0   -
+        1   -
+        2   -
+        3   -
+        4   -
+        5   -
+        6   -
+        7   -
+        8   -
+        9   {
+            # The measure have no unit, its value is assumed to be in pixels.
+            set from "pixels"
+
+            switch -- [string is integer -strict $measure] {
+                0   { return $fallback }
+            }
+
+            if { $measure < 0 } {
+                return $fallback
+            }
+        }
+        c   -
+        i   -
+        m   -
+        p   {
+            # The measure have a valid unit, retrieve its value and unit type.
+            switch -- $unit {
+                c   { set from "centimeters" }
+                i   { set from "inches"      }
+                m   { set from "millimeters" }
+                p   { set from "points"      }
+            }
+
+            set measure [string range $measure 0 end-1]
+            switch -- [string is double -strict $measure] {
+                0   { return $fallback }
+            }
+
+            if { $measure < 0 } {
+                return $fallback
+            }
+        }
+        default { return $fallback }
+    }
 }
