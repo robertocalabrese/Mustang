@@ -108,5 +108,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results Lab]
         }
+        LuvA {
+            foreach { L u v A } $colors {
+                lappend results $L $u $v
+            }
+            return [list $results Luv]
+        }
     }
 }
