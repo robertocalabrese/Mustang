@@ -60,5 +60,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results RGB12]
         }
+        RGBA16 {
+            foreach { red green blue alpha } $colors {
+                lappend results $red $green $blue
+            }
+            return [list $results RGB16]
+        }
     }
 }
