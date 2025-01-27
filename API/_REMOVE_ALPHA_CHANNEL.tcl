@@ -114,5 +114,6 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results Luv]
         }
+        default { return [list $colors $colormodel] }
     }
 }
