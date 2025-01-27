@@ -14,4 +14,8 @@ proc ::_CENTER_A_TOPLEVEL_ON_THE_SCREEN { w } {
     } else {
         update
     }
+
+    # Get the toplevel top-left corner position.
+    set width  [_winfo width  $w]
+    set height [_winfo height $w]
 }
