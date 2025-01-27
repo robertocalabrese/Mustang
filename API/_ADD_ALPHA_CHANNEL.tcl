@@ -112,5 +112,6 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results LuvA]
         }
+        default { return [list $colors $colormodel] }
     }
 }
