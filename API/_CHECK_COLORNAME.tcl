@@ -20,4 +20,11 @@
 #             If not provided, defaults to INVALID.
 #
 # Return the validated color in its hexadecimal longform or its fallback value.
-proc ::_CHECK_COLORNAME { colorname hextype { fallback INVALID } } {}
+proc ::_CHECK_COLORNAME { colorname hextype { fallback INVALID } } {
+    # Check if the colorname provided is known by Mustang.
+    set index [lsearch -exact -nocase $::TABLE(ALL,all) $colorname]
+    switch -- $index {
+        -1      { return $fallback }
+        default { set colorname [lindex $::TABLE(ALL,all) $index] }
+    }
+}
