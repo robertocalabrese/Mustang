@@ -86,5 +86,32 @@ proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
                 default { return $fallback }
             }
         }
+        HEX16 {
+            switch -- [string length $color] {
+                3   -
+                4   {
+                    # Color is expressed as shortform with (4) or without (3) alpha channel.
+                    set red   [string index $color 0]
+                    set green [string index $color 1]
+                    set blue  [string index $color 2]
+
+                    # Return the color longform without alpha channel.
+                    return [string cat "#" \
+                                       $red   $red   $red   $red \
+                                       $green $green $green $green \
+                                       $blue  $blue  $blue  $blue];
+
+                }
+                12  {
+                    # Return the color as is (without alpha channel).
+                    return [string cat "#" $color]
+                }
+                16  {
+                    # Return the color as is but with its alpha channel removed (last four digits).
+                    return [string cat "#" [string range $color 0 end-4]]
+                }
+                default { return $fallback }
+            }
+        }
     }
 }
