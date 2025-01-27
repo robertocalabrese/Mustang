@@ -82,5 +82,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HSLA]
         }
+        HSP {
+            foreach { hue saturation perceived_brightness } $colors {
+                lappend results $hue $saturation $perceived_brightness 100.0
+            }
+            return [list $results HSPA]
+        }
     }
 }
