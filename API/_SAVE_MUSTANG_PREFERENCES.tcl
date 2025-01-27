@@ -128,5 +128,15 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \[25.0%,300.0%\]"
         chan puts $channel "SCALING: $::SCALING"
         chan puts $channel ""
+
+        chan puts $channel "# SCROLLBAR_ACTION"
+        chan puts $channel "#"
+        chan puts $channel "# It's a string that specifies how each scrollbar reacts when a click happens on the trough."
+        chan puts $channel "#    jump --> The thumb will jump to the selected location."
+        chan puts $channel "#    page --> The thumb will scroll one page down, up, left or right."
+        chan puts $channel "#"
+        chan puts $channel "# \['jump' or 'page'\]"
+        chan puts $channel "SCROLLBAR_ACTION: $::SCROLLBAR_ACTION"
+        chan puts $channel ""
     }
 }
