@@ -138,5 +138,14 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# \['jump' or 'page'\]"
         chan puts $channel "SCROLLBAR_ACTION: $::SCROLLBAR_ACTION"
         chan puts $channel ""
+
+        chan puts $channel "# SCROLLSPEED"
+        chan puts $channel "#"
+        chan puts $channel "# It's an integer that specifies how big is a scroll unit."
+        chan puts $channel "# A scroll unit rappresents the distance to travel (in pixels) for a single tick of the mouse wheel."
+        chan puts $channel "#"
+        chan puts $channel "# \[1,100\]"
+        chan puts $channel "SCROLLSPEED: $::SCROLLSPEED"
+        chan puts $channel ""
     }
 }
