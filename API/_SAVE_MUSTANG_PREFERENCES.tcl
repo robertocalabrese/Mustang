@@ -30,5 +30,14 @@ proc ::_SAVE_MUSTANG_PREFERENCES {} {
         chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
         chan puts $channel "BIGGEST_FONT: $::FONT(Biggest,family) $::FONT(Biggest,size)"
         chan puts $channel ""
+
+        chan puts $channel "# CIE"
+        chan puts $channel "#"
+        chan puts $channel "# It's a string that specifies the current CIE standard."
+        chan puts $channel "# This value is used in color model conversions like XYZ-->RGB, RGB-->XYZ, ..."
+        chan puts $channel "#"
+        chan puts $channel "# \['standard' or 'intent'\]"
+        chan puts $channel "CIE: $::CIE"
+        chan puts $channel ""
     }
 }
