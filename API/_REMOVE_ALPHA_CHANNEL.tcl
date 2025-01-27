@@ -66,5 +66,11 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results RGB16]
         }
+        HSBA {
+            foreach { hue saturation brightness alpha } $colors {
+                lappend results $hue $saturation $brightness
+            }
+            return [list $results HSB]
+        }
     }
 }
