@@ -26,4 +26,14 @@
 # Return a list with two elements.
 # The first element contains all the resulting colors (without alpha channels) while
 # the second element is the new color model in which they are expressed.
-proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {}
+proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
+    switch -- $colormodel {
+        HEXA  -
+        HEXA8 {
+            foreach color $colors {
+                lappend results [string range $color 0 end-2]
+            }
+            return [list $results HEX8]
+        }
+    }
+}
