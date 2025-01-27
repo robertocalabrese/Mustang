@@ -96,4 +96,17 @@ proc ::_CONVERT_MEASURE { measure to { fallback INVALID } } {
         }
         default { return $fallback }
     }
+
+    # Execute the conversion.
+    switch -- $from {
+        centimeters {
+            switch -- $to {
+                centimeters { return [string cat $measure "c"] }
+                inches      { return [string cat [expr { $measure*0.39370078740157477 }] "i"] }
+                millimeters { return [string cat [expr { $measure*10 }] "m"] }
+                points      { return [string cat [expr { $measure*28.3464566929133850 }] "p"] }
+                pixels      { return [expr { round($measure*[_tk scaling]*28.346456692913385) }] }
+            }
+        }
+    }
 }
