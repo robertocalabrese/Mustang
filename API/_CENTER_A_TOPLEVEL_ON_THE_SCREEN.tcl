@@ -37,4 +37,7 @@ proc ::_CENTER_A_TOPLEVEL_ON_THE_SCREEN { w } {
         set y      0
         set height $screenheight
     }
+
+    # Center the toplevel on the screen.
+    _wm geometry $w [string cat $width "x" $height "+" $x "+" "$y"]
 }
