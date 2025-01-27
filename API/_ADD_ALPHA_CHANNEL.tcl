@@ -76,5 +76,11 @@ proc ::_ADD_ALPHA_CHANNEL { colors colormodel } {
             }
             return [list $results HSIA]
         }
+        HSL {
+            foreach { hue saturation lightness } $colors {
+                lappend results $hue $saturation $lightness 100.0
+            }
+            return [list $results HSLA]
+        }
     }
 }
