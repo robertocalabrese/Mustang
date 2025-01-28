@@ -88,6 +88,9 @@ proc ::_Lab_XYZ { channels } {
         set Z [expr { $Y-($b*0.005) }]
 
         set X_cube [expr { $X*$X*$X }]
+        set Y_cube [expr { $Y*$Y*$Y }]
+        set Z_cube [expr { $Z*$Z*$Z }]
+
         if { $X_cube > $epsilon } {
             set xr $X_cube
         } else {
@@ -96,13 +99,13 @@ proc ::_Lab_XYZ { channels } {
         }
 
         if { $L > $kepsilon } {
-            set yr [expr { pow((($L+16.0)/116.0),3) }]
+            # pow((($L+16.0)/116.0),3)
+            set yr $Y_cube
         } else {
             # $L/$k
             set yr [expr { $L*$j }]
         }
 
-        set Z_cube [expr { $Z*$Z*$Z }]
         if { $Z_cube > $epsilon } {
             set zr $Z_cube
         } else {
