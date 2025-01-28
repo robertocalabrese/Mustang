@@ -626,6 +626,35 @@ proc ::Mustang::init {} {
         }
     }
 
+    # Remove the following commands from Tk.
+    set REMOVED_CMDS_LIST [list [file join $::MUSTANG_DIR cmds removed "message.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_bisque.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_chooseColor.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_chooseDirectory.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_dialog.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_focusFollowsMouse.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_focusNext.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_focusPrev.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_getOpenFile.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_getSaveFile.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_menuSetFocus.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_messageBox.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_optionMenu.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_popup.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_SetPalette.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_textCopy.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_textCut.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "tk_textPaste.tcl"]];
+
+    foreach ::path $REMOVED_CMDS_LIST {
+        try {
+            apply { {} { source -encoding utf-8 $::path }}
+        } on error { errortext errorcode } {
+            chan puts "Unable to load '[file rootname [file tail $::path]]'."
+            exit 2
+        }
+    }
+
     # Initialize the tables for all available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
