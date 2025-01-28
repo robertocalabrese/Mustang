@@ -509,6 +509,123 @@ proc ::Mustang::init {} {
         }
     }
 
+    # Load the color math functions.
+    set COLORMATH_LIST [list [file join $::MUSTANG_DIR colormath "_COMPANDING.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX8_HEX12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX8_HEX16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX8_RGB8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX12_HEX8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX12_HEX16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX12_RGB12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX16_HEX8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX16_HEX12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEX16_RGB16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA8_HEXA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA8_HEXA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA8_RGBA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA12_HEXA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA12_HEXA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA12_RGBA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA16_HEXA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA16_HEXA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HEXA16_RGBA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSB_HSI.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSB_HSL.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSB_HSP.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSB_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSBA_HSIA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSBA_HSLA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSBA_HSPA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSBA_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSI_HSB.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSI_HSL.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSI_HSP.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSI_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSIA_HSBA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSIA_HSLA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSIA_HSPA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSIA_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSL_HSB.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSL_HSI.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSL_HSP.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSL_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSLA_HSBA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSLA_HSIA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSLA_HSPA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSLA_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSP_HSB.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSP_HSI.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSP_HSL.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSP_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSPA_HSBA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSPA_HSIA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSPA_HSLA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_HSPA_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_INVERSE_COMPANDING.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_Lab_XYZ.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_LabA_XYZA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_Luv_XYZ.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_LuvA_XYZA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB8_HEX8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB8_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB8_RGB12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB8_RGB16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB12_HEX12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB12_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB12_RGB8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB12_RGB16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB16_HEX16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB16_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB16_RGB8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGB16_RGB12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_HSB.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_HSI.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_HSL.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_HSP.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_RGB8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_RGB12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_RGB16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgb_XYZ.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA8_HEXA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA8_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA8_RGBA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA8_RGBA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA12_HEXA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA12_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA12_RGBA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA12_RGBA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA16_HEXA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA16_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA16_RGBA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_RGBA16_RGBA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_HSBA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_HSIA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_HSLA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_HSPA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_RGBA8.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_RGBA12.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_RGBA16.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_rgba_XYZA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_xyY_XYZ.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_xyYA_XYZA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZ_Lab.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZ_Luv.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZ_rgb.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZ_xyY.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZA_LabA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZA_LuvA.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZA_rgba.tcl"] \
+                             [file join $::MUSTANG_DIR colormath "_XYZA_xyYA.tcl"]];
+
+    foreach ::path $COLORMATH_LIST {
+        try {
+            apply { {} { source -encoding utf-8 $::path }}
+        } on error { errortext errorcode } {
+            chan puts "Unable to load '[file rootname [file tail $::path]]'."
+            exit 2
+        }
+    }
+
     # Initialize the tables for all available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
