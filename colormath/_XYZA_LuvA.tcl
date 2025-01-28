@@ -9,34 +9,34 @@
 #
 # Where:
 #
-# channels      Should be a list that specifies all the channels (flattened together) of the XYZ colors to convert.
-#               Each XYZ color needs to be rappresented by 4 channels values in the following order and ranges:
-#                   X --> X     [0,$::sRGB(PCS,X)]
-#                   Y --> Y     [0,$::sRGB(PCS,Y)]
-#                   Z --> Z     [0,$::sRGB(PCS,Z)]
-#                   A --> Alpha [0,1.0]
+# channels   Should be a list that specifies all the channels (flattened together) of the XYZ colors to convert.
+#            Each XYZ color needs to be rappresented by 4 channels values in the following order and ranges:
+#                X --> X     [0,$::sRGB(PCS,X)]
+#                Y --> Y     [0,$::sRGB(PCS,Y)]
+#                Z --> Z     [0,$::sRGB(PCS,Z)]
+#                A --> Alpha [0,1.0]
 #
-#               Attention, the input and output colors will not be checked.
-#               Please, take the appropriate steps before and after using this procedure or use the color command instead.
+#            Attention, the input and output colors will not be checked.
+#            Please, take the appropriate steps before and after using this procedure or use the color command instead.
 #
-#               Examples:
+#            Examples:
 #
-#                   One color:
-#                       color    --> [list 0.4 0.5 0.2 0.7]
-#                       channels --> [list 0.4 0.5 0.2 0.7]
+#                One color:
+#                    color    --> [list 0.4 0.5 0.2 0.7]
+#                    channels --> [list 0.4 0.5 0.2 0.7]
 #
-#                   Two colors:
-#                       color1   --> [list 0.4 0.5 0.2 0.7]
-#                       color2   --> [list 0.5 0.4 0.6 0.2]
-#                       channels --> [list 0.4 0.5 0.2 0.7 0.5 0.4 0.6 0.2] <-- all colors channels must be flattened together.
+#                Two colors:
+#                    color1   --> [list 0.4 0.5 0.2 0.7]
+#                    color2   --> [list 0.5 0.4 0.6 0.2]
+#                    channels --> [list 0.4 0.5 0.2 0.7 0.5 0.4 0.6 0.2] <-- all colors channels must be flattened together.
 #
-#                   Three colors:
-#                       color1   --> [list 0.4 0.5 0.2 0.7]
-#                       color2   --> [list 0.5 0.4 0.6 0.2]
-#                       color3   --> [list 0.2 0.2 0.1 0.5]
-#                       channels --> [list 0.4 0.5 0.2 0.7 0.5 0.4 0.6 0.2 0.2 0.2 0.1 0.5] <-- all colors channels must be flattened together.
+#                Three colors:
+#                    color1   --> [list 0.4 0.5 0.2 0.7]
+#                    color2   --> [list 0.5 0.4 0.6 0.2]
+#                    color3   --> [list 0.2 0.2 0.1 0.5]
+#                    channels --> [list 0.4 0.5 0.2 0.7 0.5 0.4 0.6 0.2 0.2 0.2 0.1 0.5] <-- all colors channels must be flattened together.
 #
-#                   and so on and so forth...
+#                and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 3       = 0.3333333333333333

@@ -9,31 +9,31 @@
 #
 # Where:
 #
-# channels      Should be a list that specifies all the channels (flattened together) of the XYZ colors to convert.
-#               Each XYZ color needs to be rappresented by 3 channels values in the following order and ranges:
-#                   X --> X [0,$::sRGB(PCS,X)]
-#                   Y --> Y [0,$::sRGB(PCS,Y)]
-#                   Z --> Z [0,$::sRGB(PCS,Z)]
+# channels   Should be a list that specifies all the channels (flattened together) of the XYZ colors to convert.
+#            Each XYZ color needs to be rappresented by 3 channels values in the following order and ranges:
+#                X --> X [0,$::sRGB(PCS,X)]
+#                Y --> Y [0,$::sRGB(PCS,Y)]
+#                Z --> Z [0,$::sRGB(PCS,Z)]
 #
-#               Attention, the input and output colors will not be checked.
-#               Please, take the appropriate steps before and after using this procedure or use the color command instead.
+#            Attention, the input and output colors will not be checked.
+#            Please, take the appropriate steps before and after using this procedure or use the color command instead.
 #
-#               Examples:
+#            Examples:
 #
-#                   One color:
-#                       color    --> [list 0.4 0.5 0.2]
-#                       channels --> [list 0.4 0.5 0.2]
+#                One color:
+#                    color    --> [list 0.4 0.5 0.2]
+#                    channels --> [list 0.4 0.5 0.2]
 #
-#                   Two colors:
-#                       color1   --> [list 0.4 0.5 0.2]
-#                       color2   --> [list 0.5 0.4 0.6]
-#                       channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels must be flattened together.
+#                Two colors:
+#                    color1   --> [list 0.4 0.5 0.2]
+#                    color2   --> [list 0.5 0.4 0.6]
+#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels must be flattened together.
 #
-#                   Three colors:
-#                       color1   --> [list 0.4 0.5 0.2]
-#                       color2   --> [list 0.5 0.4 0.6]
-#                       color3   --> [list 0.2 0.2 0.1]
-#                       channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels must be flattened together.
+#                Three colors:
+#                    color1   --> [list 0.4 0.5 0.2]
+#                    color2   --> [list 0.5 0.4 0.6]
+#                    color3   --> [list 0.2 0.2 0.1]
+#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels must be flattened together.
 #
 # Note:  For info about XYZ to xyY conversions visit 'http://www.brucelindbloom.com'.
 #

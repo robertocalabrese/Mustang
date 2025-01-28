@@ -8,34 +8,34 @@
 #
 # Where:
 #
-# channels      Should be a list that specifies all the channels (flattened together) of the RGB colors at 12 bit to convert.
-#               Each RGB color needs to be rappresented by 4 channels values in the following order and ranges:
-#                   R --> Red   [0,4095]
-#                   G --> Green [0,4095]
-#                   B --> Blue  [0,4095]
-#                   A --> Alpha [0,4095]
+# channels   Should be a list that specifies all the channels (flattened together) of the RGB colors at 12 bit to convert.
+#            Each RGB color needs to be rappresented by 4 channels values in the following order and ranges:
+#                R --> Red   [0,4095]
+#                G --> Green [0,4095]
+#                B --> Blue  [0,4095]
+#                A --> Alpha [0,4095]
 #
-#               Attention, the input and output colors will not be checked.
-#               Please, take the appropriate steps before and after using this procedure or use the color command instead.
+#            Attention, the input and output colors will not be checked.
+#            Please, take the appropriate steps before and after using this procedure or use the color command instead.
 #
-#               Examples:
+#            Examples:
 #
-#                   One color:
-#                       color    --> [list 400 1720 2120 780]
-#                       channels --> [list 400 1720 2120 780]
+#                One color:
+#                    color    --> [list 400 1720 2120 780]
+#                    channels --> [list 400 1720 2120 780]
 #
-#                   Two colors:
-#                       color1   --> [list 400 1720 2120 780]
-#                       color2   --> [list 570 650  650  230]
-#                       channels --> [list 400 1720 2120 780 570 650 650 230] <-- all colors channels must be flattened together.
+#                Two colors:
+#                    color1   --> [list 400 1720 2120 780]
+#                    color2   --> [list 570 650  650  230]
+#                    channels --> [list 400 1720 2120 780 570 650 650 230] <-- all colors channels must be flattened together.
 #
-#                   Three colors:
-#                       color1   --> [list 400 1720 2120 780]
-#                       color2   --> [list 570 650  650  230]
-#                       color3   --> [list 230 2120 1200 900]
-#                       channels --> [list 400 1720 2120 780 570 650 650 230 230 2120 1200 900] <-- all colors channels must be flattened together.
+#                Three colors:
+#                    color1   --> [list 400 1720 2120 780]
+#                    color2   --> [list 570 650  650  230]
+#                    color3   --> [list 230 2120 1200 900]
+#                    channels --> [list 400 1720 2120 780 570 650 650 230 230 2120 1200 900] <-- all colors channels must be flattened together.
 #
-#                   and so on and so forth...
+#                and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   255 / 4095 = 0.06227106227106227

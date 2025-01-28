@@ -8,41 +8,41 @@
 #
 # Where:
 #
-# hexadecimals      Should be a list that specifies all the hexadecimal colors at 16 bit to convert.
-#                   Each hexadecimal color needs to be rappresented by sixteen hexadecimals values in the range [#0000000000000000,#ffffffffffffffff]
-#                   that specifies the 4 channels values in the following order and ranges:
-#                       first four hedadecimals --> red   [0000,ffff]
-#                       next  four hedadecimals --> green [0000,ffff]
-#                       next  four hedadecimals --> blue  [0000,ffff]
-#                       last  four hedadecimals --> alpha [0000,ffff]
+# hexadecimals   Should be a list that specifies all the hexadecimal colors at 16 bit to convert.
+#                Each hexadecimal color needs to be rappresented by sixteen hexadecimals values in the range [#0000000000000000,#ffffffffffffffff]
+#                that specifies the 4 channels values in the following order and ranges:
+#                    first four hedadecimals --> red   [0000,ffff]
+#                    next  four hedadecimals --> green [0000,ffff]
+#                    next  four hedadecimals --> blue  [0000,ffff]
+#                    last  four hedadecimals --> alpha [0000,ffff]
 #
-#                   Attention:
-#                       - Each hexadecimal color must start with the '#' symbol.
-#                       - Each hexadecimal letter must be lowercase.
-#                       - Shortforms are not allowed.
-#                       - Textual or system colornames are not allowed.
-#                       - For performance reasons, the input and output colors will not be checked.
+#                Attention:
+#                    - Each hexadecimal color must start with the '#' symbol.
+#                    - Each hexadecimal letter must be lowercase.
+#                    - Shortforms are not allowed.
+#                    - Textual or system colornames are not allowed.
+#                    - For performance reasons, the input and output colors will not be checked.
 #
-#                   Please, take the appropriate steps before and after using this procedure or use the color command instead.
+#                Please, take the appropriate steps before and after using this procedure or use the color command instead.
 #
-#                   Examples:
+#                Examples:
 #
-#                       One color:
-#                           color        --> #ffffffff0000ffff
-#                           hexadecimals --> [list #ffffffff0000ffff] or just #ffffffff0000ffff
+#                    One color:
+#                        color        --> #ffffffff0000ffff
+#                        hexadecimals --> [list #ffffffff0000ffff] or just #ffffffff0000ffff
 #
-#                       Two colors:
-#                           color1       --> #000000000000ffff
-#                           color2       --> #ffffffffffffffff
-#                           hexadecimals --> [list #000000000000ffff #ffffffffffffffff]
+#                    Two colors:
+#                        color1       --> #000000000000ffff
+#                        color2       --> #ffffffffffffffff
+#                        hexadecimals --> [list #000000000000ffff #ffffffffffffffff]
 #
-#                       Three colors:
-#                           color1       --> #ffff00000000ffff
-#                           color2       --> #0000ffff0000ffff
-#                           color3       --> #00000000ffffffff
-#                           hexadecimals --> [list #ffff00000000ffff #0000ffff0000ffff #00000000ffffffff]
+#                    Three colors:
+#                        color1       --> #ffff00000000ffff
+#                        color2       --> #0000ffff0000ffff
+#                        color3       --> #00000000ffffffff
+#                        hexadecimals --> [list #ffff00000000ffff #0000ffff0000ffff #00000000ffffffff]
 #
-#                       and so on and so forth...
+#                    and so on and so forth...
 #
 # Return a list containing the resulting RGB colors channels (flattened together) at 16 bit.
 # Each RGB color will be rappresented by 4 channels values in the following order and ranges:

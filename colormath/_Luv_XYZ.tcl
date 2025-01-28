@@ -9,33 +9,33 @@
 #
 # Where:
 #
-# channels      Should be a list that specifies all the channels (flattened together) of the Luv colors to convert.
-#               Each Luv color needs to be rappresented by 3 channels values in the following order and ranges:
-#                   L --> Lightness [0,100.0]
-#                   u --> u         [-134.0,220.0]
-#                   v --> v         [-140.0,122.0]
+# channels   Should be a list that specifies all the channels (flattened together) of the Luv colors to convert.
+#            Each Luv color needs to be rappresented by 3 channels values in the following order and ranges:
+#                L --> Lightness [0,100.0]
+#                u --> u         [-134.0,220.0]
+#                v --> v         [-140.0,122.0]
 #
-#               Attention, the input and output colors will not be checked.
-#               Please, take the appropriate steps before and after using this procedure or use the color command instead.
+#            Attention, the input and output colors will not be checked.
+#            Please, take the appropriate steps before and after using this procedure or use the color command instead.
 #
-#               Examples:
+#            Examples:
 #
-#                   One color:
-#                       color    --> [list 100 -50 50]
-#                       channels --> [list 100 -50 50]
+#                One color:
+#                    color    --> [list 100 -50 50]
+#                    channels --> [list 100 -50 50]
 #
-#                   Two colors:
-#                       color1   --> [list 100 -50 50]
-#                       color2   --> [list 57   80 80]
-#                       channels --> [list 100 -50 50 57 80 80] <-- all colors channels must be flattened together.
+#                Two colors:
+#                    color1   --> [list 100 -50 50]
+#                    color2   --> [list 57   80 80]
+#                    channels --> [list 100 -50 50 57 80 80] <-- all colors channels must be flattened together.
 #
-#                   Three colors:
-#                       color1   --> [list 100 -50 50]
-#                       color2   --> [list 57   80 80]
-#                       color3   --> [list 23   20 12]
-#                       channels --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels must be flattened together.
+#                Three colors:
+#                    color1   --> [list 100 -50 50]
+#                    color2   --> [list 57   80 80]
+#                    color3   --> [list 23   20 12]
+#                    channels --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels must be flattened together.
 #
-#                   and so on and so forth...
+#                and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 3                 = 0.3333333333333333

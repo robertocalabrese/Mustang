@@ -8,34 +8,34 @@
 #
 # Where:
 #
-# channels      Should be a list that specifies all the channels (flattened together) of the HSI colors to convert.
-#               Each HSI color needs to be rappresented by 4 channels values in the following order and ranges:
-#                   H --> Hue        [0,360.0[ --> Note: '360.0' is not included.
-#                   S --> Saturation [0,100.0]
-#                   I --> Intensity  [0,100.0]
-#                   A --> Alpha      [0,100.0]
+# channels   Should be a list that specifies all the channels (flattened together) of the HSI colors to convert.
+#            Each HSI color needs to be rappresented by 4 channels values in the following order and ranges:
+#                H --> Hue        [0,360.0[ --> Note: '360.0' is not included.
+#                S --> Saturation [0,100.0]
+#                I --> Intensity  [0,100.0]
+#                A --> Alpha      [0,100.0]
 #
-#               Attention, the input and output colors will not be checked.
-#               Please, take the appropriate steps before and after using this procedure or use the color command instead.
+#            Attention, the input and output colors will not be checked.
+#            Please, take the appropriate steps before and after using this procedure or use the color command instead.
 #
-#               Examples:
+#            Examples:
 #
-#                   One color:
-#                       color    --> [list 120 50 50 78]
-#                       channels --> [list 120 50 50 78]
+#                One color:
+#                    color    --> [list 120 50 50 78]
+#                    channels --> [list 120 50 50 78]
 #
-#                   Two colors:
-#                       color1   --> [list 120 50 50 78]
-#                       color2   --> [list 57  80 80 23]
-#                       channels --> [list 120 50 50 78 57 80 80 23] <-- all colors channels must be flattened together.
+#                Two colors:
+#                    color1   --> [list 120 50 50 78]
+#                    color2   --> [list 57  80 80 23]
+#                    channels --> [list 120 50 50 78 57 80 80 23] <-- all colors channels must be flattened together.
 #
-#                   Three colors:
-#                       color1   --> [list 120 50 50 78]
-#                       color2   --> [list 57  80 80 23]
-#                       color3   --> [list 270 20 90 50]
-#                       channels --> [list 120 50 50 78 57 80 80 23 270 20 90 50] <-- all colors channels must be flattened together.
+#                Three colors:
+#                    color1   --> [list 120 50 50 78]
+#                    color2   --> [list 57  80 80 23]
+#                    color3   --> [list 270 20 90 50]
+#                    channels --> [list 120 50 50 78 57 80 80 23 270 20 90 50] <-- all colors channels must be flattened together.
 #
-#                   and so on and so forth...
+#                and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 100 = 0.01
