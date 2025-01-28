@@ -11,8 +11,8 @@
 rename tk_textCopy _tk_textCopy
 
 proc tk_textCopy { window } {
-    {*}$::_PUTS stdout "The 'tk_textCopy' command has been removed from Tk by Mustang. Ignoring."
-    {*}$::_PUTS stdout "Please use the 'copy' command instead."
+    chan puts stdout "The 'tk_textCopy' command has been removed from Tk by Mustang. Ignoring."
+    chan puts stdout "Please use the 'copy' command instead."
 
     return ""
 }
