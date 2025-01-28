@@ -309,7 +309,7 @@ proc ::Mustang::init {} {
     #
     # It's a list that specifies all the available palettes.
     # This list is case sensitive.
-    set ::PALETTES [list ALL]
+    set ::PALETTES [list ]
 
     # ::POPUPS
     #
