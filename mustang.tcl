@@ -225,7 +225,7 @@ proc ::Mustang::init {} {
     # ::CIE
     #
     # It's a string that specifies the current CIE standard.
-    # This value is used in color model conversions like XYZ-->RGB, RGB-->XYZ, ...
+    # This value is used in color model conversions like XYZ-->Lab or Lab-->XYZ.
     #
     # ['standard' or 'intent']
     set ::CIE "standard"
