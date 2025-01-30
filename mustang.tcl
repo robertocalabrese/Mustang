@@ -677,6 +677,7 @@ proc ::Mustang::init {} {
     }
 
     # Load the Tk commands that will be hijacked by Mustang.
+    # Order do matter here. 'winfo.tcl' and 'tk.tcl' must be loaded before anything other commands.
     set HIJACKED_CMDS_LIST [list [file join $::MUSTANG_DIR cmds "winfo.tcl"] \
                                  [file join $::MUSTANG_DIR cmds "tk.tcl"] \
                                  [file join $::MUSTANG_DIR cmds "bell.tcl"] \
