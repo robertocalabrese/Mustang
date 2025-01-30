@@ -80,7 +80,7 @@ package require Tk
 package require Img
 package require msgcat
 
-# Note: The variable '::MUSTANG_VERSION' is defined in the pkgIndex file located in the root folder of the Mustang package.
+# Note: The variables '::MUSTANG_VERSION' and '::MUSTANG_DIR' are defined in the pkgIndex file located in the root folder of the Mustang package.
 
 # Set the application name, prettyname and version.
 # The developer should overrule these variables values with its own application name, prettyname and version.
@@ -297,14 +297,14 @@ proc ::Mustang::init {} {
     # It's a string that specifies the available languages.
     # It must follow the 'ISO 639-1' specifications.
     set ::LANGUAGES [list ]
-    foreach path [glob -type f -nocomplain -directory [file join $::BISON_DIR msgs] -- *.msg] {
+    foreach path [glob -type f -nocomplain -directory [file join $::MUSTANG_DIR msgs] -- *.msg] {
         set lang [string tolower [file rootname [file tail $path]]]
         switch -- $lang {
             root    { continue }
             default { lappend ::LANGUAGES $lang }
         }
     }
-    ::msgcat::mcload [file join $::BISON_DIR msgs]
+    ::msgcat::mcload [file join $::MUSTANG_DIR msgs]
 
     # Note: The Mustang language packs are defined in the global namespace.
     #
@@ -496,8 +496,6 @@ proc ::Mustang::init {} {
 
     # Create the Mustang config folder.
     file mkdir [file join $::CONFIG_DIR mustang]
-
-    # Note: The variable '::MUSTANG_DIR' is defined in the pkgIndex file located in the root folder of the Mustang package.
 
     # Load the helper functions.
     set HELPER_LIST [list [file join $::MUSTANG_DIR API "_ADD_ALPHA_CHANNEL.tcl"] \
