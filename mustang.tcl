@@ -506,7 +506,8 @@ proc ::Mustang::init {} {
                           [file join $::MUSTANG_DIR API "_CHECK_MEASURE.tcl"] \
                           [file join $::MUSTANG_DIR API "_CONVERT_MEASURE.tcl"] \
                           [file join $::MUSTANG_DIR API "_LOAD_PALETTE.tcl"] \
-                          [file join $::MUSTANG_DIR API "_REMOVE_ALPHA_CHANNEL.tcl"]];
+                          [file join $::MUSTANG_DIR API "_REMOVE_ALPHA_CHANNEL.tcl"] \
+                          [file join $::MUSTANG_DIR API "_ROUND.tcl"]];
 
     foreach ::path $HELPER_LIST {
         try {
