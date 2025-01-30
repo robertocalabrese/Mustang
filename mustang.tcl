@@ -723,6 +723,43 @@ proc ::Mustang::init {} {
         }
     }
 
+    # Load the Mustang widgets.
+    set MUSTANG_WIDGETS_LIST [list [file join $::MUSTANG_DIR widgets "button.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "canvas.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "checkbutton.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "combobox.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "contextmenu.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "entry.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "frame.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "label.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "labelframe.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "listbox.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "menu.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "menubutton.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "notebook.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "palette.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "panedwindow.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "point.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "progressbar.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "radiobutton.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "scale.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "scrollbar.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "separator.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "sizegrip.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "spinbox.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "text.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "toplevel.tcl"] \
+                                   [file join $::MUSTANG_DIR widgets "treeview.tcl"]];
+
+    foreach ::path $MUSTANG_WIDGETS_LIST {
+        try {
+            apply { {} { source -encoding utf-8 $::path }}
+        } on error { errortext errorcode } {
+            chan puts "Unable to load '[file rootname [file tail $::path]]'."
+            exit 2
+        }
+    }
+
     # Initialize the tables for all available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
