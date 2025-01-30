@@ -707,6 +707,22 @@ proc ::Mustang::init {} {
         }
     }
 
+    # Load the new Mustang commands.
+    set NEW_MUSTANG_CMDS_LIST [list [file join $::MUSTANG_DIR cmds "color.tcl"] \
+                                    [file join $::MUSTANG_DIR cmds "copy.tcl"] \
+                                    [file join $::MUSTANG_DIR cmds "cut.tcl"] \
+                                    [file join $::MUSTANG_DIR cmds "dialog.tcl"] \
+                                    [file join $::MUSTANG_DIR cmds "paste.tcl"]];
+
+    foreach ::path $NEW_MUSTANG_CMDS_LIST {
+        try {
+            apply { {} { source -encoding utf-8 $::path }}
+        } on error { errortext errorcode } {
+            chan puts "Unable to load '[file rootname [file tail $::path]]'."
+            exit 2
+        }
+    }
+
     # Initialize the tables for all available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
