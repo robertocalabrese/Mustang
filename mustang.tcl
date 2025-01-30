@@ -676,6 +676,37 @@ proc ::Mustang::init {} {
         }
     }
 
+    # Load the Tk commands that will be hijacked by Mustang.
+    set HIJACKED_CMDS_LIST [list [file join $::MUSTANG_DIR cmds "winfo.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "tk.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "bell.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "bind.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "bindtags.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "clipboard.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "destroy.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "event.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "focus.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "font.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "grab.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "grid.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "option.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "pack.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "place.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "selection.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "send.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "style.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "tkwait.tcl"] \
+                                 [file join $::MUSTANG_DIR cmds "wm.tcl"]];
+
+    foreach ::path $HIJACKED_CMDS_LIST {
+        try {
+            apply { {} { source -encoding utf-8 $::path }}
+        } on error { errortext errorcode } {
+            chan puts "Unable to load '[file rootname [file tail $::path]]'."
+            exit 2
+        }
+    }
+
     # Initialize the tables for all available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
