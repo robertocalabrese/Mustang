@@ -760,7 +760,7 @@ proc ::Mustang::init {} {
         }
     }
 
-    # Initialize the tables for all available palettes color families.
+    # Initialize the tables for all the available palettes color families.
     set ::TABLE(ALL,all)         [list ]
     set ::TABLE(ALL,gray)        [list ]
     set ::TABLE(ALL,red)         [list ]
