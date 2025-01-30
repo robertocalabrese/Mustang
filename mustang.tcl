@@ -80,13 +80,13 @@ package require Tk
 package require Img
 package require msgcat
 
+# Note: The variable '::MUSTANG_VERSION' is defined in the pkgIndex file located in the root folder of the Mustang package.
+
 # Set the application name, prettyname and version.
 # The developer should overrule these variables values with its own application name, prettyname and version.
 set ::APP_NAME       Mustang
 set ::APP_PRETTYNAME "Mustang $::MUSTANG_VERSION"
 set ::APP_VERSION    $::MUSTANG_VERSION
-
-# Note: The variable '::MUSTANG_VERSION' is defined in the pkgIndex file located in the root folder of the Mustang package.
 
 # Get the family, weight and slant of the TkFixedFont and register them as the Mustang MonospaceFont ones.
 set ::FONT(Monospace,family) [font configure TkFixedFont -family]
@@ -229,6 +229,28 @@ proc ::Mustang::init {} {
     #
     # ['standard' or 'intent']
     set ::CIE "standard"
+
+    # ::COLOR_PATTERN
+    #
+    # Each color pattern is a list that specifies the theme colors to use for the relative accent color.
+    #
+    # The first  hexadecimal will be used as 'Press' color.
+    # The second hexadecimal will be used as 'Hover' color.
+    # The third  hexadecimal will be used as 'Focus' color.
+    # The fourth hexadecimal will be used as 'Selection' color.
+    # The fifth  hexadecimal will be used as 'Invalid' color.
+    # The sixth  hexadecimal will be used as 'Secondary' color.
+    #
+    # The color displayed as the accent color in the theme chooser window, will be the 'hover' one.
+    # An exception is made for the custom accent color that will have an image of a colorwheel.
+    set ::COLOR_PATTERN(blue)   [list #334173  #1ca7ec  #b5e2ff  #e9fcf6  #ff0000  #f68453]
+    set ::COLOR_PATTERN(cyan)   [list #026aa7  #298fca  #9ebaf5  #ccf2f6  #ff0000  #ff9505]
+    set ::COLOR_PATTERN(green)  [list #004d25  #48bf53  #99d18f  #d6ecd2  #ff0000  #205072]
+    set ::COLOR_PATTERN(orange) [list #784c34  #de7f31  #ffaf7a  #e6c09a  #ff0000  #223B5D]
+    set ::COLOR_PATTERN(purple) [list #522157  #c678dd  #efa6f6  #e4c7b7  #ff0000  #33539e]
+    set ::COLOR_PATTERN(red)    [list #431e15  #f67280  #ffb171  #ffdca2  #ff0000  #2c7a7b]
+    set ::COLOR_PATTERN(yellow) [list #be8815  #e5de00  #f1ee8e  #f7f5bc  #ff0000  #e47200]
+    set ::COLOR_PATTERN(custom) [list #ffffff  #ffffff  #ffffff  #ffffff  #ffffff  #ffffff]
 
     # ::COLORSCHEME
     #
@@ -431,10 +453,8 @@ proc ::Mustang::init {} {
     # Start the init process #
     ##########################
 
-    # Load the accent colors.
-    source -encoding utf-8 [file join $::MUSTANG_DIR "accent_colors.tcl"]
-
-    # Note: The variable '::MUSTANG_DIR' is defined in the pkgIndex file located in the root folder of the Mustang package.
+    # Set the list of all availables accent colors.
+    set ::ACCENTS [list blue cyan green orange purple red yellow custom]
 
     # Set the user folders.
     switch -- [tk windowingsystem] {
@@ -476,6 +496,8 @@ proc ::Mustang::init {} {
 
     # Create the Mustang config folder.
     file mkdir [file join $::CONFIG_DIR mustang]
+
+    # Note: The variable '::MUSTANG_DIR' is defined in the pkgIndex file located in the root folder of the Mustang package.
 
     # Load the helper functions.
     set HELPER_LIST [list [file join $::MUSTANG_DIR API "_ADD_ALPHA_CHANNEL.tcl"] \
