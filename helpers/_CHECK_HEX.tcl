@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 ## _CHECK_HEX
 #
 # Validate a color expressed in hexadecimal form.
@@ -241,3 +245,5 @@ proc ::_CHECK_HEX { color hextype { fallback INVALID } } {
         default { return $fallback }
     }
 }
+
+#*EOF*

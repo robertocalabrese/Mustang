@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 # _REMOVE_ALPHA_CHANNEL
 #
 # Remove the alpha channel from the colors provided.
@@ -117,3 +121,5 @@ proc ::_REMOVE_ALPHA_CHANNEL { colors colormodel } {
         default { return [list $colors $colormodel] }
     }
 }
+
+#*EOF*

@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 ## _CHECK_COLORNAME
 #
 # Validate a color expressed in textual form (like red, green, blue, purple, orange,...).
@@ -39,3 +43,5 @@ proc ::_CHECK_COLORNAME { colorname hextype { fallback INVALID } } {
         default { return $fallback }
     }
 }
+
+#*EOF*

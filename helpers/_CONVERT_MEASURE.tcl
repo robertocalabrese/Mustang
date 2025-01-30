@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 ## _CONVERT_MEASURE
 #
 # Convert a measure.
@@ -147,3 +151,5 @@ proc ::_CONVERT_MEASURE { measure to { fallback INVALID } } {
         }
     }
 }
+
+#*EOF*

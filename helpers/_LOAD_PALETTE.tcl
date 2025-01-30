@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 # _LOAD_PALETTE
 #
 # Load a palette file.
@@ -125,3 +129,5 @@ proc ::_LOAD_PALETTE { filepath } {
     # Order the palettes alphabetically.
     set ::PALETTES [lsort -increasing -dictionary $::PALETTES]
 }
+
+#*EOF*

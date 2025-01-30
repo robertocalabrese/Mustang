@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 ## _ADD_SPACES_TO_A_STRING
 #
 # Dinamically add spaces to a string in a table, so that the next column will result vertically aligned.
@@ -32,3 +36,5 @@ proc ::_ADD_SPACES_TO_A_STRING { STRING maxLength { gap 3 } } {
 
     return $STRING
 }
+
+#*EOF*

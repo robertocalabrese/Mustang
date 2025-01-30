@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 ## _CENTER_A_TOPLEVEL_ON_THE_SCREEN
 #
 # Center a toplevel address 'w' on the screen.
@@ -41,3 +45,5 @@ proc ::_CENTER_A_TOPLEVEL_ON_THE_SCREEN { w } {
     # Center the toplevel on the screen.
     _wm geometry $w [string cat $width "x" $height "+" $x "+" "$y"]
 }
+
+#*EOF*

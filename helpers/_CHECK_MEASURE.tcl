@@ -1,3 +1,7 @@
+# Developer:  🆁🅾🅱🅴🆁🆃🅾  🅲🅰🅻🅰🅱🆁🅴🆂🅴
+# City:       🅿🅰🅻🅴🆁🅼🅾, 🆂🅸🅲🅸🅻🆈
+# Country:    🅸🆃🅰🅻🆈
+
 ## _CHECK_MEASURE
 #
 # Validate a measure.
@@ -50,3 +54,5 @@ proc ::_CHECK_MEASURE { measure { fallback INVALID } } {
         return $fallback
     }
 }
+
+#*EOF*
