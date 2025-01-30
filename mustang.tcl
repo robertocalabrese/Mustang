@@ -615,7 +615,8 @@ proc ::Mustang::init {} {
     }
 
     # Remove the following commands from Tk.
-    set REMOVED_CMDS_LIST [list [file join $::MUSTANG_DIR cmds removed "message.tcl"] \
+    set REMOVED_CMDS_LIST [list [file join $::MUSTANG_DIR cmds removed "fontchooser.tcl"] \
+                                [file join $::MUSTANG_DIR cmds removed "message.tcl"] \
                                 [file join $::MUSTANG_DIR cmds removed "tk_bisque.tcl"] \
                                 [file join $::MUSTANG_DIR cmds removed "tk_chooseColor.tcl"] \
                                 [file join $::MUSTANG_DIR cmds removed "tk_chooseDirectory.tcl"] \
