@@ -783,6 +783,258 @@ proc ::Mustang::init {} {
             set filepath      [file join $::CONFIG_DIR [string cat "mustang-" $major_version] [string cat "mustang-" $major_version ".conf"]]
         }
     }
+
+    # Load the Mustang preference file, if any.
+    try {
+        open $filepath r
+    } on ok { channel } {
+        # Read the entire file.
+        set file_content [split [chan read $channel] "\n"]
+        chan close $channel
+
+        # Scan the file content line by line.
+        foreach line $file_content {
+            # Remove any spaces at the beginning and ending of the line string.
+            set line [string trimright [string trimleft $line]]
+
+            # Skip comments.
+            switch -- [string index $line 0] {
+                "#"  { continue }
+            }
+
+            # Skip empty lines and options without value/s.
+            switch -- [llength $line] {
+                0       -
+                1       { continue }
+                default {
+                    # Threat '$line' as option/value.
+                    set option [lindex   $line 0]
+                    set value  [lreplace $line 0 0]
+                    switch -nocase -- $option {
+                        "ACCENT:" {
+                            set value [string tolower $value]
+                            if { $value in $::ACCENTS } {
+                                set ::ACCENT $value
+                            }
+                        }
+                        "BIGGEST_FONT:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lreplace $value end end]]
+                            if { $family ni $::FONT_FAMILIES } {
+                                continue
+                            }
+
+                            set ::FONT(Biggest,family) $family
+                            set ::FONT(Biggest,size)   $size
+
+                            _font configure BiggestFont -family $::FONT(Biggest,family) \
+                                                          -size $::FONT(Biggest,size);
+                        }
+                        "CIE:" {
+                            switch -nocase -- $value {
+                                intent   { set ::CIE intent }
+                                standard { set ::CIE standard }
+                            }
+                        }
+                        "BLUE:"   -
+                        "CYAN:"   -
+                        "GREEN:"  -
+                        "ORANGE:" -
+                        "PURPLE:" -
+                        "RED:"    -
+                        "YELLOW:" -
+                        "CUSTOM:" {
+                            set accent_color  [string tolower [string range $option 0 end-1]]
+                            set color_pattern ""
+                            set valid_pattern true
+
+                            switch -- [llength $value] {
+                                6   {
+                                    foreach color [string tolower $value] {
+                                        # Check if color is a valid hexadecimal color.
+                                        set longform [::_CHECK_HEX $color HEX8]
+                                        switch -- $longform {
+                                            INVALID {
+                                                # Check if color is a known palette colorname.
+                                                set longform [::_CHECK_COLORNAME $color HEX8]
+                                                switch -- $longform {
+                                                    INVALID {
+                                                        set valid_pattern false
+                                                        break
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        append color_pattern $longform " "
+                                    }
+
+                                    switch -- $valid_pattern {
+                                        true { set ::COLOR_PATTERN($accent_color) $color_pattern }
+                                    }
+                                }
+                            }
+                        }
+                        "COLORSCHEME:" {
+                            switch -nocase -- $value {
+                                dark  { set ::COLORSCHEME dark }
+                                light { set ::COLORSCHEME light }
+                            }
+                        }
+                        "DEPTH:" {
+                            switch -- $value {
+                                8   -
+                                12  -
+                                16  { set ::DEPTH $value }
+                            }
+                        }
+                        "DPI:" {
+                            switch -- [string is integer -strict $value] {
+                                1   {
+                                    if { $value >= 72 } {
+                                        set ::DPI $value
+                                    }
+                                }
+                            }
+                        }
+                        "FOCUS_MODEL:" {
+                            switch -nocase -- $value {
+                                explicit { set ::FOCUS_MODEL explicit }
+                                implicit { set ::FOCUS_MODEL implicit }
+                            }
+                        }
+                        "LANGUAGE:" {
+                            set value [string tolower $value]
+                            if { $value in $::LANGUAGES } {
+                                set ::LANGUAGE $value
+                            }
+                        }
+                        "MONOSPACE_FONT:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lreplace $value end end]]
+                            if { $family ni $::FONT_FAMILIES } {
+                                continue
+                            }
+
+                            set ::FONT(Monospace,family) $family
+                            set ::FONT(Monospace,size)   $size
+
+                            _font configure MonospaceFont -family $::FONT(Monospace,family) \
+                                                            -size $::FONT(Monospace,size);
+                        }
+                        "NORMAL_FONT:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lreplace $value end end]]
+                            if { $family ni $::FONT_FAMILIES } {
+                                continue
+                            }
+
+                            set ::FONT(Normal,family) $family
+                            set ::FONT(Normal,size)   $size
+
+                            _font configure NormalFont -family $::FONT(Normal,family) \
+                                                         -size $::FONT(Normal,size);
+                        }
+                        "NOTIFICATIONS:" {
+                            switch -nocase -- $value {
+                                0        -
+                                off      -
+                                no       -
+                                false    -
+                                disabled { set ::NOTIFICATIONS disabled }
+                                1        -
+                                on       -
+                                yes      -
+                                true     -
+                                enabled  { set ::NOTIFICATIONS enabled }
+                            }
+                        }
+                        "POPUPS:" {
+                            switch -nocase -- $value {
+                                0        -
+                                off      -
+                                no       -
+                                false    -
+                                disabled { set ::POPUPS disabled }
+                                1        -
+                                on       -
+                                yes      -
+                                true     -
+                                enabled  { set ::POPUPS enabled }
+                            }
+                        }
+                        "SCALING:" {
+                            set value [string trim $value "%"]
+                            switch -- [string is double -strict $value] {
+                                1   {
+                                    if { ($value >= 25.0) && ($value <= 300.0) } {
+                                        set ::SCALING $value
+                                    }
+                                }
+                            }
+                        }
+                        "SCROLLBAR_ACTION:" {
+                            switch -nocase -- $value {
+                                jump { set ::SCROLLBAR_ACTION jump }
+                                page { set ::SCROLLBAR_ACTION page }
+                            }
+                        }
+                        "SCROLLSPEED:" {
+                            switch -- [string is integer -strict $value] {
+                                1   {
+                                    if { ($value >= 1) && ($value <= 100) } {
+                                        set ::SCROLLSPEED $value
+                                    }
+                                }
+                            }
+                        }
+                        "SMALLEST_FONT:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lreplace $value end end]]
+                            if { $family ni $::FONT_FAMILIES } {
+                                continue
+                            }
+
+                            set ::FONT(Smallest,family) $family
+                            set ::FONT(Smallest,size)   $size
+
+                            _font configure SmallestFont -family $::FONT(Smallest,family) \
+                                                           -size $::FONT(Smallest,size);
+                        }
+                        "THEME:" {
+                            set value [string tolower $value]
+                            if { $value in $::THEMES } {
+                                set ::THEME $value
+                            }
+                        }
+                        "UNION:" {
+                            switch -nocase -- $value {
+                                "+"     -
+                                "-"     { set ::UNION $value }
+                                " "     -
+                                "space" { set ::UNION " " }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #*EOF*
