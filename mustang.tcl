@@ -787,6 +787,212 @@ proc ::Mustang::init {} {
     # Load the Mustang preference file, if any.
     try {
         open $filepath r
+    } on error { errortext errorcode } {
+        # Save the Mustang preference file.
+        try {
+            open $filepath w
+        } on error { errortext errorcode } {
+            chan puts "Unable to read or write '$filepath'."
+        } on ok { channel } {
+            chan puts $channel "# [string trimright [string cat "Mustang " $major_version]]"
+            chan puts $channel "#"
+            chan puts $channel "# [clock format [clock seconds] -format [list %d %B %Y - %H:%M:%S]]"
+            chan puts $channel ""
+
+            chan puts $channel "# ACCENT"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the accent color to use."
+            chan puts $channel "#"
+            chan puts $channel "# \['blue', 'cyan', 'green', 'orange', 'purple', 'red', 'yellow' or 'custom'\]"
+            chan puts $channel "ACCENT: $::ACCENT"
+            chan puts $channel ""
+
+            chan puts $channel "# BIGGEST_FONT"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the biggest font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "# If the size is a positive number, it is interpreted as a size in points."
+            chan puts $channel "# If the size is a negative number, its absolute value is interpreted as a size in pixels."
+            chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
+            chan puts $channel "BIGGEST_FONT: $::FONT(Biggest,family) $::FONT(Biggest,size)"
+            chan puts $channel ""
+
+            chan puts $channel "# CIE"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the CIE standard to use."
+            chan puts $channel "# This value is used in color model conversions like XYZ-->Lab or Lab-->XYZ."
+            chan puts $channel "#"
+            chan puts $channel "# \['standard' or 'intent'\]"
+            chan puts $channel "CIE: $::CIE"
+            chan puts $channel ""
+
+            chan puts $channel "# COLOR_PATTERN"
+            chan puts $channel "#"
+            chan puts $channel "# Each color pattern is a list that specifies the theme colors to use for the relative accent color."
+            chan puts $channel "#"
+            chan puts $channel "# The first  hexadecimal will be used as 'Press' color."
+            chan puts $channel "# The second hexadecimal will be used as 'Hover' color."
+            chan puts $channel "# The third  hexadecimal will be used as 'Focus' color."
+            chan puts $channel "# The fourth hexadecimal will be used as 'Selection' color."
+            chan puts $channel "# The fifth  hexadecimal will be used as 'Invalid' color."
+            chan puts $channel "# The sixth  hexadecimal will be used as 'Secondary' color."
+            chan puts $channel "#"
+            chan puts $channel "# The color displayed as the accent color in the theme chooser window, will be the 'hover' one."
+            chan puts $channel "# An exception is made for the custom accent color that will have an image of a colorwheel."
+            chan puts $channel "BLUE:   $::COLOR_PATTERN(blue)"
+            chan puts $channel "CYAN:   $::COLOR_PATTERN(cyan)"
+            chan puts $channel "GREEN:  $::COLOR_PATTERN(green)"
+            chan puts $channel "ORANGE: $::COLOR_PATTERN(orange)"
+            chan puts $channel "PURPLE: $::COLOR_PATTERN(purple)"
+            chan puts $channel "RED:    $::COLOR_PATTERN(red)"
+            chan puts $channel "YELLOW: $::COLOR_PATTERN(yellow)"
+            chan puts $channel "CUSTOM: $::COLOR_PATTERN(custom)"
+            chan puts $channel ""
+
+            chan puts $channel "# COLORSCHEME"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the colorscheme to use."
+            chan puts $channel "#"
+            chan puts $channel "# \['light' or 'dark'\]"
+            chan puts $channel "COLORSCHEME: $::COLORSCHEME"
+            chan puts $channel ""
+
+            chan puts $channel "# DEPTH"
+            chan puts $channel "#"
+            chan puts $channel "# It's an integer that specifies the color depth to use."
+            chan puts $channel "#"
+            chan puts $channel "# \['8', '12' or '16'\]"
+            chan puts $channel "DEPTH: $::DEPTH"
+            chan puts $channel ""
+
+            chan puts $channel "# DPI"
+            chan puts $channel "#"
+            chan puts $channel "# It's an integer that specifies the number of pixels per inch of the screen"
+            chan puts $channel "# where the application is initially placed."
+            chan puts $channel "DPI: $::DPI"
+            chan puts $channel ""
+
+            chan puts $channel "# ::FOCUS_MODEL"
+            chan puts $channel "#"
+            chan puts $channel "# Change the focus model for the application."
+            chan puts $channel "#"
+            chan puts $channel "# Implicit method:"
+            chan puts $channel "#    Whenever the mouse enters a window, Mustang will automatically give it the input focus."
+            chan puts $channel "#    The focus command may be used to move the focus to a window other than the one under the mouse,"
+            chan puts $channel "#    but as soon as the mouse moves into a new window the focus will jump to that window."
+            chan puts $channel "#"
+            chan puts $channel "# Explicit method."
+            chan puts $channel "#    The 'User' has to click on a window to give it the focus."
+            chan puts $channel "#"
+            chan puts $channel "# \['implicit' or 'explicit'\]"
+            chan puts $channel "FOCUS_MODEL: $::FOCUS_MODEL"
+            chan puts $channel ""
+
+            chan puts $channel "# LANGUAGE"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the language to use."
+            chan puts $channel "# It must follow the 'ISO 639-1' specifications."
+            chan puts $channel "LANGUAGE: $::LANGUAGE"
+            chan puts $channel ""
+
+            chan puts $channel "# MONOSPACE_FONT"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the monospace font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another monospace family will be chosen."
+            chan puts $channel "# If the size is a positive number, it is interpreted as a size in points."
+            chan puts $channel "# If the size is a negative number, its absolute value is interpreted as a size in pixels."
+            chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
+            chan puts $channel "MONOSPACE_FONT: $::FONT(Monospace,family) $::FONT(Monospace,size)"
+            chan puts $channel ""
+
+            chan puts $channel "# NORMAL_FONT"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the general font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "# If the size is a positive number, it is interpreted as a size in points."
+            chan puts $channel "# If the size is a negative number, its absolute value is interpreted as a size in pixels."
+            chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
+            chan puts $channel "NORMAL_FONT: $::FONT(Normal,family) $::FONT(Normal,size)"
+            chan puts $channel ""
+
+            chan puts $channel "# NOTIFICATIONS"
+            chan puts $channel "#"
+            chan puts $channel "# It's a boolean that specifies if notifications should be displayed or not."
+            chan puts $channel "#"
+            chan puts $channel "# \['enabled' or 'disabled'\]"
+            chan puts $channel "NOTIFICATIONS: $::NOTIFICATIONS"
+            chan puts $channel ""
+
+            chan puts $channel "# POPUPS"
+            chan puts $channel "#"
+            chan puts $channel "# It's a boolean that specifies if popups should be displayed or not."
+            chan puts $channel "#"
+            chan puts $channel "# \['enabled' or 'disabled'\]"
+            chan puts $channel "POPUPS: $::POPUPS"
+            chan puts $channel ""
+
+            chan puts $channel "# SCALING"
+            chan puts $channel "#"
+            chan puts $channel "# It's a percentage that specifies the scaling factor of the screen."
+            chan puts $channel "# It can be provided with or without the '%' symbol."
+            chan puts $channel "#"
+            chan puts $channel "# \[25.0%,300.0%\]"
+            chan puts $channel "SCALING: $::SCALING"
+            chan puts $channel ""
+
+            chan puts $channel "# SCROLLBAR_ACTION"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies how each scrollbar reacts when a click happens on its trough."
+            chan puts $channel "#    jump --> The thumb will jump to the selected location."
+            chan puts $channel "#    page --> The thumb will scroll one page down, up, left or right."
+            chan puts $channel "#"
+            chan puts $channel "# \['jump' or 'page'\]"
+            chan puts $channel "SCROLLBAR_ACTION: $::SCROLLBAR_ACTION"
+            chan puts $channel ""
+
+            chan puts $channel "# SCROLLSPEED"
+            chan puts $channel "#"
+            chan puts $channel "# It's an integer that specifies how big is a scroll unit."
+            chan puts $channel "# A scroll unit rappresents the distance to travel (in pixels) for a single tick of the mouse wheel."
+            chan puts $channel "#"
+            chan puts $channel "# \[1,100\]"
+            chan puts $channel "SCROLLSPEED: $::SCROLLSPEED"
+            chan puts $channel ""
+
+            chan puts $channel "# SMALLEST_FONT"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the smallest font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "# If the size is a positive number, it is interpreted as a size in points."
+            chan puts $channel "# If the size is a negative number, its absolute value is interpreted as a size in pixels."
+            chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
+            chan puts $channel "SMALLEST_FONT: $::FONT(Smallest,family) $::FONT(Smallest,size)"
+            chan puts $channel ""
+
+            chan puts $channel "# THEME"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the theme name to use."
+            chan puts $channel "THEME: $::THEME"
+            chan puts $channel ""
+
+            switch -- $::UNION {
+                " " { set union space }
+                "-" { set union "-"   }
+                "+" { set union "+"   }
+            }
+
+            chan puts $channel "# UNION"
+            chan puts $channel "#"
+            chan puts $channel "# It's a character that specifies the union symbol to use inside a shortcut that links two"
+            chan puts $channel "# or more keys together (like 'Ctrl+C', 'Ctrl-C' or 'Ctrl C' for copy)."
+            chan puts $channel "# It's used inside menus popups and/or contextual menus."
+            chan puts $channel "#"
+            chan puts $channel "# \['+', '-' or 'space'\]"
+            chan puts $channel "UNION: $union"
+
+            chan flush $channel
+            chan close $channel
+        }
     } on ok { channel } {
         # Read the entire file.
         set file_content [split [chan read $channel] "\n"]
