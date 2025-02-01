@@ -769,6 +769,20 @@ proc ::Mustang::init {} {
 
     # Load the default palette file.
     ::_LOAD_PALETTE [file join $::MUSTANG_DIR palettes "Classic.txt"]
+
+    # Set the Mustang major version and preference filepath.
+    set major_version [lindex [split $::MUSTANG_VERSION "."] 0]
+    switch -- $major_version {
+        0   -
+        1   {
+            set major_version ""
+            set filepath      [file join $::CONFIG_DIR mustang "mustang.conf"]
+        }
+        default {
+            set major_version [string cat $major_version ".0"]
+            set filepath      [file join $::CONFIG_DIR [string cat "mustang-" $major_version] [string cat "mustang-" $major_version ".conf"]]
+        }
+    }
 }
 
 #*EOF*
