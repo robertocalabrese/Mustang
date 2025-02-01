@@ -1286,6 +1286,9 @@ proc ::Mustang::init {} {
     # Unset the no longer needed '::path' variable.
     # It was defined in the global namespace in order to be used with the apply command.
     unset -nocomplain -- ::path
+
+    # From this moment on, Mustang is officially up and running.
+    set ::TEMP(init,state) done
 }
 
 #*EOF*
