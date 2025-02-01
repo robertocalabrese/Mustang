@@ -1282,6 +1282,10 @@ proc ::Mustang::init {} {
         set ::STYLES($theme,dev)     $theme_stylenames
         set ::STYLES($theme,mustang) $theme_stylenames
     }
+
+    # Unset the no longer needed '::path' variable.
+    # It was defined in the global namespace in order to be used with the apply command.
+    unset -nocomplain -- ::path
 }
 
 #*EOF*
