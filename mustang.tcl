@@ -1250,6 +1250,38 @@ proc ::Mustang::init {} {
     foreach svg $::SVGS {
         $::SVG(icon,$svg) configure -format [list svg -scale $scaleFactor]
     }
+
+    # Initialize all the style theme lists.
+    set theme_stylenames [list Button \
+                               Canvas \
+                               Checkbutton \
+                               Combobox \
+                               Contextmenu \
+                               Entry \
+                               Frame \
+                               Label \
+                               Labelframe \
+                               Listbox \
+                               Menu \
+                               Menubutton \
+                               Notebook \
+                               Palette \
+                               Panedwindow \
+                               Progressbar \
+                               Radiobutton \
+                               Scale \
+                               Scrollbar \
+                               Separator \
+                               Sizegrip \
+                               Spinbox \
+                               Text \
+                               Toplevel \
+                               Treeview];
+
+    foreach theme $::THEMES {
+        set ::STYLES($theme,dev)     $theme_stylenames
+        set ::STYLES($theme,mustang) $theme_stylenames
+    }
 }
 
 #*EOF*
