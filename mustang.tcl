@@ -121,11 +121,11 @@ set ::FONT(Biggest,weight) $::FONT(Normal,weight)
 set ::FONT(Biggest,slant)  $::FONT(Normal,slant)
 
 # Set a list with all the SVG icon names defined by Mustang.
-set ::SVG(list) [list error \
-                      info \
-                      question \
-                      reboot \
-                      warning];
+set ::SVGS [list error \
+                 info \
+                 question \
+                 reboot \
+                 warning];
 
 # Note: The following images were taken from the 'Vimix Icon Theme' project and
 #       translated into 'base64' format.
@@ -1240,6 +1240,15 @@ proc ::Mustang::init {} {
                 }
             }
         }
+    }
+
+    # Set the tk scaling.
+    set scaleFactor [expr { $::SCALING/100.0 }]
+    _tk scaling     [expr { ($::DPI/72.0)*$scaleFactor }]
+
+    # Adjust the scale of every SVG images defined by Mustang.
+    foreach svg $::SVGS {
+        $::SVG(icon,$svg) configure -format [list svg -scale $scaleFactor]
     }
 }
 
