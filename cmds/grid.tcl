@@ -397,7 +397,52 @@ proc ::ms::grid::Command { args } {
             }
         }
         content -
-        slaves  {}
+        slaves  {
+            switch -- [llength $args] {
+                1   -
+                3   {
+                    set container [lindex  $args 0]
+                    set args      [lremove $args 0]
+
+                    # Get the 'container' real address.
+                    set result [::ms::Check_Pathname $container invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid $action $w {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check the initial address type provided (short or real).
+                        switch -- $type {
+                            short {
+                                set shorts_result [list ]
+                                foreach w $result {
+                                    if { $w in $::ms::addr(reals) } {
+                                        # 'w' is the real address of a widget created by mustang.
+                                        lappend shorts_result $::ms::addr($w,short)
+                                    } else {
+                                        # 'w' is the real address of a widget not created by mustang.
+                                        lappend shorts_result [::ms::Get_Short $w]
+                                    }
+                                }
+
+                                return $shorts_result
+                            }
+                            default { return $result }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         forget -
         remove {}
         info {}
