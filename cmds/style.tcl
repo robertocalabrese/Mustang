@@ -338,7 +338,16 @@ proc ::ms::style::Command { args } {
             set args       [lremove $args 0]
             switch -- $subcommand {
                 create   -
-                settings {}
+                settings {
+                    # Execute the command.
+                    try {
+                        _ttk_style theme $subcommand {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
                 names {}
                 styles {}
                 use {}
