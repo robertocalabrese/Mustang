@@ -466,4 +466,108 @@ proc ::ms::style::Command { args } {
     }
 }
 
+####################
+##                ##
+##     CHECKS     ##
+##                ##
+####################
+
+# Check_Layout
+#
+# Check the style layout spec provided.
+#
+# Where:
+#
+# layout_spec   Should be the style layout spec to validate.
+#
+# Return the word 'OK' if the style layout spec is validated, or the word 'invalid' if its not.
+proc ::ms::style::Check_Layout { layout_spec } {
+    set index 0
+    while { $index < [llength $layout_spec] } {
+        set layout_item [lindex $layout_spec $index]
+        switch -- $layout_item {
+            -border {
+                set value [lindex $layout_spec $index+1]
+                switch -- [string is integer -strict $value] {
+                    0   { return invalid }
+                }
+
+                incr index +2
+            }
+            -children {
+                set value [lindex $layout_spec $index+1]
+                switch -- $value {
+                    ""      { return invalid }
+                    default { tailcall ::ms::style::Check_Layout $value }
+                }
+
+                incr index +2
+            }
+            -expand {
+                switch -- [lindex $layout_spec $index+1] {
+                    0        -
+                    no       -
+                    off      -
+                    false    -
+                    disabled -
+                    1        -
+                    yes      -
+                    on       -
+                    true     -
+                    enabled  {}
+                    default  { return invalid }
+                }
+
+                incr index +2
+            }
+            -side {
+                switch -- [lindex $layout_spec $index+1] {
+                    bottom  -
+                    left    -
+                    right   -
+                    top     {}
+                    default { return invalid }
+                }
+
+                incr index +2
+            }
+            -sticky {
+                set value  [lindex $layout_spec $index+1]
+                set length [string length $value]
+                switch -- $length {
+                    0   {}
+                    1   -
+                    2   -
+                    4   {
+                        set char_index 0
+                        while { $char_index < $length } {
+                            set char [string index $value $char_index]
+                            switch -- $char {
+                                n       -
+                                s       -
+                                e       -
+                                w       {}
+                                default { return invalid }
+                            }
+
+                            incr char_index
+                        }
+                    }
+                    default { return invalid }
+                }
+
+                incr index +2
+            }
+            default {
+                switch -- [string index $layout_item 0] {
+                    "-"     { return invalid }
+                    default { incr index }
+                }
+            }
+        }
+    }
+
+    return "OK"
+}
+
 #*EOF*
