@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="18"
+   height="18"
+   viewBox="0 0 4.7624998 4.7625"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="scale_thumb_hover.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:ns="https://creativecommons.org/ns#">
+  <title
+     id="title1">Scale Thumb - hover state</title>
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient841">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="0"
+         id="stop837" />
+      <stop
+         id="stop845"
+         offset="0.45299172"
+         style="stop-color:#007aff;stop-opacity:1;:" />
+      <stop
+         style="stop-color:#1f1c1b;stop-opacity:1"
+         offset="1"
+         id="stop839" />
+    </linearGradient>
+    <color-profile
+       name="sRGB"
+       xlink:href="/usr/share/color/icc/colord/sRGB.icc"
+       id="color-profile2" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter830"
+       x="-0.0091199969"
+       width="1.01824"
+       y="-0.0091212767"
+       height="1.0182426">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.052873416"
+         id="feGaussianBlur832" />
+    </filter>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient841"
+       id="radialGradient869"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(3.7861321,4.3554835,-3.6747223,3.1941263,1028.0263,-942.16378)"
+       cx="2.1009476"
+       cy="294.15451"
+       fx="2.1009476"
+       fy="294.15451"
+       r="2.9222286" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="63.356768"
+     inkscape:cx="7.2367959"
+     inkscape:cy="9.0676974"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     showborder="true"
+     inkscape:showpageshadow="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="2542"
+     inkscape:window-height="1380"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:snap-to-guides="false"
+     inkscape:deskcolor="#505050">
+    <sodipodi:guide
+       position="0.0041760863,6.1597273"
+       orientation="1,0"
+       id="guide817"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.53453904,-0.0041760863"
+       orientation="0,1"
+       id="guide823"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="2.6392865,6.389412"
+       orientation="1,0"
+       id="guide827"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-3.4786799,2.6392865"
+       orientation="0,1"
+       id="guide829"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="5.2911013,5.9383947"
+       orientation="1,0"
+       id="guide832"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.48024992,5.2869252"
+       orientation="0,1"
+       id="guide834"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0.79763248,5.8298165"
+       orientation="1,0"
+       id="guide894"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="4.4976449,5.8256404"
+       orientation="1,0"
+       id="guide896"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1.3112911,4.4976449"
+       orientation="0,1"
+       id="guide898"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.6916603,0.79345639"
+       orientation="0,1"
+       id="guide900"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <ns:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Scale Thumb - hover state</dc:title>
+        <dc:date>12/10/2025</dc:date>
+        <dc:creator>
+          <ns:Agent>
+            <dc:title>Roberto Calabrese</dc:title>
+          </ns:Agent>
+        </dc:creator>
+        <dc:description>This image was created for the Mustang toolkit Halo theme.</dc:description>
+        <ns:license
+           rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/" />
+      </ns:Work>
+      <ns:License
+         rdf:about="https://creativecommons.org/publicdomain/zero/1.0/">
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Reproduction" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Distribution" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#DerivativeWorks" />
+      </ns:License>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Scale Thumb - hover state</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Livello 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-293.29084)">
+    <path
+       style="fill:url(#radialGradient869);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.01635;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter830)"
+       d="m -40.625,3.3027344 a 6.9562408,6.9562408 0 0 0 -6.957031,6.9570316 6.9562408,6.9562408 0 0 0 6.957031,6.955078 6.9562408,6.9562408 0 0 0 6.957031,-6.955078 A 6.9562408,6.9562408 0 0 0 -40.625,3.3027344 Z"
+       transform="matrix(0.33593545,0,0,0.33593545,16.02456,292.22452)"
+       id="ellipse865"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

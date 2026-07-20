@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="18"
+   height="18"
+   viewBox="0 0 4.7624999 4.7625002"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="check_on_pressed.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:ns="https://creativecommons.org/ns#">
+  <title
+     id="title1">Checkbutton On - pressed state</title>
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="63.356767"
+     inkscape:cx="6.3450207"
+     inkscape:cy="9.3833702"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="2542"
+     inkscape:window-height="1380"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050">
+    <sodipodi:guide
+       position="0,2.6225823"
+       orientation="1,0"
+       id="guide815"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="4.7607386,4.5954566"
+       orientation="1,0"
+       id="guide817"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-3.9505776,3.7041888"
+       orientation="0,1"
+       id="guide819"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.9255213,-0.0024145881"
+       orientation="0,1"
+       id="guide821"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0.338263,4.3574197"
+       orientation="1,0"
+       id="guide823"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="4.4224755,2.9417264"
+       orientation="1,0"
+       id="guide825"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="2.0880432,4.4158849"
+       orientation="0,1"
+       id="guide827"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="2.3720171,0.33584841"
+       orientation="0,1"
+       id="guide829"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1.060726,4.2070806"
+       orientation="1,0"
+       id="guide953"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.7083648,4.0442132"
+       orientation="1,0"
+       id="guide955"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.2656996,3.7017741"
+       orientation="0,1"
+       id="guide957"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.4703278,1.0541353"
+       orientation="0,1"
+       id="guide959"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <ns:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Checkbutton On - pressed state</dc:title>
+        <dc:date>12/10/2025</dc:date>
+        <dc:creator>
+          <ns:Agent>
+            <dc:title>Roberto Calabrese</dc:title>
+          </ns:Agent>
+        </dc:creator>
+        <dc:description>This image was created for the Mustang toolkit Halo theme.</dc:description>
+        <ns:license
+           rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/" />
+      </ns:Work>
+      <ns:License
+         rdf:about="https://creativecommons.org/publicdomain/zero/1.0/">
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Reproduction" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Distribution" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#DerivativeWorks" />
+      </ns:License>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Checkbutton On - pressed state</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-293.29583)">
+    <rect
+       y="294.35654"
+       x="1.0607259"
+       height="2.6434627"
+       width="2.6434627"
+       id="rect826"
+       style="opacity:1;fill:#0169d9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.660676;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+    <path
+       id="path834"
+       d="m 0.6774807,293.29893 c -0.37059233,0 -0.67954776,0.30896 -0.67954776,0.67955 v 3.39641 c 0,0.37059 0.30895543,0.67955 0.67954776,0.67955 h 3.4017204 c 0.3705924,0 0.6795478,-0.30896 0.6795478,-0.67955 v -3.39641 c 0,-0.37059 -0.3089554,-0.67955 -0.6795478,-0.67955 z m 6.6256e-4,0.33911 H 4.0798647 c 0.1882347,0 0.3397739,0.15154 0.3397739,0.33977 v 3.39642 c 0,0.18823 -0.1515392,0.33977 -0.3397739,0.33977 H 0.67814431 c -0.18823473,0 -0.33977387,-0.15154 -0.33977387,-0.33977 v -3.39642 c 0,-0.18823 0.15153914,-0.33977 0.33977387,-0.33977 z"
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#0169d9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.679548;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+  </g>
+</svg>

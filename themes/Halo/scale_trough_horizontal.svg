@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="7"
+   height="2"
+   viewBox="0 0 1.8520833 0.52916669"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="scale_trough_horizontal.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:ns="https://creativecommons.org/ns#">
+  <title
+     id="title1">Scale Trough Horizontal - normal state</title>
+  <defs
+     id="defs2">
+    <color-profile
+       name="sRGB"
+       xlink:href="/usr/share/color/icc/colord/sRGB.icc"
+       id="color-profile2" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="44.8"
+     inkscape:cx="-0.9375"
+     inkscape:cy="4.0066964"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="2542"
+     inkscape:window-height="1380"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050">
+    <sodipodi:guide
+       position="-0.0041760864,8.3605251"
+       orientation="1,0"
+       id="guide817"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0.52618689,8.0180861"
+       orientation="1,0"
+       id="guide819"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-4.8400841,7.9429165"
+       orientation="0,1"
+       id="guide821"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-2.2509106,0"
+       orientation="0,1"
+       id="guide823"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <ns:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Scale Trough Horizontal - normal state</dc:title>
+        <dc:date>12/10/2025</dc:date>
+        <dc:creator>
+          <ns:Agent>
+            <dc:title>Roberto Calabrese</dc:title>
+          </ns:Agent>
+        </dc:creator>
+        <dc:description>This image was created for the Mustang toolkit Halo theme.</dc:description>
+        <ns:license
+           rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/" />
+      </ns:Work>
+      <ns:License
+         rdf:about="https://creativecommons.org/publicdomain/zero/1.0/">
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Reproduction" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Distribution" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#DerivativeWorks" />
+      </ns:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-296.47082)">
+    <rect
+       transform="rotate(90)"
+       y="-1.8556863"
+       x="296.46964"
+       height="1.8598624"
+       width="0.53036296"
+       id="rect820"
+       style="fill:#a4a6a8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.2;paint-order:stroke fill markers" />
+  </g>
+</svg>

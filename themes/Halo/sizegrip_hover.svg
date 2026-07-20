@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15"
+   height="15"
+   viewBox="0 0 3.9687499 3.9687501"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="sizegrip_hover.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:ns="https://creativecommons.org/ns#">
+  <title
+     id="title1">Sizegrip - hover state</title>
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="63.356768"
+     inkscape:cx="8.9019693"
+     inkscape:cy="7.236796"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="2542"
+     inkscape:window-height="1380"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050">
+    <sodipodi:guide
+       position="0,2.9529391"
+       orientation="1,0"
+       id="guide815"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.9687499,2.9736096"
+       orientation="1,0"
+       id="guide817"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-2.2589983,3.9687501"
+       orientation="0,1"
+       id="guide819"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-2.1349748,0"
+       orientation="0,1"
+       id="guide821"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-1.3170108,0.79434059"
+       orientation="0,1"
+       id="guide823"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-2.4745628,1.5886812"
+       orientation="0,1"
+       id="guide825"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-2.1467866,2.3830218"
+       orientation="0,1"
+       id="guide827"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-2.0434337,3.1773624"
+       orientation="0,1"
+       id="guide829"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0.79434057,3.8329149"
+       orientation="1,0"
+       id="guide831"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1.5886811,3.6114445"
+       orientation="1,0"
+       id="guide833"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="2.3830217,3.6114445"
+       orientation="1,0"
+       id="guide835"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.1773623,3.635068"
+       orientation="1,0"
+       id="guide837"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <ns:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Sizegrip - hover state</dc:title>
+        <dc:date>12/10/2025</dc:date>
+        <dc:creator>
+          <ns:Agent>
+            <dc:title>Roberto Calabrese</dc:title>
+          </ns:Agent>
+        </dc:creator>
+        <dc:description>This image was created for the Mustang toolkit Halo theme.</dc:description>
+        <ns:license
+           rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/" />
+      </ns:Work>
+      <ns:License
+         rdf:about="https://creativecommons.org/publicdomain/zero/1.0/">
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Reproduction" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Distribution" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#DerivativeWorks" />
+      </ns:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-293.03123)">
+    <path
+       id="path828"
+       transform="matrix(0.26458333,0,0,0.26458333,0,293.03123)"
+       d="M 12.009766 -0.01171875 L 12.009766 2.9902344 L 15.011719 2.9902344 L 15.011719 -0.01171875 L 12.009766 -0.01171875 z M 6.0039062 5.9941406 L 6.0039062 8.9960938 L 9.0058594 8.9960938 L 9.0058594 5.9941406 L 6.0039062 5.9941406 z M 12.009766 5.9941406 L 12.009766 8.9960938 L 15.011719 8.9960938 L 15.011719 5.9941406 L 12.009766 5.9941406 z M 0 11.998047 L 0 15 L 3.0019531 15 L 3.0019531 11.998047 L 0 11.998047 z M 6.0039062 11.998047 L 6.0039062 15 L 9.0058594 15 L 9.0058594 11.998047 L 6.0039062 11.998047 z M 12.009766 11.998047 L 12.009766 15 L 15.011719 15 L 15.011719 11.998047 L 12.009766 11.998047 z "
+       style="opacity:0.98799995;fill:#007aff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.87;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.30196078;paint-order:stroke fill markers" />
+  </g>
+</svg>

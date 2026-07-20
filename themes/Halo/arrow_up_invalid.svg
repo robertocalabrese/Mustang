@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="9.5"
+   height="6"
+   viewBox="0 0 2.5135415 1.5874999"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   sodipodi:docname="arrow_up_invalid.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:ns="https://creativecommons.org/ns#">
+  <title
+     id="title1">Arrow Down - normal state</title>
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="89.6"
+     inkscape:cx="8.4375"
+     inkscape:cy="3.8058036"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="2542"
+     inkscape:window-height="1383"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050">
+    <sodipodi:guide
+       position="0,2.7125696"
+       orientation="1,0"
+       id="guide815"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1.2609049,2.4916898"
+       orientation="1,0"
+       id="guide817"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1.8957867,2.1137136"
+       orientation="0,1"
+       id="guide819"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.18898809,-0.00059058777"
+       orientation="0,1"
+       id="guide821"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.42227025,1.4280412"
+       orientation="0,1"
+       id="guide853"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="3.7029853,-0.0035435266"
+       orientation="1,0"
+       id="guide1"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="2.5159846,2.160084"
+       orientation="1,0"
+       id="guide2"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.43703494,0.15827752"
+       orientation="0,-1"
+       id="guide3"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.48132903,0.5309384"
+       orientation="0,-1"
+       id="guide4"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <ns:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:date>12/10/2025</dc:date>
+        <dc:creator>
+          <ns:Agent>
+            <dc:title>Roberto Calabrese</dc:title>
+          </ns:Agent>
+        </dc:creator>
+        <dc:description>This image was created for the Mustang toolkit Halo theme.</dc:description>
+        <dc:title>Arrow Down - normal state</dc:title>
+        <ns:license
+           rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/" />
+      </ns:Work>
+      <ns:License
+         rdf:about="https://creativecommons.org/publicdomain/zero/1.0/">
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Reproduction" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#Distribution" />
+        <ns:permits
+           rdf:resource="https://creativecommons.org/ns#DerivativeWorks" />
+      </ns:License>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Arrow Down - normal state</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-295.41249)">
+    <path
+       style="opacity:0.988;fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.419212;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.301961;paint-order:stroke fill markers"
+       d="m 2.5129063,296.84227 -2.51080743,-0.003 1.25699443,-1.28017 z"
+       id="rect831"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc"
+       inkscape:transform-center-y="-0.037549311"
+       inkscape:transform-center-x="0.00074977004" />
+  </g>
+</svg>
