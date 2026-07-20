@@ -180,6 +180,7 @@
 #      If *container* has no content then an empty string is returned.
 #
 #   **pack** **forget** *window* ?*window*? ... ?*window*?
+#   **pack** **remove** *window* ?*window*? ... ?*window*?
 #      Removes each of the *window*s from the packing order for its container and unmaps their windows.
 #      The content will no longer be managed by the packer.
 #
