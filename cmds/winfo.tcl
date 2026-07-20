@@ -450,7 +450,30 @@ proc ::ms::winfo::Command { args } {
         vrooty         -
         width          -
         x              -
-        y              {}
+        y              {
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         default { ::ms::Error "Invalid option, '$action'." $caller_info }
     }
 }
