@@ -444,7 +444,38 @@ proc ::ms::grid::Command { args } {
             }
         }
         forget -
-        remove {}
+        remove {
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    foreach window $args {
+                        # Get the 'window' real address.
+                        set result [::ms::Check_Pathname $window invalid]
+                        switch -- $result {
+                            invalid { break }
+                            default { set w [lindex $result 0] }
+                        }
+
+                        # Note: The 'grid info' command returns an option/value list that
+                        #       will always contain the '-in' option at index '0'.
+
+                        set container [lindex [_grid info $w] 1]
+
+                        switch -- $container {
+                            ""  { break }
+                        }
+
+                        # Forget/Remove the real address.
+                        _grid $action $w
+
+                        # Force the propagation inside any scrollable widget ancestor, if any.
+                        ::ms::Scrollable_Widgets_Propagation_Mechanism $container
+                    }
+
+                    return ""
+                }
+            }
+        }
         info {}
         location {}
         size {}
