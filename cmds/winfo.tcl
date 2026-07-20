@@ -209,7 +209,21 @@ proc ::ms::winfo::Command { args } {
                 return $result
             }
         }
-        exists {}
+        exists {
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { return 0 }
+                        default { return 1 }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         interps {}
         parent {}
         pathname {}
