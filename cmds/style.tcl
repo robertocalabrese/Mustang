@@ -167,7 +167,22 @@ proc ::ms::style::Command { args } {
             set subcommand [lindex  $args 0]
             set args       [lremove $args 0]
             switch -- $subcommand {
-                create {}
+                create {
+                    switch -- [llength $args] {
+                        0       -
+                        1       { ::ms::Error "Invalid number of arguments." $caller_info }
+                        default {
+                            # Execute the command.
+                            try {
+                                _ttk_style element create {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
                 names {}
                 options {}
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
