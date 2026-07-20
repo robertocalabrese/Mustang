@@ -355,7 +355,111 @@ proc ::ms::style::Command { args } {
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
-                use {}
+                use {
+                    switch -- [llength $args] {
+                        0   { return $::ms::theme }
+                        1   {
+                            if { $args in $::ms::themes } {
+                                # Change the current theme.
+                                set ::ms::theme $args
+
+                                # Disable the user to iteract with the application while mustang is updating the theme.
+                                foreach w $::ms::addr(toplevel) {
+                                    _tk busy hold $w
+                                    _tk busy configure $w -cursor watch
+                                }
+
+                                #########################
+                                ##                     ##
+                                ##     UPDATE THEME    ##
+                                ##                     ##
+                                #########################
+
+                                # Note: The command could be either a refresh of the accent color and/or colorscheme, or a theme change.
+
+                                # Automatically load all the current theme svg images (if any) and re-color them relative to
+                                # the current accent color and colorscheme.
+                                ::ms::Load_SVG_Images
+
+                                # Refresh/Load the current theme.
+                                _ttk_style theme use $::ms::theme
+
+                                # Update the theme accent color and colorscheme in every style.
+                                foreach style $::ms::style($::ms::theme) {
+                                    ##############################################
+                                    ##                                          ##
+                                    ##     UPDATE EVERY THEME STYLE OPTIONS     ##
+                                    ##                                          ##
+                                    ##############################################
+
+                                    # Re-translate all the theme style options.
+                                    set style_options [list ]
+                                    foreach { option value } $::ms::styleopt($::ms::theme,$style) {
+                                        # Check and eventually re-translate the option value.
+                                        set value [::ms::style::Check_Option $option $value]
+
+                                        # Register the current option and its value into the 'styleopt' array for the current theme.
+                                        lappend style_options $option $value
+
+                                        # Remove the '-' from 'option'.
+                                        set option [string trimleft $option "-"]
+
+                                        # Register the option value in the 'styleopt' array for the current theme.
+                                        set ::ms::styleopt($::ms::theme,$style,$option) $value
+                                    }
+
+                                    # Update the theme style options.
+                                    _ttk_style configure $style {*}$style_options
+
+                                    ######################################################
+                                    ##                                                  ##
+                                    ##     UPDATE/CREATE EVERY THEME STYLE MAPPINGS     ##
+                                    ##                                                  ##
+                                    ######################################################
+
+                                    # Note: Not every style has a mapping state.
+
+                                    # If exists a 'stylemap' array for the current theme and style, re-translate it.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$style)] {
+                                        1   {
+                                            # Check and eventually re-translate the mapping options values.
+                                            set mapping [::ms::style::Check_Mapping $style {*}$::ms::stylemap($::ms::theme,$style)]
+
+                                            # Update the theme mapping states.
+                                            _ttk_style map $style {*}$mapping
+                                        }
+                                    }
+                                }
+
+                                ########################################
+                                ##                                    ##
+                                ##     UPDATE ALL WIDGETS CREATED     ##
+                                ##                                    ##
+                                ########################################
+
+                                # Refresh all widgets option (for each classtype) that are not managed directly by Tk.
+                                foreach classtype $::ms::data(classtypes) {
+                                    foreach style $::ms::style($classtype) {
+                                        [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
+                                    }
+                                }
+
+                                # Enable the user to iteract again with the application.
+                                foreach w $::ms::addr(toplevel) {
+                                    _tk busy forget $w
+                                }
+
+                                update
+                            }
+
+                            # Notify the developer that the theme, the accent color or the colorscheme has changed.
+                            _event generate . <<ThemeChanged>>
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
