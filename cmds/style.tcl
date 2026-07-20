@@ -62,6 +62,147 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## style - Manipulate the style database.
+#
+#### SYNOPSIS
+#
+# **style** **configure** *style* ?**option**? ?*value*? ?**option** *value*? ... ?**option** *value*?
+# **style** **element** **create** *elementName* *type ?*arg* ... *arg*?
+# **style** **element** **names**
+# **style** **element** **options** *element*
+# **style** **layout** *style*
+# **style** **lookup** *style* *option* ?*state*? ?*default*?
+# **style** **map** *style* ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
+# **style** **theme** **create** *themeName* ?**-parent** *basedon*? ?**-settings** *script*?
+# **style** **theme** **names**
+# **style** **theme** **settings** *themeName* *script*
+# **style** **theme** **styles**
+# **style** **theme** **use** ?*MustangTheme*?
+#
+#### DEFINITIONS
+#
+# At each widget is assigned a *style*, which specifies the set of elements making up the widget and how
+# they are arranged, along with dynamic and default settings for element options.
+# By default, the style name is the same as the widget's class; this may be overridden by the *-style* option.
+#
+# A *theme* is a collection of elements and styles which controls the overall look and feel of an application.
+# The mustang default theme is called *Halo*, a cross platform dynamic theme based on the *clam* engine.
+#
+#### DESCRIPTION
+#
+# The *style* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is always the first argument after the command itself.
+# The legal forms are:
+#
+#   **style** **configure** *style* ?**option**? ?*value*? ?**option** *value*? ... ?**option** *value*?
+#       Sets the default value of the specified option(s) in *style*.
+#
+#       If *style* does not exist, it is created.
+#       If only *style* and *option* are specified, get the default value for option *option* of style *style*.
+#       If only *style* is specified, get the default value for all options of style *style*.
+#
+#   **style** **element** **create** *elementName* *type ?*arg* ... *arg*?
+#       Creates a new element in the current theme of type *type*.
+#       The only cross-platform built-in element type is *image* (see [ttk_image](https://www.tcl-lang.org/man/tcl9.0/TkCmd/ttk_image.html))
+#       but themes may define other element types (see **Ttk_RegisterElementFactory**).
+#       On suitable versions of Windows an element factory is registered to create Windows theme elements
+#       (see [ttk_vsapi](https://www.tcl-lang.org/man/tcl9.0/TkCmd/ttk_vsapi.html)).
+#
+#   **style** **element** **names**
+#       Returns the list of elements defined in the current theme.
+#
+#   **style** **element** **options** *element*
+#       Returns the list of *element*'s options.
+#
+#   **style** **layout** *style*
+#       Return the layout specification for style *style*.
+#
+#       Note: Canvas, Listbox, Menu, Text and Toplevel widgets does not understands layouts due to their classic nature.
+#             Trying to associate a layout to one of these widget will be ignored by mustang; the layout will be created
+#             but never applied.
+#
+#   **style** **lookup** *style* *option* ?*state*? ?*default*?
+#       Returns the value specified for *option* in style *style* in state *state*, using the standard lookup rules
+#       for element options.
+#
+#       *State* is a list of state names; if omitted, it defaults to all bits off (the *normal* state).
+#       The *normal* state can be specified as an empty string or with the word 'normal'.
+#
+#       If the *default* argument is present, it is used as a fallback value in case no specification for *option* is found.
+#       If *style* does not exist, it is created.
+#
+#   **style** **map** *style* ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
+#       Sets dynamic (state dependent) values of the specified option(s) in *style*.
+#       Each *statespec*/*value* pair is examined in order; the value corresponding to the first matching *statespec* is used.
+#
+#       If *style* does not exist, an error will be returned. Mappings can be created only if their related style allready exists.
+#       If only *style* and *option* are specified, get the dynamic values for option *option* of style *style*.
+#       If only *style* is specified, get the dynamic values for all options of style *style*.
+#
+#   **style** **theme** **create** *themeName* ?**-parent** *basedon*? ?**-settings** *script*?
+#       Creates a new theme. It is an error if *themeName* already exists.
+#       If *-parent* is specified, the new theme will inherit styles, elements, and layouts from the parent theme *basedon*.
+#       If *-settings* is present, *script* is evaluated in the context of the new theme as per **style theme settings**.
+#
+#   **style** **theme** **names**
+#       Returns all the available themes.
+#
+#   **style** **theme** **settings** *themeName* *script*
+#       Temporarily sets the current theme to *themeName*, evaluate *script*, then restore the previous theme.
+#       Typically *script* simply defines styles and elements, though arbitrary Tcl code may appear.
+#
+#       Each time a new theme is selected by the user, mustang will try to recreate each missing style in the new theme, adapting them
+#       for the new theme colors, accent colors and colorscheme, if possible.
+#       Using this command, will stop this mustang functionality for every style specified in *script*.
+#
+#       In order for mustang to adapt the styles in the new theme, every style color option should contain theme color names
+#       instead of pure hexadecimals values. This will allow mustang to translate them using the theme colors of the current theme.
+#
+#   **style** **theme** **styles**
+#       Returns a list of all the styles created.
+#
+#   **style** **theme** **use** ?*themeName*?
+#       Without an argument the result is the name of the current mustang theme. Otherwise this command sets the current theme
+#       to *themeName*, and refreshes all widgets.
+#
+#### LAYOUTS
+#
+# A *layout* specifies a list of elements, each followed by one or more options specifying how to arrange the element.
+# The layout mechanism uses a simplified version of the [pack](/wiki/commands/pack.md) geometry manager: given an initial cavity,
+# each element is allocated a parcel.
+# Then the parcel actually used by the element is adjusted within the allocated parcel.
+# Valid options are:
+#
+#   **-children** { *sublayout...* }
+#       Specifies a list of elements to place inside the element.
+#
+#   **-expand** *boolean*
+#       Specifies whether the allocated parcel is the entire cavity.
+#       If so, simultaneous specification of *-side* is ignored.
+#       Defaults to 0.
+#
+#   **-side** *side*
+#       Specifies which side of the cavity to place the element.
+#       Allowed values are one of **left**, **right**, **top** or **bottom**.
+#       For instance, **-side top** allocates the parcel along the top of the cavity having width and height respectively
+#       the width of the cavity and the height of the element.
+#       If omitted, the allocated parcel is the entire cavity (same effect as **-expand** 1).
+#
+#   **-sticky** [*nswe*]
+#       Specifies the actual parcel position and size inside the allocated parcel.
+#       If specified as an empty string then the actual parcel is centered in the allocated parcel.
+#       Default is **nswe**.
+#
+# For example:
+#
+#   ttk::style layout Horizontal.TScrollbar {
+#       Scrollbar.trough -children {
+#           Scrollbar.leftarrow -side left \
+#           Scrollbar.rightarrow -side right \
+#           Horizontal.Scrollbar.thumb -side left -sticky ew
+#       }
+#   }
 package provide ::ms::style 0.1
 
 # Create the mustang **style** package.
