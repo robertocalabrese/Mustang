@@ -224,7 +224,56 @@ proc ::ms::winfo::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        interps {}
+        interps {
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    try {
+                        _winfo interps
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # '-displayof'
+                    switch -- [lindex $args 0] {
+                        "-displayof" {
+                            set window [lindex $args 1]
+
+                            # Get the real address associated with 'window'.
+                            set result [::ms::Check_Pathname $window invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                default {
+                                    set w    [lindex $result 0]
+                                    set type [lindex $result 1]
+
+                                    # Check the initial address type provided (short or real).
+                                    switch -- $type {
+                                        short {
+                                            # Substitute 'window' with its relative real address.
+                                            set args [lreplace $args 1 1 $w]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo interps {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         parent {}
         pathname {}
         fpixels -
