@@ -83,10 +83,49 @@ interp alias {} wm {} ::ms::wm::Command
 #
 # Depending on the *action* provided, the return value/s may vary.
 proc ::ms::wm::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _wm {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        colormapwindows {}
+        group      -
+        iconwindow -
+        transient  {}
+        manage {}
+        stackorder {}
+        aspect           -
+        attribute        -
+        attributes       -
+        client           -
+        command          -
+        deiconify        -
+        focusmodel       -
+        forget           -
+        frame            -
+        geometry         -
+        grid             -
+        iconbitmap       -
+        iconbitmap       -
+        iconify          -
+        iconmask         -
+        iconname         -
+        iconphoto        -
+        iconposition     -
+        maxsize          -
+        minsize          -
+        overrideredirect -
+        positionfrom     -
+        protocol         -
+        resizable        -
+        sizefrom         -
+        state            -
+        title            -
+        withdraw         {}
+        default { ::ms::Error "Invalid option, '$action'." $caller_info }
+    }
 }
 
 #*EOF*
