@@ -632,7 +632,108 @@ proc ::ms::grid::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default {}
+        default {
+            # Note: Differently from Tk, the 'grid' command do not accepts
+            #       shortforms ('-', 'x' and '^').
+
+            set window $action
+
+            # Get the 'window' real address.
+            set result [::ms::Check_Pathname $window invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                default { set addresses [lindex $result 0] }
+            }
+
+            # Check if there are other addresses.
+            set remaining_args $args
+            foreach arg $args {
+                switch -- [string index $arg 0] {
+                    "." {
+                        set window $arg
+
+                        # Get the 'window' real address.
+                        set result [::ms::Check_Pathname $window invalid]
+                        switch -- $result {
+                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            default {
+                                lappend addresses  [lindex  $result 0]
+                                set remaining_args [lremove $remaining_args 0]
+                            }
+                        }
+                    }
+                    default { break }
+                }
+            }
+            set args $remaining_args
+
+            # Check the option/values in 'args'.
+            switch -- [expr { [llength $args]%2 }] {
+                0   {
+                    # Check if the '-in' option was provided.
+                    set index [lsearch -exact $args "-in"]
+                    switch -- $index {
+                        -1      {}
+                        default {
+                            # '-in'
+                            set container [lindex $args $index+1]
+
+                            # Get the 'container' real address.
+                            set result [::ms::Check_Pathname $container invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                                default {
+                                    set w    [lindex $result 0]
+                                    set type [lindex $result 1]
+
+                                    # Check the initial address type provided (short or real).
+                                    switch -- $type {
+                                        short {
+                                            # Substitute 'window' with its relative real address.
+                                            set args [lreplace $args $index+1 $index+1 $w]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                _grid {*}$addresses {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                # Note: The 'grid info' command returns an option/value list that
+                #       will always contain the '-in' option at index '0'.
+
+                foreach w $addresses {
+                    # Check if 'w' is a scrollable widget.
+                    if { $w in $::ms::addr(megawidgets,scrollable) } {
+                        # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                        # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                        # the moment they are positioned on screen.
+                        # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
+                        # they normally don't contain any widgets.
+                        switch -- $::ms::data($w,classtype) {
+                            canvas    -
+                            listbox   -
+                            scrollbar -
+                            text      -
+                            treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                        }
+                    }
+
+                    # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
+                    ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_grid info $w] 1]
+                }
+            }
+
+            return ""
+        }
     }
 }
 
