@@ -84,10 +84,42 @@ interp alias {} ttk::style {} ::ms::style::Command
 #
 # Depending on the *action* provided, the return value/s may vary.
 proc ::ms::style::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _ttk_style {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        configure {}
+        element {
+            # Separate the 'subcommand' from its 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                create {}
+                names {}
+                options {}
+                default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
+            }
+        }
+        layout {}
+        lookup {}
+        map {}
+        theme {
+            # Separate the 'subcommand' from its 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                create   -
+                settings {}
+                names {}
+                styles {}
+                use {}
+                default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
+            }
+        }
+    }
 }
 
 #*EOF*
