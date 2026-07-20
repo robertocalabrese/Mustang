@@ -192,7 +192,21 @@ proc ::ms::style::Command { args } {
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
-                options {}
+                options {
+                    switch -- [llength $args] {
+                        1   {
+                            # Execute the command.
+                            try {
+                                _ttk_style element options $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
