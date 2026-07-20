@@ -583,7 +583,31 @@ proc ::ms::grid::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        location {}
+        location {
+            switch -- [llength $args] {
+                3   {
+                    set container [lindex  $args 0]
+                    set args      [lremove $args 0]
+
+                    # Get the 'container' real address.
+                    set result [::ms::Check_Pathname $container invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid location $w {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         size {}
         default {}
     }
