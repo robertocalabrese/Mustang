@@ -83,10 +83,64 @@ interp alias {} winfo {} ::ms::winfo::Command
 #
 # Depending on the *action* provided, the return value/s may vary.
 proc ::ms::winfo::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _winfo {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        atom     -
+        atomname {}
+        children {}
+        containing {}
+        exists {}
+        interps {}
+        parent {}
+        pathname {}
+        fpixels -
+        pixels  -
+        rgb     {}
+        visualsavailable {}
+        cells          -
+        class          -
+        colormapfull   -
+        depth          -
+        geometry       -
+        height         -
+        id             -
+        ismapped       -
+        manager        -
+        name           -
+        pointerx       -
+        pointerxy      -
+        pointery       -
+        reqheight      -
+        reqwidth       -
+        rootx          -
+        rooty          -
+        screen         -
+        screencells    -
+        screendepth    -
+        screenheight   -
+        screenmmheight -
+        screenmmwidth  -
+        screenvisual   -
+        screenwidth    -
+        server         -
+        toplevel       -
+        viewable       -
+        visual         -
+        visualid       -
+        vrootheight    -
+        vrootwidth     -
+        vrootx         -
+        vrooty         -
+        width          -
+        x              -
+        y              {}
+        default { ::ms::Error "Invalid option, '$action'." $caller_info }
+    }
 }
 
 #*EOF*
