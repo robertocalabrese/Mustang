@@ -169,7 +169,83 @@ proc ::ms::wm::Command { args } {
         }
         group      -
         iconwindow -
-        transient  {}
+        transient  {
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { pathname } {
+                        switch -- $pathname {
+                            ""      { return "" }
+                            default {
+                                # Check the initial address type provided (short or real).
+                                switch -- $type {
+                                    short {
+                                        if { $pathname in $::ms::addr(reals) } {
+                                            # 'pathname' is the real address of a widget created by mustang.
+                                            return $::ms::addr($pathname,short)
+                                        } else {
+                                            # 'pathname' is the real address of a widget not created by mustang.
+                                            return [::ms::Get_Short $pathname]
+                                        }
+                                    }
+                                }
+
+                                return $pathname
+                            }
+                        }
+                    }
+                }
+                2   {
+                    set window   [lindex $args 0]
+                    set pathname [lindex $args 1]
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    switch -- $pathname {
+                        ""      {}
+                        default {
+                            # Get the real address associated with 'pathname'.
+                            set result [::ms::Check_Pathname $pathname invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$pathname'." $caller_info }
+                                default { set pathname [lindex $result 0] }
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w $pathname
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         manage {}
         stackorder {}
         aspect           -
