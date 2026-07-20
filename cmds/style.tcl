@@ -348,8 +348,13 @@ proc ::ms::style::Command { args } {
                         return ""
                     }
                 }
-                names {}
-                styles {}
+                names { return $::ms::themes }
+                styles {
+                    switch -- [llength $args] {
+                        0       { return $::ms::style($::ms::theme) }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
                 use {}
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
