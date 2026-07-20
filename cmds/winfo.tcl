@@ -388,7 +388,32 @@ proc ::ms::winfo::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        visualsavailable {}
+        visualsavailable {
+            switch -- [llength $args] {
+                1   {}
+                2   {
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                _winfo visualsavailable $w $args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         cells          -
         class          -
         colormapfull   -
