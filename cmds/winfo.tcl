@@ -91,7 +91,47 @@ proc ::ms::winfo::Command { args } {
     set args   [lremove $args 0]
     switch -- $action {
         atom     -
-        atomname {}
+        atomname {
+            switch -- [llength $args] {
+                1   {}
+                3   {
+                    # '-displayof'
+                    switch -- [lindex $args 0] {
+                        "-displayof" {
+                            set window [lindex $args 1]
+
+                            # Get the real address associated with 'window'.
+                            set result [::ms::Check_Pathname $window invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                default {
+                                    set w    [lindex $result 0]
+                                    set type [lindex $result 1]
+
+                                    # Check the initial address type provided (short or real).
+                                    switch -- $type {
+                                        short {
+                                            # Substitute 'window' with its relative real address.
+                                            set args [lreplace $args 1 1 $w]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                _winfo $action {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         children {}
         containing {}
         exists {}
