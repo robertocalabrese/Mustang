@@ -517,8 +517,8 @@ proc ::ms::pack::Command { args } {
 
                         set container [lindex [_pack info $w] 1]
 
-                        # Forget/Remove the real address.
-                        _pack $action $w
+                        # Forget the real address.
+                        _pack forget $w
 
                         # Force the propagation inside any scrollable widget ancestor, if any.
                         ::ms::Scrollable_Widgets_Propagation_Mechanism $container
