@@ -90,7 +90,83 @@ proc ::ms::wm::Command { args } {
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
-        colormapwindows {}
+        colormapwindows {
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm colormapwindows $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check the initial address type provided (short or real).
+                        switch -- $type {
+                            short {
+                                set short_result [list ]
+                                foreach w $result {
+                                    if { $w in $::ms::addr(reals) } {
+                                        # 'w' is the real address of a widget created by mustang.
+                                        lappend short_result $::ms::addr($w,short)
+                                    } else {
+                                        # 'w' is the real address of a widget not created by mustang.
+                                        lappend short_result [::ms::Get_Short $w]
+                                    }
+                                }
+
+                                # Remove any doubles.
+                                set result [lsort -unique $short_result]
+                            }
+                        }
+
+                        return $result
+                    }
+                }
+                2   {
+                    set window     [lindex $args 0]
+                    set windowList [lindex $args 1]
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Iterate the 'windowList' list to substitute any window short address with their long counterpart.
+                    set real_windowList [list ]
+                    foreach window $windowList {
+                        # Get the real address associated with 'window'.
+                        set result [::ms::Check_Pathname $window invalid]
+                        switch -- $result {
+                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            default { lappend real_windowList [lindex $result 0] }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm colormapwindows $w $real_windowList
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         group      -
         iconwindow -
         transient  {}
