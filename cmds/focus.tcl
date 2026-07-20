@@ -370,4 +370,48 @@ proc ::tk_focusPrev { w } {
     }
 }
 
+## FocusOK (from the Tk 'focus.tcl' file)
+#
+# Determines if a window can be focussed or not.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# Return a boolean value indicating if the window provided can take the keyboard focus or not.
+#   0 --> The window provided cannot take the keyboard focus.
+#   1 --> The window provided can take the keyboard focus.
+proc ::tk::FocusOK { w } {
+    # Check if 'w' is the hull of a megawidget of some kind.
+    if { $w in $::ms::addr(megawidgets) } {
+        set w $::ms::addr($w,widget)
+    }
+
+    set code [catch { $w cget -takefocus } value]
+    if { ($code == 0) && ($value ne "") } {
+        switch -- $value {
+            0       { return 0 }
+            1       { return [_winfo viewable $w] }
+            default {
+                set value [uplevel #0 $value [list $w]]
+                switch -- $value {
+                    ""      {}
+                    default { return $value }
+                }
+            }
+        }
+    }
+
+    switch -- [_winfo viewable $w] {
+        0   { return 0 }
+    }
+
+    set code [catch { $w cget -state } value]
+    if { ($code == 0) && $value eq "disabled" } {
+        return 0
+    }
+
+    regexp Key|Focus "[_bind $w] [_bind [_winfo class $w]]"
+}
+
 #*EOF*
