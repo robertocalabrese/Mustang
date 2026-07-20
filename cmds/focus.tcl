@@ -62,6 +62,111 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## focus
+#
+#### SYNOPSIS:
+#
+# **focus**
+# **focus** **-displayof** *window*
+# **focus** **-force** *window*
+# **focus** **-lastfor** *window*
+# **focus** **-next** *window*
+# **focus** **-prev** *window*
+# **focus** *window*
+#
+#### DESCRIPTION:
+#
+# The focus command is used to manage the mustang input focus.
+# At any given time, one window on each display is designated as the focus window; any key press or key release events
+# for the display are sent to that window.
+#
+# It is normally up to the window manager to redirect the focus among the toplevel windows of a display.
+# For example, some window managers automatically set the input focus to a toplevel window whenever the mouse enters it;
+# others redirect the input focus only when the user clicks on a window.
+#
+# Usually the window manager will set the focus only to toplevel windows, leaving it up to the application to
+# redirect the focus among the children of the toplevel.
+#
+# Mustang remembers one focus window for each toplevel (the most recent descendant of that toplevel to receive the focus);
+# when the window manager gives the focus to a toplevel, mustang automatically redirects it to the remembered window.
+# The developer can change the focus model through the **::ms::focusmodel** variable (allowed values are *explicit* or *implicit*).
+# The default focus model is **explicit**.
+# In an **explicit** focus model the focus changes only when a widget decides explicitly to claim the focus (e.g., because
+# of a button click), or when the user types a key such as **Tab** or **Shift-Tab** that moves the focus.
+# In an **implicit** focus model instead, the focus changes everytime the mouse enters a focussable widget.
+#
+# The **focus -next** and **focus -prev** commands implement a focus order among the windows of a toplevel;
+# they are used in the default bindings for **Tab** and **Shift-Tab**, among other things.
+#
+# The *focus* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is always the first argument after the command itself.
+#
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#       *Action*s that gives as a result a window pathname, will always return the address as a real address.
+#       You can always convert a real address into a short address through the **tk get short** command.
+#
+# The legal forms are:
+#
+#   **focus**
+#      Returns the pathname of the focus window on the display containing the application's main window,
+#      or an empty string if no window in this application has the focus on that display.
+#
+#      Note: It is better to specify the display explicitly using **-displayof** (see below) so that the code will work
+#            in applications using multiple displays.
+#
+#      ATTENTION! Differently than others mustang commands, the **focus** command will **always**
+#                 return a real address or an empty string.
+#
+#                 You can always translate a real address into a short address using the **tk get short**
+#                 command or a short address into a real address using the **tk get real** command.
+#
+#   **focus** **-displayof** *window*
+#      Returns the pathname of the focus window on the display containing *window*.
+#      If the focus window for *window*'s display is not in this application, the return value is an empty string.
+#
+#   **focus** **-force** *window*
+#      Sets the focus of *window*'s display to *window*, even if the application does not currently have the input focus for the display.
+#      This command should be used sparingly, if at all. In normal usage, an application should not claim the focus for itself;
+#      instead, it should wait for the window manager to give it the focus.
+#      If *window* is an empty string then the command does nothing. Returns an empty string.
+#
+#   **focus** **-lastfor** *window*
+#      Returns the pathname of the most recent window to have the input focus among all the windows in the same toplevel as *window*.
+#      If no window in that toplevel has ever had the input focus, or if the most recent focus window has been deleted,
+#      then the pathname of the toplevel is returned.
+#      The return value is the window that will receive the input focus the next time the window manager gives the focus to the toplevel.
+#
+#   **focus** **-next** *window*
+#      This command is used for keyboard traversal. It returns the pathname of the *next* window after *window* in focus order.
+#      The focus order is determined by the stacking order of windows and the structure of the *window* hierarchy.
+#      Among siblings, the focus order is the same as the stacking order, with the lowest window being first.
+#      If a window has children, the window is visited first, followed by its children (recursively), followed by its next sibling.
+#      Toplevel windows other than the *window* toplevel are skipped, so that **focus -next** never returns a window in a different
+#      toplevel from *window*.
+#
+#      After computing the pathname of the next window, **focus -next** examines the *window*'s **-takefocus** option to see whether
+#      it should be skipped. If so, **focus -next** continues on to the next window in the focus order, until it eventually finds a
+#      window that will accept the focus or returns back to *window*.
+#
+#   **focus** **-prev** *window*
+#      **focus -prev** is similar to **focus -next** except that it returns the pathname of the window just before *window* in the focus order.
+#
+#   **focus** *window*
+#      If the application currently has the input focus on *window*'s display, this command resets the input focus for *window*'s display
+#      to *window* and returns an empty string.
+#      If the application does not currently have the input focus on *window*'s display, *window* will be remembered as the focus for its
+#      toplevel; the next time the focus arrives at the toplevel, mustang will redirect it to *window*.
+#      If *window* is an empty string then the command does nothing. Returns an empty string.
+#
+#### QUIRKS:
+#
+# When an internal window receives the input focus, mustang does not actually set the X focus to that window; as far as X is concerned,
+# the focus will stay on the toplevel window containing the window with the focus. However, mustang generates **FocusIn** and **FocusOut**
+# events just as if the X focus were on the internal window.
+#
+# This approach gets around a number of problems that would occur if the X focus were actually moved; the fact that the X focus is on the
+# toplevel is invisible unless you use C code to query the X server directly.
 package provide ::ms::focus 0.1
 
 # Create the mustang **focus** package.
