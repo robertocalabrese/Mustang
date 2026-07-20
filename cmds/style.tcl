@@ -614,4 +614,357 @@ proc ::ms::style::Check_Mapping { style args } {
     return $stylemap
 }
 
+# Check_Option
+#
+# Validate the style option value provided.
+#
+# Where:
+#
+# option   Should be the style option name to validate (like *-background*, *-borderwidth* or *-padding*).
+#
+# value    Should be the style value to validate related to the style option provided.
+#
+# Return the data if the 'option' and 'value' provided are validated, or the word 'invalid' if they are not.
+proc ::ms::style::Check_Option { option value } {
+    switch -- $option {
+        -anchor {
+            set value [string tolower $value]
+            switch -- $value {
+                center  -
+                e       -
+                n       -
+                ne      -
+                nw      -
+                s       -
+                se      -
+                sw      -
+                w       { return $value }
+                default { return invalid }
+            }
+        }
+        -arrowcolor               -
+        -background               -
+        -bordercolor              -
+        -darkcolor                -
+        -disabledforeground       -
+        -fieldbackground          -
+        -focuscolor               -
+        -focusfill                -
+        -foreground               -
+        -highlightcolor           -
+        -indicatorbackground      -
+        -indicatorcolor           -
+        -indicatorforeground      -
+        -innercolor               -
+        -insertbackground         -
+        -insertcolor              -
+        -lightcolor               -
+        -linecolor                -
+        -outercolor               -
+        -placeholderforeground    -
+        -preselectbackground      -
+        -preselectforeground      -
+        -troughcolor              -
+        -selectbackground         -
+        -selectforeground         -
+        -shellbackground          -
+        -stripedbackground        {
+            set value [::ms::Check_Color $value invalid]
+            switch -- $value {
+                invalid { return invalid }
+                default { return $value }
+            }
+        }
+        -arrowpadding     -
+        -expand           -
+        -handlepad        -
+        -indicatormargin  -
+        -indicatormargins -
+        -labelmargins     -
+        -padding          -
+        -postoffset       -
+        -sashpad          -
+        -tabmargins       {
+            switch -- [llength $value] {
+                1   {
+                    set value [::ms::Check_Measure $value invalid]
+                    switch -- $value {
+                        invalid { return invalid }
+                    }
+
+                    return $value
+                }
+                2   {
+                    set pad1 [::ms::Check_Measure [lindex $value 0] invalid]
+                    switch -- $pad1 {
+                        invalid { return invalid }
+                    }
+
+                    set pad2 [::ms::Check_Measure [lindex $value 1] invalid]
+                    switch -- $pad2 {
+                        invalid { return invalid }
+                    }
+
+                    return [list $pad1 $pad2]
+                }
+                3   {
+                    set pad1 [::ms::Check_Measure [lindex $value 0] invalid]
+                    switch -- $pad1 {
+                        invalid { return invalid }
+                    }
+
+                    set pad2 [::ms::Check_Measure [lindex $value 1] invalid]
+                    switch -- $pad2 {
+                        invalid { return invalid }
+                    }
+
+                    set pad3 [::ms::Check_Measure [lindex $value 2] invalid]
+                    switch -- $pad3 {
+                        invalid { return invalid }
+                    }
+
+                    return [list $pad1 $pad2 $pad3]
+                }
+                4   {
+                    set pad1 [::ms::Check_Measure [lindex $value 0] invalid]
+                    switch -- $pad1 {
+                        invalid { return invalid }
+                    }
+
+                    set pad2 [::ms::Check_Measure [lindex $value 1] invalid]
+                    switch -- $pad2 {
+                        invalid { return invalid }
+                    }
+
+                    set pad3 [::ms::Check_Measure [lindex $value 2] invalid]
+                    switch -- $pad3 {
+                        invalid { return invalid }
+                    }
+
+                    set pad4 [::ms::Check_Measure [lindex $value 3] invalid]
+                    switch -- $pad4 {
+                        invalid { return invalid }
+                    }
+
+                    return [list $pad1 $pad2 $pad3 $pad4]
+                }
+                default { return invalid }
+            }
+        }
+        -arrowsize            -
+        -barsize              -
+        -borderwidth          -
+        -columnseparatorwidth -
+        -insertborderwidth    -
+        -focussolid           -
+        -focusthickness       -
+        -focuswidth           -
+        -gripcount            -
+        -gripsize             -
+        -groovewidth          -
+        -handlesize           -
+        -height               -
+        -highlightthickness   -
+        -indent               -
+        -indicatorsize        -
+        -insertwidth          -
+        -rowheight            -
+        -rowwidth             -
+        -sashpad              -
+        -sashthickness        -
+        -selectborderwidth    -
+        -sliderlength         -
+        -sliderthickness      -
+        -spacer               -
+        -thickness            -
+        -width                {
+            set value [::ms::Check_Measure $value invalid]
+            switch -- $value {
+                invalid { return invalid }
+                default { return $value }
+            }
+        }
+        -charwidth -
+        -columns   -
+        -rows      {
+            switch -- [string is integer -strict $value] {
+                0   { return invalid }
+                1   { return $value }
+            }
+        }
+        -compound {
+            set value [string tolower $value]
+            switch -- $value {
+                bottom  -
+                center  -
+                image   -
+                left    -
+                none    -
+                right   -
+                text    -
+                top     { return $value }
+                default { return invalid }
+            }
+        }
+        -cursor {
+            set value [string tolower $value]
+            if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                return $value
+            } else {
+                return invalid
+            }
+        }
+        -embossed     -
+        -labeloutside {
+            switch -nocase -- $value {
+                0        -
+                no       -
+                off      -
+                false    -
+                disabled { set value 0 }
+                1        -
+                yes      -
+                on       -
+                true     -
+                enabled  { set value 1 }
+                default  { return invalid }
+            }
+
+            return $value
+        }
+        -font {
+            if { $value in [_font names] } {
+                return $value
+            } else {
+                return invalid
+            }
+        }
+        -image {
+            switch -- [::ms::Check_Image $value] {
+                invalid { return invalid }
+                default { return $value }
+            }
+        }
+        -inactiveselectbackground {
+            switch -- $value {
+                ""      {}
+                default {
+                    set value [::ms::Check_Color $value invalid]
+                    switch -- $value {
+                        invalid { return invalid }
+                    }
+                }
+            }
+
+            return $value
+        }
+        -insertofftime -
+        -insertontime  {
+            switch -- [string is integer -strict $value] {
+                0   { return invalid }
+                1   {
+                    if { $value < 0 } {
+                        return invalid
+                    } else {
+                        return $value
+                    }
+                }
+            }
+        }
+        -justify {
+            set value [string tolower $value]
+            switch -- $value {
+                center  -
+                left    -
+                right   { return $value }
+                default { return invalid }
+            }
+        }
+        -shiftrelief {
+            switch -- [string is integer -strict $value] {
+                0   { return invalid }
+                1   { return $value }
+            }
+        }
+        -indicatorrelief -
+        -relief          -
+        -pbarrelief      -
+        -sashrelief      -
+        -sliderrelief    -
+        -thumbrelief     -
+        -troughrelief    {
+            set value [string tolower $value]
+            switch -- $value {
+                flat    -
+                groove  -
+                raised  -
+                ridge   -
+                solid   -
+                sunken  { return $value }
+                default { return invalid }
+            }
+        }
+        -tabposition {
+            set value [string tolower $value]
+            switch -- $value {
+                e       -
+                en      -
+                es      -
+                n       -
+                ne      -
+                nw      -
+                s       -
+                se      -
+                sw      -
+                w       -
+                wn      -
+                ws      { return $value }
+                default { return invalid }
+            }
+        }
+        -wraplength {
+            # Check the last digit of the measure provided.
+            switch -- [string index $value end] {
+                0   -
+                1   -
+                2   -
+                3   -
+                4   -
+                5   -
+                6   -
+                7   -
+                8   -
+                9   {
+                    if { [string is integer -strict $value] } {
+                        return $value
+                    } else {
+                        return invalid
+                    }
+                }
+                c   -
+                i   -
+                m   -
+                p   {
+                    # The measure have a valid unit, separate its value from its unit.
+                    set value [string range $value 0 end-1]
+                    set unit  [string index $value end]
+
+                    switch -- $value {
+                        0       { return 0 }
+                        default {
+                            if { [string is double -strict $value] } {
+                                return [string cat $value $unit]
+                            } else {
+                                return invalid
+                            }
+                        }
+                    }
+                }
+                default { return invalid }
+            }
+        }
+        default { return invalid }
+    }
+}
+
 #*EOF*
