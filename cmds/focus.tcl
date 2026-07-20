@@ -414,4 +414,42 @@ proc ::tk::FocusOK { w } {
     regexp Key|Focus "[_bind $w] [_bind [_winfo class $w]]"
 }
 
+############################
+##                        ##
+##     TTK PROCEDURES     ##
+##                        ##
+############################
+
+# Note: The following procedure were inspired by their ttk equivalent.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## clickToFocus (from the ttk 'utils.tcl' file)
+#
+# Utility routine, used in <Button-1> bindings.
+# Assign keyboard focus to the specified widget if **-takefocus** is enabled.
+#
+# Where:
+#
+# w   Should be the widget short or real address involved.
+#
+# It doesn't return anything.
+proc ::ttk::clickToFocus { w } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Get the 'w' real address.
+    set result [::ms::Check_Pathname $w invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
+        default { set w [lindex $result 0] }
+    }
+
+    if { [::ttk::takesFocus $w] } {
+        focus $w
+    }
+
+    return ""
+}
+
 #*EOF*
