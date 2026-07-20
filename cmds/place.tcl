@@ -195,7 +195,26 @@ proc ::ms::place::Command { args } {
             }
         }
         forget -
-        remove {}
+        remove {
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    foreach window $args {
+                        # Get the 'window' real address.
+                        set result [::ms::Check_Pathname $window invalid]
+                        switch -- $result {
+                            invalid { break }
+                            default { set w [lindex $result 0] }
+                        }
+
+                        # Forget the real address.
+                        _place forget $w
+                    }
+
+                    return ""
+                }
+            }
+        }
         info {}
         default {}
     }
