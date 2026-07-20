@@ -274,7 +274,103 @@ proc ::ms::pack::Command { args } {
                 }
             }
         }
-        info {}
+        info {
+            switch -- [llength $args] {
+                1   {
+                    set window [lindex $args 0]
+
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _pack info $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check the initial address type provided (short or real).
+                        switch -- $type {
+                            short {
+                                # Note: The 'pack info' command returns an option/value list that
+                                #       will always contain the '-in' option at index '0'.
+
+                                # '-in' address
+                                set container [lindex $result 1]
+                                if { $container in $::ms::addr(reals) } {
+                                    # 'container' is the real address of a widget created by mustang.
+                                    set result [lreplace $result $index+1 $index+1 $::ms::addr($container,short)]
+                                } else {
+                                    # 'container' is the real address of a widget not created by mustang.
+                                    set result [lreplace $result $index+1 $index+1 [::ms::Get_Short $container]]
+                                }
+                            }
+                        }
+
+                        return $result
+                    }
+                }
+                2   {
+                    # Get the 'pathname' and 'optionName' provided.
+                    set window     [lindex $args 0]
+                    set optionName [lindex $args 1]
+
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _pack info $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        switch -- $optionName {
+                            "-in" {
+                                # Check the initial address type provided (short or real).
+                                switch -- $type {
+                                    short {
+                                        # Note: The 'pack info' command returns an option/value list that
+                                        #       will always contain the '-in' option at index '0'.
+
+                                        # '-in' address
+                                        set container [lindex $result 1]
+                                        if { $container in $::ms::addr(reals) } {
+                                            # 'container' is the real address of a widget created by mustang.
+                                            return $::ms::addr($container,short)
+                                        } else {
+                                            # 'container' is the real address of a widget not created by mustang.
+                                            return [::ms::Get_Short $container]
+                                        }
+                                    }
+                                    default { return [lindex $result 1] }
+                                }
+                            }
+                            default {
+                                set index [lsearch -exact $result $optionName]
+                                switch -- $index {
+                                    -1      { ::ms::Error "Invalid option name, '$optionName'." $caller_info }
+                                    default { return [lindex $result $index+1] }
+                                }
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         propagate {}
         default {}
     }
