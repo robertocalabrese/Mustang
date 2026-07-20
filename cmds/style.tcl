@@ -256,7 +256,16 @@ proc ::ms::style::Command { args } {
                 }
             }
         }
-        lookup {}
+        lookup {
+            # Execute the command.
+            try {
+                _ttk_style lookup {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         map {}
         theme {
             # Separate the 'subcommand' from its 'args'.
