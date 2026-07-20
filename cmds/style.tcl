@@ -266,7 +266,72 @@ proc ::ms::style::Command { args } {
                 return $result
             }
         }
-        map {}
+        map {
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+                1   {
+                    set style [lindex $args 0]
+
+                    # Check if exists a mapping for the style provided (in the current theme).
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$style)] {
+                        0   { return "" }
+                        1   { return $::ms::stylemap($::ms::theme,$style) }
+                    }
+                }
+                2   {
+                    set style  [lindex $args 0]
+                    set option [string trimleft [lindex $args 1] "-"]
+
+                    # Check if the style map option provided exists (in the current theme).
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$style,$option)] {
+                        0   { return "" }
+                        1   { return $::ms::stylemap($::ms::theme,$style,$option) }
+                    }
+                }
+                default {
+                    set style [lindex  $args 0]
+                    set args  [lremove $args 0]
+
+                    # Note: The following check is making mustang active differently than Tk.
+                    #         Tk      --> If the style doesn't exists when the map command is issued,
+                    #                     it will be created by Tk.
+                    #
+                    #         Mustang --> The style must allready exists before issuing the map command.
+
+                    # Check if the relative style is allready created.
+                    if { $style ni $::ms::style($::ms::theme) } {
+                        ::ms::Error "'$style' mapping data must be created after the '$style' style creation, not before." $caller_info
+                    }
+
+                    # Check that 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Register (as is) the 'style' mapping provided.
+                            set ::ms::stylemap($::ms::theme,$style) $args
+
+                            # Check and translate the mapping options values.
+                            set mapping [::ms::style::Check_Mapping $style {*}$::ms::stylemap($::ms::theme,$style)]
+                            switch -- $mapping {
+                                invalid { ::ms::Error "Invalid mapping data for '$style'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            _ttk_style map $style {*}$mapping
+
+                            # Update each classtype real address that have 'style' as a style.
+                            foreach classtype $::ms::data(classtypes) {
+                                if { $style in $::ms::style($classtype) } {
+                                    [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
+                                }
+                            }
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid number of mappings for '$style'." $caller_info }
+                    }
+                }
+            }
+        }
         theme {
             # Separate the 'subcommand' from its 'args'.
             set subcommand [lindex  $args 0]
