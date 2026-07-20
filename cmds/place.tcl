@@ -90,7 +90,65 @@ proc ::ms::place::Command { args } {
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
-        configure {}
+        configure {
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                1       { return "" }
+                default {
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Check the option/values in 'args'.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # '-in'
+                            set index [lsearch -exact $args "-in"]
+                            switch -- $index {
+                                -1      {}
+                                default {
+                                    set container [lindex $args $index+1]
+
+                                    # Get the 'container' real address.
+                                    set result [::ms::Check_Pathname $container invalid]
+                                    switch -- $result {
+                                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                                        default {
+                                            set w    [lindex $result 0]
+                                            set type [lindex $result 1]
+
+                                            # Check the initial address type provided (short or real).
+                                            switch -- $type {
+                                                short {
+                                                    # Substitute 'window' with its relative real address.
+                                                    set args [lreplace $args $index+1 $index+1 $w]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            # Execute the command.
+                            try {
+                                _place configure $w {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
         content -
         slaves  {}
         forget -
