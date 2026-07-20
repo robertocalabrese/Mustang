@@ -274,7 +274,46 @@ proc ::ms::winfo::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        parent {}
+        parent {
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo parent $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { parent } {
+                        # Check the initial address type provided (short or real).
+                        switch -- $type {
+                            short {
+                                if { $parent in $::ms::addr(reals) } {
+                                    # 'parent' is the real address of a widget created by mustang.
+                                    return $::ms::addr($parent,short)
+                                } else {
+                                    # 'parent' is the real address of a widget not created by mustang.
+                                    return [::ms::Get_Short $parent]
+                                }
+                            }
+                        }
+
+                        return $parent
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         pathname {}
         fpixels -
         pixels  -
