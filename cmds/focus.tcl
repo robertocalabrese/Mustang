@@ -452,4 +452,38 @@ proc ::ttk::clickToFocus { w } {
     return ""
 }
 
+## focusFirst (from the ttk 'utils.tcl' file)
+#
+# Return the first descendant of $w, in preorder traversal order,
+# that can take keyboard focus or the empty string if none do.
+#
+# Where:
+#
+# w   Should be the widget short or real address involved.
+proc ::ttk::focusFirst { w } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Get the 'w' real address.
+    set result [::ms::Check_Pathname $w invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
+        default { set w [lindex $result 0] }
+    }
+
+    if { [::ttk::takesFocus $w] } {
+        return $w
+    }
+
+    foreach child [winfo children $w] {
+        set c [::ttk::focusFirst $child]
+        switch -- $c {
+            ""      {}
+            default { return $c }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
