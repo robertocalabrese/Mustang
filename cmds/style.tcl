@@ -91,7 +91,77 @@ proc ::ms::style::Command { args } {
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
-        configure {}
+        configure {
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+                1   {
+                    set style [lindex $args 0]
+
+                    # Check if the style provided exists (in the current theme).
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$style)] {
+                        0   { return "" }
+                        1   { return $::ms::styleopt($::ms::theme,$style) }
+                    }
+                }
+                2   {
+                    set style  [lindex $args 0]
+                    set option [string trimleft [lindex $args 1] "-"]
+
+                    # Check if the style option provided exists (in the current theme).
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$style,$option)] {
+                        0   { return "" }
+                        1   { return $::ms::styleopt($::ms::theme,$style,$option) }
+                    }
+                }
+                default {
+                    set style [lindex  $args 0]
+                    set args  [lremove $args 0]
+
+                    # Check that 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Register (as is) the 'style' options provided.
+                            set ::ms::styleopt($::ms::theme,$style) $args
+
+                            # Check the options provided.
+                            set style_options [list ]
+                            foreach { option value } $args {
+                                # Check the option value.
+                                set value [::ms::style::Check_Option $option $value]
+                                switch -- $value {
+                                    invalid { ::ms::Error "Invalid option for '$style', '$option $value'." $caller_info }
+                                    default { lappend style_options $option $value }
+                                }
+
+                                # Remove the '-' from option.
+                                set option [string trimleft $option "-"]
+
+                                # Register the current option value for 'style' in the 'styleopt' options array for the current theme.
+                                set ::ms::styleopt($::ms::theme,$style,$option) $value
+                            }
+
+                            # Execute the command.
+                            _ttk_style configure $style {*}$style_options
+
+                            # If needed, add the style into the style list for the current theme.
+                            if { $style ni $::ms::style($::ms::theme) } {
+                                lappend ::ms::style($::ms::theme) $style
+                            }
+
+                            # Update each classtype real address that have 'style' as a style.
+                            foreach classtype $::ms::data(classtypes) {
+                                if { $style in $::ms::style($classtype) } {
+                                    [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
+                                }
+                            }
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid number of options for '$style'." $caller_info }
+                    }
+                }
+            }
+        }
         element {
             # Separate the 'subcommand' from its 'args'.
             set subcommand [lindex  $args 0]
