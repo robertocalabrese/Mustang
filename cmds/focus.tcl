@@ -193,4 +193,49 @@ proc ::ms::focus::Command { args } {
     return ""
 }
 
+###########################
+##                       ##
+##     TK PROCEDURES     ##
+##                       ##
+###########################
+
+# Note: The following procedure were inspired by their Tk equivalent.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Implicit (from the Tk 'focus.tcl' file, '::tk_focusFollowsMouse')
+#
+# Enforce the **implicit** focus model.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# detail   The *detail* field from the event.
+#          For **FocusIn** and **FocusOut** events, the string can be one of the following:
+#
+#             NotifyAncestor
+#             NotifyNonlinearVirtual
+#             NotifyDetailNone
+#             NotifyPointer
+#             NotifyInferior
+#             NotifyPointerRoot
+#             NotifyNonlinear
+#             NotifyVirtual
+#
+# It doesn't return anything.
+proc ::ms::focus::Implicit { w detail } {
+    switch -- $detail {
+        NotifyAncestor  -
+        NotifyNonlinear -
+        NotifyInferior  {
+            switch -- [::tk::FocusOK $w] {
+                1   { _focus $w }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
