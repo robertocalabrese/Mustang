@@ -83,10 +83,21 @@ interp alias {} pack {} ::ms::pack::Command
 #
 # Depending on the *action* provided, the return value/s may vary.
 proc ::ms::pack::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _pack {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        configure {}
+        content -
+        slaves  {}
+        forget {}
+        info {}
+        propagate {}
+        default {}
+    }
 }
 
 #*EOF*
