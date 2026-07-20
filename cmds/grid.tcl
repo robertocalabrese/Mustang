@@ -142,7 +142,154 @@ proc ::ms::grid::Command { args } {
             }
         }
         columnconfigure -
-        rowconfigure    {}
+        rowconfigure    {
+            switch -- [llength $args] {
+                0   -
+                1   { ::ms::Error "Invalid number of arguments." $caller_info }
+                2   {
+                    set container [lindex $args 0]
+                    set indexes   [lindex $args 1]
+
+                    # Get the 'container' real address.
+                    set result [::ms::Check_Pathname $container invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Check the 'indexes' value/s.
+                    switch -- $indexes {
+                        all     {}
+                        default {
+                            # Check that every index in indexes is a column/row value or a widget address.
+                            set checked_indexes [list ]
+                            foreach index $indexes {
+                                switch -- [string is integer -strict $index] {
+                                    0   {
+                                        # Check if 'index' is a valid short or real address.
+
+                                        # Get the 'index' real address.
+                                        set result [::ms::Check_Pathname $index invalid]
+                                        switch -- $result {
+                                            invalid { ::ms::Error "Invalid index value, '$index'." $caller_info }
+                                            default { lappend checked_indexes $index }
+                                        }
+                                    }
+                                    1   {
+                                        # Check that 'index' is a positive integer (0 included).
+                                        if { $index > -1 } {
+                                            lappend checked_indexes $index
+                                        } else {
+                                            ::ms::Error "Invalid index value, '$index'." $caller_info
+                                        }
+                                    }
+                                }
+                            }
+
+                            set indexes $checked_indexes
+                        }
+                    }
+
+                    # Check if 'w' is a megawidget container.
+                    if { $w in $::ms::addr(megawidgets,containers) } {
+                        set w $::ms::addr($w,widget)
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid $action $w $indexes
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    set container [lindex  $args 0]
+                    set indexes   [lindex  $args 1]
+                    set args      [lremove $args 0 1]
+
+                    # Get the 'container' real address.
+                    set result [::ms::Check_Pathname $container invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Check the 'indexes' value/s.
+                    switch -- $indexes {
+                        all     {}
+                        default {
+                            # Check that every index in indexes is a column/row value or a widget address.
+                            set checked_indexes [list ]
+                            foreach index $indexes {
+                                switch -- [string is integer -strict $index] {
+                                    0   {
+                                        # Check if 'index' is a valid short or real address.
+
+                                        # Get the 'index' real address.
+                                        set result [::ms::Check_Pathname $index invalid]
+                                        switch -- $result {
+                                            invalid { ::ms::Error "Invalid index value, '$index'." $caller_info }
+                                            default { lappend checked_indexes $index }
+                                        }
+                                    }
+                                    1   {
+                                        # Check that 'index' is a positive integer (0 included).
+                                        if { $index > -1 } {
+                                            lappend checked_indexes $index
+                                        } else {
+                                            ::ms::Error "Invalid index value, '$index'." $caller_info
+                                        }
+                                    }
+                                }
+                            }
+
+                            set indexes $checked_indexes
+                        }
+                    }
+
+                    # Check if 'w' is a megawidget container.
+                    if { $w in $::ms::addr(megawidgets,containers) } {
+                        set w $::ms::addr($w,widget)
+                    }
+
+                    # Check the option/values in 'args'.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                _grid $action $w $indexes {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                # Note: The 'grid info' command returns an option/value list that
+                                #       will always contain the '-in' option at index '0'.
+
+                                # Check if 'w' is a scrollable widget.
+                                if { $w in $::ms::addr(megawidgets,scrollable) } {
+                                    # If its classtype is a listbox, canvas or text, update its scrollbar if needed.
+                                    # The listbox is not a container, its scrollbar update needs to be launched each time its layout changes.
+                                    # For safeguarding we will do the same for canvas and text because even if they are containers,
+                                    # they normally don't contain any widgets.
+                                    switch -- $::ms::data($w,classtype) {
+                                        canvas  -
+                                        listbox -
+                                        text    { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                                    }
+                                }
+
+                                # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
+                                ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_grid info $w] 1]
+
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
         configure {}
         content -
         slaves  {}
