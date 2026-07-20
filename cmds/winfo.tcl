@@ -314,7 +314,53 @@ proc ::ms::winfo::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        pathname {}
+        pathname {
+            # ATTENTION! Differently than others mustang commands, the **winfo pathname** command will **always**
+            #            return real addresses, even if a short address was provided as input.
+            #
+            #            You can always ask if an address is a short or real address with **tk get addr**.
+            #            You can always translate a real address into a short address using the **tk get short**
+            #            command or a short address into a real address using the **tk get real** command.
+            switch -- [llength $args] {
+                1   {}
+                3   {
+                    # '-displayof'
+                    switch -- [lindex $args 0] {
+                        "-displayof" {
+                            set window [lindex $args 1]
+
+                            # Get the real address associated with 'window'.
+                            set result [::ms::Check_Pathname $window invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                default {
+                                    set w    [lindex $result 0]
+                                    set type [lindex $result 1]
+
+                                    # Check the initial address type provided (short or real).
+                                    switch -- $type {
+                                        short {
+                                            # Substitute 'window' with its relative real address.
+                                            set args [lreplace $args 1 1 $w]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                _winfo pathname {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         fpixels -
         pixels  -
         rgb     {}
