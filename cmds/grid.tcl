@@ -80,10 +80,28 @@ interp alias {} grid {} ::ms::grid::Command
 #
 # Depending on the *action* provided, the return value/s may vary.
 proc ::ms::grid::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _grid {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        anchor    -
+        propagate {}
+        bbox {}
+        columnconfigure -
+        rowconfigure    {}
+        configure {}
+        content -
+        slaves  {}
+        forget -
+        remove {}
+        info {}
+        location {}
+        size {}
+        default {}
+    }
 }
 
 #*EOF*
