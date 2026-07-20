@@ -238,4 +238,69 @@ proc ::ms::focus::Implicit { w detail } {
     return ""
 }
 
+## tk_focusNext (from the Tk 'focus.tcl' file)
+#
+# This procedure returns the name of the next window after 'w' in 'focus order'
+# (the window that should receive the focus next if Tab is typed in w).
+# 'Next' is defined by a pre-order search of a top-level and its non-top-level
+# descendants, with the stacking order determining the order of siblings.
+# The **-takefocus** options on windows determine whether or not they should be skipped.
+#
+# Where:
+#
+# w   Should be the widget short or real address involved.
+#
+# Return the real address of the 'next' window after 'w' that can take the keyboard focus.
+proc ::tk_focusNext { w } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Get the 'w' real address.
+    set result [::ms::Check_Pathname $w invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
+        default { set w [lindex $result 0] }
+    }
+
+    # Original procedure.
+    set cur $w
+    while { 1 } {
+        # Descend to just before the first child of the current widget.
+        set parent   $cur
+        set children [_winfo children $cur]
+
+        set i -1
+
+        # Look for the next sibling that isn't a top-level.
+        while { 1 } {
+            incr i
+            if { $i < [llength $children] } {
+                set cur [lindex $children $i]
+                if { [_winfo toplevel $cur] eq $cur } {
+                    continue
+                } else {
+                    break
+                }
+            }
+
+            # No more siblings, so go to the current widget's parent.
+            # If it's a top-level, break out of the loop, otherwise
+            # look for its next sibling.
+
+            set cur $parent
+            if { [_winfo toplevel $cur] eq $cur } {
+                break
+            }
+            set parent   [_winfo parent $parent]
+            set children [_winfo children $parent]
+
+            set i [lsearch -exact $children $cur]
+        }
+
+        if { $w eq $cur || [::tk::FocusOK $cur] } {
+            return $cur
+        }
+    }
+}
+
 #*EOF*
