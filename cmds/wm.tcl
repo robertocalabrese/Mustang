@@ -279,7 +279,74 @@ proc ::ms::wm::Command { args } {
                 return $result
             }
         }
-        stackorder {}
+        stackorder {
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm stackorder $w
+                    } on error {} {
+                        ::ms::Error "Invalid address, '$window'." $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    set option [lindex $args 0]
+                    switch -- $option {
+                        "isabove" -
+                        "isbelow" {
+                            set toplevel [lindex $args 1]
+
+                            # Get the real address associated with 'toplevel'.
+                            set result [::ms::Check_Pathname $toplevel invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$toplevel'." $caller_info }
+                                default { set args [lreplace $args 1 1 [lindex $result 0]] }
+                            }
+                        }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm stackorder $w {*}$args
+                    } on error {} {
+                        ::ms::Error "Invalid address, '$window'." $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                _wm stackorder $w {*}$args
+            } on error {} {
+                ::ms::Error "Invalid address, '$widget' is not a frame, labelframe, or toplevel widget." $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         aspect           -
         attribute        -
         attributes       -
