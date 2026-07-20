@@ -245,7 +245,35 @@ proc ::ms::pack::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        forget {}
+        forget -
+        remove {
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    foreach window $args {
+                        # Get the 'window' real address.
+                        set result [::ms::Check_Pathname $window invalid]
+                        switch -- $result {
+                            invalid { break }
+                            default { set w [lindex $result 0] }
+                        }
+
+                        # Note: The 'pack info' command returns an option/value list that
+                        #       will always contain the '-in' option at index '0'.
+
+                        set container [lindex [_pack info $w] 1]
+
+                        # Forget/Remove the real address.
+                        _pack $action $w
+
+                        # Force the propagation inside any scrollable widget ancestor, if any.
+                        ::ms::Scrollable_Widgets_Propagation_Mechanism $container
+                    }
+
+                    return ""
+                }
+            }
+        }
         info {}
         propagate {}
         default {}
