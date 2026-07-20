@@ -570,4 +570,48 @@ proc ::ms::style::Check_Layout { layout_spec } {
     return "OK"
 }
 
+# Check_Mapping
+#
+# Check the style mapping data provided.
+#
+# Where:
+#
+# style   Should be the style name of the style mapping data to analyze.
+#
+# args    Should be the style mapping data to analyze.
+#
+# Return the data if the style mapping provided is validated, or the word 'invalid' if its not.
+proc ::ms::style::Check_Mapping { style args } {
+    set stylemap [list ]
+    foreach { option mapping } $args {
+        set option_states_values [list ]
+        foreach { states value } $mapping {
+            # Check the states.
+            foreach state $states {
+                switch -- [::ms::Check_State $state] {
+                    invalid { return invalid }
+                }
+            }
+
+            # Check the states option value.
+            set result [::ms::style::Check_Option $option $value]
+            switch -- $result {
+                invalid { return invalid }
+                default { lappend option_states_values $states $result }
+            }
+        }
+
+        # Add the option and the option states values to 'stylemap'.
+        lappend stylemap $option $option_states_values
+
+        # Remove the '-' from option.
+        set option [string trimleft $option "-"]
+
+        # Register the option states values in the 'stylemap' array.
+        set ::ms::stylemap($::ms::theme,$style,$option) $option_states_values
+    }
+
+    return $stylemap
+}
+
 #*EOF*
