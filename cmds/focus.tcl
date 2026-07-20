@@ -303,4 +303,71 @@ proc ::tk_focusNext { w } {
     }
 }
 
+## tk_focusPrev (from the Tk 'focus.tcl' file)
+#
+# This procedure returns the name of the previous window before 'w' in 'focus order'
+# (the window that should receive the focus next if Shift-Tab is typed in w).
+# 'Previous' is defined by a pre-order search of a top-level and its non-top-level
+# descendants, with the stacking order determining the order of siblings.
+# The **-takefocus** options on windows determine whether or not they should be skipped.
+#
+# Where:
+#
+# w   Should be the widget short or real address involved.
+#
+# Return the the real address of the 'previous' window after 'w' that can take the keyboard focus.
+proc ::tk_focusPrev { w } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Get the 'w' real address.
+    set result [::ms::Check_Pathname $w invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
+        default { set w [lindex $result 0] }
+    }
+
+    # Original procedure.
+    set cur $w
+    while { 1 } {
+        # Collect information about the current window's position
+        # among its siblings.  Also, if the window is a top-level,
+        # then reposition to just after the last child of the window.
+
+        if { [_winfo toplevel $cur] eq $cur }  {
+            set parent   $cur
+            set children [_winfo children $cur]
+
+            set i [llength $children]
+        } else {
+            set parent   [_winfo parent $cur]
+            set children [_winfo children $parent]
+
+            set i [lsearch -exact $children $cur]
+        }
+
+        # Go to the previous sibling, then descend to its last descendant
+        # (highest in stacking order.  While doing this, ignore top-levels
+        # and their descendants.  When we run out of descendants, go up
+        # one level to the parent.
+
+        while { $i > 0 } {
+            incr i -1
+            set cur [lindex $children $i]
+            if { [_winfo toplevel $cur] eq $cur } {
+                continue
+            }
+            set parent   $cur
+            set children [_winfo children $parent]
+
+            set i [llength $children]
+        }
+
+        set cur $parent
+        if { $w eq $cur || [::tk::FocusOK $cur] } {
+            return $cur
+        }
+    }
+}
+
 #*EOF*
