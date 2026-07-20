@@ -404,27 +404,27 @@
 #
 # A toplevel window containing a text widget and two scrollbars:
 #
-#     # Make the widgets
-#     toplevel .t
-#     text .t.txt -wrap none -xscroll {.t.h set} -yscroll {.t.v set}
-#     scrollbar .t.v -orient vertical   -command {.t.txt yview}
-#     scrollbar .t.h -orient horizontal -command {.t.txt xview}
+#   # Make the widgets
+#   toplevel .t
+#   text .t.txt -wrap none -xscroll {.t.h set} -yscroll {.t.v set}
+#   scrollbar .t.v -orient vertical   -command {.t.txt yview}
+#   scrollbar .t.h -orient horizontal -command {.t.txt xview}
 #
-#     # Lay them out
-#     grid .t.txt .t.v .t.h -sticky nsew
+#   # Lay them out
+#   grid .t.txt .t.v .t.h -sticky nsew
 #
-#     # Tell the text widget to take all the extra room
-#     grid rowconfigure    .t .t.txt -weight 1
-#     grid columnconfigure .t .t.txt -weight 1
+#   # Tell the text widget to take all the extra room
+#   grid rowconfigure    .t .t.txt -weight 1
+#   grid columnconfigure .t .t.txt -weight 1
 #
 # Three widgets of equal width, despite their different "natural" widths:
 #
-#     button .b -text "Foo"
-#     entry .e -textvariable foo ; set foo "Hello World!"
-#     label .l -text "This is a fairly long piece of text"
+#   button .b -text "Foo"
+#   entry .e -textvariable foo ; set foo "Hello World!"
+#   label .l -text "This is a fairly long piece of text"
 #
-#     grid .b .e .l -sticky ew
-#     grid columnconfigure . "all" -uniform allTheSame
+#   grid .b .e .l -sticky ew
+#   grid columnconfigure . "all" -uniform allTheSame
 namespace eval ::ms::grid {}
 
 # Rename the original Tk **grid** command.
