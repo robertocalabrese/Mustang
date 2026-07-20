@@ -1,0 +1,545 @@
+# Copyright: 2025 Roberto Calabrese a.k.a. Kicka
+#
+# This file is part of "Mustang", a GUI toolkit for Tcl/Tk 9.0 and later
+# (https://codeberg.org/kicka/Mustang).
+#
+# The author hereby grant permission to use, copy, modify, distribute,
+# and license this software and its documentation for any purpose, provided
+# that existing copyright notices are retained in all copies and that this
+# notice is included verbatim in any distributions. No written agreement,
+# license, or royalty fee is required for any of the authorized uses.
+# Modifications to this software may be copyrighted by their authors
+# and need not follow the licensing terms described here, provided that
+# the new terms are clearly indicated on the first page of each file where
+# they apply.
+#
+# IN NO EVENT SHALL THE AUTHOR OR DISTRIBUTORS BE LIABLE TO ANY PARTY
+# FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+# ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY
+# DERIVATIVES THEREOF, EVEN IF THE AUTHOR HAVE BEEN ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# THE AUTHOR AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+# INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+# IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHOR AND DISTRIBUTORS HAVE
+# NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+# MODIFICATIONS.
+#
+# GOVERNMENT USE: If you are acquiring this software on behalf of the
+# U.S. government, the Government shall have only "Restricted Rights"
+# in the software and related documentation as defined in the Federal
+# Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
+# are acquiring the software on behalf of the Department of Defense, the
+# software shall be classified as "Commercial Computer Software" and the
+# Government shall have only "Restricted Rights" as defined in Clause
+# 252.227-7013 (c) (1) of DFARs.  Notwithstanding the foregoing, the
+# author grant the U.S. Government and others acting in its behalf
+# permission to use and distribute the software in accordance with the
+# terms specified in this license.
+
+#############################
+##                         ##
+##     MUSTANG PALETTE     ##
+##                         ##
+#############################
+
+# Colors selection from 'https://en.wikipedia.org/wiki/Lists_of_colors'
+#                       'https://en.wikipedia.org/wiki/Pantone'
+
+# Colorname                     Hexcolor    Family
+"Alice Blue"                    #f0f8ff     Cyan-Blue
+Almond                          #eed9c4     Orange
+"Antique Brass"                 #c88a65     Orange
+"Antique Gray"                  #9f9f9f     Gray
+"Antique White"                 #faebd7     Orange
+"Apple Orchard"                 #bf3f3f     Red
+Apricot                         #fdd5b1     Orange
+Aqua                            #00ffff     Cyan
+"Aqua Pearl"                    #5fbed7     Cyan
+"Aqua Sky"                      #7bc4c4     Cyan
+Aquamarine                      #7fffd4     Green-Cyan
+Asparagus                       #7ba05b     Yellow-Green
+"Atomic Tangerine"              #ff9966     Orange
+"Aztec Gold"                    #c39953     Orange
+Azure                           #f0ffff     Cyan
+"Banana Mania"                  #fbe7b2     Orange
+Beaver                          #926f5b     Orange
+Beige                           #f5f5dc     Yellow
+Bisque                          #ffe4c4     Orange
+Bittersweet                     #fe6f5e     Red
+"Bittersweet Shimmer"           #bf4f51     Red
+Black                           #000000     Gray
+"Black Coral Pearl"             #54626f     Cyan-Blue
+"Black Pearl"                   #3a3a3a     Gray
+"Blanched Almond"               #ffebcd     Orange
+"Blast Off Bronze"              #a57164     Red
+Blue                            #0000ff     Blue
+"Blue Bell"                     #9999cc     Blue
+"Blue Gray"                     #c8c8cd     Blue
+"Blue Iris"                     #5a5b9f     Blue
+"Blue Turquoise"                #53b0ae     Cyan
+"Blue Violet"                   #8a2be2     Blue-Purple
+Blush                           #db5079     Purple-Red
+"Brick Red"                     #c62d42     Red
+"Brilliant Rose"                #e667ce     Purple
+Brown                           #a52a2a     Red
+"Bubble Gum"                    #df9aca     Purple-Red
+Burlywood                       #deb887     Orange
+"Burnished Brown"               #a17a74     Red
+"Burnt Orange"                  #ff7034     Orange
+"Burnt Sienna"                  #e97451     Red
+"Burnt Umber"                   #805533     Orange
+"Butternut Squash"              #e74f00     Orange
+"Cadet Blue"                    #5f9ea0     Cyan
+Canary                          #ffff99     Yellow
+"Caribbean Green"               #00cc99     Green-Cyan
+"Caribbean Green Pearl"         #6ada8e     Green-Cyan
+"Caribbean Sea"                 #67cd95     Green-Cyan
+Carmine                         #e62e6b     Purple-Red
+"Carnation Pink"                #ffa6c9     Purple-Red
+"Celestial Blue"                #7070cc     Blue
+Cerise                          #da3287     Purple-Red
+Cerulean                        #9bb7d4     Cyan-Blue
+"Cerulean Blue"                 #339acc     Cyan-Blue
+"Cerulean Frost"                #6d9bc3     Cyan-Blue
+"Charcoal Gray"                 #736a62     Orange
+Chartreuse                      #7fff00     Yellow-Green
+Chestnut                        #b94e48     Red
+"Chili Pepper"                  #9b1b30     Red
+Chocolate                       #d2691e     Orange
+"Cinnamon Satin"                #cd607e     Purple-Red
+Citrine                         #933709     Orange
+"Classic Blue"                  #0f4c81     Cyan-Blue
+"Cloudy Sky"                    #548cd0     Cyan-Blue
+"Cobalt Blue"                   #8c90c8     Blue
+"Cobalt Cool"                   #028aae     Cyan
+"Cool Mint"                     #ddebec     Cyan
+Copper                          #da8a67     Orange
+"Copper Penny"                  #ad6f69     Red
+Coral                           #ff7f50     Orange
+Cornflower                      #93ccea     Cyan-Blue
+"Cornflower Blue"               #6495ed     Cyan-Blue
+Cornsilk                        #fff8dc     Yellow
+"Cosmic Cobalt"                 #2e2d88     Blue
+"Cotton Candy"                  #ffb7d5     Purple-Red
+Crayellow                       #f1d651     Yellow
+Crimson                         #dc143c     Red
+"Cyber Grape"                   #58427c     Blue-Purple
+Dandelion                       #fed85d     Yellow
+"Dark Goldenrod"                #b8860b     Orange
+"Dark Gray"                     #a9a9a9     Gray
+"Dark Green"                    #006400     Green
+"Dark Khaki"                    #bdb76b     Yellow
+"Dark Magenta"                  #8b008b     Purple
+"Dark Olive Green"              #556b2f     Yellow-Green
+"Dark Orange"                   #ff8c00     Orange
+"Dark Orchid"                   #9932cc     Blue-Purple
+"Dark Red"                      #8b0000     Red
+"Dark Salmon"                   #e9967a     Orange
+"Dark Sea Green"                #8fbc8f     Green
+"Dark Slate Blue"               #483d8b     Blue
+"Dark Slate Gray"               #2f4f4f     Cyan
+"Dark Turquoise"                #00ced1     Cyan
+"Dark Venetian Red"             #b33b24     Red
+"Dark Violet"                   #9400d3     Blue-Purple
+"Deep Almond"                   #986a5a     Orange
+"Deep Golden"                   #8d5b28     Orange
+"Deep Pink"                     #ff1493     Purple-Red
+"Deep Rose"                     #b86f69     Red
+"Deep Sky Blue"                 #00bfff     Cyan-Blue
+"Deep Space Sparkle"            #4a646c     Cyan
+"Deepest Almond"                #513529     Orange
+Denim                           #1560bd     Cyan-Blue
+"Desert Sand"                   #edc9af     Orange
+"Dodger Blue"                   #1e90ff     Cyan-Blue
+"Electric Lime"                 #ccff00     Yellow
+Emerald                         #009473     Cyan
+"English Vermilion"             #cc474b     Red
+"Extra Deep Golden"             #5f452e     Orange
+"Extra Deep Rose"               #6c4d4b     Red
+"Extra Light Almond"            #eee6cf     Orange
+Fern                            #63b76c     Green
+Firebrick                       #b22222     Red
+"Floral White"                  #fffaf0     Orange
+"Forest Green"                  #228b22     Green
+Fuchsia                         #c154c1     Purple
+"Fuchsia Rose"                  #c74375     Purple-Red
+"Fuzzy Wuzzy"                   #87421f     Orange
+Gainsboro                       #dcdcdc     Gray
+"Ghost White"                   #f8f8ff     Blue
+"Glossy Grape"                  #ab92b3     Purple
+Gold                            #ffd700     Yellow
+"Gold Medal"                    #c5bc42     Yellow
+Goldenrod                       #daa520     Orange
+"Granite Gray"                  #676767     Gray
+"Granny Smith Apple"            #9de093     Green
+"Grape Violet"                  #8359a3     Blue-Purple
+Gray                            #808080     Gray
+"Gray 1"                        #030303     Gray
+"Gray 2"                        #050505     Gray
+"Gray 3"                        #080808     Gray
+"Gray 4"                        #0a0a0a     Gray
+"Gray 5"                        #0d0d0d     Gray
+"Gray 6"                        #0f0f0f     Gray
+"Gray 7"                        #121212     Gray
+"Gray 8"                        #141414     Gray
+"Gray 9"                        #171717     Gray
+"Gray 10"                       #1a1a1a     Gray
+"Gray 11"                       #1c1c1c     Gray
+"Gray 12"                       #1f1f1f     Gray
+"Gray 13"                       #212121     Gray
+"Gray 14"                       #242424     Gray
+"Gray 15"                       #262626     Gray
+"Gray 16"                       #292929     Gray
+"Gray 17"                       #2b2b2b     Gray
+"Gray 18"                       #2e2e2e     Gray
+"Gray 19"                       #303030     Gray
+"Gray 20"                       #333333     Gray
+"Gray 21"                       #363636     Gray
+"Gray 22"                       #383838     Gray
+"Gray 23"                       #3b3b3b     Gray
+"Gray 24"                       #3d3d3d     Gray
+"Gray 25"                       #404040     Gray
+"Gray 26"                       #424242     Gray
+"Gray 27"                       #454545     Gray
+"Gray 28"                       #474747     Gray
+"Gray 29"                       #4a4a4a     Gray
+"Gray 30"                       #4d4d4d     Gray
+"Gray 31"                       #4f4f4f     Gray
+"Gray 32"                       #525252     Gray
+"Gray 33"                       #545454     Gray
+"Gray 34"                       #575757     Gray
+"Gray 35"                       #595959     Gray
+"Gray 36"                       #5c5c5c     Gray
+"Gray 37"                       #5e5e5e     Gray
+"Gray 38"                       #616161     Gray
+"Gray 39"                       #636363     Gray
+"Gray 40"                       #666666     Gray
+"Gray 41"                       #696969     Gray
+"Gray 42"                       #6b6b6b     Gray
+"Gray 43"                       #6e6e6e     Gray
+"Gray 44"                       #707070     Gray
+"Gray 45"                       #737373     Gray
+"Gray 46"                       #757575     Gray
+"Gray 47"                       #787878     Gray
+"Gray 48"                       #7a7a7a     Gray
+"Gray 49"                       #7d7d7d     Gray
+"Gray 50"                       #7f7f7f     Gray
+"Gray 51"                       #828282     Gray
+"Gray 52"                       #858585     Gray
+"Gray 53"                       #878787     Gray
+"Gray 54"                       #8a8a8a     Gray
+"Gray 55"                       #8c8c8c     Gray
+"Gray 56"                       #8f8f8f     Gray
+"Gray 57"                       #919191     Gray
+"Gray 58"                       #949494     Gray
+"Gray 59"                       #969696     Gray
+"Gray 60"                       #999999     Gray
+"Gray 61"                       #9c9c9c     Gray
+"Gray 62"                       #9e9e9e     Gray
+"Gray 63"                       #a1a1a1     Gray
+"Gray 64"                       #a3a3a3     Gray
+"Gray 65"                       #a6a6a6     Gray
+"Gray 66"                       #a8a8a8     Gray
+"Gray 67"                       #ababab     Gray
+"Gray 68"                       #adadad     Gray
+"Gray 69"                       #b0b0b0     Gray
+"Gray 70"                       #b3b3b3     Gray
+"Gray 71"                       #b5b5b5     Gray
+"Gray 72"                       #b8b8b8     Gray
+"Gray 73"                       #bababa     Gray
+"Gray 74"                       #bdbdbd     Gray
+"Gray 75"                       #bfbfbf     Gray
+"Gray 76"                       #c2c2c2     Gray
+"Gray 77"                       #c4c4c4     Gray
+"Gray 78"                       #c7c7c7     Gray
+"Gray 79"                       #c9c9c9     Gray
+"Gray 80"                       #cccccc     Gray
+"Gray 81"                       #cfcfcf     Gray
+"Gray 82"                       #d1d1d1     Gray
+"Gray 83"                       #d4d4d4     Gray
+"Gray 84"                       #d6d6d6     Gray
+"Gray 85"                       #d9d9d9     Gray
+"Gray 86"                       #dbdbdb     Gray
+"Gray 87"                       #dedede     Gray
+"Gray 88"                       #e0e0e0     Gray
+"Gray 89"                       #e3e3e3     Gray
+"Gray 90"                       #e5e5e5     Gray
+"Gray 91"                       #e8e8e8     Gray
+"Gray 92"                       #ebebeb     Gray
+"Gray 93"                       #ededed     Gray
+"Gray 94"                       #f0f0f0     Gray
+"Gray 95"                       #f2f2f2     Gray
+"Gray 96"                       #f5f5f5     Gray
+"Gray 97"                       #f7f7f7     Gray
+"Gray 98"                       #fafafa     Gray
+"Gray 99"                       #fcfcfc     Gray
+Green                           #008000     Green
+"Green Blue"                    #2887c8     Cyan-Blue
+"Green Sheen"                   #6eaea1     Cyan
+"Green Yellow"                  #adff2f     Yellow-Green
+Greenery                        #88b04b     Yellow-Green
+Honeydew                        #f0fff0     Green
+Honeysuckle                     #d94f70     Red
+"Hot Cocoa"                     #8f482f     Orange
+"Hot Magenta"                   #ff00cc     Purple
+"Hot Pink"                      #ff69b4     Purple-Red
+"Illuminating"                  #f5df4d     Yellow
+"Illuminating Emerald"          #319177     Green-Cyan
+Inchworm                        #dee327     Yellow
+"Indian Red"                    #cd5c5c     Red
+Indigo                          #4b0082     Blue-Purple
+"Iridescent Indigo"             #3c32cd     Blue
+Ivory                           #fffff0     Yellow
+Jade                            #469a84     Green-Cyan
+Jasper                          #d05340     Red
+"Jazzberry Jam"                 #a50b5e     Purple-Red
+"Jungle Green"                  #29ab87     Green-Cyan
+"Key Lime Pearl"                #e8f48c     Yellow
+Khaki                           #f0e68c     Yellow
+"Laser Lemon"                   #e6ff66     Yellow
+Lavender                        #e6e6fa     Blue
+"Lavender Blush"                #fff0f5     Purple-Red
+"Lavender Silk"                 #6b4d82     Blue-Purple
+"Lemon Chiffon"                 #fffacd     Yellow
+"Lemon Yellow 1"                #fbe870     Yellow
+"Lemon Yellow 2"                #efe75e     Yellow
+"Light Almond"                  #e6b9b3     Red
+"Light Blue"                    #add8e6     Cyan
+"Light Chrome Green"            #bee64b     Yellow-Green
+"Light Coral"                   #f08080     Red
+"Light Cyan"                    #e0ffff     Cyan
+"Light Goldenrod Yellow"        #fafad2     Yellow
+"Light Gray"                    #d3d3d3     Gray
+"Light Green"                   #90ee90     Green
+"Light Medium Almond"           #e0b5a4     Orange
+"Light Medium Golden"           #f0c9a2     Orange
+"Light Medium Rose"             #f4afb2     Red
+"Light Pink"                    #ffb6c1     Red
+"Light Rose"                    #fac7c3     Red
+"Light Salmon"                  #ffa07a     Orange
+"Light Sea Green"               #20b2aa     Cyan
+"Light Slate Gray"              #778899     Cyan-Blue
+"Light Steel Blue"              #b0c4de     Cyan-Blue
+"Light Venetian Red"            #e6735c     Red
+"Light Yellow"                  #ffffe0     Yellow
+"Lilac Luster"                  #ae98aa     Purple
+Lime                            #00ff00     Green
+"Lime Green"                    #32cd32     Green
+Linen                           #faf0e6     Orange
+"Liquid Gold"                   #ffd966     Yellow
+"Living Coral"                  #ff6f61     Red
+"Macaroni and Cheese"           #ffb97b     Orange
+Magenta                         #ff00ff     Purple
+"Magic Mint"                    #83caa2     Green-Cyan
+Mahogany                        #ca3435     Red
+Maize                           #f2c649     Orange
+Malachite                       #469496     Cyan
+"Mandarin Pearl"                #f37a48     Orange
+Maroon                          #800000     Red
+Marsala                         #955251     Red
+"Maximum Blue"                  #47abcc     Cyan
+"Maximum Blue Purple"           #acace6     Blue
+"Maximum Green"                 #5e8c31     Yellow-Green
+"Maximum Green Yellow"          #d9e650     Yellow
+"Maximum Purple"                #733380     Purple
+"Maximum Red"                   #d92121     Red
+"Maximum Red Purple"            #a63a79     Purple-Red
+"Maximum Yellow"                #fafa37     Yellow
+"Maximum Yellow Red"            #f2ba49     Orange
+"Medium Almond"                 #d19c7d     Orange
+"Medium Aquamarine"             #66cdaa     Green-Cyan
+"Medium Blue"                   #0000cd     Blue
+"Medium Chrome Green"           #6ca67c     Green-Cyan
+"Medium Deep Golden"            #a16b4f     Orange
+"Medium Deep Rose"              #ee8e99     Red
+"Medium Golden"                 #dea26c     Orange
+"Medium Orchid"                 #ba55d3     Purple
+"Medium Purple"                 #9370db     Blue-Purple
+"Medium Rose"                   #d96cbe     Purple
+"Medium Sea Green"              #3cb371     Green-Cyan
+"Medium Slate Blue"             #7b68ee     Blue
+"Medium Spring Green"           #00fa9a     Green-Cyan
+"Medium Turquoise"              #48d1cc     Cyan
+"Medium Violet"                 #8f47b3     Blue-Purple
+"Medium Violet Red"             #c71585     Purple-Red
+Melon                           #febaad     Red
+"Metallic Seaweed"              #0a7e8c     Cyan
+"Middle Blue"                   #7ed4e6     Cyan
+"Middle Blue Green"             #8dd9cc     Cyan
+"Middle Blue Purple"            #8b72be     Blue-Purple
+"Middle Green"                  #4d8c57     Green
+"Middle Green Yellow"           #acbf60     Yellow
+"Middle Purple"                 #d982b5     Purple-Red
+"Middle Red"                    #e58e73     Red
+"Middle Red Purple"             #a55353     Red
+"Middle Yellow"                 #ffeb00     Yellow
+"Middle Yellow Red"             #ecac76     Orange
+"Midnight Blue"                 #191970     Blue
+"Midnight Pearl"                #702670     Purple
+Mimosa                          #f0c05a     Orange
+"Mint Cream"                    #f5fffa     Green-Cyan
+"Misty Moss"                    #bbb477     Yellow
+"Misty Rose"                    #ffe4e1     Red
+Moccasin                        #ffe4b5     Orange
+"Mocha Mousse"                  #a47864     Orange
+"Moonlit Pond"                  #4f2cd0     Blue
+Moonstone                       #3aa8c1     Cyan
+"Mountain Meadow"               #1ab385     Green-Cyan
+Mulberry                        #af1f65     Purple-Red
+"Mystic Maroon"                 #ad4379     Purple-Red
+"Mystic Pearl"                  #d65282     Purple-Red
+"Navajo White"                  #ffdead     Orange
+Navy                            #000080     Blue
+"Navy Blue"                     #0066cc     Cyan-Blue
+"Neon Carrot"                   #ff9933     Orange
+Oatmeal                         #d9dad2     Yellow
+"Ocean Blue Pearl"              #4f42b5     Blue
+"Ocean Foam"                    #62c9d3     Cyan
+"Ocean Green Pearl"             #48bf91     Green-Cyan
+"Old Lace"                      #fdf5e6     Orange
+Olive                           #808000     Yellow
+"Olive Drab"                    #6b8e23     Yellow-Green
+"Olive Green"                   #b5b35c     Yellow
+Onyx                            #353839     Cyan
+Orange                          #ffa500     Orange
+"Orange Peel"                   #ff8021     Orange
+"Orange Red"                    #ff4500     Orange
+"Orange Yellow"                 #f8d568     Yellow
+Orchid                          #da70d6     Purple
+"Orchid Pearl"                  #7b4259     Purple-Red
+"Outer Space"                   #2d383a     Cyan
+"Pacific Blue"                  #009dc4     Cyan
+"Pale Goldenrod"                #eee8aa     Yellow
+"Pale Green"                    #98fb98     Green
+"Pale Turquoise"                #afeeee     Cyan
+"Pale Violet Red"               #db7093     Purple-Red
+"Papaya Whip"                   #ffefd5     Orange
+Peach                           #ffcba4     Orange
+"Peach Fuzz"                    #ffbe98     Orange
+"Peach Puff"                    #ffdab9     Orange
+Peridot                         #abad48     Yellow
+Periwinkle                      #c3cde6     Cyan-Blue
+"Permanent Geranium Lake"       #e12c2c     Red
+Peru                            #cd853f     Orange
+Pesto                           #5f7b4a     Yellow-Green
+"Petrified Forest"              #005b39     Green-Cyan
+"Pewter Blue"                   #8ba8b7     Cyan-Blue
+"Piggy Pink"                    #fdd7e4     Purple-Red
+"Pine Green"                    #01796f     Cyan
+Pink                            #ffc0cb     Red
+"Pink Flamingo"                 #fc74fd     Purple
+"Pink Luster"                   #ffb2e7     Purple-Red
+"Pink Pearl"                    #b07080     Purple-Red
+"Pink Sherbert"                 #f7a38e     Red
+Plum                            #dda0dd     Purple
+"Polished Pine"                 #5da493     Cyan
+"Powder Blue"                   #b0e0e6     Cyan
+Purple                          #800080     Purple
+"Purple Heart"                  #652dc1     Blue-Purple
+"Purple Pizzazz"                #ff00bb     Purple-Red
+"Radiant Orchid"                #b163a3     Purple
+"Radical Red"                   #ff355e     Red
+"Raw Sienna 1"                  #d27d46     Orange
+"Raw Sienna 2"                  #e6bc5c     Orange
+"Raw Umber"                     #886a4e     Orange
+"Razzle Dazzle Rose"            #ee34d2     Purple
+"Rebecca Purple"                #663399     Blue-Purple
+Red                             #ff0000     Red
+"Red Orange"                    #ff3f34     Red
+"Red Satin"                     #9f3434     Red
+"Red Violet"                    #bb3385     Purple-Red
+"Robot Canary"                  #9c7c38     Orange
+"Rose Dust"                     #9e5e6f     Purple-Red
+"Rose Gold"                     #c88ca4     Purple-Red
+"Rose Pearl"                    #f03865     Red
+"Rose Quartz"                   #f7cac9     Red
+"Rose Red"                      #ed0a3f     Red
+"Rosy Brown"                    #bc8f8f     Red
+"Royal Blue"                    #4169e1     Cyan-Blue
+"Royal Purple"                  #6b3fa0     Blue-Purple
+Ruby                            #aa4069     Purple-Red
+"Rusty Red"                     #da2c43     Red
+"Saddle Brown"                  #8b4513     Orange
+Salmon                          #fa8072     Red
+"Salmon Pearl"                  #f1444a     Red
+"Sand Dollar"                   #decdbe     Orange
+"Sandy Brown"                   #f4a460     Orange
+Sapphire                        #2d5da1     Cyan-Blue
+Scarlet                         #fd0e35     Red
+"Sea Glass"                     #c4ea7f     Yellow-Green
+"Sea Green"                     #2e8b57     Green-Cyan
+"Sea Shell"                     #fff5ee     Orange
+Sepia                           #9e5b40     Orange
+Serenity                        #92a8d1     Cyan-Blue
+Shadow                          #837050     Orange
+"Shadow Blue"                   #778ba5     Cyan-Blue
+Shamrock                        #33cc99     Green-Cyan
+"Sheen Green"                   #8fd400     Yellow-Green
+"Shimmering Blush"              #d98695     Red
+"Shocking Pink"                 #ff6eff     Purple
+"Shooting Star"                 #ffff65     Yellow
+Sienna                          #a0522d     Orange
+Silver                          #c0c0c0     Gray
+"Sky Blue"                      #87ceeb     Cyan-Blue
+"Slate Blue"                    #6a5acd     Blue
+"Slate Gray"                    #708090     Cyan-Blue
+"Smoke Gray"                    #8b8680     Orange
+"Smokey Topaz"                  #832a0d     Red
+Snow                            #fffafa     Red
+"Snow Drift"                    #f3f3f3     Gray
+"Spring Green"                  #00ff7f     Green-Cyan
+"Steel Blue"                    #4682b4     Cyan-Blue
+"Steel Teal"                    #5f8a8b     Cyan
+"Sugar Plum"                    #914e75     Purple-Red
+Sunglow                         #ffcc33     Yellow
+"Sunny Pearl"                   #f2f27a     Yellow
+"Sunset Orange"                 #fe4c40     Red
+"Sunset Pearl"                  #f1cc79     Orange
+"Sunset Shimmer"                #f79015     Orange
+Tan                             #fa9d5a     Orange
+"Tangerine Tango"               #dd4124     Red
+Teal                            #008080     Cyan
+Thistle                         #d8bfd8     Purple
+"Tickle Me Pink"                #fc80a5     Purple-Red
+Tigerlily                       #e2583e     Red
+Timberwolf                      #d9d6cf     Orange
+Tomato                          #ff6347     Red
+"Tropical Rain Forest"          #00755e     Cyan
+"True Red"                      #bf1932     Red
+"Tulip Orange"                  #ff8833     Orange
+Tumbleweed                      #dea681     Orange
+Turquoise                       #45b5aa     Cyan
+"Turquoise Blue"                #6cdae7     Cyan
+"Turquoise Pearl"               #3bbcd0     Cyan
+"Twilight Lavender"             #8a496b     Purple-Red
+"Ultimate Gray"                 #939597     Cyan-Blue
+"Ultra Violet"                  #5f4b8b     Blue-Purple
+"Ultramarine Blue"              #3f26bf     Blue
+"Unmellow Yellow"               #ffee66     Yellow
+"Van Dyke Brown"                #664228     Orange
+"Venetian Red"                  #cc553d     Red
+"Very Deep Almond"              #88605e     Red
+"Very Deep Rose"                #8f6c68     Red
+"Very Light Almond"             #e6d2d3     Red
+"Very Light Golden"             #f0dfcf     Orange
+"Very Light Rose"               #f7e1e3     Red
+"Very Peri"                     #6667ab     Blue
+Violet                          #ee82ee     Purple
+"Violet Blue"                   #274ba1     Cyan-Blue
+"Violet Purple"                 #732e6c     Purple
+"Violet Red"                    #f7468a     Purple-Red
+"Viva Magenta"                  #bb2649     Red
+"Vivid Tangerine"               #ff9980     Red
+"Vivid Violet"                  #803790     Purple
+Wheat                           #f5deb3     Orange
+White                           #ffffff     Gray
+"White Smoke"                   #f5f5f5     Gray
+"Wild Blue Yonder"              #7a89b8     Blue
+"Wild Strawberry"               #ff3399     Purple-Red
+"Wild Watermelon"               #fd5b78     Red
+"Wintergreen Dream"             #56887d     Cyan
+Yellow                          #ffff00     Yellow
+"Yellow Green"                  #9acd32     Yellow-Green
+"Yellow Orange"                 #ffae42     Orange
