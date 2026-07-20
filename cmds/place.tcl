@@ -311,7 +311,59 @@ proc ::ms::place::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default {}
+        default {
+            set window $action
+
+            # Get the 'window' real address.
+            set result [::ms::Check_Pathname $window invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                default { set w [lindex $result 0] }
+            }
+
+            # Check the option/values in 'args'.
+            switch -- [expr { [llength $args]%2 }] {
+                0   {
+                    # Check if the '-in' option was provided.
+                    set index [lsearch -exact $args "-in"]
+                    switch -- $index {
+                        -1      {}
+                        default {
+                            # '-in'
+                            set container [lindex $args $index+1]
+
+                            # Get the 'container' real address.
+                            set result [::ms::Check_Pathname $container invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                                default {
+                                    set w    [lindex $result 0]
+                                    set type [lindex $result 1]
+
+                                    # Check the initial address type provided (short or real).
+                                    switch -- $type {
+                                        short {
+                                            # Substitute 'window' with its relative real address.
+                                            set args [lreplace $args $index+1 $index+1 $w]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                _place $w {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
     }
 }
 
