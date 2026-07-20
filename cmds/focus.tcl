@@ -83,10 +83,114 @@ interp alias {} focus {} ::ms::focus::Command
 #
 # Depending on the *action* provided, the return value/s may vary.
 proc ::ms::focus::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _focus {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    switch -- [llength $args] {
+        0   { return [_focus] }
+        1   {
+            set window $args
+
+            # Get the 'window' real address.
+            set result [::ms::Check_Pathname $window invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                default { set w [lindex $result 0] }
+            }
+
+            # Check if 'w' is the hull of a megawidget of some kind.
+            if { $w in $::ms::addr(megawidgets) } {
+                set w $::ms::addr($w,widget)
+            }
+
+            # Execute the command.
+            _focus $w
+        }
+        2   {
+            set action [lindex $args 0]
+            set window [lindex $args 1]
+
+            # Get the 'window' real address.
+            set result [::ms::Check_Pathname $window invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                default {
+                    set w    [lindex $result 0]
+                    set type [lindex $result 1]
+                }
+            }
+
+            # Check the 'action' value.
+            switch -- $action {
+                "-displayof" -
+                "-lastfor"   {
+                    set focus_address [_focus $action $w]
+
+                    # Check the initial address type provided (short or real).
+                    switch -- $type {
+                        short {
+                            if { $focus_address in $::ms::addr(reals) } {
+                                # 'focus_address' is a real address of a widget created by mustang.
+                                return $::ms::addr($focus_address,short)
+                            } else {
+                                # 'focus_address' is a real address of a widget not created by mustang.
+                                return [::ms::Get_Short $focus_address]
+                            }
+                        }
+                        default { return $focus_address }
+                    }
+                }
+                "-force" {
+                    # Check if 'w' is the hull of a megawidget of some kind.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        set w $::ms::addr($w,widget)
+                    }
+
+                    _focus -force $w
+                }
+                "-next" {
+                    # Get the next address relative to 'w'.
+                    set next_address [::tk_focusNext $w]
+
+                    # Check the initial address type provided (short or real).
+                    switch -- $type {
+                        short {
+                            if { $next_address in $::ms::addr(reals) } {
+                                # 'next_address' is a real address of a widget created by mustang.
+                                return $::ms::addr($next_address,short)
+                            } else {
+                                # 'next_address' is a real address of a widget not created by mustang.
+                                return [::ms::Get_Short $next_address]
+                            }
+                        }
+                        default { return $next_address }
+                    }
+                }
+                "-prev" {
+                    # Get the previous address relative to 'w'.
+                    set prev_address [::tk_focusPrev $w]
+
+                    # Check the initial address type provided (short or real).
+                    switch -- $type {
+                        short {
+                            if { $prev_address in $::ms::addr(reals) } {
+                                # 'prev_address' is a real address of a widget created by mustang.
+                                return $::ms::addr($prev_address,short)
+                            } else {
+                                # 'prev_address' is a real address of a widget not created by mustang.
+                                return [::ms::Get_Short $prev_address]
+                            }
+                        }
+                        default { return $prev_address }
+                    }
+                }
+                default { ::ms::Error "Wrong option or option with no value." $caller_info }
+            }
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
+
+    return ""
 }
 
 #*EOF*
