@@ -210,7 +210,52 @@ proc ::ms::style::Command { args } {
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
-        layout {}
+        layout {
+            # Note: Canvas, Listbox, Menu, Text and Toplevel widgets does not understands layouts
+            #       due to their classic nature.
+            #       Trying to associate a layout to one of these widget will be ignored by mustang.
+            #       The layout will be created but never applied.
+
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+                1   {
+                    set layout_name [lindex $args 0]
+
+                    # Check if the layout name provided exists in the 'stylelayout' array for the current theme.
+                    switch -- [info exists ::ms::stylelayout($::ms::theme,$layout_name)] {
+                        0   { return "" }
+                        1   { return $::ms::stylelayout($::ms::theme,$layout_name) }
+                    }
+                }
+                default {
+                    set layout_name [lindex $args 0]
+                    set layout_spec [string trim {*}[lremove $args 0]]
+
+                    # Check the layout spec provided.
+                    switch -- [::ms::style::Check_Layout $layout_spec] {
+                        invalid { ::ms::Error "Invalid layout spec." $caller_info }
+                    }
+
+                    # Register the layout into the style layout dictionary.
+                    set ::ms::stylelayout($::ms::theme,$layout_name) $layout_spec
+
+                    # Execute the command.
+                    _ttk_style layout $layout_name $layout_spec
+
+                    # If needed, add the layout name into the layout list.
+                    switch -- [info exists ::ms::layouts($::ms::theme)] {
+                        0   { set ::ms::layouts($::ms::theme) [list $layout_name] }
+                        1   {
+                            if { $layout_name ni $::ms::layouts($::ms::theme) } {
+                                lappend ::ms::layouts($::ms::theme) $layout_name
+                            }
+                        }
+                    }
+
+                    return ""
+                }
+            }
+        }
         lookup {}
         map {}
         theme {
