@@ -486,4 +486,35 @@ proc ::ttk::focusFirst { w } {
     return ""
 }
 
+## takesFocus (from the ttk 'utils.tcl' file)
+#
+# Test if the widget can take the keyboard focus.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# Return a boolean value indicating if the window can take the keyboard focus or not.
+#   0 --> The window provided cannot take the keyboard focus.
+#   1 --> The window provided can take the keyboard focus.
+proc ::ttk::takesFocus { w } {
+    # Check if 'w' is the hull of a megawidget of some kind.
+    if { $w in $::ms::addr(megawidgets) } {
+        set w $::ms::addr($w,widget)
+    }
+
+    if { ![_winfo viewable $w] } {
+        return 0
+    } elseif { [catch { $w cget -takefocus } takefocus] } {
+        return [::ttk::GuessTakeFocus $w]
+    } else {
+        switch -- $takefocus {
+            ""      { return [::ttk::GuessTakeFocus $w] }
+            0       { return 0 }
+            1       { return 1 }
+            default { return [expr { [uplevel #0 $takefocus [list $w]] == 1 }] }
+        }
+    }
+}
+
 #*EOF*
