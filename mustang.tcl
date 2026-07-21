@@ -265,6 +265,97 @@ proc ::ms::Init {} {
 
     # Set the tolerance error (16 bits).
     set ::ms::tolerance [expr { 1.0/65535.0 }]
+
+    ################################################################
+    ##                                                            ##
+    ##     INITIALIZE SOME VARIABLES THAT HELPS THE DEVELOPER     ##
+    ##                                                            ##
+    ################################################################
+
+    # Set the default accent color of the current theme.
+    #
+    # ['blue', 'gray', 'green', 'orange', 'pink', 'purple', 'red' or 'yellow']
+    set ::ms::accent "blue"
+
+    # Set how each mustang scrollbar and scale reacts when a click happens on their trough.
+    #    jump   --> The thumb will jump to the selected location.
+    #
+    #    scroll --> The scrollbar thumb will scroll one page down, up, left or right depending
+    #               on the scrollbar orientation and the clicked position.
+    #               The scale thumb will scroll one unit down, up, left or right depending on
+    #               the scale orientation and the clicked position.
+    #               This is the default click action.
+    #
+    # ['jump' or 'scroll']
+    set ::ms::clickaction "scroll"
+
+    # Set the default colorscheme of the current theme.
+    #
+    # ['light' or 'dark']
+    set ::ms::colorscheme "light"
+
+    # Set the default focus model to 'explicit'.
+    #
+    # In an **explicit** focus model the focus changes only when a widget decides
+    # explicitly to claim the focus (e.g., because of a button click), or when
+    # the user types a key such as 'Tab' or 'Shift-Tab' that moves the focus.
+    # This is the default focus model.
+    #
+    # In an **implicit** focus model instead, the focus changes everytime the mouse
+    # enters a focussable widget.
+    #
+    # ['explicit' or 'implicit']
+    set ::ms::focusmodel "explicit"
+
+    # Set the default action for the middle click buttonpress.
+    # Only available on Linux and BSD operating systems.
+    #
+    # On Linux, the default action is 'paste', on the other
+    # operating systems is blocked to 'drag'.
+    #
+    # ['paste','drag']
+    switch -- [_tk windowingsystem] {
+        x11     { set ::ms::middleclick paste }
+        default { set ::ms::middleclick drag }
+    }
+
+    # Set how the mouse scrolling should work.
+    #    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom
+    #                and scrolling the mousewheel down will move the page towards the top.
+    #                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page
+    #                towards the right and scrolling the mousewheel down (with the SHIFT key pressed)
+    #                will move the page towards the left.
+    #
+    #    classic --> Scrolling the mousewheel up will move the page towards the top and scrolling
+    #                the mousewheel down will move the page towards the bottom.
+    #                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page
+    #                towards the left and scrolling the mousewheel down (with the SHIFT key pressed)
+    #                will move the page towards the right.
+    #                This is the default on Windows, Linux and BSD operating systems.
+    set ::ms::scrollmode "classic"
+
+    # Enable/Disable the scroll stopper for combobox, spinbox and listboxes.
+    #    enabled  --> When pressing of the arrow up or of the arrow down key (or by scrolling the mousewheel)
+    #                 cause the relative content to reach the start (or the end), the movement will stop.
+    #                 Further pressing of the same arrow key (or scrolling the mousewheel in the same
+    #                 direction as before) will not yield any movement.
+    #
+    #    disabled --> When pressing of the arrow up or of the arrow down key (or by scrolling the mousewheel)
+    #                 cause the relative content to reach the start (or the end), the movement will cycle trough.
+    #                 Further pressing of the same arrow key (or scrolling the mousewheel in the same
+    #                 direction as before) will continue to do the movement but from the other end of the content.
+    set ::ms::scrollstopper "enabled"
+
+    # Set the current theme as the default 'Halo' theme.
+    # Theme names are case sensitive.
+    set ::ms::theme "Halo"
+
+    # Set the mustang union symbol that should be displayed inside a shortcut that links
+    # two or more keys together, like 'Ctrl+C', 'Ctrl-C', or 'Ctrl C' for copy.
+    # It's used inside mustangs menu popups and contextual menus.
+    #
+    # ['+', '-' or 'space']
+    set ::ms::union "+"
 }
 
 ####################
