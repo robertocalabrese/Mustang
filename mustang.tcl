@@ -430,6 +430,31 @@ proc ::ms::Init {} {
     file mkdir $::ms::folder(mustang,config)
     file mkdir $::ms::folder(mustang,palettes)
     file mkdir $::ms::folder(mustang,svgs)
+
+    #############################################################
+    ##                                                         ##
+    ##     LOAD ALL THE AVAILABLE MUSTANG MESSAGE CATALOGS     ##
+    ##                                                         ##
+    #############################################################
+
+    # Note: For auto translations purposes, the developer message catalogs should be
+    #       defined in the '::ms' namespace or in the global namespace.
+
+    # Set the available mustang message catalogs.
+    set ::ms::languages [list ]
+    foreach path [glob -type f -nocomplain -directory [file join $::ms_library msgs] -- *.msg] {
+        set language [string tolower [file rootname [file tail $path]]]
+        switch -- $language {
+            root    { continue }
+            default { lappend ::ms::languages $language }
+        }
+    }
+
+    # Load all the available mustang message catalogs.
+    ::msgcat::mcload [file join $::ms_library msgs]
+
+    # Set the mustang language to use.
+    set ::ms::language [::msgcat::mclocale]
 }
 
 ####################
