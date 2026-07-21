@@ -1011,7 +1011,306 @@ proc ::ms::Init {} {
                 }
             }
         }
-        Linux {}
+        Linux {
+            # Set all the available Linux cursors types.
+            set ::ms::machine(os,cursors) [list arrow             based_arrow_down      based_arrow_up         boat \
+                                                bogosity          bottom_left_corner    bottom_right_corner    bottom_side \
+                                                bottom_tee        box_spiral            center_ptr             circle \
+                                                clock             coffee_mug            cross                  cross_reverse \
+                                                crosshair         diamond_cross         dot                    dotbox \
+                                                double_arrow      draft_large           draft_small            draped_box \
+                                                exchange          fleur                 gobbler                gumby \
+                                                hand1             hand2                 heart                  icon \
+                                                iron_cross        left_ptr              left_side              left_tee \
+                                                leftbutton        ll_angle              lr_angle               man \
+                                                middlebutton      mouse                 none                   pencil \
+                                                pirate            plus                  question_arrow         right_ptr \
+                                                right_side        right_tee             rightbutton            rtl_logo \
+                                                sailboat          sb_down_arrow         sb_h_double_arrow      sb_left_arrow \
+                                                sb_right_arrow    sb_up_arrow           sb_v_double_arrow      shuttle \
+                                                sizing            spider                spraycan               star \
+                                                target            tcross                top_left_arrow         top_left_corner \
+                                                top_right_corner  top_side              top_tee                trek \
+                                                ul_angle          umbrella              ur_angle               watch \
+                                                X_cursor          xterm];
+
+            # Get the cpu model name.
+            set cmds [list {*}[auto_execok grep] "-m" "1" "model name" "[file join / proc cpuinfo]"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,model) "unknown"
+            } on ok { result } {
+                set ::ms::machine(cpu,model) [lremove $result 0 2]
+            }
+
+            # Get the number of cpus cores available.
+            set cmd [list {*}[auto_execok grep] "-m" "1" "cpu cores" "[file join / proc cpuinfo]"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,cores) 1
+            } on ok { result } {
+                set ::ms::machine(cpu,cores) [lremove $result 0 2]
+            }
+
+            # Get the number of cpus threads available.
+            set cmd [list {*}[auto_execok getconf] "_NPROCESSORS_ONLN"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                # Fallback.
+                set cmd [list {*}[auto_execok nproc] "--all"]
+                try {
+                    exec {*}$cmd
+                } on error {} {
+                    set ::ms::machine(cpu,threads) 1
+                } on ok { result } {
+                    set ::ms::machine(cpu,threads) $result
+                }
+            } on ok { result } {
+                set ::ms::machine(cpu,threads) $result
+            }
+
+            # Set the UI scale factor.
+            set ::ms::machine(os,ui_scale_factor) 100.0
+
+            # /etc/os-release
+            #
+            # Archlinux:
+            #
+            #   NAME="Arch Linux"
+            #   PRETTY_NAME="Arch Linux"
+            #   ID=arch
+            #   BUILD_ID=rolling
+            #   ANSI_COLOR="38;2;23;147;209"
+            #   HOME_URL="https://archlinux.org/"
+            #   DOCUMENTATION_URL="https://wiki.archlinux.org/"
+            #   SUPPORT_URL="https://bbs.archlinux.org/"
+            #   BUG_REPORT_URL="https://gitlab.archlinux.org/groups/archlinux/-/issues"
+            #   PRIVACY_POLICY_URL="https://terms.archlinux.org/docs/privacy-policy/"
+            #   LOGO=archlinux-logo
+            #
+            # Archlinux ARM:
+            #
+            #   NAME="Arch Linux ARM"
+            #   PRETTY_NAME="Arch Linux ARM"
+            #   ID=archarm
+            #   ID_LIKE=arch
+            #   BUILD_ID=rolling
+            #   ANSI_COLOR="38;2;23;147;209"
+            #   HOME_URL="https://archlinuxarm.org/"
+            #   DOCUMENTATION_URL="https://archlinuxarm.org/wiki"
+            #   SUPPORT_URL="https://archlinuxarm.org/forum/"
+            #   BUG_REPORT_URL="https://github.com/archlinuxarm/PKGBUILDs/issues"
+            #   LOGO=archlinux-logo
+            #
+            # Ubuntu:
+            #
+            #   PRETTY_NAME="Ubuntu 24.10"
+            #   NAME="Ubuntu"
+            #   VERSION_ID="24.10"
+            #   VERSION="24.10 (Oracular Oriole)"
+            #   VERSION_CODENAME=oracular
+            #   ID=ubuntu
+            #   ID_LIKE=debian
+            #   HOME_URL="https://www.ubuntu.com/"
+            #   SUPPORT_URL="https://help.ubuntu.com"
+            #   BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+            #   PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy/"
+            #   UBUNTU_CODENAME=oracular
+            #   LOGO=ubuntu-logo
+            #
+            # Ubuntu LTS:
+            #
+            #   PRETTY_NAME="Ubuntu 24.04.2 LTS"
+            #   NAME="Ubuntu"
+            #   VERSION_ID="24.04"
+            #   VERSION="24.04.2 LTS (Noble Numbat)"
+            #   VERSION_CODENAME=noble
+            #   ID=ubuntu
+            #   ID_LIKE=debian
+            #   HOME_URL="https://www.ubuntu.com/"
+            #   SUPPORT_URL="https://help.ubuntu.com"
+            #   BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+            #   PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy/"
+            #   UBUNTU_CODENAME=noble
+            #   LOGO=ubuntu-logo
+            #
+            # Debian:
+            #
+            #   PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+            #   NAME="Debian GNU/Linux"
+            #   VERSION_ID="12"
+            #   VERSION="12 (bookworm)"
+            #   VERSION_CODENAME="bookworm"
+            #   ID=debian
+            #   BUILD_ID=rolling
+            #   ANSI_COLOR="0;36"
+            #   HOME_URL="https://www.debian.org/"
+            #   SUPPORT_URL="https://www.debian.org/support"
+            #   BUG_REPORT_URL="https://bugs.debian.org/"
+            #
+            # Fedora Linux:
+            #
+            #   NAME="Fedora Linux"
+            #   VERSION="41 (KDE Plasma)"
+            #   RELEASE_TYPE=stable
+            #   ID="fedora"
+            #   VERSION_ID="41"
+            #   VERSION_CODENAME=""
+            #   PLATFORM_ID="platform:f41"
+            #   PRETTY_NAME="Fedora Linux 41 (KDE Plasma)"
+            #   ANSI_COLOR="0;38;2;60;110;180"
+            #   LOGO=fedora-logo-icon
+            #   CPE_NAME="cpe:/o:fedoraproject:fedora:41"
+            #   DEFAULT_HOSTNAME="fedora"
+            #   HOME_URL="http://www.fedoraproject.org"
+            #   DOCUMENTATION_URL="https://docs.fedoraproject.org/en-US/fedora/f41/system-administrators-guide/"
+            #   SUPPORT_URL="https://ask.fedoraproject.org"
+            #   BUG_REPORT_URL="https://bugzilla.redhat.com"
+            #   REDHAT_BUGZILLA_PRODUCT="Fedora"
+            #   REDHAT_BUGZILLA_PRODUCT_VERSION=41
+            #   REDHAT_SUPPORT_PRODUCT="Fedora"
+            #   REDHAT_SUPPORT_PRODUCT_VERSION=41
+            #   SUPPORT_END=2025-12-15
+            #   VARIANT="KDE Plasma"
+            #   VARIANT_ID=kde
+            #
+            # openSUSE Tumbleweed:
+            #
+            #   NAME="openSUSE Tumbleweed"
+            #   # VERSION="20250306"
+            #   ID="opensuse-tumbleweed"
+            #   ID_LIKE="opensuse suse"
+            #   VERSION_ID="20250306"
+            #   PRETTY_NAME="openSUSE Tumbleweed"
+            #   ANSI_COLOR="0;32"
+            #   #CPE 2.3 format, boot#1217921
+            #   CPE_NAME="cpe:2.3:o:opensuse:tumbleweed:20250306:*:*:*:*:*:*:*"
+            #   #CPE 2.2 format
+            #   #CPE_NAME="cpe:/o:opensuse:tumbleweed:20250306"
+            #   BUG_REPORT_URL="https://bugs.opensuse.org"
+            #   HOME_URL="http://www.opensuse.org"
+            #   DOCUMENTATION_URL="https://en.opensuse.org/Portal:Tumbleweed"
+            #   LOGO="distributor-logo-Tumbleweed"
+            #
+            # openSUSE Leap:
+            #
+            #   NAME="openSUSE Leap"
+            #   VERSION="15.5"
+            #   ID="opensuse-leap"
+            #   ID_LIKE="opensuse suse"
+            #   VERSION_ID="15.5"
+            #   PRETTY_NAME="openSUSE Leap 15.5"
+            #   ANSI_COLOR="0;32"
+            #   CPE_NAME="cpe:/o:opensuse:leap:15.5"
+            #   BUG_REPORT_URL="https://bugs.opensuse.org"
+            #   HOME_URL="http://www.opensuse.org"
+            #   DOCUMENTATION_URL="https://en.opensuse.org/Portal:Leap"
+            #   LOGO="distributor-logo-Leap"
+
+            # Get the Linux distribution name, prettyname and version.
+            try {
+                open [file join / etc os-release] r
+            } on error {} {
+                set ::ms::machine(os,name)       "unknown"
+                set ::ms::machine(os,prettyname) "unknown"
+                set ::ms::machine(os,version)    "unknown"
+            } on ok { channel } {
+                # Read the entire file.
+                set file_content [split [chan read $channel] "\n"]
+                chan close $channel
+
+                # Scan the file content line by line.
+                foreach line $file_content {
+                    set line [split $line "="]
+                    switch -nocase -- [lindex $line 0] {
+                        NAME        { set ::ms::machine(os,name)       [string trim [lindex $line 1] \"] }
+                        PRETTY_NAME { set ::ms::machine(os,prettyname) [string trim [lindex $line 1] \"] }
+                        VERSION_ID  -
+                        BUILD_ID    { set ::ms::machine(os,version)    [string trim [lindex $line 1] \"] }
+                    }
+                }
+            }
+
+            # Set the Linux distribution package manager.
+            #
+            # ['apt', 'dnf', 'emerge', 'installpkg', 'pacman', 'rpm', 'zypper', 'yum', 'unknown']
+            set ::ms::machine(os,pkgmanager) "unknown"
+            foreach name [list apt dnf emerge installpkg pacman rpm zypper yum] {
+                switch -- [auto_execok $name] {
+                    ""      {}
+                    default {
+                        set ::ms::machine(os,pkgmanager) $name
+                        break
+                    }
+                }
+            }
+
+            # Set the graphic user interface (GUI) currently in use in the Linux distribution .
+            # The first element is the name of the desktop environment or window manager in use while the second element
+            # is the GUI type, either the word 'DE' for desktop environments or 'WM' for window managers.
+            set options [list -e | {*}[auto_execok grep] -E -i "awesome|bspwm|budgie-desktop|cinnamon-session|cosmic-launcher|dwm|enlightenment_start|gala|gnome-session|hyprland|i3|mango|mate-session|niri|niri-session|openbox-session|qtile|river|startdde|startlxde|startlxqt|startkde|startplasma|startplasma-x11|startplasma-way|startplasma-wayland|startxfce|startxfce2|startxfce3|startxfce4|sway|xmonad"]
+            try {
+                exec {*}[auto_execok ps] {*}$options
+            } on error {} {
+                set ::ms::machine(os,GUI) [list unknown unknown]
+            } on ok { results } {
+                switch -- [string trim $results] {
+                    ""      { set ::ms::machine(os,GUI) [list unknown unknown] }
+                    default {
+                        switch -nocase -- [lindex $results end] {
+                            awesome             { set ::ms::machine(os,GUI) [list AwesomeWM     WM] }
+                            bspwm               { set ::ms::machine(os,GUI) [list BSPWM         WM] }
+                            budgie-desktop      { set ::ms::machine(os,GUI) [list Budgie        DE] }
+                            cinnamon-session    { set ::ms::machine(os,GUI) [list Cinnamon      DE] }
+                            cosmic-launcher     { set ::ms::machine(os,GUI) [list COSMIC        DE] }
+                            dwm                 { set ::ms::machine(os,GUI) [list DWM           WM] }
+                            enlightenment_start { set ::ms::machine(os,GUI) [list Enlightenment DE] }
+                            gala                { set ::ms::machine(os,GUI) [list Pantheon      DE] }
+                            gnome-session       { set ::ms::machine(os,GUI) [list Gnome         DE] }
+                            hyprland            { set ::ms::machine(os,GUI) [list Hyprland      WM] }
+                            i3                  { set ::ms::machine(os,GUI) [list i3            WM] }
+                            mango               { set ::ms::machine(os,GUI) [list MangoWM       WM] }
+                            mate-session        { set ::ms::machine(os,GUI) [list Mate          DE] }
+                            niri                -
+                            niri-session        { set ::ms::machine(os,GUI) [list Niri          WM] }
+                            openbox-session     { set ::ms::machine(os,GUI) [list Openbox       WM] }
+                            qtile               { set ::ms::machine(os,GUI) [list Qtile         WM] }
+                            river               { set ::ms::machine(os,GUI) [list River         WM] }
+                            startdde            { set ::ms::machine(os,GUI) [list Deepin        DE] }
+                            startlxde           { set ::ms::machine(os,GUI) [list LXDE          DE] }
+                            startlxqt           { set ::ms::machine(os,GUI) [list LXQT          DE] }
+                            startkde            { set ::ms::machine(os,GUI) [list KDE           DE] }
+                            startplasma         -
+                            startplasma-x11     -
+                            startplasma-way     -
+                            startplasma-wayland { set ::ms::machine(os,GUI) [list "KDE Plasma"  DE] }
+                            startxfce           -
+                            startxfce2          -
+                            startxfce3          -
+                            startxfce4          { set ::ms::machine(os,GUI) [list XFCE          DE] }
+                            sway                { set ::ms::machine(os,GUI) [list SWAY          WM] }
+                            xmonad              { set ::ms::machine(os,GUI) [list Xmonad        WM] }
+                            default             { set ::ms::machine(os,GUI) [list unknown       unknown] }
+                        }
+                    }
+                }
+            }
+
+            # Set the Linux distribution display manager ('x11' or 'wayland').
+            switch -- [info exists ::env(WAYLAND_DISPLAY)] {
+                0   {
+                    # Fallback.
+                    switch -- [info exists ::env(XDG_SESSION_TYPE)] {
+                        0   { set ::ms::machine(os,display_manager) "x11" }
+                        1   { set ::ms::machine(os,display_manager) $::env(XDG_SESSION_TYPE) }
+                    }
+                }
+                1   { set ::ms::machine(os,display_manager) "wayland" }
+            }
+        }
         "Win*" {}
         default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
     }
