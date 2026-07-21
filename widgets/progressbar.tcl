@@ -1,7 +1,7 @@
 # Copyright: 2025 Roberto Calabrese a.k.a. Kicka
 #
 # This file is part of "Mustang", a GUI toolkit for Tcl/Tk 9.0 and later
-# (https://codeberg.org/kicka/Mustang).
+# (https://github.com/robertocalabrese/Mustang).
 #
 # The author hereby grant permission to use, copy, modify, distribute,
 # and license this software and its documentation for any purpose, provided
