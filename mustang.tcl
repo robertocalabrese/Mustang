@@ -391,6 +391,45 @@ proc ::ms::Init {} {
             }
         }
     }
+
+    ############################################
+    ##                                        ##
+    ##     SET/CREATE THE MUSTANG FOLDERS     ##
+    ##                                        ##
+    ############################################
+
+    # Get the mustang major version number.
+    set major_version [lindex [split $::ms_version "."] 0]
+    switch -- $major_version {
+        0       { set major_version "dev" }
+        default { set major_version [string cat $major_version ".0"] }
+    }
+
+    # Set the mustang folders.
+    switch -- $major_version {
+        1.0 -
+        dev {
+            set ::ms::folder(mustang,cache)  [file join $::ms::folder(os,cache)  mustang]
+            set ::ms::folder(mustang,config) [file join $::ms::folder(os,config) mustang]
+            set ::ms::folder(mustang,data)   [file join $::ms::folder(os,data)   mustang]
+        }
+        default {
+            set folder [string cat "mustang-" $major_version]
+
+            set ::ms::folder(mustang,cache)  [file join $::ms::folder(os,cache)  $folder]
+            set ::ms::folder(mustang,config) [file join $::ms::folder(os,config) $folder]
+            set ::ms::folder(mustang,data)   [file join $::ms::folder(os,data)   $folder]
+        }
+    }
+
+    # Set the mustang subfolders.
+    set ::ms::folder(mustang,palettes) [file join $::ms::folder(mustang,data)  palettes]
+    set ::ms::folder(mustang,svgs)     [file join $::ms::folder(mustang,cache) svgs]
+
+    # If needed, create the mustang folders and subfolders.
+    file mkdir $::ms::folder(mustang,config)
+    file mkdir $::ms::folder(mustang,palettes)
+    file mkdir $::ms::folder(mustang,svgs)
 }
 
 ####################
