@@ -871,6 +871,20 @@ proc ::ms::Init {} {
                                          -size $size_mono;
         }
     }
+
+    ################################################
+    ##                                            ##
+    ##     CHECK THE CURRENT OPERATING SYSTEM     ##
+    ##                                            ##
+    ################################################
+
+    set translated_error_text ""
+    switch -nocase -glob -- $::tcl_platform(os) {
+        Darwin {}
+        Linux {}
+        "Win*" {}
+        default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
+    }
 }
 
 ####################
