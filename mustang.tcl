@@ -792,9 +792,9 @@ proc ::ms::Init {} {
             switch -- $found {
                 0   {
                     # gsettings: check if a normal font is defined.
-                    set options [list get org.gnome.desktop.interface font-name]
+                    set cmd [list {*}[auto_execok gsettings] "get" "org.gnome.desktop.interface" "font-name"]
                     try {
-                        exec [auto_execok gsettings] {*}$options
+                        exec {*}$cmd
                     } on error {} {
                         # Do nothing.
                     } on ok { result } {
@@ -825,9 +825,9 @@ proc ::ms::Init {} {
                         }
 
                         # gsettings: check if a monospace font is defined.
-                        set options [list get org.gnome.desktop.interface monospace-font-name]
+                        set cmd [list {*}[auto_execok gsettings] "get" "org.gnome.desktop.interface" "monospace-font-name"]
                         try {
-                            exec [auto_execok gsettings] {*}$options
+                            exec {*}$cmd
                         } on error {} {
                             # Do nothing.
                         } on ok { result } {
