@@ -541,6 +541,336 @@ proc ::ms::Init {} {
             set ::ms::palette(names) [lsort -increasing -dictionary $::ms::palette(names)]
         }
     }
+
+    ######################################
+    ##                                  ##
+    ##     CREATE THE MUSTANG FONTS     ##
+    ##                                  ##
+    ######################################
+
+    # Set the mustang fonts families and sizes for each
+    # operating system scenarios.
+    switch -nocase -glob -- $::tcl_platform(os) {
+        Darwin {
+            set family      [_font configure TkDefaultFont -family]
+            set family_mono [_font configure TkFixedFont -family]
+
+            # Check if it's a recent macOS operating system or not.
+            switch -- [_tk windowingsystem] {
+                aqua {
+                    # Note: 'macOS Big Sur' or later.
+                    set size_biggest   15
+                    set size_bigger    14
+                    set size_normal    13
+                    set size_smaller   12
+                    set size_smallest  11
+                    set size_mono      11
+                }
+                default {
+                    set size_normal [_font configure TkDefaultFont -size]
+                    set size_mono   [_font configure TkFixedFont -size]
+
+                    set size_biggest  [expr { $size_normal+2 }]
+                    set size_bigger   [expr { $size_normal+1 }]
+                    set size_smaller  [expr { $size_normal-1 }]
+                    set size_smallest [expr { $size_normal-2 }]
+                }
+            }
+
+            # Create the mustang fonts.
+            _font create BiggestFont   -family $family \
+                                         -size $size_biggest;
+
+            _font create BiggerFont    -family $family \
+                                         -size $size_bigger;
+
+            _font create NormalFont    -family $family \
+                                         -size $size_normal;
+
+            _font create SmallerFont   -family $family \
+                                         -size $size_smaller;
+
+            _font create SmallestFont  -family $family \
+                                         -size $size_smallest;
+
+            _font create MonospaceFont -family $family_mono \
+                                         -size $size_mono;
+        }
+        "Win*" {
+            set family      [_font configure TkDefaultFont -family]
+            set family_mono [_font configure TkFixedFont -family]
+
+            set size_normal [_font configure TkDefaultFont -size]
+            set size_mono   [_font configure TkFixedFont -size]
+
+            set size_biggest  [expr { $size_normal+2 }]
+            set size_bigger   [expr { $size_normal+1 }]
+            set size_smaller  [expr { $size_normal-1 }]
+            set size_smallest [expr { $size_normal-2 }]
+
+            # Create the mustang fonts.
+            _font create BiggestFont   -family $family \
+                                         -size $size_biggest;
+
+            _font create BiggerFont    -family $family \
+                                         -size $size_bigger;
+
+            _font create NormalFont    -family $family \
+                                         -size $size_normal;
+
+            _font create SmallerFont   -family $family \
+                                         -size $size_smaller;
+
+            _font create SmallestFont  -family $family \
+                                         -size $size_smallest;
+
+            _font create MonospaceFont -family $family_mono \
+                                         -size $size_mono;
+        }
+        default {
+            set family      [_font configure TkDefaultFont -family]
+            set family_mono [_font configure TkFixedFont -family]
+
+            set size_normal [_font configure TkDefaultFont -size]
+            set size_mono   [_font configure TkFixedFont -size]
+
+            set size_biggest  [expr { $size_normal+2 }]
+            set size_bigger   [expr { $size_normal+1 }]
+            set size_smaller  [expr { $size_normal-1 }]
+            set size_smallest [expr { $size_normal-2 }]
+
+            # Check the configuration file for the following desktop environment (in order):
+            #
+            #   'KDE'
+            #   'QT'
+            #   'GTK4'
+            #   'GTK3'
+            #   'GTK2'
+            #
+            # The first one found that have font data informations will define the families
+            # and sizes of the mustang fonts.
+            # If the fonts data informations are not found for some reasons, the above ones
+            # will be used.
+
+            set found 0
+
+            # Check the KDE configuration file, if any.
+            try {
+                open [file join $::ms::folder(os,config) kdeglobals] r
+            } on error {} {
+                # Do nothing.
+            } on ok { channel } {
+                # Read the entire file.
+                set file_content [split [chan read $channel] "\n"]
+                chan close $channel
+
+                # Scan the file content line by line.
+                foreach line $file_content {
+                    set line [split $line "="]
+                    # Check if the line starts with the word 'fixed' or 'font'.
+                    # If not, skip the line.
+                    switch -- [lindex $line 0] {
+                        fixed {
+                            set values [split [lindex $line 1] ","]
+
+                            set family_mono [lindex $values 0]
+                            set size_mono   [lindex $values 1]
+
+                            incr found
+                        }
+                        font {
+                            set values [split [lindex $line 1] ","]
+
+                            set family      [string trim [lindex $values 0]]
+                            set size_normal [string trim [lindex $values 1]]
+
+                            set size_biggest  [expr { $size_normal+2 }]
+                            set size_bigger   [expr { $size_normal+1 }]
+                            set size_smaller  [expr { $size_normal-1 }]
+                            set size_smallest [expr { $size_normal-2 }]
+
+                            incr found
+                        }
+                    }
+                }
+            }
+
+            # Check the QT configuration file, if any.
+            switch -- $found {
+                0   {
+                    try {
+                        open [file join $::ms::folder(os,config) "Trolltech.conf"] r
+                    } on error {} {
+                        # Do nothing.
+                    } on ok { channel } {
+                        # Read the entire file.
+                        set file_content [split [chan read $channel] "\n"]
+                        chan close $channel
+
+                        # Scan the file content line by line.
+                        foreach line $file_content {
+                            set line [split $line "="]
+                            # Check if the line starts with the word 'font'.
+                            # If not, skip the line.
+                            switch -- [lindex $line 0] {
+                                font {
+                                    set values [split [lindex $line 1] ","]
+
+                                    set family      [string range [string trim [lindex $values 0]] 1 end]
+                                    set size_normal [string trim  [lindex $values 1]]
+
+                                    set size_biggest  [expr { $size_normal+2 }]
+                                    set size_bigger   [expr { $size_normal+1 }]
+                                    set size_smaller  [expr { $size_normal-1 }]
+                                    set size_smallest [expr { $size_normal-2 }]
+
+                                    incr found
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Check the GTK configuration files, if any.
+            switch -- $found {
+                0   {
+                    foreach path [list [file join $::ms::folder(os,config) "gtk-4.0" "settings.ini"] \
+                                       [file join $::ms::folder(os,config) "gtk-3.0" "settings.ini"] \
+                                       [file join $::env(HOME) ".gtkrc-2.0"]] {
+                        try {
+                            open $path r
+                        } on error {} {
+                            continue
+                        } on ok { channel } {
+                            # Read the entire file.
+                            set file_content [split [chan read $channel] "\n"]
+                            chan close $channel
+
+                            # Scan the file content line by line.
+                            foreach line $file_content {
+                                set line [split $line "="]
+                                # Check if the line starts with the word 'gtk-font-name' or 'monospace-font-name'.
+                                # If not, skip the line.
+                                switch -- [lindex $line 0] {
+                                    "gtk-font-name" {
+                                        set values [split [lindex $line 1] ","]
+
+                                        set family      [string trim [lindex $values 0]]
+                                        set size_normal [string trim [lindex $values 1]]
+
+                                        set size_biggest  [expr { $size_normal+2 }]
+                                        set size_bigger   [expr { $size_normal+1 }]
+                                        set size_smaller  [expr { $size_normal-1 }]
+                                        set size_smallest [expr { $size_normal-2 }]
+
+                                        incr found
+                                    }
+                                    "monospace-font-name" {
+                                        set values [split [lindex $line 1] ","]
+
+                                        set family_mono [string trim [lindex $values 0]]
+                                        set size_mono   [string trim [lindex $values 1]]
+
+                                        incr found
+                                    }
+                                }
+                            }
+
+                            switch -- $found {
+                                0       { continue }
+                                default { break }
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Try the 'gsettings' command.
+            # Distribution like Ubuntu don't come with a GTK configuration file,
+            # but they do have the 'gsettings' command.
+            switch -- $found {
+                0   {
+                    # gsettings: check if a normal font is defined.
+                    set options [list get org.gnome.desktop.interface font-name]
+                    try {
+                        exec [auto_execok gsettings] {*}$options
+                    } on error {} {
+                        # Do nothing.
+                    } on ok { result } {
+                        set values [string trim $result "'"]
+                        set index [string first "," $values]
+                        switch -- $index {
+                            0   {}
+                            -1  {
+                                set size_normal [string trim [lindex  $values end]]
+                                set family      [string trim [lremove $values end]]
+
+                                set size_biggest  [expr { $size_normal+2 }]
+                                set size_bigger   [expr { $size_normal+1 }]
+                                set size_smaller  [expr { $size_normal-1 }]
+                                set size_smallest [expr { $size_normal-2 }]
+                            }
+                            default {
+                                set values [split $values ","]
+
+                                set family      [string trim [lindex $values 0]]
+                                set size_normal [string trim [lindex $values 1]]
+
+                                set size_biggest  [expr { $size_normal+2 }]
+                                set size_bigger   [expr { $size_normal+1 }]
+                                set size_smaller  [expr { $size_normal-1 }]
+                                set size_smallest [expr { $size_normal-2 }]
+                            }
+                        }
+
+                        # gsettings: check if a monospace font is defined.
+                        set options [list get org.gnome.desktop.interface monospace-font-name]
+                        try {
+                            exec [auto_execok gsettings] {*}$options
+                        } on error {} {
+                            # Do nothing.
+                        } on ok { result } {
+                            set values [string trim $result "'"]
+                            set index [string first "," $values]
+                            switch -- $index {
+                                0   {}
+                                -1  {
+                                    set size_mono   [string trim [lindex  $values end]]
+                                    set family_mono [string trim [lremove $values end]]
+                                }
+                                default {
+                                    set values [split $values ","]
+
+                                    set family_mono [string trim [lindex $values 0]]
+                                    set size_mono   [string trim [lindex $values 1]]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Create the mustang fonts.
+            _font create BiggestFont   -family $family \
+                                         -size $size_biggest;
+
+            _font create BiggerFont    -family $family \
+                                         -size $size_bigger;
+
+            _font create NormalFont    -family $family \
+                                         -size $size_normal;
+
+            _font create SmallerFont   -family $family \
+                                         -size $size_smaller;
+
+            _font create SmallestFont  -family $family \
+                                         -size $size_smallest;
+
+            _font create MonospaceFont -family $family_mono \
+                                         -size $size_mono;
+        }
+    }
 }
 
 ####################
