@@ -356,6 +356,41 @@ proc ::ms::Init {} {
     #
     # ['+', '-' or 'space']
     set ::ms::union "+"
+
+    ##############################################
+    ##                                          ##
+    ##     SET THE OPERATING SYSTEM FOLDERS     ##
+    ##                                          ##
+    ##############################################
+
+    switch -- [_tk windowingsystem] {
+        aqua {
+            set ::ms::folder(os,cache)  [file join $::env(HOME) Library Caches]
+            set ::ms::folder(os,config) [file join $::env(HOME) Library "Application Support"]
+            set ::ms::folder(os,data)   [file join $::env(HOME) Library Preferences]
+        }
+        win32 {
+            set ::ms::folder(os,cache)  [file join $::env(LOCALAPPDATA) cache]
+            set ::ms::folder(os,config) $::env(LOCALAPPDATA)
+            set ::ms::folder(os,data)   $::env(APPDATA)
+        }
+        default {
+            switch -- [info exists ::env(XDG_CACHE_HOME)] {
+                0   { set ::ms::folder(os,cache) [file join $::env(HOME) ".cache"] }
+                1   { set ::ms::folder(os,cache) $::env(XDG_CACHE_HOME) }
+            }
+
+            switch -- [info exists ::env(XDG_CONFIG_HOME)] {
+                0   { set ::ms::folder(os,config) [file join $::env(HOME) ".config"] }
+                1   { set ::ms::folder(os,config) $::env(XDG_CONFIG_HOME) }
+            }
+
+            switch -- [info exists ::env(XDG_DATA_HOME)] {
+                0   { set ::ms::folder(os,data) [file join $::env(HOME) ".local" share] }
+                1   { set ::ms::folder(os,data) $::env(XDG_DATA_HOME) }
+            }
+        }
+    }
 }
 
 ####################
