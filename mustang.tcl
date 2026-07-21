@@ -168,7 +168,104 @@ namespace eval ::ms {}
 # Initialize mustang.
 #
 # It doesn't return anything.
-proc ::ms::Init {} {}
+proc ::ms::Init {} {
+    #################################################
+    ##                                             ##
+    ##     INITIALIZE SOME LISTS AND VARIABLES     ##
+    ##                                             ##
+    #################################################
+
+    # Initialize the widgets real and short address list.
+    set ::ms::addr(reals)  [list ]
+    set ::ms::addr(shorts) [list ]
+
+    # Initialize some styles and classtypes related lists.
+    foreach classtype [list button \
+                            canvas \
+                            checkbutton \
+                            combobox \
+                            cmenu \
+                            crate \
+                            embed \
+                            entry \
+                            frame \
+                            label \
+                            labelframe \
+                            listbox \
+                            menu \
+                            menubutton \
+                            notebook \
+                            palette \
+                            progressbar \
+                            radiobutton \
+                            scale \
+                            separator \
+                            sizegrip \
+                            spinbox \
+                            text \
+                            toolbutton \
+                            toplevel \
+                            treeview] {
+        # Initialize the widgets real address list for 'classtype'.
+        set ::ms::addr($classtype) [list ]
+
+        # Initialize the widgets style list for 'classtype'.
+        set ::ms::style($classtype) [list ]
+
+        # Add 'classtype' to the list of available classtypes.
+        lappend ::ms::data(classtypes) $classtype
+    }
+
+    # Note: Panedwindows are disabled for Windows and macOS systems.
+    #       See the [panedwindow](/wiki/widgets/panedwindow.md) page for more information.
+    switch -nocase -glob -- $::tcl_platform(os) {
+        Darwin  -
+        "Win*"  {}
+        default {
+            # Initialize the widgets real address list for the 'panedwindow' classtype.
+            set ::ms::addr(panedwindow) [list ]
+
+            # Initialize the widgets style list for the 'panedwindow' classtype.
+            set ::ms::style(panedwindow) [list ]
+
+            # Add 'panedwindow' to the list of available classtypes.
+            lappend ::ms::data(classtypes) panedwindow
+        }
+    }
+
+    # Initialize the megawidgets real address lists.
+    set ::ms::addr(megawidgets)            [list ]
+    set ::ms::addr(megawidgets,containers) [list ]
+    set ::ms::addr(megawidgets,scrollable) [list ]
+
+    # Set the statespec value for the 'normal' state.
+    set ::ms::data(statespec,normal) [list "!active" \
+                                           "!alternate" \
+                                           "!background" \
+                                           "!disabled" \
+                                           "!focus" \
+                                           "!hover" \
+                                           "!invalid" \
+                                           "!pressed" \
+                                           "!readonly" \
+                                           "!selected" \
+                                           "!user1" \
+                                           "!user2" \
+                                           "!user3" \
+                                           "!user4" \
+                                           "!user5" \
+                                           "!user6"];
+
+    # Set the debug global variable to 'disabled', if it doesn't exists yet.
+    #
+    # ['enabled', 'disabled']
+    switch -- [info exists ::DEBUG] {
+        0   { set ::DEBUG "disabled" }
+    }
+
+    # Set the tolerance error (16 bits).
+    set ::ms::tolerance [expr { 1.0/65535.0 }]
+}
 
 ####################
 ##                ##
