@@ -880,7 +880,137 @@ proc ::ms::Init {} {
 
     set translated_error_text ""
     switch -nocase -glob -- $::tcl_platform(os) {
-        Darwin {}
+        Darwin {
+            # Set all the available macOS cursors types.
+            set ::ms::machine(os,cursors) [list aliasarrow          arrow                    based_arrow_down       based_arrow_up \
+                                                boat                bogosity                 bottom_left_corner     bottom_right_corner \
+                                                bottom_side         bottom_tee               box_spiral             bucket \
+                                                cancel              center_ptr               circle                 clock \
+                                                closedhand          coffee_mug               contextualmenuarrow    copyarrow \
+                                                countingdownhand    countingupanddownhand    countinguphand         cross \
+                                                cross-hair          cross_reverse            crosshair              diamond_cross \
+                                                dot                 dotbox                   double_arrow           draft_large \
+                                                draft_small         draped_box               exchange               eyedrop \
+                                                eyedrop-full        fist                     fleur                  gobbler \
+                                                gumby               hand                     hand1                  hand2 \
+                                                heart               help                     icon                   iron_cross \
+                                                left_ptr            left_side                left_tee               leftbutton \
+                                                ll_angle            lr_angle                 man                    middlebutton \
+                                                mouse               movearrow                none                   notallowed \
+                                                openhand            pencil                   pirate                 plus \
+                                                pointinghand        poof                     question_arrow         resize \
+                                                resizebottomleft    resizebottomright        resizedown             resizeleft \
+                                                resizeleftright     resizeright              resizetopleft          resizetopright \
+                                                resizeup            resizeupdown             right_ptr              right_side \
+                                                right_tee           rightbutton              rtl_logo               sailboat \
+                                                sb_down_arrow       sb_h_double_arrow        sb_left_arrow          sb_right_arrow \
+                                                sb_up_arrow         sb_v_double_arrow        shuttle                sizing \
+                                                spider              spinning                 spraycan               star \
+                                                target              tcross                   text                   top_left_arrow \
+                                                top_left_corner     top_right_corner         top_side               top_tee \
+                                                trek                ul_angle                 umbrella               ur_angle \
+                                                wait                watch                    X_cursor               xterm \
+                                                zoom-in             zoom-out];
+
+            # Set the colorscheme as the user choice in the macOS settings panel.
+            _wm attributes . -appearance auto
+            switch -- [_wm attributes . -isdark] {
+                0   { set ::ms::colorscheme light }
+                1   { set ::ms::colorscheme dark }
+            }
+
+            # Get the mouse scrolling mode setted in the macOS preferences window.
+            set cmd [list {*}[auto_execok defaults] "read" "-g" "com.apple.swipescrolldirection"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                # Do nothing.
+            } on ok { result } {
+                switch -- $result {
+                    1       -
+                    on      -
+                    yes     -
+                    true    -
+                    enabled { set ::ms::scrollmode "natural" }
+                    default { set ::ms::scrollmode "classic" }
+                }
+            }
+
+            # Get the cpu model name.
+            set cmd [list {*}[auto_execok sysctl] "-n" "machdep.cpu.brand_string"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,model) "unknown"
+            } on ok { result } {
+                set ::ms::machine(cpu,model) [lremove $result 0 2]
+            }
+
+            # Get the number of cpus cores available.
+            set cmd [list {*}[auto_execok sysctl] "-n" "hw.physicalcpu"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,cores) 1
+            } on ok { result } {
+                set ::ms::machine(cpu,cores) $result
+            }
+
+            # Get the number of cpus threads available.
+            set cmd [list {*}[auto_execok sysctl] "-n" "hw.logicalcpu"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,threads) 1
+            } on ok { result } {
+                set ::ms::machine(cpu,threads) $result
+            }
+
+            # Set the UI scale factor.
+            set ::ms::machine(os,ui_scale_factor) 200.0
+
+            # Get the macOS name, prettyname and version number.
+            set cmd [list {*}[auto_execok sw_vers] "-productVersion"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set translated_error_text "[::msgcat::mc "Operating system not supported."]"
+            } on ok { version } {
+                # Note: Data taken from 'https://ss64.com/osx/sw_vers.html'.
+
+                # Note: The 'aqua' theme was released in 2020; for this reason macOS versions
+                #       prior to 'Monterey' are not supported by mustang.
+
+                switch -glob -- $version {
+                    "26*" {
+                        set ::ms::machine(os,name)       "macOS Tahoe"
+                        set ::ms::machine(os,prettyname) "macOS Tahoe $version"
+                        set ::ms::machine(os,version)    $version
+                    }
+                    "15*" {
+                        set ::ms::machine(os,name)       "macOS Sequoia"
+                        set ::ms::machine(os,prettyname) "macOS Sequoia $version"
+                        set ::ms::machine(os,version)    $version
+                    }
+                    "14*" {
+                        set ::ms::machine(os,name)       "macOS Sonoma"
+                        set ::ms::machine(os,prettyname) "macOS Sonoma $version"
+                        set ::ms::machine(os,version)    $version
+                    }
+                    "13*" {
+                        set ::ms::machine(os,name)       "macOS Ventura"
+                        set ::ms::machine(os,prettyname) "macOS Ventura $version"
+                        set ::ms::machine(os,version)    $version
+                    }
+                    "12*" {
+                        set ::ms::machine(os,name)       "macOS Monterey"
+                        set ::ms::machine(os,prettyname) "macOS Monterey $version"
+                        set ::ms::machine(os,version)    $version
+                    }
+                    default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
+                }
+            }
+        }
         Linux {}
         "Win*" {}
         default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
