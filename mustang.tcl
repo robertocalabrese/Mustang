@@ -273,6 +273,7 @@ proc ::ms::Init {} {
     ################################################################
 
     # Set the default accent color of the current theme.
+    # The default value is 'blue'.
     #
     # ['blue', 'gray', 'green', 'orange', 'pink', 'purple', 'red' or 'yellow']
     set ::ms::accent "blue"
@@ -290,6 +291,7 @@ proc ::ms::Init {} {
     set ::ms::clickaction "scroll"
 
     # Set the default colorscheme of the current theme.
+    # The default colorscheme is 'light' in Windows and Linux and the system one in macOS.
     #
     # ['light' or 'dark']
     set ::ms::colorscheme "light"
@@ -1422,6 +1424,423 @@ proc ::ms::Init {} {
             set ::ms::machine(os,prettyname) [list {*}$::ms::machine(os,name) " build: " $buildNumber]
         }
         default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
+    }
+
+    ############################################
+    ##                                        ##
+    ##     LOAD/SAVE THE MUSTANG SETTINGS     ##
+    ##                                        ##
+    ############################################
+
+    # Set the mustang settings filepath.
+    set filepath [file join $::ms::folder(mustang,config) settings.ini]
+
+    # Load the mustang settings file, if any.
+    try {
+        open $filepath r
+    } on error {} {
+        # Save the mustang settings file.
+        try {
+            open $filepath w
+        } on error {} {
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts "Unable to read or write '[file tail $filepath]'. Ignoring." }
+            }
+        } on ok { channel } {
+            chan puts $channel "# [string trimright [string cat "Mustang " $major_version]]"
+            chan puts $channel "#"
+            chan puts $channel "# [clock format [clock seconds] -format [list %d %B %Y - %H:%M:%S]]"
+            chan puts $channel ""
+
+            chan puts $channel "#############################"
+            chan puts $channel "##                         ##"
+            chan puts $channel "##     GENERAL OPTIONS     ##"
+            chan puts $channel "##                         ##"
+            chan puts $channel "#############################"
+            chan puts $channel ""
+
+            chan puts $channel "# Accent color"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the accent color to use."
+            chan puts $channel "# The default value is 'blue'."
+            chan puts $channel "#"
+            chan puts $channel "# \['blue', 'gray', 'green', 'orange', 'pink', 'purple', 'red' or 'yellow'\]"
+            chan puts $channel "Accent: $::ms::accent"
+            chan puts $channel ""
+
+            chan puts $channel "# Colorscheme"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the colorscheme to use."
+            chan puts $channel "# The default colorscheme is 'light' in Windows and Linux and the system one in macOS."
+            chan puts $channel "#"
+            chan puts $channel "# \['light' or 'dark'\]"
+            chan puts $channel "Colorscheme: $::ms::colorscheme"
+            chan puts $channel ""
+
+            chan puts $channel "# Focus Model"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the focus model to use."
+            chan puts $channel "#     explicit --> The focus changes only when a widget decides explicitly to"
+            chan puts $channel "#                  claim the focus (e.g., because of a button click), or when"
+            chan puts $channel "#                  the user types a key such as TAB or SHIFT-TAB that moves"
+            chan puts $channel "#                  the focus."
+            chan puts $channel "#                  This is the default focus model."
+            chan puts $channel "#"
+            chan puts $channel "#     implicit --> The focus changes everytime the mouse enters a focussable widget."
+            chan puts $channel "#"
+            chan puts $channel "# \['explicit' or 'implicit'\]"
+            chan puts $channel "FocusModel: $::ms::focusmodel"
+            chan puts $channel ""
+
+            chan puts $channel "# Language"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the language to use."
+            chan puts $channel "Language: $::ms::language"
+            chan puts $channel ""
+
+            chan puts $channel "# Click action"
+            chan puts $channel "#"
+            chan puts $channel "# Set how each mustang scrollbar and scale reacts when a click happens on their trough."
+            chan puts $channel "#    jump   --> The thumb will jump to the selected location."
+            chan puts $channel "#"
+            chan puts $channel "#    scroll --> The scrollbar thumb will scroll one page down, up, left or right depending"
+            chan puts $channel "#               on the scrollbar orientation and the clicked position."
+            chan puts $channel "#               The scale thumb will scroll one unit down, up, left or right depending on"
+            chan puts $channel "#               the scale orientation and the clicked position."
+            chan puts $channel "#               This is the default click action."
+            chan puts $channel "#"
+            chan puts $channel "# \['jump' or 'scroll'\]"
+            chan puts $channel "ClickAction: $::ms::clickaction"
+            chan puts $channel ""
+
+            chan puts $channel "# Set the default action for the middle click buttonpress."
+            chan puts $channel "# Only available on Linux and BSD operating systems."
+            chan puts $channel "#"
+            chan puts $channel "# On Linux, the default action is 'paste', on the other"
+            chan puts $channel "# operating systems is blocked to 'drag'."
+            chan puts $channel "#"
+            chan puts $channel "# \['paste','drag'\]"
+            chan puts $channel "MiddleClick: $::ms::middleclick"
+            chan puts $channel ""
+
+            chan puts $channel "# Scroll mode"
+            chan puts $channel "#"
+            chan puts $channel "# It's the mousewheel scroll mode."
+            chan puts $channel "#    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom "
+            chan puts $channel "#                and scrolling the mousewheel down will move the page towards the top."
+            chan puts $channel "#                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page"
+            chan puts $channel "#                towards the right and scrolling the mousewheel down (with the SHIFT key pressed)"
+            chan puts $channel "#                will move the page towards the left."
+            chan puts $channel "#"
+            chan puts $channel "#    classic --> Scrolling the mousewheel up will move the page towards the top and scrolling "
+            chan puts $channel "#                the mousewheel down will move the page towards the bottom."
+            chan puts $channel "#                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page"
+            chan puts $channel "#                towards the left and scrolling the mousewheel down (with the SHIFT key pressed)"
+            chan puts $channel "#                will move the page towards the right."
+            chan puts $channel "#                This is the default scroll mode on Windows, Linux and BSD operating systems."
+            chan puts $channel "#"
+            chan puts $channel "# \['classic' or 'natural'\]"
+            chan puts $channel "ScrollMode: $::ms::scrollmode"
+            chan puts $channel ""
+
+            chan puts $channel "# Enable/Disable the scroll stopper for combobox, spinbox and listboxes."
+            chan puts $channel "#    enabled  --> When the pressing of the arrow up or of the arrow down key (or by scrolling the mousewheel)"
+            chan puts $channel "#                 cause the relative content to reach the start (or the end), the movement will stop."
+            chan puts $channel "#                 Further pressing of the same arrow key (or scrolling the mousewheel in the same"
+            chan puts $channel "#                 direction as before) will not yield any movement."
+            chan puts $channel "#"
+            chan puts $channel "#    disabled --> When the pressing of the arrow up or of the arrow down key (or by scrolling the mousewheel)"
+            chan puts $channel "#                 cause the relative content to reach the start (or the end), the movement will cycle trough."
+            chan puts $channel "#                 Further pressing of the same arrow key (or scrolling the mousewheel in the same"
+            chan puts $channel "#                 direction as before) will continue to do the movement but from the other end of the content."
+            chan puts $channel "#"
+            chan puts $channel "# \['disabled' or 'enabled'\]"
+            chan puts $channel "ScrollStopper: $::ms::scrollstopper"
+            chan puts $channel ""
+
+            chan puts $channel "# Theme"
+            chan puts $channel "#"
+            chan puts $channel "# It's a string that specifies the theme to use."
+            chan puts $channel "# Theme names are case sensitive."
+            chan puts $channel "Theme: $::ms::theme"
+            chan puts $channel ""
+
+            chan puts $channel "# UI scale factor"
+            chan puts $channel "#"
+            chan puts $channel "# It's an integer that specifies the scaling factor of the screen"
+            chan puts $channel "# (in percentage, but without the '%' sign)."
+            chan puts $channel "#"
+            chan puts $channel "# \[100,400\]"
+            chan puts $channel "UIScaleFactor: $::ms::machine(os,ui_scale_factor)"
+            chan puts $channel ""
+
+            chan puts $channel "###################"
+            chan puts $channel "##               ##"
+            chan puts $channel "##     FONTS     ##"
+            chan puts $channel "##               ##"
+            chan puts $channel "###################"
+            chan puts $channel ""
+            chan puts $channel "# If the font size specified is a positive number, it is interpreted as a size in points."
+            chan puts $channel "# If the font size specified is a negative number, its absolute value is interpreted as a size in pixels."
+            chan puts $channel "# If a font cannot be displayed at the specified size, a nearby size will be chosen."
+            chan puts $channel ""
+
+            chan puts $channel "# Biggest font"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the biggest font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "BiggestFont: [_font configure BiggestFont -family] [_font configure BiggestFont -size]"
+            chan puts $channel ""
+
+            chan puts $channel "# Bigger font"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the bigger font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "BiggerFont: [_font configure BiggerFont -family] [_font configure BiggerFont -size]"
+            chan puts $channel ""
+
+            chan puts $channel "# Default font"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the default font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "DefaultFont: [_font configure NormalFont -family] [_font configure NormalFont -size]"
+            chan puts $channel ""
+
+            chan puts $channel "# Smaller font"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the smaller font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "SmallerFont: [_font configure SmallerFont -family] [_font configure SmallerFont -size]"
+            chan puts $channel ""
+
+            chan puts $channel "# Smallest font"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the smallest font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another sans-serif family will be chosen."
+            chan puts $channel "SmallestFont: [_font configure SmallestFont -family] [_font configure SmallestFont -size]"
+            chan puts $channel ""
+
+            chan puts $channel "# Monospace font"
+            chan puts $channel "#"
+            chan puts $channel "# It's a list that specifies the monospace font to use (both family and size)."
+            chan puts $channel "# If the family does not exists, another monospace family will be chosen."
+            chan puts $channel "MonospaceFont: [_font configure MonospaceFont -family] [_font configure MonospaceFont -size]"
+
+            chan flush $channel
+            chan close $channel
+        }
+    } on ok { channel } {
+        # Read the entire file.
+        set file_content [split [chan read $channel] "\n"]
+        chan close $channel
+
+        # Scan the file content line by line.
+        foreach line $file_content {
+            # Remove any spaces at the beginning and ending of the line string.
+            set line [string trim $line]
+
+            # Skip comments.
+            switch -- [string index $line 0] {
+                "#"  { continue }
+            }
+
+            # Skip empty lines and options without value/s.
+            switch -- [llength $line] {
+                0       -
+                1       { continue }
+                default {
+                    # Get all the font family names known by the operating system.
+                    set families [_font families -displayof .]
+
+                    # Check the settings options specified.
+                    set option [lindex  $line 0]
+                    set value  [lremove $line 0]
+                    switch -nocase -- $option {
+                        "Accent:" {
+                            set value [string tolower $value]
+                            switch -- $value {
+                                blue   -
+                                gray   -
+                                green  -
+                                orange -
+                                pink   -
+                                purple -
+                                red    -
+                                yellow { set ::ms::accent $value }
+                            }
+                        }
+                        "BiggerFont:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lremove $value end]]
+                            if { $family ni $families } {
+                                continue
+                            }
+
+                            _font configure BiggerFont -family $family \
+                                                         -size $size;
+                        }
+                        "BiggestFont:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lremove $value end]]
+                            if { $family ni $families } {
+                                continue
+                            }
+
+                            _font configure BiggestFont -family $family \
+                                                          -size $size;
+                        }
+                        "ClickAction:" {
+                            set value [string tolower $value]
+                            switch -- $value {
+                                jump   -
+                                scroll { set ::ms::clickaction $value }
+                            }
+                        }
+                        "Colorscheme:" {
+                            set value [string tolower $value]
+                            switch -- $value {
+                                dark  -
+                                light { set ::ms::colorscheme $value }
+                            }
+                        }
+                        "DefaultFont:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lremove $value end]]
+                            if { $family ni $families } {
+                                continue
+                            }
+
+                            _font configure NormalFont -family $family \
+                                                         -size $size;
+                        }
+                        "FocusModel:" {
+                            switch -nocase -- $value {
+                                explicit { set ::ms::focusmodel explicit }
+                                implicit {
+                                    set ::ms::focusmodel implicit
+
+                                    # Apply the implicit bindings.
+                                    _bind all <Enter> [list +::ms::focus::Implicit %W %d]
+                                }
+                            }
+                        }
+                        "Language:" {
+                            set value [string tolower $value]
+                            if { $value in $::ms::languages } {
+                                # Set the new mustang language.
+                                set ::ms::language $value
+
+                                # Change the mustang language.
+                                ::msgcat::mclocale $value
+                            }
+                        }
+                        "MiddleClick:" {
+                            switch -- [_tk windowingsystem] {
+                                x11 {
+                                    set value [string tolower $value]
+                                    switch -- $value {
+                                        drag  -
+                                        paste { set ::ms::middleclick $value }
+                                    }
+                                }
+                                default { set ::ms::middleclick drag }
+                            }
+                        }
+                        "MonospaceFont:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lremove $value end]]
+                            if { $family ni $families } {
+                                continue
+                            }
+
+                            _font configure MonospaceFont -family $family \
+                                                            -size $size;
+                        }
+                        "ScrollMode:" {
+                            switch -nocase -- $value {
+                                classic { set ::ms::scrollmode classic }
+                                natural { set ::ms::scrollmode natural }
+                            }
+                        }
+                        "ScrollStopper:" {
+                            switch -nocase -- $value {
+                                0        -
+                                no       -
+                                off      -
+                                false    -
+                                disabled { set ::ms::scrollstopper disabled }
+                                1        -
+                                yes      -
+                                on       -
+                                true     -
+                                enabled  { set ::ms::scrollstopper enabled }
+                            }
+                        }
+                        "SmallerFont:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lremove $value end]]
+                            if { $family ni $families } {
+                                continue
+                            }
+
+                            _font configure SmallerFont -family $family \
+                                                          -size $size;
+                        }
+                        "SmallestFont:" {
+                            set size [lindex $value end]
+                            switch -- [string is integer -strict $size] {
+                                0   { continue }
+                            }
+
+                            set family [string trim [lremove $value end]]
+                            if { $family ni $families } {
+                                continue
+                            }
+
+                            _font configure SmallestFont -family $family \
+                                                           -size $size;
+                        }
+                        "Theme:" { set ::ms::theme $value }
+                        "UIScaleFactor:" {
+                            switch -- [string is double -strict $value] {
+                                0   { continue }
+                                1   {
+                                    if { $value < 100.0 } {
+                                        continue
+                                    }
+                                }
+                            }
+
+                            set ::ms::machine(os,ui_scale_factor) $value
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
