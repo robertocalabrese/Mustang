@@ -1311,7 +1311,116 @@ proc ::ms::Init {} {
                 1   { set ::ms::machine(os,display_manager) "wayland" }
             }
         }
-        "Win*" {}
+        "Win*" {
+            # Set all the available Windows cursors types.
+            set ::ms::machine(os,cursors) [list arrow            based_arrow_down      based_arrow_up         boat \
+                                                bogosity         bottom_left_corner    bottom_right_corner    bottom_side \
+                                                bottom_tee       box_spiral            center_ptr             circle \
+                                                clock            coffee_mug            cross                  cross_reverse \
+                                                crosshair        diamond_cross         dot                    dotbox \
+                                                double_arrow     draft_large           draft_small            draped_box \
+                                                exchange         fleur                 gobbler                gumby \
+                                                hand1            hand2                 heart                  icon \
+                                                iron_cross       left_ptr              left_side              left_tee \
+                                                leftbutton       ll_angle              lr_angle               man \
+                                                middlebutton     mouse                 no                     none \
+                                                pencil           pirate                plus                   question_arrow \
+                                                right_ptr        right_side            right_tee              rightbutton \
+                                                rtl_logo         sailboat              sb_down_arrow          sb_h_double_arrow \
+                                                sb_left_arrow    sb_right_arrow        sb_up_arrow            sb_v_double_arrow \
+                                                shuttle          size                  size_ne_sw             size_ns \
+                                                size_nw_se       size_we               sizing                 spider \
+                                                spraycan         star                  starting               target \
+                                                tcross           top_left_arrow        top_left_corner        top_right_corner \
+                                                top_side         top_tee               trek                   ul_angle \
+                                                umbrella         uparrow               ur_angle               wait \
+                                                watch            X_cursor              xterm];
+
+            # Get the cpu model name.
+            set cmd [list {*}[auto_execok wmic] "cpu" "get" "Name"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,model) "unknown"
+            } on ok { results } {
+                set ::ms::machine(cpu,model) [lremove $results 0]
+            }
+
+            # Get the scale factor.
+            set cmd [list {*}[auto_execok wmic] "desktopmonitor" "get" "PixelsPerXLogicalInch"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(os,ui_scale_factor) 100.0
+            } on ok { results } {
+                # Note The conversion factor is 100.0/96.0 where:
+                #    100.0 --> is the minimum scale value available on Windows.
+                #    96.0  --> is the minimum 'PixelsPerXLogicalInch' returned by Windows.
+                set DPI [lindex [lremove $results 0] 0]
+                set ::ms::machine(os,ui_scale_factor) [expr { 1.0416666666666667*$DPI }]
+            }
+
+            # Get the number of cpus cores available.
+            set cmd [list {*}[auto_execok wmic] "cpu" "get" "NumberOfCores"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,cores) 1
+            } on ok { results } {
+                set results [lremove $results 0]
+
+                set ::ms::machine(cpu,cores) 0
+                foreach core $results {
+                    incr ::ms::machine(cpu,cores) $core
+                }
+            }
+
+            # Get the number of cpus threads available.
+            set cmd [list {*}[auto_execok wmic] "cpu" "get" "NumberOfLogicalProcessors"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(cpu,threads) 1
+            } on ok { results } {
+                set results [lremove $results 0]
+
+                set ::ms::machine(cpu,threads) 0
+                foreach thread $results {
+                    incr ::ms::machine(cpu,threads) $thread
+                }
+            }
+
+            # Get the Windows version number.
+            set cmd [list {*}[auto_execok wmic] "os" "get" "Version"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set translated_error_text "[::msgcat::mc "Operating system not supported."]"
+            } on ok { results } {
+                set ::ms::machine(os,version) [lremove $results 0]
+
+                set version     [split $::tcl_platform(osVersion) "."]
+                set major       [lindex $version 0]
+                set buildNumber [lindex $version 2]
+
+                if { ($major < 11) } {
+                    set translated_error_text "[::msgcat::mc "Operating system not supported."]"
+                }
+            }
+
+            # Get the Windows exact name.
+            set cmd [list {*}[auto_execok wmic] "os" "get" "Caption"]
+            try {
+                exec {*}$cmd
+            } on error {} {
+                set ::ms::machine(os,name) "Microsoft Windows $major"
+            } on ok { results } {
+                set ::ms::machine(os,name) [lremove $results 0]
+            }
+
+            # Set the Windows prettyname.
+            set ::ms::machine(os,prettyname) [list {*}$::ms::machine(os,name) " build: " $buildNumber]
+        }
         default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
     }
 }
