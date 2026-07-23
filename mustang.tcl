@@ -2766,4 +2766,116 @@ proc ::ms::Check_Color { value { fallback invalid } } {
     }
 }
 
+## Check_Hex
+#
+# Validate a color expressed in hexadecimal form.
+#
+# Where:
+#
+# color        Should be the color to validate expressed at **8**, **12** or **16** bits, without any *alpha* channel (transparency),
+#              in shortform (three hexadecimals) or longform (six, nine or twelve hexadecimals), with or without the **#**.
+#
+#              *Color* values are case insensitive.
+#
+# colormodel   Optional. Should be a string that specifies the hexadecimal color model in which *color* will be evaluated.
+#              Allowed values are:
+#                  **HEX** or **HEX8** --> 3 or 6  hexadecimals.
+#                  **HEX12**           --> 3 or 9  hexadecimals.
+#                  **HEX16**           --> 3 or 12 hexadecimals.
+#
+#              *Colormodel* strings are case insensitive.
+#
+#              If not provided, defaults to **HEX8**.
+#
+# fallback     Optional. Should be a string that specifies the fallback value to return if the color provided will
+#              result invalid. If not provided, defaults to **invalid**.
+#
+# Return the validated color in its hexadecimal longform expressed in the color model specified, or the fallback value.
+# Validated colors will always be returned with lowercase characters.
+proc ::ms::Check_Hex { color { colormodel HEX8 } { fallback invalid } } {
+    # Check if the color provided is expressed in a valid hexadecimal form.
+    set color [string tolower [string trimleft $color "#"]]
+    switch -- [string is xdigit -strict $color] {
+        0       { return $fallback }
+        default {
+            switch -nocase -- $colormodel {
+                HEX  -
+                HEX8 {
+                    # Check the number of hexadecimals in 'color'.
+                    switch -- [string length $color] {
+                        1   {
+                            return [string cat "#" \
+                                               $color $color \
+                                               $color $color \
+                                               $color $color];
+                        }
+                        3   {
+                            # 'Color' have been provided as a shortform.
+                            set red   [string index $color 0]
+                            set green [string index $color 1]
+                            set blue  [string index $color 2]
+
+                            return [string cat "#" \
+                                               $red   $red \
+                                               $green $green \
+                                               $blue  $blue];
+
+                        }
+                        6       { return [string cat "#" $color] }
+                        default { return $fallback }
+                    }
+                }
+                HEX12 {
+                    # Check the number of hexadecimals in color.
+                    switch -- [string length $color] {
+                        1   {
+                            return [string cat "#" \
+                                               $color $color $color \
+                                               $color $color $color \
+                                               $color $color $color];
+                        }
+                        3   {
+                            # 'Color' have been provided as a shortform.
+                            set red   [string index $color 0]
+                            set green [string index $color 1]
+                            set blue  [string index $color 2]
+
+                            return [string cat "#" \
+                                               $red   $red   $red  \
+                                               $green $green $green \
+                                               $blue  $blue  $blue];
+                        }
+                        9       { return [string cat "#" $color] }
+                        default { return $fallback }
+                    }
+                }
+                HEX16 {
+                    # Check the number of hexadecimals in color.
+                    switch -- [string length $color] {
+                        1   {
+                            return [string cat "#" \
+                                               $color $color $color $color \
+                                               $color $color $color $color \
+                                               $color $color $color $color];
+                        }
+                        3   {
+                            # 'Color' have been provided as a shortform.
+                            set red   [string index $color 0]
+                            set green [string index $color 1]
+                            set blue  [string index $color 2]
+
+                            return [string cat "#" \
+                                               $red   $red   $red   $red  \
+                                               $green $green $green $green \
+                                               $blue  $blue  $blue  $blue];
+                        }
+                        12      { return [string cat "#" $color] }
+                        default { return $fallback }
+                    }
+                }
+            }
+        }
+    }
+}
+
 #*EOF*
