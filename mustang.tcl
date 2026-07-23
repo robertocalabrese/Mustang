@@ -2357,6 +2357,30 @@ proc ::ms::Init {} {
 
     # Add '::ms::current(.,style)' to the available styles for the toplevel classtype.
     lappend ::ms::style(toplevel) $::ms::current(.,style)
+
+    ###############################################################################
+    ##                                                                           ##
+    ##     SET A TRACING ON THE ACCENT, COLORSCHEME AND FOCUSMODEL VARIABLES     ##
+    ##                                                                           ##
+    ###############################################################################
+
+    # Register the current accent color, colorscheme and focusmodel as the last valid ones.
+    # These variables are used when the new color accent, colorscheme and focusmodel validation fails
+    # and mustang needs to reset its/their value/s to the last valid one/s.
+    set ::ms::temp(accent,last)      $::ms::accent
+    set ::ms::temp(colorscheme,last) $::ms::colorscheme
+    set ::ms::temp(focusmodel,last)  $::ms::focusmodel
+
+    # Set a trace on '::ms::accent' and '::ms::colorscheme' in order to check their values in case the developer/user changes them.
+    # If the value provided is a valid one then mustang will react accordingly, if it is not, mustang will override it with its last valid value.
+    trace add variable ::ms::accent \
+              write    [list ::ms::Check_And_React]
+
+    trace add variable ::ms::colorscheme \
+              write    [list ::ms::Check_And_React]
+
+    trace add variable ::ms::focusmodel \
+              write    [list ::ms::Check_And_React]
 }
 
 ####################
