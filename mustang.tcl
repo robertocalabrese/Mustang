@@ -880,6 +880,9 @@ proc ::ms::Init {} {
     ##                                            ##
     ################################################
 
+    # Note: We haven't loaded any theme yet, meaning we should not display the error message dialog in case something bad happens.
+    #       But we can delay the error message dialog until a theme is loaded or an unskippable/undelayable error happens.
+
     set translated_error_text ""
     switch -nocase -glob -- $::tcl_platform(os) {
         Darwin {
