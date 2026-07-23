@@ -2878,4 +2878,59 @@ proc ::ms::Check_Hex { color { colormodel HEX8 } { fallback invalid } } {
     }
 }
 
+## Check_Image
+#
+# Validate an image list.
+#
+# Where:
+#
+# image   Should be an image list of one or more elements.
+#         The first element is the default image name. The rest of the list is a sequence of statespec/value pairs as per style map,
+#         specifying different images to use when the widget is in a particular state or combination of states.
+#
+# Return **OK** if *image* is a valid image list or **invalid** if it's not.
+proc ::ms::Check_Image { image } {
+    set image [lindex  $image 0]
+    set args  [lremove $image 0]
+
+    # Check the first image.
+    switch -- $image {
+        ""      { return "OK" }
+        default {
+            if { $image ni [_image names] } {
+                return "invalid"
+            }
+        }
+    }
+
+    # Check if more than one image was provided.
+    switch -- [llength $args] {
+        0       {}
+        default {
+            # Check that 'args' is an 'option/value' list.
+            switch -- [expr { [llength $args]%2 }] {
+                0   {
+                    # Check the states related images.
+                    foreach { states image } $args {
+                        # Check the states.
+                        foreach state $states {
+                            switch -- [::ms::Check_State $state] {
+                                invalid { return "invalid" }
+                            }
+                        }
+
+                        # Check the image related to the states examined.
+                        if { $image ni [image names] } {
+                            return "invalid"
+                        }
+                    }
+                }
+                default { return "invalid" }
+            }
+        }
+    }
+
+    return "OK"
+}
+
 #*EOF*
