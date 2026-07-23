@@ -883,7 +883,10 @@ proc ::ms::Init {} {
     # Note: We haven't loaded any theme yet, meaning we should not display the error message dialog in case something bad happens.
     #       But we can delay the error message dialog until a theme is loaded or an unskippable/undelayable error happens.
 
-    set translated_error_text ""
+    # Set the ERROR variable to 'false', meaning no error has happened.
+    set ERROR false
+
+    # Check the current platform.
     switch -nocase -glob -- $::tcl_platform(os) {
         Darwin {
             # Set all the available macOS cursors types.
@@ -979,7 +982,7 @@ proc ::ms::Init {} {
             try {
                 exec {*}$cmd
             } on error {} {
-                set translated_error_text "[::msgcat::mc "Operating system not supported."]"
+                set ERROR true
             } on ok { version } {
                 # Note: Data taken from 'https://ss64.com/osx/sw_vers.html'.
 
@@ -1012,7 +1015,7 @@ proc ::ms::Init {} {
                         set ::ms::machine(os,prettyname) "macOS Monterey $version"
                         set ::ms::machine(os,version)    $version
                     }
-                    default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
+                    default { set ERROR true }
                 }
             }
         }
@@ -1400,7 +1403,7 @@ proc ::ms::Init {} {
             try {
                 exec {*}$cmd
             } on error {} {
-                set translated_error_text "[::msgcat::mc "Operating system not supported."]"
+                set ERROR true
             } on ok { results } {
                 set ::ms::machine(os,version) [lremove $results 0]
 
@@ -1409,7 +1412,7 @@ proc ::ms::Init {} {
                 set buildNumber [lindex $version 2]
 
                 if { ($major < 11) } {
-                    set translated_error_text "[::msgcat::mc "Operating system not supported."]"
+                    set ERROR true
                 }
             }
 
@@ -1426,7 +1429,7 @@ proc ::ms::Init {} {
             # Set the Windows prettyname.
             set ::ms::machine(os,prettyname) [list {*}$::ms::machine(os,name) " build: " $buildNumber]
         }
-        default { set translated_error_text "[::msgcat::mc "Operating system not supported."]" }
+        default { set ERROR true }
     }
 
     ############################################
@@ -1859,12 +1862,14 @@ proc ::ms::Init {} {
         #       We cannot risk to display a graphical error dialog.
 
         # Exit from the application and print the reason on 'stdout'.
-        # If there is a previous translated error, display that instead of the translation of 'Missing colors'.
-        switch -- $translated_error_text {
-            ""      { chan puts stdout "[::msgcat::mc "Missing colors."]" }
-            default { chan puts stdout "$translated_error_text" }
+        # If the operating system is not supported display the translation of "Operating system not supported",
+        # otherwise display the translation of 'Missing colors'.
+        switch -- $ERROR {
+            false { chan puts stdout "[::msgcat::mc "Missing colors."]" }
+            true  { chan puts stdout "[::msgcat::mc "Operating system not supported."]" }
         }
 
+        # Display the translation of "Quit the application".
         chan puts stdout "[::msgcat::mc "Quit the application."]"
         exit 1
     }
