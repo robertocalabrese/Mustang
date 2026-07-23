@@ -2402,4 +2402,130 @@ proc ::ms::Init {} {
 ##                ##
 ####################
 
+## Check_And_React
+#
+# Check and react to any changes made to the mustang traced variables.
+#
+# Where:
+#
+# name1,
+# name2,
+# op        Should be the tracing arguments.
+#           Do not pass any value, the **trace** command will automatically pass these values.
+#
+# It doesn't return anything.
+proc ::ms::Check_And_React { name1 name2 op } {
+    # Safeguard for future use of this procedure with other variables other than '::ms::accent' and '::ms::colorscheme'.
+    # If the variable is an array, reconstruct the name.
+    set varName $name1
+    switch -- $name2 {
+        ""      {}
+        default { append varName "(" $name2 ")" }
+    }
+
+    # Check the value of the variable name contained in 'varName'.
+    switch -- $varName {
+        ::ms::accent {
+            # Transform the accent color provided in lowercase characters.
+            set ::ms::accent [string tolower $::ms::accent]
+
+            # Check that the new accent color provided is a valid one.
+            switch -- $::ms::accent {
+                blue   -
+                gray   -
+                green  -
+                orange -
+                pink   -
+                purple -
+                red    -
+                yellow {
+                    # Check that the new accent color is not the same as the one currently registered.
+                    if { $::ms::accent ne $::ms::temp(accent,last) } {
+                        # Register the last valid accent color.
+                        set ::ms::temp(accent,last) $::ms::accent
+
+                        # Note: Both '::ms::accent' and '::ms::colorscheme' needs to refresh the theme after their validation.
+                        #       If both of these variables are setted at the same time, two refreshes will happen.
+                        #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
+                        #       This timer will be resetted if, while active, another command asks to refresh the theme.
+
+                        if { [info exists ::ms::temp(pending,refresh)] } {
+                            after cancel $::ms::temp(pending,refresh)
+                            unset -nocomplain -- ::ms::temp(pending,refresh)
+                        }
+                        set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+                    }
+                }
+                default {
+                    # Restore the last valid accent color.
+                    set ::ms::accent $::ms::temp(accent,last)
+                }
+            }
+        }
+        ::ms::colorscheme {
+            # Transform the colorscheme value provided in lowercase characters.
+            set ::ms::colorscheme [string tolower $::ms::colorscheme]
+
+            # Check that the new colorscheme value is a valid one.
+            switch -- $::ms::colorscheme {
+                dark  -
+                light {
+                    # Check that the new colorscheme value is not the same as the one currently registered.
+                    if { $::ms::colorscheme ne $::ms::temp(colorscheme,last) } {
+                        # Register the last valid colorscheme value.
+                        set ::ms::temp(colorscheme,last) $::ms::colorscheme
+
+                        # Note: Both '::ms::accent' and '::ms::colorscheme' needs to refresh the theme after their validation.
+                        #       If both of these variables are setted at the same time, two refreshes will happen.
+                        #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
+                        #       This timer will be resetted if, while active, another command asks to refresh the theme.
+
+                        if { [info exists ::ms::temp(pending,refresh)] } {
+                            after cancel $::ms::temp(pending,refresh)
+                            unset -nocomplain -- ::ms::temp(pending,refresh)
+                        }
+                        set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+                    }
+                }
+                default {
+                    # Restore the last valid colorscheme value.
+                    set ::ms::colorscheme $::ms::temp(colorscheme,last)
+                }
+            }
+        }
+        ::ms::focusmodel {
+            # Transform the focus model provided in lowercase characters.
+            set ::ms::focusmodel [string tolower $::ms::focusmodel]
+
+            # Check that the new focus model provided is a valid one.
+            switch -- $::ms::focusmodel {
+                implicit {
+                    if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
+                        # Register the last valid focus model as implicit.
+                        set ::ms::temp(focusmodel,last) implicit
+
+                        # Apply the implicit bindings.
+                        _bind all <Enter> [list +::ms::focus::Implicit %W %d]
+                    }
+                }
+                explicit {
+                    if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
+                        # Register the last valid focus model as explicit.
+                        set ::ms::temp(focusmodel,last) explicit
+
+                        # Remove the implicit bindings.
+                        bind all <Enter> [list -::ms::focus::Implicit %W %d]
+                    }
+                }
+                default {
+                    # Restore the last valid focus model.
+                    set ::ms::focusmodel $::ms::temp(focusmodel,last)
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
