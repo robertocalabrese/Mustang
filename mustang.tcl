@@ -1845,6 +1845,29 @@ proc ::ms::Init {} {
             }
         }
     }
+
+    ###########################################
+    ##                                       ##
+    ##     LOAD THE MUSTANG THEME COLORS     ##
+    ##                                       ##
+    ###########################################
+
+    try {
+        source -encoding utf-8 [file join $::ms_library themes "colors.tcl"]
+    } on error {} {
+        # Note: We have no themes available and at the same time we cannot go on.
+        #       We cannot risk to display a graphical error dialog.
+
+        # Exit from the application and print the reason on 'stdout'.
+        # If there is a previous translated error, display that instead of the translation of 'Missing colors'.
+        switch -- $translated_error_text {
+            ""      { chan puts stdout "[::msgcat::mc "Missing colors."]" }
+            default { chan puts stdout "$translated_error_text" }
+        }
+
+        chan puts stdout "[::msgcat::mc "Quit the application."]"
+        exit 1
+    }
 }
 
 ####################
