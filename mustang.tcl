@@ -1873,6 +1873,153 @@ proc ::ms::Init {} {
         chan puts stdout "[::msgcat::mc "Quit the application."]"
         exit 1
     }
+
+    #####################################################
+    ##                                                 ##
+    ##     SOURCE ALL THE AVAILABLE MUSTANG THEMES     ##
+    ##                                                 ##
+    #####################################################
+
+    # Initialize the list of available themes.
+    set ::ms::themes [list ]
+
+    # Initialize some style variables.
+    foreach classtype $::ms::data(classtypes) {
+        # Get the default 'style' from 'classtype'.
+        switch -- $classtype {
+            canvas   -
+            listbox  -
+            treeview -
+            text     -
+            toplevel { set style [string totitle $classtype] }
+            crate    { set style Crate }
+            embed    { set style Embed }
+            default  { set style [string cat "T" [string totitle $classtype]] }
+        }
+
+        # Inizialize the classtype widgets real address list for 'style'.
+        set ::ms::style($style,$classtype,addrs) [list ]
+    }
+
+    # Source all default themes.
+    foreach theme_folder [lsort -dictionary -increasing [glob -type d -nocomplain -directory [file join $::ms_library themes] -- *]] {
+        # Get the theme name from the folder name.
+        set theme [file tail $theme_folder]
+
+        # Initialize the style list for this theme.
+        set ::ms::style($theme) [list ]
+
+        # If 'theme' is a valid mustang theme, source it.
+        try {
+            source -encoding utf-8 [file join $::ms_library themes $theme "theme.tcl"]
+        } on error {} {
+            # If the '::DEBUG' variable is enabled, display on the standard output channel
+            # that the current theme examined was ignored.
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts stdout "Unable to load the '$theme' theme. Ignoring." }
+            }
+
+            # Remove every variable created so far for this theme.
+            foreach style $::ms::style($theme) {
+                unset -nocomplain -- ::ms::stylelayout($theme,$style) \
+                                     ::ms::stylemap($theme,$style) \
+                                     ::ms::styleopt($theme,$style);
+            }
+
+            unset -nocomplain -- ::ms::layouts($theme) \
+                                 ::ms::style($theme);
+        } on ok {} {
+            # Check that the theme charwidth values for entries, comboboxes, menubuttons, palettes and spinboxes
+            # are present and that they are a positive integer (and not **0**).
+            foreach style [list TEntry TCombobox TMenubutton TPalette TSpinbox] {
+                set index [lsearch -exact $::ms::styleopt($theme,$style) "-charwidth"]
+                switch -- $index {
+                    -1  {
+                        # Set the charwidth option for the current theme.
+                        lappend ::ms::styleopt($theme,$style) "-charwidth" \
+                                                              8;
+
+                        set ::ms::styleopt($theme,$style,charwidth) 8
+                    }
+                    default {
+                        if { $::ms::styleopt($theme,$style,charwidth) <= 0 } {
+                            # Update the charwidth option for the current theme.
+                            set ::ms::styleopt($theme,$style)           [lreplace $::ms::styleopt($theme,$style) $index+1 $index+1 8]
+                            set ::ms::styleopt($theme,$style,charwidth) 8
+                        }
+                    }
+                }
+            }
+
+            # Check that the theme paddings for crates, embeds, texts and toplevels are present and that they are
+            # lists with at least two elements.
+            foreach style [list Crate Embed Text Toplevel] {
+                set index [lsearch -exact $::ms::styleopt($theme,$style) "-padding"]
+                switch -- $index {
+                    -1  {
+                        # Set the padding option for the current theme.
+                        lappend ::ms::styleopt($theme,$style) "-padding" \
+                                                              [list 0];
+
+                        set ::ms::styleopt($theme,$style,padding) [list 0]
+                    }
+                    default {
+                        if { $::ms::styleopt($theme,$style,padding) <= 0 } {
+                            # Update the padding option for the current theme.
+                            set ::ms::styleopt($theme,$style)         [lreplace $::ms::styleopt($theme,$style) $index+1 $index+1 [list 0]]
+                            set ::ms::styleopt($theme,$style,padding) [list 0]
+                        }
+                    }
+                }
+            }
+
+            # Register the theme name among the available themes.
+            lappend ::ms::themes $theme
+        }
+    }
+
+    # Safeguards.
+    switch -- [llength $::ms::themes] {
+        0   {
+            # Note: We have no themes available and at the same time we cannot go on.
+            #       We cannot risk to display a graphical error dialog.
+
+            # Exit from the application and print the reason on 'stdout'.
+            # If the operating system is not supported display the translation of "Operating system not supported",
+            # otherwise display the translation of 'Missing themes'.
+            switch -- $ERROR {
+                false { chan puts stdout "[::msgcat::mc "Missing themes."]" }
+                true  { chan puts stdout "[::msgcat::mc "Operating system not supported."]" }
+            }
+
+            # Display the translation of "Quit the application".
+            chan puts stdout "[::msgcat::mc "Quit the application."]"
+            exit 1
+        }
+        1   {
+            # Check if the current theme is one of the actual themes known by mustang.
+            if { $::ms::theme ni $::ms::themes } {
+                switch -nocase -- $::DEBUG {
+                    1       -
+                    on      -
+                    true    -
+                    active  -
+                    enabled { chan puts stdout "Unable to load the '$::ms::theme' theme. The program will use the first theme on the list." }
+                }
+
+                # Set the current theme with the first theme available (in alphabetical order) among the ones known by mustang.
+                set ::ms::theme [lindex $::ms::themes 0]
+            }
+        }
+    }
+
+    # Load the mustang theme.
+    # It could be the default one (Halo), the first on the theme list (in alphabetical order) or the one registered in the mustang preferences.
+    _ttk_style theme use $::ms::theme
 }
 
 ####################
