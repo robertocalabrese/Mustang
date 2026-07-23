@@ -41,6 +41,9 @@
 namespace eval ::ms {
     # Errors
     ::msgcat::mcset  el "Operating system not supported." "Το λειτουργικό σύστημα δεν υποστηρίζεται."
+    ::msgcat::mcset  el "Missing colors." "Λείπουν χρώματα."
+    ::msgcat::mcset  el "Missing themes." "Θέματα που λείπουν."
+    ::msgcat::mcset  el "Quit the application." "Κλείστε την εφαρμογή."
 
     # Buttons
     ::msgcat::mcset  el "abort" "τερματισμός"

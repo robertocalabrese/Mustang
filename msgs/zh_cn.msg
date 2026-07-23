@@ -41,6 +41,9 @@
 namespace eval ::ms {
     # Errors
     ::msgcat::mcset  zh_cn "Operating system not supported." "不支持作系统。"
+    ::msgcat::mcset  zh_cn "Missing colors." "缺少颜色。"
+    ::msgcat::mcset  zh_cn "Missing themes." "缺少主题。"
+    ::msgcat::mcset  zh_cn "Quit the application." "退出应用。"
 
     # Buttons
     ::msgcat::mcset  zh_cn "abort" "中止"

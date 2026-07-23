@@ -41,6 +41,9 @@
 namespace eval ::ms {
     # Errors
     ::msgcat::mcset  ru "Operating system not supported." "Операционная система не поддерживается."
+    ::msgcat::mcset  ru "Missing colors." "Отсутствующие цвета."
+    ::msgcat::mcset  ru "Missing themes." "Отсутствующие темы."
+    ::msgcat::mcset  ru "Quit the application." "Закрыть заявку."
 
     # Buttons
     ::msgcat::mcset  ru "abort" "отмена"

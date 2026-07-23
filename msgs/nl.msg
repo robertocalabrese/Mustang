@@ -41,6 +41,9 @@
 namespace eval ::ms {
     # Errors
     ::msgcat::mcset  nl "Operating system not supported." "Besturingssysteem wordt niet ondersteund."
+    ::msgcat::mcset  nl "Missing colors." "Ontbrekende kleuren."
+    ::msgcat::mcset  nl "Missing themes." "Ontbrekende thema's."
+    ::msgcat::mcset  nl "Quit the application." "Beëindig de applicatie."
 
     # Buttons
     ::msgcat::mcset  nl "abort" "afbreken"

@@ -41,6 +41,9 @@
 namespace eval ::ms {
     # Errors
     ::msgcat::mcset  en "Operating system not supported."
+    ::msgcat::mcset  en "Missing colors."
+    ::msgcat::mcset  en "Missing themes."
+    ::msgcat::mcset  en "Quit the application."
 
     # Buttons
     ::msgcat::mcset  en "abort"

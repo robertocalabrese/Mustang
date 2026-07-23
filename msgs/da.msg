@@ -41,6 +41,9 @@
 namespace eval ::ms {
     # Errors
     ::msgcat::mcset  da "Operating system not supported." "Operativsystemet understøttes ikke."
+    ::msgcat::mcset  da "Missing colors." "Manglende farver."
+    ::msgcat::mcset  da "Missing themes." "Manglende temaer."
+    ::msgcat::mcset  da "Quit the application." "Afslut ansøgningen."
 
     # Buttons
     ::msgcat::mcset  da "abort" "afbryd"
