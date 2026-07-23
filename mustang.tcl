@@ -2528,4 +2528,242 @@ proc ::ms::Check_And_React { name1 name2 op } {
     return ""
 }
 
+## Check_Color
+#
+# Validate a color expressed in hexadecimal or textual form.
+#
+# Where:
+#
+# value      It's a list that specifies the color to validate and optionally some other information about the color.
+#            The number of elements of this list depends on the color type in which *value* is provided.
+#            The allowed color types are:
+#
+#               **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                                           channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                                           hexadecimals), with or without the **#**.
+#
+#                                           In this form, the list should have only one or two elements.
+#                                           The first element indicates the color to validate and the second one (optional) indicates
+#                                           the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                                           translated. If only one element is provided (the hexadecimal color) its color model will be
+#                                           assumed to be **HEX8**.
+#
+#                                           Note that **HEX8** can be shortened into **HEX**.
+#
+#                                           After its validation, the color will be returned translated in its equivalent hexadecimal
+#                                           longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                                           See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                                           Note: Hexadecimal colors and color models are case insensitive.
+#
+#                                           Some examples:
+#
+#                                                "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                                      The color model is **HEX8**.
+#
+#                                                                      The hexadecimal color is translated to '#ffffff'.
+#
+#                                                "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                                      The color model is **HEX12**.
+#
+#                                                                      The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                                "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                                      The color model is **HEX8**.
+#
+#                                                                      The hexadecimal color is translated to '#ff0000'.
+#
+#                                                "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                                      The color model is **HEX16**.
+#
+#                                                                      The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                                "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                                      The color model is **HEX8**.
+#
+#                                                                      The hexadecimal color is translated to '#0000ff'.
+#
+#                                                "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                                      The color model is **HEX8**.
+#
+#                                                                      The hexadecimal color is translated to '#ffff00'.
+#
+#               **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                                           *Magenta*, or *Light Steel Blue*.
+#
+#                                           In this form, the list should have at least one element. More precisely:
+#
+#                                                colorname   --> It's the textual color name that specifies the color.
+#                                                                Should always be written first. It can take more than one element of
+#                                                                the list depending on how many words are needed to define it.
+#
+#                                                                The only color names known by mustang are specified in its palettes.
+#                                                                See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                                the allowed color names for the default **mustang** palette.
+#
+#                                                palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                                If present, it should always be the last element of the list if the color model
+#                                                                is not present, or the last but one if the color model is present.
+#
+#                                                                Allowed values are any palette name loaded into mustang.
+#                                                                If not provided, defaults to **mustang** or return the fallback value
+#                                                                if the **mustang** palette was not loaded.
+#
+#                                                                See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                                the mustang palettes.
+#
+#                                                colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                                will be translated.
+#                                                                If present, the color model should always be the last element of the list.
+#
+#                                                                Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                                If not provided, defaults to **HEX8**.
+#
+#                                                                Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                                See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                                about color models.
+#
+#                                           Note: Colornames, palettes and color models are case insensitive.
+#
+#                                           Some examples:
+#
+#                                                "teal"                --> The color name is *teal*.
+#                                                                          The palette name is **mustang**.
+#                                                                          The color model is **HEX8**.
+#
+#                                                                          The color name is translated to "#008080"
+#
+#                                                "medium violet red"   --> The color name is *medium violet red*.
+#                                                                          The palette name is **mustang**.
+#                                                                          The color model is **HEX8**.
+#
+#                                                                          The color name is translated to "#c71585"
+#
+#                                                "sepia MyPalette"     --> The color name is *sepia*.
+#                                                                          The palette name is **MyPalette**.
+#                                                                          The color model is **HEX8**.
+#
+#                                                                          Note that in this example **MyPalette** is a fictional
+#                                                                          palette name that have been loaded into mustang.
+#
+#                                                                          The color name is translated to the hexadecimal color at 8 bit
+#                                                                          associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                                "light coral hex16"   --> The color name is *light coral*.
+#                                                                          The color model is **HEX16**.
+#                                                                          The palette name is **mustang**.
+#
+#                                                                          The color name is translated to "#f0f080808080"
+#
+#                                                "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                                         The palette name is **mustang**.
+#                                                                                         The color model is **HEX8**.
+#
+#                                                                                         The color name is translated to "#6ada8e"
+#
+#                                           After its validation, the color name will be returned translated in its hexadecimal longform
+#                                           equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#               **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                                           *HighlightAlternate* or *PlaceholderText*.
+#
+#                                           In this form, the list should have only one or two elements.
+#                                           The first element indicates the theme color name to validate and the second one (optional)
+#                                           indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                                           will be translated. If only one element is provided (the theme color name) its color model
+#                                           will be assumed to be **HEX8**.
+#
+#                                           Note that **HEX8** can be shortened into **HEX**.
+#
+#                                           After its validation, the color will be returned translated in its equivalent hexadecimal
+#                                           longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                                           See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                                           theme color names are allowed.
+#
+#                                           Note: Theme colors are case sensitive.
+#
+# fallback   Optional. Should be a string that specifies the fallback value to return if the color provided will result invalid.
+#            If not provided, defaults to **invalid**.
+#
+# Return the validated color or the fallback value.
+proc ::ms::Check_Color { value { fallback invalid } } {
+    # Check if a valid hexadecimal color model has been provided.
+    set colormodel [lindex $value end]
+    switch -nocase -- $colormodel {
+        HEX  -
+        HEX8 {
+            set colormodel HEX8
+            set value      [lrange $value 0 end-1]
+        }
+        HEX12 {
+            set colormodel HEX12
+            set value      [lrange $value 0 end-1]
+        }
+        HEX16 {
+            set colormodel HEX16
+            set value      [lrange $value 0 end-1]
+        }
+        default { set colormodel HEX8 }
+    }
+
+    # Check if a valid palette name has been provided.
+    set palette [string tolower [lindex $value end]]
+    if { $palette in $::ms::palette(names) } {
+        set color [lrange $value 0 end-1]
+    } else {
+        set color $value
+
+        # Check if the 'mustang' palette was actually loaded.
+        if { "mustang" in $::ms::palette(names) } {
+            set palette "mustang"
+        } else {
+            return $fallback
+        }
+    }
+
+    # Check if 'color' is a valid hexadecimal color.
+    set result [::ms::Check_Hex $color $colormodel invalid]
+    switch -- $result {
+        invalid {
+            # Check if 'color' is an empty string.
+            switch -- [string trim $color] {
+                ""  { return $fallback }
+            }
+
+            # Transform each word that compose 'color' in titlecase characters.
+            set colorname [list ]
+            foreach word $color {
+                lappend colorname [string totitle $word]
+            }
+
+            # Check if 'colorname' is known by 'palette'.
+            if { $colorname in $::ms::palette($palette,all_families,colornames) } {
+                # Return the colorname hexadecimal longform expressed in the hexadecimal color model provided.
+                switch -nocase -- $colormodel {
+                    HEX8  { return $::ms::palette($palette,$colorname,hex8) }
+                    HEX12 { return [::HEX8_HEX12 $::ms::palette($palette,$colorname,hex8)] }
+                    HEX16 { return [::HEX8_HEX16 $::ms::palette($palette,$colorname,hex8)] }
+                }
+            } else {
+                set hex8 [::ms::Translate_Theme_Color $color invalid]
+                switch -- $hex8 {
+                    invalid { return $fallback }
+                    default {
+                        # Return the colorname hexadecimal longform expressed in the hexadecimal color model provided.
+                        switch -nocase -- $colormodel {
+                            HEX8  { return $hex8 }
+                            HEX12 { return [::HEX8_HEX12 $hex8] }
+                            HEX16 { return [::HEX8_HEX16 $hex8] }
+                        }
+                    }
+                }
+            }
+        }
+        default { return $result }
+    }
+}
+
 #*EOF*
