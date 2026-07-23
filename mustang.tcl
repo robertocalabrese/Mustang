@@ -2381,6 +2381,19 @@ proc ::ms::Init {} {
 
     trace add variable ::ms::focusmodel \
               write    [list ::ms::Check_And_React]
+
+    ###############################################################
+    ##                                                           ##
+    ##     CHECK IF THE OPERATING SYSTEM IS SUPPORTED OR NOT     ##
+    ##                                                           ##
+    ###############################################################
+
+    # Note: If the operating system is not supported, we can now display a graphical error dialog.
+
+    switch -- $ERROR {
+        false { return "" }
+        true  { ::ms::Error "[::msgcat::mc "Operating system not supported."]" "" }
+    }
 }
 
 ####################
