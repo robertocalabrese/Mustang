@@ -883,23 +883,19 @@ proc ::ms::wm::Command { args } {
                         # Check the initial address type provided (short or real).
                         switch -- $type {
                             short {
-                                set short_result [list ]
-                                foreach w $result {
-                                    if { $w in $::ms::addr(reals) } {
-                                        # 'w' is the real address of a widget created by mustang.
-                                        lappend short_result $::ms::addr($w,short)
-                                    } else {
-                                        # 'w' is the real address of a widget not created by mustang.
-                                        lappend short_result [::ms::Get_Short $w]
+                                set shorts_result [list ]
+                                foreach addr $result {
+                                    switch -- [info exists ::ms::addr($addr,short)] {
+                                        0   { lappend shorts_result $addr }
+                                        1   { lappend shorts_result $::ms::addr($addr,short) }
                                     }
                                 }
 
                                 # Remove any doubles.
-                                set result [lsort -unique $short_result]
+                                return [lsort -unique $short_result]
                             }
+                            default { return $result }
                         }
-
-                        return $result
                     }
                 }
                 2   {
@@ -965,17 +961,13 @@ proc ::ms::wm::Command { args } {
                                 # Check the initial address type provided (short or real).
                                 switch -- $type {
                                     short {
-                                        if { $pathname in $::ms::addr(reals) } {
-                                            # 'pathname' is the real address of a widget created by mustang.
-                                            return $::ms::addr($pathname,short)
-                                        } else {
-                                            # 'pathname' is the real address of a widget not created by mustang.
-                                            return [::ms::Get_Short $pathname]
+                                        switch -- [info exists ::ms::addr($pathname,short)] {
+                                            0   { return $pathname }
+                                            1   { return $::ms::addr($pathname,short) }
                                         }
                                     }
+                                    default { return $pathname }
                                 }
-
-                                return $pathname
                             }
                         }
                     }

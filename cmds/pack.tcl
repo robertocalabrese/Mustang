@@ -480,13 +480,10 @@ proc ::ms::pack::Command { args } {
                         switch -- $type {
                             short {
                                 set shorts_result [list ]
-                                foreach w $result {
-                                    if { $w in $::ms::addr(reals) } {
-                                        # 'w' is the real address of a widget created by mustang.
-                                        lappend shorts_result $::ms::addr($w,short)
-                                    } else {
-                                        # 'w' is the real address of a widget not created by mustang.
-                                        lappend shorts_result [::ms::Get_Short $w]
+                                foreach addr $result {
+                                    switch -- [info exists ::ms::addr($addr,short)] {
+                                        0   { lappend shorts_result $addr }
+                                        1   { lappend shorts_result $::ms::addr($addr,short) }
                                     }
                                 }
 
@@ -549,20 +546,20 @@ proc ::ms::pack::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        # Check the initial address type provided (short or real).
-                        switch -- $type {
-                            short {
-                                # Note: The 'pack info' command returns an option/value list that
-                                #       will always contain the '-in' option at index '0'.
+                        switch -- $result {
+                            ""      {}
+                            default {
+                                # Check the initial address type provided (short or real).
+                                switch -- $type {
+                                    short {
+                                        # Note: The 'pack info' command returns an option/value list that
+                                        #       will always contain the '-in' option value at index '1'.
 
-                                # '-in' address
-                                set container [lindex $result 1]
-                                if { $container in $::ms::addr(reals) } {
-                                    # 'container' is the real address of a widget created by mustang.
-                                    set result [lreplace $result $index+1 $index+1 $::ms::addr($container,short)]
-                                } else {
-                                    # 'container' is the real address of a widget not created by mustang.
-                                    set result [lreplace $result $index+1 $index+1 [::ms::Get_Short $container]]
+                                        set container [lindex $result 1]
+                                        switch -- [info exists ::ms::addr($container,short)] {
+                                            1   { set result [lreplace $result 1 1 $::ms::addr($container,short)] }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -591,32 +588,34 @@ proc ::ms::pack::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        switch -- $optionName {
-                            "-in" {
-                                # Check the initial address type provided (short or real).
-                                switch -- $type {
-                                    short {
+                        switch -- $result {
+                            ""      { return "" }
+                            default {
+                                switch -- $optionName {
+                                    "-in" {
                                         # Note: The 'pack info' command returns an option/value list that
-                                        #       will always contain the '-in' option at index '0'.
+                                        #       will always contain the '-in' option value at index '1'.
 
-                                        # '-in' address
                                         set container [lindex $result 1]
-                                        if { $container in $::ms::addr(reals) } {
-                                            # 'container' is the real address of a widget created by mustang.
-                                            return $::ms::addr($container,short)
-                                        } else {
-                                            # 'container' is the real address of a widget not created by mustang.
-                                            return [::ms::Get_Short $container]
+
+                                        # Check the initial address type provided (short or real).
+                                        switch -- $type {
+                                            short {
+                                                switch -- [info exists ::ms::addr($container,short)] {
+                                                    1   { return $::ms::addr($container,short) }
+                                                }
+                                            }
+                                        }
+
+                                        return $container
+                                    }
+                                    default {
+                                        set index [lsearch -exact $result $optionName]
+                                        switch -- $index {
+                                            -1      { ::ms::Error "Invalid option name, '$optionName'." $caller_info }
+                                            default { return [lindex $result $index+1] }
                                         }
                                     }
-                                    default { return [lindex $result 1] }
-                                }
-                            }
-                            default {
-                                set index [lsearch -exact $result $optionName]
-                                switch -- $index {
-                                    -1      { ::ms::Error "Invalid option name, '$optionName'." $caller_info }
-                                    default { return [lindex $result $index+1] }
                                 }
                             }
                         }

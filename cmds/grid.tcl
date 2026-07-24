@@ -787,13 +787,10 @@ proc ::ms::grid::Command { args } {
                         switch -- $type {
                             short {
                                 set shorts_result [list ]
-                                foreach w $result {
-                                    if { $w in $::ms::addr(reals) } {
-                                        # 'w' is the real address of a widget created by mustang.
-                                        lappend shorts_result $::ms::addr($w,short)
-                                    } else {
-                                        # 'w' is the real address of a widget not created by mustang.
-                                        lappend shorts_result [::ms::Get_Short $w]
+                                foreach addr $result {
+                                    switch -- [info exists ::ms::addr($addr,short)] {
+                                        0   { lappend shorts_result $addr }
+                                        1   { lappend shorts_result $::ms::addr($addr,short) }
                                     }
                                 }
 
@@ -844,9 +841,8 @@ proc ::ms::grid::Command { args } {
                 1   {
                     set window [lindex $args 0]
 
-                    # Get the 'window' real address.
+                    # Get the 'window' real address and type.
                     set result [::ms::Check_Pathname $window invalid]
-
                     switch -- $result {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                         default {
@@ -868,16 +864,11 @@ proc ::ms::grid::Command { args } {
                                 switch -- $type {
                                     short {
                                         # Note: The 'grid info' command returns an option/value list that
-                                        #       will always contain the '-in' option at index '0'.
+                                        #       will always contain the '-in' option value at index '1'.
 
-                                        # '-in' address
                                         set container [lindex $result 1]
-                                        if { $container in $::ms::addr(reals) } {
-                                            # 'container' is the real address of a widget created by mustang.
-                                            set result [lreplace $result 1 1 $::ms::addr($container,short)]
-                                        } else {
-                                            # 'container' is the real address of a widget not created by mustang.
-                                            set result [lreplace $result 1 1 [::ms::Get_Short $container]]
+                                        switch -- [info exists ::ms::addr($container,short)] {
+                                            1   { set result [lreplace $result 1 1 $::ms::addr($container,short)] }
                                         }
                                     }
                                 }
@@ -908,28 +899,25 @@ proc ::ms::grid::Command { args } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
                         switch -- $result {
-                            ""      { ::ms::Error "The address provided is not managed by grid." $caller_info }
+                            ""      { return "" }
                             default {
                                 switch -- $optionName {
                                     "-in" {
+                                        # Note: The 'grid info' command returns an option/value list that
+                                        #       will always contain the '-in' option value at index '1'.
+
+                                        set container [lindex $result 1]
+
                                         # Check the initial address type provided (short or real).
                                         switch -- $type {
                                             short {
-                                                # Note: The 'grid info' command returns an option/value list that
-                                                #       will always contain the '-in' option at index '0'.
-
-                                                # '-in' address
-                                                set container [lindex $result 1]
-                                                if { $container in $::ms::addr(reals) } {
-                                                    # 'container' is the real address of a widget created by mustang.
-                                                    return $::ms::addr($container,short)
-                                                } else {
-                                                    # 'container' is the real address of a widget not created by mustang.
-                                                    return [::ms::Get_Short $container]
+                                                switch -- [info exists ::ms::addr($container,short)] {
+                                                    1   { return $::ms::addr($container,short) }
                                                 }
                                             }
-                                            default { return [lindex $result 1] }
                                         }
+
+                                        return $container
                                     }
                                     default {
                                         set index [lsearch -exact $result $optionName]

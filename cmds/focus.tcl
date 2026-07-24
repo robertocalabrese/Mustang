@@ -229,20 +229,17 @@ proc ::ms::focus::Command { args } {
             switch -- $action {
                 "-displayof" -
                 "-lastfor"   {
-                    set focus_address [_focus $action $w]
+                    set address [_focus $action $w]
 
                     # Check the initial address type provided (short or real).
                     switch -- $type {
                         short {
-                            if { $focus_address in $::ms::addr(reals) } {
-                                # 'focus_address' is a real address of a widget created by mustang.
-                                return $::ms::addr($focus_address,short)
-                            } else {
-                                # 'focus_address' is a real address of a widget not created by mustang.
-                                return [::ms::Get_Short $focus_address]
+                            switch -- [info exists ::ms::addr($address,short)] {
+                                0   { return $address }
+                                1   { return $::ms::addr($address,short) }
                             }
                         }
-                        default { return $focus_address }
+                        default { return $address }
                     }
                 }
                 "-force" {
@@ -260,12 +257,9 @@ proc ::ms::focus::Command { args } {
                     # Check the initial address type provided (short or real).
                     switch -- $type {
                         short {
-                            if { $next_address in $::ms::addr(reals) } {
-                                # 'next_address' is a real address of a widget created by mustang.
-                                return $::ms::addr($next_address,short)
-                            } else {
-                                # 'next_address' is a real address of a widget not created by mustang.
-                                return [::ms::Get_Short $next_address]
+                            switch -- [info exists ::ms::addr($next_address,short)] {
+                                0   { return $next_address }
+                                1   { return $::ms::addr($next_address,short) }
                             }
                         }
                         default { return $next_address }
@@ -278,12 +272,9 @@ proc ::ms::focus::Command { args } {
                     # Check the initial address type provided (short or real).
                     switch -- $type {
                         short {
-                            if { $prev_address in $::ms::addr(reals) } {
-                                # 'prev_address' is a real address of a widget created by mustang.
-                                return $::ms::addr($prev_address,short)
-                            } else {
-                                # 'prev_address' is a real address of a widget not created by mustang.
-                                return [::ms::Get_Short $prev_address]
+                            switch -- [info exists ::ms::addr($prev_address,short)] {
+                                0   { return $prev_address }
+                                1   { return $::ms::addr($prev_address,short) }
                             }
                         }
                         default { return $prev_address }

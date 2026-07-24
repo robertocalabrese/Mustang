@@ -665,17 +665,13 @@ proc ::ms::winfo::Command { args } {
                         # Check the initial address type provided (short or real).
                         switch -- $type {
                             short {
-                                if { $parent in $::ms::addr(reals) } {
-                                    # 'parent' is the real address of a widget created by mustang.
-                                    return $::ms::addr($parent,short)
-                                } else {
-                                    # 'parent' is the real address of a widget not created by mustang.
-                                    return [::ms::Get_Short $parent]
+                                switch -- [info exists ::ms::addr($parent,short)] {
+                                    0   { return $parent }
+                                    1   { return $::ms::addr($parent,short) }
                                 }
                             }
+                            default { return $parent }
                         }
-
-                        return $parent
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
