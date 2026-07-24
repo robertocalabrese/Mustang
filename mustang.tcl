@@ -2991,4 +2991,48 @@ proc ::ms::Check_Measure { measure { fallback invalid } } {
     return $fallback
 }
 
+## Check_Pathname
+#
+# Check the window pathname provided to a mustang command.
+#
+# Where:
+#
+# window     Should be the window pathname to check for.
+#
+# fallback   Optional. Should be a string that specifies the fallback value to return
+#            if the color provided will result invalid.
+#            If not provided, defaults to **invalid**.
+#
+# Return either a list containing (in order) the real address associated to *window* and
+# *window*'s type (**real** or **short**) or the fallback value if the address provided
+# is invalid.
+proc ::ms::Check_Pathname { window { fallback invalid } } {
+    # Find the real address related to 'window'.
+    if { $window in $::ms::addr(shorts) } {
+        # 'window' is a short address created by mustang.
+
+        set type      short
+        set real_addr $::ms::addr($window,real)
+    } elseif { $window in $::ms::addr(reals) } {
+        # 'window' is a real address created by mustang.
+
+        set type       real
+        set short_addr $::ms::addr($window,short)
+        set real_addr  $::ms::addr($short_addr,real)
+    } else {
+        # 'window' could still be a real address, but not created by mustang.
+        switch -- [_winfo exists $window] {
+            0   { return $fallback }
+            1   {
+                # 'window' is a real address not created by mustang.
+
+                set type      real
+                set real_addr $window
+            }
+        }
+    }
+
+    return [list $real_addr $type]
+}
+
 #*EOF*
