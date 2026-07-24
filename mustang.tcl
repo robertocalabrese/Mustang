@@ -3035,4 +3035,52 @@ proc ::ms::Check_Pathname { window { fallback invalid } } {
     return [list $real_addr $type]
 }
 
+## Check_State
+#
+# Validate a widget state.
+#
+# Where:
+#
+# state   Specifies the widget state to validate.
+#         Widget states may be prepended with a **!** to indicate their negation.
+#
+# Return **OK** if *state* is a valid widget state or **invalid** if it's not.
+proc ::ms::Check_State { state } {
+    switch -- $state {
+        active        -
+        alternate     -
+        background    -
+        disabled      -
+        focus         -
+        hover         -
+        invalid       -
+        pressed       -
+        readonly      -
+        selected      -
+        user1         -
+        user2         -
+        user3         -
+        user4         -
+        user5         -
+        user6         -
+        "!active"     -
+        "!alternate"  -
+        "!background" -
+        "!disabled"   -
+        "!focus"      -
+        "!hover"      -
+        "!invalid"    -
+        "!pressed"    -
+        "!readonly"   -
+        "!selected"   -
+        "!user1"      -
+        "!user2"      -
+        "!user3"      -
+        "!user4"      -
+        "!user5"      -
+        "!user6"      { return "OK" }
+        default       { return "invalid" }
+    }
+}
+
 #*EOF*
