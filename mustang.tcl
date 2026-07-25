@@ -4691,4 +4691,34 @@ proc ::ms::Beautify_Input_Number { number maxlength datatype } {
     }
 }
 
+## Compute_Maximum
+#
+# Computes the maximum possible value that is allowed for the digits provided.
+#
+# Where:
+#
+# digits   should be the available digits in the widget.
+#          *Digits* must be an integer greater than zero if *sign* is **no** or
+#          an integer greater than one if *sign* is **yes**.
+#
+# sign     Optional, should be a boolean value [**yes** or **no**] specifying if
+#          the procedure needs to take in account one spot for the sign or not.
+#
+# It returns the 'maximum' value allowed for that widget.
+proc ::ms::Compute_Maximum { digits { sign no } } {
+    # Correct the digits available, if needed.
+    switch -- $sign {
+        "yes" { set digits [expr { $digits-1 }] }
+    }
+
+    # Set the maximum digits.
+    set i 0
+    while { $i < $digits } {
+        append maximum_digits 9
+        incr i
+    }
+
+    return $maximum_digits
+}
+
 #*EOF*
