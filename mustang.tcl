@@ -310,7 +310,6 @@ proc ::ms::Init {} {
     set ::ms::focusmodel "explicit"
 
     # Set the default action for the middle click buttonpress.
-    # Only available on Linux operating systems.
     #
     # On Linux, the default action is 'paste', on the other
     # operating systems is 'drag'.
@@ -1524,7 +1523,6 @@ proc ::ms::Init {} {
             chan puts $channel ""
 
             chan puts $channel "# Set the default action for the middle click buttonpress."
-            chan puts $channel "# Only available on Linux operating systems."
             chan puts $channel "#"
             chan puts $channel "# On Linux, the default action is 'paste', on the other"
             chan puts $channel "# operating systems is 'drag'."
@@ -1757,15 +1755,10 @@ proc ::ms::Init {} {
                             }
                         }
                         "MiddleClick:" {
-                            switch -- [_tk windowingsystem] {
-                                x11 {
-                                    set value [string tolower $value]
-                                    switch -- $value {
-                                        drag  -
-                                        paste { set ::ms::middleclick $value }
-                                    }
-                                }
-                                default { set ::ms::middleclick drag }
+                            set value [string tolower $value]
+                            switch -- $value {
+                                drag  -
+                                paste { set ::ms::middleclick $value }
                             }
                         }
                         "MonospaceFont:" {
