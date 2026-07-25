@@ -3363,4 +3363,52 @@ proc ::ms::Scan_Or_Paste { w x event } {
     return ""
 }
 
+##################
+##              ##
+##     DRAG     ##
+##              ##
+##################
+
+## Drag
+#
+# Manage the mouse left button motion binding.
+#
+# Note: The following procedure is inspired by the ttk::entry::Drag.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Used by combobox, palette and spinbox widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) relative coordinate of the mouse pointer at the time of the event.
+#        Its normally provided by the **B1-Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::Drag { w x y } {
+    # Check if the address provided belongs to a palette widget.
+    switch -- $::ms::data($w,classtype) {
+        palette { set element [$w.combobox identify element $x $y] }
+        default { set element [interp invokehidden {} $w identify element $x $y] }
+    }
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check the cursor location.
+
+            switch -glob -- $element {
+                "*textarea" {
+                    set ::ttk::entry::State(x) $x
+                    ::ms::Drag_To $w $x
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
