@@ -5070,4 +5070,112 @@ proc ::ms::Focus_The_Widget_Or_Its_Toplevel { w } {
     return ""
 }
 
+## Load_Palette
+#
+# Load a palette file.
+#
+# Where:
+#
+# filepath   Should be the absolute filepath of the palette file to load.
+#
+# It doesn't return anything.
+proc ::ms::Load_Palette { filepath } {
+    # Get the palette name in lowercase characters.
+    set palette [string tolower [file rootname [file tail $filepath]]]
+
+    # Load the palette file.
+    try {
+        open [file nativename $filepath] r
+    } on error {} {
+        switch -nocase -- $::DEBUG {
+            1       -
+            on      -
+            true    -
+            active  -
+            enabled { chan puts stdout "Unable to load the '[file rootname [file tail $filepath]]' palette file. Ignoring." }
+        }
+    } on ok { channel } {
+        # Read the entire file.
+        set file_content [split [chan read $channel] "\n"]
+        chan close $channel
+
+        # Initialize the list of available colornames for 'palette'.
+        set ::ms::palette($palette,all_families,colornames) [list ]
+
+        # Scan the file content line by line.
+        foreach line $file_content {
+            # Skip any empty or commented lines.
+            switch -- [string index [string trim $line] 0] {
+                ""  -
+                "#" {
+                    # Skip the entire line.
+                    continue
+                }
+                default {
+                    # Transform each word that compose the color name in titlecase characters.
+                    set colorname [list ]
+                    foreach word [string trim [lindex $line 0]] {
+                        lappend colorname [string totitle $word]
+                    }
+
+                    # Check that 'colorname' is not already registered for this palette.
+                    if { $colorname in $::ms::palette($palette,all_families,colornames) } {
+                        # Skip the entire line.
+                        continue
+                    }
+
+                    # Check the hexadecimal value at 8bit.
+                    set result [::ms::Check_Hex [lindex $line 1] HEX8 invalid]
+                    switch -- $result {
+                        invalid {
+                            # Skip the entire line.
+                            continue
+                        }
+                        default { set hexcolor $result }
+                    }
+
+                    # Check the family name.
+                    set index [lsearch -exact -nocase $::ms::palette(families) [lindex $line 2]]
+                    switch -- $index {
+                        -1  {
+                            # Skip the entire line.
+                            continue
+                        }
+                        default { set family [lindex $::ms::palette(families) $index] }
+                    }
+
+                    # Register the 'colorname' data.
+                    set ::ms::palette($palette,$colorname,hex8) $hexcolor
+
+                    lappend ::ms::palette($palette,$family,colornames)      $colorname
+                    lappend ::ms::palette($palette,all_families,colornames) $colorname
+                }
+            }
+        }
+    }
+
+    # Safeguard.
+    # Check the number of colornames registered for 'palette'.
+    switch -- [llength ::ms::palette($palette,all_families,colornames)] {
+        0   {
+            # All the colornames specified in the palette file were ignored.
+            unset -nocomplain -- ::ms::palette($palette,all_families,colornames)
+            return ""
+        }
+    }
+
+    # Safeguard.
+    # Create the missing 'palette' family lists, if any.
+    foreach family $::ms::palette(families) {
+        switch -- [info exists ::ms::palette($palette,$family,colornames)] {
+            0   { set ::ms::palette($palette,$family,colornames) [list ] }
+        }
+    }
+
+    # Register the palette name into the available ones.
+    lappend ::ms::palette(names) $palette
+
+    return ""
+}
+
 #*EOF*
