@@ -3164,4 +3164,26 @@ proc ::ms::Copy { w } {
     return ""
 }
 
+## Cut
+#
+# Copy selection to clipboard then delete it.
+#
+# Note: The following procedure is inspired by the ttk::entry::Cut.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Note: This procedure is use by the entry, combobox, palette and spinbox widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Cut { w } {
+    ::ms::Copy  $w
+    ::ms::Clear $w
+
+    return ""
+}
+
 #*EOF*
