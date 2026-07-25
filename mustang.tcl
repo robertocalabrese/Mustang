@@ -5453,4 +5453,85 @@ proc ::ms::Set_Cursor { w x y } {
     return ""
 }
 
+## Show_ContextMenu
+#
+# Manages the **<<ContextMenu>>** event on a widget by displaying
+# its contextual menu at the (X,Y) root coordinates provided.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# X, Y   Should be the mouse pointer (X,Y) root coordinates.
+#        These value should be provided by the **<<ContextMenu>>** event.
+#
+# type   Optional, should be the type of contextual menu address to fire up.
+#        Allowed values are **cmenu** or **shell**.
+#
+#        If not provided defaults to **cmenu**.
+#
+# It doesn't return anything.
+proc ::ms::Show_ContextMenu { w X Y { type cmenu } } {
+    # Check the type provided.
+    switch -- $type {
+        cmenu {
+            # Check the widget state.
+            switch -- $::ms::current($w,state) {
+                disabled { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
+                default  {
+                    set cmenu $::ms::current($w,cmenu)
+
+                    # Check the current contextual menu of the widget.
+                    if { ($cmenu eq "") || ($cmenu ni $::ms::addr(cmenu)) } {
+                        # Check if the widget address provided belongs to a checkbutton, crate, frame,
+                        # label, labelframe, notebook, panedwindow or radiobutton widget.
+                        switch -- $::ms::data($w,classtype) {
+                            checkbutton -
+                            crate       -
+                            frame       -
+                            label       -
+                            labelframe  -
+                            notebook    -
+                            panedwindow -
+                            radiobutton -
+                            separator   -
+                            sizegrip    {
+                                # Use the widget's toplevel contextual menu, if any.
+                                set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
+                            }
+                            default { return "" }
+                        }
+                    }
+                }
+            }
+        }
+        shell {
+            # Check if exists a variable called '::ms::data($short_addr,cmenu,shell)'.
+            switch -- [_winfo exists ::ms::data($::ms::addr($w,short),cmenu,shell)] {
+                0   { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
+                1   {
+                    # Get the contextual menu address located inside the variable provided.
+                    set cmenu [string trim $::ms::data($::ms::addr($w,short),cmenu,shell)]
+
+                    # Check if the contextual menu is an empty string or an invalid address.
+                    # If so, use the widget's toplevel contextual menu, if any.
+                    if { ($cmenu eq "") || ($cmenu ni $::ms::addr(cmenu)) } {
+                        set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
+                    }
+                }
+            }
+        }
+    }
+
+    # Check that the contextual menu is not an empty string.
+    switch -- $cmenu {
+        ""  { return "" }
+    }
+
+    # Fire up the contextual menu.
+    ::ms::cmenu::Show $cmenu $X $Y
+
+    return ""
+}
+
 #*EOF*
