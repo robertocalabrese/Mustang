@@ -5565,4 +5565,61 @@ proc ::ms::Strip_Chars { string char { startFrom 0 } } {
     return $string
 }
 
+## Translate_Theme_Color
+#
+# Translate a theme color into an hexadecimal color at 8 bit.
+#
+# Where:
+#
+# color      Should be the theme color to translate, like *AccentColor*, *LightColor*
+#            or *WindowBackgroundColor*.
+#
+# fallback   Should be the fallback value in case the color provided is not a theme color.
+#            If not provided, defaults to **#ffffff**
+#
+# Return the translated theme color or the fallback value.
+proc ::ms::Translate_Theme_Color { color { fallback #ffffff }} {
+    # Check the theme accented colors.
+    # Theme accented colors change only if the accent color change.
+    set index [lsearch -exact $::ms::color(accent) $color]
+    switch -- $index {
+        -1      {}
+        default {
+            switch -- $::ms::accent {
+                blue   { return [lindex $::ms::color(accent) $index+1] }
+                gray   { return [lindex $::ms::color(accent) $index+2] }
+                green  { return [lindex $::ms::color(accent) $index+3] }
+                orange { return [lindex $::ms::color(accent) $index+4] }
+                pink   { return [lindex $::ms::color(accent) $index+5] }
+                purple { return [lindex $::ms::color(accent) $index+6] }
+                red    { return [lindex $::ms::color(accent) $index+7] }
+                yellow { return [lindex $::ms::color(accent) $index+8] }
+            }
+        }
+    }
+
+    # Check the theme colorschemed colors.
+    # Theme colorschemed colors change only if the colorscheme change.
+    set index [lsearch -exact $::ms::color(colorscheme) $color]
+    switch -- $index {
+        -1      {}
+        default {
+            switch -- $::ms::colorscheme {
+                dark  { return [lindex $::ms::color(colorscheme) $index+1] }
+                light { return [lindex $::ms::color(colorscheme) $index+2] }
+            }
+        }
+    }
+
+    # Check the theme fixed colors.
+    # Theme fixed colors don't change no matter the colorscheme or the accent color in use.
+    set index [lsearch -exact $::ms::color(fixed) $color]
+    switch -- $index {
+        -1      {}
+        default { return [lindex $::ms::color(fixed) $index+1] }
+    }
+
+    return $fallback
+}
+
 #*EOF*
