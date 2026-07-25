@@ -5178,4 +5178,215 @@ proc ::ms::Load_Palette { filepath } {
     return ""
 }
 
+## Load_SVG_Images
+#
+# Automatically load all the current theme svg images (if any) and re-color them.
+#
+# Note: In order for this procedure to work, the theme developer will need to set an svg dataset table array with 3 columns.
+#       This table array must be called '::ms::svg(THEMENAME,svg_dataset)' where THEMENAME must be substituted with your theme name.
+#       The first column of the table represents the svg input filenames without the extension.
+#       The second column of the table represents the colors of the svg input images.
+#       The third column of the table represents the colors of the svg output images.
+#       See the Halo theme for an svg dataset example.
+#
+# If no svg dataset table is found for the current theme, then no images will be loaded or re-colored automatically.
+#
+# It doesn't return anything
+proc ::ms::Load_SVG_Images {} {
+    # Safeguard.
+    switch -- [info exists ::ms::svg($::ms::theme,svg_dataset)] {
+        0   { return "" }
+    }
+
+    # Set the current theme svgs input and output folder.
+    set input_folder  [file join $::ms_library themes $::ms::theme]
+    set output_folder [file join $::ms::folder(mustang,data) themes $::ms::theme]
+
+    # If needed, create the current theme svgs output folder.
+    file mkdir $output_folder
+
+    # Iterate each svg dataset line.
+    foreach { svg_name input_color output_color } $::ms::svg($::ms::theme,svg_dataset) {
+        # Set the input and output svg absolute filepaths.
+        set input_filepath  [file join $input_folder  [string cat $svg_name ".svg"]]
+        set output_filepath [file join $output_folder [string cat $svg_name ".svg"]]
+
+        # Read the input svg image.
+        try {
+            open $input_filepath "r"
+        } on error { errortext errorcode } {
+            ::ms::Error "$::ms::theme theme. $errortext" ""
+        } on ok { channel } {
+            # Register the input svg data.
+            set input_svg_data [split [chan read $channel] "\n"]
+            chan close $channel
+        }
+
+        # Initialize the output svg data.
+        set output_svg_data [list ]
+
+        # Scan the input svg data, line by line.
+        foreach input_line $input_svg_data {
+            # Initialize/Reset the 'output_line'.
+            set output_line ""
+
+            # Remove any indentation from 'input_line'.
+            set trimmed [string trimleft $input_line]
+
+            # Compute the indentation of the 'input_line'.
+            set indentation [expr { [string length $input_line]-[string length $trimmed] }]
+
+            # Analyze how 'trimmed' start with.
+            switch -glob -- $trimmed {
+                "bordercolor=*" {
+                    # Add the original 'input_line' indentation to 'output_line'.
+                    while { $indentation > 0 } {
+                        append output_line " "
+                        incr indentation -1
+                    }
+
+                    # Append 'bordercolor=' to 'output_line'.
+                    append output_line "bordercolor="
+
+                    # Get the bordercolor value.
+                    set bordercolor [string range $trimmed 13 end-1]
+
+                    # Check if the bordercolor examined it's a valid hexadecimal color at 8 bit.
+                    if { $bordercolor eq $input_color } {
+                        # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
+                        set bordercolor [::ms::Check_Color [list $output_color HEX8] invalid]
+                        switch -- $bordercolor {
+                            invalid { ::ms::Error "$::ms::theme theme. Wrong svg output color, '$output_color'." ""}
+                        }
+                    }
+
+                    # Append the bordercolor value to 'output_line'.
+                    append output_line [string cat "\"" $bordercolor "\""]
+                }
+                "style=*" {
+                    # Add the original 'input_line' indentation to 'output_line'.
+                    while { $indentation > 0 } {
+                        append output_line " "
+                        incr indentation -1
+                    }
+
+                    # Append 'style="' to 'output_line'.
+                    append output_line "style=" "\""
+
+                    # Get the style values (the string after 'style="').
+                    # Note that 'value' may contain several style parameters with their relative values, plus other code.
+                    set values [string range $trimmed 7 end]
+
+                    # Search the first (is actually the last) '"' in values.
+                    set index  [string first \" $values]
+
+                    # Separate 'values' into the actual style value and the rest of the line.
+                    set value  [string range $values 0 $index-1]
+                    set rest   [string range $values $index+1 end]
+
+                    # Split 'value' into groups (along ';') with each group in the form 'parameterName:parameterValue'.
+                    set groups [split $value ";"]
+                    foreach group $groups {
+                        # Split 'group' into parameterName and parameterValue (along ':').
+                        set group          [split  $group ":"]
+                        set parameterName  [lindex $group 0]
+                        set parameterValue [lindex $group 1]
+
+                        # Check if the parameter value examined starts with the hash sign '#'.
+                        switch -- [string index $parameterValue 0] {
+                            "#" {
+                                # Check if the parameter value examined it's a valid hexadecimal color at 8 bit.
+                                set result [::ms::Check_Hex $parameterValue HEX8 invalid]
+                                switch -- $result {
+                                    invalid {}
+                                    default {
+                                        # Check if 'result' is equal to the input color provided.
+                                        if { $result eq $input_color } {
+                                            # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
+                                            set parameterValue [::ms::Check_Color [list $output_color HEX8] invalid]
+                                            switch -- $parameterValue {
+                                                invalid { ::ms::Error "$::ms::theme theme. Wrong svg output color, '$output_color'." ""}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        # Append the parameterName and the parameterValue to 'output_line'.
+                        append output_line [string cat $parameterName ":" $parameterValue ";"]
+                    }
+
+                    # Replace the last ';' with the '"'
+                    set output_line [string replace $output_line end end \"]
+
+                    # If there is a 'rest', append it at the end of 'output_line'.
+                    switch -- $rest {
+                        ""      {}
+                        default { append output_line $rest }
+                    }
+                }
+                default {
+                    # Copy the 'input_line' verbatim to 'output_line'.
+                    set output_line $input_line
+                }
+            }
+
+            # Append the 'output_line' to the 'output_svg_data'.
+            lappend output_svg_data $output_line
+        }
+
+        # Check the output svg data.
+        switch -- $output_svg_data {
+            ""  {
+                # An error as occured, copy the input svg image verbatim, if possible.
+                try {
+                    file copy -force -- $input_filepath $output_filepath
+                } on error { errortext errorcode } {
+                    ::ms::Error "$::ms::theme theme. $errortext" ""
+                }
+            }
+            default {
+                # Save the output svg image. Overwrite if needed.
+                try {
+                    open $output_filepath "w"
+                } on error { errortext errorcode } {
+                    # An error as occured, copy the input svg image verbatim, if possible.
+                    try {
+                        file copy -force -- $input_filepath $output_filepath
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$::ms::theme theme. $errortext" ""
+                    }
+                } on ok { channel } {
+                    # Write the output svg data, line by line.
+                    foreach line $output_svg_data {
+                        chan puts $channel "$line"
+                    }
+
+                    chan flush $channel
+                    chan close $channel
+                }
+            }
+        }
+
+        # If an svg image for 'svg_name' already exists, delete it.
+        try {
+            image delete $svg_name
+        } on error {} {
+            # Do nothing
+        }
+
+        # Check the windowing system.
+        switch -- [_tk windowingsystem] {
+            aqua    { set scale 100.0 }
+            default { set scale $::ms::machine(os,ui_scale_factor) }
+        }
+
+        # Load the svg image at the current UI scale factor.
+        image create photo $svg_name -format [list svg -dpi 96 -scale [expr { $scale*0.01 }]] -file $output_filepath
+    }
+
+    return ""
+}
+
 #*EOF*
