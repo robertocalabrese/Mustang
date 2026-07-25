@@ -3539,4 +3539,87 @@ proc ::ms::Scan_Release {} {
     }
 }
 
+#################################
+##                             ##
+##     SCROLLBAR MECHANISM     ##
+##                             ##
+#################################
+
+## Scrollable_Widgets_Propagation_Mechanism
+#
+# Force the *place* propagation (if needed) on any scrollable widgets real address parents
+# that are present on the widget/object real address provided.
+#
+# Where:
+#
+# w   Should be the widget real address that was just created, deleted or changed it's size.
+#
+# It doesn't return anything.
+proc ::ms::Scrollable_Widgets_Propagation_Mechanism { w } {
+    # Check if the widget address provided is not the empty string.
+    switch -- $w {
+        ""      { return "" }
+        default {
+            # Check if the widget address provided has a parent to check for.
+            set parent [_winfo parent $w]
+            switch -- $parent {
+                ""  { return "" }
+            }
+        }
+    }
+
+    # ATTENTION!
+    #
+    # This is a recursive loop.
+    # The only way to exit is if there is no more parents to check for.
+    set i 1
+    while { $i > 0 } {
+        # Check if 'parent' is a scrollable widget.
+        if { $parent in $::ms::addr(megawidgets,scrollable) } {
+            switch -- $::ms::data($parent,classtype) {
+                frame      -
+                labelframe {
+                    # The 'place' geometry manager (used internally by these classtypes) doesn't
+                    # allow any propagation. We need to force it by ourself.
+
+                    # Get the 'content' requested height and width of 'parent'.
+                    set ::ms::data($parent,reqheight) [_winfo reqheight $::ms::addr($parent,widget)]
+                    set ::ms::data($parent,reqwidth)  [_winfo reqwidth  $::ms::addr($parent,widget)]
+
+                    # height
+                    set height $::ms::data($parent,reqheight)
+                    if { $::ms::data($parent,height) > $::ms::data($parent,reqheight) } {
+                        # Change the 'content' height to match the 'viewport' height.
+                        set height $::ms::data($parent,height)
+                    }
+
+                    # width
+                    set width $::ms::data($parent,reqwidth)
+                    if { $::ms::data($parent,width) > $::ms::data($parent,reqwidth) } {
+                        # Change the 'content' width to match the 'viewport' width.
+                        set width $::ms::data($parent,width)
+                    }
+
+                    # Configure the 'content' height and width displayed by the 'place' geometry manager.
+                    _place configure $::ms::addr($parent,widget) -height $height \
+                                                                  -width $width;
+
+                    # Update the scrollbar/s.
+                    [string cat "::ms::" $::ms::data($parent,classtype) "::Scrollbar_Update"] $parent
+
+                    update idletasks
+                }
+            }
+        }
+
+        # Check the next parent, if any.
+        set parent [_winfo parent $parent]
+        switch -- $parent {
+            ""  { break }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
