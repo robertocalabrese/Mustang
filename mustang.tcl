@@ -3446,4 +3446,51 @@ proc ::ms::Drag_To { w x } {
     return ""
 }
 
+## Scan_Drag
+#
+# Manages the **<B2-Motion>** (or **<B3-Motion>** in macOS Aqua) event on a scrollable widget
+# that supports **scan** operations.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer coordinates of the event.
+#        These values should be provided by the <Motion> event.
+#
+# It doesn't return anything.
+proc ::ms::Scan_Drag { w x y } {
+    # Safeguard.
+    # Check if the drag operation is allowed or not.
+    switch -- [info exists ::ms::temp(drag_allowed)] {
+        0   { return "" }
+        1   {
+            # Compute 'delta_x' and 'delta_y'.
+            set delta_x [expr { $x-$::ms::temp(x_press) }]
+            set delta_y [expr { $y-$::ms::temp(y_press) }]
+
+            # Compute the new (x,y) coordinates to go to.
+            switch -- $::ms::scrollmode {
+                classic {
+                    set x [expr { $::ms::temp(x_press)-$delta_x }]
+                    set y [expr { $::ms::temp(y_press)-$delta_y }]
+                }
+                natural {
+                    set x [expr { $::ms::temp(x_press)+$delta_x }]
+                    set y [expr { $::ms::temp(y_press)+$delta_y }]
+                }
+            }
+
+            # Drag the scrollable widget viewport towards the new (x,y) coordinates.
+            $w scan dragto $x $y
+        }
+    }
+
+    try {
+        return -code break
+    } on error {} {
+        return ""
+    }
+}
+
 #*EOF*
