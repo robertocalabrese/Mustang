@@ -46,6 +46,90 @@ set ::ms::metadata(Halo,email)   robertocalabrese75@gmail.com
 set ::ms::metadata(Halo,parent)  clam
 set ::ms::metadata(Halo,year)    2025
 
+# Check the windowing system.
+switch -- [_tk windowingsystem] {
+    aqua  -
+    win32 {
+        set ::ms::size(Halo,arrow_down)         2.51m
+        set ::ms::size(Halo,grip)               25.0m
+        set ::ms::size(Halo,preview_height)     6.0m
+        set ::ms::size(Halo,preview_width)      10.0m
+        set ::ms::size(Halo,sash)               2.0m
+        set ::ms::size(Halo,scrollbar)          3.0m
+        set ::ms::size(Halo,spacer)             3.0m
+        set ::ms::size(Halo,treeview_indicator) 4.0m
+
+    }
+    default {
+        # In order to have the objects size at fixed millimeters we need to be take in account the current UI scale factor.
+        set ::ms::size(Halo,arrow_down)         [string cat [expr { int(ceil(2.51*$::ms::machine(os,ui_scale_factor)*0.01)) }] "m"]
+        set ::ms::size(Halo,grip)               [string cat [expr { int(ceil(25.0*$::ms::machine(os,ui_scale_factor)*0.01)) }] "m"]
+        set ::ms::size(Halo,sash)               [string cat [expr { int(ceil(2.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
+        set ::ms::size(Halo,scrollbar)          [string cat [expr { int(ceil(2.7*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
+        set ::ms::size(Halo,spacer)             [string cat [expr { int(ceil(3.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
+        set ::ms::size(Halo,treeview_indicator) [string cat [expr { int(ceil(4.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
+
+        # Set the Preview dimensions with the golden ratio (width = height * 1.618).
+        set ::ms::size(Halo,preview_height) [string cat [expr { int(ceil(6.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
+        set ::ms::size(Halo,preview_width)  [string cat [expr { int(ceil(10.0*$::ms::machine(os,ui_scale_factor)*0.01)) }] "m"]
+    }
+}
+
+# Set the Halo theme svg image dataset table array (3 columns).
+# The first column of the table represents the svg input filenames without the extension.
+# The second column of the table represents the colors of the svg input images.
+# The third column of the table represents the colors of the svg output images.
+#
+# Note that all the original svg images are drawn with a blue accent color with a light colorscheme in mind.
+set ::ms::svg(Halo,svg_dataset) [list arrow_down                          #424242 Arrow \
+                                      arrow_down_disabled                 #d8d8d8 ArrowDisabled \
+                                      arrow_down_hover                    #007aff Accent \
+                                      arrow_down_invalid                  #fefefe Text \
+                                      arrow_down_pressed                  #4f5152 ArrowPressed \
+                                      arrow_up                            #424242 Arrow \
+                                      arrow_up_disabled                   #d8d8d8 ArrowDisabled \
+                                      arrow_up_hover                      #007aff Accent \
+                                      arrow_up_invalid                    #fefefe Text \
+                                      arrow_up_pressed                    #4f5152 ArrowPressed \
+                                      check_off                           #a4a6a8 BordercolorAlternate \
+                                      check_off_disabled                  #cccccc BordercolorDisabled \
+                                      check_off_hover                     #007aff Accent \
+                                      check_off_pressed                   #0169d9 HighlightAlternate \
+                                      check_on                            #007aff Accent \
+                                      check_on_disabled                   #cccccc BordercolorDisabled \
+                                      check_on_hover                      #007aff Accent \
+                                      check_on_pressed                    #0169d9 HighlightAlternate \
+                                      radio_off                           #a4a6a8 BordercolorAlternate \
+                                      radio_off_disabled                  #cccccc BordercolorDisabled \
+                                      radio_off_hover                     #007aff Accent \
+                                      radio_off_pressed                   #0169d9 HighlightAlternate \
+                                      radio_on                            #007aff Accent \
+                                      radio_on_disabled                   #cccccc BordercolorDisabled \
+                                      radio_on_hover                      #007aff Accent \
+                                      radio_on_pressed                    #0169d9 HighlightAlternate \
+                                      scale_thumb                         #007aff Accent \
+                                      scale_thumb_disabled                #4f5152 ScaleThumbDisabled \
+                                      scale_thumb_pressed                 #0169d9 HighlightAlternate \
+                                      scale_trough_horizontal             #a4a6a8 ScaleTrough \
+                                      scale_trough_horizontal_disabled    #cccccc ScaleTroughDisabled \
+                                      scale_trough_horizontal_focus       #9fbfdf Highlight \
+                                      scale_trough_vertical               #a4a6a8 ScaleTrough \
+                                      scale_trough_vertical_disabled      #cccccc ScaleTroughDisabled \
+                                      scale_trough_vertical_focus         #9fbfdf Highlight \
+                                      sizegrip                            #a4a6a8 BordercolorAlternate \
+                                      sizegrip_hover                      #007aff Accent \
+                                      sizegrip_pressed                    #0169d9 HighlightAlternate \
+                                      spacer                              #9e9a91 Spacer \
+                                      spacer_disabled                     #d8d8d8 ArrowDisabled \
+                                      spacer_invalid                      #1f1c1b Text \
+                                      treeview_indicator_close            #1f1c1b TextAlternate \
+                                      treeview_indicator_close_focus      #007aff Accent \
+                                      treeview_indicator_open             #1f1c1b TextAlternate \
+                                      treeview_indicator_open_focus       #007aff Accent];
+
+# Automatically load all the Halo svg images (if any) and re-color them relative to the current accent color and colorscheme.
+::ms::Load_SVG_Images
+
 # The Halo theme is a multi platform theme that works with every operating system.
 namespace eval ttk::theme::Halo {
     style theme create "Halo" -parent "clam" -settings {
