@@ -4927,4 +4927,29 @@ proc ::ms::Escape { w } {
     return ""
 }
 
+## Execute_Widget_Cmd
+#
+# Execute the command associated with the widget.
+# Used by entry, combobox, palette and spinbox widgets.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Execute_Widget_Cmd { w } {
+    switch -- $::ms::current($w,command) {
+        ""      {}
+        default {
+            try {
+                uplevel #0 [list $::ms::current($w,command) $w $::ms::data($w,current_value)]
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
