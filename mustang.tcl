@@ -4978,4 +4978,96 @@ proc ::ms::External_Click { w X Y } {
     return ""
 }
 
+## Focus_The_Widget_Or_Its_Toplevel
+#
+# Focus the widget provided or its related toplevel after a **ButtonPress-1** event on it.
+#
+# The idea of this procedure is to give the user the possibility to click in an inert zone
+# of the application (e.g. a container or a toplevel) to remove the focus on a widget that
+# currently has it (e.g. an entry or a combobox).
+# While this is normally true if the click happens on a widget that can take the focus,
+# this procedure also put in place a system that works even for widgets that normally have
+# their takefocus option setted to **0** (e.g. a container or a toplevel).
+#
+# Where:
+#
+# w   Should be the real address on the widget involved.
+#
+# It doesn't return anything.
+proc ::ms::Focus_The_Widget_Or_Its_Toplevel { w } {
+    # Check the widget takefocus.
+    switch -- $::ms::current($w,takefocus) {
+        0   {
+            # Check the parent of the widget address provided, if any.
+            set parent [_winfo parent $w]
+            switch -- $parent {
+                ""      {}
+                default {
+                    # Propagate the action to the widget's parents.
+
+                    # ATTENTION!
+                    #
+                    # This is a recursive loop. The only way to exit is:
+                    #   - If there is no more parent to check for.
+                    #   - If 'parent' is a scrollable megawidget.
+                    set i 1
+                    while { $i > 0 } {
+                        # Check if 'parent' belongs to a scrollable megawidget.
+                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
+                            _focus -force $parent
+                            return ""
+                        }
+
+                        # Check the next parent, if any.
+                        set parent [_winfo parent $parent]
+                        switch -- $parent {
+                            ""  {
+                                # There are no more parents to check for.
+                                # Stop the recursive iteration.
+                                break
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Check if the widget's toplevel was created by mustang.
+            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
+                0   {
+                    # If possible, focus the widget's toplevel.
+                    try {
+                        _focus -force [_winfo toplevel $w]
+                    } on error {} {
+                        # Do nothing
+                    }
+                }
+                1   {
+                    # Check the widget's toplevel takefocus.
+                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
+                        0   {
+                            # Momentarily set the toplevel takefocus to '1'.
+                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
+                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
+                        }
+                    }
+
+                    # Focus the widget's toplevel.
+                    _focus -force $::ms::addr($w,toplevel)
+                }
+            }
+        }
+        1   {
+            # Check if 'w' is the hull of a megawidget of some kind.
+            if { $w in $::ms::addr(megawidgets) } {
+                set w $::ms::addr($w,widget)
+            }
+
+            # Focus the widget.
+            focus -force $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
