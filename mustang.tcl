@@ -3411,4 +3411,39 @@ proc ::ms::Drag { w x y } {
     return ""
 }
 
+# Drag_To
+#
+# Extend selection to 'x' based on current selection mode.
+#
+# Note: The following procedure is inspired by the ttk::entry::DragTo.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Note: This procedure is use by the entry, combobox, palette and spinbox widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) relative coordinate of the mouse pointer at the time of the event.
+#        Its normally provided by the **B1-Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::Drag_To { w x } {
+    # Check if the address provided belongs to a palette widget.
+    switch -- $::ms::data($w,classtype) {
+        palette { set address $w.combobox }
+        default { set address $w }
+    }
+
+    # Check the selection mode.
+    switch $::ttk::entry::State(selectMode) {
+        char { ::ttk::entry::CharSelect $address $::ttk::entry::State(anchor) [::ttk::entry::ClosestGap $address $x] }
+        word { ::ttk::entry::WordSelect $address $::ttk::entry::State(anchor) [::ttk::entry::ClosestGap $address $x] }
+        line { ::ttk::entry::LineSelect $address $::ttk::entry::State(anchor) [::ttk::entry::ClosestGap $address $x] }
+    }
+
+    return ""
+}
+
 #*EOF*
