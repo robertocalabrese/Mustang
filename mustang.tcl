@@ -4212,4 +4212,22 @@ proc ::ms::Enclosing_Container { w } {
     return ""
 }
 
+## Traverse_Clean_Up
+#
+# <Destroy> binding for traversal-enabled toplevels.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Traverse_Clean_Up { w } {
+    # Check if the real address provided is a toplevel.
+    if { $w eq [_winfo toplevel $w] } {
+        unset -nocomplain -- ::ms::containers(traversal,$w)
+    }
+
+    return ""
+}
+
 #*EOF*
