@@ -3521,4 +3521,22 @@ proc ::ms::Scan_Mark { w x y } {
     }
 }
 
+## Scan_Release
+#
+# Manages the **<ButtonRelease-2>** (or **<ButtonRelease-3>** in macOS Aqua) event on a scrollable widget
+# that supports **scan** operations.
+#
+# It doesn't return anything.
+proc ::ms::Scan_Release {} {
+    unset -nocomplain ::ms::temp(drag_allowed) \
+                      ::ms::temp(x_press) \
+                      ::ms::temp(y_press);
+
+    try {
+        return -code break
+    } on error {} {
+        return ""
+    }
+}
+
 #*EOF*
