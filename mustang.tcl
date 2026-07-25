@@ -3186,4 +3186,118 @@ proc ::ms::Cut { w } {
     return ""
 }
 
+## Paste
+#
+# Insert the clipboard content ('CLIPBOARD' or 'PRIMARY') at the current insert point.
+#
+# Note: This procedure is use by the entry, combobox, palette and spinbox widget.
+#
+# Where:
+#
+# w                Should be the widget real address involved.
+#
+# clipboard_type   Optional, should be a string indicating from which clipboard to take paste data.
+#                  Allowed values are:
+#                    'CLIPBOARD' --> the primary clipboard
+#                    'PRIMARY'   --> the secondary clipboard
+#
+# It doesn't return anything.
+proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
+    # Check the 'clipboard_type'.
+    switch -nocase -- $clipboard_type {
+        primary { set clipboard_type PRIMARY   }
+        default { set clipboard_type CLIPBOARD }
+    }
+
+    # Check if the address provided belongs to a palette widget.
+    switch -- $::ms::data($w,classtype) {
+        palette { set address $w.combobox }
+        default { set address [list interp invokehidden {} $w]}
+    }
+
+    # Delete any previously selected characters.
+    ::ttk::entry::PendingDelete $::ms::addr($w,widget)
+
+    # Get the 'clipboard_data' to copy.
+    try {
+        ::tk::GetSelection $::ms::addr($w,widget) $clipboard_type
+    } on error {} {
+        return ""
+    } on ok { result } {
+        set clipboard_data $result
+    }
+
+    # Get the widget value.
+    set value [{*}$address get]
+
+    # Get the insert index.
+    set insert [{*}$address index insert]
+
+    # Clean 'clipboard_data' from the tab, newline feed and carriage return symbols.
+    set i 1
+    while { $i > 0 } {
+        # Register the initial 'clipboard_data' for later comparison.
+        set initial_value $clipboard_data
+
+        # Remove the special characters from 'clipboard_data' and substitute them with an empty character.
+        set clipboard_data [regsub {\t} $clipboard_data ""]
+        set clipboard_data [regsub {\n} $clipboard_data ""]
+        set clipboard_data [regsub {\r} $clipboard_data ""]
+
+        # Check if 'clipboard_data' is equal to its initial value.
+        # If so, exit the loop, otherwise do another pass.
+        if { $clipboard_data eq $initial_value } {
+            break
+        }
+    }
+
+    # Check the maxlength.
+    switch -- $::ms::current($w,maxlength) {
+        0   {
+            # Insert the 'clipboard_data' string at the insert point.
+            interp invokehidden {} $w insert $insert $clipboard_data
+
+            # Compute the cursor index at the end of the 'clipboard_data' string.
+            set clipboard_data_end [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
+
+            # Set the cursor at 'clipboard_data_end'.
+            interp invokehidden {} $w icursor $clipboard_data_end
+
+            # Make the 'clipboard_data_end' character visible.
+            switch -- $::ms::data($w,classtype) {
+                palette { ::ttk::entry::See $w.combobox $clipboard_data_end }
+                default { ::ttk::entry::See $w $clipboard_data_end }
+            }
+        }
+        default {
+            # Construct the new value with the 'clipboard_data' inserted at the insert point.
+            set new_value [string cat [string range $value 0 $insert-1] "$clipboard_data" [string range $value $insert end]]
+
+            # Compute the length of new value.
+            set new_value_length [string length $new_value]
+
+            # Check if 'new_value' fits the widget maxlength.
+            if { $new_value_length > $::ms::current($w,maxlength) } {
+                # It doesn't fit 😕.
+                # Clear the widget field, insert the truncated new value and position the cursor at the end.
+                interp invokehidden {} $w delete 0 end
+                interp invokehidden {} $w insert 0 [string range $new_value 0 $::ms::current($w,maxlength)-1]
+                interp invokehidden {} $w icursor end
+            } else {
+                # It fit 😄.
+                # Insert 'clipboard_data' at the insert point.
+                interp invokehidden {} $w insert $insert $clipboard_data
+
+                # Compute the cursor index at the end of the 'clipboard_data' string.
+                set clipboard_data_end [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
+
+                # Set the cursor at 'clipboard_data_end'.
+                interp invokehidden {} $w icursor $clipboard_data_end
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
