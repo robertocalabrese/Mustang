@@ -4325,4 +4325,370 @@ proc ::ms::Traverse_Scroll { w command { amount -120.0 } { what units } } {
     }
 }
 
+#################################
+##                             ##
+##     INTERNAL PROCEDURES     ##
+##                             ##
+#################################
+
+## Beautify_Input_Number
+#
+# Beautify a numeric input.
+#
+# What it does:
+#    - If needed, deletes leading zeroes (every datatypes).
+#    - If needed, deletes trailing zero ('real' and 'posreal' datatype only).
+#    - If needed, deletes every '-' sign after the first digit ('integer' and 'real' datatype only).
+#    - If needed, deletes every '.' after the first one ('real' and 'posreal' datatype only).
+#    - If number starts with '.', a zero will be inserted before '.' ('real' and 'posreal' datatype only).
+#    - If number ends with '.', a zero will be inserted after '.' ('real' and 'posreal' datatype only).
+#
+# Note: This procedure assumes that the following keybindings are in place on the widget:
+#          'integer'    --> The only keys enabled in the keyboard are [0123456789-].
+#          'posinteger' --> The only keys enabled in the keyboard are [0123456789].
+#          'posreal'    --> The only keys enabled in the keyboard are [0123456789.].
+#          'real'       --> The only keys enabled in the keyboard are [0123456789-.].
+#
+# Where:
+#
+# number      Should be the value to check.
+#
+# maxlength   Should be the max number of characters allowed inside the widget.
+#
+# datatype    Should be the widget datatype ['integer', 'posinteger', 'posreal' or 'real'].
+#
+# Returns the eventually corrected number.
+proc ::ms::Beautify_Input_Number { number maxlength datatype } {
+    switch -- $datatype {
+        integer {
+            ########################
+            ##                    ##
+            ##     CORRECTION     ##
+            ##                    ##
+            ########################
+
+            # Check for any leading minus sign.
+            switch -- [string index $number 0] {
+                -       { set startFrom 1 }
+                default { set startFrom 0 }
+            }
+
+            # If needed, remove any other minus sign.
+            set number [::ms::Strip_Chars $number "-" $startFrom]
+            switch -- [string length $number] {
+                0   { return "" }
+            }
+
+            ############################
+            ##                        ##
+            ##     BEAUTIFICATION     ##
+            ##                        ##
+            ############################
+
+            if { $number == 0 } {
+                # Avoid to return '00', '000', ...
+                return 0
+            } else {
+                # Strip any leading zeros, if any.
+                switch -- $startFrom {
+                    0   { return [string trimleft $number 0] }
+                    1   { return [string cat "-" [string trimleft [string range $number 1 end] 0]] }
+                }
+            }
+        }
+        posinteger {
+            ############################
+            ##                        ##
+            ##     BEAUTIFICATION     ##
+            ##                        ##
+            ############################
+
+            if { $number == 0 } {
+                return 0
+            } else {
+                # Strip any leading zeros, if any.
+                return [string trimleft $number 0]
+            }
+        }
+        posreal {
+            # Get the first '.' index, if any.
+            set pointIndex [string first "." $number]
+            switch -- $pointIndex {
+                -1  {
+                    ############################
+                    ##                        ##
+                    ##     BEAUTIFICATION     ##
+                    ##                        ##
+                    ############################
+
+                    if { $number == 0 } {
+                        # Avoid to return '00', '000', ...
+                        return 0
+                    } else {
+                        # Strip any leading zeros, if any.
+                        set number [string trimleft $number 0]
+
+                        # Check the maxlength.
+                        switch -- $maxlength {
+                            0       {}
+                            default {
+                                # Check if we need to truncate 'number'.
+                                set max_length [expr { $maxlength-2 }]
+                                set num_length [string length $number]
+
+                                if { $max_length < $num_length } {
+                                    set diff   [expr { $num_length-$max_length }]
+                                    set number [string range $number 0 end-$diff]
+                                }
+                            }
+                        }
+
+                        # Add '.0' at the end.
+                        return [string cat $number ".0"]
+                    }
+                }
+                default {
+                    ########################
+                    ##                    ##
+                    ##     CORRECTION     ##
+                    ##                    ##
+                    ########################
+
+                    # If needed, remove any other '.'.
+                    set number [::ms::Strip_Chars $number "." $pointIndex+1]
+
+                    ############################
+                    ##                        ##
+                    ##     BEAUTIFICATION     ##
+                    ##                        ##
+                    ############################
+
+                    # Strip any leading or trailing zeros, if any.
+                    set number [string trim $number 0]
+
+                    # Check if the number starts with '.'.
+                    switch -- [string index $number 0] {
+                        "." {
+                            # Check the maxlength.
+                            switch -- $maxlength {
+                                0       {}
+                                default {
+                                    # Check if we need to truncate 'number'.
+                                    set max_length [expr { $maxlength-1 }]
+                                    set num_length [string length $number]
+
+                                    if { $max_length < $num_length } {
+                                        set diff   [expr { $num_length-$max_length }]
+                                        set number [string range $number 0 end-$diff]
+                                    }
+                                }
+                            }
+
+                            # Add '0' before '.'.
+                            set number [string cat "0" $number]
+                        }
+                    }
+
+                    # Check if the number ends with '.'.
+                    switch -- [string index $number end] {
+                        "." {
+                            # Check the maxlength.
+                            switch -- $maxlength {
+                                0       {}
+                                default {
+                                    # Check if we need to truncate 'number'.
+                                    set max_length [expr { $maxlength-1 }]
+                                    set num_length [string length $number]
+
+                                    if { $max_length < $num_length } {
+                                        set diff   [expr { $num_length-$max_length }]
+                                        set number [string range $number 0 end-$diff]
+                                    }
+                                }
+                            }
+
+                            # Add '0' after '.'.
+                            set number [string cat $number "0"]
+                        }
+                    }
+
+                    if { $number == 0 } {
+                        # Avoid to return '0.0'.
+                        return 0
+                    } else {
+                        return $number
+                    }
+                }
+            }
+        }
+        real {
+            ########################
+            ##                    ##
+            ##     CORRECTION     ##
+            ##                    ##
+            ########################
+
+            # Check for any leading minus sign.
+            switch -- [string index $number 0] {
+                -       { set startFrom 1 }
+                default { set startFrom 0 }
+            }
+
+            # If needed, remove any other minus sign.
+            set number [::ms::Strip_Chars $number "-" $startFrom]
+            switch -- [string length $number] {
+                0   { return "" }
+            }
+
+            # Get the first '.' index, if any.
+            set pointIndex [string first "." $number]
+            switch -- $pointIndex {
+                -1  {
+                    ############################
+                    ##                        ##
+                    ##     BEAUTIFICATION     ##
+                    ##                        ##
+                    ############################
+
+                    if { $number == 0 } {
+                        # Avoid to return '0.0', '.0', '0.', '-0.0', '-.0', '-0.', '00.0' ...
+                        return 0
+                    } else {
+                        # Strip any leading zeros, if any.
+                        switch -- $startFrom {
+                            0   { set number [string trimleft $number 0] }
+                            1   { set number [string cat "-" [string trimleft [string range $number 1 end] 0]] }
+                        }
+
+                        # Check the maxlength.
+                        switch -- $maxlength {
+                            0       {}
+                            default {
+                                # Check if we need to truncate 'number'.
+                                set max_length [expr { $maxlength-2 }]
+                                set num_length [string length $number]
+
+                                if { $max_length < $num_length } {
+                                    set diff   [expr { $num_length-$max_length }]
+                                    set number [string range $number 0 end-$diff]
+                                }
+                            }
+                        }
+
+                        # Add '.0' at the end.
+                        return [string cat $number ".0"]
+                    }
+                }
+                default {
+                    ########################
+                    ##                    ##
+                    ##     CORRECTION     ##
+                    ##                    ##
+                    ########################
+
+                    # If needed, remove any other '.'.
+                    set number [::ms::Strip_Chars $number "." $pointIndex+1]
+
+                    ############################
+                    ##                        ##
+                    ##     BEAUTIFICATION     ##
+                    ##                        ##
+                    ############################
+
+                    # Strip any leading zeros, if any.
+                    switch -- $startFrom {
+                        0   { set number [string trimleft $number 0] }
+                        1   { set number [string cat "-" [string trimleft [string range $number 1 end] 0]] }
+                    }
+
+                    # Strip any trailing zeros, if any.
+                    set number [string trimright $number 0]
+
+                    # Check startFrom.
+                    switch -- $startFrom {
+                        0   {
+                            # Check if the number starts with '.'.
+                            switch -- [string index $number 0] {
+                                "." {
+                                    # Check the maxlength.
+                                    switch -- $maxlength {
+                                        0       {}
+                                        default {
+                                            # Check if we need to truncate 'number'.
+                                            set max_length [expr { $maxlength-1 }]
+                                            set num_length [string length $number]
+
+                                            if { $max_length < $num_length } {
+                                                set diff   [expr { $num_length-$max_length }]
+                                                set number [string range $number 0 end-$diff]
+                                            }
+                                        }
+                                    }
+
+                                    # Add '0' before '.'.
+                                    set number [string cat "0" $number]
+                                }
+                            }
+                        }
+                        1   {
+                            # Check if the number starts with '-.'.
+                            switch -- [string index $number 1] {
+                                "." {
+                                    # Check the maxlength.
+                                    switch -- $maxlength {
+                                        0       {}
+                                        default {
+                                            # Check if we need to truncate 'number'.
+                                            set max_length [expr { $maxlength-1 }]
+                                            set num_length [string length $number]
+
+                                            if { $max_length < $num_length } {
+                                                set diff   [expr { $num_length-$max_length }]
+                                                set number [string range $number 0 end-$diff]
+                                            }
+                                        }
+                                    }
+
+                                    # Add '0' before '.'.
+                                    set number [string insert $number 1 "0"]
+                                }
+                            }
+                        }
+                    }
+
+                    # Check if the number ends with '.'.
+                    switch -- [string index $number end] {
+                        "." {
+                            # Check the maxlength.
+                            switch -- $maxlength {
+                                0       {}
+                                default {
+                                    # Check if we need to truncate 'number'.
+                                    set max_length [expr { $maxlength-1 }]
+                                    set num_length [string length $number]
+
+                                    if { $max_length < $num_length } {
+                                        set diff   [expr { $num_length-$max_length }]
+                                        set number [string range $number 0 end-$diff]
+                                    }
+                                }
+                            }
+
+                            # Add '0' after '.'.
+                            set number [string cat $number "0"]
+                        }
+                    }
+
+                    if { $number == 0 } {
+                        # Avoid to return '0.0' or '-0.0'.
+                        return 0
+                    } else {
+                        return $number
+                    }
+                }
+            }
+        }
+    }
+}
+
 #*EOF*
