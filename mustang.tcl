@@ -4952,4 +4952,30 @@ proc ::ms::Execute_Widget_Cmd { w } {
     return ""
 }
 
+## External_Click
+#
+# Checks if a **ButtonPress** event happened inside a combobox or palette popdown window or not.
+# Used by combobox and palette widgets.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# X, Y   Should be the (x,y) mouse pointer absolute coordinates at the time of the event.
+#        These values should be provided by the **ButtonPress** event.
+#
+# It doesn't return anything.
+proc ::ms::External_Click { w X Y } {
+    # Get the Tk widget address under the mouse coordinates.
+    set tk_widget [_winfo containing -displayof $w $X $Y]
+
+    # Check if the 'Popdown scrollbar' and the Tk widget under the mouse coordinates, are the same address or not.
+    if { [_winfo toplevel $tk_widget] ne "$w.popdown" } {
+        # Unpost the popdown window.
+        set ::wait_for_user_response "Unpost"
+    }
+
+    return ""
+}
+
 #*EOF*
