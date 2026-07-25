@@ -4134,4 +4134,48 @@ proc ::ms::Clean_Up { w } {
     return ""
 }
 
+## Enable_Traversal
+#
+# Enable keyboard traversal for a container widget by adding bindings to the containing toplevel window.
+#
+# '::ms::containers(traversal,$toplevel)' keeps track of the list of all traversal-enabled containers
+# widgets contained in the toplevel.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Enable_Traversal { w } {
+    # Get the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
+    # Check if we need to implement the traversal bindings in the toplevel.
+    switch -- [info exists ::ms::containers(traversal,$toplevel)] {
+        0   {
+            #####################################################################
+            ##                                                                 ##
+            ##     AUGMENT THE SCROLLABLE WIDGET RELATED TOPLEVEL BINDINGS     ##
+            ##                                                                 ##
+            #####################################################################
+
+            # Destroy
+            _bind $toplevel <Destroy> [list +::ms::Traverse_Clean_Up %W]
+
+            # Scroll one page left or right with the keyboard.
+            _bind $toplevel <<PageLeft>>  [list ::ms::Traverse_Scroll %W xview  120.0 pages]
+            _bind $toplevel <<PageRight>> [list ::ms::Traverse_Scroll %W xview -120.0 pages]
+
+            # Scroll one page up or down with the keyboard.
+            _bind $toplevel <<PageUp>>    [list ::ms::Traverse_Scroll %W yview  120.0 pages]
+            _bind $toplevel <<PageDown>>  [list ::ms::Traverse_Scroll %W yview -120.0 pages]
+        }
+    }
+
+    # Add the container real address to the list of the traversal container for its related toplevel.
+    lappend ::ms::containers(traversal,$toplevel) $w
+
+    return ""
+}
+
 #*EOF*
