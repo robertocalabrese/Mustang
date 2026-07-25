@@ -4874,4 +4874,24 @@ proc ::ms::Convert_Measure { measure { to "" } { fallback invalid } } {
     }
 }
 
+## Error
+#
+# The mustang error dialog.
+#
+# Where:
+#
+# message       Should be the error message to display to the user.
+#
+# caller_info   Optional. Should be the location of the command that generated the error.
+#               For user related errors, this value should be the empty string.
+#
+# It doesn't return anything.
+proc ::ms::Error { message { caller_info "" } } {
+    # For the time being, just show the error message and the caller information (if any)
+    # on the terminal standard output channel.
+    chan puts stdout "$message"
+    chan puts stdout "$caller_info"
+    exit 1
+}
+
 #*EOF*
