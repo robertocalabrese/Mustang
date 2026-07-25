@@ -310,7 +310,7 @@ proc ::ms::Init {} {
     set ::ms::focusmodel "explicit"
 
     # Set the default action for the middle click buttonpress.
-    # Only available on Linux and BSD operating systems.
+    # Only available on Linux operating systems.
     #
     # On Linux, the default action is 'paste', on the other
     # operating systems is 'drag'.
@@ -333,7 +333,7 @@ proc ::ms::Init {} {
     #                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page
     #                towards the left and scrolling the mousewheel down (with the SHIFT key pressed)
     #                will move the page towards the right.
-    #                This is the default on Windows, Linux and BSD operating systems.
+    #                This is the default on Windows and Linux operating systems.
     set ::ms::scrollmode "classic"
 
     # Enable/Disable the scroll stopper for combobox, spinbox and listboxes.
@@ -1524,7 +1524,7 @@ proc ::ms::Init {} {
             chan puts $channel ""
 
             chan puts $channel "# Set the default action for the middle click buttonpress."
-            chan puts $channel "# Only available on Linux and BSD operating systems."
+            chan puts $channel "# Only available on Linux operating systems."
             chan puts $channel "#"
             chan puts $channel "# On Linux, the default action is 'paste', on the other"
             chan puts $channel "# operating systems is 'drag'."
@@ -1547,7 +1547,7 @@ proc ::ms::Init {} {
             chan puts $channel "#                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page"
             chan puts $channel "#                towards the left and scrolling the mousewheel down (with the SHIFT key pressed)"
             chan puts $channel "#                will move the page towards the right."
-            chan puts $channel "#                This is the default scroll mode on Windows, Linux and BSD operating systems."
+            chan puts $channel "#                This is the default scroll mode on Windows and Linux operating systems."
             chan puts $channel "#"
             chan puts $channel "# \['classic' or 'natural'\]"
             chan puts $channel "ScrollMode: $::ms::scrollmode"
