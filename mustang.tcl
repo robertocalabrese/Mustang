@@ -313,7 +313,7 @@ proc ::ms::Init {} {
     # Only available on Linux and BSD operating systems.
     #
     # On Linux, the default action is 'paste', on the other
-    # operating systems is blocked to 'drag'.
+    # operating systems is 'drag'.
     #
     # ['paste','drag']
     switch -- [_tk windowingsystem] {
@@ -1527,7 +1527,7 @@ proc ::ms::Init {} {
             chan puts $channel "# Only available on Linux and BSD operating systems."
             chan puts $channel "#"
             chan puts $channel "# On Linux, the default action is 'paste', on the other"
-            chan puts $channel "# operating systems is blocked to 'drag'."
+            chan puts $channel "# operating systems is 'drag'."
             chan puts $channel "#"
             chan puts $channel "# \['paste','drag'\]"
             chan puts $channel "MiddleClick: $::ms::middleclick"
