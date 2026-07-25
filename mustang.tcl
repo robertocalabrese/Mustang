@@ -5389,4 +5389,68 @@ proc ::ms::Load_SVG_Images {} {
     return ""
 }
 
+## Set_Cursor
+#
+# Set the cursor shape on a combobox, palette or spinbox widget.
+#
+# Note: The following procedure is inspired by the ttk::panedwindow::SetCursor.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **<Motion>** event.
+#
+# It doesn't return anything.
+proc ::ms::Set_Cursor { w x y } {
+    # Check if the address provided belogs to a palette widget.
+    switch -- [info exists ::ms::data($w,classtype)] {
+        0   {
+            set address $w
+            set w       [_winfo parent $w]
+        }
+        1   { set address [list interp invokehidden {} $w] }
+    }
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled {
+            # Check if the cursor is different than 'arrow'.
+            switch -- $::ms::current($w,cursor) {
+                arrow   {}
+                default { {*}$address configure -cursor arrow }
+            }
+        }
+        readonly {
+            # Check if the cursor is different than the '::ms::current($w,cursor)' provided.
+            if { [{*}$address cget -cursor] ne $::ms::current($w,cursor) } {
+                {*}$address configure -cursor $::ms::current($w,cursor)
+            }
+        }
+        normal {
+            # Check if the cursor is over the textarea.
+            switch -- [{*}$address identify $x $y] {
+                textarea {
+                    # Check if the cursor is different than 'xterm'.
+                    switch -- [{*}$address cget -cursor] {
+                        xterm   {}
+                        default { {*}$address configure -cursor xterm }
+                    }
+                }
+                default {
+                    # Check if the cursor is different than the '::ms::current($w,cursor)' provided.
+                    if { [{*}$address cget -cursor] ne $::ms::current($w,cursor) } {
+                        {*}$address configure -cursor $::ms::current($w,cursor)
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
