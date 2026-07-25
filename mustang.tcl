@@ -3493,4 +3493,32 @@ proc ::ms::Scan_Drag { w x y } {
     }
 }
 
+## Scan_Mark
+#
+# Manages the **<ButtonPress-2>** (or **<ButtonPress-3>** in macOS Aqua) event on a scrollable widget
+# that supports **scan** operations.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer coordinates of the event.
+#        These values should be provided by the <ButtonPress> event.
+#
+# It doesn't return anything.
+proc ::ms::Scan_Mark { w x y } {
+    set ::ms::temp(drag_allowed) yes
+    set ::ms::temp(x_press) $x
+    set ::ms::temp(y_press) $y
+
+    # Put a mark on the <ButtonPress> coordinates.
+    $w scan mark $x $y
+
+    try {
+        return -code break
+    } on error {} {
+        return ""
+    }
+}
+
 #*EOF*
