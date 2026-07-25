@@ -5534,4 +5534,35 @@ proc ::ms::Show_ContextMenu { w X Y { type cmenu } } {
     return ""
 }
 
+## Strip_Chars
+#
+# Strip a string from any recurrence of the character provided.
+#
+# Where:
+#
+# string      Should be the string involved.
+#
+# char        Should be the character to strip from the string provided.
+#
+# startFrom   Optional, should be the index where the strip procedure will start analyzing the string.
+#             Defaults to '0', if not provided.
+#
+# Returns the eventualy stripped string.
+proc ::ms::Strip_Chars { string char { startFrom 0 } } {
+    # ATTENTION!
+    #
+    # This is a recursive loop.
+    # The only way to exit is if 'string' doesn't have any(more) 'char' in it.
+    set i 1
+    while { $i == 1 } {
+        set index [string first $char $string $startFrom]
+        switch -- $index {
+            -1      { break }
+            default { set string [string replace $string $index $index] }
+        }
+    }
+
+    return $string
+}
+
 #*EOF*
