@@ -3300,4 +3300,67 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
     return ""
 }
 
+## Scan_Or_Paste
+#
+# Manage various **ButtonPress** events.
+# Used by entry, combobox, palette and spinbox widgets.
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# x       Should be the x relative coordinate of the mouse pointer at the time of the event.
+#         This parameter should be passed by the event itself.
+#
+# event   Should be the event name.
+#
+#         Allowed events are:
+#            Button-2
+#            B2-Motion
+#            ButtonRelease-2
+#            Button-3
+#            B3-Motion
+#            ButtonRelease-3
+#            PasteSelection
+#
+# It doesn't return anything.
+proc ::ms::Scan_Or_Paste { w x event } {
+    switch -- $::ms::middleclick {
+        drag {
+            switch -- [_tk windowingsystem] {
+                aqua {
+                    switch -- $event {
+                        "Button-3"        { ::ttk::entry::ScanMark    $w $x }
+                        "B3-Motion"       { ::ttk::entry::ScanDrag    $w $x }
+                        "ButtonRelease-3" { ::ttk::entry::ScanRelease $w $x }
+                    }
+                }
+                default {
+                    switch -- $event {
+                        "Button-2"        { ::ttk::entry::ScanMark    $w $x }
+                        "B2-Motion"       { ::ttk::entry::ScanDrag    $w $x }
+                        "ButtonRelease-2" { ::ttk::entry::ScanRelease $w $x }
+                    }
+                }
+            }
+        }
+        paste {
+            switch -- [_tk windowingsystem] {
+                aqua {
+                    switch -- $event {
+                        "ButtonRelease-3" { ::ms::Paste $w PRIMARY }
+                    }
+                }
+                default {
+                    switch -- $event {
+                        "ButtonRelease-2" { ::ms::Paste $w PRIMARY }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
