@@ -3083,4 +3083,42 @@ proc ::ms::Check_State { state } {
     }
 }
 
+########################################
+##                                    ##
+##     CLEAR, COPY, CUT AND PASTE     ##
+##                                    ##
+########################################
+
+## Clear
+#
+# Delete the selection.
+#
+# Note: The following procedure is inspired by the ttk::entry::Clear.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Note: This procedure is use by the entry, combobox, palette and spinbox widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Clear { w } {
+    # Check if the address provided belongs to a palette widget.
+    switch -- $::ms::data($w,classtype) {
+        palette { set cmd [list $w.combobox delete sel.first sel.last] }
+        default { set cmd [list interp invokehidden {} $w delete sel.first sel.last] }
+    }
+
+    # Execute the command.
+    try {
+        {*}$cmd
+    } on error {} {
+        # Do nothing.
+    }
+
+    return ""
+}
+
 #*EOF*
