@@ -3121,4 +3121,47 @@ proc ::ms::Clear { w } {
     return ""
 }
 
+## Copy
+#
+# Copy the selection to the clipboard.
+#
+# Note: The following procedure is inspired by the ttk::entry::Copy.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Note: This procedure is use by the entry, combobox, palette and spinbox widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Copy { w } {
+    # Check if the address provided belongs to a palette widget.
+    switch -- $::ms::data($w,classtype) {
+        palette {
+            set string [$w.combobox get]
+            set index1 [$w.combobox index sel.first]
+            set index2 [expr { [$w.combobox index sel.last]-1 }]
+        }
+        default {
+            set string [interp invokehidden {} $w get]
+            set index1 [interp invokehidden {} $w index sel.first]
+            set index2 [expr { [interp invokehidden {} $w index sel.last]-1 }]
+        }
+    }
+
+    # Execute the command.
+    try {
+        string range $string $index1 $index2
+    } on error {} {
+        # Do nothing.
+    } on ok { selection } {
+        clipboard clear  -displayof $w
+        clipboard append -displayof $w $selection
+    }
+
+    return ""
+}
+
 #*EOF*
