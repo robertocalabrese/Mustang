@@ -4721,4 +4721,157 @@ proc ::ms::Compute_Maximum { digits { sign no } } {
     return $maximum_digits
 }
 
+## Convert_Measure
+#
+# Convert a measure from one unit measure to another.
+#
+# Where:
+#
+# measure    Should be a string (or an integer in case of pixels) that specifies
+#            the measure to convert and its unit. Allowed units are:
+#                c --> centimeters
+#                i --> inches
+#                m --> millimeters
+#                p --> points
+#            If there is no unit, the measure will be assumed to be in **pixels**.
+#            The measure (intended as without its unit) should always be a positive integer value.
+#
+# to         Optional. Should be a string that specifies the new unit in which the result
+#            needs to be expressed. Allowed values are:
+#                c --> centimeters
+#                i --> inches
+#                m --> millimeters
+#                p --> points
+#            If an empty string is provided, the **to** parameter will be assumed to be in pixels.
+#            If not provided, defaults to **pixels**.
+#
+# fallback   Optional. Should be a string that specifies the fallback value to return if
+#            the measure provided will result invalid.
+#            If not provided, defaults to **invalid**.
+#
+# Some pre-computation have been made in order to increase the performance:
+#   2.54/72.0 = 0.035277777777777776
+#   25.4/72.0 = 0.35277777777777775
+#   72.0/2.54 = 28.346456692913385
+#   72.0/25.4 = 2.834645669291339
+#   1/72.0    = 0.013888888888888888
+#   1/2.54    = 0.39370078740157477
+#   1/25.4    = 0.03937007874015748
+#
+# Return the converted measure or the fallback value.
+proc ::ms::Convert_Measure { measure { to "" } { fallback invalid } } {
+    # Check the measure provided and extract its unit.
+    set from [string index $measure end]
+    switch -- $from {
+        0   -
+        1   -
+        2   -
+        3   -
+        4   -
+        5   -
+        6   -
+        7   -
+        8   -
+        9   {
+            # The measure have no unit, its value is assumed to be in pixels.
+            set from ""
+
+            # Check if the measure is a positive integer.
+            switch -- [string is integer -strict $measure] {
+                0   { return $fallback }
+                1   {
+                    if { $measure < 0 } {
+                        return $fallback
+                    }
+                }
+            }
+        }
+        c   -
+        i   -
+        m   -
+        p   {
+            # Get the actual measure without its unit.
+            set measure [string range $measure 0 end-1]
+
+            # Check if the measure is a positive double.
+            switch -- [string is double -strict $measure] {
+                0   { return $fallback }
+                1   {
+                    if { $measure < 0 } {
+                        return $fallback
+                    }
+                }
+            }
+        }
+        default { return $fallback }
+    }
+
+    # Check the 'to' value.
+    switch -- $to {
+        ""      -
+        c       -
+        i       -
+        m       -
+        p       {}
+        default { return $fallback }
+    }
+
+    # If the measure is zero, return it without doing the conversion.
+    if { $measure == 0 } {
+        return "0"
+    }
+
+    # Get the current tk scaling value.
+    set tkscaling [_tk scaling]
+
+    # Execute the conversion.
+    switch -- $from {
+        ""  {
+            switch -- $to {
+                c   { set measure [expr { ($measure/$tkscaling)*0.035277777777777776 }] }
+                i   { set measure [expr { ($measure/$tkscaling)*0.013888888888888888 }] }
+                m   { set measure [expr { ($measure/$tkscaling)*0.352777777777777750 }] }
+                p   { set measure [expr { ($measure/$tkscaling) }] }
+            }
+        }
+        c   {
+            switch -- $to {
+                ""  { set measure [expr { round($measure*$tkscaling*28.346456692913385) }] }
+                i   { set measure [expr { $measure*0.39370078740157477 }] }
+                m   { set measure [expr { $measure*10 }] }
+                p   { set measure [expr { $measure*28.3464566929133850 }] }
+            }
+        }
+        i   {
+            switch -- $to {
+                ""  { set measure [expr { round($measure*$tkscaling*72.0) }] }
+                c   { set measure [expr { $measure*2.54 }] }
+                m   { set measure [expr { $measure*25.4 }] }
+                p   { set measure [expr { $measure*72.0 }] }
+            }
+        }
+        m   {
+            switch -- $to {
+                ""  { set measure [expr { round($measure*$tkscaling*2.834645669291339) }] }
+                c   { set measure [expr { $measure*0.1 }] }
+                i   { set measure [expr { $measure*0.03937007874015748 }] }
+                p   { set measure [expr { $measure*2.83464566929133900 }] }
+            }
+        }
+        p   {
+            switch -- $to {
+                ""  { set measure [expr { round($measure*$tkscaling) }] }
+                c   { set measure [expr { $measure*0.035277777777777776 }] }
+                i   { set measure [expr { $measure*0.013888888888888888 }] }
+                m   { set measure [expr { $measure*0.352777777777777750 }] }
+            }
+        }
+    }
+
+    switch -- $to {
+        ""      { return $measure }
+        default { return [string cat $measure $to] }
+    }
+}
+
 #*EOF*
