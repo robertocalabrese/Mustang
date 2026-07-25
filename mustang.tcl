@@ -3083,6 +3083,118 @@ proc ::ms::Check_State { state } {
     }
 }
 
+## Check_Widget_Address
+#
+# Check a widget address.
+#
+# Where:
+#
+# window        Should be the widget pathname address to create.
+#               This address should be unique and all the parents addresses should exists already.
+#               *Window* can either be a real or short address.
+#
+# caller_info   Should be the location of the command that generated the error.
+#
+# Returns the real and short address relative to 'window'.
+proc ::ms::Check_Widget_Address { window caller_info } {
+    # Set the widget real and short addresses.
+    set index [string last "." $window]
+    switch -- $index {
+        -1  -
+        1   { ::ms::Error "Invalid address, '$window'." $caller_info }
+        0   {
+            # Safeguard.
+            try {
+                _winfo toplevel $window
+            } on error {} {
+                # Do Nothing.
+            } on ok { result } {
+                if { $result eq $window } {
+                    ::ms::Error "Invalid address, '$window'." $caller_info
+                }
+            }
+
+            # 'window' is a short address or equal to one.
+            set type short
+
+            # Set the widget real and short addresses.
+            switch -- $::ms::addr(.,widget) {
+                ".content" { set real_addr [string cat ".content" $window] }
+                default    { set real_addr $window }
+            }
+            set short_addr $window
+        }
+        default {
+            # Separate the 'window' address into it's parent address and it's relative address.
+            set parent_addr   [string range $window 0 $index-1]
+            set relative_addr [string range $window $index end]
+
+            # Check 'parent_addr'.
+            if { $parent_addr in $::ms::addr(shorts) } {
+                # 'parent_addr' is the short address of a widget created by mustang.
+                set type short
+
+                # Check if 'parent_addr' refers to a container widget.
+                set real_addr $::ms::addr($parent_addr,real)
+                switch -- $::ms::data($real_addr,classtype) {
+                    canvas      -
+                    frame       -
+                    labelframe  -
+                    notebook    -
+                    panedwindow -
+                    text        -
+                    toplevel    {
+                        set parent_real_addr  $::ms::addr($real_address,widget)
+                        set parent_short_addr $parent_addr
+                    }
+                    default { ::ms::Error "Invalid address, '$window'." $caller_info }
+                }
+            } elseif { $parent_addr in $::ms::addr(reals) } {
+                # 'parent_addr' is the real address of a widget created by mustang.
+                set type real
+
+                # Check if 'parent_addr' refers to a container widget.
+                set short_addr $::ms::addr($parent_addr,short)
+                set real_addr  $::ms::addr($short_addr,real)
+                switch -- $::ms::data($real_addr,classtype) {
+                    canvas      -
+                    frame       -
+                    labelframe  -
+                    notebook    -
+                    panedwindow -
+                    text        -
+                    toplevel    {
+                        set parent_real_addr  $::ms::addr($real_addr,widget)
+                        set parent_short_addr $::ms::addr($real_addr,short)
+                    }
+                    default { ::ms::Error "Invalid address, '$window'." $caller_info }
+                }
+            } elseif { [_winfo exists $parent_addr] } {
+                # 'parent_addr' is the real address of a widget not created by mustang.
+                set type real
+
+                # Note: Widgets created outside of mustang do not have short addresses,
+                #       we will set their short address as their real address.
+
+                set parent_real_addr  $parent_addr
+                set parent_short_addr $parent_addr
+            } else {
+                ::ms::Error "Invalid address, '$window'." $caller_info
+            }
+
+            # Set the widget real ('w') and short addresses.
+            set real_addr  [string cat $parent_real_addr  $relative_addr]
+            set short_addr [string cat $parent_short_addr $relative_addr]
+        }
+    }
+
+    # Check the widget address uniqueness.
+    switch -- [_winfo exists $real_addr] {
+        0   { return [list $real_addr $short_addr] }
+        1   { ::ms::Error "The address provided already exists, '$window'." $caller_info }
+    }
+}
+
 ########################################
 ##                                    ##
 ##     CLEAR, COPY, CUT AND PASTE     ##
