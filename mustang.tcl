@@ -4894,4 +4894,37 @@ proc ::ms::Error { message { caller_info "" } } {
     exit 1
 }
 
+## Escape
+#
+# Set the last valid value as the current value.
+# Used by entry, combobox, palette and spinbox widgets.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Escape { w } {
+    # Check if the address provided belogs to a palette widget.
+    switch -- [info exists ::ms::data($w,classtype)] {
+        0   {
+            set address $w
+            set w       [_winfo parent $w]
+        }
+        1   { set address [list interp invokehidden {} $w] }
+    }
+
+    # Clear the widget textarea.
+    {*}$address delete 0 end
+    {*}$address selection clear
+
+    # Insert the last valid value.
+    {*}$address insert 0 $::ms::data($w,current_value)
+
+    # Put the text cursor at the end of the value.
+    {*}$address icursor end
+
+    return ""
+}
+
 #*EOF*
