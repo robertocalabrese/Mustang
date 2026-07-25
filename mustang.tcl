@@ -4230,4 +4230,99 @@ proc ::ms::Traverse_Clean_Up { w } {
     return ""
 }
 
+## Traverse_Scroll
+#
+# Toplevel binding procedure for **<<PageDown>>**, **<<PageLeft>>**, **<<PageRight>>**, **<<PageUp>>** keyboard events.
+# Scrolls up, down, left or right (by one page) the content of the nearest ancestor scrollable widget.
+#
+# Where:
+#
+# w          Should be the widget real address involved.
+#
+# command    Should be the command of the movement.
+#            Allowed values are **xview** or **yview**.
+#
+# amount     Optional. Should be the amount of the movement.
+#            Its sign determines the direction to take (left/right or up/down).
+#            It's normally delivered by the event (**+120.0** or **-120.0).
+#
+# what       Optional. Should be a string that specifies the unit type.
+#            Allowed values are the word **units** or **pages**.
+#            If not provided, defaults to **units**.
+#
+# Note: 1.0/120.0 = 0.008333333333333333
+#
+# If a suitable widget is found, it will scroll it and return a TCL_BREAK, otherwise return an empty string.
+proc ::ms::Traverse_Scroll { w command { amount -120.0 } { what units } } {
+    # Get the enclosing container.
+    set container_addr [::ms::Enclosing_Container $w]
+    switch -- $container_addr {
+        ""      { return "" }
+        default {
+            # Check the scrollmode.
+            switch -- $::ms::scrollmode {
+                natural { set amount [expr { -1.0*$amount }] }
+            }
+            set amount [expr { -$amount*0.008333333333333333 }]
+
+            # Check the command provided.
+            switch -- $command {
+                xview { set scroll scrollx }
+                yview { set scroll scrolly }
+            }
+
+            # ATTENTION!
+            #
+            # This is a recursive loop. The only way to exit is:
+            #   - If there is no more container address to check for.
+            #   - If the container address is a scrollable megawidget with an active horizontal or
+            #     vertical scrollbar (depending on the 'axis' provided).
+            #   - If the container address is a widget created outside of mustang that is linked
+            #     to an horizontal or vertical scrollbar (depending on the 'axis' provided).
+            set i 1
+            while { $i > 0 } {
+                # Check if the container address belongs to a scrollable megawidget.
+                if { $container_addr in $::ms::addr(megawidgets,scrollable) } {
+                    # Check if the container address has an active horizontal/vertical scrollbar linked to it.
+                    switch -- $::ms::data($container_addr,$scroll) {
+                        on  {
+                            # Execute the movement.
+                            $container_addr $command scroll $amount $what
+
+                            # Stop the recursive iteration.
+                            break
+                        }
+                    }
+                } elseif { $container_addr ni $::ms::addr(reals) } {
+                    # The widget was created outside of mustang.
+
+                    # If possible, execute the movement.
+                    try {
+                        $container_addr $command scroll $amount $what
+                    } on error {} {
+                        # The container address has no horizontal/vertical scrollbar linked to it or
+                        # doesn't have the 'xview' or 'yview' commands.
+                        # Continue the recursive iteration.
+                    } on ok {} {
+                        # Stop the recursive iteration.
+                        break
+                    }
+                }
+
+                # Check the next container address, if any.
+                set container_addr [_winfo parent $container_addr]
+                switch -- $container_addr {
+                    ""  {
+                        # There are no more container address to check for.
+                        # Stop the recursive iteration.
+                        return ""
+                    }
+                }
+            }
+
+            return -code break
+        }
+    }
+}
+
 #*EOF*
