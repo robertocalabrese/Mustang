@@ -4178,4 +4178,38 @@ proc ::ms::Enable_Traversal { w } {
     return ""
 }
 
+## Enclosing_Container
+#
+# Return the nearest traversal-enabled container widget that contains 'w'.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# BUGS: This routine should follow the geometry manager hierarchy, not window ancestry,
+#       but that information is not available in Tk.
+#
+# Returns the nearest traversal enabled container widget address or an empty string is none is found.
+proc ::ms::Enclosing_Container { w } {
+    # Get the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
+    # Check if exists a traversal enabled container list for the toplevel related to 'w'.
+    switch -- [info exists ::ms::containers(traversal,$toplevel)] {
+        0   { return "" }
+    }
+
+    # Get the enclosing container.
+    while { $w ne $toplevel && $w ne "" } {
+        switch -- [lsearch -exact $::ms::containers(traversal,$toplevel) $w] {
+            -1      {}
+            default { return $w }
+        }
+
+        set w [_winfo parent $w]
+    }
+
+    return ""
+}
+
 #*EOF*
