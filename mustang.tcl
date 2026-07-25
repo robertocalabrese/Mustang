@@ -3985,4 +3985,61 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
     return ""
 }
 
+## Touchpad_Parent
+#
+# Search the widget parents for a scrollable widget with an active scrollbar along the X and/or Y axis.
+# If we found one, scroll it and exit, otherwise examine the next parent until we reach out of parents.
+#
+# Where:
+#
+# w         Should be the widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
+#           **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#           If the value provided as *amount* is not an integer or a float,
+#           defaults to **+120.0**.
+#
+#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::Touchpad_Parent { w counter amount { what units } } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    # <TouchpadScroll> events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # by testing is the 'counter' is divisible by 5.
+    if { [expr { $counter%5 }] != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+    set delta_x [expr { $delta_x*30 }]
+    set delta_y [expr { $delta_y*30 }]
+
+    # If there is a movement along the X axis, launch '::ms::Scroll_Parent_X'.
+    if { $delta_x != 0 } {
+        ::ms::Scroll_Parent_X $w $delta_x $what
+    }
+
+    # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
+    if { $delta_y != 0 } {
+        ::ms::Scroll_Parent_Y $w $delta_y $what
+    }
+}
+
 #*EOF*
