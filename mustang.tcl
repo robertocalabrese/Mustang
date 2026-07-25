@@ -4100,4 +4100,38 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
     }
 }
 
+##########################################
+##                                      ##
+##     KEYBOARD TRAVERSAL SCROLLING     ##
+##                                      ##
+##########################################
+
+# Note: The following procedures were inspired by the ttk::notebook mechanism for traverse bindings.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## CleanUp
+#
+# <Destroy> binding for container widgets.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::Clean_Up { w } {
+    # Get the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
+    # If present, remove 'w' from the list of all traversal-enabled containers widgets contained in the toplevel.
+    switch -- [info exists ::ms::containers(traversal,$toplevel)] {
+        1   {
+            set index [lsearch -exact $::ms::containers(traversal,$toplevel) $w]
+            set ::ms::containers(traversal,$toplevel) [lreplace $::ms::containers(traversal,$toplevel) $index $index]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
