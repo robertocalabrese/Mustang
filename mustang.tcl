@@ -320,6 +320,15 @@ proc ::ms::Init {} {
         default { set ::ms::middleclick drag }
     }
 
+    # Set the UI scale factor.
+    # It's used for example to display SVG images ('width' and 'height' are both influenced by the UI scale factor).
+    #
+    # Note: macOS and Windows operaing systems automatically apply the scale to each image displayed.
+    #       In those systems it's value is fixed to '100.0' and any modification attempt will be ignored.
+    #
+    # It must be in the range [100.0,1000.0].
+    set ::ms::scale 100.0
+
     # Set how the mouse scrolling should work.
     #    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom
     #                and scrolling the mousewheel down will move the page towards the top.
@@ -973,9 +982,6 @@ proc ::ms::Init {} {
                 set ::ms::machine(cpu,threads) $result
             }
 
-            # Set the UI scale factor.
-            set ::ms::machine(os,ui_scale_factor) 200.0
-
             # Get the macOS name, prettyname and version number.
             set cmd [list {*}[auto_execok sw_vers] "-productVersion"]
             try {
@@ -1078,9 +1084,6 @@ proc ::ms::Init {} {
             } on ok { result } {
                 set ::ms::machine(cpu,threads) $result
             }
-
-            # Set the UI scale factor.
-            set ::ms::machine(os,ui_scale_factor) 100.0
 
             # /etc/os-release
             #
@@ -1353,20 +1356,6 @@ proc ::ms::Init {} {
                 set ::ms::machine(cpu,model) [lremove $results 0]
             }
 
-            # Get the scale factor.
-            set cmd [list {*}[auto_execok wmic] "desktopmonitor" "get" "PixelsPerXLogicalInch"]
-            try {
-                exec {*}$cmd
-            } on error {} {
-                set ::ms::machine(os,ui_scale_factor) 100.0
-            } on ok { results } {
-                # Note The conversion factor is 100.0/96.0 where:
-                #    100.0 --> is the minimum scale value available on Windows.
-                #    96.0  --> is the minimum 'PixelsPerXLogicalInch' returned by Windows.
-                set DPI [lindex [lremove $results 0] 0]
-                set ::ms::machine(os,ui_scale_factor) [expr { 1.0416666666666667*$DPI }]
-            }
-
             # Get the number of cpus cores available.
             set cmd [list {*}[auto_execok wmic] "cpu" "get" "NumberOfCores"]
             try {
@@ -1444,7 +1433,12 @@ proc ::ms::Init {} {
     try {
         open $filepath r
     } on error {} {
-        # Save the mustang settings file.
+        ############################################
+        ##                                        ##
+        ##     SAVE THE MUSTANG SETTINGS FILE     ##
+        ##                                        ##
+        ############################################
+
         try {
             open $filepath w
         } on error {} {
@@ -1573,14 +1567,20 @@ proc ::ms::Init {} {
             chan puts $channel "Theme: $::ms::theme"
             chan puts $channel ""
 
-            chan puts $channel "# UI scale factor"
-            chan puts $channel "#"
-            chan puts $channel "# It's an integer that specifies the scaling factor of the screen"
-            chan puts $channel "# (in percentage, but without the '%' sign)."
-            chan puts $channel "#"
-            chan puts $channel "# \[100,400\]"
-            chan puts $channel "UIScaleFactor: $::ms::machine(os,ui_scale_factor)"
-            chan puts $channel ""
+            # If the system is not macOS or Windows, save the UI scale.
+            switch -- [_tk windowingsystem] {
+                aqua    -
+                win32   {}
+                default {
+                    chan puts $channel "# Scale"
+                    chan puts $channel "#"
+                    chan puts $channel "# It's a floating point number that specifies the UI scaling factor (in percentage, but without the '%' sign)."
+                    chan puts $channel "#"
+                    chan puts $channel "# \[100.0,1000.0\]"
+                    chan puts $channel "Scale: $::ms::scale"
+                    chan puts $channel ""
+                }
+            }
 
             chan puts $channel "###################"
             chan puts $channel "##               ##"
@@ -1638,6 +1638,12 @@ proc ::ms::Init {} {
             chan close $channel
         }
     } on ok { channel } {
+        ############################################
+        ##                                        ##
+        ##     READ THE MUSTANG SETTINGS FILE     ##
+        ##                                        ##
+        ############################################
+
         # Read the entire file.
         set file_content [split [chan read $channel] "\n"]
         chan close $channel
@@ -1775,6 +1781,27 @@ proc ::ms::Init {} {
                             _font configure MonospaceFont -family $family \
                                                             -size $size;
                         }
+                        "Scale:" {
+                            # If the operating system is macOS or Windows, do not allow to change it's value (100.0).
+                            switch -- [_tk windowingsystem] {
+                                aqua    -
+                                win32   { continue }
+                                default {
+                                    switch -- [string is double -strict $value] {
+                                        0   { continue }
+                                        1   {
+                                            if { $value < 100.0 } {
+                                                continue
+                                            } elseif { $value > 1000.0 } {
+                                                continue
+                                            }
+                                        }
+                                    }
+
+                                    set ::ms::scale $value
+                                }
+                            }
+                        }
                         "ScrollMode:" {
                             switch -nocase -- $value {
                                 classic { set ::ms::scrollmode classic }
@@ -1824,18 +1851,6 @@ proc ::ms::Init {} {
                                                            -size $size;
                         }
                         "Theme:" { set ::ms::theme $value }
-                        "UIScaleFactor:" {
-                            switch -- [string is double -strict $value] {
-                                0   { continue }
-                                1   {
-                                    if { $value < 100.0 } {
-                                        continue
-                                    }
-                                }
-                            }
-
-                            set ::ms::machine(os,ui_scale_factor) $value
-                        }
                     }
                 }
             }
@@ -5481,10 +5496,15 @@ proc ::ms::Load_SVG_Images {} {
             # Do nothing
         }
 
+        # Note that macOS and Windows systems automatically applies the correct scale on the image to display.
+        # If we will apply too it will be a double scale.
+        # That's the reason behind their values has been setted at '100.0'.
+
         # Check the windowing system.
         switch -- [_tk windowingsystem] {
-            aqua    { set scale 100.0 }
-            default { set scale $::ms::machine(os,ui_scale_factor) }
+            aqua    -
+            win32   { set scale 100.0 }
+            default { set scale $::ms::scale }
         }
 
         # Load the svg image at the current UI scale factor.
