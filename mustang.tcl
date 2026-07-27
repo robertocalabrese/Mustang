@@ -2706,7 +2706,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                                                 after cancel $::ms::temp(pending,refresh)
                                                 unset -nocomplain -- ::ms::temp(pending,refresh)
                                             }
-                                            set ::ms::temp(pending,refresh) [after 50 [list style scale use $::ms::theme]]
+                                            set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
                                         }
                                     }
                                 }
@@ -2789,6 +2789,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     switch -- [_tk windowingsystem] {
                         aqua    { set ::ms::union "" }
                         default {
+                            # Check that the new 'union' provided is a valid value.
                             set ::ms::union [string trim [string tolower $::ms::union]]
                             switch -- $::ms::union {
                                 "+"     -
