@@ -2506,16 +2506,13 @@ proc ::ms::Check_And_React { name1 name2 op } {
     switch -- $op {
         unset {
             # Set 'varName' back to its last valid value.
-            switch -glob -- $varName {
-                "::ms::accent"        { set ::ms::accent        $::ms::temp(accent,last) }
-                "::ms::clickaction"   { set ::ms::clickaction   $::ms::temp(clickaction,last) }
-                "::ms::colorscheme"   { set ::ms::colorscheme   $::ms::temp(colorscheme,last) }
-                "::ms::focusmodel"    { set ::ms::focusmodel    $::ms::temp(focusmodel,last) }
-                "::ms::language"      { set ::ms::language      $::ms::temp(language,last) }
-                "::ms::middleclick"   { set ::ms::middleclick   $::ms::temp(middleclick,last) }
-                "::ms::scrollmode"    { set ::ms::scrollmode    $::ms::temp(scrollmode,last) }
-                "::ms::scrollstopper" { set ::ms::scrollstopper $::ms::temp(scrollstopper,last) }
-                "::ms::theme"         { set ::ms::theme         $::ms::temp(theme,last) }
+            switch -- $varName {
+                "::ms::accent"      { set ::ms::accent        $::ms::temp(accent,last) }
+                "::ms::clickaction" { set ::ms::clickaction   $::ms::temp(clickaction,last) }
+                "::ms::colorscheme" { set ::ms::colorscheme   $::ms::temp(colorscheme,last) }
+                "::ms::focusmodel"  { set ::ms::focusmodel    $::ms::temp(focusmodel,last) }
+                "::ms::language"    { set ::ms::language      $::ms::temp(language,last) }
+                "::ms::middleclick" { set ::ms::middleclick   $::ms::temp(middleclick,last) }
                 "::ms::scale" {
                     # If the operating system is macOS or Windows, set '::ms::scale' to '100.0',
                     # else set it back to its last valid value.
@@ -2525,6 +2522,9 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         default { set ::ms::scale $::ms::temp(scale,last) }
                     }
                 }
+                "::ms::scrollmode"    { set ::ms::scrollmode    $::ms::temp(scrollmode,last) }
+                "::ms::scrollstopper" { set ::ms::scrollstopper $::ms::temp(scrollstopper,last) }
+                "::ms::theme"         { set ::ms::theme         $::ms::temp(theme,last) }
                 "::ms::union" {
                     # If the operating system is macOS, set '::ms::union' to the empty string,
                     # else set it back to its last valid value.
