@@ -2376,23 +2376,54 @@ proc ::ms::Init {} {
     ##                                                                           ##
     ###############################################################################
 
-    # Register the current accent color, colorscheme and focusmodel as the last valid ones.
-    # These variables are used when the new color accent, colorscheme and focusmodel validation fails
-    # and mustang needs to reset its/their value/s to the last valid one/s.
-    set ::ms::temp(accent,last)      $::ms::accent
-    set ::ms::temp(colorscheme,last) $::ms::colorscheme
-    set ::ms::temp(focusmodel,last)  $::ms::focusmodel
+    # Register the current values of the mustang special variables as their last valid one.
+    set ::ms::temp(accent,last)        $::ms::accent
+    set ::ms::temp(clickaction,last)   $::ms::clickaction
+    set ::ms::temp(colorscheme,last)   $::ms::colorscheme
+    set ::ms::temp(focusmodel,last)    $::ms::focusmodel
+    set ::ms::temp(language,last)      $::ms::language
+    set ::ms::temp(middleclick,last)   $::ms::middleclick
+    set ::ms::temp(scrollmode,last)    $::ms::scrollmode
+    set ::ms::temp(scrollstopper,last) $::ms::scrollstopper
+    set ::ms::temp(theme,last)         $::ms::theme
 
-    # Set a trace on '::ms::accent' and '::ms::colorscheme' in order to check their values in case the developer/user changes them.
-    # If the value provided is a valid one then mustang will react accordingly, if it is not, mustang will override it with its last valid value.
-    trace add variable ::ms::accent \
-              write    [list ::ms::Check_And_React]
+    # If the operating system is not macOS or Windows, create the temp value for the 'scale' variable too.
+    switch -- [_tk windowingsystem] {
+        aqua    -
+        win32   {}
+        default { set ::ms::temp(scale,last) $::ms::scale }
+    }
 
-    trace add variable ::ms::colorscheme \
-              write    [list ::ms::Check_And_React]
+    # Set a trace on every mustang special variables for 'unset' and 'write' operations.
+    trace add variable           ::ms::accent \
+              [list unset write] [list ::ms::Check_And_React];
 
-    trace add variable ::ms::focusmodel \
-              write    [list ::ms::Check_And_React]
+    trace add variable           ::ms::clickaction \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::colorscheme \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::focusmodel \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::language \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::middleclick \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::scale \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::scrollmode \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::scrollstopper \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::theme \
+              [list unset write] [list ::ms::Check_And_React];
 
     ###############################################################
     ##                                                           ##
@@ -2416,18 +2447,18 @@ proc ::ms::Init {} {
 
 ## Check_And_React
 #
-# Check and react to any changes made to the mustang traced variables.
+# Check and react to any 'unset' or 'write' operations on a mustang special variable.
 #
 # Where:
 #
 # name1,
 # name2,
-# op        Should be the tracing arguments.
-#           Do not pass any value, the **trace** command will automatically pass these values.
+# op       Should be the tracing arguments.
+#          Do not pass any value, the **trace** command will automatically pass these values.
 #
 # It doesn't return anything.
 proc ::ms::Check_And_React { name1 name2 op } {
-    # Safeguard for future use of this procedure with other variables other than '::ms::accent' and '::ms::colorscheme'.
+    # Safeguard.
     # If the variable is an array, reconstruct the name.
     set varName $name1
     switch -- $name2 {
@@ -2435,103 +2466,279 @@ proc ::ms::Check_And_React { name1 name2 op } {
         default { append varName "(" $name2 ")" }
     }
 
-    # Check the value of the variable name contained in 'varName'.
-    switch -- $varName {
-        ::ms::accent {
-            # Transform the accent color provided in lowercase characters.
-            set ::ms::accent [string tolower $::ms::accent]
-
-            # Check that the new accent color provided is a valid one.
-            switch -- $::ms::accent {
-                blue   -
-                gray   -
-                green  -
-                orange -
-                pink   -
-                purple -
-                red    -
-                yellow {
-                    # Check that the new accent color is not the same as the one currently registered.
-                    if { $::ms::accent ne $::ms::temp(accent,last) } {
-                        # Register the last valid accent color.
-                        set ::ms::temp(accent,last) $::ms::accent
-
-                        # Note: Both '::ms::accent' and '::ms::colorscheme' needs to refresh the theme after their validation.
-                        #       If both of these variables are setted at the same time, two refreshes will happen.
-                        #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
-                        #       This timer will be resetted if, while active, another command asks to refresh the theme.
-
-                        if { [info exists ::ms::temp(pending,refresh)] } {
-                            after cancel $::ms::temp(pending,refresh)
-                            unset -nocomplain -- ::ms::temp(pending,refresh)
-                        }
-                        set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+    # Check the operation ('unset' or 'write').
+    switch -- $op {
+        unset {
+            # Set 'varName' back to its last valid value.
+            switch -glob -- $varName {
+                "::ms::accent"        { set ::ms::accent        $::ms::temp(accent,last) }
+                "::ms::clickaction"   { set ::ms::clickaction   $::ms::temp(clickaction,last) }
+                "::ms::colorscheme"   { set ::ms::colorscheme   $::ms::temp(colorscheme,last) }
+                "::ms::focusmodel"    { set ::ms::focusmodel    $::ms::temp(focusmodel,last) }
+                "::ms::language"      { set ::ms::language      $::ms::temp(language,last) }
+                "::ms::middleclick"   { set ::ms::middleclick   $::ms::temp(middleclick,last) }
+                "::ms::scrollmode"    { set ::ms::scrollmode    $::ms::temp(scrollmode,last) }
+                "::ms::scrollstopper" { set ::ms::scrollstopper $::ms::temp(scrollstopper,last) }
+                "::ms::theme"         { set ::ms::theme         $::ms::temp(theme,last) }
+                "::ms::scale" {
+                    # If the operating system is macOS or Windows, set '::ms::scale' to '100.0',
+                    # else set it back to its last valid value.
+                    switch -- [_tk windowingsystem] {
+                        aqua    -
+                        win32   { set ::ms::scale 100.0 }
+                        default { set ::ms::scale $::ms::temp(scale,last) }
                     }
-                }
-                default {
-                    # Restore the last valid accent color.
-                    set ::ms::accent $::ms::temp(accent,last)
                 }
             }
         }
-        ::ms::colorscheme {
-            # Transform the colorscheme value provided in lowercase characters.
-            set ::ms::colorscheme [string tolower $::ms::colorscheme]
+        write {
+            # Check the value of the variable name contained in 'varName'.
+            switch -- $varName {
+                ::ms::accent {
+                    # Check that the new 'accent' color provided is a valid value.
+                    set ::ms::accent [string tolower $::ms::accent]
+                    switch -- $::ms::accent {
+                        blue   -
+                        gray   -
+                        green  -
+                        orange -
+                        pink   -
+                        purple -
+                        red    -
+                        yellow {
+                            # Check that the new 'accent' color is not the same as the one currently registered.
+                            if { $::ms::accent ne $::ms::temp(accent,last) } {
+                                # Register the last valid 'accent' color.
+                                set ::ms::temp(accent,last) $::ms::accent
 
-            # Check that the new colorscheme value is a valid one.
-            switch -- $::ms::colorscheme {
-                dark  -
-                light {
-                    # Check that the new colorscheme value is not the same as the one currently registered.
-                    if { $::ms::colorscheme ne $::ms::temp(colorscheme,last) } {
-                        # Register the last valid colorscheme value.
-                        set ::ms::temp(colorscheme,last) $::ms::colorscheme
+                                # Note: Some mustang special variables requires to refresh the theme after their validation.
+                                #       If all of these variables are setted at once, multiple refresh will happen.
+                                #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
+                                #       This timer will be resetted if, while active, another command asks to refresh the theme.
 
-                        # Note: Both '::ms::accent' and '::ms::colorscheme' needs to refresh the theme after their validation.
-                        #       If both of these variables are setted at the same time, two refreshes will happen.
-                        #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
-                        #       This timer will be resetted if, while active, another command asks to refresh the theme.
-
-                        if { [info exists ::ms::temp(pending,refresh)] } {
-                            after cancel $::ms::temp(pending,refresh)
-                            unset -nocomplain -- ::ms::temp(pending,refresh)
+                                if { [info exists ::ms::temp(pending,refresh)] } {
+                                 after cancel $::ms::temp(pending,refresh)
+                                 unset -nocomplain -- ::ms::temp(pending,refresh)
+                                }
+                                set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+                            }
                         }
-                        set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+                        default {
+                            # Restore the last valid 'accent' color.
+                            set ::ms::accent $::ms::temp(accent,last)
+                        }
                     }
                 }
-                default {
-                    # Restore the last valid colorscheme value.
-                    set ::ms::colorscheme $::ms::temp(colorscheme,last)
-                }
-            }
-        }
-        ::ms::focusmodel {
-            # Transform the focus model provided in lowercase characters.
-            set ::ms::focusmodel [string tolower $::ms::focusmodel]
-
-            # Check that the new focus model provided is a valid one.
-            switch -- $::ms::focusmodel {
-                implicit {
-                    if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
-                        # Register the last valid focus model as implicit.
-                        set ::ms::temp(focusmodel,last) implicit
-
-                        # Apply the implicit bindings.
-                        _bind all <Enter> [list +::ms::focus::Implicit %W %d]
+                ::ms::clickaction {
+                    # Check that the new 'clickaction' value is a valid one.
+                    set ::ms::clickaction [string tolower $::ms::clickaction]
+                    switch -- $::ms::clickaction {
+                        jump   -
+                        scroll {
+                            # Register the last valid 'clickaction' value.
+                            set ::ms::temp(clickaction,last) $::ms::clickaction
+                        }
+                        default {
+                            # Restore the last valid 'clickaction' value.
+                            set ::ms::clickaction $::ms::temp(clickaction,last) }
                     }
                 }
-                explicit {
-                    if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
-                        # Register the last valid focus model as explicit.
-                        set ::ms::temp(focusmodel,last) explicit
+                ::ms::colorscheme {
+                    # Check that the new 'colorscheme' value is a valid one.
+                    set ::ms::colorscheme [string tolower $::ms::colorscheme]
+                    switch -- $::ms::colorscheme {
+                        dark  -
+                        light {
+                            # Check that the new 'colorscheme' value is not the same as the one currently registered.
+                            if { $::ms::colorscheme ne $::ms::temp(colorscheme,last) } {
+                                # Register the last valid 'colorscheme' value.
+                                set ::ms::temp(colorscheme,last) $::ms::colorscheme
 
-                        # Remove the implicit bindings.
-                        bind all <Enter> [list -::ms::focus::Implicit %W %d]
+                                # Note: Some mustang special variables requires to refresh the theme after their validation.
+                                #       If all of these variables are setted at once, multiple refresh will happen.
+                                #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
+                                #       This timer will be resetted if, while active, another command asks to refresh the theme.
+
+                                if { [info exists ::ms::temp(pending,refresh)] } {
+                                 after cancel $::ms::temp(pending,refresh)
+                                 unset -nocomplain -- ::ms::temp(pending,refresh)
+                                }
+                                set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+                            }
+                        }
+                        default {
+                            # Restore the last valid 'colorscheme' value.
+                            set ::ms::colorscheme $::ms::temp(colorscheme,last)
+                        }
                     }
                 }
-                default {
-                    # Restore the last valid focus model.
-                    set ::ms::focusmodel $::ms::temp(focusmodel,last)
+                ::ms::focusmodel {
+                    # Check that the new 'focusmodel' provided is a valid value.
+                    set ::ms::focusmodel [string tolower $::ms::focusmodel]
+                    switch -- $::ms::focusmodel {
+                        implicit {
+                            if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
+                                # Register the last valid 'focusmodel' value as 'implicit'.
+                                set ::ms::temp(focusmodel,last) implicit
+
+                                # Apply the 'implicit' bindings.
+                                _bind all <Enter> [list +::ms::focus::Implicit %W %d]
+                            }
+                        }
+                        explicit {
+                            if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
+                                # Register the last valid 'focusmodel' value as 'explicit'.
+                                set ::ms::temp(focusmodel,last) explicit
+
+                                # Remove the 'implicit' bindings.
+                                bind all <Enter> [list -::ms::focus::Implicit %W %d]
+                            }
+                        }
+                        default {
+                            # Restore the last valid 'focusmodel' value.
+                            set ::ms::focusmodel $::ms::temp(focusmodel,last)
+                        }
+                    }
+                }
+                ::ms::language {
+                    # Check that the new 'language' provided is a valid value.
+                    set ::ms::language [string tolower $::ms::language]
+                    if { $::ms::language in $::ms::languages } {
+                        # Register the last valid 'language' value.
+                        set ::ms::temp(language,last) $::ms::language
+
+                        # Change the mustang language.
+                        ::msgcat::mclocale $::ms::language
+                    } else {
+                        # Restore the last valid 'language' value.
+                        set ::ms::language $::ms::temp(language,last)
+                    }
+                }
+                ::ms::middleclick {
+                    # Check that the new 'middleclick' provided is a valid value.
+                    set ::ms::middleclick [string tolower $::ms::middleclick]
+                    switch -- $::ms::middleclick {
+                        drag  -
+                        paste {
+                            # Register the last valid 'middleclick' value.
+                            set ::ms::temp(middleclick,last) $::ms::middleclick
+                        }
+                        default {
+                            # Restore the last valid 'middleclick' value.
+                            set ::ms::middleclick $::ms::temp(middleclick,last) }
+                    }
+                }
+                ::ms::scale {
+                    # If the operating system is macOS or Windows, do not allow to change the UI 'scale' value.
+                    switch -- [_tk windowingsystem] {
+                        aqua  -
+                        win32 {
+                            # Restore the 'scale' value to '100.0'.
+                            set ::ms::scale 100.0
+                        }
+                        default {
+                            # Check that the new 'scale' provided is a valid value.
+                            switch -- [string is double -strict $::ms::scale] {
+                                0   {
+                                    # Restore the last valid 'scale' value.
+                                    set ::ms::scale $::ms::temp(scale,last)
+                                }
+                                1   {
+                                    if { ($::ms::scale < 100.0) || ($::ms::scale > 1000.0) } {
+                                        # Restore the last valid 'scale' value.
+                                        set ::ms::scale $::ms::temp(scale,last)
+                                    } else {
+                                        # Check that the new 'scale' value is not the same as the one currently registered.
+                                        if { $::ms::scale ne $::ms::temp(scale,last) } {
+                                            # Register the last valid 'scale' value.
+                                            set ::ms::temp(scale,last) $::ms::scale
+
+                                            # Note: Some mustang special variables requires to refresh the theme after their validation.
+                                            #       If all of these variables are setted at once, multiple refresh will happen.
+                                            #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
+                                            #       This timer will be resetted if, while active, another command asks to refresh the theme.
+
+                                            if { [info exists ::ms::temp(pending,refresh)] } {
+                                                after cancel $::ms::temp(pending,refresh)
+                                                unset -nocomplain -- ::ms::temp(pending,refresh)
+                                            }
+                                            set ::ms::temp(pending,refresh) [after 50 [list style scale use $::ms::theme]]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                ::ms::scrollmode {
+                    # Check that the new 'scrollmode' provided is a valid value.
+                    set ::ms::scrollmode [string tolower $::ms::scrollmode]
+                    switch -- $::ms::scrollmode {
+                        classic -
+                        natural {
+                            # Register the last valid 'scrollmode' value.
+                            set ::ms::temp(scrollmode,last) $::ms::scrollmode
+                        }
+                        default {
+                            # Restore the last valid 'scrollmode' value.
+                            set ::ms::scrollmode $::ms::temp(scrollmode,last) }
+                    }
+                }
+                ::ms::scrollstopper {
+                    # Check that the new 'scrollstopper' provided is a valid value.
+                    set ::ms::scrollstopper [string tolower $::ms::scrollstopper]
+                    switch -- $::ms::scrollstopper {
+                        0        -
+                        no       -
+                        off      -
+                        false    -
+                        disabled {
+                            # Set the 'scrollstopper' value to 'disabled'.
+                            set ::ms::scrollstopper disabled
+
+                            # Register the last valid 'scrollstopper' value.
+                            set ::ms::temp(scrollstopper,last) disabled
+                        }
+                        1        -
+                        yes      -
+                        on       -
+                        true     -
+                        enabled  {
+                            # Set the 'scrollstopper' value to 'enabled'.
+                            set ::ms::scrollstopper enable
+
+                            # Register the last valid 'scrollstopper' value.
+                            set ::ms::temp(scrollstopper,last) enabled
+                        }
+                        default {
+                            # Restore the last valid 'scrollstopper' value.
+                            set ::ms::scrollstopper $::ms::temp(scrollstopper,last)
+                        }
+                    }
+                }
+                ::ms::theme {
+                    # Check that the new 'theme' provided is a valid value.
+                    if { $::ms::theme in $::ms::themes } {
+                        # Check that the new 'theme' value is not the same as the one currently registered.
+                        if { $::ms::theme ne $::ms::temp(theme,last) } {
+                            # Register the last valid 'theme' value.
+                            set ::ms::temp(theme,last) $::ms::theme
+
+                            # Note: Some mustang special variables requires to refresh the theme after their validation.
+                            #       If all of these variables are setted at once, multiple refresh will happen.
+                            #       To avoid it, we introduce a timer (50ms) before actually executing the refresh.
+                            #       This timer will be resetted if, while active, another command asks to refresh the theme.
+
+                            if { [info exists ::ms::temp(pending,refresh)] } {
+                                after cancel $::ms::temp(pending,refresh)
+                                unset -nocomplain -- ::ms::temp(pending,refresh)
+                            }
+                            set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
+                        }
+                    } else {
+                        # Restore the last valid 'theme' value.
+                        set ::ms::theme $::ms::temp(theme,last)
+                    }
                 }
             }
         }
