@@ -266,11 +266,15 @@ proc ::ms::Init {} {
     # Set the tolerance error (16 bits).
     set ::ms::tolerance [expr { 1.0/65535.0 }]
 
-    ################################################################
-    ##                                                            ##
-    ##     INITIALIZE SOME VARIABLES THAT HELPS THE DEVELOPER     ##
-    ##                                                            ##
-    ################################################################
+    ##############################################
+    ##                                          ##
+    ##     INITIALIZE THE SPECIAL VARIABLES     ##
+    ##                                          ##
+    ##############################################
+
+    # Note: Special variables are variables that act as a bridge between mustang and the developer.
+    #       At any moment one or more of these variables are modified, mustang will react in the relative appropriate manner.
+    #       Special variables cannot be deleted. The moment they do, they will be recreated with their last valid value.
 
     # Set the default accent color of the current theme.
     # The default value is 'blue'.
