@@ -545,7 +545,7 @@ proc ::ms::Init {} {
                 on      -
                 true    -
                 active  -
-                enabled { chan puts stdout "No palettes found." }
+                enabled { chan puts stdout "Warning, no palettes found." }
             }
 
             set ::ms::palette(names) [list ]
@@ -991,7 +991,9 @@ proc ::ms::Init {} {
             try {
                 exec {*}$cmd
             } on error {} {
-                set ERROR true
+                chan puts stdout "Operating system not supported."
+                chan puts stdout "Quit the application."
+                exit 1
             } on ok { version } {
                 # Note: Data taken from 'https://ss64.com/osx/sw_vers.html'.
 
@@ -1024,7 +1026,11 @@ proc ::ms::Init {} {
                         set ::ms::machine(os,prettyname) "macOS Monterey $version"
                         set ::ms::machine(os,version)    $version
                     }
-                    default { set ERROR true }
+                    default {
+                        chan puts stdout "Operating system not supported."
+                        chan puts stdout "Quit the application."
+                        exit 1
+                    }
                 }
             }
         }
@@ -1395,7 +1401,9 @@ proc ::ms::Init {} {
             try {
                 exec {*}$cmd
             } on error {} {
-                set ERROR true
+                chan puts stdout "Operating system not supported."
+                chan puts stdout "Quit the application."
+                exit 1
             } on ok { results } {
                 set ::ms::machine(os,version) [lremove $results 0]
 
@@ -1404,7 +1412,9 @@ proc ::ms::Init {} {
                 set buildNumber [lindex $version 2]
 
                 if { ($major < 11) } {
-                    set ERROR true
+                    chan puts stdout "Operating system not supported."
+                    chan puts stdout "Quit the application."
+                    exit 1
                 }
             }
 
@@ -1421,7 +1431,11 @@ proc ::ms::Init {} {
             # Set the Windows prettyname.
             set ::ms::machine(os,prettyname) [list {*}$::ms::machine(os,name) " build: " $buildNumber]
         }
-        default { set ERROR true }
+        default {
+            chan puts stdout "Operating system not supported."
+            chan puts stdout "Quit the application."
+            exit 1
+        }
     }
 
     ############################################
@@ -1874,15 +1888,8 @@ proc ::ms::Init {} {
         #       We cannot risk to display a graphical error dialog.
 
         # Exit from the application and print the reason on 'stdout'.
-        # If the operating system is not supported display the translation of "Operating system not supported",
-        # otherwise display the translation of 'Missing colors'.
-        switch -- $ERROR {
-            false { chan puts stdout "[::msgcat::mc "Missing colors."]" }
-            true  { chan puts stdout "[::msgcat::mc "Operating system not supported."]" }
-        }
-
-        # Display the translation of "Quit the application".
-        chan puts stdout "[::msgcat::mc "Quit the application."]"
+        chan puts stdout "Missing colors."
+        chan puts stdout "Quit the application."
         exit 1
     }
 
@@ -1932,7 +1939,7 @@ proc ::ms::Init {} {
                 on      -
                 true    -
                 active  -
-                enabled { chan puts stdout "Unable to load the '$theme' theme. Ignoring." }
+                enabled { chan puts stdout "Warning, unable to load the '$theme' theme. Ignoring." }
             }
 
             # Remove every variable created so far for this theme.
@@ -2001,15 +2008,8 @@ proc ::ms::Init {} {
             #       We cannot risk to display a graphical error dialog.
 
             # Exit from the application and print the reason on 'stdout'.
-            # If the operating system is not supported display the translation of "Operating system not supported",
-            # otherwise display the translation of 'Missing themes'.
-            switch -- $ERROR {
-                false { chan puts stdout "[::msgcat::mc "Missing themes."]" }
-                true  { chan puts stdout "[::msgcat::mc "Operating system not supported."]" }
-            }
-
-            # Display the translation of "Quit the application".
-            chan puts stdout "[::msgcat::mc "Quit the application."]"
+            chan puts stdout "Missing themes."
+            chan puts stdout "Quit the application."
             exit 1
         }
         1   {
@@ -2020,7 +2020,7 @@ proc ::ms::Init {} {
                     on      -
                     true    -
                     active  -
-                    enabled { chan puts stdout "Unable to load the '$::ms::theme' theme. The program will use the first theme on the list." }
+                    enabled { chan puts stdout "Warning, unable to load the '$::ms::theme' theme. The program will use the first theme on the list." }
                 }
 
                 # Set the current theme with the first theme available (in alphabetical order) among the ones known by mustang.
@@ -2119,7 +2119,7 @@ proc ::ms::Init {} {
                 on      -
                 true    -
                 active  -
-                enabled { chan puts stdout "The toplevel '-padding' option can have a maximum of two values. Ignoring the rest." }
+                enabled { chan puts stdout "Warning, the toplevel '-padding' option can have a maximum of two values. Ignoring the extra values." }
             }
 
             set ::ms::data(.,padding) [list [lindex $::ms::current(.,padding) 0] [lindex $::ms::current(.,padding) 1]]
@@ -2131,7 +2131,7 @@ proc ::ms::Init {} {
                 on      -
                 true    -
                 active  -
-                enabled { chan puts stdout "The toplevel '-padding' option can have a maximum of two values. Ignoring the rest." }
+                enabled { chan puts stdout "Warning, the toplevel '-padding' option can have a maximum of two values. Ignoring the extra values." }
             }
 
             set ::ms::data(.,padding) [list [lindex $::ms::current(.,padding) 0] [lindex $::ms::current(.,padding) 1]]
@@ -2425,18 +2425,7 @@ proc ::ms::Init {} {
     trace add variable           ::ms::theme \
               [list unset write] [list ::ms::Check_And_React];
 
-    ###############################################################
-    ##                                                           ##
-    ##     CHECK IF THE OPERATING SYSTEM IS SUPPORTED OR NOT     ##
-    ##                                                           ##
-    ###############################################################
-
-    # Note: If the operating system is not supported, we can now display a graphical error dialog.
-
-    switch -- $ERROR {
-        false { return "" }
-        true  { ::ms::Error "[::msgcat::mc "Operating system not supported."]" "" }
-    }
+    return ""
 }
 
 ####################
@@ -5423,7 +5412,7 @@ proc ::ms::Load_Palette { filepath } {
             on      -
             true    -
             active  -
-            enabled { chan puts stdout "Unable to load the '[file rootname [file tail $filepath]]' palette file. Ignoring." }
+            enabled { chan puts stdout "Warning, unable to load the '[file rootname [file tail $filepath]]' palette file. Ignoring." }
         }
     } on ok { channel } {
         # Read the entire file.
