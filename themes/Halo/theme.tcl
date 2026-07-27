@@ -62,16 +62,16 @@ switch -- [_tk windowingsystem] {
     }
     default {
         # In order to have the objects size at fixed millimeters we need to be take in account the current UI scale factor.
-        set ::ms::size(Halo,arrow_down)         [string cat [expr { int(ceil(2.51*$::ms::machine(os,ui_scale_factor)*0.01)) }] "m"]
-        set ::ms::size(Halo,grip)               [string cat [expr { int(ceil(25.0*$::ms::machine(os,ui_scale_factor)*0.01)) }] "m"]
-        set ::ms::size(Halo,sash)               [string cat [expr { int(ceil(2.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
-        set ::ms::size(Halo,scrollbar)          [string cat [expr { int(ceil(2.7*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
-        set ::ms::size(Halo,spacer)             [string cat [expr { int(ceil(3.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
-        set ::ms::size(Halo,treeview_indicator) [string cat [expr { int(ceil(4.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
+        set ::ms::size(Halo,arrow_down)         [string cat [expr { int(ceil(2.51*$::ms::scale*0.01)) }] "m"]
+        set ::ms::size(Halo,grip)               [string cat [expr { int(ceil(25.0*$::ms::scale*0.01)) }] "m"]
+        set ::ms::size(Halo,sash)               [string cat [expr { int(ceil(2.0*$::ms::scale*0.01))  }] "m"]
+        set ::ms::size(Halo,scrollbar)          [string cat [expr { int(ceil(2.7*$::ms::scale*0.01))  }] "m"]
+        set ::ms::size(Halo,spacer)             [string cat [expr { int(ceil(3.0*$::ms::scale*0.01))  }] "m"]
+        set ::ms::size(Halo,treeview_indicator) [string cat [expr { int(ceil(4.0*$::ms::scale*0.01))  }] "m"]
 
         # Set the Preview dimensions with the golden ratio (width = height * 1.618).
-        set ::ms::size(Halo,preview_height) [string cat [expr { int(ceil(6.0*$::ms::machine(os,ui_scale_factor)*0.01))  }] "m"]
-        set ::ms::size(Halo,preview_width)  [string cat [expr { int(ceil(10.0*$::ms::machine(os,ui_scale_factor)*0.01)) }] "m"]
+        set ::ms::size(Halo,preview_height) [string cat [expr { int(ceil(6.0*$::ms::scale*0.01))  }] "m"]
+        set ::ms::size(Halo,preview_width)  [string cat [expr { int(ceil(10.0*$::ms::scale*0.01)) }] "m"]
     }
 }
 
