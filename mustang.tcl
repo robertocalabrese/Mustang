@@ -266,9 +266,6 @@ proc ::ms::Init {} {
         0   { set ::DEBUG "disabled" }
     }
 
-    # Set the tolerance error (16 bits).
-    set ::ms::tolerance [expr { 1.0/65535.0 }]
-
     ##############################################
     ##                                          ##
     ##     INITIALIZE THE SPECIAL VARIABLES     ##
