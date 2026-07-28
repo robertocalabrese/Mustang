@@ -128,7 +128,7 @@ set ::ms::svg(Halo,svg_dataset) [list arrow_down                          #42424
                                       treeview_indicator_open_focus       #007aff Accent];
 
 # Automatically load all the Halo svg images (if any) and re-color them relative to the current accent color and colorscheme.
-::ms::Load_SVG_Images
+::ms::Load_SVG_Images Halo
 
 # The Halo theme is a multi platform theme that works with every operating system.
 namespace eval ttk::theme::Halo {

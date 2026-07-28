@@ -518,9 +518,9 @@ proc ::ms::style::Command { args } {
 
                                 # Note: The command could be either a refresh of the accent color and/or colorscheme, or a theme change.
 
-                                # Automatically load all the current theme svg images (if any) and re-color them relative to
-                                # the current accent color and colorscheme.
-                                ::ms::Load_SVG_Images
+                                # Automatically load all the '::ms::theme' svg images (if any) and re-color them relative to the current
+                                # accent color and colorscheme.
+                                ::ms::Load_SVG_Images $::ms::theme
 
                                 # Refresh/Load the current theme.
                                 _ttk_style theme use $::ms::theme

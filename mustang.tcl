@@ -175,6 +175,9 @@ proc ::ms::Init {} {
     ##                                             ##
     #################################################
 
+    # Set the start of the initialization phase.
+    set ::ms::temp(init,phase) ongoing
+
     # Initialize the widgets real and short address list.
     set ::ms::addr(reals)  [list ]
     set ::ms::addr(shorts) [list ]
@@ -2471,6 +2474,9 @@ proc ::ms::Init {} {
 
     trace add variable           ::ms::union \
               [list unset write] [list ::ms::Check_And_React];
+
+    # Set the end of the initialization phase.
+    set ::ms::temp(init,phase) done
 
     return ""
 }
@@ -5577,7 +5583,7 @@ proc ::ms::Load_Palette { filepath } {
 
 ## Load_SVG_Images
 #
-# Automatically load all the current theme svg images (if any) and re-color them.
+# Automatically load and re-color the svg images (if any) of the provided theme.
 #
 # Note: In order for this procedure to work, the theme developer will need to set an svg dataset table array with 3 columns.
 #       This table array must be called '::ms::svg(THEMENAME,svg_dataset)' where THEMENAME must be substituted with your theme name.
@@ -5588,22 +5594,26 @@ proc ::ms::Load_Palette { filepath } {
 #
 # If no svg dataset table is found for the current theme, then no images will be loaded or re-colored automatically.
 #
+# Where:
+#
+# theme   Should be the theme name of the svg images to load.
+#
 # It doesn't return anything
-proc ::ms::Load_SVG_Images {} {
+proc ::ms::Load_SVG_Images { theme } {
     # Safeguard.
-    switch -- [info exists ::ms::svg($::ms::theme,svg_dataset)] {
+    switch -- [info exists ::ms::svg($theme,svg_dataset)] {
         0   { return "" }
     }
 
     # Set the current theme svgs input and output folder.
-    set input_folder  [file join $::ms_library themes $::ms::theme]
-    set output_folder [file join $::ms::folder(mustang,data) themes $::ms::theme]
+    set input_folder  [file join $::ms_library themes $theme]
+    set output_folder [file join $::ms::folder(mustang,data) themes $theme]
 
     # If needed, create the current theme svgs output folder.
     file mkdir $output_folder
 
     # Iterate each svg dataset line.
-    foreach { svg_name input_color output_color } $::ms::svg($::ms::theme,svg_dataset) {
+    foreach { svg_name input_color output_color } $::ms::svg($theme,svg_dataset) {
         # Set the input and output svg absolute filepaths.
         set input_filepath  [file join $input_folder  [string cat $svg_name ".svg"]]
         set output_filepath [file join $output_folder [string cat $svg_name ".svg"]]
@@ -5612,7 +5622,16 @@ proc ::ms::Load_SVG_Images {} {
         try {
             open $input_filepath "r"
         } on error { errortext errorcode } {
-            ::ms::Error "$::ms::theme theme. $errortext" ""
+            # Check the 'initialization' state.
+            switch -nocase -- $::ms::temp(init,phase) {
+                done    { ::ms::Error "$theme theme error.\n$errortext" "" }
+                default {
+                    chan puts stdout "$theme theme error."
+                    chan puts stdout "$errortext"
+                    chan puts stdout "Quit the application."
+                    exit 1
+                }
+            }
         } on ok { channel } {
             # Register the input svg data.
             set input_svg_data [split [chan read $channel] "\n"]
@@ -5653,7 +5672,18 @@ proc ::ms::Load_SVG_Images {} {
                         # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
                         set bordercolor [::ms::Check_Color [list $output_color HEX8] invalid]
                         switch -- $bordercolor {
-                            invalid { ::ms::Error "$::ms::theme theme. Wrong svg output color, '$output_color'." ""}
+                            invalid {
+                                # Check the 'initialization' state.
+                                switch -nocase -- $::ms::temp(init,phase) {
+                                    done    { ::ms::Error "$theme theme error.\nWrong svg output color, '$output_color'." "" }
+                                    default {
+                                        chan puts stdout "$theme theme error."
+                                        chan puts stdout "Wrong svg output color, '$output_color'."
+                                        chan puts stdout "Quit the application."
+                                        exit 1
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -5702,7 +5732,18 @@ proc ::ms::Load_SVG_Images {} {
                                             # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
                                             set parameterValue [::ms::Check_Color [list $output_color HEX8] invalid]
                                             switch -- $parameterValue {
-                                                invalid { ::ms::Error "$::ms::theme theme. Wrong svg output color, '$output_color'." ""}
+                                                invalid {
+                                                    # Check the 'initialization' state.
+                                                    switch -nocase -- $::ms::temp(init,phase) {
+                                                        done    { ::ms::Error "$theme theme error.\nWrong svg output color, '$output_color'." "" }
+                                                        default {
+                                                            chan puts stdout "$theme theme error."
+                                                            chan puts stdout "Wrong svg output color, '$output_color'."
+                                                            chan puts stdout "Quit the application."
+                                                            exit 1
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -5740,7 +5781,16 @@ proc ::ms::Load_SVG_Images {} {
                 try {
                     file copy -force -- $input_filepath $output_filepath
                 } on error { errortext errorcode } {
-                    ::ms::Error "$::ms::theme theme. $errortext" ""
+                    # Check the 'initialization' state.
+                    switch -nocase -- $::ms::temp(init,phase) {
+                        done    { ::ms::Error "$theme theme error.\n$errortext" "" }
+                        default {
+                            chan puts stdout "$theme theme error."
+                            chan puts stdout "$errortext"
+                            chan puts stdout "Quit the application."
+                            exit 1
+                        }
+                    }
                 }
             }
             default {
@@ -5752,7 +5802,16 @@ proc ::ms::Load_SVG_Images {} {
                     try {
                         file copy -force -- $input_filepath $output_filepath
                     } on error { errortext errorcode } {
-                        ::ms::Error "$::ms::theme theme. $errortext" ""
+                        # Check the 'initialization' state.
+                        switch -nocase -- $::ms::temp(init,phase) {
+                            done    { ::ms::Error "$theme theme error.\n$errortext" "" }
+                            default {
+                                chan puts stdout "$theme theme error."
+                                chan puts stdout "$errortext"
+                                chan puts stdout "Quit the application."
+                                exit 1
+                            }
+                        }
                     }
                 } on ok { channel } {
                     # Write the output svg data, line by line.
