@@ -176,7 +176,7 @@ proc ::ms::Init {} {
     #################################################
 
     # Set the start of the initialization phase.
-    set ::ms::temp(init,phase) ongoing
+    set ::ms::temp(init,phase) "ongoing"
 
     # Initialize the widgets real and short address list.
     set ::ms::addr(reals)  [list ]
@@ -1498,6 +1498,21 @@ proc ::ms::Init {} {
             chan puts $channel "Accent: $::ms::accent"
             chan puts $channel ""
 
+            chan puts $channel "# Click action"
+            chan puts $channel "#"
+            chan puts $channel "# Set how each mustang scrollbar and scale reacts when a click happens on their trough."
+            chan puts $channel "#    jump   --> The thumb will jump to the selected location."
+            chan puts $channel "#"
+            chan puts $channel "#    scroll --> The scrollbar thumb will scroll one page down, up, left or right depending"
+            chan puts $channel "#               on the scrollbar orientation and the clicked position."
+            chan puts $channel "#               The scale thumb will scroll one unit down, up, left or right depending on"
+            chan puts $channel "#               the scale orientation and the clicked position."
+            chan puts $channel "#               This is the default click action."
+            chan puts $channel "#"
+            chan puts $channel "# \['jump' or 'scroll'\]"
+            chan puts $channel "ClickAction: $::ms::clickaction"
+            chan puts $channel ""
+
             chan puts $channel "# Colorscheme"
             chan puts $channel "#"
             chan puts $channel "# It's a string that specifies the colorscheme to use."
@@ -1528,21 +1543,6 @@ proc ::ms::Init {} {
             chan puts $channel "Language: $::ms::language"
             chan puts $channel ""
 
-            chan puts $channel "# Click action"
-            chan puts $channel "#"
-            chan puts $channel "# Set how each mustang scrollbar and scale reacts when a click happens on their trough."
-            chan puts $channel "#    jump   --> The thumb will jump to the selected location."
-            chan puts $channel "#"
-            chan puts $channel "#    scroll --> The scrollbar thumb will scroll one page down, up, left or right depending"
-            chan puts $channel "#               on the scrollbar orientation and the clicked position."
-            chan puts $channel "#               The scale thumb will scroll one unit down, up, left or right depending on"
-            chan puts $channel "#               the scale orientation and the clicked position."
-            chan puts $channel "#               This is the default click action."
-            chan puts $channel "#"
-            chan puts $channel "# \['jump' or 'scroll'\]"
-            chan puts $channel "ClickAction: $::ms::clickaction"
-            chan puts $channel ""
-
             chan puts $channel "# Set the default action for the middle click buttonpress."
             chan puts $channel "#"
             chan puts $channel "# On Linux, the default action is 'paste', on the other"
@@ -1551,6 +1551,19 @@ proc ::ms::Init {} {
             chan puts $channel "# \['paste','drag'\]"
             chan puts $channel "MiddleClick: $::ms::middleclick"
             chan puts $channel ""
+
+            # If needed save the 'scale' value.
+            switch -- $windowingsystem {
+                x11 {
+                    chan puts $channel "# Scale"
+                    chan puts $channel "#"
+                    chan puts $channel "# It's a floating point number that specifies the UI scaling factor (in percentage, but without the '%' sign)."
+                    chan puts $channel "#"
+                    chan puts $channel "# \[100.0,1000.0\]"
+                    chan puts $channel "Scale: $::ms::scale"
+                    chan puts $channel ""
+                }
+            }
 
             chan puts $channel "# Scroll mode"
             chan puts $channel "#"
@@ -1594,27 +1607,10 @@ proc ::ms::Init {} {
             chan puts $channel "Theme: $::ms::theme"
             chan puts $channel ""
 
-            # If needed save the UI scale and the union variables.
+            # If needed save the 'union' value.
             switch -- $windowingsystem {
                 aqua    {}
-                win32   {
-                    chan puts $channel "# Set the union symbol that should be displayed inside a shortcut that links two or more keys together like"
-                    chan puts $channel "# for example 'Ctrl+C' ('+'), 'Ctrl-C' ('-'), or 'Ctrl C' (space) for copy."
-                    chan puts $channel "# It's used inside mustangs menu popups and contextual menus, but only on Linux and Windows operating system."
-                    chan puts $channel "# It will be ignored in macOS systems."
-                    chan puts $channel "#"
-                    chan puts $channel "# \['+', '-' or 'space'\]"
-                    chan puts $channel "Union: $::ms::union"
-                }
                 default {
-                    chan puts $channel "# Scale"
-                    chan puts $channel "#"
-                    chan puts $channel "# It's a floating point number that specifies the UI scaling factor (in percentage, but without the '%' sign)."
-                    chan puts $channel "#"
-                    chan puts $channel "# \[100.0,1000.0\]"
-                    chan puts $channel "Scale: $::ms::scale"
-                    chan puts $channel ""
-
                     chan puts $channel "# Set the union symbol that should be displayed inside a shortcut that links two or more keys together like"
                     chan puts $channel "# for example 'Ctrl+C' ('+'), 'Ctrl-C' ('-'), or 'Ctrl C' (space) for copy."
                     chan puts $channel "# It's used inside mustangs menu popups and contextual menus, but only on Linux and Windows operating system."
