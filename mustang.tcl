@@ -266,6 +266,9 @@ proc ::ms::Init {} {
         0   { set ::DEBUG "disabled" }
     }
 
+    # Get the windowingsystem.
+    set windowingsystem [_tk windowingsystem]
+
     ##############################################
     ##                                          ##
     ##     INITIALIZE THE SPECIAL VARIABLES     ##
@@ -298,7 +301,7 @@ proc ::ms::Init {} {
     # The default colorscheme is 'light' in Windows and Linux and the system one in macOS.
     #
     # ['light' or 'dark']
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         aqua {
             _wm attributes . -appearance auto
             switch -- [_wm attributes . -isdark] {
@@ -328,7 +331,7 @@ proc ::ms::Init {} {
     # operating systems is 'drag'.
     #
     # ['paste','drag']
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         x11     { set ::ms::middleclick paste }
         default { set ::ms::middleclick drag }
     }
@@ -379,7 +382,7 @@ proc ::ms::Init {} {
     # It will be ignored in macOS systems where it will be setted to the empty string.
     #
     # ['+', '-' or 'space']
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         aqua    { set ::ms::union ""  }
         default { set ::ms::union "+" }
     }
@@ -390,7 +393,7 @@ proc ::ms::Init {} {
     ##                                          ##
     ##############################################
 
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         aqua {
             set ::ms::folder(os,cache)  [file join $::env(HOME) Library Caches]
             set ::ms::folder(os,config) [file join $::env(HOME) Library "Application Support"]
@@ -583,7 +586,7 @@ proc ::ms::Init {} {
             set family_mono [_font configure TkFixedFont -family]
 
             # Check if it's a recent macOS operating system or not.
-            switch -- [_tk windowingsystem] {
+            switch -- $windowingsystem {
                 aqua {
                     # Note: 'macOS Big Sur' or later.
                     set size_biggest   15
@@ -1592,7 +1595,7 @@ proc ::ms::Init {} {
             chan puts $channel ""
 
             # If needed save the UI scale and the union variables.
-            switch -- [_tk windowingsystem] {
+            switch -- $windowingsystem {
                 aqua    {}
                 win32   {
                     chan puts $channel "# Set the union symbol that should be displayed inside a shortcut that links two or more keys together like"
@@ -1823,7 +1826,7 @@ proc ::ms::Init {} {
                         }
                         "Scale:" {
                             # If the operating system is macOS or Windows, do not allow to change it's value (100.0).
-                            switch -- [_tk windowingsystem] {
+                            switch -- $windowingsystem {
                                 aqua    -
                                 win32   { continue }
                                 default {
@@ -1897,7 +1900,7 @@ proc ::ms::Init {} {
                         }
                         "Union:" {
                             # If the operating system is not macOS, register the union value.
-                            switch -- [_tk windowingsystem] {
+                            switch -- $windowingsystem {
                                 aqua    {}
                                 default {
                                     set value [string trim [string tolower $value]]
@@ -2210,7 +2213,7 @@ proc ::ms::Init {} {
     set ::ms::addr(.,toplevel) .
 
     # Check the windowing system.
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         aqua {
             ######################
             ##                  ##
@@ -2428,14 +2431,14 @@ proc ::ms::Init {} {
     set ::ms::temp(theme,last)         $::ms::theme
 
     # If the operating system is not macOS or Windows, create the temp value for the 'scale' variable too.
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         aqua    -
         win32   {}
         default { set ::ms::temp(scale,last) $::ms::scale }
     }
 
     # If the operating system is not macOS, create the temp value for the 'union' variable too.
-    switch -- [_tk windowingsystem] {
+    switch -- $windowingsystem {
         aqua    {}
         default { set ::ms::temp(union,last) $::ms::union }
     }
