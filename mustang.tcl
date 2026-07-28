@@ -2507,12 +2507,12 @@ proc ::ms::Check_And_React { name1 name2 op } {
         unset {
             # Set 'varName' back to its last valid value.
             switch -- $varName {
-                "::ms::accent"      { set ::ms::accent        $::ms::temp(accent,last) }
-                "::ms::clickaction" { set ::ms::clickaction   $::ms::temp(clickaction,last) }
-                "::ms::colorscheme" { set ::ms::colorscheme   $::ms::temp(colorscheme,last) }
-                "::ms::focusmodel"  { set ::ms::focusmodel    $::ms::temp(focusmodel,last) }
-                "::ms::language"    { set ::ms::language      $::ms::temp(language,last) }
-                "::ms::middleclick" { set ::ms::middleclick   $::ms::temp(middleclick,last) }
+                "::ms::accent"      { set ::ms::accent      $::ms::temp(accent,last) }
+                "::ms::clickaction" { set ::ms::clickaction $::ms::temp(clickaction,last) }
+                "::ms::colorscheme" { set ::ms::colorscheme $::ms::temp(colorscheme,last) }
+                "::ms::focusmodel"  { set ::ms::focusmodel  $::ms::temp(focusmodel,last) }
+                "::ms::language"    { set ::ms::language    $::ms::temp(language,last) }
+                "::ms::middleclick" { set ::ms::middleclick $::ms::temp(middleclick,last) }
                 "::ms::scale" {
                     # If the operating system is macOS or Windows, set '::ms::scale' to '100.0',
                     # else set it back to its last valid value.
@@ -4634,18 +4634,18 @@ proc ::ms::Traverse_Clean_Up { w } {
 #
 # Where:
 #
-# w          Should be the widget real address involved.
+# w         Should be the widget real address involved.
 #
-# command    Should be the command of the movement.
-#            Allowed values are **xview** or **yview**.
+# command   Should be the command of the movement.
+#           Allowed values are **xview** or **yview**.
 #
-# amount     Optional. Should be the amount of the movement.
-#            Its sign determines the direction to take (left/right or up/down).
-#            It's normally delivered by the event (**+120.0** or **-120.0).
+# amount    Optional. Should be the amount of the movement.
+#           Its sign determines the direction to take (left/right or up/down).
+#           It's normally delivered by the event (**+120.0** or **-120.0).
 #
-# what       Optional. Should be a string that specifies the unit type.
-#            Allowed values are the word **units** or **pages**.
-#            If not provided, defaults to **units**.
+# what      Optional. Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           If not provided, defaults to **units**.
 #
 # Note: 1.0/120.0 = 0.008333333333333333
 #
