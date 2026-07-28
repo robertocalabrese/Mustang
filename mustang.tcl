@@ -301,7 +301,16 @@ proc ::ms::Init {} {
     # The default colorscheme is 'light' in Windows and Linux and the system one in macOS.
     #
     # ['light' or 'dark']
-    set ::ms::colorscheme "light"
+    switch -- [_tk windowingsystem] {
+        aqua {
+            _wm attributes . -appearance auto
+            switch -- [_wm attributes . -isdark] {
+                0   { set ::ms::colorscheme light }
+                1   { set ::ms::colorscheme dark }
+            }
+        }
+        default { set ::ms::colorscheme "light" }
+    }
 
     # Set the default focus model to 'explicit'.
     #
@@ -938,13 +947,6 @@ proc ::ms::Init {} {
                                                 trek                ul_angle                 umbrella               ur_angle \
                                                 wait                watch                    X_cursor               xterm \
                                                 zoom-in             zoom-out];
-
-            # Set the colorscheme as the user choice in the macOS settings panel.
-            _wm attributes . -appearance auto
-            switch -- [_wm attributes . -isdark] {
-                0   { set ::ms::colorscheme light }
-                1   { set ::ms::colorscheme dark }
-            }
 
             # Get the mouse scrolling mode setted in the macOS preferences window.
             set cmd [list {*}[auto_execok defaults] "read" "-g" "com.apple.swipescrolldirection"]
