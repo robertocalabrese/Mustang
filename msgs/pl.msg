@@ -39,13 +39,6 @@
 # terms specified in this license.
 
 namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  pl "Operating system not supported." "System operacyjny nie jest obsługiwany."
-    ::msgcat::mcset  pl "Missing colors." "Brakujące kolory."
-    ::msgcat::mcset  pl "Missing themes." "Brakujące motywy."
-    ::msgcat::mcset  pl "Quit the application." "Zakończ aplikację."
-
-    # Buttons
     ::msgcat::mcset  pl "abort" "przerwij"
     ::msgcat::mcset  pl "about" "o programie"
     ::msgcat::mcset  pl "apply" "zastosować"

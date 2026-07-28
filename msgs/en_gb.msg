@@ -38,9 +38,6 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  en-gb "Missing colors." "Missing colours."
-}
+namespace eval ::ms {}
 
 #*EOF*

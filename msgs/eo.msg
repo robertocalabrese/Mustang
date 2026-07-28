@@ -39,13 +39,6 @@
 # terms specified in this license.
 
 namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  eo "Operating system not supported." "Operaciumo ne subtenata."
-    ::msgcat::mcset  eo "Missing colors." "Mankas koloroj."
-    ::msgcat::mcset  eo "Missing themes." "Mankas temoj."
-    ::msgcat::mcset  eo "Quit the application." "Forlasu la aplikaĵon."
-
-    # Buttons
     ::msgcat::mcset  eo "abort" "ĉesigu"
     ::msgcat::mcset  eo "about" "pri"
     ::msgcat::mcset  eo "apply" "petu"

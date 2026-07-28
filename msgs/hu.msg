@@ -39,13 +39,6 @@
 # terms specified in this license.
 
 namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  hu "Operating system not supported." "Az operációs rendszer nem támogatott."
-    ::msgcat::mcset  hu "Missing colors." "Hiányzó színek."
-    ::msgcat::mcset  hu "Missing themes." "Hiányzó témák."
-    ::msgcat::mcset  hu "Quit the application." "Hagyd abba az alkalmazást."
-
-    # Buttons
     ::msgcat::mcset  hu "abort" "megszakítás"
     ::msgcat::mcset  hu "about" "névjegy"
     ::msgcat::mcset  hu "apply" "alkalmaz"

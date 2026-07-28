@@ -39,13 +39,6 @@
 # terms specified in this license.
 
 namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  fi "Operating system not supported." "Käyttöjärjestelmää ei tueta."
-    ::msgcat::mcset  fi "Missing colors." "Puuttuvat värit."
-    ::msgcat::mcset  fi "Missing themes." "Puuttuvat teemat."
-    ::msgcat::mcset  fi "Quit the application." "Lopeta hakemus."
-
-    # Buttons
     ::msgcat::mcset  fi "abort" "keskeytä"
     ::msgcat::mcset  fi "about" "tietoja"
     ::msgcat::mcset  fi "apply" "käyttää"

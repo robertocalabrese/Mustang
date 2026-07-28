@@ -39,13 +39,6 @@
 # terms specified in this license.
 
 namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  sv "Operating system not supported." "Operativsystemet stöds inte."
-    ::msgcat::mcset  sv "Missing colors." "Saknade färger."
-    ::msgcat::mcset  sv "Missing themes." "Saknade teman."
-    ::msgcat::mcset  sv "Quit the application." "Avsluta ansökan."
-
-    # Buttons
     ::msgcat::mcset  sv "abort" "avbryt"
     ::msgcat::mcset  sv "about" "om"
     ::msgcat::mcset  sv "apply" "använda"

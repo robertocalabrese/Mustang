@@ -39,13 +39,6 @@
 # terms specified in this license.
 
 namespace eval ::ms {
-    # Errors
-    ::msgcat::mcset  cs "Operating system not supported." "Operační systém není podporován."
-    ::msgcat::mcset  cs "Missing colors." "Chybějící barvy."
-    ::msgcat::mcset  cs "Missing themes." "Chybějící témata."
-    ::msgcat::mcset  cs "Quit the application." "Ukončit aplikaci."
-
-    # Buttons
     ::msgcat::mcset  cs "abort" "přerušit"
     ::msgcat::mcset  cs "about" "o programu"
     ::msgcat::mcset  cs "apply" "použít"
