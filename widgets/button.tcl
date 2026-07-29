@@ -975,7 +975,18 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        invoke {}
+        invoke {
+            # Synopsis:
+            #
+            # *window* **invoke**
+            try {
+                uplevel #0 [list interp invokehidden {} $w invoke]
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
