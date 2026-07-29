@@ -905,7 +905,18 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            try {
+                interp invokehidden {} $w $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         instate {}
         invoke {}
         state {}
