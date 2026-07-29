@@ -624,6 +624,25 @@ proc ::ms::button::Command { window { args "" } } {
                     set takefocus $::ms::current($w,takefocus)
                 }
             }
+
+            # Enable/Disable the widget automatic translation.
+            switch -- $::ms::current($w,textvariable) {
+                ""  {
+                    switch -- [llength $::ms::current($w,text)] {
+                        0       { set ::ms::data($w,translated_text) $::ms::current($w,text) }
+                        default {
+                            # Automatic translation: ON
+                            set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+                        }
+                    }
+
+                    set textvariable ::ms::data($w,translated_text)
+                }
+                default {
+                    # Automatic translation: OFF
+                    set textvariable $::ms::current($w,textvariable)
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
