@@ -665,13 +665,13 @@ proc ::ms::winfo::Command { args } {
                         # Check the initial address type provided (short or real).
                         switch -- $type {
                             short {
-                                switch -- [info exists ::ms::addr($parent,short)] {
-                                    0   { return $parent }
-                                    1   { return $::ms::addr($parent,short) }
+                                if { $parent in $::ms::addr(reals) } {
+                                    return $::ms::addr($parent,short)
                                 }
                             }
-                            default { return $parent }
                         }
+
+                        return $parent
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
