@@ -1614,6 +1614,13 @@ proc ::ms::button::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        # Check the widget state and set the relative cursor.
+        # This is not strictly needed for buttons, it's here mostly for coherence with the other widgets.
+        switch -- $::ms::current($w,state) {
+            disabled { set cursor arrow }
+            normal   { set cursor $::ms::current($w,cursor) }
+        }
     }
 
     return ""
