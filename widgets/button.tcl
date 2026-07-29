@@ -1947,4 +1947,25 @@ proc ::ms::button::Focus_Out { w } {
     return ""
 }
 
+## Invoke
+#
+# Invoke the command associated with the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::button::Invoke { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Invoke the command associated with the widget.
+            uplevel #0 [list interp invokehidden {} $w invoke]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
