@@ -885,9 +885,10 @@ proc ::ms::wm::Command { args } {
                             short {
                                 set shorts_result [list ]
                                 foreach addr $result {
-                                    switch -- [info exists ::ms::addr($addr,short)] {
-                                        0   { lappend shorts_result $addr }
-                                        1   { lappend shorts_result $::ms::addr($addr,short) }
+                                    if { $addr in $::ms::addr(reals) } {
+                                        lappend shorts_result $::ms::addr($addr,short)
+                                    } else {
+                                        lappend shorts_result $addr
                                     }
                                 }
 
@@ -961,13 +962,13 @@ proc ::ms::wm::Command { args } {
                                 # Check the initial address type provided (short or real).
                                 switch -- $type {
                                     short {
-                                        switch -- [info exists ::ms::addr($pathname,short)] {
-                                            0   { return $pathname }
-                                            1   { return $::ms::addr($pathname,short) }
+                                        if { $pathname in $::ms::addr(reals) } {
+                                            return $::ms::addr($pathname,short)
                                         }
                                     }
-                                    default { return $pathname }
                                 }
+
+                                return $pathname
                             }
                         }
                     }
