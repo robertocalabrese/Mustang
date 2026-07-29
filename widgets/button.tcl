@@ -158,6 +158,24 @@ namespace eval ::ms::button {
                                                   text \
                                                   textvariable \
                                                   underline];
+
+    # Set the 'styleable' button option list.
+    set ::ms::button(styleable,options) [list anchor \
+                                              background \
+                                              bordercolor \
+                                              borderwidth \
+                                              charwidth \
+                                              compound \
+                                              cursor \
+                                              darkcolor \
+                                              font \
+                                              foreground \
+                                              image \
+                                              justify \
+                                              lightcolor \
+                                              padding \
+                                              relief \
+                                              shiftrelief];
 }
 
 # Rename the original Tk **button** and **ttk::button** commands.
