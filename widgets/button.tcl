@@ -939,6 +939,329 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                         0   {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+                            ##################################################
+                            ##                                              ##
+                            ##     CHECK THE CONFIGURE OPTIONS PROVIDED     ##
+                            ##                                              ##
+                            ##################################################
+
+                            # Check the widget options provided.
+                            foreach { option value } $args {
+                                switch -nocase -- $option {
+                                    -anchor {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            center -
+                                            e      -
+                                            n      -
+                                            ne     -
+                                            nw     -
+                                            s      -
+                                            se     -
+                                            sw     -
+                                            w      {
+                                                set ::ms::current($w,anchor)    $value
+                                                set ::ms::managed_by($w,anchor) developer
+                                            }
+                                        }
+                                    }
+                                    -background {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,background)    $value
+                                        set ::ms::managed_by($w,background) developer
+                                    }
+                                    -bordercolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,bordercolor)    $value
+                                        set ::ms::managed_by($w,bordercolor) developer
+                                    }
+                                    -borderwidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,borderwidth)    $value
+                                        set ::ms::managed_by($w,borderwidth) developer
+                                    }
+                                    -charwidth {
+                                        switch -- [string is integer -strict $value] {
+                                            0   { continue }
+                                        }
+
+                                        set ::ms::current($w,charwidth)    $value
+                                        set ::ms::managed_by($w,charwidth) developer
+                                    }
+                                    -class {}
+                                    -cmenu {
+                                        set value [string trim $value]
+                                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                                            set ::ms::current($w,cmenu) $value
+                                        }
+                                    }
+                                    -command { set ::ms::current($w,command) $value }
+                                    -compound {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            bottom -
+                                            center -
+                                            image  -
+                                            left   -
+                                            none   -
+                                            right  -
+                                            text   -
+                                            top    {
+                                                set ::ms::current($w,compound)    $value
+                                                set ::ms::managed_by($w,compound) developer
+                                            }
+                                        }
+                                    }
+                                    -cursor {
+                                        set value [string tolower $value]
+                                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                                            set ::ms::current($w,cursor)    $value
+                                            set ::ms::managed_by($w,cursor) developer
+                                        }
+                                    }
+                                    -darkcolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,darkcolor)    $value
+                                        set ::ms::managed_by($w,darkcolor) developer
+                                    }
+                                    -default {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            active   -
+                                            disabled -
+                                            normal   { set ::ms::current($w,default) $value }
+                                        }
+                                    }
+                                    -font {
+                                        if { $value in [font names] } {
+                                            set ::ms::current($w,font)    $value
+                                            set ::ms::managed_by($w,font) developer
+                                        }
+                                    }
+                                    -foreground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,foreground)    $value
+                                        set ::ms::managed_by($w,foreground) developer
+                                    }
+                                    -image {
+                                        switch -- [::ms::Check_Image $value] {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,image)    $value
+                                        set ::ms::managed_by($w,image) developer
+                                    }
+                                    -justify {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            center -
+                                            left   -
+                                            right  {
+                                                set ::ms::current($w,justify)    $value
+                                                set ::ms::managed_by($w,justify) developer
+                                            }
+                                        }
+                                    }
+                                    -lightcolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,lightcolor)    $value
+                                        set ::ms::managed_by($w,lightcolor) developer
+                                    }
+                                    -padding {
+                                        switch -- [llength $value] {
+                                            1   {
+                                                set value [::ms::Check_Measure $value invalid]
+                                                switch -- $value {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $value]
+                                            }
+                                            2   {
+                                                set pad_horizontal [::ms::Check_Measure [lindex $value 0] invalid]
+                                                switch -- $pad_horizontal {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                                switch -- $pad_vertical {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $pad_horizontal $pad_vertical]
+                                            }
+                                            3   {
+                                                set pad_left [::ms::Check_Measure [lindex $value 0] invalid]
+                                                switch -- $pad_left {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                                switch -- $pad_vertical {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_right [::ms::Check_Measure [lindex $value 2] invalid]
+                                                switch -- $pad_right {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $pad_left $pad_vertical $pad_right]
+                                            }
+                                            4   {
+                                                set pad_left [::ms::Check_Measure [lindex $value 0] invalid]
+                                                switch -- $pad_left {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_top [::ms::Check_Measure [lindex $value 1] invalid]
+                                                switch -- $pad_top {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_right [::ms::Check_Measure [lindex $value 2] invalid]
+                                                switch -- $pad_right {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_bottom [::ms::Check_Measure [lindex $value 3] invalid]
+                                                switch -- $pad_bottom {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $pad_left $pad_top $pad_right $pad_bottom]
+                                            }
+                                            default { continue }
+                                        }
+
+                                        set ::ms::managed_by($w,padding) developer
+                                    }
+                                    -relief {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            flat   -
+                                            groove -
+                                            raised -
+                                            ridge  -
+                                            solid  -
+                                            sunken {
+                                                set ::ms::current($w,relief)    $value
+                                                set ::ms::managed_by($w,relief) developer
+                                            }
+                                        }
+                                    }
+                                    -shiftrelief {
+                                        switch -- [string is integer -strict $value] {
+                                            0   { continue }
+                                        }
+
+                                        set ::ms::current($w,shiftrelief)    $value
+                                        set ::ms::managed_by($w,shiftrelief) developer
+                                    }
+                                    -state {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            disabled -
+                                            normal   { set ::ms::current($w,state) $value }
+                                        }
+                                    }
+                                    -style {
+                                        if { $value in $::ms::style($::ms::theme) } {
+                                            # Check if exists a layout for the style provided.
+                                            # If not, create one by mirroring the current theme 'TButton' layout.
+                                            if { $value ni $::ms::layouts($::ms::theme) } {
+                                                _ttk_style layout $value [_ttk_style layout TButton]
+                                            }
+
+                                            # Remove the widget address from the button real address list that contains all the
+                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            set index [lsearch -exact $::ms::style($::ms::current($w,style),button,addrs) $w]
+                                            switch -- $index {
+                                                -1      {}
+                                                default { set ::ms::style($::ms::current($w,style),button,addrs) [lremove $::ms::style($::ms::current($w,style),button,addrs) $index] }
+                                            }
+
+                                            # Add the widget address to the address list that contains all the
+                                            # widgets addresses with style 'value'.
+                                            lappend ::ms::style($value,button,addrs) $w
+
+                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # for the button classtype.
+                                            switch -- [llength $::ms::style($::ms::current($w,style),button,addrs)] {
+                                                0   {
+                                                    set index [lsearch -exact $::ms::style(button) $::ms::current($w,style)]
+                                                    switch -- $index {
+                                                        -1      {}
+                                                        default { set ::ms::style(button) [lremove $::ms::style(button) $index] }
+                                                    }
+                                                }
+                                            }
+
+                                            # If needed, add 'value' to the available styles for the button classtype.
+                                            if { $value ni $::ms::style(button) } {
+                                                lappend ::ms::style(button) $value
+                                            }
+
+                                            # Update the current style associated with the widget with 'value'.
+                                            set ::ms::current($w,style) $value
+                                        }
+                                    }
+                                    -takefocus {
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,takefocus) 0 }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,takefocus) 1 }
+                                        }
+                                    }
+                                    -text { set ::ms::current($w,text) $value }
+                                    -textvariable {
+                                        switch -- [info exists $value] {
+                                            1   { set ::ms::current($w,textvariable) $value }
+                                        }
+                                    }
+                                    -underline {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                if { $value >= -1 } {
+                                                    set ::ms::current($w,underline) $value
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
