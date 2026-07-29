@@ -611,6 +611,19 @@ proc ::ms::button::Command { window { args "" } } {
                     }
                 }
             }
+
+            # Check the widget state and set the takefocus and cursor accordingly.
+            # This is not strictly needed for buttons, it's here mostly for coherence with the other widgets.
+            switch -- $::ms::current($w,state) {
+                disabled {
+                    set cursor    arrow
+                    set takefocus 0
+                }
+                normal {
+                    set cursor    $::ms::current($w,cursor)
+                    set takefocus $::ms::current($w,takefocus)
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
