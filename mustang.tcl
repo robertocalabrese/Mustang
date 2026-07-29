@@ -484,6 +484,7 @@ proc ::ms::Init {} {
     ::msgcat::mcload [file join $::ms_library msgs]
 
     # Set the mustang language to use.
+    # This is a special variable.
     set ::ms::language [::msgcat::mclocale]
 
     #################################################
