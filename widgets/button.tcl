@@ -176,6 +176,20 @@ namespace eval ::ms::button {
                                               padding \
                                               relief \
                                               shiftrelief];
+
+    # Set the default 'non-styleable' button options values.
+    set ::ms::default(button,class)        TButton
+    set ::ms::default(button,cmenu)        {}
+    set ::ms::default(button,command)      {}
+    set ::ms::default(button,default)      normal
+    set ::ms::default(button,state)        normal
+    set ::ms::default(button,style)        TButton
+    set ::ms::default(button,takefocus)    1
+    set ::ms::default(button,text)         {}
+    set ::ms::default(button,textvariable) {}
+    set ::ms::default(button,underline)    -1
+
+    # Note: The default 'styleable' button options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **button** and **ttk::button** commands.
