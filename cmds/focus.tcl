@@ -234,13 +234,13 @@ proc ::ms::focus::Command { args } {
                     # Check the initial address type provided (short or real).
                     switch -- $type {
                         short {
-                            switch -- [info exists ::ms::addr($address,short)] {
-                                0   { return $address }
-                                1   { return $::ms::addr($address,short) }
+                            if { $address in $::ms::addr(reals) } {
+                                return $::ms::addr($address,short)
                             }
                         }
-                        default { return $address }
                     }
+
+                    return $address
                 }
                 "-force" {
                     # Check if 'w' is the hull of a megawidget of some kind.
@@ -257,13 +257,13 @@ proc ::ms::focus::Command { args } {
                     # Check the initial address type provided (short or real).
                     switch -- $type {
                         short {
-                            switch -- [info exists ::ms::addr($next_address,short)] {
-                                0   { return $next_address }
-                                1   { return $::ms::addr($next_address,short) }
+                            if { $next_address in $::ms::addr(reals) } {
+                                return $::ms::addr($next_address,short)
                             }
                         }
-                        default { return $next_address }
                     }
+
+                    return $next_address
                 }
                 "-prev" {
                     # Get the previous address relative to 'w'.
@@ -272,13 +272,13 @@ proc ::ms::focus::Command { args } {
                     # Check the initial address type provided (short or real).
                     switch -- $type {
                         short {
-                            switch -- [info exists ::ms::addr($prev_address,short)] {
-                                0   { return $prev_address }
-                                1   { return $::ms::addr($prev_address,short) }
+                            if { $prev_address in $::ms::addr(reals) } {
+                                return $::ms::addr($prev_address,short)
                             }
                         }
-                        default { return $prev_address }
                     }
+
+                    return $prev_address
                 }
                 default { ::ms::Error "Wrong option or option with no value." $caller_info }
             }
