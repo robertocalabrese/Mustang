@@ -46,7 +46,7 @@ set ::ms_version 0.1
 package ifneeded mustang $::ms_version {
     package provide mustang $::ms_version
 
-    # Load the mustang core.
+    # Load the mustang core system.
     package require ::ms
 
     # Load all the mustang commands.
@@ -252,7 +252,6 @@ package ifneeded ::ms::menu        0.1 [list source [file join $::ms_library wid
 package ifneeded ::ms::menubutton  0.1 [list source [file join $::ms_library widgets "menubutton.tcl"]]
 package ifneeded ::ms::notebook    0.1 [list source [file join $::ms_library widgets "notebook.tcl"]]
 package ifneeded ::ms::palette     0.1 [list source [file join $::ms_library widgets "palette.tcl"]]
-package ifneeded ::ms::panedwindow 0.1 [list source [file join $::ms_library widgets "panedwindow.tcl"]]
 package ifneeded ::ms::progressbar 0.1 [list source [file join $::ms_library widgets "progressbar.tcl"]]
 package ifneeded ::ms::radiobutton 0.1 [list source [file join $::ms_library widgets "radiobutton.tcl"]]
 package ifneeded ::ms::scale       0.1 [list source [file join $::ms_library widgets "scale.tcl"]]
@@ -264,6 +263,13 @@ package ifneeded ::ms::text        0.1 [list source [file join $::ms_library wid
 package ifneeded ::ms::toolbutton  0.1 [list source [file join $::ms_library widgets "toolbutton.tcl"]]
 package ifneeded ::ms::toplevel    0.1 [list source [file join $::ms_library widgets "toplevel.tcl"]]
 package ifneeded ::ms::treeview    0.1 [list source [file join $::ms_library widgets "treeview.tcl"]]
+
+# Note: Panedwindows are disabled for Windows and macOS systems.
+switch -nocase -glob -- $::tcl_platform(os) {
+    Darwin  -
+    "Win*"  {}
+    default { package ifneeded ::ms::panedwindow 0.1 [list source [file join $::ms_library widgets "panedwindow.tcl"]] }
+}
 
 # Mustang colormaths.
 package ifneeded ::ms::companding         0.1 [list source [file join $::ms_library colormaths "companding.tcl"]]
