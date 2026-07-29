@@ -166,6 +166,65 @@ namespace eval ttk::theme::Halo {
                              -selectbackground White \
                             -selectborderwidth 0 \
                              -selectforeground TextAlternate;
+
+        ####################
+        ##                ##
+        ##     BUTTON     ##
+        ##                ##
+        ####################
+
+        # Note: 'anchor', 'borderwidth', 'charwidth', 'compound', 'cursor', 'font', 'justify', 'padding' and
+        #       'shiftrelief' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: The 'image' option supports mapping values but they need to be specified in the normal state declaration as a list.
+        #       The first element is the the image name to use in the normal state. The rest of the list is a sequence of statespec/value
+        #       pairs as per style map, specifying different images to use when the widget is in a particular state or combination of states.
+        #
+        #       Note that all images in the list should have the same size.
+        #
+        #       If an empty string is specified, it indicates that the widget has no image to display.
+        #       The image specified should have been allready created at the time the widget is created.
+        #
+        #       Any 'image' mapping values specified with the style map command will be ignored by mustang.
+
+        # Layout
+        style layout TButton {
+            Button.border -sticky nswe -children {
+                Button.padding -sticky nswe -children {
+                    Button.label -sticky nswe
+                }
+            }
+        }
+
+        # Normal state
+        style configure TButton      -anchor center \
+                                 -background ButtonBackground \
+                                -bordercolor ButtonBorder \
+                                -borderwidth 2 \
+                                  -charwidth -8 \
+                                   -compound none \
+                                     -cursor arrow \
+                                  -darkcolor ButtonBackground \
+                                       -font NormalFont \
+                                 -foreground ButtonText \
+                                      -image {} \
+                                    -justify left \
+                                 -lightcolor ButtonBorder \
+                                    -padding [list 4p 8p 4p 8p] \
+                                     -relief sunken \
+                                -shiftrelief -2;
+
+        # Mapping
+        style map TButton  -background [list {pressed !disabled} ButtonBackgroundPressed] \
+                          -bordercolor [list          background BordercolorBackground \
+                                                        disabled ButtonBackground] \
+                            -darkcolor [list             pressed ButtonBackgroundPressed] \
+                           -foreground [list            disabled ButtonTextDisabled \
+                                                           focus Accent \
+                                                           hover TextAlternate] \
+                           -lightcolor [list            disabled ButtonBackground] \
+                               -relief [list {pressed !disabled} raised];
     }
 }
 
