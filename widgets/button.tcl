@@ -146,7 +146,19 @@ _bind _Button <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Button <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **button** package.
-namespace eval ::ms::button {}
+namespace eval ::ms::button {
+    # Set the 'non styleable' button option list.
+    set ::ms::button(non_styleable,options) [list class \
+                                                  cmenu \
+                                                  command \
+                                                  default \
+                                                  state \
+                                                  style \
+                                                  takefocus \
+                                                  text \
+                                                  textvariable \
+                                                  underline];
+}
 
 # Rename the original Tk **button** and **ttk::button** commands.
 rename button      _button
