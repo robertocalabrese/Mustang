@@ -481,9 +481,10 @@ proc ::ms::pack::Command { args } {
                             short {
                                 set shorts_result [list ]
                                 foreach addr $result {
-                                    switch -- [info exists ::ms::addr($addr,short)] {
-                                        0   { lappend shorts_result $addr }
-                                        1   { lappend shorts_result $::ms::addr($addr,short) }
+                                    if { $addr in $::ms::addr(reals) } {
+                                        lappend shorts_result $::ms::addr($addr,short)
+                                    } else {
+                                        lappend shorts_result $addr
                                     }
                                 }
 
@@ -556,8 +557,8 @@ proc ::ms::pack::Command { args } {
                                         #       will always contain the '-in' option value at index '1'.
 
                                         set container [lindex $result 1]
-                                        switch -- [info exists ::ms::addr($container,short)] {
-                                            1   { set result [lreplace $result 1 1 $::ms::addr($container,short)] }
+                                        if { $container in $::ms::addr(reals) } {
+                                            set result [lreplace $result 1 1 $::ms::addr($container,short)]
                                         }
                                     }
                                 }
@@ -601,8 +602,8 @@ proc ::ms::pack::Command { args } {
                                         # Check the initial address type provided (short or real).
                                         switch -- $type {
                                             short {
-                                                switch -- [info exists ::ms::addr($container,short)] {
-                                                    1   { return $::ms::addr($container,short) }
+                                                if { $container in $::ms::addr(reals) } {
+                                                    return $::ms::addr($container,short)
                                                 }
                                             }
                                         }
