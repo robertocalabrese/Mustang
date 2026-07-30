@@ -1960,17 +1960,26 @@ proc ::ms::Init {} {
         set ::ms::style($style,$classtype,addrs) [list ]
     }
 
+    # Register the current theme in 'current_theme' so we don't loose its value.
+    set current_theme $::ms::theme
+
     # Source all default themes.
     foreach theme_folder [lsort -dictionary -increasing [glob -type d -nocomplain -directory [file join $::ms_library themes] -- *]] {
         # Get the theme name from the folder name.
-        set theme [file tail $theme_folder]
+        set ::ms::theme [file tail $theme_folder]
 
         # Initialize the style list for this theme.
-        set ::ms::style($theme) [list ]
+        set ::ms::style($::ms::theme) [list ]
+
+        # Initialize the list containing the styles created by mustang for this theme.
+        set ::ms::style($::ms::theme,created_by_mustang) [list ]
+
+        # Initialize the list containing the mappings created by mustang for this theme.
+        set ::ms::stylemap($::ms::theme,created_by_mustang) [list ]
 
         # If 'theme' is a valid mustang theme, source it.
         try {
-            source -encoding utf-8 [file join $::ms_library themes $theme "theme.tcl"]
+            source -encoding utf-8 [file join $::ms_library themes $::ms::theme "theme.tcl"]
         } on error {} {
             # If the '::DEBUG' variable is enabled, display on the standard output channel
             # that the current theme examined was ignored.
@@ -1979,36 +1988,36 @@ proc ::ms::Init {} {
                 on      -
                 true    -
                 active  -
-                enabled { chan puts stdout "Warning, unable to load the '$theme' theme. Ignoring." }
+                enabled { chan puts stdout "Unable to load the '$::ms::theme' theme. Ignoring." }
             }
 
             # Remove every variable created so far for this theme.
-            foreach style $::ms::style($theme) {
-                unset -nocomplain -- ::ms::stylelayout($theme,$style) \
-                                     ::ms::stylemap($theme,$style) \
-                                     ::ms::styleopt($theme,$style);
+            foreach style $::ms::style($::ms::theme) {
+                unset -nocomplain -- ::ms::stylelayout($::ms::theme,$style) \
+                                     ::ms::stylemap($::ms::theme,$style) \
+                                     ::ms::styleopt($::ms::theme,$style);
             }
 
-            unset -nocomplain -- ::ms::layouts($theme) \
-                                 ::ms::style($theme);
+            unset -nocomplain -- ::ms::layouts($::ms::theme) \
+                                 ::ms::style($::ms::theme) \
+                                 ::ms::style($::ms::theme,created_by_mustang) \
+                                 ::ms::stylemap($::ms::theme,created_by_mustang);
         } on ok {} {
             # Check that the theme charwidth values for entries, comboboxes, menubuttons, palettes and spinboxes
             # are present and that they are a positive integer (and not **0**).
             foreach style [list TEntry TCombobox TMenubutton TPalette TSpinbox] {
-                set index [lsearch -exact $::ms::styleopt($theme,$style) "-charwidth"]
+                set index [lsearch -exact $::ms::styleopt($::ms::theme,$style) "-charwidth"]
                 switch -- $index {
                     -1  {
                         # Set the charwidth option for the current theme.
-                        lappend ::ms::styleopt($theme,$style) "-charwidth" \
-                                                              8;
-
-                        set ::ms::styleopt($theme,$style,charwidth) 8
+                        lappend ::ms::styleopt($::ms::theme,$style)       "-charwidth" 8
+                        set ::ms::styleopt($::ms::theme,$style,charwidth) 8
                     }
                     default {
-                        if { $::ms::styleopt($theme,$style,charwidth) <= 0 } {
+                        if { $::ms::styleopt($::ms::theme,$style,charwidth) <= 0 } {
                             # Update the charwidth option for the current theme.
-                            set ::ms::styleopt($theme,$style)           [lreplace $::ms::styleopt($theme,$style) $index+1 $index+1 8]
-                            set ::ms::styleopt($theme,$style,charwidth) 8
+                            set ::ms::styleopt($::ms::theme,$style)           [lreplace $::ms::styleopt($::ms::theme,$style) $index+1 $index+1 8]
+                            set ::ms::styleopt($::ms::theme,$style,charwidth) 8
                         }
                     }
                 }
@@ -2017,29 +2026,30 @@ proc ::ms::Init {} {
             # Check that the theme paddings for crates, embeds, texts and toplevels are present and that they are
             # lists with at least two elements.
             foreach style [list Crate Embed Text Toplevel] {
-                set index [lsearch -exact $::ms::styleopt($theme,$style) "-padding"]
+                set index [lsearch -exact $::ms::styleopt($::ms::theme,$style) "-padding"]
                 switch -- $index {
                     -1  {
                         # Set the padding option for the current theme.
-                        lappend ::ms::styleopt($theme,$style) "-padding" \
-                                                              [list 0];
-
-                        set ::ms::styleopt($theme,$style,padding) [list 0]
+                        lappend ::ms::styleopt($::ms::theme,$style)     "-padding" [list 0]
+                        set ::ms::styleopt($::ms::theme,$style,padding) [list 0]
                     }
                     default {
-                        if { $::ms::styleopt($theme,$style,padding) <= 0 } {
+                        if { $::ms::styleopt($::ms::theme,$style,padding) <= 0 } {
                             # Update the padding option for the current theme.
-                            set ::ms::styleopt($theme,$style)         [lreplace $::ms::styleopt($theme,$style) $index+1 $index+1 [list 0]]
-                            set ::ms::styleopt($theme,$style,padding) [list 0]
+                            set ::ms::styleopt($::ms::theme,$style)         [lreplace $::ms::styleopt($::ms::theme,$style) $index+1 $index+1 [list 0]]
+                            set ::ms::styleopt($::ms::theme,$style,padding) [list 0]
                         }
                     }
                 }
             }
 
             # Register the theme name among the available themes.
-            lappend ::ms::themes $theme
+            lappend ::ms::themes $::ms::theme
         }
     }
+
+    # Re-establish '::ms::theme' with its old value.
+    set ::ms::theme $current_theme
 
     # Safeguards.
     switch -- [llength $::ms::themes] {
