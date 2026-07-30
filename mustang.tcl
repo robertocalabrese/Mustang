@@ -213,7 +213,7 @@ proc ::ms::Init {} {
         set ::ms::addr($classtype) [list ]
 
         # Initialize the widgets style list for 'classtype'.
-        set ::ms::style($classtype) [list ]
+        set ::ms::style($classtype,classtype) [list ]
 
         # Add 'classtype' to the list of available classtypes.
         lappend ::ms::data(classtypes) $classtype
@@ -229,7 +229,7 @@ proc ::ms::Init {} {
             set ::ms::addr(panedwindow) [list ]
 
             # Initialize the widgets style list for the 'panedwindow' classtype.
-            set ::ms::style(panedwindow) [list ]
+            set ::ms::style(panedwindow,classtype) [list ]
 
             # Add 'panedwindow' to the list of available classtypes.
             lappend ::ms::data(classtypes) panedwindow
@@ -2408,7 +2408,7 @@ proc ::ms::Init {} {
     lappend ::ms::style($::ms::current(.,style),toplevel,addrs) .
 
     # Add '::ms::current(.,style)' to the available styles for the toplevel classtype.
-    lappend ::ms::style(toplevel) $::ms::current(.,style)
+    lappend ::ms::style(toplevel,classtype) $::ms::current(.,style)
 
     ###############################################################################
     ##                                                                           ##
