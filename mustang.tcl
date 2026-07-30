@@ -3808,7 +3808,7 @@ proc ::ms::Drag { w x y } {
             switch -glob -- $element {
                 "*textarea" {
                     set ::ttk::entry::State(x) $x
-                    ::ms::Drag_To $w $x
+                    ::ms::DragTo $w $x
                 }
             }
         }
@@ -3817,7 +3817,7 @@ proc ::ms::Drag { w x y } {
     return ""
 }
 
-# Drag_To
+# DragTo
 #
 # Extend selection to 'x' based on current selection mode.
 #
@@ -3835,7 +3835,7 @@ proc ::ms::Drag { w x y } {
 #        Its normally provided by the **B1-Motion** event.
 #
 # It doesn't return anything.
-proc ::ms::Drag_To { w x } {
+proc ::ms::DragTo { w x } {
     # Check if the address provided belongs to a palette widget.
     switch -- $::ms::data($w,classtype) {
         palette { set address $w.combobox }
@@ -3852,7 +3852,7 @@ proc ::ms::Drag_To { w x } {
     return ""
 }
 
-## Scan_Drag
+## ScanDrag
 #
 # Manages the **<B2-Motion>** (or **<B3-Motion>** in macOS Aqua) event on a scrollable widget
 # that supports **scan** operations (canvases, listboxes and texts).
@@ -3865,7 +3865,7 @@ proc ::ms::Drag_To { w x } {
 #        These values should be provided by the <Motion> event.
 #
 # It doesn't return anything.
-proc ::ms::Scan_Drag { w x y } {
+proc ::ms::ScanDrag { w x y } {
     # Safeguard.
     # Check if the drag operation is allowed or not.
     switch -- [info exists ::ms::temp(drag_allowed)] {
@@ -3899,7 +3899,7 @@ proc ::ms::Scan_Drag { w x y } {
     }
 }
 
-## Scan_Mark
+## ScanMark
 #
 # Manages the **<ButtonPress-2>** (or **<ButtonPress-3>** in macOS Aqua) event on a scrollable widget
 # that supports **scan** operations.
@@ -3912,7 +3912,7 @@ proc ::ms::Scan_Drag { w x y } {
 #        These values should be provided by the <ButtonPress> event.
 #
 # It doesn't return anything.
-proc ::ms::Scan_Mark { w x y } {
+proc ::ms::ScanMark { w x y } {
     set ::ms::temp(drag_allowed) yes
     set ::ms::temp(x_press) $x
     set ::ms::temp(y_press) $y
@@ -3927,13 +3927,13 @@ proc ::ms::Scan_Mark { w x y } {
     }
 }
 
-## Scan_Release
+## ScanRelease
 #
 # Manages the **<ButtonRelease-2>** (or **<ButtonRelease-3>** in macOS Aqua) event on a scrollable widget
 # that supports **scan** operations.
 #
 # It doesn't return anything.
-proc ::ms::Scan_Release {} {
+proc ::ms::ScanRelease {} {
     unset -nocomplain ::ms::temp(drag_allowed) \
                       ::ms::temp(x_press) \
                       ::ms::temp(y_press);
@@ -4525,7 +4525,7 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::Clean_Up { w } {
+proc ::ms::CleanUp { w } {
     # Get the toplevel related to 'w'.
     set toplevel [_winfo toplevel $w]
 
@@ -4566,7 +4566,7 @@ proc ::ms::Enable_Traversal { w } {
             #####################################################################
 
             # Destroy
-            _bind $toplevel <Destroy> [list +::ms::Traverse_Clean_Up %W]
+            _bind $toplevel <Destroy> [list +::ms::Traverse_CleanUp %W]
 
             # Scroll one page left or right with the keyboard.
             _bind $toplevel <<PageLeft>>  [list ::ms::Traverse_Scroll %W xview  120.0 pages]
@@ -4618,7 +4618,7 @@ proc ::ms::Enclosing_Container { w } {
     return ""
 }
 
-## Traverse_Clean_Up
+## Traverse_CleanUp
 #
 # <Destroy> binding for traversal-enabled toplevels.
 #
@@ -4627,7 +4627,7 @@ proc ::ms::Enclosing_Container { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::Traverse_Clean_Up { w } {
+proc ::ms::Traverse_CleanUp { w } {
     # Check if the real address provided is a toplevel.
     if { $w eq [_winfo toplevel $w] } {
         unset -nocomplain -- ::ms::containers(traversal,$w)
