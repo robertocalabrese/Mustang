@@ -210,7 +210,7 @@ proc ::ms::Init {} {
                             toplevel \
                             treeview] {
         # Initialize the widgets real address list for 'classtype'.
-        set ::ms::addr($classtype) [list ]
+        set ::ms::addr($classtype,classtype) [list ]
 
         # Initialize the widgets style list for 'classtype'.
         set ::ms::style($classtype,classtype) [list ]
@@ -226,7 +226,7 @@ proc ::ms::Init {} {
         "Win*"  {}
         default {
             # Initialize the widgets real address list for the 'panedwindow' classtype.
-            set ::ms::addr(panedwindow) [list ]
+            set ::ms::addr(panedwindow,classtype) [list ]
 
             # Initialize the widgets style list for the 'panedwindow' classtype.
             set ::ms::style(panedwindow,classtype) [list ]
@@ -2398,13 +2398,13 @@ proc ::ms::Init {} {
     # Create an alias for the toplevel real pathcommand.
     lappend ::ms::data(.,token) [interp alias {} . {} ::ms::toplevel::Pathname_Cmd .]
 
-    # Add the widget address to the toplevel widgets real address list.
-    lappend ::ms::addr(toplevel) .
+    # Add the widget address to the toplevel classtype real address list.
+    lappend ::ms::addr(toplevel,classtype) .
 
-    # Add the widget address to the toplevel real address list with class '::ms::current(.,class)'.
+    # Add the widget address to the toplevel classtype real address list with class '::ms::current(.,class)'.
     lappend ::ms::class($::ms::current(.,class),toplevel,addrs) .
 
-    # Add the widget address to the toplevel real address list with style '::ms::current(.,style)'.
+    # Add the widget address to the toplevel classtype real address list with style '::ms::current(.,style)'.
     lappend ::ms::style($::ms::current(.,style),toplevel,addrs) .
 
     # Add '::ms::current(.,style)' to the available styles for the toplevel classtype.
