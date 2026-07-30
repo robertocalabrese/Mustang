@@ -2070,7 +2070,7 @@ proc ::ms::Init {} {
                     on      -
                     true    -
                     active  -
-                    enabled { chan puts stdout "Warning, unable to load the '$::ms::theme' theme. The program will use the first theme on the list." }
+                    enabled { chan puts stdout "Warning, unable to load the '$::ms::theme' theme. The first theme available will be used instead." }
                 }
 
                 # Set the current theme with the first theme available (in alphabetical order) among the ones known by mustang.
