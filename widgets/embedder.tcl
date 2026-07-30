@@ -62,13 +62,13 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
-package provide ::ms::embed 0.1
+package provide ::ms::embedder 0.1
 
-# Create the mustang **embed** package.
-namespace eval ::ms::embed {}
+# Create the mustang **embedder** package.
+namespace eval ::ms::embedder {}
 
-# Create an alias for the mustang **embed** command.
-interp alias {} embed {} ::ms::embed::Command
+# Create an alias for the mustang **embedder** command.
+interp alias {} embedder {} ::ms::embedder::Command
 
 ############################
 ##                        ##
@@ -78,7 +78,7 @@ interp alias {} embed {} ::ms::embed::Command
 
 ## Command
 #
-# Create a mustang **embed** widget.
+# Create a mustang **embedder** widget.
 #
 # Where:
 #
@@ -91,7 +91,7 @@ interp alias {} embed {} ::ms::embed::Command
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
-proc ::ms::embed::Command { window { args "" } } {
+proc ::ms::embedder::Command { window { args "" } } {
     # For the time being return the empty string.
     # Embed widgets are not covered until the new command is written.
     return ""
@@ -118,7 +118,7 @@ proc ::ms::embed::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::embed::Pathname_Cmd { w cmd args } {}
+proc ::ms::embedder::Pathname_Cmd { w cmd args } {}
 
 ######################################
 ##                                  ##

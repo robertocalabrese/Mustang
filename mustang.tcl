@@ -189,7 +189,7 @@ proc ::ms::Init {} {
                             combobox \
                             cmenu \
                             crate \
-                            embed \
+                            embedder \
                             entry \
                             frame \
                             label \
@@ -1948,7 +1948,7 @@ proc ::ms::Init {} {
         switch -- $classtype {
             canvas   -
             crate    -
-            embed    -
+            embedder -
             listbox  -
             treeview -
             text     -
@@ -2023,9 +2023,9 @@ proc ::ms::Init {} {
                 }
             }
 
-            # Check that the theme paddings for crates, embeds, texts and toplevels are present and that they are
+            # Check that the theme paddings for crates, embedders, texts and toplevels are present and that they are
             # lists with at least two elements.
-            foreach style [list Crate Embed Text Toplevel] {
+            foreach style [list Crate Embedder Text Toplevel] {
                 set index [lsearch -exact $::ms::styleopt($::ms::theme,$style) "-padding"]
                 switch -- $index {
                     -1  {
