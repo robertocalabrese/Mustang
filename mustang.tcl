@@ -2189,7 +2189,7 @@ proc ::ms::Init {} {
     }
 
     # Set the point options that needs to be configured.
-    set POINT_OPTIONS [list -background $::ms::current(.,background) \
+    set point_options [list -background $::ms::current(.,background) \
                                 -cursor $::ms::current(.,cursor) \
                                   -padx [lindex $::ms::data(.,padding) 0] \
                                   -pady [lindex $::ms::data(.,padding) 1] \
@@ -2198,14 +2198,14 @@ proc ::ms::Init {} {
     switch -- $::ms::current(.,relief) {
         flat  -
         solid {
-            lappend POINT_OPTIONS         -borderwidth 0 \
+            lappend point_options         -borderwidth 0 \
                                   -highlightbackground $::ms::current(.,bordercolor) \
                                        -highlightcolor $::ms::current(.,bordercolor) \
                                    -highlightthickness $::ms::current(.,borderwidth) \
                                                -relief flat;
         }
         default {
-            lappend POINT_OPTIONS         -borderwidth $::ms::current(.,borderwidth) \
+            lappend point_options         -borderwidth $::ms::current(.,borderwidth) \
                                   -highlightbackground $::ms::current(.,background) \
                                        -highlightcolor $::ms::current(.,background) \
                                    -highlightthickness 0 \
@@ -2214,7 +2214,7 @@ proc ::ms::Init {} {
     }
 
     # Apply the options.
-    . configure {*}$POINT_OPTIONS
+    . configure {*}$point_options
 
     # Set the widget toplevel.
     set ::ms::addr(.,toplevel) .
