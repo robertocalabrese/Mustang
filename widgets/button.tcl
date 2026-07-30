@@ -1720,13 +1720,13 @@ proc ::ms::button::Command { window { args "" } } {
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the button widgets real address list.
-            lappend ::ms::addr(button) $w
+            # Add the widget address to the button classtype widgets real address list.
+            lappend ::ms::addr(button,classtype) $w
 
-            # Add the widget address to the button real address list with class '::ms::current($w,class)'.
+            # Add the widget address to the button classtype real address list with class '::ms::current($w,class)'.
             lappend ::ms::class($::ms::current($w,class),button,addrs) $w
 
-            # Add the widget address to the button real address list with style '::ms::current($w,style)'.
+            # Add the widget address to the button classtype real address list with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),button,addrs) $w
 
             # If needed, add '::ms::current($w,style)' to the available styles for the button classtype.
@@ -2763,21 +2763,21 @@ proc ::ms::button::Destroy { w } {
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the button widgets real address list.
-    set index [lsearch -exact $::ms::addr(button) $w]
+    # Remove the widget address from the button classtype widgets real address list.
+    set index [lsearch -exact $::ms::addr(button,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(button) [lremove $::ms::addr(button) $index] }
+        default { set ::ms::addr(button,classtype) [lremove $::ms::addr(button,classtype) $index] }
     }
 
-    # Remove the widget address from the button real address list with class '::ms::current($w,class)'.
+    # Remove the widget address from the button classtype real address list with class '::ms::current($w,class)'.
     set index [lsearch -exact $::ms::class($::ms::current($w,class),button,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::class($::ms::current($w,class),button,addrs) [lremove $::ms::class($::ms::current($w,class),button,addrs) $index] }
     }
 
-    # Remove the widget address from the button real address list with style '::ms::current($w,style)'.
+    # Remove the widget address from the button classtype real address list with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),button,addrs) $w]
     switch -- $index {
         -1      {}
