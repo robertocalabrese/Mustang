@@ -4767,8 +4767,8 @@ proc ::ms::Traverse_Scroll { w command { amount -120.0 } { what units } } {
 #    - If needed, deletes trailing zero ('real' and 'posreal' datatype only).
 #    - If needed, deletes every '-' sign after the first digit ('integer' and 'real' datatype only).
 #    - If needed, deletes every '.' after the first one ('real' and 'posreal' datatype only).
-#    - If number starts with '.', a zero will be inserted before '.' ('real' and 'posreal' datatype only).
-#    - If number ends with '.', a zero will be inserted after '.' ('real' and 'posreal' datatype only).
+#    - If *number* starts with '.', a zero will be inserted before '.' ('real' and 'posreal' datatype only).
+#    - If *number* ends with '.', a zero will be inserted after '.' ('real' and 'posreal' datatype only).
 #
 # Note: This procedure assumes that the following keybindings are in place on the widget:
 #          'integer'    --> The only keys enabled in the keyboard are [0123456789-].
