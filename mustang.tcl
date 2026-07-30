@@ -2340,7 +2340,7 @@ proc ::ms::Init {} {
             _bind .content <ButtonPress-1> { ::ms::toplevel::Focus_Toplevel .; break }
 
             # Contextual menu
-            _bind .content <<ContextMenu>> { ::ms::Show_Context_Menu . %X %Y cmenu; break }
+            _bind .content <<ContextMenu>> { ::ms::Show_ContextMenu . %X %Y cmenu; break }
 
             # Destroy
             _bind .content <Destroy> { ::ms::toplevel::Destroy .; break }
@@ -2396,12 +2396,6 @@ proc ::ms::Init {} {
     ##                 ##
     #####################
 
-    # Set the toplevel title, if any.
-    switch -- $::ms::current(.,title) {
-        ""      {}
-        default { wm title . [::msgcat::mc "$::ms::current(.,title)"] }
-    }
-
     # Hide the toplevel real address pathcommand.
     interp hide {} .
 
@@ -2420,11 +2414,11 @@ proc ::ms::Init {} {
     # Add '::ms::current(.,style)' to the available styles for the toplevel classtype.
     lappend ::ms::style(toplevel,classtype) $::ms::current(.,style)
 
-    ###############################################################################
-    ##                                                                           ##
-    ##     SET A TRACING ON THE ACCENT, COLORSCHEME AND FOCUSMODEL VARIABLES     ##
-    ##                                                                           ##
-    ###############################################################################
+    #########################################
+    ##                                     ##
+    ##     TRACE THE SPECIAL VARIABLES     ##
+    ##                                     ##
+    #########################################
 
     # Register the current values of the mustang special variables as their last valid one.
     set ::ms::temp(accent,last)        $::ms::accent
