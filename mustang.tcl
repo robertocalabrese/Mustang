@@ -3855,7 +3855,7 @@ proc ::ms::Drag_To { w x } {
 ## Scan_Drag
 #
 # Manages the **<B2-Motion>** (or **<B3-Motion>** in macOS Aqua) event on a scrollable widget
-# that supports **scan** operations.
+# that supports **scan** operations (canvases, listboxes and texts).
 #
 # Where:
 #
