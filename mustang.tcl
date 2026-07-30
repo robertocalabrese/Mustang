@@ -163,6 +163,9 @@ namespace eval ::ms {}
 ##                                ##
 ####################################
 
+# Note: The following procedure is launched only at initialization time and removed when the initialization is completed.
+#       The remove of the procedure is located in the 'pkgIndex.tcl' file.
+
 ## Init
 #
 # Initialize mustang.
@@ -2490,6 +2493,9 @@ proc ::ms::Init {} {
 ##                ##
 ####################
 
+# Note: The following procedures should be used **ESCLUSIVELY** by Mustang.
+#       The developer will be responsible for any errors that may arise, if he/she chooses to use it.
+
 ## Check_And_React
 #
 # Check and react to any 'unset' or 'write' operations on a mustang special variable.
@@ -3495,6 +3501,9 @@ proc ::ms::Check_Widget_Address { window caller_info } {
 ##                                    ##
 ########################################
 
+# Note: The following procedures should be used **ESCLUSIVELY** by Mustang.
+#       The developer will be responsible for any errors that may arise, if he/she chooses to use it.
+
 ## Clear
 #
 # Delete the selection.
@@ -3775,6 +3784,9 @@ proc ::ms::Scan_Or_Paste { w x event } {
 ##              ##
 ##################
 
+# Note: The following procedures should be used **ESCLUSIVELY** by Mustang.
+#       The developer will be responsible for any errors that may arise, if he/she chooses to use it.
+
 ## Drag
 #
 # Manage the mouse left button motion binding.
@@ -3950,6 +3962,9 @@ proc ::ms::ScanRelease {} {
 ##     SCROLLBAR MECHANISM     ##
 ##                             ##
 #################################
+
+# Note: The following procedures should be used **ESCLUSIVELY** by Mustang.
+#       The developer will be responsible for any errors that may arise, if he/she chooses to use it.
 
 ## Scrollable_Widgets_Propagation_Mechanism
 #
@@ -4512,6 +4527,9 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 ##                                      ##
 ##########################################
 
+# Note: The following procedures should be used **ESCLUSIVELY** by Mustang.
+#       The developer will be responsible for any errors that may arise, if he/she chooses to use it.
+
 # Note: The following procedures were inspired by the ttk::notebook mechanism for traverse bindings.
 #       The procedures have been slighty modified to work with mustang.
 #       All credits goes to the original author/s.
@@ -4736,6 +4754,9 @@ proc ::ms::Traverse_Scroll { w command { amount -120.0 } { what units } } {
 ##     INTERNAL PROCEDURES     ##
 ##                             ##
 #################################
+
+# Note: The following procedures should be used **ESCLUSIVELY** by Mustang.
+#       The developer will be responsible for any errors that may arise, if he/she chooses to use it.
 
 ## Beautify_Input_Number
 #
