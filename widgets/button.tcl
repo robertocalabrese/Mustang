@@ -1730,8 +1730,8 @@ proc ::ms::button::Command { window { args "" } } {
             lappend ::ms::style($::ms::current($w,style),button,addrs) $w
 
             # If needed, add '::ms::current($w,style)' to the available styles for the button classtype.
-            if { $::ms::current($w,style) ni $::ms::style(button) } {
-                lappend ::ms::style(button) $::ms::current($w,style)
+            if { $::ms::current($w,style) ni $::ms::style(button,classtype) } {
+                lappend ::ms::style(button,classtype) $::ms::current($w,style)
             }
 
             # Depending on the address type provided, return the widget real or short address.
@@ -2099,17 +2099,17 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                                             # for the button classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),button,addrs)] {
                                                 0   {
-                                                    set index [lsearch -exact $::ms::style(button) $::ms::current($w,style)]
+                                                    set index [lsearch -exact $::ms::style(button,classtype) $::ms::current($w,style)]
                                                     switch -- $index {
                                                         -1      {}
-                                                        default { set ::ms::style(button) [lremove $::ms::style(button) $index] }
+                                                        default { set ::ms::style(button,classtype) [lremove $::ms::style(button,classtype) $index] }
                                                     }
                                                 }
                                             }
 
                                             # If needed, add 'value' to the available styles for the button classtype.
-                                            if { $value ni $::ms::style(button) } {
-                                                lappend ::ms::style(button) $value
+                                            if { $value ni $::ms::style(button,classtype) } {
+                                                lappend ::ms::style(button,classtype) $value
                                             }
 
                                             # Update the current style associated with the widget with 'value'.
