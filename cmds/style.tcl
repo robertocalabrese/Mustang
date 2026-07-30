@@ -505,7 +505,7 @@ proc ::ms::style::Command { args } {
                                 set ::ms::theme $args
 
                                 # Disable the user to iteract with the application while mustang is updating the theme.
-                                foreach w $::ms::addr(toplevel) {
+                                foreach w $::ms::addr(toplevel,classtype) {
                                     _tk busy hold $w
                                     _tk busy configure $w -cursor watch
                                 }
@@ -586,7 +586,7 @@ proc ::ms::style::Command { args } {
                                 }
 
                                 # Enable the user to iteract again with the application.
-                                foreach w $::ms::addr(toplevel) {
+                                foreach w $::ms::addr(toplevel,classtype) {
                                     _tk busy forget $w
                                 }
 
