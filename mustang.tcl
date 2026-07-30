@@ -1947,12 +1947,12 @@ proc ::ms::Init {} {
         # Get the default 'style' from 'classtype'.
         switch -- $classtype {
             canvas   -
+            crate    -
+            embed    -
             listbox  -
             treeview -
             text     -
             toplevel { set style [string totitle $classtype] }
-            crate    { set style Crate }
-            embed    { set style Embed }
             default  { set style [string cat "T" [string totitle $classtype]] }
         }
 
