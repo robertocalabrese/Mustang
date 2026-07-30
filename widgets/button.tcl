@@ -2784,6 +2784,17 @@ proc ::ms::button::Destroy { w } {
         default { set ::ms::style($::ms::current($w,style),button,addrs) [lremove $::ms::style($::ms::current($w,style),button,addrs) $index] }
     }
 
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the button classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),button,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(button,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(button,classtype) [lremove $::ms::style(button,classtype) $index] }
+            }
+        }
+    }
+
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short);
