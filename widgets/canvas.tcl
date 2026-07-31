@@ -194,6 +194,21 @@ namespace eval ::ms::canvas {
                                                   xscrollincrement \
                                                   yscrollcommand \
                                                   yscrollincrement];
+
+    # Set the canvas 'styleable' canvas option list.
+    set ::ms::canvas(styleable,options) [list background \
+                                              bordercolor \
+                                              borderwidth \
+                                              cursor \
+                                              darkcolor \
+                                              insertbackground \
+                                              insertborderwidth \
+                                              lightcolor \
+                                              relief \
+                                              selectbackground \
+                                              selectborderwidth \
+                                              selectforeground \
+                                              shellbackground];
 }
 
 # Rename the original Tk **canvas** command.
