@@ -963,6 +963,25 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+                    ####################
+                    ##                ##
+                    ##     CANVAS     ##
+                    ##                ##
+                    ####################
+
+                    # Note: Tk Canvases don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
+
+                    # Create the widget.
+                    _canvas $w.canvas {*}$canvas_options
+
+                    # Grid the canvas object.
+                    _grid $w.canvas -column 0 \
+                                      -padx 0 \
+                                      -pady 0 \
+                                       -row 0 \
+                                    -sticky nesw;
                 }
             }
         }
