@@ -225,6 +225,39 @@ namespace eval ttk::theme::Halo {
                                                            hover TextAlternate] \
                            -lightcolor [list            disabled ButtonBackground] \
                                -relief [list {pressed !disabled} raised];
+
+        ####################
+        ##                ##
+        ##     CANVAS     ##
+        ##                ##
+        ####################
+
+        # Note: The layout is useless because the canvas widget doesn't understand styles, at least not natively.
+
+        # Note: 'shellbackground' is used by scrollable canvases and ignored by simple canvases.
+
+        # Note: 'borderwidth', 'cursor' and 'relief' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # No layout
+
+        # Normal state
+        style configure Canvas        -background Background \
+                                     -bordercolor Bordercolor \
+                                     -borderwidth 0 \
+                                          -cursor arrow \
+                                -insertbackground Background7 \
+                               -insertborderwidth 2 \
+                                          -relief flat \
+                                -selectbackground FieldbackgroundFocus \
+                               -selectborderwidth 0 \
+                                -selectforeground FieldbackgroundFocusText \
+                                 -shellbackground Background;
+
+        # Mapping
+        style map Canvas -bordercolor [list background BordercolorBackground \
+                                              disabled BordercolorDisabled \
+                                                 hover Accent];
     }
 }
 
