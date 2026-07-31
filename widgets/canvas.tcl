@@ -209,6 +209,28 @@ namespace eval ::ms::canvas {
                                               selectborderwidth \
                                               selectforeground \
                                               shellbackground];
+
+    # Set the default 'non-styleable' canvas options values.
+    set ::ms::default(canvas,class)            Canvas
+    set ::ms::default(canvas,closeenough)      1.0
+    set ::ms::default(canvas,cmenu)            {}
+    set ::ms::default(canvas,confine)          1
+    set ::ms::default(canvas,height)           [::ms::Convert_Measure 7c "" 300]
+    set ::ms::default(canvas,insertofftime)    300
+    set ::ms::default(canvas,insertontime)     600
+    set ::ms::default(canvas,insertwidth)      2
+    set ::ms::default(canvas,scrollable)       false
+    set ::ms::default(canvas,scrollregion)     {}
+    set ::ms::default(canvas,state)            normal
+    set ::ms::default(canvas,style)            Canvas
+    set ::ms::default(canvas,takefocus)        0
+    set ::ms::default(canvas,width)            [::ms::Convert_Measure 10c "" 400]
+    set ::ms::default(canvas,xscrollcommand)   {}
+    set ::ms::default(canvas,xscrollincrement) 0
+    set ::ms::default(canvas,yscrollcommand)   {}
+    set ::ms::default(canvas,yscrollincrement) 0
+
+    # Note: The default 'styleable' canvas options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **canvas** command.
