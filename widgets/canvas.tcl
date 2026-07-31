@@ -2966,4 +2966,217 @@ proc ::ms::canvas::Configure { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::canvas::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the canvas classtype widgets real address list.
+    set index [lsearch -exact $::ms::addr(canvas,classtype) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(canvas,classtype) [lremove $::ms::addr(canvas,classtype) $index] }
+    }
+
+    # Remove the widget address from the canvas classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),canvas,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),canvas,addrs) [lremove $::ms::class($::ms::current($w,class),canvas,addrs) $index] }
+    }
+
+    # Remove the widget address from the canvas classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),canvas,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),canvas,addrs) [lremove $::ms::style($::ms::current($w,style),canvas,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the button classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),button,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(button,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(button,classtype) [lremove $::ms::style(button,classtype) $index] }
+            }
+        }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            ###########################
+            ##                       ##
+            ##     SIMPLE CANVAS     ##
+            ##                       ##
+            ###########################
+
+            # Remove the widget address from the list of all available real addresses.
+            set index [lsearch -exact $::ms::addr(reals) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+            }
+        }
+        true {
+            ###############################
+            ##                           ##
+            ##     SCROLLABLE CANVAS     ##
+            ##                           ##
+            ###############################
+
+            # Remove every widget's objects addresses from the list of all available real addresses.
+            foreach object [list $w \
+                                 $w.canvas \
+                                 $w.x \
+                                 $w.y] {
+                set index [lsearch -exact $::ms::addr(reals) $object]
+                switch -- $index {
+                    -1      {}
+                    default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+                }
+            }
+
+            # Remove the widget address from the megawidget real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+            }
+
+            # Remove the widget address from the megawidget container real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets,containers) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets,containers) [lremove $::ms::addr(megawidgets,containers) $index] }
+            }
+
+            # Remove the widget address from the megawidget scrollable real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets,scrollable) [lremove $::ms::addr(megawidgets,scrollable) $index] }
+            }
+        }
+    }
+
+    # Destroy the bindings for the widget real address in its related toplevel.
+    ::ms::CleanUp $w
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short) \
+                         ::ms::addr($w.canvas,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,closeenough) \
+                         ::ms::current($w,confine) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,height) \
+                         ::ms::current($w,insertbackground) \
+                         ::ms::current($w,insertborderwidth) \
+                         ::ms::current($w,insertofftime) \
+                         ::ms::current($w,insertontime) \
+                         ::ms::current($w,insertwidth) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,scrollable) \
+                         ::ms::current($w,scrollregion) \
+                         ::ms::current($w,selectbackground) \
+                         ::ms::current($w,selectborderwidth) \
+                         ::ms::current($w,selectforeground) \
+                         ::ms::current($w,shellbackground) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,xscrollcommand) \
+                         ::ms::current($w,xscrollincrement) \
+                         ::ms::current($w,yscrollcommand) \
+                         ::ms::current($w,yscrollincrement) \
+                         ::ms::current($w,width);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,scrollx) \
+                         ::ms::data($w,scrolly) \
+                         ::ms::data($w,statespec) \
+                         ::ms::data($w,token) \
+                         ::ms::data($w,xscrollcommand) \
+                         ::ms::data($w,yscrollcommand);
+
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,closeenough) \
+                         ::ms::default($w,confine) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,height) \
+                         ::ms::default($w,insertbackground) \
+                         ::ms::default($w,insertborderwidth) \
+                         ::ms::default($w,insertofftime) \
+                         ::ms::default($w,insertontime) \
+                         ::ms::default($w,insertwidth) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,scrollable) \
+                         ::ms::default($w,scrollregion) \
+                         ::ms::default($w,selectbackground) \
+                         ::ms::default($w,selectborderwidth) \
+                         ::ms::default($w,selectforeground) \
+                         ::ms::default($w,shellbackground) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,xscrollcommand) \
+                         ::ms::default($w,xscrollincrement) \
+                         ::ms::default($w,yscrollcommand) \
+                         ::ms::default($w,yscrollincrement) \
+                         ::ms::default($w,width);
+
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,insertbackground) \
+                         ::ms::managed_by($w,insertborderwidth) \
+                         ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,selectbackground) \
+                         ::ms::managed_by($w,selectborderwidth) \
+                         ::ms::managed_by($w,selectforeground) \
+                         ::ms::managed_by($w,shellbackground);
+
+    unset -nocomplain -- ::ms::style($w,hull)
+
+    return ""
+}
+
 #*EOF*
