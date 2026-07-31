@@ -982,6 +982,28 @@ proc ::ms::canvas::Command { window { args "" } } {
                                       -pady 0 \
                                        -row 0 \
                                     -sticky nesw;
+
+                    ########################
+                    ##                    ##
+                    ##     SCROLLBARS     ##
+                    ##                    ##
+                    ########################
+
+                    # Create the horizontal scrollbar.
+                    _ttk_scrollbar $w.x     -class TScrollbar \
+                                          -command [list $w.canvas xview] \
+                                           -cursor arrow \
+                                           -orient horizontal \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+                    # Create the vertical scrollbar.
+                    _ttk_scrollbar $w.y     -class TScrollbar \
+                                          -command [list $w.canvas yview] \
+                                           -cursor arrow \
+                                           -orient vertical \
+                                            -style TScrollbar \
+                                        -takefocus 0;
                 }
             }
         }
