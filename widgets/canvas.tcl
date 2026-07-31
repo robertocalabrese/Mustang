@@ -274,6 +274,93 @@ proc ::ms::canvas::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)            $::ms::default(canvas,class)
+            set ::ms::default($w,cmenu)            $::ms::default(canvas,cmenu)
+            set ::ms::default($w,closeenough)      $::ms::default(canvas,closeenough)
+            set ::ms::default($w,confine)          $::ms::default(canvas,confine)
+            set ::ms::default($w,height)           $::ms::default(canvas,height)
+            set ::ms::default($w,insertofftime)    $::ms::default(canvas,insertofftime)
+            set ::ms::default($w,insertontime)     $::ms::default(canvas,insertontime)
+            set ::ms::default($w,insertwidth)      $::ms::default(canvas,insertwidth)
+            set ::ms::default($w,scrollable)       $::ms::default(canvas,scrollable)
+            set ::ms::default($w,scrollregion)     $::ms::default(canvas,scrollregion)
+            set ::ms::default($w,state)            $::ms::default(canvas,state)
+            set ::ms::default($w,style)            $::ms::default(canvas,style)
+            set ::ms::default($w,takefocus)        $::ms::default(canvas,takefocus)
+            set ::ms::default($w,width)            $::ms::default(canvas,width)
+            set ::ms::default($w,xscrollcommand)   $::ms::default(canvas,xscrollcommand)
+            set ::ms::default($w,xscrollincrement) $::ms::default(canvas,xscrollincrement)
+            set ::ms::default($w,yscrollcommand)   $::ms::default(canvas,yscrollcommand)
+            set ::ms::default($w,yscrollincrement) $::ms::default(canvas,yscrollincrement)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)            $::ms::default(canvas,class)
+            set ::ms::current($w,cmenu)            $::ms::default(canvas,cmenu)
+            set ::ms::current($w,closeenough)      $::ms::default(canvas,closeenough)
+            set ::ms::current($w,confine)          $::ms::default(canvas,confine)
+            set ::ms::current($w,height)           $::ms::default(canvas,height)
+            set ::ms::current($w,insertofftime)    $::ms::default(canvas,insertofftime)
+            set ::ms::current($w,insertontime)     $::ms::default(canvas,insertontime)
+            set ::ms::current($w,insertwidth)      $::ms::default(canvas,insertwidth)
+            set ::ms::current($w,scrollable)       $::ms::default(canvas,scrollable)
+            set ::ms::current($w,scrollregion)     $::ms::default(canvas,scrollregion)
+            set ::ms::current($w,state)            $::ms::default(canvas,state)
+            set ::ms::current($w,style)            $::ms::default(canvas,style)
+            set ::ms::current($w,takefocus)        $::ms::default(canvas,takefocus)
+            set ::ms::current($w,width)            $::ms::default(canvas,width)
+            set ::ms::current($w,xscrollcommand)   $::ms::default(canvas,xscrollcommand)
+            set ::ms::current($w,xscrollincrement) $::ms::default(canvas,xscrollincrement)
+            set ::ms::current($w,yscrollcommand)   $::ms::default(canvas,yscrollcommand)
+            set ::ms::current($w,yscrollincrement) $::ms::default(canvas,yscrollincrement)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype)      canvas
+            set ::ms::data($w,scrollx)        off
+            set ::ms::data($w,scrolly)        off
+            set ::ms::data($w,statespec)      $::ms::data(statespec,normal)
+            set ::ms::data($w,xscrollcommand) {}
+            set ::ms::data($w,yscrollcommand) {}
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a canvas styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **canvas** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)        Tk
+            set ::ms::managed_by($w,bordercolor)       Tk
+            set ::ms::managed_by($w,borderwidth)       Tk
+            set ::ms::managed_by($w,cursor)            Tk
+            set ::ms::managed_by($w,darkcolor)         Tk
+            set ::ms::managed_by($w,insertbackground)  Tk
+            set ::ms::managed_by($w,insertborderwidth) Tk
+            set ::ms::managed_by($w,lightcolor)        Tk
+            set ::ms::managed_by($w,relief)            Tk
+            set ::ms::managed_by($w,selectbackground)  Tk
+            set ::ms::managed_by($w,selectborderwidth) Tk
+            set ::ms::managed_by($w,selectforeground)  Tk
+            set ::ms::managed_by($w,shellbackground)   Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
