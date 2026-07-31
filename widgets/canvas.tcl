@@ -835,6 +835,28 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        Canvas  { bindtags $w [list $w _Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        default { bindtags $w [list $w $::ms::current($w,class) _Canvas Canvas $::ms::addr($w,toplevel) all] }
+                    }
+
+                    # Configure
+                    _bind $w <Configure> { ::ms::canvas::Configure %W; break }
+
+                    # Enter/Leave
+                    _bind $w <Enter> { ::ms::canvas::Pathname_Cmd %W state  hover; break }
+                    _bind $w <Leave> { ::ms::canvas::Pathname_Cmd %W state !hover; break }
+
+                    # Add the simple canvas to the related toplevel keyboard pages navigation bindings.
+                    ::ms::Enable_Traversal $w
                 }
                 true {
                     ###############################
