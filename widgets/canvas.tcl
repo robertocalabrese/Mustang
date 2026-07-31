@@ -1929,6 +1929,18 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                                     # Apply the changes.
                                     interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                                    ####################
+                                    ##                ##
+                                    ##     CANVAS     ##
+                                    ##                ##
+                                    ####################
+
+                                    # Note: Tk Canvases don't understands styles, at least not natively.
+                                    #       No internal styles needs to be created.
+
+                                    # Create the widget.
+                                    $w.canvas configure {*}$canvas_options
                                 }
                             }
                         }
