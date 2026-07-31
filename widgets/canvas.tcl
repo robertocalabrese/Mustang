@@ -2763,6 +2763,95 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: 'borderwidth', 'cursor', 'insertwidth', 'relief' and 'selectborderwidth' are not allowed to change if the statespec changes.
+
+        # background
+        switch -- $::ms::managed_by($w,background) {
+            developer { set background $::ms::current($w,background) }
+            Tk        { set background [_ttk_style lookup $stylename -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+        }
+
+        # bordercolor
+        switch -- $::ms::managed_by($w,bordercolor) {
+            developer { set bordercolor $::ms::current($w,bordercolor) }
+            Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+        }
+
+        # insertbackground
+        switch -- $::ms::managed_by($w,insertbackground) {
+            developer { set insertbackground $::ms::current($w,insertbackground) }
+            Tk        { set insertbackground [_ttk_style lookup $stylename -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
+        }
+
+        # selectbackground
+        switch -- $::ms::managed_by($w,selectbackground) {
+            developer { set selectbackground $::ms::current($w,selectbackground) }
+            Tk        { set selectbackground [_ttk_style lookup $stylename -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
+        }
+
+        # selectforeground
+        switch -- $::ms::managed_by($w,selectforeground) {
+            developer { set selectforeground $::ms::current($w,selectforeground) }
+            Tk        { set selectforeground [_ttk_style lookup $stylename -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
+        }
+
+        # Set the canvas options.
+        set canvas_options [list        -background $background \
+                                            -cursor $cursor \
+                                  -insertbackground $insertbackground \
+                                 -insertborderwidth $::ms::current($w,insertborderwidth) \
+                                  -selectbackground $selectbackground \
+                                 -selectborderwidth $::ms::current($w,selectborderwidth) \
+                                  -selectforeground $selectforeground];
+
+        # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
+        #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+        #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+        #       like it behaves in other widgets that has it and understands it.
+
+        # Check the 'relief' type.
+        switch -- $::ms::current($w,relief) {
+            flat  -
+            solid {
+                lappend canvas_options         -borderwidth 0 \
+                                       -highlightbackground $bordercolor \
+                                            -highlightcolor $bordercolor \
+                                        -highlightthickness $::ms::current($w,borderwidth) \
+                                                    -relief flat;
+            }
+            default {
+                lappend canvas_options         -borderwidth $::ms::current($w,borderwidth) \
+                                       -highlightbackground $background \
+                                            -highlightcolor $background \
+                                        -highlightthickness 0 \
+                                                    -relief $::ms::current($w,relief);
+            }
+        }
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false {
+                ###########################
+                ##                       ##
+                ##     SIMPLE CANVAS     ##
+                ##                       ##
+                ###########################
+            }
+            true {
+                ###############################
+                ##                           ##
+                ##     SCROLLABLE CANVAS     ##
+                ##                           ##
+                ###############################
+            }
+        }
     }
 
     return ""
