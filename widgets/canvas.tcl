@@ -2843,6 +2843,18 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
                 ##     SIMPLE CANVAS     ##
                 ##                       ##
                 ###########################
+
+                ####################
+                ##                ##
+                ##     CANVAS     ##
+                ##                ##
+                ####################
+
+                # Note: Tk Canvases don't understands styles, at least not natively.
+                #       No internal styles needs to be created.
+
+                # Apply the changes.
+                interp invokehidden {} $w configure {*}$canvas_options
             }
             true {
                 ###############################
