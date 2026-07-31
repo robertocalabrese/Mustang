@@ -1129,6 +1129,54 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Add the widget to the related toplevel keyboard pages navigation bindings.
                     ::ms::Enable_Traversal $w
+
+                    #####################
+                    ##                 ##
+                    ##     CLOSING     ##
+                    ##                 ##
+                    #####################
+
+                    # Configure the internal widget rows and columns.
+                    _grid rowconfigure    $w [list 0] -weight 1
+                    _grid columnconfigure $w [list 0] -weight 1
+
+                    # Set the widget real address relative to its short address, 'short_addr'.
+                    set ::ms::addr($short_addr,real) $w
+
+                    # Set the widget short addresses relative to its real address, 'w'.
+                    # They will all point to the widget hull object short address.
+                    set ::ms::addr($w,short)        $short_addr
+                    set ::ms::addr($w.canvas,short) $short_addr
+                    set ::ms::addr($w.x,short)      $short_addr
+                    set ::ms::addr($w.y,short)      $short_addr
+
+                    # Add the widget real and short address into the list of all available real and short addresses.
+                    lappend ::ms::addr(reals) $w \
+                                              $w.canvas \
+                                              $w.x \
+                                              $w.y;
+
+                    lappend ::ms::addr(shorts) $short_addr
+
+                    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+                    set ::ms::addr($w,border) $w.canvas
+
+                    # Set the actual widget address (the widget that the developer was intended to build).
+                    set ::ms::addr($w,widget) $w.canvas
+
+                    # Set the structure addresses.
+                    # Is important to note that the scrollbar addresses must not be included.
+                    set ::ms::addr($w,structure) [list $w \
+                                                       $w.canvas];
+
+                    # Add the widget address to the megawidget addresses list.
+                    lappend ::ms::addr(megawidgets) $w
+
+                    # Add the widget address to the megawidget container addresses list.
+                    lappend ::ms::addr(megawidgets,containers) $w
+
+                    # Add the widget address to the scrollable megawidget addresses list.
+                    lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
         }
