@@ -908,6 +908,61 @@ proc ::ms::canvas::Command { window { args "" } } {
                     switch -- $::ms::current($w,width) {
                         0   { set ::ms::current($w,width) $::ms::default($w,width) }
                     }
+
+                    ##################
+                    ##              ##
+                    ##     HULL     ##
+                    ##              ##
+                    ##################
+
+                    # Set the hull object style name.
+                    set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                         ".TFrame"];
+
+                    # If needed, create the hull object style name.
+                    if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                        _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                        # Add the hull object style name to the theme styles list created by mustang.
+                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                    }
+
+                    # Initialize the hull object mapping.
+                    set mapping [list ]
+
+                    # shellbackground
+                    switch -- $::ms::managed_by($w,shellbackground) {
+                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                        Tk  {
+                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
+                            }
+                        }
+                    }
+
+                    # If needed, create the hull object mapping.
+                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                        _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                        # Add the hull object mapping to the stylemap list containing all the mappings
+                        # created by mustang for the current theme.
+                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                    }
+
+                    # Create the hull object.
+                    _ttk_frame $w -borderwidth 0 \
+                                        -class TFrame \
+                                       -cursor arrow \
+                                       -height 0 \
+                                      -padding 0 \
+                                       -relief flat \
+                                        -style $::ms::style($w,hull) \
+                                    -takefocus 0 \
+                                        -width 0;
+
+                    # Set the widget toplevel.
+                    set ::ms::addr($w,toplevel) [_winfo toplevel $w]
                 }
             }
         }
