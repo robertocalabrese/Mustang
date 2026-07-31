@@ -3235,4 +3235,50 @@ proc ::ms::canvas::Focus_Out { w } {
     return ""
 }
 
+## Hover
+#
+# Manage the **Enter** and **Leave** event on the widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# X, Y   Should be the mouse pointer (X,Y) root coordinates.
+#        These value are provided directly by the **Enter** or **Leave** event.
+#
+# It doesn't return anything.
+proc ::ms::canvas::Hover { w X Y } {
+    # Safeguard.
+    switch -- $::ms::current($w,scrollable) {
+        false { return }
+    }
+
+    # Get the dimensions of the widget border object.
+    set height [_winfo height $::ms::addr($w,border)]
+    set width  [_winfo width  $::ms::addr($w,border)]
+
+    # Get the north-west (nw) root coordinates of the widget border object.
+    set X_nw [_winfo rootx $::ms::addr($w,border)]
+    set Y_nw [_winfo rooty $::ms::addr($w,border)]
+
+    # Get the widget south-east (se) root coordinates of the widget border object.
+    set X_se [expr { $X_nw+$width }]
+    set Y_se [expr { $Y_nw+$height }]
+
+    # Check if the mouse pointer coordinates are inside or outside the widget border object.
+    if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
+        # The mouse cursor is outside the widget border object.
+
+        # Change the widget dynamic state to '!hover'.
+        ::ms::canvas::Pathname_Cmd $w state !hover
+    } else {
+        # The mouse cursor is inside the widget border object.
+
+        # Change the widget dynamic state to 'hover'.
+        ::ms::canvas::Pathname_Cmd $w state hover
+    }
+
+    return ""
+}
+
 #*EOF*
