@@ -1704,7 +1704,138 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        xview {}
+        xview {
+            # Synopsis:
+            #
+            # *window* **xview**
+            # *window* **xview** **moveto** *fraction*
+            # *window* **xview** **scroll** *number* *what*
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    # Check the subcommand.
+                    switch -nocase -- $subcommand {
+                        ""     { return [interp invokehidden {} $w xview] }
+                        moveto {
+                            # Check the number of arguments provided (after the 'moveto' word).
+                            switch -- [llength $args] {
+                                1       {}
+                                default { return "" }
+                            }
+
+                            # Check the fraction provided.
+                            set fraction $args
+                            switch -- [string is double -strict $fraction] {
+                                0   { return "" }
+                            }
+
+                            # Check that fraction is inside its limits [0,1.0].
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+
+                            # Move the content object horizontally.
+                            interp invokehidden {} $w xview moveto $fraction
+
+                            return ""
+                        }
+                        scroll {
+                            # Check the number of arguments provided (after the 'scroll' word).
+                            switch -- [llength $args] {
+                                2       {}
+                                default { return "" }
+                            }
+
+                            # Check the 'number'.
+                            set number [lindex $args 0]
+                            switch -- [string is double -strict $number] {
+                                0   { return "" }
+                            }
+
+                            # Check the 'what'.
+                            switch -nocase -- [lindex $args 1] {
+                                pages   { set what "pages" }
+                                units   { set what "units" }
+                                default { return "" }
+                            }
+
+                            # Move the content object horizontally.
+                            interp invokehidden {} $w xview scroll $number $what
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+                    }
+                }
+                true {
+                    # Check if the widget has an active horizontal scrollbar.
+                    switch -- $::ms::data($w,scrollx) {
+                        on  {
+                            # Check the subcommand.
+                            switch -nocase -- $subcommand {
+                                ""     { return [$w.canvas xview] }
+                                moveto {
+                                    # Check the number of arguments provided (after the 'moveto' word).
+                                    switch -- [llength $args] {
+                                        1       {}
+                                        default { return "" }
+                                    }
+
+                                    # Check the fraction provided.
+                                    set fraction $args
+                                    switch -- [string is double -strict $fraction] {
+                                        0   { return "" }
+                                    }
+
+                                    # Check that fraction is inside its limits [0,1.0].
+                                    if { $fraction < 0 } {
+                                        set fraction 0
+                                    } elseif { $fraction > 1.0 } {
+                                        set fraction 1.0
+                                    }
+
+                                    # Move the content object horizontally.
+                                    $w.canvas xview moveto $fraction
+
+                                    return ""
+                                }
+                                scroll {
+                                    # Check the number of arguments provided (after the 'scroll' word).
+                                    switch -- [llength $args] {
+                                        2       {}
+                                        default { return "" }
+                                    }
+
+                                    # Check the 'number'.
+                                    set number [lindex $args 0]
+                                    switch -- [string is double -strict $number] {
+                                        0   { return "" }
+                                    }
+
+                                    # Check the 'what'.
+                                    switch -nocase -- [lindex $args 1] {
+                                        pages   { set what "pages" }
+                                        units   { set what "units" }
+                                        default { return "" }
+                                    }
+
+                                    # Move the content object horizontally.
+                                    $w.canvas xview scroll $number $what
+
+                                    return ""
+                                }
+                                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         yview {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
