@@ -1733,6 +1733,27 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Check the widget state and set the cursor, statespec and takefocus accordingly.
+                            switch -- $::ms::current($w,state) {
+                                disabled {
+                                    set cursor    arrow
+                                    set takefocus 0
+
+                                    # Check if the disabled flag is active in the widget statespec.
+                                    if { "disabled" ni $::ms::data($w,statespec) } {
+                                        # Update the disabled flag.
+                                        # No need to check if 'index' is '-1'.
+                                        set index [lsearch -exact $::ms::data($w,statespec) !disabled]
+                                        set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) $index $index $state]
+                                    }
+                                }
+                                normal {
+                                    set cursor    $::ms::current($w,cursor)
+                                    set statespec $::ms::data($w,statespec)
+                                    set takefocus $::ms::current($w,takefocus)
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
