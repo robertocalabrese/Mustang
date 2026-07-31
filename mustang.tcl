@@ -3933,7 +3933,7 @@ proc ::ms::ScanMark { w x y } {
 ## ScanRelease
 #
 # Manages the **<ButtonRelease-2>** (or **<ButtonRelease-3>** in macOS Aqua) event on a scrollable widget
-# that supports **scan** operations.
+# that supports **scan** operations (canvases, listboxes and texts).
 #
 # It doesn't return anything.
 proc ::ms::ScanRelease {} {
