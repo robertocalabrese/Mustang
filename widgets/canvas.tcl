@@ -1970,6 +1970,18 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Note: If width and/or height were provided by the developer, and these values were accepted by Tk,
+                            #       then a configure event will be invoked by Tk ('::ms::canvas::Configure').
+                            #       After this event, their values will be registered.
+
+                            update
+
+                            # Cleaning.
+                            unset -nocomplain -- ::ms::temp($w,height) \
+                                                 ::ms::temp($w,width);
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
