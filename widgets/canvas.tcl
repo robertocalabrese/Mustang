@@ -1338,6 +1338,389 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+                            ##################################################
+                            ##                                              ##
+                            ##     CHECK THE CONFIGURE OPTIONS PROVIDED     ##
+                            ##                                              ##
+                            ##################################################
+
+                            # Check the remaining widget's options, if any.
+                            foreach { option value } $args {
+                                switch -nocase -- $option {
+                                    -background {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,background)    $value
+                                        set ::ms::managed_by($w,background) developer
+                                    }
+                                    -bordercolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,bordercolor)    $value
+                                        set ::ms::managed_by($w,bordercolor) developer
+                                    }
+                                    -borderwidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,borderwidth)    $value
+                                        set ::ms::managed_by($w,borderwidth) developer
+                                    }
+                                    -class {}
+                                    -cmenu {
+                                        set value [string trim $value]
+                                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                                            set ::ms::current($w,cmenu) $value
+                                        }
+                                    }
+                                    -closeenough {
+                                        switch -- [string is double -strict $value] {
+                                            0   { continue }
+                                        }
+
+                                        set ::ms::current($w,closeenough) $value
+                                    }
+                                    -confine {
+                                        switch -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,confine) 0 }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,confine) 1 }
+                                        }
+                                    }
+                                    -cursor {
+                                        set value [string tolower $value]
+                                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                                            set ::ms::current($w,cursor)    $value
+                                            set ::ms::managed_by($w,cursor) developer
+                                        }
+                                    }
+                                    -height {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::temp($w,height) $value
+                                    }
+                                    -insertbackground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,insertbackground)    $value
+                                        set ::ms::managed_by($w,insertbackground) developer
+                                    }
+                                    -insertborderwidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,insertborderwidth)    $value
+                                        set ::ms::managed_by($w,insertborderwidth) developer
+                                    }
+                                    -insertofftime {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                if { $value >= 0 } {
+                                                    set ::ms::current($w,insertofftime) $value
+                                                }
+                                            }
+                                        }
+                                    }
+                                    -insertontime {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                if { $value > 0 } {
+                                                    set ::ms::current($w,insertontime) $value
+                                                }
+                                            }
+                                        }
+                                    }
+                                    -insertwidth {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                if { $value > 0 } {
+                                                    set ::ms::current($w,insertwidth) $value
+                                                }
+                                            }
+                                        }
+                                    }
+                                    -relief {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            flat   -
+                                            groove -
+                                            raised -
+                                            ridge  -
+                                            solid  -
+                                            sunken {
+                                                set ::ms::current($w,relief)    $value
+                                                set ::ms::managed_by($w,relief) developer
+                                            }
+                                        }
+                                    }
+                                    -scrollable {}
+                                    -scrollregion {
+                                        switch -- [llength $value] {
+                                            4   {
+                                                set scrollregion [list ]
+                                                foreach coordinate $value {
+                                                    set unit [string index $coordinate end]
+                                                    switch -- $unit {
+                                                        0   -
+                                                        1   -
+                                                        2   -
+                                                        3   -
+                                                        4   -
+                                                        5   -
+                                                        6   -
+                                                        7   -
+                                                        8   -
+                                                        9   {
+                                                            # The coordinate have no unit, its value is assumed to be in pixels.
+                                                            if { [string is double -strict $coordinate] && ( $coordinate >= 0 ) } {
+                                                                lappend scrollregion $coordinate
+                                                            } else {
+                                                                break
+                                                            }
+                                                        }
+                                                        i   -
+                                                        c   -
+                                                        m   -
+                                                        p   {
+                                                            set coordinate [string range $coordinate 0 end-1]
+
+                                                            if { [string is double -strict $coordinate] && ( $coordinate >= 0 ) } {
+                                                                switch -- $coordinate {
+                                                                    0       { lappend scrollregion $coordinate }
+                                                                    default { lappend scrollregion [string cat $coordinate $unit] }
+                                                                }
+                                                            } else {
+                                                                break
+                                                            }
+                                                        }
+                                                        default { break }
+                                                    }
+                                                }
+
+                                                switch -- [llength $scrollregion] {
+                                                    4   { set ::ms::current($w,scrollregion) $scrollregion }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    -selectbackground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,selectbackground)    $value
+                                        set ::ms::managed_by($w,selectbackground) developer
+                                    }
+                                    -selectborderwidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,selectborderwidth)    $value
+                                        set ::ms::managed_by($w,selectborderwidth) developer
+                                    }
+                                    -selectforeground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,selectforeground)    $value
+                                        set ::ms::managed_by($w,selectforeground) developer
+                                    }
+                                    -shellbackground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,shellbackground)    $value
+                                        set ::ms::managed_by($w,shellbackground) developer
+                                    }
+                                    -state {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            disabled -
+                                            normal   { set ::ms::current($w,state) $value }
+                                        }
+                                    }
+                                    -style {
+                                        if { $value in $::ms::style($::ms::theme) } {
+                                            # Remove the widget address from the canvas real address list that contains all the
+                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            set index [lsearch -exact $::ms::style($::ms::current($w,style),canvas,addrs) $w]
+                                            switch -- $index {
+                                                -1      {}
+                                                default { set ::ms::style($::ms::current($w,style),canvas,addrs) [lremove $::ms::style($::ms::current($w,style),canvas,addrs) $index] }
+                                            }
+
+                                            # Add the widget address to the address list that contains all the
+                                            # widgets addresses with style 'value'.
+                                            lappend ::ms::style($value,canvas,addrs) $w
+
+                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # for the canvas classtype.
+                                            switch -- [llength $::ms::style($::ms::current($w,style),canvas,addrs)] {
+                                                0   {
+                                                    set index [lsearch -exact $::ms::style(canvas,classtype) $::ms::current($w,style)]
+                                                    switch -- $index {
+                                                        -1      {}
+                                                        default { set ::ms::style(canvas,classtype) [lremove $::ms::style(canvas,classtype) $index] }
+                                                    }
+                                                }
+                                            }
+
+                                            # If needed, add 'value' to the available styles for the canvas classtype.
+                                            if { $value ni $::ms::style(canvas,classtype) } {
+                                                lappend ::ms::style(canvas,classtype) $value
+                                            }
+
+                                            # Update the current style associated with the widget with 'value'.
+                                            set ::ms::current($w,style) $value
+                                        }
+                                    }
+                                    -takefocus {
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,takefocus) 0 }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,takefocus) 1 }
+                                        }
+                                    }
+                                    -width {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::temp($w,width) $value
+                                    }
+                                    -xscrollcommand {
+                                        switch -- $::ms::current($w,scrollable) {
+                                            true { continue }
+                                        }
+
+                                        switch -- [llength $value] {
+                                            0   {
+                                                set ::ms::current($w,xscrollcommand) {}
+                                                set ::ms::data($w,xscrollcommand)    {}
+                                            }
+                                            2   {
+                                                set addr [lindex $value 0]
+                                                set cmd  [lindex $value 1]
+
+                                                # Get the 'addr' real address.
+                                                set result [::ms::Check_Pathname $addr invalid]
+                                                switch -- $result {
+                                                    invalid { continue }
+                                                    default { set addr [lindex $result 0] }
+                                                }
+
+                                                # Check that 'addr' corrisponds to a scrollbar widget with horizontal orientation.
+                                                if { $addr in $::ms::addr(scrollbar) } {
+                                                    switch -- $::ms::current($addr,orient) {
+                                                        vertical { continue }
+                                                    }
+                                                } else {
+                                                    continue
+                                                }
+
+                                                # Check the 'cmd' value.
+                                                switch -nocase -- $cmd {
+                                                    set     {}
+                                                    default { continue }
+                                                }
+
+                                                set ::ms::current($w,xscrollcommand) $value
+                                                set ::ms::data($w,xscrollcommand)    [list $addr set]
+                                            }
+                                        }
+                                    }
+                                    -xscrollincrement {
+                                        switch -- [string is integer -strict $value] {
+                                            1   { set ::ms::current($w,xscrollincrement) $value }
+                                        }
+                                    }
+                                    -yscrollcommand {
+                                        switch -- $::ms::current($w,scrollable) {
+                                            true { continue }
+                                        }
+
+                                        switch -- [llength $value] {
+                                            0   {
+                                                set ::ms::current($w,yscrollcommand) {}
+                                                set ::ms::data($w,yscrollcommand)    {}
+                                            }
+                                            2   {
+                                                set addr [lindex $value 0]
+                                                set cmd  [lindex $value 1]
+
+                                                # Get the 'addr' real address.
+                                                set result [::ms::Check_Pathname $addr invalid]
+                                                switch -- $result {
+                                                    invalid { continue }
+                                                    default { set addr [lindex $result 0] }
+                                                }
+
+                                                # Check that 'addr' corrisponds to a scrollbar widget with vertical orientation.
+                                                if { $addr in $::ms::addr(scrollbar) } {
+                                                    switch -- $::ms::current($addr,orient) {
+                                                        horizontal { continue }
+                                                    }
+                                                } else {
+                                                    continue
+                                                }
+
+                                                # Check the 'cmd' value.
+                                                switch -nocase -- $cmd {
+                                                    set     {}
+                                                    default { continue }
+                                                }
+
+                                                set ::ms::current($w,yscrollcommand) $value
+                                                set ::ms::data($w,yscrollcommand)    [list $addr set]
+                                            }
+                                        }
+                                    }
+                                    -yscrollincrement {
+                                        switch -- [string is integer -strict $value] {
+                                            1   { set ::ms::current($w,yscrollincrement) $value }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
