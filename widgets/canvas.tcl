@@ -1179,6 +1179,43 @@ proc ::ms::canvas::Command { window { args "" } } {
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
+
+            #####################
+            ##                 ##
+            ##     CLOSING     ##
+            ##                 ##
+            #####################
+
+            # Hide the widget pathcommand.
+            interp hide {} $w
+
+            # Create an alias for the widget pathcommand.
+            lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::canvas::Pathname_Cmd $w]
+
+            # If needed, create an alias for the widget short address pathcommand.
+            if { $short_addr ne $w } {
+                lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::canvas::Pathname_Cmd $w]
+            }
+
+            # Add the widget address to the canvas classtype widgets real address list.
+            lappend ::ms::addr(canvas,classtype) $w
+
+            # Add the widget address to the canvas classtype real address list with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),canvas,addrs) $w
+
+            # Add the widget address to the canvas classtype real address list with style '::ms::current($w,style)'.
+            lappend ::ms::style($::ms::current($w,style),canvas,addrs) $w
+
+            # If needed, add '::ms::current($w,style)' to the available styles for the canvas classtype.
+            if { $::ms::current($w,style) ni $::ms::style(canvas,classtype) } {
+                lappend ::ms::style(canvas,classtype) $::ms::current($w,style)
+            }
+
+            # Depending on the address type provided, return the widget real or short address.
+            switch -- $type {
+                real  { return $w }
+                short { return $short_addr }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
