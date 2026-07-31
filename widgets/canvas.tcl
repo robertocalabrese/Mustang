@@ -2918,6 +2918,15 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
 
                 # Apply the changes.
                 $w.canvas {*}$canvas_options
+
+                #######################
+                ##                   ##
+                ##     SCROLLBAR     ##
+                ##                   ##
+                #######################
+
+                # Update the scrollbars.
+                ::ms::canvas::Scrollbar_Update $w
             }
         }
     }
