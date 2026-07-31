@@ -3627,7 +3627,7 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
 
     # Check if the address provided belongs to a palette widget.
     switch -- $::ms::data($w,classtype) {
-        palette { set address $w.combobox }
+        palette { set address [list $w.combobox] }
         default { set address [list interp invokehidden {} $w]}
     }
 
@@ -3670,14 +3670,11 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
     # Check the maxlength.
     switch -- $::ms::current($w,maxlength) {
         0   {
-            # Insert the 'clipboard_data' string at the insert point.
-            interp invokehidden {} $w insert $insert $clipboard_data
+            # Insert the 'clipboard_data' string at the 'insert' point.
+            {*}$address insert $insert $clipboard_data
 
-            # Compute the cursor index at the end of the 'clipboard_data' string.
-            set clipboard_data_end [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
-
-            # Set the cursor at 'clipboard_data_end'.
-            interp invokehidden {} $w icursor $clipboard_data_end
+            # Set the cursor index at the end of the 'clipboard_data' string.
+            {*}$address icursor [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
 
             # Make the 'clipboard_data_end' character visible.
             switch -- $::ms::data($w,classtype) {
@@ -3689,26 +3686,20 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
             # Construct the new value with the 'clipboard_data' inserted at the insert point.
             set new_value [string cat [string range $value 0 $insert-1] "$clipboard_data" [string range $value $insert end]]
 
-            # Compute the length of new value.
-            set new_value_length [string length $new_value]
-
-            # Check if 'new_value' fits the widget maxlength.
-            if { $new_value_length > $::ms::current($w,maxlength) } {
+            # Check if 'new_value' list length fits the widget maxlength.
+            if { [string length $new_value] > $::ms::current($w,maxlength) } {
                 # It doesn't fit 😕.
                 # Clear the widget field, insert the truncated new value and position the cursor at the end.
-                interp invokehidden {} $w delete 0 end
-                interp invokehidden {} $w insert 0 [string range $new_value 0 $::ms::current($w,maxlength)-1]
-                interp invokehidden {} $w icursor end
+                {*}$address delete 0 end
+                {*}$address insert 0 [string range $new_value 0 $::ms::current($w,maxlength)-1]
+                {*}$address icursor end
             } else {
                 # It fit 😄.
-                # Insert 'clipboard_data' at the insert point.
-                interp invokehidden {} $w insert $insert $clipboard_data
+                # Insert 'clipboard_data' at the 'insert' point.
+                {*}$address insert $insert $clipboard_data
 
-                # Compute the cursor index at the end of the 'clipboard_data' string.
-                set clipboard_data_end [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
-
-                # Set the cursor at 'clipboard_data_end'.
-                interp invokehidden {} $w icursor $clipboard_data_end
+                # Set the cursor index at the end of the 'clipboard_data' string.
+                {*}$address icursor [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
             }
         }
     }
