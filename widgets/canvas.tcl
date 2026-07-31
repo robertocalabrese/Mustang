@@ -1242,7 +1242,53 @@ proc ::ms::canvas::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::canvas::Pathname_Cmd { w cmd args } {}
+proc ::ms::canvas::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        addtag        -
+        bbox          -
+        bind          -
+        canvasx       -
+        canvasy       -
+        coords        -
+        dchars        -
+        delete        -
+        dtag          -
+        find          -
+        focus         -
+        gettags       -
+        icursor       -
+        image         -
+        imove         -
+        index         -
+        insert        -
+        itemcget      -
+        itemconfigure -
+        lower         -
+        move          -
+        moveto        -
+        postscript    -
+        raise         -
+        rchars        -
+        rotate        -
+        scale         -
+        scan          -
+        select        -
+        type          {}
+        cget {}
+        configure {}
+        create {}
+        instate {}
+        state {}
+        style {}
+        xview {}
+        yview {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
