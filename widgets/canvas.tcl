@@ -62,6 +62,2278 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## canvas
+#
+#### DESCRIPTION:
+#
+# Create and manipulate 'canvas' hypergraphics drawing surface widgets.
+# The canvas command creates a new window (given by the *window* argument) and makes it into a canvas widget.
+#
+# Canvas widgets implement structured graphics. A canvas displays any number of items, which may be things like rectangles,
+# circles, lines, and text.
+# Items may be manipulated (e.g. moved or re-colored) and commands may be associated with items in much the same way that
+# the bind command allows commands to be bound to widgets.
+# For example, a particular command may be associated with the **ButtonPress-1** event so that the command is invoked
+# whenever button 1 is pressed with the mouse cursor over an item.
+# This means that items in a canvas can have behaviors defined by the Tcl scripts bound to them.
+#
+# The canvas command returns the pathname of the new window.
+#
+# Note 1: At the time this command is invoked, there must not exist a window with the same pathname,
+#         but the pathname's parents must exists.
+#         *Window* may be provided either as a short or as a real address, the address returned will be:
+#            - A short address, if the *window* provided as input is a short address.
+#            - A real address, if the *window* provided as input is a real address.
+#
+# Note 2: The simple canvas widget is a megawidget composed by an hull object (the megawidget container) and a canvas object.
+#
+# Note 3: The scrollable canvas widget is a megawidget composed by an hull object (the megawidget container), a border object,
+#         a canvas object and two scrollbar objects (displayed only when needed).
+#
+# Additional options, described below, may be specified on the command line to configure aspects of the canvas.
+#
+#### SYNOPSIS:
+#
+#   **canvas** *window* ?*option value*? ... ?*option value*?
+#
+#### WIDGET OPTIONS:
+#
+# Note: Every option listed here can be:
+#          - Retrieved with the **configure** or **cget** command with no exceptions.
+#          - Changed with the **configure** command, unless stated otherwise.
+#
+# **-background**             It's a list that specifies the color to use as background.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                            If there isn't one, the **-background** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-background** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                             See also **-shellbackground**.
+#
+# **-bordercolor**            It's a list that specifies the color to use as bordercolor.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: It's only meaningful for widgets with a **solid** or **flat** relief.
+#
+#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                            If there isn't one, the **-bordercolor** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-bordercolor** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                             See also **-borderwidth** and **-relief**.
+#
+# **-borderwidth**            Specifies the width of the three-dimensional border to draw around the outside of the widget,
+#                             if such a border is being drawn.
+#                             The **-relief** option typically determines this.
+#
+#                             The value may also be used when drawing three-dimensional effects in the widget's interior.
+#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                             (pixels, points, inches, millimeters or centimeters).
+#
+#                             Note: A value of **0** means no border.
+#
+#                             Note: Only working with reliefs that are not *flat*.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
+#                                                            If there isn't one, the **-borderwidth** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-borderwidth** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-bordercolor** and **-relief**.
+#
+# **-class**                  Specifies a class for the widget.
+#                             It is mainly used to make bindings for widgets that have the same class.
+#
+#                             Note: This option may only be provided while creating the widget.
+#                                   Attempts to change this value after the widget is created by using the **configure** command,
+#                                   will be ignored by mustang.
+#
+#                             If not provided, defaults to **Canvas**.
+#
+# **-closeenough**            Specifies a floating-point value indicating how close the mouse cursor must be to an item before it is
+#                             considered to be "inside" the item.
+#
+#                             If not provided, defaults to 1.0.
+#
+# **-cmenu**                  Specifies the contextual menu address that will be assigned to the widget.
+#
+#                             The contextual menu will be assign to the *content* and *border* objects of the megawidget.
+#                             If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                             toplevel (if any) will be used instead. If the widget's toplevel doesn't have a contextual menu,
+#                             nothing will happen.
+#
+#                             The *hull* object will rather use the contextual menu of the widget's toplevel, if any.
+#                             If the developer needs a different contextual menu for it, a variable called
+#                             '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
+#                             order to be used instead of the toplevel one.
+#
+#                             Note: '$short_addr' must be the short address of the canvas widget.
+#                                   See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
+#
+#                             If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid contextual menu
+#                             address, it will be ignored and the contextual menu of the widget's toplevel (if any) will be used.
+#                             If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#
+#                             The *scrollbar* objects are not supposed to have a contextual menu and will not be link with any.
+#
+#                             Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple canvas widget, it will be silently ignored.
+#
+#                             If not provided, defaults to the empty string.
+#
+# **-confine**                Specifies a boolean value that indicates whether or not it should be allowable to set the canvas's
+#                             view outside the region defined by the **scrollregion** argument.
+#
+#                             If not provided, defaults to true, which means that the view will be constrained within the scroll region.
+#
+# **-cursor**                 Specifies the mouse cursor to be used inside the canvas area.
+#                             If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                             cursor specification.
+#
+#                             See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                            If there isn't one, the **-cursor** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-cursor** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+# **-height**                 Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                             (pixels, points, inches, millimeters and centimeters).
+#
+#                             If this option is **0** then the widget will assume the minimum height possible that can accomodate
+#                             it's content height. Negative values will be ignored.
+#
+#                             Note that canvases will ignore height of '0'.
+#                             This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across
+#                             operating systems a height value of '0' will not be accepted for canvases.
+#
+#                             Note: "WINDOW MANAGERS"
+#
+#                                 Any toplevel is managed by the *window manager*.
+#                                 Any widget's program-requested height may cause it's toplevel to change it's height as well.
+#                                 If the toplevel program-requested height is ignored (by the window manager),
+#                                 then any widget's program-requested height is ignored too (by Tk that follows the istructions
+#                                 received by the 'window manager').
+#
+#                                 Some window managers ignores any toplevel program-requested height and demands only to the
+#                                 user to manually change the toplevel's height.
+#
+#                                 Some window managers allows any toplevel program-requested height until the user will
+#                                 manually change the toplevel's height.
+#                                 Once the user has manually changed the toplevel's height, any subsequent toplevel
+#                                 program-requested height will be ignored.
+#
+#                                 Others window managers allows any toplevel program-requested height in any circumstances.
+#
+#                             "Tk"
+#
+#                                 Tk ignores any widget's program-requested height if the **grid** or **pack** geometry manager
+#                                 is used within the widget, since these geometry managers will override the widget's height in
+#                                 those cases.
+#
+#                             If not provided, defaults to **7** centimeters.
+#
+#                             See also **-width**.
+#
+# **-insertbackground**       It's a list that specifies color to use as background in the area covered by the insertion cursor.
+#                             This color will normally override either the normal background for the widget (or the selection
+#                             background if the insertion cursor happens to fall in the selection).
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-insertbackground** specified in its style.
+#                                                            If there isn't one, the **-insertbackground** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-insertbackground** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                             See also **-selectbackground** and **-insertborderwidth**.
+#
+# **-insertborderwidth**      It's a list that specifies a non-negative value indicating the width of the 3-D border to draw around
+#                             the insertion cursor.
+#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+#
+#                             Note: A value of **0** means no border.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-insertborderwidth** specified in its style.
+#                                                            If there isn't one, the **-insertborderwidth** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-insertborderwidth** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectborderwidth**.
+#
+# **-insertofftime**          Specifies a non-negative integer value indicating the number of milliseconds the insertion cursor
+#                             should remain "off" in each blink cycle.
+#                             If this option is zero then the cursor does not blink: it is on all the time.
+#
+#                             If not provided, defaults to **300** milliseconds.
+#
+#                             See also **-insertontime**.
+#
+# **-insertontime**           Specifies a non-negative integer value indicating the number of milliseconds the insertion cursor
+#                             should remain "on" in each blink cycle.
+#
+#                             If not provided, defaults to **600** milliseconds.
+#
+#                             See also **-insertofftime**.
+#
+# **-insertwidth**            Specifies a non-negative value indicating the total width of the insertion cursor.
+#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+#                             If a border has been specified for the insertion cursor (using the *-insertborderwidth* option),
+#                             the border will be drawn inside the width specified by the *-insertwidth* option.
+#
+#                             If not provided, defaults to **2**.
+#
+# **-relief**                 Specifies the three-dimensional effect desired for the widget.
+#                             The value indicates how the widget's interior should appear relative to its exterior.
+#                             For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                             relative to the exterior of the widget.
+#
+#                             The widget will accept as relief any of the following values:
+#                                **flat**,
+#                                **groove**,
+#                                **raised**,
+#                                **ridge**,
+#                                **solid**,
+#                                **sunken**.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-relief** specified in its style.
+#                                                            If there isn't one, the **-relief** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-relief** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-bordercolor** and **-borderwidth**.
+#
+# **-scrollable**             Specifies a boolean value indicating wheter or not the widget should be scrollable.
+#                             If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single canvas widget.
+#
+#                             The scrollbars will be automatically managed by Tk with the following rules:
+#                                The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
+#                                the widget *viewport* width and *not needed* when it's not.
+#
+#                                The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
+#                                the widget *viewport* height and *not needed* when it's not.
+#
+#                                If a scrollbar is currently needed, then it will be displayed (if it's not already displayed).
+#                                If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
+#                                already displayed).
+#
+#                             Note: This option may be provided while creating the widget.
+#                                   Attempts to change this value after the widget was created by using the **configure** command,
+#                                   will be ignored by mustang.
+#
+#                             If not provided, defaults to **false** (meaning no scrollbar).
+#
+# **-scrollregion**           Specifies a list with four coordinates describing the left, top, right, and bottom coordinates
+#                             of a rectangular region. This region is used for scrolling purposes and is considered to be the
+#                             boundary of the information in the canvas.
+#                             Each of the coordinates may be specified in any of the forms given in the **COORDINATES** section below.
+#
+#                             If not provided, defaults to the empty string, meaning no scrolling available.
+#
+# **-selectbackground**       It's a list that specifies the background color to use when displaying selected items.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-selectbackground** specified in its style.
+#                                                            If there isn't one, the **-selectbackground** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-selectbackground** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                             See also **-selectforeground** and **-insertborderwidth**.
+#
+# **-selectborderwidth**      Specifies a non-negative value indicating the width of the 3-D border to draw around selected items.
+#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+#
+#                             Note: A value of **0** means no border.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-selectborderwidth** specified in its style.
+#                                                            If there isn't one, the **-selectborderwidth** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-selectborderwidth** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectbackground** and **-selectforeground**.
+#
+# **-selectforeground**       It's a list that specifies the foreground color to use when displaying selected items.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events are not allowed to change its value.
+#                                                            Only the developer is allowed to do it.
+#
+#                                   If it's not provided --> The widget will follow the **-selectforeground** specified in its style.
+#                                                            If there isn't one, the **-selectforeground** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-selectforeground** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                             See also **-selectbackground** and **-selectborderwidth**.
+#
+# **-shellbackground**        It's a list that specifies the color to use as background structure.
+#                             This color will be used in the interspaces between the mustang objects that compose the widget and should
+#                             reflects the widget's parent background.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: The *-shellbackground* is meaningless and will be ignored for canvas that are not scrollable.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events are not allowed to change its value.
+#                                                            Only the developer is allowed to do it.
+#
+#                                   If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
+#                                                            If there isn't one, the **-shellbackground** of the **Canvas** style
+#                                                            will be used instead.
+#                                                            The **-shellbackground** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                                                            Note: The **-shellbackground** should change rarely, for example upon
+#                                                                  an **Activate**/**Deactivate** event.
+#
+#                             See also **-background**.
+#
+# **-state**                  Specifies the state for the widget.
+#                             Setting it changes the widget **physical** state and not the widget *look* (the state widget command
+#                             does that). Allowed states values are **normal** and **disabled**.
+#
+#                             Individual canvas objects all have their own state option which may override the default state.
+#                             Many options can take separate specifications such that the appearance of the item can be different
+#                             in different situations.
+#                             The options that start with active control the appearance when the mouse pointer is over it, while
+#                             the option starting with disabled controls the appearance when the state is disabled.
+#                             Canvas items which are disabled will not react to canvas bindings.
+#
+#                             If not provided, defaults to **normal**.
+#
+# **-style**                  Specifies a custom widget style.
+#                             If not provided, defaults to **Canvas**.
+#
+#                             The *style* provided should already exists at the time the widget is created.
+#
+#                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                             and **Shift-Tab**).
+#
+#                             Before setting the focus to a widget, the traversal scripts consult the value of the
+#                             *-takefocus* option.
+#                                **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                                **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                          and all of its ancestors are mapped.
+#
+#                             Differently than Tk, mustang does not allow the empty string as a valid value.
+#
+#                             Note: Widgets will ignore any takefocus values while in the **disabled** state.
+#                                   The moment the widget becomes **normal** the takefocus specified will be taken into consideration.
+#
+#                             If not provided, defaults to **0**.
+#
+# **-width**                  Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                             (pixels, points, inches, millimeters and centimeters).
+#
+#                             If this option is **0** then the widget will assume the minimum width possible that can accomodate
+#                             it's content width. Negative values will be ignored.
+#
+#                             Note that canvases will ignore width of '0'.
+#                             This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across
+#                             operating systems a width value of '0' will not be accepted for canvases.
+#
+#                             Note: "WINDOW MANAGERS"
+#
+#                                       Any toplevel is managed by the *window manager*.
+#                                       Any widget's program-requested width may cause it's toplevel to change it's width as well.
+#                                       If the toplevel program-requested width is ignored (by the window manager),
+#                                       then any widget's program-requested width is ignored too (by Tk that follows the istructions
+#                                       received by the window manager).
+#
+#                                       Some window managers ignores any toplevel program-requested width and demands only to the
+#                                       user to manually change the toplevel's width.
+#
+#                                       Some window managers allows any toplevel program-requested width until the user will
+#                                       manually change the toplevel's width.
+#                                       Once the user has manually changed the toplevel's width, any subsequent toplevel
+#                                       program-requested width will be ignored.
+#
+#                                       Others window managers allows any toplevel program-requested width in any circumstances.
+#
+#                                   "Tk"
+#
+#                                       Tk ignores any widget's program-requested width if the **grid** or **pack** geometry manager
+#                                       is used within the widget, since these geometry managers will override the widget's width in
+#                                       those cases.
+#
+#                             If not provided, defaults to **10** centimeters.
+#
+#                             See also **-height**.
+#
+# **-xscrollcommand**         Specifies the prefix for a command used to communicate with horizontal scrollbars.
+#                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
+#                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
+#                             Tcl command by concatenating the scroll command and two numbers.
+#                             Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
+#                             **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
+#                             one third the way through the document, and so on.
+#                             The first fraction indicates the first information in the document that is visible in the window, and the
+#                             second fraction indicates the information just after the last portion that is visible.
+#                             The command is then passed to the Tcl interpreter for execution.
+#                             Typically the **-xscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                             e.g. **.x.scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                             If this option is not specified, then no command will be executed.
+#
+#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to 'auto'.
+#
+#                             If not specified defaults to the empty string.
+#
+#                             See also **-yscrollcommand**, **-xscrollincrement**, **-yscrollincrement** and **-scrollable**.
+#
+# **-xscrollincrement**       Specifies an integer indicating the increment for horizontal scrolling.
+#                             If the value of this option is greater than zero, the horizontal view in the widget will be constrained
+#                             so that the widget *x* coordinate at the left edge of the widget is always an even multiple of
+#                             **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the left and
+#                             right arrows of a scrollbar are selected) will also be **xScrollIncrement**. If the value of this option
+#                             is zero, then horizontal scrolling is unconstrained.
+#
+#                             See also **-xscrollcommand**, **-yscrollcommand**, **-yscrollincrement** and **-scrollable**.
+#
+# **-yscrollcommand**         Specifies the prefix for a command used to communicate with vertical scrollbars.
+#                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
+#                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
+#                             Tcl command by concatenating the scroll command and two numbers.
+#                             Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
+#                             **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
+#                             one third the way through the document, and so on.
+#                             The first fraction indicates the first information in the document that is visible in the window, and the
+#                             second fraction indicates the information just after the last portion that is visible.
+#                             The command is then passed to the Tcl interpreter for execution.
+#                             Typically the **-yscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                             e.g. **.y.scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                             If this option is not specified, then no command will be executed.
+#
+#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to 'auto'.
+#
+#                             If not specified defaults to the empty string.
+#
+#                             See also **-xscrollcommand**, **-xscrollincrement**, **-yscrollincrement** and **-scrollable**.
+#
+# **-yscrollincrement**       Specifies an integer indicating the increment for vertical scrolling.
+#                             If the value of this option is greater than zero, the vertical view in the widget will be constrained
+#                             so that the widget *y* coordinate at the left edge of the widget is always an even multiple of
+#                             **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the top and
+#                             bottom arrows of a scrollbar are selected) will also be **yScrollIncrement**. If the value of this option
+#                             is zero, then vertical scrolling is unconstrained.
+#
+#                             See also **-xscrollcommand**, **-yscrollcommand**, **-xscrollincrement** and **-scrollable**.
+#
+#### WIDGET COMMAND:
+#
+# The canvas command creates a new command whose name is the same as the pathname of the canvas's window.
+# This command may be used to invoke various operations on the widget.
+# It has the following general form:
+#
+#   *window* *action* ?*arg* *arg* ... *arg*?
+#
+# *Window* is the name of the command, which is the same as the canvas widget's pathname.
+# *Actions* and the *arg*s determine the exact behavior of the *window* command.
+#
+# The following commands are possible for canvas widgets:
+#
+#   *window* **addtag** *tag* *searchSpec* ?*arg* ... *arg*?
+#     For each item that meets the constraints specified by searchSpec and the args, add tag to the list of tags associated
+#     with the item if it is not already present on that list.
+#
+#     It is possible that no items will satisfy the constraints given by searchSpec and args, in which case the command has
+#     no effect. This command returns an empty string as result.
+#
+#     *SearchSpec* and arg's may take any of the following forms:
+#
+#        **above** *tagOrId*
+#           Selects the item just after (above) the one given by *tagOrId* in the display list.
+#           If *tagOrId* denotes more than one item, then the last (topmost) of these items in the display list is used.
+#
+#        **all**
+#           Selects all the items in the canvas.
+#
+#        **below** *tagOrId*
+#           Selects the item just before (below) the one given by *tagOrId* in the display list.
+#           If *tagOrId* denotes more than one item, then the first (lowest) of these items in the display list is used.
+#
+#        **closest** *x* *y* ?**halo**? ?**start**?
+#           Selects the item closest to the point given by *x* and *y*.
+#           If more than one item is at the same closest distance (e.g. two items overlap the point), then the top-most of
+#           these items (the last one in the display list) is used.
+#           If *halo* is specified, then it must be a non-negative value. Any item closer than *halo* to the point is considered
+#           to overlap it.
+#
+#           The *start* argument may be used to step circularly through all the closest items.
+#           If *start* is specified, it names an item using a tag or id (if by tag, it selects the first item in the display list
+#           with the given tag).
+#           Instead of selecting the topmost closest item, this form will select the topmost closest item that is below *start*
+#           in the display list; if no such item exists, then the selection behaves as if the start argument had not been specified.
+#
+#        **enclosed** *x1* *y1* *x2* *y2*
+#           Selects all the items completely enclosed within the rectangular region given by *x1*, *y1*, *x2*, and *y2*.
+#           *X1* must be no greater than *x2* and *y1* must be no greater than *y2*.
+#
+#        **overlapping** *x1* *y1* *x2* *y2*
+#           Selects all the items that overlap or are enclosed within the rectangular region given by *x1*, *y1*, *x2*, and *y2*.
+#           *X1* must be no greater than *x2* and *y1* must be no greater than *y2*.
+#
+#        **withtag** *tagOrId*
+#           Selects all the items given by *tagOrId*.
+#
+#   *window* **bbox** *tagOrId* ?*tagOrId* ... *tagOrId*?
+#     Returns a list with four elements giving an approximate bounding box for all the items named by the *tagOrId* arguments.
+#     The list has the form "x1 y1 x2 y2" such that the drawn areas of all the named elements are within the region bounded by
+#     *x1* on the left, *x2* on the right, *y1* on the top, and *y2* on the bottom.
+#
+#     The return value may overestimate the actual bounding box by a few pixels.
+#
+#     If no items match any of the *tagOrId* arguments or if the matching items have empty bounding boxes (i.e. they have nothing
+#     to display) then an empty string is returned.
+#
+#   *window* **bind** *tagOrId* ?*sequence*? ?*command*?
+#     This command associates command with all the items given by *tagOrId* such that whenever the event sequence given by sequence
+#     occurs for one of the items the command will be invoked.
+#
+#     This widget command is similar to the [bind](/wiki/commands/bind.md) command except that it operates on items in a canvas rather
+#     than entire widgets.
+#     See the **bind** manual entry for complete details on the syntax of sequence and the substitutions performed on command before
+#     invoking it.
+#
+#     If all arguments are specified then a new binding is created, replacing any existing binding for the same sequence and *tagOrId*
+#     (if the first character of command is "**+**" then command augments an existing binding rather than replacing it).
+#     In this case the return value is an empty string.
+#
+#     If command is omitted then the command returns the command associated with tagOrId and sequence (an error occurs if there is no
+#     such binding). If both command and sequence are omitted then the command returns a list of all the sequences for which bindings
+#     have been defined for *tagOrId*.
+#
+#     The only events for which bindings may be specified are those related to the mouse and keyboard (such as **Enter**, **Leave**,
+#     **Button**, **Motion**, and **Key**) or virtual events. The handling of events in canvases uses the current item defined in
+#     **ITEM IDS AND TAGS** section below.
+#
+#     **Enter** and **Leave** events trigger for an item when it becomes the current item or ceases to be the current item; note that
+#     these events are different than **Enter** and **Leave** events for windows.
+#
+#     Mouse-related events are directed to the current item, if any.
+#
+#     Keyboard-related events are directed to the focus item, if any (see the focus widget command below for more on this).
+#     If a virtual event is used in a binding, that binding can trigger only if the virtual event is defined by an underlying mouse-related
+#     or keyboard-related event.
+#
+#     It is possible for multiple bindings to match a particular event.
+#     This could occur, for example, if one binding is associated with the item's id and another is associated with one of the item's tags.
+#     When this occurs, all of the matching bindings are invoked.
+#     A binding associated with the **all** tag is invoked first, followed by one binding for each of the item's *tags* (in order),
+#     followed by a binding associated with the item's *id*.
+#     If there are multiple matching bindings for a single tag, then only the most specific binding is invoked.
+#     A continue command in a binding script terminates that script, and a break command terminates that script and skips any remaining
+#     scripts for the event, just as for the bind command.
+#
+#     If bindings have been created for a canvas window using the bind command, then they are invoked in addition to bindings created for the
+#     canvas's items using the bind widget command.
+#     The bindings for items will be invoked before any of the bindings for the window as a whole.
+#
+#   *window* **canvasx** *screenx* ?*gridspacing*?
+#     Given a window x-coordinate in the canvas screenx, this command returns the canvas x-coordinate that is displayed at that location.
+#     If *gridspacing* is specified, then the canvas coordinate is rounded to the nearest multiple of gridspacing units.
+#
+#   *window* **canvasy** *screeny* ?*gridspacing*?
+#     Given a window y-coordinate in the canvas screeny this command returns the canvas y-coordinate that is displayed at that location.
+#     If *gridspacing* is specified, then the canvas coordinate is rounded to the nearest multiple of gridspacing units.
+#
+#   *window* **cget** option
+#     Returns the current value of the option given by *option*.
+#     *Option* may be one of the widget options accepted by the canvas command (See **WIDGET OPTIONS**).
+#
+#   *window* **configure** **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+#     Query or modify the configuration options of the widget.
+#
+#     If no options are specified, returns a list describing all of the available options with their
+#     default and current values.
+#
+#     If a single *option* is specified with no *value*, then the command returns a list describing its default
+#     and current values.
+#
+#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     to have the given value(s) and the command returns an empty string.
+#
+#     Some options can only be setted at creation time.
+#     See **WIDGET OPTIONS** to know which one is configurable and which one is not.
+#
+#   *window* **coords** *tagOrId* ?*coordList*?
+#     Query or modify the coordinates that define an item.
+#     If no coordinates are specified, this command returns a list whose elements are the coordinates of the item named by *tagOrId*.
+#     If coordinates are specified, then they replace the current coordinates for the named item.
+#     If *tagOrId* refers to multiple items, then the first one in the display list is used.
+#
+#     Note that for rectangles, ovals and arcs the returned list of coordinates has a fixed order, namely the left, top, right and bottom
+#     coordinates, which may not be the order originally given.
+#     Also the coordinates are always returned in screen units with no units (that is, in pixels).
+#     pixels. So if the original coordinates were specified for instance in centimeters or inches, the returned values will nevertheless be in
+#
+#   *window* **create** *type* *coordList* ?*option* *value*? ... ?*option* *value*?
+#     Create a new item in *window* of type *type*.
+#     The exact format of the arguments after type depends on type, but usually they consist of the coordinates for one or more points,
+#     followed by specifications for zero or more item options.
+#     See the subsections on individual item types below for more on the syntax of this command.
+#     This command returns the *id* for the new item.
+#
+#   *window* **dchars** *tagOrId* *first* ?*last*?
+#     For each item given by *tagOrId*, delete the characters, or coordinates, in the range given by first and last, inclusive.
+#     If some of the items given by *tagOrId* do not support indexing operations then they ignore this operation.
+#     Text items interpret first and last as indices to a character, line and polygon items interpret them as indices to a coordinate
+#     (an x,y pair).
+#     Indices are described in **INDICES** section below. If *last* is omitted, it defaults to **first**.
+#     This command returns an empty string.
+#
+#   *window* **delete** ?*tagOrId* ... *tagOrId*?
+#     Delete each of the items given by each *tagOrId*, and return an empty string.
+#
+#   *window* **dtag** *tagOrId* ?*tagToDelete*?
+#     For each of the items given by *tagOrId*, delete the tag given by *tagToDelete* from the list of those associated with the item.
+#     If an item does not have the tag *tagToDelete* then the item is unaffected by the command.
+#     If *tagToDelete* is omitted then it defaults to *tagOrId*.
+#     This command returns an empty string.
+#
+#   *window* **find** *searchCommand* ?*arg* ... *arg*?
+#     This command returns a list consisting of all the items that meet the constraints specified by *searchCommand* and *arg*'s.
+#     *SearchCommand* and *arg*s have any of the forms accepted by the **addtag** command.
+#     The items are returned in stacking order, with the lowest item first.
+#
+#   *window* **focus** ?*tagOrId*?
+#     Set the keyboard focus for the canvas widget to the item given by *tagOrId*.
+#     If *tagOrId* refers to several items, then the focus is set to the first such item in the display list that supports the insertion
+#     cursor.
+#     If *tagOrId* does not refer to any items, or if none of them support the insertion cursor, then the focus is not changed.
+#     If *tagOrId* is an empty string, then the focus item is reset so that no item has the focus.
+#     If *tagOrId* is not specified then the command returns the id for the item that currently has the focus, or an empty string if no
+#      item has the focus.
+#
+#     Once the focus has been set to an item, the item will display the insertion cursor and all keyboard events will be directed to
+#     that item. The focus item within a canvas and the focus window on the screen (set with the [focus](/wiki/commands/focus.md) command)
+#     are totally independent: a given item does not actually have the input focus unless (a) its canvas is the focus window and (b) the
+#     item is the focus item within the canvas. In most cases it is advisable to follow the focus widget command with the focus command
+#     to set the focus window to the canvas (if it was not there already).
+#
+#   *window* **gettags** *tagOrId*
+#     Return a list whose elements are the tags associated with the item given by *tagOrId*.
+#     If *tagOrId* refers to more than one item, then the tags are returned from the first such item in the display list.
+#     If *tagOrId* does not refer to any items, or if the item contains no tags, then an empty string is returned.
+#
+#   *window* **icursor** *tagOrId* *index*
+#     Set the position of the insertion cursor for the item(s) given by *tagOrId* to just before the character whose position is given
+#     by *index*.
+#     If some or all of the items given by *tagOrId* do not support an insertion cursor then this command has no effect on them.
+#     See **INDICES** section below for a description of the legal forms for index.
+#
+#     Note that the insertion cursor is only displayed in an item if that item currently has the keyboard focus (see the focus widget
+#     command, above), but the cursor position may be set even when the item does not have the focus.
+#
+#     This command returns an empty string.
+#
+#   *window* **image** *imagename* ?*subsample*? ?*zoom*?
+#     Draw the canvas into the Tk photo image named *imagename*.
+#     If a *-scrollregion* has been defined then this will be the boundaries of the canvas region drawn and the final size of the
+#     photo image.
+#     Otherwise the widget width and height with an origin of **0,0** will be the size of the canvas region drawn and the final size
+#     of the photo image.
+#     Optionally an integer *subsample* factor may be given and the photo image will be reduced in size.
+#
+#     In addition to the *subsample* an integer *zoom* factor can also be given and the photo image will be enlarged.
+#     The image background will be filled with the canvas background colour.
+#     The canvas widget does not need to be mapped for this widget command to work, but at least one of it's ancestors must be mapped.
+#
+#     This command returns an empty string.
+#
+#   *window* **imove** *tagOrId* *index* *x* *y*
+#     This command causes the index'th coordinate of each of the items indicated by *tagOrId* to be relocated to the location (*x*,*y*).
+#     Each item interprets index independently according to the rules described in **INDICES** section below.
+#     Out of the standard set of items, only line and polygon items may have their coordinates relocated this way.
+#
+#   *window* **index** *tagOrId* *index*
+#     This command returns a decimal string giving the numerical index within *tagOrId* corresponding to *index*.
+#     *Index* gives a textual description of the desired position as described in **INDICES** section below.
+#     Text items interpret index as an index to a character, line and polygon items interpret it as an index to a coordinate
+#     (an x,y pair).
+#
+#     The return value is guaranteed to lie between 0 and the number of characters, or coordinates, within the item, inclusive.
+#     If *tagOrId* refers to multiple items, then the index is processed in the first of these items that supports indexing operations
+#     (in display list order).
+#
+#   *window* **insert** *tagOrId* *beforeThis* *string*
+#     For each of the items given by *tagOrId*, if the item supports text or coordinate, insertion then string is inserted into the
+#     item's text just before the character, or coordinate, whose index is **beforeThis**.
+#     Text items interpret *beforeThis* as an index to a character, line and polygon items interpret it as an index to a coordinate
+#     (an x,y pair).
+#     For lines and polygons the string must be a valid coordinate sequence.
+#
+#     See **INDICES** section below for information about the forms allowed for *beforeThis*.
+#
+#     This command returns an empty string.
+#
+#   *window* **instate** *statespec* ?*script*?
+#     Test the widget's state.
+#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     If *script* is specified it's equivalent to:
+#
+#        if { [*window* **instate** *stateSpec*] } *script*
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **itemcget** *tagOrId* *option*
+#     Returns the current value of the configuration option for the item given by *tagOrId* whose name is *option*.
+#     This command is similar to the **cget** widget command except that it applies to a particular item rather than the widget
+#     as a whole.
+#     *Option* may have any of the values accepted by the create widget command when the item was created.
+#     If *tagOrId* is a tag that refers to more than one item, the first (lowest) such item is used.
+#
+#   *window* **itemconfigure** *tagOrId* ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+#     This command is similar to the configure widget command except that it modifies item-specific options for the items given
+#     by *tagOrId* instead of modifying options for the overall canvas widget.
+#     If no option is specified, returns a list describing all of the available options for the first item given by *tagOrId*
+#     (see [Tk_ConfigureInfo](https://www.tcl-lang.org/man/tcl9.0/TkLib/ConfigWidg.html) for information on the format of this list).
+#     If *option* is specified with no value, then the command returns a list describing the one named *option* (this list will be
+#     identical to the corresponding sublist of the value returned if no option is specified).
+#     If one or more option-value pairs are specified, then the command modifies the given widget option(s) to have the given value(s)
+#     in each of the items given by tagOrId; in this case the command returns an empty string.
+#     The options and values are the same as those permissible in the create widget command when the item(s) were created; see the
+#     sections describing individual item types below for details on the legal options.
+#
+#   *window* **lower** *tagOrId* ?*belowThis*?
+#     Move all of the items given by *tagOrId* to a new position in the display list just before the item given by *belowThis*.
+#     If *tagOrId* refers to more than one item then all are moved but the relative order of the moved items will not be changed.
+#     *BelowThis* is a tag or id; if it refers to more than one item then the first (lowest) of these items in the display list is
+#     used as the destination location for the moved items.
+#     Note that this command has no effect on window items.
+#     Window items always obscure other item types, and the stacking order of window items is determined by the raise command and
+#     lower command, not the raise widget command and lower widget command for canvases.
+#
+#     This command returns an empty string.
+#
+#   *window* **move** *tagOrId* *xAmount* *yAmount*
+#     Move each of the items given by *tagOrId* in the canvas coordinate space by adding *xAmount* to the x-coordinate of each point
+#     associated with the item and *yAmount* to the y-coordinate of each point associated with the item.
+#
+#     This command returns an empty string.
+#
+#   *window* **moveto** *tagOrId* *xPos* *yPos*
+#     Move the items given by *tagOrId* in the canvas coordinate space so that the first coordinate pair (the upper-left corner of
+#     the bounding box) of the first item (the lowest in the display list) with tag *tagOrId* is located at position (*xPos*,*yPos*).
+#     *xPos* and *yPos* may be the empty string, in which case the corresponding coordinate will be unchanged.
+#     All items matching *tagOrId* remain in the same positions relative to each other.
+#
+#     This command returns an empty string.
+#
+#   *window* **postscript** ?*option* *value*? ... ?*option* *value*?
+#     Generate a Postscript representation for part or all of the canvas.
+#     If the **-file** option is specified then the Postscript is written to a file and an empty string is returned; otherwise the
+#     Postscript is returned as the result of the command.
+#     If the interpreter that owns the canvas is marked as safe, the operation will fail because safe interpreters are not allowed
+#     to write files.
+#     If the **-channel** option is specified, the argument denotes the name of a channel already opened for writing.
+#     The Postscript is written to that channel, and the channel is left open for further writing at the end of the operation.
+#     The Postscript is created in Encapsulated Postscript form using version 3.0 of the Document Structuring Conventions.
+#
+#     Note: by default Postscript is only generated for information that appears in the canvas's window on the screen.
+#           If the canvas is freshly created it may still have its initial size of 1x1 pixel so nothing will appear in the Postscript.
+#           To get around this problem either invoke the update command to wait for the canvas window to reach its final size, or
+#           else use the **-width** and **-height** options to specify the area of the canvas to print.
+#           The option-value argument pairs provide additional information to control the generation of Postscript.
+#
+#     The following options are supported:
+#
+#         **-channel** *channelName*
+#           Specifies the name of the channel to which to write the Postscript.
+#           If this option and the **-file** option are not specified then the Postscript is returned as the result of the command.
+#
+#         **-colormap** *varName*
+#           *VarName* must be the name of an array variable that specifies a color mapping to use in the Postscript.
+#           Each element of *varName* must consist of Postscript code to set a particular color value (e.g. “1.0 1.0 0.0 setrgbcolor”).
+#           When outputting color information in the Postscript, Tk checks to see if there is an element of varName with the same name
+#           as the color. If so, Tk uses the value of the element as the Postscript command to set the color.
+#
+#           If this option has not been specified, or if there is no entry in *varName* for a given color, then Tk uses the red, green,
+#           and blue intensities from the X color.
+#
+#         **-colormode** *mode*
+#           Specifies how to output color information. *Mode* must be either **color** (for full color output), **gray** (convert all
+#           colors to their gray-scale equivalents) or **mono** (convert all colors to black or white).
+#
+#         **-file** *fileName*
+#           Specifies the name of the file in which to write the Postscript.
+#           If this option and the **-channel** option are not specified then the Postscript is returned as the result of the command.
+#
+#         **-fontmap** *varName*
+#           *VarName* must be the name of an array variable that specifies a font mapping to use in the Postscript.
+#           Each element of *varName* must consist of a Tcl list with two elements, which are the name and point size of a Postscript
+#           font.
+#           When outputting Postscript commands for a particular font, Tk checks to see if varName contains an element with the same
+#           name as the font. If there is such an element, then the font information contained in that element is used in the Postscript.
+#           Otherwise Tk attempts to guess what Postscript font to use.
+#           Tk's guesses generally only work for well-known fonts such as Times and Helvetica and Courier, and only if the X font name
+#           does not omit any dashes up through the point size.
+#
+#           For example, -*-Courier-Bold-R-Normal--*-120-* will work but *Courier-Bold-R-Normal*120* will not; Tk needs the dashes to
+#           parse the font name).
+#
+#         **-height** *size*
+#           Specifies the height of the area of the canvas to print.
+#           Defaults to the height of the canvas window.
+#
+#         **-pageanchor** *anchor*
+#           Specifies which point of the printed area of the canvas should appear over the positioning point on the page (which is given
+#           by the **-pagex** and **-pagey** options).
+#
+#           For example, **-pageanchor n** means that the top center of the area of the canvas being printed (as it appears in the canvas
+#           window) should be over the positioning point.
+#
+#           Defaults to **center**.
+#
+#         **-pageheight** *size*
+#           Specifies that the Postscript should be scaled in both x and y so that the printed area is size high on the Postscript page.
+#           *Size* consists of a floating-point number followed by **c** for centimeters, **i** for inches, **m** for millimeters, or **p**
+#           or nothing for printer's points (1/72 inch).
+#           Defaults to the height of the printed area on the screen.
+#           If both **-pageheight** and **-pagewidth** are specified then the scale factor from **-pagewidth** is used (non-uniform scaling
+#           is not implemented).
+#
+#         **-pagewidth** *size*
+#           Specifies that the Postscript should be scaled in both x and y so that the printed area is size wide on the Postscript page.
+#           *Size* has the same form as for **-pageheight**.
+#           Defaults to the width of the printed area on the screen.
+#           If both **-pageheight** and **-pagewidth** are specified then the scale factor from **-pagewidth** is used (non-uniform scaling
+#           is not implemented).
+#
+#         **-pagex** *position*
+#           *Position* gives the x-coordinate of the positioning point on the Postscript page, using any of the forms allowed for
+#           **-pagewidth**. Used in conjunction with the **-pagey** and **-pageanchor** options to determine where the printed area
+#           appears on the Postscript page.
+#
+#           Defaults to the center of the page.
+#
+#         **-pagey** *position*
+#           *Position* gives the y-coordinate of the positioning point on the Postscript page, using any of the forms allowed for
+#           **-pageheight**. Used in conjunction with the **-pagex** and **-pageanchor** options to determine where the printed area
+#           appears on the Postscript page.
+#
+#           Defaults to the center of the page.
+#
+#         **-rotate** *boolean*
+#           *Boolean* specifies whether the printed area is to be rotated 90 degrees.
+#           In non-rotated output the x-axis of the printed area runs along the short dimension of the page ("portrait" orientation);
+#           in rotated output the x-axis runs along the long dimension of the page ("landscape" orientation).
+#
+#           Defaults to non-rotated.
+#
+#         **-width** *size*
+#           Specifies the width of the area of the canvas to print.
+#           Defaults to the width of the canvas window.
+#
+#         **-x** *position*
+#           Specifies the x-coordinate of the left edge of the area of the canvas that is to be printed, in canvas coordinates, not
+#           window coordinates.
+#           Defaults to the coordinate of the left edge of the window.
+#
+#         **-y** *position*
+#           Specifies the y-coordinate of the top edge of the area of the canvas that is to be printed, in canvas coordinates, not
+#           window coordinates.
+#           Defaults to the coordinate of the top edge of the window.
+#
+#   *window* **raise** *tagOrId* ?*aboveThis*?
+#     Move all of the items given by *tagOrId* to a new position in the display list just after the item given by *aboveThis*.
+#     If *tagOrId* refers to more than one item then all are moved but the relative order of the moved items will not be changed.
+#     *AboveThis* is a tag or id; if it refers to more than one item then the last (topmost) of these items in the display list
+#     is used as the destination location for the moved items.
+#
+#     This command returns an empty string.
+#
+#     Note this this command has no effect on window items.
+#     Window items always obscure other item types, and the stacking order of window items is determined by the raise command and
+#     lower command, not the raise widget command and lower widget command for canvases.
+#
+#   *window* **rchars** *tagOrId* *first* *last* *string*
+#     This command causes the text or coordinates between *first* and *last* for each of the items indicated by *tagOrId* to be
+#     replaced by string.
+#     Each item interprets *first* and *last* independently according to the rules described in **INDICES** section below.
+#     Out of the standard set of items, text items support this operation by altering their text as directed, and line and polygon
+#     items support this operation by altering their coordinate list (in which case string should be a list of coordinates to use
+#     as a replacement).
+#     The other items ignore this operation.
+#
+#   *window* **rotate** *tagOrId* *xOrigin* *yOrigin* *angle*
+#     Rotate the coordinates of all of the items given by *tagOrId* in canvas coordinate space.
+#     *XOrigin* and *yOrigin* identify the origin for the rotation operation and angle identifies the amount to rotate the coordinates
+#     anticlockwise, in degrees (negative values rotate clockwise).
+#
+#     This command returns an empty string.
+#
+#     Implementation note: not all item types work the same with rotations. In particular, bitmap, image, text and window items only
+#     rotate their anchor points and do not rotate the items themselves about those points, and the arc, oval and rectangle types
+#     rotate about a computed center point instead of moving the bounding box coordinates directly.
+#
+#     Some items (currently arc and text) have angles in their options; this command does not affect those options.
+#
+#   *window* **scale** *tagOrId* *xOrigin* *yOrigin* *xScale* *yScale*
+#     Rescale the coordinates of all of the items given by *tagOrId* in canvas coordinate space.
+#     *XOrigin* and *yOrigin* identify the origin for the scaling operation and *xScale* and *yScale* identify the scale factors for
+#     x- and y-coordinates, respectively (a scale factor of 1.0 implies no change to that coordinate).
+#     For each of the points defining each item, the x-coordinate is adjusted to change the distance from *xOrigin* by a factor of
+#     *xScale*. Similarly, each y-coordinate is adjusted to change the distance from *yOrigin* by a factor of *yScale*.
+#
+#     This command returns an empty string.
+#
+#     Note that some items have only a single pair of coordinates (e.g., text, images and windows) and so scaling of them by this
+#     command can only move them around.
+#
+#   *window* **scan** *option* *args*
+#     This command is used to implement scanning on canvases. It has two forms, depending on option:
+#
+#       *window* **scan** **mark** *x* *y*
+#         Records x and y and the canvas's current view; used in conjunction with later scan dragto commands.
+#         Typically this command is associated with a mouse button press in the widget and *x* and *y* are the coordinates of the mouse.
+#         It returns an empty string.
+#
+#       *window* **scan** **dragto** *x* *y* ?*gain*?
+#         This command computes the difference between its *x* and *y* arguments (which are typically mouse coordinates) and the x and
+#          y arguments to the last **scan mark** command for the widget.
+#         It then adjusts the view by gain times the difference in coordinates, where gain defaults to **10**.
+#         This command is typically associated with mouse motion events in the widget, to produce the effect of dragging the canvas at
+#         high speed through its window.
+#         The return value is an empty string.
+#
+#   *window* **select** *option* ?*tagOrId* *arg*?
+#     Manipulates the selection in one of several ways, depending on option.
+#     The command may take any of the forms described below.
+#     In all of the descriptions below, *tagOrId* must refer to an item that supports indexing and selection; if it refers to multiple
+#     items then the first of these that supports indexing and the selection is used.
+#     Index gives a textual description of a position within *tagOrId*, as described in **INDICES** section below.
+#
+#       *window* **select** **adjust** *tagOrId* *index*
+#         Locate the end of the selection in *tagOrId* nearest to the character given by *index*, and adjust that end of the selection
+#         to be at *index* (i.e. including but not going beyond *index*).
+#         The other end of the selection is made the anchor point for future select to commands.
+#         If the selection is not currently in *tagOrId* then this command behaves the same as the select to widget command.
+#         Returns an empty string.
+#
+#       *window* **select** **clear**
+#         Clear the selection if it is in this widget.
+#         If the selection is not in this widget then the command has no effect.
+#         Returns an empty string.
+#
+#       *window* **select** **from** *tagOrId* *index*
+#         Set the selection anchor point for the widget to be just before the character given by *index* in the item given by *tagOrId*.
+#         This command does not change the selection; it just sets the fixed end of the selection for future select to commands.
+#         Returns an empty string.
+#
+#       *window* **select** **item**
+#         Returns the *id* of the selected item, if the selection is in an item in this canvas.
+#         If the selection is not in this canvas then an empty string is returned.
+#
+#       *window* **select** **to** *tagOrId* *index*
+#         Set the selection to consist of those characters of *tagOrId* between the selection anchor point and *index*.
+#         The new selection will include the character given by *index*; it will include the character given by the anchor point only
+#         if index is greater than or equal to the anchor point.
+#         The anchor point is determined by the most recent select adjust or select from command for this widget.
+#         If the selection anchor point for the widget is not currently in *tagOrId*, then it is set to the same character given by index.
+#         Returns an empty string.
+#
+#   *window* **state** ?*statespec*?
+#     Modify or inquire widget state.
+#     If *statespec* is present       --> Sets the widget dynamic state.
+#                                         For each flag in *statespec*, sets the corresponding flag or clears it
+#                                         if prefixed by an exclamation point.
+#                                         Returns a new *statespec* indicating which flags were changed.
+#
+#     If *statespec* is not specified --> Returns a list of the currently enabled dynamic states.
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **style**
+#     Return the style used by the widget.
+#
+#   *window* **type** *tagOrId*
+#     Returns the type of the item given by *tagOrId*, such as rectangle or text.
+#     If *tagOrId* refers to more than one item, then the type of the first item in the display list is returned.
+#     If *tagOrId* does not refer to any items at all then an empty string is returned.
+#
+#   *window* **xview** ?args?
+#     *window* **xview**
+#         Returns a list containing two elements.
+#         Each element is a real fraction between **0** and **1.0**; together they describe the horizontal span
+#         that is visible in the window.
+#
+#      *window* **xview** **moveto** *fraction*
+#         Adjusts the view in the window so that *fraction* of the total width of the widget is off-screen to the left.
+#         *Fraction* must be a fraction between **0** and **1.0**.
+#
+#      *window* **xview** **scroll** *number* *what*
+#         This command shifts the view in the window left or right according to *number* and *what*.
+#
+#         *Number* must be an integer or a float, but not **0**.
+#         If *number* is negative then information farther to the left becomes visible, if it is positive then information
+#         farther to the right becomes visible.
+#         If **0** is provided, the command will be ignored by mustang.
+#
+#         *what* must be either **pages** or **units**.
+#         If *what* is **pages** then the view adjusts in units of nine-tenths of the *window*'s width.
+#         If *what* is **units** then if *xscrollincrement* is greater than **0**, the horizontal view adjusts in units
+#         of *xscrollincrement*; if *xscrollincrement* is lesser than or equal to **0**, the horizontal view adjusts in
+#         units of one-tenths of the *window*'s width.
+#
+#   *window* **yview** ?args?
+#     *window* **yview**
+#        Returns a list containing two elements.
+#        Each element is a real fraction between **0** and **1.0**; together they describe the vertical span that
+#        is visible in the window.
+#
+#     *window* **yview** **moveto** *fraction*
+#        Adjusts the view in the window so that *fraction* of the total height of the widget is off-screen to the top.
+#        *Fraction* must be a fraction between **0** and **1.0**.
+#
+#     *window* **yview** **scroll** *number* *what*
+#        This command shifts the view in the window up or down according to *number* and *what*.
+#
+#        *Number* must be an integer or a float, but not **0**.
+#        If *number* is negative higher information becomes visible, if it is positive then lower information becomes visible.
+#        If **0** is provided, the command will be ignored by mustang.
+#
+#        *what* must be either **pages** or **units**.
+#        If *what* is **pages** then the view adjusts in units of nine-tenths of the *window*'s height.
+#        If *what* is **units** then if *yscrollincrement* is greater than **0**, the vertical view adjusts in units
+#        of *yscrollincrement*; if *yscrollincrement* is lesser than or equal to **0**, the vertical view adjusts in
+#        units of one-tenths of the *window*'s height.
+#
+#### DISPLAY LIST:
+#
+# The items in a canvas are ordered for purposes of display, with the first item in the display list being displayed first,
+# followed by the next item in the list, and so on.
+# Items later in the display list obscure those that are earlier in the display list and are sometimes referred to as being
+# "on top" of earlier items.
+# When a new item is created it is placed at the end of the display list, on top of everything else.
+# Widget commands may be used to re-arrange the order of the display list.
+#
+# Window items are an exception to the above rules.
+# The underlying window systems require them always to be drawn on top of other items.
+# In addition, the stacking order of window items is not affected by any of the canvas widget commands; you must use the Tk
+# raise command and lower command instead.
+#
+##### ITEM IDS AND TAGS:
+#
+# Items in a canvas widget may be named in either of two ways: by *id* or by *tag*.
+# Each item has a unique identifying number, which is assigned to that item when it is created.
+# The *id* of an item never changes and id numbers are never re-used within the lifetime of a canvas widget.
+#
+# Each item may also have any number of tags associated with it.
+# A *tag* is just a string of characters, and it may take any form except that of an integer.
+# For example, "x123" is OK but "123" is not. The same tag may be associated with many different items.
+# This is commonly done to group items in various interesting ways; for example, all selected items might be given the tag
+# "selected".
+#
+# The tag **all** is implicitly associated with every item in the canvas; it may be used to invoke operations on all the
+# items in the canvas.
+#
+# The tag **current** is managed automatically by Tk; it applies to the *current item*, which is the topmost item whose
+# drawn area covers the position of the mouse cursor (different item types interpret this in varying ways; see the individual
+# item type documentation for details).
+# If the mouse is not in the canvas widget or is not over an item, then no item has the current tag.
+#
+# When specifying items in canvas widget commands, if the specifier is an integer then it is assumed to refer to the single
+# item with that id. If the specifier is not an integer, then it is assumed to refer to all of the items in the canvas that
+# have a tag matching the specifier. The symbol *tagOrId* is used below to indicate that an argument specifies either an id
+# that selects a single item or a tag that selects zero or more items.
+#
+# *tagOrId* may contain a logical expressions of tags by using operators: "**&&**", "**||**", "**^**", "**!**", and parenthesized
+# subexpressions. For example:
+#
+#    .c find withtag {(a&&!b)||(!a&&b)}
+#
+# or equivalently:
+#
+#    .c find withtag {a^b}
+#
+# will find only those items with either "a" or "b" tags, but not both.
+#
+# Some widget commands only operate on a single item at a time; if *tagOrId* is specified in a way that names multiple items,
+# then the normal behavior is for the command to use the first (lowest) of these items in the display list that is suitable
+# for the command. Exceptions are noted in the widget command descriptions below.
+#
+#### COORDINATES:
+#
+# All coordinates related to canvases are stored as floating-point numbers.
+# Coordinates and distances are specified in screen units, which are floating-point numbers optionally followed by one of
+# several letters.
+# If no letter is supplied then the distance is in pixels. If the letter is **m** then the distance is in millimeters on
+# the screen; if it is **c** then the distance is in centimeters; **i** means inches, and **p** means printers points (1/72 inch).
+# Larger y-coordinates refer to points lower on the screen; larger x-coordinates refer to points farther to the right.
+# Coordinates can be specified either as an even number of parameters, or as a single list parameter containing an even number
+# of x and y coordinate values.
+#
+#### TRANSFORMATIONS:
+#
+# Normally the origin of the canvas coordinate system is at the upper-left corner of the window containing the canvas.
+# It is possible to adjust the origin of the canvas coordinate system relative to the origin of the window using the xview and
+# yview widget commands; this is typically used for scrolling.
+# Canvases do not support scaling or rotation of the canvas coordinate system relative to the window coordinate system.
+#
+# Individual items may be moved, scaled or rotated using widget commands described below.
+#
+# Note that the default origin of the canvas's visible area is coincident with the origin for the whole window as that makes
+# bindings using the mouse position easier to work with; you only need to use the **canvasx** and **canvasy** widget commands
+# if you adjust the origin of the visible area.
+# However, this also means that any window border (as controlled by the **-borderwidth** option) must be taken into account
+# before you get to the visible area of the canvas.
+#
+#### INDICES:
+#
+# Text items support the notion of an index for identifying particular positions within the item.
+# In a similar fashion, line and polygon items support index for identifying, inserting and deleting subsets of their coordinates.
+# Indices are used for commands such as inserting or deleting a range of characters or coordinates, and setting the insertion
+# cursor position. An index may be specified in any of a number of ways, and different types of items may support different forms
+# for specifying indices.
+# Text items support the following forms for an index; if you define new types of text-like items, it would be advisable to support
+# as many of these forms as practical.
+# Note that it is possible to refer to the character just after the last one in the text item; this is necessary for such tasks
+# as inserting new text at the end of the item.
+# Lines and Polygons do not support the insertion cursor and the selection.
+# Their indices are supposed to be even always, because coordinates always appear in pairs.
+#
+#   *number*
+#       A decimal number giving the position of the desired character within the text item.
+#       **0** refers to the first character, **1** to the next character, and so on.
+#       If indexes are odd for lines and polygons, they will be automatically decremented by one.
+#       A negative number is treated as if it were zero, and a number greater than the length of the text item is treated as if
+#       it were equal to the length of the text item.
+#       For polygons, negative numbers or numbers greater than the length of the coordinate list will be adjusted by adding or
+#       subtracting the length until the result is between zero and the length, inclusive.
+#
+#   **end**
+#       Refers to the character or coordinate just after the last one in the item (same as the number of characters or coordinates
+#       in the item).
+#
+#   **insert**
+#       Refers to the character just before which the insertion cursor is drawn in this item.
+#       Not valid for lines and polygons.
+#
+#   **sel.first**
+#       Refers to the first selected character in the item.
+#       If the selection is not in this item then this form is illegal.
+#
+#   **sel.last**
+#       Refers to the last selected character in the item.
+#       If the selection is not in this item then this form is illegal.
+#
+#   **@***x,y*
+#       Refers to the character or coordinate at the point given by *x* and *y*, where x and y are specified in the coordinate system
+#       of the canvas. If x and y lie outside the coordinates covered by the text item, then they refer to the first or last character
+#       in the line that is closest to the given point.
+#
+#### DASH PATTERNS:
+#
+# Many items support the notion of a dash pattern for outlines.
+# The first possible syntax is a list of integers. Each element represents the number of pixels of a line segment.
+# Only the odd segments are drawn using the "outline" color. The other segments are drawn transparent.
+#
+# The second possible syntax is a character list containing only 5 possible characters "**.,-_ **".
+# The space can be used to enlarge the space between other line elements, and cannot occur as the first position in the string.
+# Some examples:
+#
+#    -dash .     → -dash {2 4}
+#    -dash -     → -dash {6 4}
+#    -dash -.    → -dash {6 4 2 4}
+#    -dash -..   → -dash {6 4 2 4 2 4}
+#    -dash {. }  → -dash {2 8}
+#    -dash ,     → -dash {4 4}
+#
+# The main difference of this syntax with the previous is that it is shape-conserving.
+# This means that all values in the dash list will be multiplied by the line width before display.
+# This assures that "." will always be displayed as a dot and "-" always as a dash regardless of the line width.
+#
+# On systems which support only a limited set of dash patterns, the dash pattern will be displayed as the closest dash pattern that
+# is available. For example, on Windows only the first 4 of the above examples are available. The last 2 examples will be displayed
+# identically to the first one.
+#
+#### OVERVIEW OF ITEM TYPES:
+#
+# The sections below describe the various types of items supported by canvas widgets.
+# Each item type is characterized by two things: first, the form of the create command used to create instances of the type; and
+# second, a set of configuration options for items of that type, which may be used in the create and itemconfigure widget commands.
+# Most items do not support indexing or selection or the commands related to them, such as index and insert.
+# Where items do support these facilities, it is noted explicitly in the descriptions below.
+# At present, text, line and polygon items provide this support.
+# For lines and polygons the indexing facility is used to manipulate the coordinates of the item.
+#
+###### COMMON ITEM OPTIONS:
+#
+# Many items share a common set of options.
+# These options are explained here, and then referred to be each widget type for brevity.
+#
+#   **-anchor** *anchorPos*
+#     AnchorPos tells how to position the item relative to the positioning point for the item; it may have any of the forms accepted
+#     by [Tk_GetAnchor](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetAnchor.html).
+#     For example, if *anchorPos* is **center** then the item is centered on the point; if *anchorPos* is **n** then the item will be
+#     drawn so that its top center point is at the positioning point.
+#     This option defaults to **center**.
+#
+#   **-dash**         *pattern*
+#   **-activedash**   *pattern*
+#   **-disableddash** *pattern*
+#       These options specify dash patterns for the normal, active state, and disabled state of an item.
+#       *Pattern* may have any of the forms accepted by [Tk_GetDash](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetDash.html).
+#       If the dash options are omitted then the default is a solid outline.
+#       See **DASH PATTERNS** for more information.
+#
+#   **-dashoffset** *offset*
+#       The starting offset in pixels into the pattern provided by the **-dash** option.
+#       **-dashoffset** is ignored if there is no **-dash** pattern.
+#       The *offset* may have any of the forms described in the **COORDINATES** section above.
+#
+#   **-fill**         *color*
+#   **-activefill**   *color*
+#   **-disabledfill** *color*
+#       These options specify the color to be used to fill item's area.
+#       In its normal, active, and disabled states. The even-odd fill rule is used.
+#       *Color* may have any of the forms accepted by mustang.
+#       For the line item, it specifies the color of the line drawn.
+#       For the text item, it specifies the foreground color of the text.
+#       If *color* is an empty string (the default for all canvas items except line and text), then the item will not be filled.
+#
+#   **-outline**         *color*
+#   **-activeoutline**   *color*
+#   **-disabledoutline** *color*
+#       These options specify the color that should be used to draw the outline of the item in its normal, active and disabled states.
+#       *Color* may have any of the forms accepted by mustang.
+#       If *color* is specified as an empty string then no outline is drawn for the item.
+#
+#   **-offset** *offset*
+#       Specifies the offset of stipples. The *offset* value can be of the form **x**,**y** or *side*, where side can be **n**, **ne**,
+#       **e**, **se**, **s**, **sw**, **w**, **nw**, or **center**.
+#       In the first case the origin is the origin of the toplevel of the current window.
+#       For the canvas itself and canvas objects the origin is the canvas origin, but putting **#** in front of the coordinate pair
+#       indicates using the toplevel origin instead.
+#       For canvas objects, the **-offset** option is used for stippling as well.
+#       For the line and polygon canvas items you can also specify an index as argument, which connects the stipple origin to one
+#       of the coordinate points of the line/polygon.
+#       *Note that stipple offsets are only supported on X11; they are silently ignored on other platforms*.
+#
+#   **-outlinestipple**         *bitmap*
+#   **-activeoutlinestipple**   *bitmap*
+#   **-disabledoutlinestipple** *bitmap*
+#       These options specify stipple patterns that should be used to draw the outline of the item in its normal, active and disabled
+#       states.
+#       Indicates that the outline for the item should be drawn with a stipple pattern; *bitmap* specifies the stipple pattern to use,
+#       in any of the forms accepted by [Tk_GetBitmap](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetBitmap.html).
+#       If the **-outline** option has not been specified then this option has no effect.
+#       If *bitmap* is an empty string (the default), then the outline is drawn in a solid fashion.
+#       *Note that stipples are not well supported on platforms that do not use X11 as their drawing API*.
+#
+#   **-outlineoffset** *offset*
+#       Specifies the *offset* of the stipple pattern used for outlines, in the same way that the **-outline** option controls fill
+#       stipples (see the **-outline** option for a description of the syntax of offset).
+#
+#   **-stipple**         *bitmap*
+#   **-activestipple**   *bitmap*
+#   **-disabledstipple** *bitmap*
+#       These options specify stipple patterns that should be used to fill the item in its normal, active and disabled states.
+#       *Bitmap* specifies the stipple pattern to use, in any of the forms accepted by [Tk_GetBitmap](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetBitmap.html).
+#       If the **-fill** option has not been specified then this option has no effect.
+#       If *bitmap* is an empty string (the default), then filling is done in a solid fashion.
+#       For the text item, it affects the actual text.
+#       *Note that stipples are not well supported on platforms that do not use X11 as their drawing API*.
+#
+#   **-state** *state*
+#       This allows an item to override the canvas widget's global state option.
+#       Allowed values are: *normal*, *disabled* or *hidden*.
+#
+#   **-tags** *tagList*
+#       Specifies a set of tags to apply to the item. TagList consists of a list of tag names, which replace any existing tags for
+#       the item. *TagList* may be an empty list.
+#
+#   **-width**         *outlineWidth*
+#   **-activewidth**   *outlineWidth*
+#   **-disabledwidth** *outlineWidth*
+#       These options specify the width of the outline to be drawn around the item's region, in its normal, active and disabled
+#       states.
+#       *OutlineWidth* may be in any of the forms described in the **COORDINATES** section above.
+#       If the **-outline** option has been specified as an empty string then this option has no effect.
+#       This option defaults to **1.0**. For arcs, wide outlines will be drawn centered on the edges of the arc's region.
+#
+#### STANDARD ITEM TYPES:
+#
+###### ARC ITEMS:
+#
+# Items of type arc appear on the display as arc-shaped regions.
+# An arc is a section of an oval delimited by two angles (specified by either the **-start** and **-extent** options or the
+# **-height** option) and displayed in one of several ways (specified by the -style option).
+# Arcs are created with the following form:
+#
+#    *window* **create** **arc** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* give the coordinates of two diagonally opposite corners of a rectangular region enclosing the oval
+# that defines the arc (except when **-height** is specified - see below).
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
+# for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# An arc item becomes the current item when the mouse pointer is over any part that is painted or (when fully transparent)
+# that would be painted if both the **-fill** and **-outline** options were non-empty.
+#
+# The following standard options are supported by arcs:
+#
+#   -dash
+#   -activedash
+#   -disableddash
+#   -dashoffset
+#   -fill
+#   -activefill
+#   -disabledfill
+#   -offset
+#   -outline
+#   -activeoutline
+#   -disabledoutline
+#   -outlineoffset
+#   -outlinestipple
+#   -activeoutlinestipple
+#   -disabledoutlinestipple
+#   -stipple
+#   -activestipple
+#   -disabledstipple
+#   -state
+#   -tags
+#   -width
+#   -activewidth
+#   -disabledwidth
+#
+# The following extra options are supported for arcs:
+#
+#   **-extent** *degrees*
+#       Specifies the size of the angular range occupied by the arc.
+#       The arc's range extends for degrees *degrees* counter-clockwise from the starting angle given by the **-start** option.
+#       *Degrees* may be negative.
+#       If it is greater than 360 or less than -360, then *degrees* modulo 360 is used as the extent.
+#
+#   **-start** *degrees*
+#       Specifies the beginning of the angular range occupied by the arc.
+#       *Degrees* is given in units of degrees measured counter-clockwise from the 3-o'clock position; it may be either positive
+#       or negative.
+#
+#   **-height** *distance*
+#       Provides a shortcut for creating a circular arc segment by defining the distance of the mid-point of the arc from its chord.
+#       When this option is used the coordinates are interpreted as the start and end coordinates of the chord, and the options
+#       **-start** and **-extent** are ignored. The value of *distance* has the following meaning:
+#
+#           distance > 0 creates a clockwise arc
+#           distance < 0 creates an counter-clockwise arc
+#           distance = 0 creates an arc as if this option had not been specified
+#
+#       If you want the arc to have a specific radius, r, use the formula:
+#
+#           distance = r ± sqrt(r**2 - (chordLength / 2)**2)
+#
+#       choosing the minus sign for the minor arc and the plus sign for the major arc.
+#
+#       Note that **itemcget -height** always returns **0** so that introspection code can be kept simple.
+#
+#   **-style** *type*
+#       Specifies how to draw the arc. If type is **pieslice** (the default) then the arc's region is defined by a section of the
+#       oval's perimeter plus two line segments, one between the center of the oval and each end of the perimeter section.
+#       If type is **chord** then the arc's region is defined by a section of the oval's perimeter plus a single line segment
+#       connecting the two end points of the perimeter section.
+#       If type is **arc** then the arc's region consists of a section of the perimeter alone.
+#       In this last case the **-fill** option is ignored.
+#
+###### BITMAP ITEMS:
+#
+# Items of type bitmap appear on the display as images with two colors, foreground and background.
+# Bitmaps are created with the following form:
+#
+#    *window* **create** **bitmap** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* (which must have two elements) specify the coordinates of a point used to position the bitmap on the
+# display, as controlled by the **-anchor** option.
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
+# for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# A bitmap item becomes the current item when the mouse pointer is over any part of its bounding box.
+#
+# The following standard options are supported by bitmaps:
+#
+#   -anchor
+#   -state
+#   -tags
+#
+# The following extra options are supported for bitmaps:
+#
+#   **-background**         *color*
+#   **-activebackground**   *color*
+#   **-disabledbackground** *color*
+#       Specifies the color to use for each of the bitmap's "0" valued pixels in its normal, active and disabled states.
+#       *Color* may have any of the forms accepted by mustang.
+#       If this option is not specified, or if it is specified as an empty string, then nothing is displayed where the
+#       bitmap pixels are 0; this produces a transparent effect.
+#
+#   **-bitmap**         *bitmap*
+#   **-activebitmap**   *bitmap*
+#   **-disabledbitmap** *bitmap*
+#       These options specify the bitmaps to display in the item in its normal, active and disabled states.
+#       *Bitmap* may have any of the forms accepted by [Tk_GetBitmap](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetBitmap.html).
+#
+#   **-foreground**         *color*
+#   **-activeforeground**   *color*
+#   **-disabledforeground** *color*
+#       These options specify the color to use for each of the bitmap's "1" valued pixels in its normal, active and disabled
+#       states.
+#       *Color* may have any of the forms accepted by mustang.
+#
+###### IMAGE ITEMS:
+#
+# Items of type image are used to display images on a canvas.
+# Images are created with the following form:
+#
+#    *window* **create** **image** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* specify the coordinates of a point used to position the image on the display, as controlled by the
+# *-anchor* option.
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
+# for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# An image item becomes the current item when the mouse pointer is over any part of its bounding box.
+#
+# The following standard options are supported by images:
+#
+#   -anchor
+#   -state
+#   -tags
+#
+# The following extra options are supported for images:
+#
+#   **-image**         *name*
+#   **-activeimage**   *name*
+#   **-disabledimage** *name*
+#       Specifies the name of the images to display in the item in is normal, active and disabled states.
+#       This image must have been created previously with the image create command.
+#
+###### LINE ITEMS:
+#
+# Items of type line appear on the display as one or more connected line segments or curves.
+# Line items support coordinate indexing operations using the dchars, index and insert widget commands.
+# Lines are created with the following form:
+#
+#    *window* **create** **line** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* give the coordinates for a series of two or more points that describe a series of connected
+# line segments.
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
+# for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# A line item is the current item whenever the mouse pointer is over any segment of the line, whether drawn or not and
+# whether or not the line is smoothed.
+#
+# The following standard options are supported by lines:
+#
+#   -dash
+#   -activedash
+#   -disableddash
+#   -dashoffset
+#   -fill
+#   -activefill
+#   -disabledfill
+#   -stipple
+#   -activestipple
+#   -disabledstipple
+#   -state
+#   -tags
+#   -width
+#   -activewidth
+#   -disabledwidth
+#
+# The following extra options are supported for lines:
+#
+#   **-arrow** *where*
+#       Indicates whether or not arrowheads are to be drawn at one or both ends of the line.
+#       *Where* must have one of the values **none** (for no arrowheads), **first** (for an arrowhead at the first point
+#       of the line), **last** (for an arrowhead at the last point of the line), or **both** (for arrowheads at both ends).
+#
+#       This option defaults to **none**.
+#
+#       When requested to draw an arrowhead, Tk internally adjusts the corresponding line end point so that the rendered line
+#       ends at the neck of the arrowhead rather than at its tip so that the line doesn't extend past the edge of the arrowhead.
+#       This may trigger a Leave event if the mouse is hovering this line end.
+#       Conversely, when removing an arrowhead Tk adjusts the corresponding line point the other way round, which may trigger an
+#       **Enter** event.
+#
+#   **-arrowshape** *shape*
+#       This option indicates how to draw arrowheads.
+#       The *shape* argument must be a list with three elements, each specifying a distance in any of the forms described in the
+#       **COORDINATES** section above.
+#       The first element of the list gives the distance along the line from the neck of the arrowhead to its tip.
+#       The second element gives the distance along the line from the trailing points of the arrowhead to the tip, and the third
+#       element gives the distance from the outside edge of the line to the trailing points.
+#       If this option is not specified then Tk picks a "reasonable" shape.
+#
+#   **-capstyle** *style*
+#       Specifies the ways in which caps are to be drawn at the endpoints of the line.
+#       *Style* may have any of the forms accepted by [Tk_GetCapStyle](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetCapStyl.html)
+#       (**butt**, **projecting**, or **round**).
+#       If this option is not specified then it defaults to **butt**.
+#       Where arrowheads are drawn the cap style is ignored.
+#
+#   **-joinstyle** *style*
+#       Specifies the ways in which joints are to be drawn at the vertices of the line.
+#       *Style* may have any of the forms accepted by [Tk_GetJoinStyle](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetJoinStl.html)
+#       (**bevel**, **miter**, or **round**).
+#       If this option is not specified then it defaults to **round**.
+#       If the line only contains two points then this option is irrelevant.
+#
+#   **-smooth** *smoothMethod*
+#       *smoothMethod* must have one of the forms accepted by [Tcl_GetBoolean](https://www.tcl-lang.org/man/tcl9.0/TclLib/GetInt.html)
+#       or a line smoothing method.
+#       Only **true** and **raw** are supported in the core (with bezier being an alias for true), but more can be added at runtime.
+#       If a boolean false value or empty string is given, no smoothing is applied.
+#       A boolean truth value assumes *true* smoothing.
+#
+#       If the smoothing method is *true*, this indicates that the line should be drawn as a curve, rendered as a set of quadratic
+#        splines: one spline is drawn for the first and second line segments, one for the second and third, and so on.
+#       Straight-line segments can be generated within a curve by duplicating the end-points of the desired line segment.
+#
+#       If the smoothing method is *raw*, this indicates that the line should also be drawn as a curve but where the list of coordinates
+#       is such that the first coordinate pair (and every third coordinate pair thereafter) is a knot point on a cubic Bezier curve,
+#       and the other coordinates are control points on the cubic Bezier curve.
+#       Straight line segments can be generated within a curve by making control points equal to their neighbouring knot points.
+#       If the last point is a control point and not a knot point, the point is repeated (one or two times) so that it also becomes
+#       a knot point.
+#
+#   **-splinesteps** *number*
+#       Specifies the degree of smoothness desired for curves: each spline will be approximated with number line segments.
+#       This option is ignored unless the **-smooth** option is **true** or **raw**.
+#
+###### OVAL ITEMS:
+#
+# Items of type oval appear as circular or oval regions on the display.
+# Each oval may have an outline, a fill, or both.
+# Ovals are created with the following form:
+#
+#    *window* **create** **oval** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* give the coordinates of two diagonally opposite corners of a rectangular region enclosing the oval.
+# The oval will include the top and left edges of the rectangle not the lower or right edges.
+# If the region is square then the resulting oval is circular; otherwise it is elongated in shape.
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options for
+# the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# An oval item becomes the current item when the mouse pointer is over any part that is painted or (when fully transparent)
+# that would be painted if both the **-fill** and **-outline** options were non-empty.
+#
+# The following standard options are supported by ovals:
+#
+#   -dash
+#   -activedash
+#   -disableddash
+#   -dashoffset
+#   -fill
+#   -activefill
+#   -disabledfill
+#   -offset
+#   -outline
+#   -activeoutline
+#   -disabledoutline
+#   -outlineoffset
+#   -outlinestipple
+#   -activeoutlinestipple
+#   -disabledoutlinestipple
+#   -stipple
+#   -activestipple
+#   -disabledstipple
+#   -state
+#   -tags
+#   -width
+#   -activewidth
+#   -disabledwidth
+#
+# There are no oval-specific options.
+#
+###### POLYGON ITEMS:
+#
+# Items of type polygon appear as polygonal or curved filled regions on the display.
+# Polygon items support coordinate indexing operations using the dchars, index and insert widget commands.
+# Polygons are created with the following form:
+#
+#    *window* **create** **polygon** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* specify the coordinates for three or more points that define a polygon.
+# The first point should not be repeated as the last to close the shape; Tk will automatically close the periphery between
+# the first and last points.
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
+# for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# A polygon item is the current item whenever the mouse pointer is over any part of the polygon, whether drawn or not and
+# whether or not the outline is smoothed.
+#
+# The following standard options are supported by polygons:
+#
+#   -dash
+#   -activedash
+#   -disableddash
+#   -dashoffset
+#   -fill
+#   -activefill
+#   -disabledfill
+#   -offset
+#   -outline
+#   -activeoutline
+#   -disabledoutline
+#   -outlineoffset
+#   -outlinestipple
+#   -activeoutlinestipple
+#   -disabledoutlinestipple
+#   -stipple
+#   -activestipple
+#   -disabledstipple
+#   -state
+#   -tags
+#   -width
+#   -activewidth
+#   -disabledwidth
+#
+# The following extra options are supported for polygons:
+#
+#   **-joinstyle** *style*
+#     Specifies the ways in which joints are to be drawn at the vertices of the outline.
+#     *Style* may have any of the forms accepted by [Tk_GetJoinStyle](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetJoinStl.html)
+#     (**bevel**, **miter**, or **round**).
+#     If this option is not specified then it defaults to round.
+#
+#   **-smooth** *boolean*
+#     *Boolean* must have one of the forms accepted by [Tcl_GetBoolean](https://www.tcl-lang.org/man/tcl9.0/TclLib/GetInt.html)
+#     or a line smoothing method.
+#     Only **true** and **raw** are supported in the core (with bezier being an alias for true), but more can be added at runtime.
+#     If a boolean false value or empty string is given, no smoothing is applied.
+#     A boolean truth value assumes *true* smoothing.
+#
+#     If the smoothing method is *true*, this indicates that the polygon should be drawn as a curve, rendered as a set of quadratic
+#     splines: one spline is drawn for the first and second line segments, one for the second and third, and so on.
+#     Straight-line segments can be generated within a curve by duplicating the end-points of the desired line segment.
+#
+#     If the smoothing method is *raw*, this indicates that the polygon should also be drawn as a curve but where the list of coordinates
+#     is such that the first coordinate pair (and every third coordinate pair thereafter) is a knot point on a cubic Bezier curve, and
+#     the other coordinates are control points on the cubic Bezier curve.
+#     Straight line segments can be generated within a curve by making control points equal to their neighbouring knot points.
+#     If the last point is not the second point of a pair of control points, the point is repeated (one or two times) so that it also
+#     becomes the second point of a pair of control points (the associated knot point will be the first control point).
+#
+#   **-splinesteps** *number*
+#     Specifies the degree of smoothness desired for curves: each spline will be approximated with *number* line segments.
+#     This option is ignored unless the **-smooth** option is true or raw.
+#
+# Polygon items are different from other items such as rectangles, ovals and arcs in that interior points are considered to be "inside"
+# a polygon (e.g. for purposes of the find closest and find overlapping widget commands) even if it is not filled.
+# For most other item types, an interior point is considered to be inside the item only if the item is filled or if it has neither a
+# fill nor an outline.
+# If you would like an unfilled polygon whose interior points are not considered to be inside the polygon, use a line item instead.
+#
+###### RECTANGLE ITEMS:
+#
+# Items of type rectangle appear as rectangular regions on the display.
+# Each rectangle may have an outline, a fill, or both.
+# Rectangles are created with the following form:
+#
+#    *window* **create** **rectangle** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* (which must have four elements) give the coordinates of two diagonally opposite corners of the rectangle
+# (the rectangle will include its upper and left edges but not its lower or right edges).
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# A rectangle item becomes the current item when the mouse pointer is over any part that is painted or (when fully transparent) that
+# would be painted if both the **-fill** and **-outline** options were non-empty.
+#
+# The following standard options are supported by rectangles:
+#
+#   -dash
+#   -activedash
+#   -disableddash
+#   -dashoffset
+#   -fill
+#   -activefill
+#   -disabledfill
+#   -offset
+#   -outline
+#   -activeoutline
+#   -disabledoutline
+#   -outlineoffset
+#   -outlinestipple
+#   -activeoutlinestipple
+#   -disabledoutlinestipple
+#   -stipple
+#   -activestipple
+#   -disabledstipple
+#   -state
+#   -tags
+#   -width
+#   -activewidth
+#   -disabledwidth
+#
+# There are no rectangle-specific options.
+#
+###### TEXT ITEMS:
+#
+# A text item displays a string of characters on the screen in one or more lines.
+# Text items support indexing, editing and selection through the dchars widget command, the focus widget command, the icursor widget
+# command, the index widget command, the insert widget command, and the select widget command.
+# Text items are created with the following form:
+#
+#    *window* **create** **text** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* (which must have two elements) specify the coordinates of a point used to position the text on the display
+# (see the options below for more information on how text is displayed).
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# A text item becomes the current item when the mouse pointer is over any part of its bounding box.
+#
+# The following standard options are supported by text items:
+#
+#   -anchor
+#   -fill
+#   -activefill
+#   -disabledfill
+#   -stipple
+#   -activestipple
+#   -disabledstipple
+#   -state
+#   -tags
+#
+# The following extra options are supported for text items:
+#
+#   **-angle** *rotationDegrees*
+#     *RotationDegrees* tells how many degrees to rotate the text anticlockwise about the positioning point for the text; it may have
+#     any floating-point value from **0.0** to **360.0**.
+#     For example, if rotationDegrees is **90**, then the text will be drawn vertically from bottom to top.
+#     This option defaults to **0.0**.
+#
+#   **-font** *fontName*
+#     Specifies the font to use for the text item. *FontName* may be any string acceptable to [Tk_GetFont](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetFont.html).
+#     If this option is not specified, it defaults to a system-dependent font.
+#
+#   **-justify** *how*
+#     Specifies how to justify the text within its bounding region. How must be one of the values **left**, **right**, or **center**.
+#     This option will only matter if the text is displayed as multiple lines.
+#     If the option is omitted, it defaults to left.
+#
+#   **-text** *string*
+#     **String** specifies the characters to be displayed in the text item. Newline characters cause line breaks.
+#     The characters in the item may also be changed with the insert and delete widget commands.
+#     This option defaults to an empty string.
+#
+#   **-underline** *number*
+#     Specifies the integer index of a character within the text to be underlined.
+#     **0** corresponds to the first character of the text displayed, **1** to the next character, and so on.
+#     **-1** means that no underline should be drawn (if the whole text item is to be underlined, the appropriate font should be
+#     used instead).
+#
+#   **-width** *lineLength*
+#     Specifies a maximum line length for the text, in any of the forms described in the **COORDINATES** section above.
+#     If this option is zero (the default) the text is broken into lines only at newline characters.
+#     However, if this option is non-zero then any line that would be longer than lineLength is broken just before a space
+#     character to make the line shorter than lineLength; the space character is treated as if it were a newline character.
+#
+###### WINDOW ITEMS:
+#
+# Items of type window cause a particular window to be displayed at a given position on the canvas.
+# Window items are created with the following form:
+#
+#    *window* **create** **window** *coordList* ?*option* *value*? ... ?*option* *value*?
+#
+# The argument *coordList* (which must have two elements) specify the coordinates of a point used to position the window on
+# the display, as controlled by the **-anchor** option.
+# After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
+# for the item.
+# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# Theoretically, a window item becomes the current item when the mouse pointer is over any part of its bounding box,
+# but in practice this typically does not happen because the mouse pointer ceases to be over the canvas at that point.
+#
+# The following standard options are supported by window items:
+#
+#   -anchor
+#   -state
+#   -tags
+#
+# The following extra options are supported for window items:
+#
+#   **-height** *pixels*
+#     Specifies the height to assign to the item's window.
+#     *Pixels* may have any of the forms described in the **COORDINATES** section above.
+#     If this option is not specified, or if it is specified as zero, then the window is given whatever height it requests
+#     internally.
+#
+#   **-width** *pixels*
+#     Specifies the width to assign to the item's window.
+#     *Pixels* may have any of the forms described in the **COORDINATES** section above.
+#     If this option is not specified, or if it is specified as zero, then the window is given whatever width it requests
+#     internally.
+#
+#   **-window** *pathName*
+#     Specifies the window to associate with this item.
+#     The window specified by *pathName* must either be a child of the canvas widget or a child of some ancestor of the
+#     canvas widget.
+#     *PathName* may not refer to a top-level window and can be a short or real address.
+#
+# Note that, due to restrictions in the ways that windows are managed, it is not possible to draw other graphical items
+# (such as lines and images) on top of window items.
+# A window item always obscures any graphics that overlap it, regardless of their order in the display list.
+# Also note that window items, unlike other canvas items, are not clipped for display by their containing canvas's border,
+# and are instead clipped by the parent widget of the window specified by the **-window** option; when the parent widget is
+# the canvas, this means that the window item can overlap the canvas's border.
+#
+#### APPLICATION-DEFINED ITEM TYPES:
+#
+# It is possible for individual applications to define new item types for canvas widgets using C code.
+# See the documentation for Tk_CreateItemType.
+#
+#### STATES:
+#
+# The canvas widget supports only the **normal** and **disabled** states.
+#
+#### STYLING OPTIONS:
+#
+# Default style name: **Canvas**
+#
+# Every canvas styleable option is supported and configurable with the [style](/wiki/commands/style.md) command.
+# Valid styleable options of other widgets will be ignored.
+# It is considered an error providing style options that are not managed by mustang or Tk.
+#
+# See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#### BINDINGS:
+#
+# Mustang automatically creates several bindings for the canvases in order to facilitate the developer work and augment the
+# user experience at the same time.
+#
+###### SCROLLING
+#
+# The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
+#
+# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided,
+#       a multiple of it. See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
+#
+#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#
+# Note: Belows, when we talk about the widget's parents, we talk about it recursively.
+#       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       otherwise nothing will happen.
+#
+# Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
+#       for the Y axis, while **Control-TouchpadScroll** events abide by the same rules of the **Control-MouseWheel** for the X axis
+#       and the **Control-Shift-MouseWheel** for the Y axis.
+#
+######## SIMPLE CANVAS:
+#
+# 1.  **MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar
+#     by one unit up or down (depending on the mousewheel direction). If none of the widget's parents meets the required condition,
+#     nothing will happen.
+#
+# 2.  **Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal scrollbar and move that
+#     scrollbar by one unit left or right (depending on the mousewheel direction). If none of the widget's parents meets the required condition,
+#     nothing will happen.
+#
+# 3.  **Control-MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar and move that
+#     scrollbar by one page up or down (depending on the mousewheel direction). If none of the widget's parents meets the required condition,
+#     nothing will happen.
+#
+# 4.  **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal scrollbar and
+#     move that scrollbar by one page left or right (depending on the mousewheel direction). If none of the widget's parents meets the required
+#     condition, nothing will happen.
+#
+# 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
+#
+#        1 - **TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
+#            scrollbar and move that scrollbar by one unit towards the left or the right (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an active vertical
+#            scrollbar and move that scrollbar by one unit towards the top or the bottom (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
+#
+#        1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
+#            scrollbar and move that scrollbar by one page towards the left or the right (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an active vertical
+#            scrollbar and move that scrollbar by one page towards the top or the bottom (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 7.  **ContextMenu** events will display the contextual menu associated with the widget.
+#     See the **-cmenu** option for more details.
+#
+######## SCROLLABLE CANVAS:
+#
+# 1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of
+#     the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable
+#     parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 2.  If the widget have an active horizontal scrollbar, **Shift-MouseWheel** events will scroll one unit towards the left or the right
+#     of the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget's
+#     scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the
+#     mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 3.  If the widget have an active vertical scrollbar, **Control-MouseWheel** events will scroll one page towards the top or the
+#     bottom of the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget's
+#     scrollable parent with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the mousewheel
+#     direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 4.  If the widget have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will scroll one page towards the left or
+#     the right of the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget's
+#     scrollable parent with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel
+#     direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
+#
+#        1 - If the widget have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try will scroll the widget
+#            scrollbar one unit towards the left or the right (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to find the
+#            innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
+#            or the right (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - If the widget have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try will scroll the widget
+#            scrollbar one unit towards the top or the bottom (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to find the
+#            innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
+#            or the bottom (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
+#
+#        1 - If the widget have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try will scroll the
+#            widget scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
+#            the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
+#            or the right (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - If the widget have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try will scroll the
+#            widget scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
+#            the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
+#            or the bottom (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 7.  Pressing and holding the mousewheel button and moving the mouse, will scroll the content in every direction.
+#
+# 8.  **ContextMenu** events will display the contextual menu associated with the widget.
+#     See the **-cmenu** option for more details.
+#
+###### INTERNAL MECHANISM:
+#
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth**
+#     and **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually
+#     indicate that the user is inside the widget.
+#
+# The following behavior will happen if the widget has the focus or if one of its children has the focus but do not have a direct
+# binding action setted for the key involved.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the previous
+#     focussable widget.
+#
+# 2.  If the widget vertical scrollbar is active:
+#       - **Prior** Scrolls one page towards the top of the widget.
+#       - **Next**  Scrolls one page towards the bottom of the widget.
+#     If the widget vertical scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
+#     active vertical scrollbar and scroll that scrollbar. If none of the widget's parents meets the required conditions,
+#     nothing will happen.
+#
+# 3.  If the widget horizontal scrollbar is active:
+#       - **Control-Prior** Scrolls one page towards the right of the widget.
+#       - **Control-Next**  Scrolls one page towards the left of the widget.
+#     If the widget horizontal scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
+#     active horizontal scrollbar and scroll that scrollbar. If none of the widget's parents meets the required conditions,
+#     nothing will happen.
+#
+# There are other bindings in place for internal mechanism on the widget like **Activate/Deactivate**, **Configure**, **Destroy**,
+# **Enter/Leave** and **FocusIn/FocusOut**, as well as **ButtonPress-1**, **B1-Motion** and **ButtonRelease-1** on its scrollbar objects.
+#
+###### ALTERNATIVE BINDINGS:
+#
+# Check the [event](/wiki/commands/event.md) wiki page to see alternative keystrokes in case some keys are not present in the user
+# keyboard like the *Delete*, *Arrows*, *Home*, *End*, *PageUp* or *PageDown* keys.
+#
+#### COLOR OPTIONS:
+#
+# Each color option accepts colors provided in one of the following forms:
+#
+#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                               hexadecimals), with or without the **#**.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the color to validate and the second one (optional) indicates
+#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                               translated. If only one element is provided (the hexadecimal color) its color model will be
+#                               assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                               Note: Hexadecimal colors and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffffff'.
+#
+#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                          The color model is **HEX12**.
+#
+#                                                          The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ff0000'.
+#
+#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                          The color model is **HEX16**.
+#
+#                                                          The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#0000ff'.
+#
+#                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffff00'.
+#
+#   **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                               *Magenta*, or *Light Steel Blue*.
+#
+#                               In this form, the list should have at least one element. More precisely:
+#
+#                                    colorname   --> It's the textual color name that specifies the color.
+#                                                    Should always be written first. It can take more than one element of
+#                                                    the list depending on how many words are needed to define it.
+#
+#                                                    The only color names known by mustang are specified in its palettes.
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the allowed color names for the default **mustang** palette.
+#
+#                                    palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                    If present, it should always be the last element of the list if the color model
+#                                                    is not present, or the last but one if the color model is present.
+#
+#                                                    Allowed values are any palette name loaded into mustang.
+#                                                    If not provided, defaults to **mustang** or return the fallback value
+#                                                    if the **mustang** palette was not loaded.
+#
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the mustang palettes.
+#
+#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                    will be translated.
+#                                                    If present, the color model should always be the last element of the list.
+#
+#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                    If not provided, defaults to **HEX8**.
+#
+#                                                    Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                    about color models.
+#
+#                               Note: Colornames, palettes and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "teal"                --> The color name is *teal*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#008080"
+#
+#                                    "medium violet red"   --> The color name is *medium violet red*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#c71585"
+#
+#                                    "sepia MyPalette"     --> The color name is *sepia*.
+#                                                              The palette name is **MyPalette**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              Note that in this example **MyPalette** is a fictional
+#                                                              palette name that have been loaded into mustang.
+#
+#                                                              The color name is translated to the hexadecimal color at 8 bit
+#                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                    "light coral hex16"   --> The color name is *light coral*.
+#                                                              The color model is **HEX16**.
+#                                                              The palette name is **mustang**.
+#
+#                                                              The color name is translated to "#f0f080808080"
+#
+#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                             The palette name is **mustang**.
+#                                                                             The color model is **HEX8**.
+#
+#                                                                             The color name is translated to "#6ada8e"
+#
+#                               After its validation, the color name will be returned translated in its hexadecimal longform
+#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                               *HighlightAlternate* or *PlaceholderText*.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the theme color name to validate and the second one (optional)
+#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                               will be translated. If only one element is provided (the theme color name) its color model
+#                               will be assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                               theme color names are allowed.
+#
+#                               Note: Theme colors are case sensitive.
+#
+#### EXAMPLE:
+#
+#   # Create a scrollable canvas 800x600.
+#   canvas .c      -borderwidth 2 \
+#                       -height 600 \
+#                       -relief solid \
+#                   -scrollable true \
+#                 -scrollregion [list 0 0 2000 2000] \
+#                        -style Canvas \
+#                    -takefocus true \
+#                        -width 800 \
+#             -xscrollincrement -2 \
+#             -yscrollincrement -2;
+#
+#   # Focus the scrollable canvas.
+#   focus .c
+#
+#   # Pack the scrollable canvas and expand it in both directions.
+#   pack .c  -anchor nw \
+#            -expand true \
+#              -fill both \
+#              -padx [list 15 15] \
+#              -pady [list 15 15] \
+#              -side top;
+#
+#   # Create a rectangle inside the scrollable canvas.
+#   .c create rectangle [list 10 10 700 700] -fill SelectedTextBackgroundColor
+#
+#   # After 3 seconds, change the accent color to orange.
+#   after 3000 [list set ::ms::accent orange]
+#
+#   # After 6 seconds, invert the colorscheme.
+#   switch -- [tk windowingsystem] {
+#       aqua {
+#           switch -- [wm attributes . -isdark] {
+#               0   { after 6000 [list set ::ms::colorscheme dark]  }
+#               1   { after 6000 [list set ::ms::colorscheme light] }
+#           }
+#       }
+#       default { after 6000 [list set ::ms::colorscheme dark] }
+#   }
+#
+#### CREDITS:
+#
+# Tk's canvas widget is a blatant ripoff of ideas from Joel Bartlett's ezd program.
+# Ezd provides structured graphics in a Scheme environment and preceded canvases by a year or two.
+# Its simple mechanisms for placing and animating graphical objects inspired the functions of canvases.
 package provide ::ms::canvas 0.1
 
 ##############################
