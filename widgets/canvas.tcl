@@ -1941,6 +1941,15 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                                     # Create the widget.
                                     $w.canvas configure {*}$canvas_options
+
+                                    #######################
+                                    ##                   ##
+                                    ##     SCROLLBAR     ##
+                                    ##                   ##
+                                    #######################
+
+                                    # Update the scrollbars.
+                                    ::ms::canvas::Scrollbar_Update $w
                                 }
                             }
                         }
