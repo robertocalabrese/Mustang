@@ -3800,16 +3800,15 @@ proc ::ms::Scan_Or_Paste { w x event } {
 proc ::ms::Drag { w x y } {
     # Check if the address provided belongs to a palette widget.
     switch -- $::ms::data($w,classtype) {
-        palette { set element [$w.combobox identify element $x $y] }
-        default { set element [interp invokehidden {} $w identify element $x $y] }
+        palette { set address [list $w.combobox] }
+        default { set address [list interp invokehidden {} $w] }
     }
 
     # Check the widget state.
     switch -- $::ms::current($w,state) {
         normal {
             # Check the cursor location.
-
-            switch -glob -- $element {
+            switch -glob -- [{*}$address identify element $x $y] {
                 "*textarea" {
                     set ::ttk::entry::State(x) $x
                     ::ms::DragTo $w $x
