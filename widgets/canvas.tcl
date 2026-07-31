@@ -1277,7 +1277,70 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
         scale         -
         scan          -
         select        -
-        type          {}
+        type          {
+            # Synopsis:
+            #
+            # *window* **addtag** *tag* *searchSpec* ?*arg* ... *arg*?
+            # *window* **bbox** *tagOrId* ?*tagOrId* *tagOrId* ...?
+            # *window* **bind** *tagOrId* ?*sequence*? ?*command*?
+            # *window* **canvasx** *screenx* ?*gridspacing*?
+            # *window* **canvasy** *screeny* ?*gridspacing*?
+            # *window* **coords** *tagOrId* ?*x0* *y0* ...?
+            # *window* **coords** *tagOrId* ?*coordList*?
+            # *window* **dchars** *tagOrId* *first* ?*last*?
+            # *window* **delete** ?*tagOrId* *tagOrId* ...?
+            # *window* **dtag** *tagOrId* ?*tagToDelete*?
+            # *window* **find** *searchCommand* ?*arg* ... *arg*?
+            # *window* **focus** ?*tagOrId*?
+            # *window* **gettags** *tagOrId*
+            # *window* **icursor** *tagOrId* *index*
+            # *window* **image** *imagename* ?*subsample*? ?*zoom*?
+            # *window* **imove** *tagOrId* *index* *x* *y*
+            # *window* **index** *tagOrId* *index*
+            # *window* **insert** *tagOrId* *beforeThis* *string*
+            # *window* **itemcget** *tagOrId* *option*
+            # *window* **itemconfigure** *tagOrId* ?*option*? ?*value*? ?*option value* ... *option value*?
+            # *window* **lower** *tagOrId* ?*belowThis*?
+            # *window* **move** *tagOrId* *xAmount* *yAmount*
+            # *window* **moveto** *tagOrId* *xPos* *yPos*
+            # *window* **postscript** ?*option value* ... *option value*?
+            # *window* **raise** *tagOrId* ?*aboveThis*?
+            # *window* **rchars** *tagOrId* *first* *last* *string*
+            # *window* **rotate** *tagOrId* *xOrigin* *yOrigin* *angle*
+            # *window* **scale** *tagOrId* *xOrigin* *yOrigin* *xScale* *yScale*
+            # *window* **scan** *option* *args*
+            #    *window* **scan** **mark** *x* *y*
+            #    *window* **scan** **dragto** *x* *y* ?*gain*?
+            # *window* **select** *option* ?*tagOrId* *arg*?
+            #    *window* **select** **adjust** *tagOrId* *index*
+            #    *window* **select** **clear**
+            #    *window* **select** **from** *tagOrId* *index*
+            #    *window* **select** **item**
+            #    *window* **select** **to** *tagOrId* *index*
+            # *window* **type** *tagOrId*
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                true {
+                    # Execute the command.
+                    try {
+                        $w.canvas $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+            }
+        }
         cget {
             # Synopsis:
             #
