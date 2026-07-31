@@ -3905,7 +3905,7 @@ proc ::ms::ScanDrag { w x y } {
 ## ScanMark
 #
 # Manages the **<ButtonPress-2>** (or **<ButtonPress-3>** in macOS Aqua) event on a scrollable widget
-# that supports **scan** operations.
+# that supports **scan** operations (canvases, listboxes and texts).
 #
 # Where:
 #
