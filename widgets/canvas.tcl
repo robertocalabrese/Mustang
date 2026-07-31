@@ -1952,6 +1952,24 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     ::ms::canvas::Scrollbar_Update $w
                                 }
                             }
+
+                            ##################################################
+                            ##                                              ##
+                            ##     IF NEEDED, UPDATE THE WIDGET'S STATE     ##
+                            ##                                              ##
+                            ##################################################
+
+                            # Note: There is no need to update the canvas object, it's a classic widget and
+                            #       it was already been taking care of.
+
+                            # Check if the widget is scrollable or not.
+                            switch -- $::ms::current($w,scrollable) {
+                                true {
+                                    switch -- $::ms::current($w,state) {
+                                        disabled { interp invokehidden {} $w state disabled }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
