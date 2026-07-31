@@ -2472,10 +2472,8 @@ namespace eval ::ms::canvas {
                                               bordercolor \
                                               borderwidth \
                                               cursor \
-                                              darkcolor \
                                               insertbackground \
                                               insertborderwidth \
-                                              lightcolor \
                                               relief \
                                               selectbackground \
                                               selectborderwidth \
@@ -2624,10 +2622,8 @@ proc ::ms::canvas::Command { window { args "" } } {
             set ::ms::managed_by($w,bordercolor)       Tk
             set ::ms::managed_by($w,borderwidth)       Tk
             set ::ms::managed_by($w,cursor)            Tk
-            set ::ms::managed_by($w,darkcolor)         Tk
             set ::ms::managed_by($w,insertbackground)  Tk
             set ::ms::managed_by($w,insertborderwidth) Tk
-            set ::ms::managed_by($w,lightcolor)        Tk
             set ::ms::managed_by($w,relief)            Tk
             set ::ms::managed_by($w,selectbackground)  Tk
             set ::ms::managed_by($w,selectborderwidth) Tk
@@ -2705,15 +2701,6 @@ proc ::ms::canvas::Command { window { args "" } } {
                             set ::ms::managed_by($w,cursor) developer
                         }
                     }
-                    -darkcolor {
-                        set value [::ms::Check_Color $value invalid]
-                        switch -- $value {
-                            invalid { continue }
-                        }
-
-                        set ::ms::current($w,darkcolor)    $value
-                        set ::ms::managed_by($w,darkcolor) developer
-                    }
                     -height {
                         set value [::ms::Check_Measure $value invalid]
                         switch -- $value {
@@ -2766,15 +2753,6 @@ proc ::ms::canvas::Command { window { args "" } } {
                                 }
                             }
                         }
-                    }
-                    -lightcolor {
-                        set value [::ms::Check_Color $value invalid]
-                        switch -- $value {
-                            invalid { continue }
-                        }
-
-                        set ::ms::current($w,lightcolor)    $value
-                        set ::ms::managed_by($w,lightcolor) developer
                     }
                     -relief {
                         set value [string tolower $value]
