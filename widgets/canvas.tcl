@@ -755,6 +755,98 @@ proc ::ms::canvas::Command { window { args "" } } {
                     set takefocus $::ms::current($w,takefocus)
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'borderwidth', 'cursor', 'insertwidth', 'relief' and 'selectborderwidth' are not allowed to change if the statespec changes.
+
+            # Set the canvas options.
+            set canvas_options [list        -background $::ms::current($w,background) \
+                                           -closeenough $::ms::current($w,closeenough) \
+                                               -confine $::ms::current($w,confine) \
+                                                -cursor $cursor \
+                                                -height $::ms::current($w,height) \
+                                      -insertbackground $::ms::current($w,insertbackground) \
+                                     -insertborderwidth $::ms::current($w,insertborderwidth) \
+                                         -insertofftime $::ms::current($w,insertofftime) \
+                                          -insertontime $::ms::current($w,insertontime) \
+                                           -insertwidth $::ms::current($w,insertwidth) \
+                                                -offset 0,0 \
+                                          -scrollregion $::ms::current($w,scrollregion) \
+                                      -selectbackground $::ms::current($w,selectbackground) \
+                                     -selectborderwidth $::ms::current($w,selectborderwidth) \
+                                      -selectforeground $::ms::current($w,selectforeground) \
+                                                 -state $::ms::current($w,state) \
+                                             -takefocus $takefocus \
+                                                 -width $::ms::current($w,width) \
+                                        -xscrollcommand $::ms::data($w,xscrollcommand) \
+                                      -xscrollincrement $::ms::current($w,xscrollincrement) \
+                                        -yscrollcommand $::ms::data($w,yscrollcommand) \
+                                      -yscrollincrement $::ms::current($w,yscrollincrement)];
+
+            # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
+            #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+            #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+            #       like it behaves in other widgets that has it and understands it.
+
+            # Check the 'relief' type.
+            switch -- $::ms::current($w,relief) {
+                flat  -
+                solid {
+                    lappend canvas_options         -borderwidth 0 \
+                                           -highlightbackground $::ms::current($w,bordercolor) \
+                                                -highlightcolor $::ms::current($w,bordercolor) \
+                                            -highlightthickness $::ms::current($w,borderwidth) \
+                                                        -relief flat;
+                }
+                default {
+                    lappend canvas_options         -borderwidth $::ms::current($w,borderwidth) \
+                                           -highlightbackground $::ms::current($w,background) \
+                                                -highlightcolor $::ms::current($w,background) \
+                                            -highlightthickness 0 \
+                                                        -relief $::ms::current($w,relief);
+                }
+            }
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    ###########################
+                    ##                       ##
+                    ##     SIMPLE CANVAS     ##
+                    ##                       ##
+                    ###########################
+                }
+                true {
+                    ###############################
+                    ##                           ##
+                    ##     SCROLLABLE CANVAS     ##
+                    ##                           ##
+                    ###############################
+
+                    # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with 'auto'.
+                    set ::ms::current($w,xscrollcommand) auto
+                    set ::ms::current($w,yscrollcommand) auto
+
+                    # Set the internal value for 'xscrollcommand' and 'yscrollcommand'.
+                    set ::ms::data($w,xscrollcommand) [list $w.x set]
+                    set ::ms::data($w,yscrollcommand) [list $w.y set]
+
+                    # Check if the height provided is zero.
+                    switch -- $::ms::current($w,height) {
+                        0   { set ::ms::current($w,height) $::ms::default($w,height) }
+                    }
+
+                    # Check if the width provided is zero.
+                    switch -- $::ms::current($w,width) {
+                        0   { set ::ms::current($w,width) $::ms::default($w,width) }
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
