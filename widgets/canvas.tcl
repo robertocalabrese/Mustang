@@ -174,7 +174,27 @@ _bind _Canvas <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **canvas** package.
-namespace eval ::ms::canvas {}
+namespace eval ::ms::canvas {
+    # Set the canvas 'non-styleable' canvas option list.
+    set ::ms::canvas(non_styleable,options) [list class \
+                                                  closeenough \
+                                                  cmenu \
+                                                  confine \
+                                                  height \
+                                                  insertofftime \
+                                                  insertontime \
+                                                  insertwidth \
+                                                  scrollable \
+                                                  scrollregion \
+                                                  state \
+                                                  style \
+                                                  takefocus \
+                                                  width \
+                                                  xscrollcommand \
+                                                  xscrollincrement \
+                                                  yscrollcommand \
+                                                  yscrollincrement];
+}
 
 # Rename the original Tk **canvas** command.
 rename canvas _canvas
