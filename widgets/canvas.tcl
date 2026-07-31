@@ -2940,4 +2940,30 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Configure
+#
+# Manage the **Configure** event on a widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::canvas::Configure { w } {
+    # Check if we are here due to a widget configure command or not.
+    switch -- [info exists ::ms::temp($w,height)] {
+        1   {
+            set ::ms::current($w,height) $::ms::temp($w,height)
+            set ::ms::current($w,width)  $::ms::temp($w,width)
+        }
+    }
+
+    # If needed, update the scrollbars.
+    switch -- $::ms::current($w,scrollable) {
+        true { ::ms::canvas::Scrollbar_Update $w }
+    }
+
+    return ""
+}
+
 #*EOF*
