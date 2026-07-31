@@ -1297,7 +1297,179 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        create {}
+        create {
+            switch -- [llength $args] {
+                0       -
+                1       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    set type   [lindex  $args 0]
+                    set coords [lindex  $args 1]
+                    set args   [lremove $args 0 1]
+
+                    # Check 'type'.
+                    switch -- $type {
+                        arc       -
+                        bitmap    -
+                        image     -
+                        line      -
+                        oval      -
+                        polygon   -
+                        rectangle -
+                        text      -
+                        window    {}
+                        default   { ::ms::Error "Invalid option, '$type'." $caller_info }
+                    }
+
+                    # Check 'coords'.
+                    switch -- [expr { [llength $coords]%2 }] {
+                        0   {
+                            foreach coord $coords {
+                                switch -- [string index $coord end] {
+                                    0   -
+                                    1   -
+                                    2   -
+                                    3   -
+                                    4   -
+                                    5   -
+                                    6   -
+                                    7   -
+                                    8   -
+                                    9   {
+                                        # The coordinate have no unit, its value is assumed to be in pixels.
+                                        if { ![string is double -strict $coord] || ( $coord < 0 ) } {
+                                            ::ms::Error "Invalid coordinate, '$coords'." $caller_info
+                                        }
+                                    }
+                                    i   -
+                                    c   -
+                                    m   -
+                                    p   {
+                                        set coord [string range $coord 0 end-1]
+
+                                        if { ![string is double -strict $coord] || ( $coord < 0 ) } {
+                                            ::ms::Error "Invalid coordinate, '$coords'." $caller_info
+                                        }
+                                    }
+                                    default { ::ms::Error "Invalid coordinate, '$coords'." $caller_info }
+                                }
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of coordinates, '$coords'." $caller_info }
+                    }
+
+                    # Check that the remaining 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Remove any duplicated options (retain only the last ones).
+                            set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+                            ###############################################
+                            ##                                           ##
+                            ##     CHECK THE CREATE OPTIONS PROVIDED     ##
+                            ##                                           ##
+                            ###############################################
+
+                            # Check the remaining widget's options, if any.
+                            set new_args [list ]
+                            foreach { option value } $args {
+                                switch -nocase -- $option {
+                                    -activebackground   -
+                                    -activefill         -
+                                    -activeforeground   -
+                                    -activeoutline      -
+                                    -background         -
+                                    -disabledbackground -
+                                    -disabledfill       -
+                                    -disabledforeground -
+                                    -disabledoutline    -
+                                    -fill               -
+                                    -foreground         -
+                                    -outline            {
+                                        set result [::ms::Check_Color $value invalid]
+                                        switch -- $result {
+                                            invalid { ::ms::Error "'$value' is not a valid color." $caller_info }
+                                            default { lappend new_args $option $result }
+                                        }
+                                    }
+                                    -activebitmap           -
+                                    -activedash             -
+                                    -activeimage            -
+                                    -activeoutlinestipple   -
+                                    -activestipple          -
+                                    -activewidth            -
+                                    -anchor                 -
+                                    -angle                  -
+                                    -arrow                  -
+                                    -arrowshape             -
+                                    -bitmap                 -
+                                    -capstyle               -
+                                    -dash                   -
+                                    -dashoffset             -
+                                    -disabledbitmap         -
+                                    -disableddash           -
+                                    -disabledimage          -
+                                    -disabledoutlinestipple -
+                                    -disabledstipple        -
+                                    -disabledwidth          -
+                                    -extent                 -
+                                    -font                   -
+                                    -height                 -
+                                    -image                  -
+                                    -joinstyle              -
+                                    -justify                -
+                                    -offset                 -
+                                    -outlineoffset          -
+                                    -outlinestipple         -
+                                    -start                  -
+                                    -state                  -
+                                    -stipple                -
+                                    -style                  -
+                                    -smooth                 -
+                                    -splinesteps            -
+                                    -tags                   -
+                                    -text                   -
+                                    -underline              -
+                                    -width                  { lappend new_args $option $value }
+                                    -window {
+                                        # Get the 'window' real address.
+                                        set result [::ms::Check_Pathname $window invalid]
+                                        switch -- $result {
+                                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                            default { lappend new_args -window [lindex $result 0] }
+                                        }
+                                    }
+                                    default { ::ms::Error "Invalid create option, '$option'." $caller_info }
+                                }
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            # Execute the command.
+                            try {
+                                interp invokehidden {} $w $cmd $type $coords {*}$new_args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        true {
+                            # Execute the command.
+                            try {
+                                $w.canvas $cmd $type $coords {*}$new_args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
+            }
+        }
         instate {}
         state {}
         style {}
