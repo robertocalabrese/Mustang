@@ -5879,13 +5879,10 @@ proc ::ms::Load_SVG_Images { theme } {
 #
 # It doesn't return anything.
 proc ::ms::Set_Cursor { w x y } {
-    # Check if the address provided belogs to a palette widget.
-    switch -- [info exists ::ms::data($w,classtype)] {
-        0   {
-            set address $w
-            set w       [_winfo parent $w]
-        }
-        1   { set address [list interp invokehidden {} $w] }
+    # Check if the address provided belongs to a palette widget.
+    switch -- $::ms::data($w,classtype) {
+        palette { set address [list $w.combobox] }
+        default { set address [list interp invokehidden {} $w] }
     }
 
     # Check the widget state.
