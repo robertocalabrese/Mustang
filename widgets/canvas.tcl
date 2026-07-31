@@ -2757,6 +2757,12 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        # Check the widget state and set the relative cursor.
+        switch -- $::ms::current($w,state) {
+            disabled { set cursor arrow }
+            normal   { set cursor $::ms::current($w,cursor) }
+        }
     }
 
     return ""
