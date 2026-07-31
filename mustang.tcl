@@ -5965,12 +5965,12 @@ proc ::ms::Show_ContextMenu { w X Y { type cmenu } } {
                             panedwindow -
                             radiobutton -
                             separator   -
-                            sizegrip    {
-                                # Use the widget's toplevel contextual menu, if any.
-                                set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
-                            }
-                            default { return "" }
+                            sizegrip    {}
+                            default     { return "" }
                         }
+
+                        # Use the widget's toplevel contextual menu, if any.
+                        set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
                     }
                 }
             }
