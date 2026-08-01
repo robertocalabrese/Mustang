@@ -648,6 +648,47 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                     set pad_bottom [lindex $::ms::current($w,padding) 3]
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
+            #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+
+            ##################
+            ##              ##
+            ##     HULL     ##
+            ##              ##
+            ##################
+
+            # Set the hull object style name.
+            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                 ".TFrame"];
+
+            # If needed, create the hull object style name.
+            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                # Add the hull object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+            }
+
+            # Create the hull object.
+            _ttk_frame $w -borderwidth 0 \
+                                -class TFrame \
+                               -cursor $cursor \
+                               -height 0 \
+                              -padding 0 \
+                               -relief flat \
+                                -style $::ms::style($w,hull) \
+                            -takefocus 0 \
+                                -width 0;
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
