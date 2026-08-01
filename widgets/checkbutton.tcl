@@ -841,6 +841,64 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                              -pady [list $pad_top 1m] \
                               -row 0 \
                            -sticky we;
+
+            #######################
+            ##                   ##
+            ##     HIGHLIGHT     ##
+            ##                   ##
+            #######################
+
+            # Set the highlight object style name.
+            set ::ms::style($w,highlight) [string cat "_hc=" $::ms::current($w,highlightcolor) \
+                                                      ".TFrame"];
+
+            # If needed, create the highlight object style name.
+            if { $::ms::style($w,highlight) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,highlight) -background $::ms::current($w,highlightcolor)
+
+                # Add the highlight object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,highlight)
+            }
+
+            # Initialize the highlight object mapping.
+            set mapping [list ]
+
+            # highlightcolor
+            switch -- $::ms::managed_by($w,highlightcolor) {
+                developer { lappend mapping -background [list pressed $::ms::current($w,highlightcolor)] }
+                Tk  {
+                    # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),highlightcolor)] {
+                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),highlightcolor) }
+                    }
+                }
+            }
+
+            # If needed, create the highlight object mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,highlight) {*}$mapping
+
+                # Add the highlight object mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the highlight object.
+            _ttk_frame $w.highlight -borderwidth 0 \
+                                          -class TFrame \
+                                         -cursor $cursor \
+                                         -height 2 \
+                                        -padding 0 \
+                                         -relief flat \
+                                          -style $::ms::style($w,highlight) \
+                                      -takefocus 0 \
+                                          -width 1;
+
+            _grid $w.highlight -column 1 \
+                                 -padx [list $::ms::current($w,spacer) $pad_right] \
+                                 -pady [list 1m $pad_bottom] \
+                                  -row 1 \
+                               -sticky we;
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
