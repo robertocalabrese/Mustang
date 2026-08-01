@@ -1146,7 +1146,48 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    # Check that the first argument of 'args' is the word "element".
+                    switch -- [lindex $args 0] {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Get the root coordinates of the north-west corner of the container ('$w').
+                    set rootx [_winfo rootx $w]
+                    set rooty [_winfo rooty $w]
+
+                    # Transform the relative coordinates provided into root coordinates.
+                    set X [expr { $rootx+$x }]
+                    set Y [expr { $rooty+$y }]
+
+                    # Get the widget address containing the point given by the root coordinates calculated.
+                    set widget [_winfo containing -display $w $X $Y]
+
+                    # Return the name of the object, or an empty string if there are no checkbutton objects at the coordinates provided.
+                    if { $widget eq $w } {
+                        return "Checkbutton.hull"
+                    } elseif { $widget eq "$w.indicator" } {
+                        return "Checkbutton.indicator"
+                    } elseif { $widget eq "$w.label" } {
+                        return "Checkbutton.label"
+                    } elseif { $widget eq "$w.highlight" } {
+                        return "Checkbutton.highlight"
+                    } else {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         instate {}
         invoke {}
         state {}
