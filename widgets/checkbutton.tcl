@@ -1530,6 +1530,37 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                     set pad_bottom [lindex $::ms::current($w,padding) 3]
                                 }
                             }
+
+                            ##################################
+                            ##                              ##
+                            ##     CONFIGURE THE WIDGET     ##
+                            ##                              ##
+                            ##################################
+
+                            # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
+                            #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+
+                            ##################
+                            ##              ##
+                            ##     HULL     ##
+                            ##              ##
+                            ##################
+
+                            # Set the hull object style name.
+                            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                                 ".TFrame"];
+
+                            # If needed, create the hull object style name.
+                            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                                # Add the hull object style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                            }
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure -cursor $cursor \
+                                                                 -style $::ms::style($w,hull);
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
