@@ -899,6 +899,125 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                  -pady [list 1m $pad_bottom] \
                                   -row 1 \
                                -sticky we;
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TCheckbutton { bindtags $w [list $w _Checkbutton TCheckbutton $::ms::addr($w,toplevel) all] }
+                default      { bindtags $w [list $w $::ms::current($w,class) _Checkbutton TCheckbutton $::ms::addr($w,toplevel) all] }
+            }
+
+            # ButtonPress-1
+            _bind $w.indicator <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
+            _bind $w.label     <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
+            _bind $w.highlight <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
+
+            # Contextual menu
+            _bind $w.indicator <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+            _bind $w.label     <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+            _bind $w.highlight <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+            # Enter/Leave
+            _bind $w.indicator <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.label     <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.highlight <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
+
+            _bind $w.indicator <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.label     <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.highlight <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
+
+            # FocusIn/FocusOut
+            _bind $w.indicator <FocusIn>  { ::ms::checkbutton::Focus_In  [_winfo parent %W]; break }
+            _bind $w.label     <FocusIn>  { ::ms::checkbutton::Focus_In  [_winfo parent %W]; break }
+            _bind $w.highlight <FocusIn>  { ::ms::checkbutton::Focus_In  [_winfo parent %W]; break }
+
+            _bind $w.indicator <FocusOut> { ::ms::checkbutton::Focus_Out [_winfo parent %W]; break }
+            _bind $w.label     <FocusOut> { ::ms::checkbutton::Focus_Out [_winfo parent %W]; break }
+            _bind $w.highlight <FocusOut> { ::ms::checkbutton::Focus_Out [_winfo parent %W]; break }
+
+            # Return/KP_Enter
+            _bind $w.indicator <Return>   { ::ms::checkbutton::Return [_winfo parent %W]; break }
+            _bind $w.indicator <KP_Enter> { ::ms::checkbutton::Return [_winfo parent %W]; break }
+
+            # Shift-Tab
+            switch -- [_tk windowingsystem] {
+                win32   { _bind $w.indicator <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+                default {
+                    _bind $w.indicator <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+                    try {
+                        _bind $w.indicator <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+                    } on error {} {
+                        # Do nothing.
+                    }
+                }
+            }
+
+            # Mousewheel and Touchpad
+
+            # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+            # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.indicator <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+            _bind $w.label     <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+            _bind $w.highlight <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+            # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+            # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.indicator <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+            _bind $w.label     <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+            _bind $w.highlight <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+            # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+            # and move that scrollbar by one page up or down (depending on the mousewheel direction).
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.indicator <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+            _bind $w.label     <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+            _bind $w.highlight <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+            # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+            # and move that scrollbar by one page left or right (depending on the mousewheel direction).
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.indicator <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+            _bind $w.label     <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+            _bind $w.highlight <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+            # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+            #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+            # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+            # These two planes may involve different widgets depending on the active scrollbars on them and on the
+            # touchpad direction.
+            #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+            #       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+            #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+            #
+            #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+            #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+            #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+            _bind $w.indicator <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+            _bind $w.label     <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+            _bind $w.highlight <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+            # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+            # These two planes may involve different widgets depending on the active scrollbars on them and on the
+            # touchpad direction.
+            #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+            #       and move that scrollbar by one page left or right (depending on the touchpad direction).
+            #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+            #
+            #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+            #       and move that scrollbar by one page up or down (depending on the touchpad direction).
+            #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+            _bind $w.indicator <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+            _bind $w.label     <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+            _bind $w.highlight <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
