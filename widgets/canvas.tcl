@@ -5498,11 +5498,6 @@ proc ::ms::canvas::Focus_Out { w } {
 #
 # It doesn't return anything.
 proc ::ms::canvas::Hover { w X Y } {
-    # Safeguard.
-    switch -- $::ms::current($w,scrollable) {
-        false { return }
-    }
-
     # Get the dimensions of the widget border object.
     set height [_winfo height $::ms::addr($w,border)]
     set width  [_winfo width  $::ms::addr($w,border)]
