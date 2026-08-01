@@ -2556,4 +2556,35 @@ proc ::ms::checkbutton::Hover { w X Y } {
 
     return ""
 }
+
+## Return
+#
+# Launch the associated command, if any.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::checkbutton::Return { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Invoke the widget command, if any.
+            switch -- $::ms::current($w,command) {
+                ""      {}
+                default {
+                    try {
+                        uplevel #0 [list $w.indicator invoke]
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" ""
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
