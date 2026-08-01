@@ -155,6 +155,22 @@ namespace eval ::ms::checkbutton {
                                                        textvariable \
                                                        underline \
                                                        variable];
+
+    # Set the 'styleable' checkbutton option list.
+    set ::ms::checkbutton(styleable,options) [list charwidth \
+                                                   cursor \
+                                                   font \
+                                                   foreground \
+                                                   highlightcolor \
+                                                   image \
+                                                   indicatorbackground \
+                                                   indicatorforeground \
+                                                   indicatorrelief \
+                                                   justify \
+                                                   padding \
+                                                   shellbackground \
+                                                   spacer \
+                                                   wraplength];
 }
 
 # Rename the original Tk **checkbutton** and **ttk::checkbutton** commands.
