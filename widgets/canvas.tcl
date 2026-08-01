@@ -788,6 +788,11 @@
 #
 #     This command returns an empty string.
 #
+#   *window* **identify** **element** *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if the mouse pointer does not
+#     lie within any element.
+#     *X* and *y* are pixel coordinates relative to the widget.
+#
 #   *window* **image** *imagename* ?*subsample*? ?*zoom*?
 #     Draw the canvas into the Tk photo image named *imagename*.
 #     If a *-scrollregion* has been defined then this will be the boundaries of the canvas region drawn and the final size of the
@@ -4472,6 +4477,59 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         }
                     }
                 }
+            }
+        }
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    # Check that the first argument of 'args' is the word "element".
+                    switch -- [lindex $args 0] {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Get the root coordinates of the north-west corner of the container ('$w').
+                    set rootx [_winfo rootx $w]
+                    set rooty [_winfo rooty $w]
+
+                    # Transform the relative coordinates provided into root coordinates.
+                    set X [expr { $rootx+$x }]
+                    set Y [expr { $rooty+$y }]
+
+                    # Get the widget address containing the point given by the root coordinates calculated.
+                    set widget [_winfo containing -display $w $X $Y]
+
+                    # Return the name of the object, or an empty string if there are no canvas objects at the coordinates provided.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            if { $widget eq $w } {
+                                return "Canvas"
+                            } else {
+                                return ""
+                            }
+                        }
+                        true {
+                            if { $widget eq $w } {
+                                return "Canvas.hull"
+                            } elseif { $widget eq "$w.canvas" } {
+                                return "Canvas"
+                            } elseif { $widget eq "$w.x" } {
+                                return "Canvas.hscrollbar"
+                            } elseif { $widget eq "$w.y" } {
+                                return "Canvas.vscrollbar"
+                            } else {
+                                return ""
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         instate {
