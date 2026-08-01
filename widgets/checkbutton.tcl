@@ -689,6 +689,88 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            #######################
+            ##                   ##
+            ##     INDICATOR     ##
+            ##                   ##
+            #######################
+
+            # Note: The 'alt' engine use the option name 'indicatorcolor' instead of 'indicatorforeground' as the other engines do.
+            #       Mustang will take care of setting both option names with the 'indicatorforeground' value so that no matter
+            #       the engine used by the current theme, everything will work as expected by the developer.
+
+            # Set the indicator object style name.
+            set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                      "_ib=" $::ms::current($w,indicatorbackground) \
+                                                      "_if=" $::ms::current($w,indicatorforeground) \
+                                                      "_ir=" $::ms::current($w,indicatorrelief) \
+                                                      "." $::ms::current($w,style)];
+
+            # If needed, create the indicator object style name.
+            if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+                                                                -indicatorbackground $::ms::current($w,indicatorbackground) \
+                                                                     -indicatorcolor $::ms::current($w,indicatorforeground) \
+                                                                -indicatorforeground $::ms::current($w,indicatorforeground) \
+                                                                    -indicatorrelief $::ms::current($w,indicatorrelief);
+
+                # Add the indicator object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,indicator)
+            }
+
+            # Initialize the indicator object mapping.
+            set mapping [list ]
+
+            # indicatorcolor and indicatorforeground.
+            switch -- $::ms::managed_by($w,indicatorforeground) {
+                developer {
+                    lappend mapping -indicatorcolor      [list pressed $::ms::current($w,indicatorforeground)]
+                    lappend mapping -indicatorforeground [list pressed $::ms::current($w,indicatorforeground)]
+                }
+                Tk  {
+                    # Check if a 'indicatorforeground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),indicatorforeground)] {
+                        1   {
+                            lappend mapping -indicatorcolor      $::ms::stylemap($::ms::theme,$::ms::current($w,style),indicatorforeground)
+                            lappend mapping -indicatorforeground $::ms::stylemap($::ms::theme,$::ms::current($w,style),indicatorforeground)
+                        }
+                    }
+                }
+            }
+
+            # If needed, create the indicator object mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,indicator) {*}$mapping
+
+                # Add the indicator object mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the indicator object.
+            _ttk_checkbutton $w.indicator        -class TCheckbutton \
+                                               -command $::ms::current($w,command) \
+                                              -compound left \
+                                                -cursor $cursor \
+                                                 -image $::ms::current($w,image) \
+                                              -offvalue $::ms::current($w,offvalue) \
+                                               -onvalue $::ms::current($w,onvalue) \
+                                               -padding 0 \
+                                                 -state $::ms::current($w,state) \
+                                                 -style $::ms::style($w,indicator) \
+                                             -takefocus $::ms::current($w,takefocus) \
+                                                  -text "" \
+                                          -textvariable "" \
+                                             -underline -1 \
+                                              -variable $::ms::current($w,variable);
+
+            # Grid the indicator object.
+            _grid $w.indicator -column 0 \
+                                 -padx [list $pad_left 0] \
+                                 -pady [list $pad_top 1m] \
+                                  -row 0 \
+                               -sticky w;
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
