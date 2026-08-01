@@ -1018,6 +1018,83 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             _bind $w.indicator <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
             _bind $w.label     <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
             _bind $w.highlight <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+
+            #####################
+            ##                 ##
+            ##     CLOSING     ##
+            ##                 ##
+            #####################
+
+            # Configure the internal widget rows and columns.
+            _grid rowconfigure $w [list 0] -weight 1
+            _grid rowconfigure $w [list 1] -weight 0
+
+            _grid columnconfigure $w [list 0] -weight 0
+            _grid columnconfigure $w [list 1] -weight 1
+
+            # Hide the widget pathcommand.
+            interp hide {} $w
+
+            # Create an alias for the widget pathcommand.
+            lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::checkbutton::Pathname_Cmd $w]
+
+            # If needed, create an alias for the widget short address pathcommand.
+            if { $short_addr ne $w } {
+                lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::checkbutton::Pathname_Cmd $w]
+            }
+
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
+
+            # Set the actual widget address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w.indicator
+
+            # Set the structure addresses.
+            set ::ms::addr($w,structure) [list $w \
+                                               $w.indicator \
+                                               $w.label \
+                                               $w.highlight];
+
+            # Add the widget address to the megawidget addresses list.
+            lappend ::ms::addr(megawidgets) $w
+
+            # Set the widget real address relative to its short address, 'short_addr'.
+            set ::ms::addr($short_addr,real) $w
+
+            # Set the widget short addresses relative to its real address, 'w'.
+            # They will all point to the widget hull object short address.
+            set ::ms::addr($w,short)           $short_addr
+            set ::ms::addr($w.indicator,short) $short_addr
+            set ::ms::addr($w.label,short)     $short_addr
+            set ::ms::addr($w.highlight,short) $short_addr
+
+            # Add the widget real and short address into the list of all available real and short addresses.
+            lappend ::ms::addr(reals) $w \
+                                      $w.indicator \
+                                      $w.label \
+                                      $w.highlight;
+
+            lappend ::ms::addr(shorts) $short_addr
+
+            # Add the widget address to the checkbutton classtype widgets real address list.
+            lappend ::ms::addr(checkbutton) $w
+
+            # Add the widget address to the checkbutton classtype real address list with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),checkbutton,addrs) $w
+
+            # Add the widget address to the checkbutton classtype real address list with style '::ms::current($w,style)'.
+            lappend ::ms::style($::ms::current($w,style),checkbutton,addrs) $w
+
+            # If needed, add '::ms::current($w,style)' to the available styles for the checkbutton classtype.
+            if { $::ms::current($w,style) ni $::ms::style(checkbutton,classtype) } {
+                lappend ::ms::style(checkbutton,classtype) $::ms::current($w,style)
+            }
+
+            # Depending on the address type provided, return the widget real or short address.
+            switch -- $type {
+                real  { return $w }
+                short { return $short_addr }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
