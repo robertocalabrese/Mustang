@@ -771,6 +771,76 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                  -pady [list $pad_top 1m] \
                                   -row 0 \
                                -sticky w;
+
+            ###################
+            ##               ##
+            ##     LABEL     ##
+            ##               ##
+            ###################
+
+            # Set the label object style name.
+            set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                  "_fg=" $::ms::current($w,foreground) \
+                                                  ".TLabel"];
+
+            # If needed, create the label object style name.
+            if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+                                                            -foreground $::ms::current($w,foreground);
+
+                # Add the label object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,label)
+            }
+
+            # Initialize the label object mapping.
+            set mapping [list ]
+
+            # foreground
+            switch -- $::ms::managed_by($w,foreground) {
+                developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+                Tk  {
+                    # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
+                        1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
+                    }
+                }
+            }
+
+            # If needed, create the label object mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,label) {*}$mapping
+
+                # Add the label object mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the label object.
+            _ttk_label $w.label       -anchor w \
+                                 -borderwidth 0 \
+                                       -class TLabel \
+                                    -compound none \
+                                      -cursor $cursor \
+                                        -font $::ms::current($w,font) \
+                                       -image [list ] \
+                                     -justify $::ms::current($w,justify) \
+                                     -padding 0 \
+                                      -relief flat \
+                                       -state $::ms::current($w,state) \
+                                       -style $::ms::style($w,label) \
+                                   -takefocus 0 \
+                                        -text "" \
+                                -textvariable $textvariable \
+                                   -underline $::ms::current($w,underline) \
+                                       -width $::ms::current($w,charwidth) \
+                                  -wraplength $::ms::current($w,wraplength);
+
+            # Grid the label object.
+            _grid $w.label -column 1 \
+                             -padx [list $::ms::current($w,spacer) $pad_right] \
+                             -pady [list $pad_top 1m] \
+                              -row 0 \
+                           -sticky we;
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
