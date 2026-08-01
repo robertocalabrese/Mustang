@@ -171,6 +171,22 @@ namespace eval ::ms::checkbutton {
                                                    shellbackground \
                                                    spacer \
                                                    wraplength];
+
+    # Set the default 'non-styleable' checkbutton options values.
+    set ::ms::default(checkbutton,class)        TCheckbutton
+    set ::ms::default(checkbutton,cmenu)        {}
+    set ::ms::default(checkbutton,command)      {}
+    set ::ms::default(checkbutton,offvalue)     0
+    set ::ms::default(checkbutton,onvalue)      1
+    set ::ms::default(checkbutton,state)        normal
+    set ::ms::default(checkbutton,style)        TCheckbutton
+    set ::ms::default(checkbutton,takefocus)    1
+    set ::ms::default(checkbutton,text)         {}
+    set ::ms::default(checkbutton,textvariable) {}
+    set ::ms::default(checkbutton,underline)    -1
+    set ::ms::default(checkbutton,variable)     {}
+
+    # Note: The default 'styleable' checkbutton options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **checkbutton** and **ttk::checkbutton** commands.
