@@ -5262,13 +5262,13 @@ proc ::ms::canvas::Destroy { w } {
         default { set ::ms::style($::ms::current($w,style),canvas,addrs) [lremove $::ms::style($::ms::current($w,style),canvas,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the button classtype.
-    switch -- [llength $::ms::style($::ms::current($w,style),button,addrs)] {
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the canvas classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),canvas,addrs)] {
         0   {
-            set index [lsearch -exact $::ms::style(button,classtype) $::ms::current($w,style)]
+            set index [lsearch -exact $::ms::style(canvas,classtype) $::ms::current($w,style)]
             switch -- $index {
                 -1      {}
-                default { set ::ms::style(button,classtype) [lremove $::ms::style(button,classtype) $index] }
+                default { set ::ms::style(canvas,classtype) [lremove $::ms::style(canvas,classtype) $index] }
             }
         }
     }
