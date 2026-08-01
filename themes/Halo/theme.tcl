@@ -258,6 +258,104 @@ namespace eval ttk::theme::Halo {
         style map Canvas -bordercolor [list background BordercolorBackground \
                                               disabled BordercolorDisabled \
                                                  hover Accent];
+
+        #########################
+        ##                     ##
+        ##     CHECKBUTTON     ##
+        ##                     ##
+        #########################
+
+        # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
+        #       'shellbackground' and 'wraplength' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'indicatorbackground', 'indicatorcolor', 'indicatorforeground' and 'indicatorrelief' are setted in a way
+        #       that reflects the default checkbutton images colors.
+        #       Due to the fact that the Halo theme uses images for the indicator, they are silently ignored when the
+        #       Halo theme is in use.
+
+        # Note: In mustang checkbuttons are megawidgets, but differently than other megawidgets their 'background' and
+        #       'shellbackground' coincides.
+        #       The correct option name to use as background inside a checkbutton style in mustang is '-shellbackground' and not
+        #       '-background', nonetheless a '-background' option is setted as well for those widgets that are not created by mustang.
+
+        # Note: Mustang do not use '-compound' or '-indicatormargin' (the latter is replaced by a combinatioon of '-padding' and 'spacer').
+        #       Nonetheless, these options are setted as well for those widgets that are not created by mustang.
+
+        # Note: The 'image' option supports mapping values but they need to be specified in the normal state declaration as a list.
+        #       The first element is the the image name to use in the normal state. The rest of the list is a sequence of statespec/value
+        #       pairs as per style map, specifying different images to use when the widget is in a particular state or combination of states.
+        #
+        #       Note that all images in the list should have the same size.
+        #
+        #       If an empty string is specified, it indicates that the widget has no image to display.
+        #       The image specified should have been allready created at the time the widget is created.
+        #
+        #       Any 'image' mapping values specified with the style map command will be ignored by mustang.
+
+        # Layout
+        style layout TCheckbutton {
+            Checkbutton.padding -sticky nswe -children {
+                Checkbutton.indicator -side left -sticky {}
+                Checkbutton.label -side left -sticky we
+            }
+        }
+
+        # Elements
+        # The first image normally represents the normal state, here is a decoy.
+        style element create Checkbutton.indicator    image [list                      check_off \
+                                                                  {disabled  selected} check_on_disabled \
+                                                                  {disabled !selected} check_off_disabled \
+                                                                   {pressed  selected} check_on_pressed \
+                                                                   {pressed !selected} check_off_pressed \
+                                                                     {focus  selected} check_on_hover \
+                                                                     {focus !selected} check_off_hover \
+                                                                     {hover  selected} check_on_hover \
+                                                                     {hover !selected} check_off_hover \
+                                                                              selected check_on \
+                                                                             !selected check_off] \
+                                                    -border 0 \
+                                                    -height -1 \
+                                                   -padding [list 0 0 1 0] \
+                                                    -sticky {} \
+                                                     -width -1;
+
+        # Normal state
+        style configure TCheckbutton          -background Background \
+                                               -charwidth -10 \
+                                                -compound left \
+                                                  -cursor arrow \
+                                                    -font NormalFont \
+                                              -foreground Text \
+                                          -highlightcolor Background \
+                                                   -image {} \
+                                     -indicatorbackground Background \
+                                     -indicatorforeground Accent \
+                                         -indicatormargin [list 1m 2m 0 1m] \
+                                         -indicatorrelief flat \
+                                                 -justify left \
+                                                 -padding [list 1m 2m] \
+                                         -shellbackground Background \
+                                                  -spacer $::ms::size(Halo,spacer) \
+                                              -wraplength 0;
+
+        # Mapping
+        style map TCheckbutton          -foreground [list  disabled TextDisabled \
+                                                           readonly TextReadonly \
+                                                              hover Accent] \
+                                    -highlightcolor [list  disabled Background \
+                                                           readonly Background \
+                                                            pressed HighlightAlternate \
+                                                              focus Accent] \
+                               -indicatorforeground [list  disabled BordercolorDisabled \
+                                                           readonly TextReadonly \
+                                                            pressed HighlightAlternate \
+                                                              focus Highlight \
+                                                              hover Accent \
+                                                          alternate Accent \
+                                                           selected Accent \
+                                                          !selected BordercolorAlternate];
+
     }
 }
 
