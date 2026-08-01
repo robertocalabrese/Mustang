@@ -141,7 +141,21 @@ _bind _Checkbutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; brea
 _bind _Checkbutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **checkbutton** package.
-namespace eval ::ms::checkbutton {}
+namespace eval ::ms::checkbutton {
+    # Set the 'non styleable' checkbutton option list.
+    set ::ms::checkbutton(non_styleable,options) [list class \
+                                                       cmenu \
+                                                       command \
+                                                       offvalue \
+                                                       onvalue \
+                                                       state \
+                                                       style \
+                                                       takefocus \
+                                                       text \
+                                                       textvariable \
+                                                       underline \
+                                                       variable];
+}
 
 # Rename the original Tk **checkbutton** and **ttk::checkbutton** commands.
 rename checkbutton      _checkbutton
