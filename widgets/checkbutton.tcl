@@ -2368,4 +2368,19 @@ proc ::ms::checkbutton::Destroy { w } {
     return ""
 }
 
+## Focus_In
+#
+# Manage the **FocusIn** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::checkbutton::Focus_In { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::checkbutton::Pathname_Cmd $w state focus
+
+    return ""
+}
 #*EOF*
