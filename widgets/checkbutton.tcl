@@ -1969,6 +1969,34 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
         }
+
+        # Get the padding data.
+        switch -- [llength $::ms::current($w,padding)] {
+            1   {
+                set pad_left   [lindex $::ms::current($w,padding) 0]
+                set pad_right  [lindex $::ms::current($w,padding) 0]
+                set pad_top    [lindex $::ms::current($w,padding) 0]
+                set pad_bottom [lindex $::ms::current($w,padding) 0]
+            }
+            2   {
+                set pad_left   [lindex $::ms::current($w,padding) 0]
+                set pad_top    [lindex $::ms::current($w,padding) 1]
+                set pad_right  [lindex $::ms::current($w,padding) 0]
+                set pad_bottom [lindex $::ms::current($w,padding) 1]
+            }
+            3   {
+                set pad_left   [lindex $::ms::current($w,padding) 0]
+                set pad_top    [lindex $::ms::current($w,padding) 1]
+                set pad_right  [lindex $::ms::current($w,padding) 2]
+                set pad_bottom [lindex $::ms::current($w,padding) 1]
+            }
+            4   {
+                set pad_left   [lindex $::ms::current($w,padding) 0]
+                set pad_top    [lindex $::ms::current($w,padding) 1]
+                set pad_right  [lindex $::ms::current($w,padding) 2]
+                set pad_bottom [lindex $::ms::current($w,padding) 3]
+            }
+        }
     }
 
     return ""
