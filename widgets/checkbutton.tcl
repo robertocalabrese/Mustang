@@ -64,6 +64,82 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::checkbutton 0.1
 
+###################################
+##                               ##
+##     _CHECKBUTTON BINDINGS     ##
+##                               ##
+###################################
+
+# Activate/Deactivate
+_bind _Checkbutton <Activate>   { ::ms::radiobutton::Pathname_Cmd %W state !background; break }
+_bind _Checkbutton <Deactivate> { ::ms::radiobutton::Pathname_Cmd %W state  background; break }
+
+# ButtonPress-1
+_bind _Checkbutton <ButtonPress-1> { ::ms::checkbutton::ButtonPress %W; break }
+
+# Contextual menu
+_bind _Checkbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+
+# Destroy
+_bind _Checkbutton <Destroy> { ::ms::radiobutton::Destroy %W; break }
+
+# Enter/Leave
+_bind _Checkbutton <Enter> { ::ms::radiobutton::Hover %W %X %Y; break }
+_bind _Checkbutton <Leave> { ::ms::radiobutton::Hover %W %X %Y; break }
+
+# FocusIn/FocusOut
+_bind _Checkbutton <FocusIn>  { ::ms::radiobutton::Focus_In  %W; break }
+_bind _Checkbutton <FocusOut> { ::ms::radiobutton::Focus_Out %W; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Checkbutton <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Checkbutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Checkbutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Checkbutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Checkbutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Checkbutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 # Create the mustang **checkbutton** package.
 namespace eval ::ms::checkbutton {}
 
