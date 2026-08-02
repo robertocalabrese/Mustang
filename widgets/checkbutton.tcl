@@ -1740,6 +1740,21 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                   -row 1 \
                                -sticky we;
 
+            ####################################
+            ##                                ##
+            ##     CHECK THE WIDGET STATE     ##
+            ##                                ##
+            ####################################
+
+            switch -- $::ms::current($w,state) {
+                disabled {
+                    $w state disabled
+                    $w.indicator state disabled
+                    $w.label state disabled
+                    $w.highlight state disabled
+                }
+            }
+
             ######################
             ##                  ##
             ##     BINDINGS     ##
@@ -2579,6 +2594,21 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             _grid configure $w.highlight -padx [list $::ms::current($w,spacer) $pad_right] \
                                                          -pady [list 1m $pad_bottom];
 
+                            ####################################
+                            ##                                ##
+                            ##     CHECK THE WIDGET STATE     ##
+                            ##                                ##
+                            ####################################
+
+                            switch -- $::ms::current($w,state) {
+                                disabled {
+                                    interp invokehidden {} $w state disabled
+                                    $w.indicator state disabled
+                                    $w.label state disabled
+                                    $w.highlight state disabled
+                                }
+                            }
+
                             return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -2731,28 +2761,13 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                     ##                                 ##
                     #####################################
 
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled {
-                            # Propagate the new statespec to the hull, label, highlight and indicator objects of
-                            # the checkbutton.
-                            interp invokehidden {} $w state disabled
-                            $w.indicator state disabled
-                            $w.label state disabled
-                            $w.highlight state disabled
+                    # Propagate the new statespec to the hull, label, highlight and indicator objects of
+                    # the checkbutton.
+                    interp invokehidden {} $w state $statespec
+                    $w.label state $statespec
+                    $w.highlight state $statespec
 
-                            return ""
-                        }
-                        normal {
-                            # Propagate the new statespec to the hull, label, highlight and indicator objects of
-                            # the checkbutton.
-                            interp invokehidden {} $w state $statespec
-                            $w.label state $statespec
-                            $w.highlight state $statespec
-
-                            return [$w.indicator state $statespec]
-                        }
-                    }
+                    return [$w.indicator state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
