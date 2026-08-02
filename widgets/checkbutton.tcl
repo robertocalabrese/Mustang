@@ -1407,17 +1407,6 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                 }
             }
 
-            # Check if a variable was provided.
-            switch -- [llength $::ms::current($w,variable)] {
-                0   {
-                    # Depending on the address type provided, set the appropriate address.
-                    switch -- $type {
-                        real  { set ::ms::current($w,variable) $w }
-                        short { set ::ms::current($w,variable) $short_addr }
-                    }
-                }
-            }
-
             # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
             foreach option $::ms::checkbutton(styleable,options) {
                 set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,TCheckbutton,$option)
@@ -1458,6 +1447,17 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                 default {
                     # Automatic translation: OFF
                     set textvariable $::ms::current($w,textvariable)
+                }
+            }
+
+            # Check if a variable was provided.
+            switch -- [llength $::ms::current($w,variable)] {
+                0   {
+                    # Depending on the address type provided, set the appropriate address.
+                    switch -- $type {
+                        real  { set ::ms::current($w,variable) $w }
+                        short { set ::ms::current($w,variable) $short_addr }
+                    }
                 }
             }
 
@@ -2291,17 +2291,6 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check if a variable was provided.
-                            switch -- [llength $::ms::current($w,variable)] {
-                                0   {
-                                    # Depending on the address type provided, set the appropriate address.
-                                    switch -- $type {
-                                        real  { set ::ms::current($w,variable) $w }
-                                        short { set ::ms::current($w,variable) $short_addr }
-                                    }
-                                }
-                            }
-
                             # Set the current option values for each styleable option managed by Tk.
                             foreach option $::ms::checkbutton(styleable,options) {
                                 switch -- $::ms::managed_by($w,$option) {
@@ -2340,6 +2329,17 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                 default {
                                     # Automatic translation: OFF
                                     set textvariable $::ms::current($w,textvariable)
+                                }
+                            }
+
+                            # Check if a variable was provided.
+                            switch -- [llength $::ms::current($w,variable)] {
+                                0   {
+                                    # Depending on the address type provided, set the appropriate address.
+                                    switch -- $type {
+                                        real  { set ::ms::current($w,variable) $w }
+                                        short { set ::ms::current($w,variable) $short_addr }
+                                    }
                                 }
                             }
 
