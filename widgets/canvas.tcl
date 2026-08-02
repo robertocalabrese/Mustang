@@ -2873,8 +2873,11 @@ proc ::ms::canvas::Command { window { args "" } } {
                     -state {
                         set value [string tolower $value]
                         switch -- $value {
-                            disabled -
-                            normal   { set ::ms::current($w,state) $value }
+                            disabled {
+                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
+                                set ::ms::current($w,state)  disabled
+                            }
+                            normal { set ::ms::current($w,state) normal }
                         }
                     }
                     -style {
@@ -3019,22 +3022,52 @@ proc ::ms::canvas::Command { window { args "" } } {
 
             # Note: 'borderwidth', 'cursor', 'insertwidth', 'relief' and 'selectborderwidth' are not allowed to change if the statespec changes.
 
+            # background
+            switch -- $::ms::managed_by($w,background) {
+                developer { set background $::ms::current($w,background) }
+                Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+            }
+
+            # bordercolor
+            switch -- $::ms::managed_by($w,bordercolor) {
+                developer { set bordercolor $::ms::current($w,bordercolor) }
+                Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+            }
+
+            # insertbackground
+            switch -- $::ms::managed_by($w,insertbackground) {
+                developer { set insertbackground $::ms::current($w,insertbackground) }
+                Tk        { set insertbackground [_ttk_style lookup $::ms::current($w,style) -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
+            }
+
+            # selectbackground
+            switch -- $::ms::managed_by($w,selectbackground) {
+                developer { set selectbackground $::ms::current($w,selectbackground) }
+                Tk        { set selectbackground [_ttk_style lookup $::ms::current($w,style) -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
+            }
+
+            # selectforeground
+            switch -- $::ms::managed_by($w,selectforeground) {
+                developer { set selectforeground $::ms::current($w,selectforeground) }
+                Tk        { set selectforeground [_ttk_style lookup $::ms::current($w,style) -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
+            }
+
             # Set the canvas options.
-            set canvas_options [list        -background $::ms::current($w,background) \
+            set canvas_options [list        -background $background \
                                            -closeenough $::ms::current($w,closeenough) \
                                                -confine $::ms::current($w,confine) \
                                                 -cursor $cursor \
                                                 -height $::ms::current($w,height) \
-                                      -insertbackground $::ms::current($w,insertbackground) \
+                                      -insertbackground $insertbackground \
                                      -insertborderwidth $::ms::current($w,insertborderwidth) \
                                          -insertofftime $::ms::current($w,insertofftime) \
                                           -insertontime $::ms::current($w,insertontime) \
                                            -insertwidth $::ms::current($w,insertwidth) \
                                                 -offset 0,0 \
                                           -scrollregion $::ms::current($w,scrollregion) \
-                                      -selectbackground $::ms::current($w,selectbackground) \
+                                      -selectbackground $selectbackground \
                                      -selectborderwidth $::ms::current($w,selectborderwidth) \
-                                      -selectforeground $::ms::current($w,selectforeground) \
+                                      -selectforeground $selectforeground \
                                                  -state $::ms::current($w,state) \
                                              -takefocus $takefocus \
                                                  -width $::ms::current($w,width) \
@@ -3053,15 +3086,15 @@ proc ::ms::canvas::Command { window { args "" } } {
                 flat  -
                 solid {
                     lappend canvas_options         -borderwidth 0 \
-                                           -highlightbackground $::ms::current($w,bordercolor) \
-                                                -highlightcolor $::ms::current($w,bordercolor) \
+                                           -highlightbackground $bordercolor \
+                                                -highlightcolor $bordercolor \
                                             -highlightthickness $::ms::current($w,borderwidth) \
                                                         -relief flat;
                 }
                 default {
                     lappend canvas_options         -borderwidth $::ms::current($w,borderwidth) \
-                                           -highlightbackground $::ms::current($w,background) \
-                                                -highlightcolor $::ms::current($w,background) \
+                                           -highlightbackground $background \
+                                                -highlightcolor $background \
                                             -highlightthickness 0 \
                                                         -relief $::ms::current($w,relief);
                 }
@@ -3215,6 +3248,11 @@ proc ::ms::canvas::Command { window { args "" } } {
                                         -style $::ms::style($w,hull) \
                                     -takefocus 0 \
                                         -width 0;
+
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { $w state disabled }
+                    }
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
@@ -4060,10 +4098,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                                     # Check if the disabled flag is active in the widget statespec.
                                     if { "disabled" ni $::ms::data($w,statespec) } {
-                                        # Update the disabled flag.
-                                        # No need to check if 'index' is '-1'.
-                                        set index [lsearch -exact $::ms::data($w,statespec) !disabled]
-                                        set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) $index $index $state]
+                                        set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 disabled]
                                     }
                                 }
                                 normal {
@@ -4243,6 +4278,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         # Add the hull object mapping to the stylemap list containing all the mappings
                                         # created by mustang for the current theme.
                                         lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                                    }
+
+                                    # Check the widget state.
+                                    switch -- $::ms::current($w,state) {
+                                        disabled { interp invokehidden {} $w state disabled }
                                     }
 
                                     # Apply the changes.
