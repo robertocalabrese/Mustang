@@ -863,6 +863,216 @@ proc ::ms::combobox::Command { window { args "" } } {
                     }
                 }
             }
+
+            # Check if a list of values was provided.
+            switch -- [llength $::ms::current($w,values)] {
+                0   {
+                    # Check the datatype.
+                    switch -- $::ms::current($w,datatype) {
+                        alnum {
+                            set number 1
+                            while { $number < 51 } {
+                                lappend ::ms::current($w,values) [string cat "Item-" $number]
+                                incr number
+                            }
+
+                            # Set the current index as the index of the item **Item-0**.
+                            set ::ms::data($w,current_index) 0
+
+                            # Register the sorted values in lowercase characters.
+                            set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+                        }
+                        integer {
+                            set number -25
+                            while { $number < 26 } {
+                                lappend ::ms::current($w,values) $number
+                                incr number
+                            }
+
+                            # Set the current index as the index of the item **0**.
+                            set ::ms::data($w,current_index) 25
+                        }
+                        posinteger {
+                            set number 0
+                            while { $number < 51 } {
+                                lappend ::ms::current($w,values) $number
+                                incr number
+                            }
+
+                            # Set the current index as the index of the item **0**.
+                            set ::ms::data($w,current_index) 0
+                        }
+                        posreal {
+                            set number 0
+                            while { $number < 51.0 } {
+                                lappend ::ms::current($w,values) $number
+                                set number [expr { $number+1.0 } ]
+                            }
+
+                            # Set the current index as the index of the item **0**.
+                            set ::ms::data($w,current_index) 0
+                        }
+                        real {
+                            set number -25.0
+                            while { $number < 26.0 } {
+                                lappend ::ms::current($w,values) $number
+                                set number [expr { $number+1.0 } ]
+                            }
+
+                            # Set the current index as the index of the item **0**.
+                            set ::ms::data($w,current_index) 25
+                        }
+                        default {
+                            lappend ::ms::current($w,values) Amsterdam Beijing        Cairo           Dublin    Freetown      Gibraltar \
+                                                             Hanoi     Havana         Helsinki        Islamabad Jerusalem     Kabul \
+                                                             Kingston  "Kuala Lumpur" "La Paz"        Lima      Lisbon        London \
+                                                             Madrid    Manila         "Mexico City"   Minx      Monaco        Montevideo \
+                                                             Moscow    Nairobi        "New Delhi"     Oslo      "Panama City" Paris \
+                                                             Praga     Quito          Reykjavík       Riga      Rome          "San José" \
+                                                             San Juan  "San Salvador" "Santo Domingo" Sarajevo  Seoul         Singapore \
+                                                             Sofia     Stockholm      Taipei          Tallin    Tirana        Tokyo \
+                                                             Tunis     Valletta       Vienna          Warsaw    Washigton     Zagreb;
+
+                            # Set the current index as the index of the item **Amsterdam**.
+                            set ::ms::data($w,current_index) 0
+
+                            # Register the sorted values in lowercase characters.
+                            set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+                        }
+                    }
+
+                    # Register the sorted values
+                    set ::ms::data($w,values) $::ms::current($w,values)
+
+                    # Set the current value as the value corresponding to the '::ms::data($w,current_index)' in '::ms::current($w,values)'.
+                    set ::ms::data($w,current_value) [lindex $::ms::current($w,values) $::ms::data($w,current_index)]
+
+                    # Compute the index of the last available item in '::ms::current($w,values)'.
+                    set ::ms::data($w,last_available_index) [expr { [llength $::ms::current($w,values)]-1 }]
+                }
+                default {
+                    # Check the datatype.
+                    switch -- $::ms::current($w,datatype) {
+                        alnum {
+                            foreach value $::ms::current($w,values) {
+                                # Check every character in value.
+                                set i 0
+                                while { $i < [string length $value] } {
+                                    set char [string index $value $i]
+                                    switch -- $char {
+                                        " "     -
+                                        "."     -
+                                        ","     -
+                                        "-"     {}
+                                        default {
+                                            switch -- [string is alnum $char] {
+                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                            }
+                                        }
+                                    }
+
+                                    incr i
+                                }
+                            }
+
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+
+                            # Register the sorted values in lowercase characters.
+                            set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+                        }
+                        alpha {
+                            foreach value $::ms::current($w,values) {
+                                # Check every character in value.
+                                set i 0
+                                while { $i < [string length $value] } {
+                                    set char [string index $value $i]
+                                    switch -- $char {
+                                        " "     {}
+                                        default {
+                                            switch -- [string is alpha $char] {
+                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                            }
+                                        }
+                                    }
+
+                                    incr i
+                                }
+                            }
+
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -ascii $::ms::current($w,values)]
+
+                            # Register the sorted values in lowercase characters.
+                            set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+                        }
+                        integer {
+                            foreach value $::ms::current($w,values) {
+                                switch -- [string is integer -strict $value] {
+                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
+                                }
+                            }
+
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+                        }
+                        posinteger {
+                            foreach value $::ms::current($w,values) {
+                                switch -- [string is integer -strict $value] {
+                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
+                                    1   {
+                                        if { $value < 0 } {
+                                            ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
+                                        }
+                                    }
+                                }
+                            }
+
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+                        }
+                        posreal {
+                            foreach value $::ms::current($w,values) {
+                                switch -- [string is double -strict $value] {
+                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
+                                    1   {
+                                        if { $value < 0 } {
+                                            ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
+                                        }
+                                    }
+                                }
+                            }
+
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+                        }
+                        real {
+                            foreach value $::ms::current($w,values) {
+                                switch -- [string is double -strict $value] {
+                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
+                                }
+                            }
+
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+                        }
+                        none {
+                            # Register the sorted values.
+                            set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+
+                            # Register the sorted values in lowercase characters.
+                            set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+                        }
+                    }
+
+                    # Set the current index as the first one of '::ms::data($w,values)', and get the relative value.
+                    set ::ms::data($w,current_index) 0
+                    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $::ms::data($w,current_index)]
+
+                    # Compute the index of the last available item in '::ms::data($w,values)'.
+                    set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,values)]-1 }]
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
