@@ -5176,4 +5176,319 @@ proc ::ms::combobox::Popdown_ArrowUp { w } {
     return -code break
 }
 
+## Popdown_Autoselection
+#
+# Automatic selection of the listbox item.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Autoselection { w } {
+    ##############################
+    ##                          ##
+    ##     VALUE CORRECTION     ##
+    ##                          ##
+    ##############################
+
+    # Remove any leading and trailing spaces from the widget textarea value.
+    set value [string trim [interp invokehidden {} $w get]]
+
+    # Clear 'value' from illegal characters, if any.
+    set corrected_value ""
+    switch -- $::ms::current($w,datatype) {
+        alnum {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     -
+                    "."     -
+                    ","     -
+                    "-"     {}
+                    default {
+                        # Check if 'char' is an alphanumeric character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        alpha {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     {}
+                    default {
+                        # Check if 'char' is an alphabetic character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        integer {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "-"     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        posinteger {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                # Check if 'char' is an integer character.
+                set char [string index $value $i]
+                switch -- [string is integer $char] {
+                    0   {
+                        incr i
+                        continue
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        posreal {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "."     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        real {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "-"     -
+                    "."     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+    }
+
+    ##########################################################
+    ##                                                      ##
+    ##     SEARCH THE INDEX OF THE CLOSEST LISTBOX ITEM     ##
+    ##                                                      ##
+    ##########################################################
+
+    switch -- $value {
+        ""      { set index 0 }
+        default {
+            switch -- $::ms::current($w,datatype) {
+                alnum -
+                alpha {
+                    #######################################
+                    ##                                   ##
+                    ##     ALPHABETIC INEXACT SEARCH     ##
+                    ##                                   ##
+                    #######################################
+
+                    # Trasform 'value' in lowercase characters for comparison reasons.
+                    set value [string tolower $value]
+
+                    # Find the closest match to 'value'.
+                    set i     0
+                    set limit [string length $value]
+                    while { $i < $limit } {
+                        # Get the longest common characters in the list.
+                        set longest [::tcl::prefix longest $::ms::data($w,values,lowercase) $value]
+
+                        # Check the 'longest' variable.
+                        switch -- $longest {
+                            ""  {
+                                # Remove the last character from value.
+                                set value [string range $value 0 end-1]
+
+                                incr i
+                            }
+                        }
+
+                        break
+                    }
+
+                    # Check the resulting 'longest' value after the loop.
+                    switch -- $longest {
+                        ""      { set index $::ms::data($w,current_index) }
+                        default {
+                            # Get all the elements from the lowercase list that starts with the 'longest' value and sort it.
+                            set prefix_list [lsort -dictionary [::tcl::prefix all $::ms::data($w,values,lowercase) $longest]]
+
+                            # Get the index of the first element of 'prefix_list' relative to '::ms::data($w,values,lowercase)'.
+                            set index [lsearch -exact $::ms::data($w,values,lowercase) [lindex $prefix_list 0]]
+                            switch -- $index {
+                                ""  { set index $::ms::data($w,current_index) }
+                            }
+                        }
+                    }
+                }
+                integer    -
+                posinteger -
+                posreal    -
+                real       {
+                    # Beautify and correct 'value' depending on its datatype.
+                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+
+                    # Get the first and last elements of the ordered list.
+                    set first [lindex $::ms::data($w,values) 0]
+                    set last  [lindex $::ms::data($w,values) end]
+
+                    # Check if 'value' is less than the first element or more of the last element.
+                    if { $value <= $first } {
+                        set index 0
+                    } elseif { $value >= $last } {
+                        set index end
+                    } else {
+                        # 'value' is in between the first and last elements (both not included).
+
+                        ######################################
+                        ##                                  ##
+                        ##     NUMERICAL INEXACT SEARCH     ##
+                        ##                                  ##
+                        ######################################
+
+                        # Set the previous element as the first one.
+                        set previous $first
+
+                        # Find the closest match to 'value'.
+                        set i 1
+                        while { $i < [llength $::ms::data($w,values)] } {
+                            # Set the 'next' element.
+                            set next [lindex $::ms::data($w,values) $i]
+
+                            if { $value == $next } {
+                                # Set the index of the next element as the current index.
+                                set index [lsearch -exact $::ms::data($w,values) $next]
+                                break
+                            } elseif { $value < $next } {
+                                # Set the index that contains the closest match to 'value' between 'previous' and 'next' as the current index.
+                                if { [expr { $next-$value }] < [expr { $value-$previous }] } {
+                                    set index [lsearch -exact $::ms::data($w,values) $next]
+                                } else {
+                                    set index [lsearch -exact $::ms::data($w,values) $previous]
+                                }
+
+                                break
+                            }
+
+                            # Update the previous element for the next lap.
+                            set previous $next
+
+                            incr i
+                        }
+                    }
+                }
+                none {
+                    # Trasform 'value' in lowercase characters for comparison reasons.
+                    set value [string tolower $value]
+                    if { $value in $::ms::data($w,values,lowercase) } {
+                        set index [lsearch -exact $::ms::data($w,values,lowercase) $value]
+                    } else {
+                        set index $::ms::data($w,current_index)
+                    }
+                }
+            }
+        }
+    }
+
+    # Select the listbox 'index' found.
+    $w.popdown.f.lb activate  $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    # Make sure that 'index' is visible.
+    $w.popdown.f.lb see $index
+
+    return ""
+}
+
 #*EOF*
