@@ -2123,6 +2123,29 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
+                            # relative to the datatype option provided.
+                            switch -- $::ms::current($w,datatype) {
+                                alnum      -
+                                alpha      -
+                                integer    -
+                                posinteger -
+                                posreal    -
+                                real       {
+                                    set ::ms::current($w,invalidcommand)  {}
+                                    set ::ms::current($w,validate)        key
+                                    set ::ms::current($w,validatecommand) [list ::ms::combobox::Validate_KeyPress %W %P]
+
+                                    switch -- $::ms::current($w,maxlength) {
+                                        0       {}
+                                        default {
+                                            # Ignore the xscrollcommand provided, if any.
+                                            set ::ms::current($w,xscrollcommand) {}
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
