@@ -282,6 +282,28 @@ namespace eval ::ms::combobox {
                                                 selectbackground \
                                                 selectborderwidth \
                                                 selectforeground];
+
+    # Set the default 'non-styleable' combobox options values.
+    set ::ms::default(combobox,class)           TCombobox
+    set ::ms::default(combobox,cmenu)           {}
+    set ::ms::default(combobox,command)         {}
+    set ::ms::default(combobox,datatype)        none
+    set ::ms::default(combobox,exportselection) 1
+    set ::ms::default(combobox,invalidcommand)  {}
+    set ::ms::default(combobox,maxlength)       0
+    set ::ms::default(combobox,placeholder)     {}
+    set ::ms::default(combobox,posthook)        {}
+    set ::ms::default(combobox,prehook)         {}
+    set ::ms::default(combobox,state)           normal
+    set ::ms::default(combobox,style)           TCombobox
+    set ::ms::default(combobox,takefocus)       1
+    set ::ms::default(combobox,textvariable)    {}
+    set ::ms::default(combobox,validate)        none
+    set ::ms::default(combobox,validatecommand) {}
+    set ::ms::default(combobox,values)          {}
+    set ::ms::default(combobox,xscrollcommand)  {}
+
+    # Note: The default 'styleable' combobox options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::combobox** command.
