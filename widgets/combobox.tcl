@@ -258,6 +258,30 @@ namespace eval ::ms::combobox {
                                                     validatecommand \
                                                     values \
                                                     xscrollcommand];
+
+    # Set the 'styleable' combobox option list.
+    set ::ms::combobox(styleable,options) [list arrowcolor \
+                                                arrowsize \
+                                                background \
+                                                bordercolor \
+                                                charwidth \
+                                                cursor \
+                                                darkcolor \
+                                                fieldbackground \
+                                                focuscolor \
+                                                focuswidth \
+                                                font \
+                                                foreground \
+                                                insertcolor \
+                                                insertwidth \
+                                                justify \
+                                                lightcolor \
+                                                padding \
+                                                placeholderforeground \
+                                                rows \
+                                                selectbackground \
+                                                selectborderwidth \
+                                                selectforeground];
 }
 
 # Rename the original Tk **ttk::combobox** command.
