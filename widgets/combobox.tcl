@@ -1701,7 +1701,30 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        xview {}
+        xview {
+            # Synopsis:
+            #
+            # *window* **xview** *option* *args*
+            #    *window* **xview**
+            #    *window* **xview** *index*
+            #    *window* **xview** **moveto** *fraction*
+            #    *window* **xview** **scroll** *number* *what*
+            switch -- [llength $args] {
+                0   { return [interp invokehidden {} $w xview] }
+                1   -
+                2   -
+                3   {
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
