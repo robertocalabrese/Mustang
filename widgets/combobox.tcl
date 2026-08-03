@@ -2692,6 +2692,11 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the combobox widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,combobox,addrs) {}
+
+    return ""
 }
 
 ######################################
