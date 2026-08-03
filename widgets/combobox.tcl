@@ -1619,7 +1619,46 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        set {}
+        set {
+            # Synopsis:
+            #
+            # *window* **set** *value*
+            switch -- [llength $args] {
+                1   {
+                    # Check the widget datatype.
+                    switch -- $::ms::current($w,datatype) {
+                        integer    -
+                        posinteger { set index [lsearch -exact -integer $::ms::data($w,values) $args] }
+                        real       -
+                        posreal    { set index [lsearch -exact -real    $::ms::data($w,values) $args] }
+                        default    { set index [lsearch -exact -nocase  $::ms::data($w,values) $args] }
+                    }
+
+                    # Check that the value provided exists inside '::ms::data($w,values)'.
+                    switch -- $index {
+                        -1      {}
+                        default {
+                            # Update the current index and value.
+                            set ::ms::data($w,current_index) $index
+                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index]
+
+                            # Clear the widget textarea.
+                            interp invokehidden {} $w delete 0 end
+                            interp invokehidden {} $w selection clear
+
+                            # Apply the changes.
+                            interp invokehidden {} $w current $index
+
+                            # Execute the command associated with the widget.
+                            ::ms::Execute_Widget_Cmd $w
+                        }
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         style {}
         xview {}
