@@ -3266,5 +3266,28 @@ proc ::ms::combobox::Destroy { w } {
     return ""
 }
 
+## Focus_In
+#
+# Manage the **FocusIn** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Focus_In { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::combobox::Pathname_Cmd $w state focus
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Select all the widget textarea characters.
+            interp invokehidden {} $w selection range 0 end
+        }
+    }
+
+    return ""
+}
 
 #*EOF*
