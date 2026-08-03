@@ -1298,6 +1298,18 @@ proc ::ms::combobox::Command { window { args "" } } {
 
             # Set the cursor at the end of the combobox textarea.
             $w icursor end
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TCombobox { bindtags $w [list $w _Combobox TCombobox $::ms::addr($w,toplevel) all] }
+                default   { bindtags $w [list $w $::ms::current($w,class) _Combobox TCombobox $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
