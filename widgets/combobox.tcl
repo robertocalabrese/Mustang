@@ -3913,4 +3913,44 @@ proc ::ms::combobox::Post { w } {
     return ""
 }
 
+## Return
+#
+# Manage the **Return** keypress event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Return { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+        readonly { set value [interp invokehidden {} $w get] }
+        normal {
+            # Validate the widget string.
+            set value [::ms::combobox::Validate_String $w]
+
+            # Clear the widget field, insert the validated value and put the cursor at the end.
+            interp invokehidden {} $w delete 0 end
+            interp invokehidden {} $w set $value
+            interp invokehidden {} $w icursor end
+        }
+    }
+
+    # Remove the widget selection, if any.
+    interp invokehidden {} $w selection clear
+
+    # If 'value' is different than the previous registered one, register it
+    # and launch the external procedure provided, if any.
+    if { $value ne $::ms::data($w,current_value) } {
+        set ::ms::data($w,current_index) [lsearch -exact $::ms::data($w,values) $value]
+        set ::ms::data($w,current_value) $value
+
+        ::ms::Execute_Widget_Cmd $w
+    }
+
+    return ""
+}
+
 #*EOF*
