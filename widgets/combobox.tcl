@@ -5630,4 +5630,34 @@ proc ::ms::combobox::Popdown_PageDown { w } {
     return -code break
 }
 
+## Popdown_PageUp
+#
+# Move the listbox view towards the top by one page and
+# select the first visible row.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_PageUp { w } {
+    # Check if all popdown rows are currently displayed or not.
+    if { [llength $::ms::data($w,values)] > $::ms::current($w,rows) } {
+        # Scroll one page towards the top of the popdown window.
+        $w.popdown.f.lb yview scroll -1 pages
+
+        # Get the index of the current top visible row.
+        set index [$w.popdown.f.lb index @0,0]
+
+        # Select and activate the current top visible row.
+        $w.popdown.f.lb activate  $index
+        $w.popdown.f.lb selection clear 0 end
+        $w.popdown.f.lb selection set $index
+    } else {
+        ::ms::combobox::Popdown_Home $w
+    }
+
+    return -code break
+}
+
 #*EOF*
