@@ -811,6 +811,20 @@ proc ::ms::combobox::Command { window { args "" } } {
                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                 }
             }
+
+            # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+            foreach option $::ms::combobox(styleable,options) {
+                set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,TCombobox,$option)
+
+                switch -- $::ms::managed_by($w,$option) {
+                    Tk  {
+                        switch -- [info exists ::ms::styleopt($::ms::theme,$::ms::current($w,style),$option)] {
+                            0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                            1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$::ms::current($w,style),$option) }
+                        }
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
