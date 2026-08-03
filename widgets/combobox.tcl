@@ -3049,4 +3049,27 @@ proc ::ms::combobox::ButtonPress { w x y mode } {
     return ""
 }
 
+## Check_TextVariable
+#
+# Validate the textvariable value, everytime it changes.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# name1,
+# name2,
+# op       Should be the tracing arguments.
+#          Do not pass any value, the **trace** command will automatically pass these values.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Check_TextVariable { w name1 name2 op } {
+    switch -- $::ms::current($w,datatype) {
+        none    {}
+        default { ::ms::combobox::Return $w }
+    }
+
+    return ""
+}
+
 #*EOF*
