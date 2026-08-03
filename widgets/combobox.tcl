@@ -3953,4 +3953,74 @@ proc ::ms::combobox::Return { w } {
     return ""
 }
 
+## Unpost
+#
+# Unpost the popdown window.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Unpost { w } {
+    # Release the grab.
+    _grab release $w.popdown
+
+    # Withdraw and destroy the popdown window.
+    _wm withdraw $w.popdown
+    _destroy $w.popdown
+
+    # Run the posthook callback, if any.
+    switch -- $::ms::current($w,posthook) {
+        ""      {}
+        default {
+            try {
+                uplevel #0 [list $::ms::current($w,posthook) $w]
+            } on error { errortext errorcode } {
+                ::ms::Error "Invalid posthook command for '$w'." ""
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!pressed'.
+    ::ms::combobox::Pathname_Cmd $w state !pressed
+
+    # Unset the toplevel temporary variables.
+    unset -nocomplain -- ::ms::temp(toplevel,height) \
+                         ::ms::temp(toplevel,width) \
+                         ::ms::temp(toplevel,X,nw) \
+                         ::ms::temp(toplevel,X,se) \
+                         ::ms::temp(toplevel,Y,nw) \
+                         ::ms::temp(toplevel,Y,se);
+
+    # Focus on the combobox.
+    _focus -force $w
+
+    # Check the current combobox index.
+    set current_index [interp invokehidden {} $w current]
+    switch -- $current_index {
+        ""      {}
+        default {
+            if { $current_index ne $::ms::data($w,current_index) } {
+                set ::ms::data($w,current_index) $current_index
+                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $current_index]
+
+                # Execute the external procedure provided, if any.
+                switch -- $::ms::current($w,command) {
+                    ""      {}
+                    default {
+                        try {
+                            uplevel #0 [list $::ms::current($w,command) $w $::ms::data($w,current_value)]
+                        } on error { errortext errorcode } {
+                            ::ms::Error "$errortext" $caller_info
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
