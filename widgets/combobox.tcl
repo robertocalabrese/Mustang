@@ -830,6 +830,16 @@ proc ::ms::combobox::Command { window { args "" } } {
             switch -- $::ms::current($w,state) {
                 disabled { set ::ms::current($w,takefocus) 0 }
             }
+
+            # If the maxlength is not zero check that the charwidth is not less of it.
+            switch -- $::ms::current($w,maxlength) {
+                0       {}
+                default {
+                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
+                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
