@@ -3072,4 +3072,199 @@ proc ::ms::combobox::Check_TextVariable { w name1 name2 op } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Destroy { w } {
+    # If the combobox popdown is currently displayed, release the grab.
+    switch -- [winfo exists $w.popdown] {
+        1   { set ::wait_for_user_response "Unpost" }
+    }
+
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget real address from the widgets real address list.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the combobox widgets real address list.
+    set index [lsearch -exact $::ms::addr(combobox) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(combobox) [lremove $::ms::addr(combobox) $index] }
+    }
+
+    # Remove the widget address from the combobox real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),combobox,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),combobox,addrs) [lremove $::ms::class($::ms::current($w,class),combobox,addrs) $index] }
+    }
+
+    # Remove the widget address from the combobox real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),combobox,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),combobox,addrs) [lremove $::ms::style($::ms::current($w,style),combobox,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the combobox classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),combobox,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(combobox,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(combobox,classtype) [lremove $::ms::style(combobox,classtype) $index] }
+            }
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,arrowcolor) \
+                         ::ms::current($w,arrowsize) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,charwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,command) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,datatype) \
+                         ::ms::current($w,exportselection) \
+                         ::ms::current($w,fieldbackground) \
+                         ::ms::current($w,focuscolor) \
+                         ::ms::current($w,focuswidth) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,invalidcommand) \
+                         ::ms::current($w,insertcolor) \
+                         ::ms::current($w,insertwidth) \
+                         ::ms::current($w,justify) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,maxlength) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,placeholder) \
+                         ::ms::current($w,placeholderforeground) \
+                         ::ms::current($w,posthook) \
+                         ::ms::current($w,prehook) \
+                         ::ms::current($w,rows) \
+                         ::ms::current($w,selectbackground) \
+                         ::ms::current($w,selectborderwidth) \
+                         ::ms::current($w,selectforeground) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,textvariable) \
+                         ::ms::current($w,validate) \
+                         ::ms::current($w,validatecommand) \
+                         ::ms::current($w,values) \
+                         ::ms::current($w,xscrollcommand);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,current_index) \
+                         ::ms::data($w,current_value) \
+                         ::ms::data($w,last_available_index) \
+                         ::ms::data($w,token) \
+                         ::ms::data($w,values) \
+                         ::ms::data($w,values,lowercase);
+
+    unset -nocomplain -- ::ms::default($w,arrowcolor) \
+                         ::ms::default($w,arrowsize) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,charwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,command) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,datatype) \
+                         ::ms::default($w,exportselection) \
+                         ::ms::default($w,fieldbackground) \
+                         ::ms::default($w,focuscolor) \
+                         ::ms::default($w,focuswidth) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,invalidcommand) \
+                         ::ms::default($w,insertcolor) \
+                         ::ms::default($w,insertwidth) \
+                         ::ms::default($w,justify) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,maxlength) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,placeholder) \
+                         ::ms::default($w,placeholderforeground) \
+                         ::ms::default($w,posthook) \
+                         ::ms::default($w,prehook) \
+                         ::ms::default($w,rows) \
+                         ::ms::default($w,selectbackground) \
+                         ::ms::default($w,selectborderwidth) \
+                         ::ms::default($w,selectforeground) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,textvariable) \
+                         ::ms::default($w,validate) \
+                         ::ms::default($w,validatecommand) \
+                         ::ms::default($w,values) \
+                         ::ms::default($w,xscrollcommand);
+
+    unset -nocomplain -- ::ms::managed_by($w,arrowcolor) \
+                         ::ms::managed_by($w,arrowsize) \
+                         ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,charwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,fieldbackground) \
+                         ::ms::managed_by($w,focuscolor) \
+                         ::ms::managed_by($w,focuswidth) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,insertcolor) \
+                         ::ms::managed_by($w,insertwidth) \
+                         ::ms::managed_by($w,justify) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,placeholderforeground) \
+                         ::ms::managed_by($w,rows) \
+                         ::ms::managed_by($w,selectbackground) \
+                         ::ms::managed_by($w,selectborderwidth) \
+                         ::ms::managed_by($w,selectforeground);
+
+    unset -nocomplain -- ::ms::style($w,widget)
+
+    return ""
+}
+
+
 #*EOF*
