@@ -1400,7 +1400,25 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
     switch -nocase -- $cmd {
         bbox    -
         icursor -
-        index   {}
+        index   {
+            # Synopsis:
+            #
+            # *window* **bbox** *index*
+            # *window* **icursor** *index*
+            # *window* **index** *index*
+            switch -- [llength $args] {
+                1   {
+                    try {
+                        interp invokehidden {} $w $cmd $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         cget {}
         configure {}
         current {}
