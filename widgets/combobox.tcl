@@ -3354,4 +3354,85 @@ proc ::ms::combobox::Focus_Out { w } {
     return ""
 }
 
+## KeyPress
+#
+# Manage the **Keypress** event on the widget.
+# Some keys may be disabled depending on the datatype specified for the widget.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be the key pressed.
+#
+# It doesn't return anything.
+proc ::ms::combobox::KeyPress { w key } {
+    # Enable only the keypress bindings that are needed for the 'datatype' provided and
+    # disable everything else.
+    switch -- $::ms::current($w,datatype) {
+        alnum {
+            switch -- $key {
+                Caps_Lock   -
+                KP_Decimal  -
+                KP_Subtract {}
+                default     {
+                    if { ![regexp "\[0-9a-zA-Z .,\-\]" $key] } {
+                        return -code break
+                    }
+                }
+            }
+        }
+        alpha {
+            switch -- $key {
+                Caps_Lock {}
+                default   {
+                    if { ![regexp "\[a-zA-Z \]" $key] } {
+                        return -code break
+                    }
+                }
+            }
+        }
+        integer {
+            switch -- $key {
+                KP_Subtract {}
+                default     {
+                    if { ![regexp "\[0-9\-\]" $key] } {
+                        return -code break
+                    }
+                }
+            }
+        }
+        posinteger {
+            if { ![regexp "\[0-9\]" $key] } {
+                return -code break
+            }
+        }
+        posreal {
+            switch -- $key {
+                KP_Decimal {}
+                default    {
+                    if { ![regexp "\[0-9.\]" $key] } {
+                        return -code break
+                    }
+                }
+            }
+        }
+        real {
+            switch -- $key {
+                KP_Decimal  -
+                KP_Subtract {}
+                default     {
+                    if { ![regexp "\[0-9.\-\]" $key] } {
+                        return -code break
+                    }
+                }
+            }
+        }
+    }
+
+    ::ttk::entry::Insert $w $key
+
+    return ""
+}
+
 #*EOF*
