@@ -3290,4 +3290,68 @@ proc ::ms::combobox::Focus_In { w } {
     return ""
 }
 
+## Focus_Out
+#
+# Manage the **FocusOut** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Focus_Out { w } {
+    # Check the contextual menu relative to this widget, if any.
+    switch -- $::ms::current($w,cmenu) {
+        ""      {}
+        default {
+            # If the contextual menu of the widget is open do not loose the focus (graphically),
+            # remove the selection or validate the data.
+            switch -- [_winfo exists $::ms::current($w,cmenu)] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # If the popdown window of the combobox is currently displayed do not loose the focus (graphically),
+    # remove the selection or validate the data.
+    switch -- [_winfo exists $w.popdown] {
+        1   { return "" }
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::combobox::Pathname_Cmd $w state !focus
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+        readonly { set value [interp invokehidden {} $w get] }
+        normal {
+            # Validate the widget string.
+            set value [::ms::combobox::Validate_String $w]
+
+            # Clear the widget field, insert the validated value and put the cursor at the end.
+            interp invokehidden {} $w delete 0 end
+            interp invokehidden {} $w set $value
+            interp invokehidden {} $w icursor end
+        }
+    }
+
+    # Remove the widget selection, if any.
+    interp invokehidden {} $w selection clear
+
+    # If 'value' is different than the previous registered one, register it
+    # and launch the external procedure provided, if any.
+    if { $value ne $::ms::data($w,current_value) } {
+        set ::ms::data($w,current_index) [lsearch -exact $::ms::data($w,values) $value]
+        set ::ms::data($w,current_value) $value
+
+        ::ms::Execute_Widget_Cmd $w
+    }
+
+    # Cleaning.
+    unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+
+    return ""
+}
+
 #*EOF*
