@@ -238,7 +238,27 @@ _bind _Combobox <TouchpadScroll> { ::ms::combobox::Touchpad %W %# %D; break }
 _bind _Combobox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **combobox** package.
-namespace eval ::ms::combobox {}
+namespace eval ::ms::combobox {
+    # Set the 'non styleable' combobox option list.
+    set ::ms::combobox(non_styleable,options) [list class \
+                                                    cmenu \
+                                                    command \
+                                                    datatype \
+                                                    exportselection \
+                                                    invalidcommand \
+                                                    maxlength \
+                                                    placeholder \
+                                                    posthook \
+                                                    prehook \
+                                                    state \
+                                                    style \
+                                                    takefocus \
+                                                    textvariable \
+                                                    validate \
+                                                    validatecommand \
+                                                    values \
+                                                    xscrollcommand];
+}
 
 # Rename the original Tk **ttk::combobox** command.
 rename ttk::combobox _ttk_combobox
