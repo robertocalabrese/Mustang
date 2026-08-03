@@ -2108,6 +2108,11 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Check the widget state and set the takefocus accordingly.
+                            switch -- $::ms::current($w,state) {
+                                disabled { set ::ms::current($w,takefocus) 0 }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
