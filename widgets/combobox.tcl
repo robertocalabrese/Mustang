@@ -2694,7 +2694,21 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
     }
 
     # Update all the combobox widgets addresses that have stylename as a style.
-    foreach w $::ms::style($stylename,combobox,addrs) {}
+    foreach w $::ms::style($stylename,combobox,addrs) {
+        # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+        foreach option $::ms::combobox(styleable,options) {
+            set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,TCombobox,$option)
+
+            switch -- $::ms::managed_by($w,$option) {
+                Tk  {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$stylename,$option)] {
+                        0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                        1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$stylename,$option) }
+                    }
+                }
+            }
+        }
+    }
 
     return ""
 }
