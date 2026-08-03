@@ -2311,9 +2311,16 @@ proc ::ms::combobox::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus accordingly.
+            # Check the widget state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
-                disabled { set ::ms::current($w,takefocus) 0 }
+                disabled {
+                    set cursor    arrow
+                    set takefocus 0
+                }
+                normal {
+                    set cursor    $::ms::current($w,cursor)
+                    set takefocus $::ms::current($w,takefocus)
+                }
             }
 
             # If the maxlength is not zero check that the charwidth is not less of it.
@@ -2756,7 +2763,7 @@ proc ::ms::combobox::Command { window { args "" } } {
 
             # Create the combobox widget.
             _ttk_combobox $w           -class $::ms::current($w,class) \
-                                      -cursor $::ms::current($w,cursor) \
+                                      -cursor $cursor \
                              -exportselection $::ms::current($w,exportselection) \
                                         -font $::ms::current($w,font) \
                               -invalidcommand $::ms::current($w,invalidcommand) \
@@ -2767,7 +2774,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                                         -show "" \
                                        -state $::ms::current($w,state) \
                                        -style $::ms::style($w,widget) \
-                                   -takefocus $::ms::current($w,takefocus) \
+                                   -takefocus $takefocus \
                                 -textvariable $::ms::current($w,textvariable) \
                                     -validate $::ms::current($w,validate) \
                              -validatecommand $::ms::current($w,validatecommand) \
@@ -3397,9 +3404,16 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus accordingly.
+                            # Check the widget state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
-                                disabled { set ::ms::current($w,takefocus) 0 }
+                                disabled {
+                                    set cursor    arrow
+                                    set takefocus 0
+                                }
+                                normal {
+                                    set cursor    $::ms::current($w,cursor)
+                                    set takefocus $::ms::current($w,takefocus)
+                                }
                             }
 
                             # If the maxlength is not zero check that the charwidth is not less of it.
@@ -3753,7 +3767,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Apply the changes.
-                            interp invokehidden {} $w configure          -cursor $::ms::current($w,cursor) \
+                            interp invokehidden {} $w configure          -cursor $cursor \
                                                                 -exportselection $::ms::current($w,exportselection) \
                                                                            -font $::ms::current($w,font) \
                                                                  -invalidcommand $::ms::current($w,invalidcommand) \
@@ -3761,7 +3775,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                                     -placeholder $::ms::current($w,placeholder) \
                                                                           -state $::ms::current($w,state) \
                                                                           -style $::ms::style($w,widget) \
-                                                                      -takefocus $::ms::current($w,takefocus) \
+                                                                      -takefocus $takefocus \
                                                                    -textvariable $::ms::current($w,textvariable) \
                                                                        -validate $::ms::current($w,validate) \
                                                                 -validatecommand $::ms::current($w,validatecommand) \
@@ -4132,6 +4146,12 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
             }
         }
 
+        # Check the widget state and set the cursor accordingly.
+        switch -- $::ms::current($w,state) {
+            disabled { set cursor arrow }
+            normal   { set cursor $::ms::current($w,cursor) }
+        }
+
         # If the maxlength is not zero check that the charwidth is not less of it.
         switch -- $::ms::current($w,maxlength) {
             0       {}
@@ -4343,7 +4363,7 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
         }
 
         # Apply the changes.
-        interp invokehidden {} $w configure      -cursor $::ms::current($w,cursor) \
+        interp invokehidden {} $w configure      -cursor $cursor \
                                                    -font $::ms::current($w,font) \
                                                 -justify $::ms::current($w,justify) \
                                             -placeholder $::ms::current($w,placeholder) \
