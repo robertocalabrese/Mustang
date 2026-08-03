@@ -1419,9 +1419,82 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        cget {}
+        cget {
+            # Synopsis:
+            #
+            # *window* **cget** *option*
+            switch -- [llength $args] {
+                0   { ::ms::Error "Missing cget option." $caller_info }
+                1   {
+                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
+                    set option [string range $args 1 end]
+                    if { ($option in $::ms::combobox(non_styleable,options)) || ($option in $::ms::combobox(styleable,options))} {
+                        return $::ms::current($w,$option)
+                    } else {
+                        ::ms::Error "Invalid option, '$args'." $caller_info
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+            }
+        }
         configure {}
-        current {}
+        current {
+            # Synopsis:
+            #
+            # *window* **current** ?newIndex?
+            switch -- [llength $args] {
+                0   {
+                    # Find the value in '::ms::data($w,values)' that corrisponds to the current index
+                    # displayed in the combobox entry.
+                    set value [lindex $::ms::data($w,values) $::ms::data($w,current_index)]
+
+                    # Check the widget datatype.
+                    switch -- $::ms::current($w,datatype) {
+                        integer    -
+                        posinteger { return [lsearch -exact -integer $::ms::current($w,values) $value] }
+                        real       -
+                        posreal    { return [lsearch -exact -real    $::ms::current($w,values) $value] }
+                        default    { return [lsearch -exact -nocase  $::ms::current($w,values) $value] }
+                    }
+                }
+                1   {
+                    # Check that the argument provided is an integer.
+                    switch -- [string is integer $args] {
+                        0   { ::ms::Error "The argument provided is not an index, '$args'" $caller_info }
+                    }
+
+                    # Find the index in '::ms::data($w,values)' that corrisponds to the index provided
+                    # for '::ms::current($w,values)'.
+                    set value [lindex $::ms::current($w,values) $args]
+                    switch -- $value {
+                        ""      {}
+                        default {
+                            # Set the new current index and value.
+                            set ::ms::data($w,current_value) $value
+
+                            # Check the widget datatype.
+                            switch -- $::ms::current($w,datatype) {
+                                integer    -
+                                posinteger { set ::ms::data($w,current_index) [lsearch -exact -integer $::ms::current($w,values) $value] }
+                                real       -
+                                posreal    { set ::ms::data($w,current_index) [lsearch -exact -real    $::ms::current($w,values) $value] }
+                                default    { set ::ms::data($w,current_index) [lsearch -exact -nocase  $::ms::current($w,values) $value] }
+                            }
+
+                            # Clear the widget textarea.
+                            interp invokehidden {} $w delete 0 end
+                            interp invokehidden {} $w selection clear
+
+                            # Apply the changes.
+                            interp invokehidden {} $w current $::ms::data($w,current_index)
+                        }
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         delete    -
         identify  -
         selection {}
