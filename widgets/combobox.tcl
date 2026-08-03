@@ -5136,4 +5136,44 @@ proc ::ms::combobox::Popdown_ArrowDown { w } {
     return -code break
 }
 
+## Popdown_ArrowUp
+#
+# Move the current selected row towards the top by one row.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_ArrowUp { w } {
+    # Compute the new index.
+    set index [expr { [$w.popdown.f.lb index active]-1 }]
+
+    # Check the scrollstopper ('disabled' or 'enabled').
+    switch -- $::ms::scrollstopper {
+        disabled {
+            # If index is lesser than zero, cycle trough.
+            if { $index < 0 } {
+                set index $::ms::data($w,last_available_index)
+            }
+        }
+        enabled {
+            # If index is lesser than zero, stop the movement.
+            if { $index < 0 } {
+                return -code break
+            }
+        }
+    }
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate  $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    # Make sure that 'index' is visible.
+    $w.popdown.f.lb see $index
+
+    return -code break
+}
+
 #*EOF*
