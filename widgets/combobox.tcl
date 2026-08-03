@@ -5090,4 +5090,50 @@ proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
     return ""
 }
 
+#######################################
+##                                   ##
+##     POPDOWN WINDOW PROCEDURES     ##
+##                                   ##
+#######################################
+
+## Popdown_ArrowDown
+#
+# Move the current selected row towards the bottom by one row.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_ArrowDown { w } {
+    # Compute the new index.
+    set index [expr { [$w.popdown.f.lb index active]+1 }]
+
+    # Check the scrollstopper ('disabled' or 'enabled').
+    switch -- $::ms::scrollstopper {
+        disabled {
+            # If index is bigger than the last available index, cycle trough.
+            if { $index > $::ms::data($w,last_available_index) } {
+                set index 0
+            }
+        }
+        enabled {
+            # If index is bigger than the last available index, stop the movement.
+            if { $index > $::ms::data($w,last_available_index) } {
+                return -code break
+            }
+        }
+    }
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate  $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    # Make sure that 'index' is visible.
+    $w.popdown.f.lb see $index
+
+    return -code break
+}
+
 #*EOF*
