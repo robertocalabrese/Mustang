@@ -1554,7 +1554,13 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             return ""
         }
         get      -
-        validate {}
+        validate {
+            # Synopsis:
+            #
+            # *window* **get**
+            # *window* **validate**
+            return [interp invokehidden {} $w $cmd]
+        }
         instate {}
         set {}
         state {}
