@@ -5491,4 +5491,25 @@ proc ::ms::combobox::Popdown_Autoselection { w } {
     return ""
 }
 
+## Popdown_End
+#
+# Move the listbox view to its bottom and select the very last row.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_End { w } {
+    # Select and activate the very last row.
+    $w.popdown.f.lb activate  $::ms::data($w,last_available_index)
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $::ms::data($w,last_available_index)
+
+    # Make sure that the last available index is visible.
+    $w.popdown.f.lb see $::ms::data($w,last_available_index)
+
+    return ""
+}
+
 #*EOF*
