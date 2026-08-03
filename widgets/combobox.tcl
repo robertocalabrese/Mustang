@@ -4708,4 +4708,59 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
     return ""
 }
 
+## Scrollbar_MouseWheel
+#
+# Scroll the listbox vertically by units (**MouseWheel**) or by pages (**Control-MouseWheel**).
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#          *Amount* is normally delivered by the **MouseWheel**/**Control-MouseWheel**
+#          event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#
+#          If not provided, defaults to **units**.
+#
+# Note: 1.0/120.0 = 0.008333333333333333
+#
+# It doesn't return anything.
+proc ::ms::combobox::Scrollbar_MouseWheel { w amount what } {
+    # Check that 'amount' is an integer or a float.
+    switch -- [string is double -strict $amount] {
+        0   { set amount 120.0 }
+        1   {
+            if { $amount == 0 } {
+                set amount 120
+            } else {
+                set amount [expr { $amount*1.0 }]
+            }
+        }
+    }
+
+    # Check the scrollmode.
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1.0*$amount }] }
+    }
+
+    # If possible, scroll the listbox vertically.
+    try {
+        $w.popdown.f.lb yview scroll [expr { -$amount*0.008333333333333333 }] $what
+    } on error {} {
+        # The popdown listbox cannot scroll vertically.
+    }
+
+    return ""
+}
+
 #*EOF*
