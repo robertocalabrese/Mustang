@@ -1424,11 +1424,13 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             # Check the widget state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
-                    set cursor arrow
-
-                    set ::ms::current($w,takefocus) 0
+                    set cursor    arrow
+                    set takefocus 0
                 }
-                normal { set cursor $::ms::current($w,cursor) }
+                normal {
+                    set cursor    $::ms::current($w,cursor)
+                    set takefocus $::ms::current($w,takefocus)
+                }
             }
 
             # Enable/Disable the widget automatic translation.
@@ -1599,7 +1601,7 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                                -padding 0 \
                                                  -state $::ms::current($w,state) \
                                                  -style $::ms::style($w,indicator) \
-                                             -takefocus $::ms::current($w,takefocus) \
+                                             -takefocus $takefocus \
                                                   -text "" \
                                           -textvariable "" \
                                              -underline -1 \
@@ -2321,11 +2323,13 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             # Check the widget state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
-                                    set cursor arrow
-
-                                    set ::ms::current($w,takefocus) 0
+                                    set cursor    arrow
+                                    set takefocus 0
                                 }
-                                normal { set cursor $::ms::current($w,cursor) }
+                                normal {
+                                    set cursor    $::ms::current($w,cursor)
+                                    set takefocus $::ms::current($w,takefocus)
+                                }
                             }
 
                             # Enable/Disable the widget automatic translation.
@@ -2483,7 +2487,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                                      -onvalue $::ms::current($w,onvalue) \
                                                        -state $::ms::current($w,state) \
                                                        -style $::ms::style($w,indicator) \
-                                                   -takefocus $::ms::current($w,takefocus) \
+                                                   -takefocus $takefocus \
                                                     -variable $::ms::current($w,variable);
 
                             _grid configure $w.indicator -padx [list $pad_left 0] \
