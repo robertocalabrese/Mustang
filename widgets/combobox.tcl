@@ -5512,4 +5512,25 @@ proc ::ms::combobox::Popdown_End { w } {
     return ""
 }
 
+## Popdown_Home
+#
+# Move the listbox view to its top and select the very first row.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Home { w } {
+    # Select and activate the very first row.
+    $w.popdown.f.lb activate  0
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set 0
+
+    # Make sure that index **0** is visible.
+    $w.popdown.f.lb see 0
+
+    return ""
+}
+
 #*EOF*
