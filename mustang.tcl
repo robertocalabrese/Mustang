@@ -191,8 +191,6 @@ proc ::ms::Init {} {
                             checkbutton \
                             combobox \
                             cmenu \
-                            crate \
-                            embedder \
                             entry \
                             frame \
                             label \
@@ -1950,8 +1948,6 @@ proc ::ms::Init {} {
         # Get the default 'style' from 'classtype'.
         switch -- $classtype {
             canvas   -
-            crate    -
-            embedder -
             listbox  -
             treeview -
             text     -
@@ -2026,9 +2022,9 @@ proc ::ms::Init {} {
                 }
             }
 
-            # Check that the theme paddings for crates, embedders, texts and toplevels are present and that they are
+            # Check that the theme paddings for texts and toplevels are present and that they are
             # lists with at least two elements.
-            foreach style [list Crate Embedder Text Toplevel] {
+            foreach style [list Text Toplevel] {
                 set index [lsearch -exact $::ms::styleopt($::ms::theme,$style) "-padding"]
                 switch -- $index {
                     -1  {
@@ -5953,11 +5949,10 @@ proc ::ms::Show_ContextMenu { w X Y { type cmenu } } {
 
                     # Check the current contextual menu of the widget.
                     if { ($cmenu eq "") || ($cmenu ni $::ms::addr(cmenu)) } {
-                        # Check if the widget address provided belongs to a checkbutton, crate, frame,
+                        # Check if the widget address provided belongs to a checkbutton, frame,
                         # label, labelframe, notebook, panedwindow or radiobutton widget.
                         switch -- $::ms::data($w,classtype) {
                             checkbutton -
-                            crate       -
                             frame       -
                             label       -
                             labelframe  -

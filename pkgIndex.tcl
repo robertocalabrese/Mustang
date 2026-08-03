@@ -90,8 +90,6 @@ package ifneeded mustang $::ms_version {
     package require ::ms::checkbutton
     package require ::ms::combobox
     package require ::ms::cmenu
-    package require ::ms::crate
-    package require ::ms::embed
     package require ::ms::entry
     package require ::ms::frame
     package require ::ms::label
@@ -241,8 +239,6 @@ package ifneeded ::ms::canvas      0.1 [list source [file join $::ms_library wid
 package ifneeded ::ms::checkbutton 0.1 [list source [file join $::ms_library widgets "checkbutton.tcl"]]
 package ifneeded ::ms::combobox    0.1 [list source [file join $::ms_library widgets "combobox.tcl"]]
 package ifneeded ::ms::cmenu       0.1 [list source [file join $::ms_library widgets "cmenu.tcl"]]
-package ifneeded ::ms::crate       0.1 [list source [file join $::ms_library widgets "crate.tcl"]]
-package ifneeded ::ms::embed       0.1 [list source [file join $::ms_library widgets "embed.tcl"]]
 package ifneeded ::ms::entry       0.1 [list source [file join $::ms_library widgets "entry.tcl"]]
 package ifneeded ::ms::frame       0.1 [list source [file join $::ms_library widgets "frame.tcl"]]
 package ifneeded ::ms::label       0.1 [list source [file join $::ms_library widgets "label.tcl"]]
