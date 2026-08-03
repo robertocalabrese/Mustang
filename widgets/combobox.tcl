@@ -4815,4 +4815,71 @@ proc ::ms::combobox::Scrollbar_Touchpad { w counter amount { what units } } {
     }
 }
 
+## Touchpad
+#
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+#
+#   1 - If the listbox can scroll horizontally, scroll it by units (**TouchpadScroll**) or by pages
+#       (**Control-TouchpadScroll**), otherwise don't do any movement on the horizontal axis.
+#
+#   2 - If the listbox can scroll vertically, scroll it by units (**TouchpadScroll**) or by pages
+#       (**Control-TouchpadScroll**), otherwise don't do any movement on the vertical axis.
+#
+# Where:
+#
+# w         Should be the scrollable widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#           *Amount* is normally delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
+#           event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#           If the value provided as *amount* is not an integer or a float,
+#           defaults to **+120.0**.
+#
+#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
+#
+#           If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Touchpad { w counter amount } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    # **TouchpadScroll** events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This allow the binding script to respond to every 5th **TouchpadScroll** event
+    # by testing is the 'counter' is divisible by 5.
+    if { [expr { $counter%5 }] != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+    set delta_x [expr { $delta_x*30 }]
+    set delta_y [expr { $delta_y*30 }]
+
+    # If there is a movement along the X axis, launch '::ms::combobox::MouseWheel'.
+    if { $delta_x != 0 } {
+        ::ms::combobox::MouseWheel $w $delta_x
+    }
+
+    # If there is a movement along the Y axis, launch '::ms::combobox::Shift_MouseWheel'.
+    if { $delta_y != 0 } {
+        ::ms::combobox::Shift_MouseWheel $w $delta_y
+    }
+
+    return ""
+}
+
 #*EOF*
