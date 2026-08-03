@@ -1472,6 +1472,630 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                         0   {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+                            ##################################################
+                            ##                                              ##
+                            ##     CHECK THE CONFIGURE OPTIONS PROVIDED     ##
+                            ##                                              ##
+                            ##################################################
+
+                            # Check the widget options provided.
+                            foreach { option value } $args {
+                                switch -nocase -- $option {
+                                    -arrowcolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,arrowcolor)    $value
+                                        set ::ms::managed_by($w,arrowcolor) developer
+                                    }
+                                    -arrowsize {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,arrowsize)    $value
+                                        set ::ms::managed_by($w,arrowsize) developer
+                                    }
+                                    -background {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,background)    $value
+                                        set ::ms::managed_by($w,background) developer
+                                    }
+                                    -bordercolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,bordercolor)    $value
+                                        set ::ms::managed_by($w,bordercolor) developer
+                                    }
+                                    -charwidth {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                set ::ms::current($w,charwidth)    $value
+                                                set ::ms::managed_by($w,charwidth) developer
+                                            }
+                                        }
+                                    }
+                                    -class {}
+                                    -cmenu {
+                                        set value [string trim $value]
+                                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                                            set ::ms::current($w,cmenu) $value
+                                        }
+                                    }
+                                    -command { set ::ms::current($w,command) $value }
+                                    -cursor {
+                                        set value [string tolower $value]
+                                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                                            set ::ms::current($w,cursor)    $value
+                                            set ::ms::managed_by($w,cursor) developer
+                                        }
+                                    }
+                                    -darkcolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,darkcolor)    $value
+                                        set ::ms::managed_by($w,darkcolor) developer
+                                    }
+                                    -datatype {}
+                                    -exportselection {
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,exportselection) 0 }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,exportselection) 1 }
+                                        }
+                                    }
+                                    -fieldbackground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,fieldbackground)    $value
+                                        set ::ms::managed_by($w,fieldbackground) developer
+                                    }
+                                    -focuscolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,focuscolor)    $value
+                                        set ::ms::managed_by($w,focuscolor) developer
+                                    }
+                                    -focuswidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,focuswidth)    $value
+                                        set ::ms::managed_by($w,focuswidth) developer
+                                    }
+                                    -font {
+                                        if { $value in [font names] } {
+                                            set ::ms::current($w,font)    $value
+                                            set ::ms::managed_by($w,font) developer
+                                        }
+                                    }
+                                    -foreground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,foreground)    $value
+                                        set ::ms::managed_by($w,foreground) developer
+                                    }
+                                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
+                                    -insertcolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,insertcolor)    $value
+                                        set ::ms::managed_by($w,insertcolor) developer
+                                    }
+                                    -insertwidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,insertwidth)    $value
+                                        set ::ms::managed_by($w,insertwidth) developer
+                                    }
+                                    -justify {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            center -
+                                            left   -
+                                            right  {
+                                                set ::ms::current($w,justify)    $value
+                                                set ::ms::managed_by($w,justify) developer
+                                            }
+                                        }
+                                    }
+                                    -lightcolor {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,lightcolor)    $value
+                                        set ::ms::managed_by($w,lightcolor) developer
+                                    }
+                                    -maxlength {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                if { $value >= 0 } {
+                                                    set ::ms::current($w,maxlength) $value
+                                                }
+                                            }
+                                        }
+                                    }
+                                    -padding {
+                                        switch -- [llength $value] {
+                                            1   {
+                                                set value [::ms::Check_Measure $value invalid]
+                                                switch -- $value {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $value]
+                                            }
+                                            2   {
+                                                set pad_horizontal [::ms::Check_Measure [lindex $value 0] invalid]
+                                                switch -- $pad_horizontal {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                                switch -- $pad_vertical {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $pad_horizontal $pad_vertical]
+                                            }
+                                            3   {
+                                                set pad_left [::ms::Check_Measure [lindex $value 0] invalid]
+                                                switch -- $pad_left {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                                switch -- $pad_vertical {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_right [::ms::Check_Measure [lindex $value 2] invalid]
+                                                switch -- $pad_right {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $pad_left $pad_vertical $pad_right]
+                                            }
+                                            4   {
+                                                set pad_left [::ms::Check_Measure [lindex $value 0] invalid]
+                                                switch -- $pad_left {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_top [::ms::Check_Measure [lindex $value 1] invalid]
+                                                switch -- $pad_top {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_right [::ms::Check_Measure [lindex $value 2] invalid]
+                                                switch -- $pad_right {
+                                                    invalid { continue }
+                                                }
+
+                                                set pad_bottom [::ms::Check_Measure [lindex $value 3] invalid]
+                                                switch -- $pad_bottom {
+                                                    invalid { continue }
+                                                }
+
+                                                set ::ms::current($w,padding) [list $pad_left $pad_top $pad_right $pad_bottom]
+                                            }
+                                            default { continue }
+                                        }
+
+                                        set ::ms::managed_by($w,padding) developer
+                                    }
+                                    -placeholder { set ::ms::current($w,placeholder) $value }
+                                    -placeholderforeground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,placeholderforeground)    $value
+                                        set ::ms::managed_by($w,placeholderforeground) developer
+                                    }
+                                    -posthook { set ::ms::current($w,posthook) $value }
+                                    -prehook { set ::ms::current($w,prehook) $value }
+                                    -rows {
+                                        switch -- [string is integer -strict $value] {
+                                            1   {
+                                                if { $value > 0 } {
+                                                    set ::ms::current($w,rows)    $value
+                                                    set ::ms::managed_by($w,rows) developer
+                                                }
+                                            }
+                                        }
+                                    }
+                                    -selectbackground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,selectbackground)    $value
+                                        set ::ms::managed_by($w,selectbackground) developer
+                                    }
+                                    -selectborderwidth {
+                                        set value [::ms::Check_Measure $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,selectborderwidth)    $value
+                                        set ::ms::managed_by($w,selectborderwidth) developer
+                                    }
+                                    -selectforeground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,selectforeground)    $value
+                                        set ::ms::managed_by($w,selectforeground) developer
+                                    }
+                                    -state {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            disabled -
+                                            readonly -
+                                            normal   { set ::ms::current($w,state) $value }
+                                        }
+                                    }
+                                    -style {
+                                        if { $value in $::ms::style($::ms::theme) } {
+                                            # Check if exists a layout for the style provided.
+                                            # If not, create one by mirroring the current theme 'TCombobox' layout.
+                                            if { $value ni $::ms::layouts($::ms::theme) } {
+                                                _ttk_style layout $value [_ttk_style layout TCombobox]
+                                            }
+
+                                            # Remove the widget address from the combobox real address list that contains all the
+                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            set index [lsearch -exact $::ms::style($::ms::current($w,style),combobox,addrs) $w]
+                                            switch -- $index {
+                                                -1      {}
+                                                default { set ::ms::style($::ms::current($w,style),combobox,addrs) [lremove $::ms::style($::ms::current($w,style),combobox,addrs) $index] }
+                                            }
+
+                                            # Add the widget address to the address list that contains all the
+                                            # widgets addresses with style 'value'.
+                                            lappend ::ms::style($value,combobox,addrs) $w
+
+                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # for the combobox classtype.
+                                            switch -- [llength $::ms::style($::ms::current($w,style),combobox,addrs)] {
+                                                0   {
+                                                    set index [lsearch -exact $::ms::style(combobox,classtype) $::ms::current($w,style)]
+                                                    switch -- $index {
+                                                        -1      {}
+                                                        default { set ::ms::style(combobox,classtype) [lremove $::ms::style(combobox,classtype) $index] }
+                                                    }
+                                                }
+                                            }
+
+                                            # If needed, add 'value' to the available styles for the combobox classtype.
+                                            if { $value ni $::ms::style(combobox,classtype) } {
+                                                lappend ::ms::style(combobox,classtype) $value
+                                            }
+
+                                            # Update the current style associated with the widget with 'value'.
+                                            set ::ms::current($w,style) $value
+                                        }
+                                    }
+                                    -takefocus {
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,takefocus) 0 }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,takefocus) 1 }
+                                        }
+                                    }
+                                    -textvariable {
+                                        switch -- [info exists $value] {
+                                            1   {
+                                                # Remove the previous trace, if any.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""      {}
+                                                    default {
+                                                        trace remove variable $::ms::current($w,textvariable) \
+                                                                     write    [list ::ms::combobox::Check_TextVariable $w];
+                                                    }
+                                                }
+
+                                                # Set the new current textvariable.
+                                                set ::ms::current($w,textvariable) $value
+
+                                                # Set a trace in order to perform a validation (if needed) whenever the developer
+                                                # changes the value of the variable name provided.
+                                                trace add variable $value \
+                                                          write    [list ::ms::combobox::Check_TextVariable $w];
+                                            }
+                                        }
+                                    }
+                                    -validate {
+                                        switch -nocase $value {
+                                            none     { set ::ms::current($w,validate) none }
+                                            focus    { set ::ms::current($w,validate) focus }
+                                            focusin  { set ::ms::current($w,validate) focusin }
+                                            focusout { set ::ms::current($w,validate) focusout }
+                                            key      { set ::ms::current($w,validate) key }
+                                            all      { set ::ms::current($w,validate) all }
+                                        }
+                                    }
+                                    -validatecommand { set ::ms::current($w,validatecommand) $value }
+                                    -values {
+                                        # Set the new current list of values.
+                                        set ::ms::current($w,values) $value
+
+                                        # Check if a list of values was provided.
+                                        switch -- [llength $::ms::current($w,values)] {
+                                            0   {
+                                                # Remove any possible whitespaces.
+                                                set ::ms::current($w,values) [list ]
+
+                                                # Check the datatype.
+                                                switch -- $::ms::current($w,datatype) {
+                                                    alnum {
+                                                        set number 1
+                                                        while { $number < 51 } {
+                                                            lappend ::ms::current($w,values) [string cat "Item-" $number]
+                                                            incr number
+                                                        }
+
+                                                        # Set the current index as the index of the item **Item-0**.
+                                                        set ::ms::data($w,current_index) 0
+
+                                                        # Register the sorted values in lowercase characters.
+                                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+                                                    }
+                                                    integer {
+                                                        set number -25
+                                                        while { $number < 26 } {
+                                                            lappend ::ms::current($w,values) $number
+                                                            incr number
+                                                        }
+
+                                                        # Set the current index as the index of the item **0**.
+                                                        set ::ms::data($w,current_index) 25
+                                                    }
+                                                    posinteger {
+                                                        set number 0
+                                                        while { $number < 51 } {
+                                                            lappend ::ms::current($w,values) $number
+                                                            incr number
+                                                        }
+
+                                                        # Set the current index as the index of the item **0**.
+                                                        set ::ms::data($w,current_index) 0
+                                                    }
+                                                    posreal {
+                                                        set number 0
+                                                        while { $number < 51.0 } {
+                                                            lappend ::ms::current($w,values) $number
+                                                            set number [expr { $number+1.0 } ]
+                                                        }
+
+                                                        # Set the current index as the index of the item **0**.
+                                                        set ::ms::data($w,current_index) 0
+                                                    }
+                                                    real {
+                                                        set number -25.0
+                                                        while { $number < 26.0 } {
+                                                            lappend ::ms::current($w,values) $number
+                                                            set number [expr { $number+1.0 } ]
+                                                        }
+
+                                                        # Set the current index as the index of the item **0**.
+                                                        set ::ms::data($w,current_index) 25
+                                                    }
+                                                    default {
+                                                        lappend ::ms::current($w,values) Amsterdam Beijing        Cairo           Dublin    Freetown      Gibraltar \
+                                                                                         Hanoi     Havana         Helsinki        Islamabad Jerusalem     Kabul \
+                                                                                         Kingston  "Kuala Lumpur" "La Paz"        Lima      Lisbon        London \
+                                                                                         Madrid    Manila         "Mexico City"   Minx      Monaco        Montevideo \
+                                                                                         Moscow    Nairobi        "New Delhi"     Oslo      "Panama City" Paris \
+                                                                                         Praga     Quito          Reykjavík       Riga      Rome          San José \
+                                                                                         San Juan  San Salvador   "Santo Domingo" Sarajevo  Seoul         Singapore \
+                                                                                         Sofia     Stockholm      Taipei          Tallin    Tirana        Tokyo \
+                                                                                         Tunis     Valletta       Vienna          Warsaw    Washigton     Zagreb;
+
+                                                        # Set the current index as the index of the item **Amsterdam**.
+                                                        set ::ms::data($w,current_index) 0
+
+                                                        # Register the sorted values in lowercase characters.
+                                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+                                                    }
+                                                }
+
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) $::ms::current($w,values)
+
+                                                # Set the current value as the value corresponding to the '::ms::data($w,current_index)' in '::ms::current($w,values)'.
+                                                set ::ms::data($w,current_value) [lindex $::ms::current($w,values) $::ms::data($w,current_index)]
+
+                                                # Compute the index of the last available item in '::ms::current($w,values)'.
+                                                set ::ms::data($w,last_available_index) [expr { [llength $::ms::current($w,values)]-1 }]
+                                            }
+                                            default {
+                                                # Check the datatype.
+                                                switch -- $::ms::current($w,datatype) {
+                                                    alnum {
+                                                        foreach value $::ms::current($w,values) {
+                                                            # Check every character in value.
+                                                            set i 0
+                                                            while { $i < [string length $value] } {
+                                                                set char [string index $value $i]
+                                                                switch -- $char {
+                                                                    " "     -
+                                                                    "."     -
+                                                                    ","     -
+                                                                    "-"     {}
+                                                                    default {
+                                                                        switch -- [string is alnum $char] {
+                                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                incr i
+                                                            }
+                                                        }
+
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+
+                                                        # Register the sorted values in lowercase characters.
+                                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+                                                    }
+                                                    alpha {
+                                                        foreach value $::ms::current($w,values) {
+                                                            # Check every character in value.
+                                                            set i 0
+                                                            while { $i < [string length $value] } {
+                                                                set char [string index $value $i]
+                                                                switch -- $char {
+                                                                    " "     {}
+                                                                    default {
+                                                                        switch -- [string is alpha $char] {
+                                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                incr i
+                                                            }
+                                                        }
+
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -ascii $::ms::current($w,values)]
+
+                                                        # Register the sorted values in lowercase characters.
+                                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+                                                    }
+                                                    integer {
+                                                        foreach value $::ms::current($w,values) {
+                                                            switch -- [string is integer -strict $value] {
+                                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
+                                                            }
+                                                        }
+
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+                                                    }
+                                                    posinteger {
+                                                        foreach value $::ms::current($w,values) {
+                                                            switch -- [string is integer -strict $value] {
+                                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
+                                                                1   {
+                                                                    if { $value < 0 } {
+                                                                        ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+                                                    }
+                                                    posreal {
+                                                        foreach value $::ms::current($w,values) {
+                                                            switch -- [string is double -strict $value] {
+                                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
+                                                                1   {
+                                                                    if { $value < 0 } {
+                                                                        ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+                                                    }
+                                                    real {
+                                                        foreach value $::ms::current($w,values) {
+                                                            switch -- [string is double -strict $value] {
+                                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
+                                                            }
+                                                        }
+
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+                                                    }
+                                                    none {
+                                                        # Register the sorted values.
+                                                        set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+
+                                                        # Register the sorted values in lowercase characters.
+                                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+                                                    }
+                                                }
+
+                                                # Set the current index as the first one of '::ms::data($w,values)', and get the relative value.
+                                                set ::ms::data($w,current_index) 0
+                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $::ms::data($w,current_index)]
+
+                                                # Compute the index of the last available item in '::ms::data($w,values)'.
+                                                set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,values)]-1 }]
+                                            }
+                                        }
+
+                                        # Clear the widget textarea.
+                                        interp invokehidden {} $w delete 0 end
+                                        interp invokehidden {} $w selection clear
+
+                                        # Set the current index in the combobox entry.
+                                        interp invokehidden {} $w current $::ms::data($w,current_index)
+                                    }
+                                    -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
