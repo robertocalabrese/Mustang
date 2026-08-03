@@ -4957,4 +4957,72 @@ proc ::ms::combobox::Popdown_MouseWheel { w x y amount { what units } } {
     return -code break
 }
 
+## Popdown_Shift_MouseWheel
+#
+# If the listbox can scroll horizontally, scroll it by units (**Shift-MouseWheel**) or by pages
+# (**Control-Shift-MouseWheel**), otherwise don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#          These values should be provided by the **Shift-MouseWheel**/**Control-Shift-MouseWheel**
+#          event.
+#
+# amount   Should be the delta value of a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#          *Amount* is normally delivered by the **Shift-MouseWheel**/**Control-Shift-MouseWheel**
+#          event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#
+#          If not provided, defaults to **units**.
+#
+# Note: 1.0/120.0 = 0.008333333333333333
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
+    # Check that 'amount' is an integer or a float.
+    switch -- [string is double -strict $amount] {
+        0   { set amount 120.0 }
+        1   {
+            if { $amount == 0 } {
+                set amount 120
+            } else {
+                set amount [expr { $amount*1.0 }]
+            }
+        }
+    }
+
+    # Check the scrollmode.
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1.0*$amount }] }
+    }
+
+    # If possible, scroll the listbox horizontally.
+    try {
+        $w.popdown.f.lb xview scroll [expr { -$amount*0.008333333333333333 }] $what
+    } on error {} {
+        # The popdown listbox cannot scroll horizontally.
+    }
+
+    # Get the index of the current hovered row.
+    set index [$w.popdown.f.lb index @$x,$y]
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    return -code break
+}
+
 #*EOF*
