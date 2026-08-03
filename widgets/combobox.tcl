@@ -4023,4 +4023,215 @@ proc ::ms::combobox::Unpost { w } {
     return ""
 }
 
+###################################
+##                               ##
+##     VALIDATION PROCEDURES     ##
+##                               ##
+###################################
+
+## Validate_KeyPress
+#
+# Limit the input keypresses in a combobox widget and set the widget state to 'invalid' or '!invalid'
+# depending if there are illegal characters for the datatype specified or if the string is not contained
+# inside any of the items provided by the ::ms::current($w,values) variable.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# string   Should be the string to check.
+#
+# It returns a boolean value ['0' or '1'] indicating if the string provided
+# reached it's length limit or not.
+proc ::ms::combobox::Validate_KeyPress { w string } {
+    # Check if the character is allowed to be displayed or not.
+    switch -- $::ms::current($w,maxlength) {
+        0       {}
+        default {
+            # Check if the length of 'string' is bigger than the maxlength allowed.
+            if { [string length $string] > $::ms::current($w,maxlength) } {
+                # The character will not be inserted.
+                return 0
+            }
+        }
+    }
+
+    # Remove any leading and trailing spaces from 'string'.
+    set value [string trim $string]
+
+    # Check 'value'.
+    switch -- $value {
+        ""  {
+            # Change the widget dynamic state to '!invalid'.
+            ::ms::combobox::Pathname_Cmd $w state !invalid
+
+            return 1
+        }
+        default {
+            # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
+            #       we made sure of that in the widget bindings section.
+            #       Nonetheless, they can be inserted trough a paste or pasteselection event.
+            #       If this is the case, we will let the illegal character be inserted but we will
+            #       mark the string as invalid.
+
+            # Depending on the widget datatype, check for illegal characters in 'value'.
+            switch -- $::ms::current($w,datatype) {
+                alnum {
+                    # Check every character in 'value'.
+                    set i 0
+                    while { $i < [string length $value] } {
+                        set char [string index $value $i]
+                        switch -- $char {
+                            " "     -
+                            "."     -
+                            ","     -
+                            "-"     {}
+                            default {
+                                switch -- [string is alnum $char] {
+                                    0   {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+
+                        incr i
+                    }
+                }
+                alpha {
+                    # Check every character in 'value'.
+                    set i 0
+                    while { $i < [string length $value] } {
+                        set char [string index $value $i]
+                        switch -- $char {
+                            " "     {}
+                            default {
+                                switch -- [string is alpha $char] {
+                                    0   {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+
+                        incr i
+                    }
+                }
+                integer {
+                    switch -- $value {
+                        "-"     {}
+                        default {
+                            switch -- [string is integer $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                            }
+                        }
+                    }
+                }
+                posinteger {
+                    switch -- [string is integer $value] {
+                        0   {
+                            # Change the widget dynamic state to 'invalid'.
+                            ::ms::combobox::Pathname_Cmd $w state invalid
+
+                            return 1
+                        }
+                        1   {
+                            if { $value < 0 } {
+                                # Change the widget dynamic state to 'invalid'.
+                                ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                return 1
+                            }
+                        }
+                    }
+                }
+                posreal {
+                    switch -- $value {
+                        "."     {}
+                        default {
+                            switch -- [string is double $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    if { $value < 0 } {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                real {
+                    switch -- $value {
+                        "-"     -
+                        "."     {}
+                        default {
+                            switch -- [string is double $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # Note: If we have arrived to this point, it means that no illegal characters have been found
+    #       in the string examined but the string could still be invalid because it may not be contained
+    #       inside the items of the list provided for the widget.
+
+    #######################################
+    ##                                   ##
+    ##     ALPHABETIC INEXACT SEARCH     ##
+    ##                                   ##
+    #######################################
+
+    # Check the datatype.
+    switch -- $::ms::current($w,datatype) {
+        integer    -
+        posinteger -
+        posreal    -
+        real       { set values $::ms::data($w,values) }
+        default    {
+            # Trasform 'string' in lowercase characters for comparison reasons.
+            set value [string tolower $value]
+            set values $::ms::data($w,values,lowercase)
+        }
+    }
+
+    # Compare the longest common characters found in 'values' that contains consecutive characters of
+    # 'value' with 'value' itself and change the widget dynamic invalid state accordingly.
+    set end [expr { [string length $value]-1 }]
+    if { [string range [::tcl::prefix longest $values $value] 0 $end] eq $value } {
+        ::ms::combobox::Pathname_Cmd $w state !invalid
+    } else {
+        ::ms::combobox::Pathname_Cmd $w state  invalid
+    }
+
+    return 1
+}
+
 #*EOF*
