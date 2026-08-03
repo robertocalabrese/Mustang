@@ -64,6 +64,179 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::combobox 0.1
 
+################################
+##                            ##
+##     _COMBOBOX BINDINGS     ##
+##                            ##
+################################
+
+# Activate/Deactivate
+_bind _Combobox <Activate>   { ::ms::combobox::Pathname_Cmd %W state !background; break }
+_bind _Combobox <Deactivate> { ::ms::combobox::Pathname_Cmd %W state  background; break }
+
+# Allowing some modifiers combination.
+switch -- [_tk windowingsystem] {
+    aqua {
+        _bind _Combobox <Option-KeyPress>         { # Enable binding }
+        _bind _Combobox <Option-Shift-KeyPress>   { # Enable binding }
+        _bind _Combobox <Control-KeyPress>        { # Enable binding }
+        _bind _Combobox <Control-Option-KeyPress> { # Enable binding }
+        _bind _Combobox <Control-Shift-KeyPress>  { # Enable binding }
+        _bind _Combobox <Command-KeyPress>        { # Enable binding }
+        _bind _Combobox <Command-Shift-KeyPress>  { # Enable binding }
+    }
+    default {
+        _bind _Combobox <Alt-KeyPress>           { # Enable binding }
+        _bind _Combobox <Alt-Shift-KeyPress>     { # Enable binding }
+        _bind _Combobox <Control-KeyPress>       { # Enable binding }
+        _bind _Combobox <Control-Alt-KeyPress>   { # Enable binding }
+        _bind _Combobox <Control-Shift-KeyPress> { # Enable binding }
+        _bind _Combobox <Meta-KeyPress>          { # Enable binding }
+        _bind _Combobox <Meta-Shift-KeyPress>    { # Enable binding }
+    }
+}
+
+# Backspace/Delete keys
+_bind _Combobox <KeyPress-BackSpace> { # Enable binding }
+_bind _Combobox <KeyPress-Delete>    { # Enable binding }
+_bind _Combobox <KeyPress-KP_Delete> { ::ttk::entry::Delete %W; break }
+
+# Buttonpress
+_bind _Combobox <ButtonPress-1>        { ::ms::combobox::ButtonPress %W %x %y "";  break }
+_bind _Combobox <Shift-ButtonPress-1>  { ::ms::combobox::ButtonPress %W %x %y "s"; break }
+_bind _Combobox <Double-ButtonPress-1> { ::ms::combobox::ButtonPress %W %x %y "2"; break }
+_bind _Combobox <Triple-ButtonPress-1> { ::ms::combobox::ButtonPress %W %x %y "3"; break }
+_bind _Combobox <B1-Motion>            { ::ms::Drag %W %x %y; break }
+
+_bind _Combobox <Button-2>         { ::ms::Scan_Or_Paste %W %x "Button-2"; break }
+_bind _Combobox <B2-Motion>        { ::ms::Scan_Or_Paste %W %x "B2-Motion"; break }
+_bind _Combobox <ButtonRelease-2>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-2"; break }
+
+_bind _Combobox <Button-3>         { ::ms::Scan_Or_Paste %W %x "Button-3"; break }
+_bind _Combobox <B3-Motion>        { ::ms::Scan_Or_Paste %W %x "B3-Motion"; break }
+_bind _Combobox <ButtonRelease-3>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-3"; break }
+
+# Contextual menu
+_bind _Combobox <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+# Clear/Copy/Cut/Paste
+_bind _Combobox <<Clear>> { ::ms::Clear %W; break }
+_bind _Combobox <<Copy>>  { ::ms::Copy  %W; break }
+_bind _Combobox <<Cut>>   { ::ms::Cut   %W; break }
+_bind _Combobox <<Paste>> { ::ms::Paste %W CLIPBOARD; break }
+
+# Cursor management.
+_bind _Combobox <Motion> { ::ms::Set_Cursor %W %x %y; break }
+
+# Destroy
+_bind _Combobox <Destroy> { ::ms::combobox::Destroy %W; break }
+
+# Enter/Leave
+_bind _Combobox <Enter> { ::ms::combobox::Pathname_Cmd %W state  hover; break }
+_bind _Combobox <Leave> { ::ms::combobox::Pathname_Cmd %W state !hover; break }
+
+# Escape key
+_bind _Combobox <KeyPress-Escape> { ::ms::Escape %W; break }
+
+# F keys
+_bind _Combobox <Fn-KeyPress> { # Enable binding }
+
+# FocusIn/FocusOut
+_bind _Combobox <FocusIn>  { ::ms::combobox::Focus_In  %W; break }
+_bind _Combobox <FocusOut> { ::ms::combobox::Focus_Out %W; break }
+
+# Insert cursor movements.
+_bind _Combobox <<LineEnd>>   { ::ttk::entry::Move %W end; break }
+_bind _Combobox <<LineStart>> { ::ttk::entry::Move %W home; break }
+_bind _Combobox <<NextChar>>  { ::ttk::entry::Move %W nextchar; break }
+_bind _Combobox <<NextLine>>  { ::ms::combobox::Post %W; break }
+_bind _Combobox <<NextWord>>  { ::ttk::entry::Move %W nextword; break }
+_bind _Combobox <<PrevChar>>  { ::ttk::entry::Move %W prevchar; break }
+_bind _Combobox <<PrevWord>>  { ::ttk::entry::Move %W prevword; break }
+
+_bind _Combobox <<SelectLineEnd>>   { ::ttk::entry::Extend %W end; break }
+_bind _Combobox <<SelectLineStart>> { ::ttk::entry::Extend %W home; break }
+_bind _Combobox <<SelectNextChar>>  { ::ttk::entry::Extend %W nextchar; break }
+_bind _Combobox <<SelectNextWord>>  { ::ttk::entry::Extend %W selectnextword; break }
+_bind _Combobox <<SelectPrevChar>>  { ::ttk::entry::Extend %W prevchar; break }
+_bind _Combobox <<SelectPrevWord>>  { ::ttk::entry::Extend %W prevword; break }
+
+_bind _Combobox <<SelectAll>>  { %W selection range 0 end; break }
+_bind _Combobox <<SelectNone>> { %W selection clear; break }
+
+# Enabling only some keys depending on the datatype specified for the widget.
+_bind _Combobox <KeyPress> { ::ms::combobox::KeyPress %W %A; break }
+
+# Return
+_bind _Combobox <KeyPress-Return>   { ::ms::combobox::Return %W; break }
+_bind _Combobox <KeyPress-KP_Enter> { ::ms::combobox::Return %W; break }
+
+# Tab/Shift-Tab keys
+_bind _Combobox <KeyPress-Tab> { # Enable binding }
+switch -- [_tk windowingsystem] {
+    x11 {
+        _bind _Combobox <KeyPress-ISO_Left_Tab> { # Enable binding }
+
+        # This seems to be correct on *some* HP systems.
+        catch { _bind _Combobox <KeyPress-hpBackTab> { # Enable binding } }
+    }
+    aqua  { _bind _Combobox <KeyPress-ISO_Left_Tab> { # Enable binding } }
+    win32 { _bind _Combobox <Shift-KeyPress-Tab>    { # Enable binding } }
+}
+
+# Enabling window traversal navigation.
+_bind _Combobox <<PageLeft>>  { # Enable binding }
+_bind _Combobox <<PageRight>> { # Enable binding }
+_bind _Combobox <<PageUp>>    { # Enable binding }
+_bind _Combobox <<PageDown>>  { # Enable binding }
+
+# Mousewheel and Touchpad
+
+# If the widget is in its **normal** or **readonly** state and the items list is not empty, scroll the items
+# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable parent
+# with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the
+# mousewheel direction). If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Combobox <MouseWheel> { ::ms::combobox::MouseWheel %W %D; break }
+
+# If the widget is in its **normal** state and has the focus, move the insert cursor by one character
+# towards the left or the right (depending on the direction of the mousewheel event), otherwise try to
+# find the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
+# by one unit left or right (again, depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Combobox <Shift-MouseWheel> { ::ms::combobox::Shift_MouseWheel %W %D; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Combobox <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Combobox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - View the **Shift-MouseWheel** event.
+#   2 - View the **MouseWheel** event.
+_bind _Combobox <TouchpadScroll> { ::ms::combobox::Touchpad %W %# %D; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Combobox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 # Create the mustang **combobox** package.
 namespace eval ::ms::combobox {}
 
