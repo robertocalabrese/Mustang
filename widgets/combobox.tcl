@@ -5533,4 +5533,30 @@ proc ::ms::combobox::Popdown_Home { w } {
     return ""
 }
 
+## Popdown_Hover
+#
+# Manage the **Motion** event upon the listbox.
+#
+# Note: The following procedure is a modified version of the 'ttk::combobox::LBHover' procedure.
+#       All credits goes to the original author/s.
+#
+#
+# w      Should be the combobox real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Hover { w x y } {
+    # Get the index of the current hovered row.
+    set index [$w.popdown.f.lb index @$x,$y]
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate  $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    return ""
+}
+
 #*EOF*
