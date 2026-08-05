@@ -277,6 +277,30 @@ namespace eval ::ms::entry {
                                              selectbackground \
                                              selectborderwidth \
                                              selectforeground];
+
+    # Set the default 'non-styleable' entry options values.
+    set ::ms::default(entry,class)           TEntry
+    set ::ms::default(entry,cmenu)           {}
+    set ::ms::default(entry,command)         {}
+    set ::ms::default(entry,datatype)        none
+    set ::ms::default(entry,decimals)        1
+    set ::ms::default(entry,exportselection) 1
+    set ::ms::default(entry,from)            0
+    set ::ms::default(entry,hash)            yes
+    set ::ms::default(entry,invalidcommand)  {}
+    set ::ms::default(entry,maxlength)       0
+    set ::ms::default(entry,placeholder)     {}
+    set ::ms::default(entry,show)            {}
+    set ::ms::default(entry,state)           normal
+    set ::ms::default(entry,style)           TEntry
+    set ::ms::default(entry,takefocus)       1
+    set ::ms::default(entry,textvariable)    {}
+    set ::ms::default(entry,to)              0
+    set ::ms::default(entry,validate)        none
+    set ::ms::default(entry,validatecommand) {}
+    set ::ms::default(entry,xscrollcommand)  {}
+
+    # Note: The default 'styleable' entry options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **entry** and **ttk::entry** commands.
