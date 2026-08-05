@@ -3853,7 +3853,47 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::labelframe::Style_Update { stylename caller_info } {}
+proc ::ms::labelframe::Style_Update { stylename caller_info } {
+    ##############################
+    ##                          ##
+    ##     LABELFRAME.LABEL     ##
+    ##                          ##
+    ##############################
+
+    set background  $::ms::styleopt($::ms::theme,TLabelframe.Label,background)
+    set bordercolor $::ms::styleopt($::ms::theme,TLabelframe.Label,bordercolor)
+    set borderwidth $::ms::styleopt($::ms::theme,TLabelframe.Label,borderwidth)
+    set charwidth   $::ms::styleopt($::ms::theme,TLabelframe.Label,charwidth)
+    set darkcolor   $::ms::styleopt($::ms::theme,TLabelframe.Label,darkcolor)
+    set lightcolor  $::ms::styleopt($::ms::theme,TLabelframe.Label,lightcolor)
+    set padding     $::ms::styleopt($::ms::theme,TLabelframe.Label,padding)
+    set relief      $::ms::styleopt($::ms::theme,TLabelframe.Label,relief)
+
+    # Check if 'stylename.Label' exists among the styles known by the current theme.
+    # If not, set it as 'TLabelframe.Label'.
+    set labelframe_title_style [string cat $stylename ".Label"]
+    if { ($labelframe_title_style in $::ms::style($::ms::theme)) && ($labelframe_title_style ne "TLabelframe.Label") } {
+        # Check if a layout exists for 'stylename.Label'.
+        # If not, create one by mirroring the 'TLabelframe' layout for the current theme.
+        if { $labelframe_title_style ni $::ms::layouts($::ms::theme) } {
+            _ttk_style layout $labelframe_title_style [_ttk_style layout TLabelframe.Label]
+        }
+
+        # Get the labelframe title style options, if any.
+        foreach option [list  background \
+                             bordercolor \
+                             borderwidth \
+                               charwidth \
+                               darkcolor \
+                              lightcolor \
+                                 padding \
+                                  relief] {
+            switch -- [info exists ::ms::styleopt($::ms::theme,$labelframe_title_style,$option)] {
+                1   { set $option $::ms::styleopt($::ms::theme,$labelframe_title_style,$option) }
+            }
+        }
+    }
+}
 
 ######################################
 ##                                  ##
