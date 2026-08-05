@@ -141,7 +141,21 @@ _bind _Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break
 _bind _Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **labelframe** package.
-namespace eval ::ms::labelframe {}
+namespace eval ::ms::labelframe {
+    # Set the labelframe 'non-styleable' labelframe option list.
+    set ::ms::labelframe(non_styleable,options) [list class \
+                                                      cmenu \
+                                                      height \
+                                                      scrollable \
+                                                      state \
+                                                      style \
+                                                      takefocus \
+                                                      text \
+                                                      textvariable \
+                                                      width \
+                                                      xscrollincrement \
+                                                      yscrollincrement];
+}
 
 # Rename the original Tk **labelframe** and **ttk::labelframe** commands.
 rename labelframe      _labelframe
