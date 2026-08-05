@@ -1829,4 +1829,44 @@ proc ::ms::label::Focus_In { w } {
     return ""
 }
 
+## Focus_Out
+#
+# Manage the **FocusOut** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::label::Focus_Out { w } {
+    # Check the contextual menu associated with this widget, if any.
+    set cmenu $::ms::current($w,cmenu)
+    switch -- $cmenu {
+        ""  {
+            # Check if a contextual menu was associated with the widget's toplevel.
+            set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
+            switch -- $cmenu {
+                ""      {}
+                default {
+                    # If the contextual menu of the widget's toplevel is open do not loose the focus (graphically).
+                    switch -- [_winfo exists $cmenu] {
+                        1   { return "" }
+                    }
+                }
+            }
+        }
+        default {
+            # If the contextual menu of the widget is open do not loose the focus (graphically).
+            switch -- [_winfo exists $cmenu] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::label::Pathname_Cmd $w state !focus
+
+    return ""
+}
+
 #*EOF*
