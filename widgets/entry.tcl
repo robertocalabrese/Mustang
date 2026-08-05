@@ -1847,6 +1847,145 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Depending on the datatype provided override the maxlength option and, if needed,
+                            # check the 'from' and 'to' values.
+                            switch -- $::ms::current($w,datatype) {
+                                hex8 {
+                                    # Override any 'maxlength' provided.
+                                    switch -- $::ms::current($w,hash) {
+                                        no  { set ::ms::current($w,maxlength) 6 }
+                                        yes { set ::ms::current($w,maxlength) 7 }
+                                    }
+                                }
+                                hex12 {
+                                    # Override any 'maxlength' provided.
+                                    switch -- $::ms::current($w,hash) {
+                                        no  { set ::ms::current($w,maxlength) 9 }
+                                        yes { set ::ms::current($w,maxlength) 10 }
+                                    }
+                                }
+                                hex16 {
+                                    # Override any 'maxlength' provided.
+                                    switch -- $::ms::current($w,hash) {
+                                        no  { set ::ms::current($w,maxlength) 12 }
+                                        yes { set ::ms::current($w,maxlength) 13 }
+                                    }
+                                }
+                                integer {
+                                    # Safeguard.
+                                    # Make sure that the 'from' and 'to' values are integers.
+                                    set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }]
+                                    set ::ms::current($w,to)   [expr { int($::ms::current($w,to)) }]
+
+                                    # Safeguard.
+                                    # Make sure that the 'from' value is not greater than the 'to' value.
+                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                        set ::ms::current($w,from) -9
+                                        set ::ms::current($w,to)    9
+                                    }
+
+                                    # Override any 'maxlength' provided.
+                                    set maxlength_from [string length $::ms::current($w,from)]
+                                    set maxlength_to   [string length $::ms::current($w,to)]
+                                    if { $maxlength_from > $maxlength_to } {
+                                        set ::ms::current($w,maxlength) $maxlength_from
+                                    } else {
+                                        set ::ms::current($w,maxlength) $maxlength_to
+                                    }
+                                }
+                                posinteger {
+                                    # Safeguard.
+                                    # Make sure that the 'from' and 'to' values are integers.
+                                    set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }]
+                                    set ::ms::current($w,to)   [expr { int($::ms::current($w,to)) }]
+
+                                    # Safeguard.
+                                    # Make sure that the 'from' and 'to' value are both greater or equal to zero.
+                                    if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
+                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                        set ::ms::current($w,from) 0
+                                        set ::ms::current($w,to)   9
+                                    }
+
+                                    # Safeguard.
+                                    # Make sure that the 'from' value is not greater than the 'to' value.
+                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                        set ::ms::current($w,from) 0
+                                        set ::ms::current($w,to)   9
+                                    }
+
+                                    # Override any 'maxlength' provided.
+                                    set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
+                                }
+                                posreal {
+                                    # Safeguard.
+                                    # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
+                                    if { $::ms::current($w,from) != 0 } {
+                                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
+                                    } else {
+                                        set ::ms::current($w,from) 0
+                                    }
+
+                                    if { $::ms::current($w,to) != 0 } {
+                                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
+                                    } else {
+                                        set ::ms::current($w,to) 0
+                                    }
+
+                                    # Safeguard.
+                                    # Make sure that the 'from' and 'to' value are both greater or equal to zero.
+                                    if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
+                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                        set ::ms::current($w,from) 0
+                                        set ::ms::current($w,to)   9.9
+                                    }
+
+                                    # Make sure that the 'from' value is not greater than the 'to' value.
+                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                        set ::ms::current($w,from) 0
+                                        set ::ms::current($w,to)   9.9
+                                    }
+
+                                    # Override any 'maxlength' provided.
+                                    set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
+                                }
+                                real {
+                                    # Safeguard.
+                                    # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
+                                    if { $::ms::current($w,from) != 0 } {
+                                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
+                                    } else {
+                                        set ::ms::current($w,from) 0
+                                    }
+
+                                    if { $::ms::current($w,to) != 0 } {
+                                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
+                                    } else {
+                                        set ::ms::current($w,to) 0
+                                    }
+
+                                    # Safeguard.
+                                    # Make sure that the 'from' value is not greater than the 'to' value.
+                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                        set ::ms::current($w,from) -9.9
+                                        set ::ms::current($w,to)    9.9
+                                    }
+
+                                    # Override any 'maxlength' provided.
+                                    set maxlength_from [string length $::ms::current($w,from)]
+                                    set maxlength_to   [string length $::ms::current($w,to)]
+                                    if { $maxlength_from > $maxlength_to } {
+                                        set ::ms::current($w,maxlength) $maxlength_from
+                                    } else {
+                                        set ::ms::current($w,maxlength) $maxlength_to
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
