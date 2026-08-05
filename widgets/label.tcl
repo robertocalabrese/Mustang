@@ -1813,4 +1813,20 @@ proc ::ms::label::Destroy { w } {
     return ""
 }
 
+## Focus_In
+#
+# Manage the **FocusIn** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::label::Focus_In { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::label::Pathname_Cmd $w state focus
+
+    return ""
+}
+
 #*EOF*
