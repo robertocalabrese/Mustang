@@ -586,6 +586,57 @@ namespace eval ttk::theme::Halo {
         style map TFrame -bordercolor [list background BordercolorBackground \
                                               disabled BordercolorDisabled \
                                                  hover Accent];
+
+        ###################
+        ##               ##
+        ##     LABEL     ##
+        ##               ##
+        ###################
+
+        # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'justify', 'padding', 'relief',
+        #       'width' and 'wraplength' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: The 'image' option supports mapping values but they need to be specified in the normal state declaration as a list.
+        #       The first element is the the image name to use in the normal state. The rest of the list is a sequence of statespec/value
+        #       pairs as per style map, specifying different images to use when the widget is in a particular state or combination of states.
+        #
+        #       Note that all images in the list should have the same size.
+        #
+        #       If an empty string is specified, it indicates that the widget has no image to display.
+        #       The image specified should have been allready created at the time the widget is created.
+        #
+        #       Any 'image' mapping values specified with the style map command will be ignored by mustang.
+
+        # Layout
+        style layout TLabel {
+            Label.border -sticky nsew -border 1 -children {
+                Label.padding -sticky nsew -border 1 -children {
+                    Label.label -sticky nsew
+                }
+            }
+        }
+
+        # Normal state
+        style configure TLabel      -anchor w \
+                                -background Background \
+                               -bordercolor Background \
+                               -borderwidth 0 \
+                                 -charwidth 0 \
+                                  -compound none \
+                                    -cursor arrow \
+                                 -darkcolor Darkcolor \
+                                      -font NormalFont \
+                                -foreground Text \
+                                     -image {} \
+                                   -justify left \
+                                -lightcolor Lightcolor \
+                                   -padding [list 0] \
+                                    -relief flat \
+                                -wraplength 0;
+
+        # Mapping
+        style map TLabel -foreground [list disabled TextDisabled]
     }
 }
 
