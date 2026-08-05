@@ -3280,4 +3280,78 @@ proc ::ms::entry::KeyPress { w key } {
     return ""
 }
 
+## Return
+#
+# Manage the **Return** key event.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::entry::Return { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
+    # Validate the widget string.
+    set value [::ms::entry::Validate_String $w]
+
+    # Clear the widget field, insert the validated value, select all characters
+    # and put the cursor at the end.
+    interp invokehidden {} $w delete    0 end
+    interp invokehidden {} $w insert    0 $value
+    interp invokehidden {} $w selection range 0 end
+    interp invokehidden {} $w icursor   end
+
+    # If the current value is different than the previous registered one, register it
+    # and launch the external procedure provided, if any.
+    if { $value ne $::ms::data($w,current_value) } {
+        set ::ms::data($w,current_value) $value
+
+        ::ms::Execute_Widget_Cmd $w
+    }
+
+    return ""
+}
+
+## Return
+#
+# Manage the **Return** key event.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::entry::Return { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
+    # Validate the widget string.
+    set value [::ms::entry::Validate_String $w]
+
+    # Clear the widget field, insert the validated value, select all characters
+    # and put the cursor at the end.
+    interp invokehidden {} $w delete    0 end
+    interp invokehidden {} $w insert    0 $value
+    interp invokehidden {} $w selection range 0 end
+    interp invokehidden {} $w icursor   end
+
+    # If the current value is different than the previous registered one, register it
+    # and launch the external procedure provided, if any.
+    if { $value ne $::ms::data($w,current_value) } {
+        set ::ms::data($w,current_value) $value
+
+        ::ms::Execute_Widget_Cmd $w
+    }
+
+    return ""
+}
+
 #*EOF*
