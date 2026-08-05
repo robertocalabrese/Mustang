@@ -3459,4 +3459,18 @@ proc ::ms::frame::Scrollbar_ButtonPress { w orient x y }  {
     return ""
 }
 
+## Scrollbar_ButtonRelease
+#
+# Manage the **ButtonRelease** event on a scrollable frame internal scrollbar.
+#
+# It doesn't return anything.
+proc ::ms::frame::Scrollbar_ButtonRelease {} {
+    unset -nocomplain -- ::ms::temp(drag_allowed) \
+                         ::ms::temp(fraction) \
+                         ::ms::temp(xpress) \
+                         ::ms::temp(ypress);
+
+    return ""
+}
+
 #*EOF*
