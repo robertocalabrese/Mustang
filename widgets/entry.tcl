@@ -4054,18 +4054,18 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
 
         # If needed, create the widget style name.
         if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,widget)             -background $::ms::current($w,background) \
-                                                                    -bordercolor $::ms::current($w,bordercolor) \
-                                                                      -darkcolor $::ms::current($w,darkcolor) \
-                                                                -fieldbackground $::ms::current($w,fieldbackground) \
-                                                                     -focuscolor $::ms::current($w,focuscolor) \
-                                                                     -focuswidth $::ms::current($w,focuswidth) \
-                                                                     -foreground $::ms::current($w,foreground) \
-                                                                     -lightcolor $::ms::current($w,lightcolor) \
-                                                                        -padding $::ms::current($w,padding) \
-                                                          -placeholderforeground $::ms::current($w,placeholderforeground) \
-                                                               -selectbackground $::ms::current($w,selectbackground) \
-                                                               -selectforeground $::ms::current($w,selectforeground);
+            _ttk_style configure $::ms::style($w,widget)            -background $::ms::current($w,background) \
+                                                                   -bordercolor $::ms::current($w,bordercolor) \
+                                                                     -darkcolor $::ms::current($w,darkcolor) \
+                                                               -fieldbackground $::ms::current($w,fieldbackground) \
+                                                                    -focuscolor $::ms::current($w,focuscolor) \
+                                                                    -focuswidth $::ms::current($w,focuswidth) \
+                                                                    -foreground $::ms::current($w,foreground) \
+                                                                    -lightcolor $::ms::current($w,lightcolor) \
+                                                                       -padding $::ms::current($w,padding) \
+                                                         -placeholderforeground $::ms::current($w,placeholderforeground) \
+                                                              -selectbackground $::ms::current($w,selectbackground) \
+                                                              -selectforeground $::ms::current($w,selectforeground);
 
             # Add the widget style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
@@ -4300,7 +4300,7 @@ proc ::ms::entry::ButtonPress { w x } {
                 _focus -force $w
             }
 
-            interp invokehidden {} $w icursor [::ttk::entry::ClosestGap $w $x]
+            interp invokehidden {} $w icursor   [::ttk::entry::ClosestGap $w $x]
             interp invokehidden {} $w selection clear
             interp invokehidden {} $w configure -placeholder ""
 
