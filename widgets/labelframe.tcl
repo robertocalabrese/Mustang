@@ -3893,6 +3893,11 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the labelframe widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,labelframe,addrs) {}
+
+    return ""
 }
 
 ######################################
