@@ -3741,4 +3741,322 @@ proc ::ms::entry::Validate_KeyPress { w string } {
     return 1
 }
 
+## Validate_String
+#
+# Validate the string inside the widget.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# Return the validated string.
+proc ::ms::entry::Validate_String { w } {
+    ##############################
+    ##                          ##
+    ##     VALUE CORRECTION     ##
+    ##                          ##
+    ##############################
+
+    # Get the widget string and remove any leading/trailing spaces from it.
+    set value [string trim [interp invokehidden {} $w get]]
+
+    # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
+    #       we made sure of that trough the widget bindings.
+    #       Nonetheless, they can be inserted trough a paste or pasteselection event.
+
+    # Clear 'value' from any illegal characters, if any.
+    set corrected_value ""
+    switch -- $::ms::current($w,datatype) {
+        alnum {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     -
+                    "."     -
+                    ","     -
+                    "-"     {}
+                    default {
+                        # Check if 'char' is an alphanumeric character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        alpha {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     {}
+                    default {
+                        # Check if 'char' is an alphabetic character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        hex8  -
+        hex12 -
+        hex16 {
+            switch -- [string index $value 0] {
+                "#" {
+                    # Check if the hash sign '#' should be included or not.
+                    switch -- $::ms::current($w,hash) {
+                        no  { set i 0 }
+                        yes {
+                            # Add '#' to the corrected value.
+                            append corrected_value "#"
+
+                            set i 1
+                        }
+                    }
+                }
+                default { set i 0 }
+            }
+
+            # Check every character in 'value'.
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "#" {
+                        incr i
+                        continue
+                    }
+                    default {
+                        # Check if 'char' is an alphabetic character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        integer {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "-"     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        posinteger {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                # Check if 'char' is an integer character.
+                set char [string index $value $i]
+                switch -- [string is integer $char] {
+                    0   {
+                        incr i
+                        continue
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        posreal {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "."     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        real {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "-"     -
+                    "."     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the corrected value.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+    }
+
+    # Note: At this point, every illegal characters in 'value' (for the datatype specified) have been stripped out.
+
+    ########################
+    ##                    ##
+    ##     VALIDATION     ##
+    ##                    ##
+    ########################
+
+    # If the datatype is not 'none', 'alnum' or 'alpha' validate 'value'.
+    switch -- $::ms::current($w,datatype) {
+        hex8  -
+        hex12 -
+        hex16 {
+            # Check if 'value' is the empty string.
+            switch -- $value {
+                ""      {}
+                default {
+                    # Check if 'value' is a valid hexadecimal color.
+                    set value [::ms::Check_Hex $value $::ms::current($w,datatype) invalid]
+                    switch -- $value {
+                        invalid { set value $::ms::data($w,current_value) }
+                        default {
+                            # Check if the hash sign '#' should be included or not.
+                            switch -- $::ms::current($w,hash) {
+                                no  { set value [string trimleft $value "#"] }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        integer    -
+        posinteger {
+            # Check if 'value' is the empty string.
+            switch -- $value {
+                ""      {}
+                default {
+                    # Beautify 'value'.
+                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+
+                    # Check if 'value' is a valid number.
+                    switch -- [string is integer -strict $value] {
+                        0   { set value $::ms::data($w,current_value) }
+                        1   {
+                            # Check that 'value' is not beyond the widget limits, truncate if needed.
+                            if { $value < $::ms::current($w,from) } {
+                                set value $::ms::current($w,from)
+                            } elseif { $value > $::ms::current($w,to) } {
+                                set value $::ms::current($w,to)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        posreal -
+        real    {
+            # Check if 'value' is the empty string.
+            switch -- $value {
+                ""      {}
+                default {
+                    # Beautify 'value'.
+                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+
+                    # Check if 'value' is a valid number.
+                    switch -- [string is double -strict $value] {
+                        0   { set value $::ms::data($w,current_value) }
+                        1   {
+                            # Check that 'value' is not beyond the widget limits, truncate if needed.
+                            if { $value <= $::ms::current($w,from) } {
+                                set value $::ms::current($w,from)
+                            } elseif { $value >= $::ms::current($w,to) } {
+                                set value $::ms::current($w,to)
+                            } else {
+                                set value [format $::ms::data($w,format) $value]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # Set the widget dynamic state as '!invalid'.
+    ::ms::entry::Pathname_Cmd $w state !invalid
+
+    return $value
+}
+
 #*EOF*
