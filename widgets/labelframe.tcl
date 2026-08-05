@@ -3113,6 +3113,15 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                                                                      -padding $::ms::current($w,padding) \
                                                                                        -style $::ms::style($w,content) \
                                                                                    -takefocus $::ms::current($w,takefocus);
+
+                                    ########################
+                                    ##                    ##
+                                    ##     SCROLLBARS     ##
+                                    ##                    ##
+                                    ########################
+
+                                    # Update the scrollbars.
+                                    ::ms::labelframe::Scrollbar_Update $w
                                 }
                             }
                         }
