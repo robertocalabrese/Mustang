@@ -1666,4 +1666,151 @@ proc ::ms::label::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget address involved.
+#
+# It doesn't return anything.
+proc ::ms::label::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget real address from the widgets real address list.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the label widgets real address list.
+    set index [lsearch -exact $::ms::addr(label) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(label) [lremove $::ms::addr(label) $index] }
+    }
+
+    # Remove the widget address from the label real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),label,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),label,addrs) [lremove $::ms::class($::ms::current($w,class),label,addrs) $index] }
+    }
+
+    # Remove the widget address from the label real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),label,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),label,addrs) [lremove $::ms::style($::ms::current($w,style),label,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the label classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),label,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(label,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(label,classtype) [lremove $::ms::style(label,classtype) $index] }
+            }
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,anchor) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,charwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,compound) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,image) \
+                         ::ms::current($w,justify) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,text) \
+                         ::ms::current($w,textvariable) \
+                         ::ms::current($w,underline) \
+                         ::ms::current($w,wraplength);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,token) \
+                         ::ms::data($w,translated_text);
+
+    unset -nocomplain -- ::ms::default($w,anchor) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,charwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,compound) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,image) \
+                         ::ms::default($w,justify) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,text) \
+                         ::ms::default($w,textvariable) \
+                         ::ms::default($w,underline) \
+                         ::ms::default($w,wraplength);
+
+    unset -nocomplain -- ::ms::managed_by($w,anchor) \
+                         ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,charwidth) \
+                         ::ms::managed_by($w,compound) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,image) \
+                         ::ms::managed_by($w,justify) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,wraplength);
+
+    unset -nocomplain -- ::ms::style($w,widget)
+
+    return ""
+}
+
 #*EOF*
