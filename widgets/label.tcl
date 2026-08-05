@@ -864,7 +864,18 @@ proc ::ms::label::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            try {
+                interp invokehidden {} $w identify {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         instate {}
         state {}
         style {}
