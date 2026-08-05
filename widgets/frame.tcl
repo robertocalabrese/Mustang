@@ -137,7 +137,19 @@ _bind _Frame <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Frame <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **frame** package.
-namespace eval ::ms::frame {}
+namespace eval ::ms::frame {
+    # Set the 'non-styleable' frame option list.
+    set ::ms::frame(non_styleable,options) [list class \
+                                                 height \
+                                                 cmenu \
+                                                 scrollable \
+                                                 state \
+                                                 style \
+                                                 takefocus \
+                                                 width \
+                                                 xscrollincrement \
+                                                 yscrollincrement];
+}
 
 # Rename the original Tk **frame** and **ttk::frame** commands.
 rename frame      _frame
