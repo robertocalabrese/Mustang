@@ -1889,6 +1889,15 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                                                            -padding $::ms::current($w,padding) \
                                                                              -style $::ms::style($w,content) \
                                                                          -takefocus $::ms::current($w,takefocus);
+
+                                    ########################
+                                    ##                    ##
+                                    ##     SCROLLBARS     ##
+                                    ##                    ##
+                                    ########################
+
+                                    # Update the scrollbars.
+                                    ::ms::frame::Scrollbar_Update $w
                                 }
                             }
                         }
