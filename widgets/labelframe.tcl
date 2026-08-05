@@ -4115,6 +4115,91 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
 
                 # Apply the changes.
                 $w.container configure -style $::ms::style($w,container)
+
+                ####################
+                ##                ##
+                ##     BORDER     ##
+                ##                ##
+                ####################
+
+                # Set the border object style name.
+                set ::ms::style($w,border) [string cat "_bg=" $::ms::current($w,background) \
+                                                       "_bc=" $::ms::current($w,bordercolor) \
+                                                       "_dc=" $::ms::current($w,darkcolor) \
+                                                       "_lc=" $::ms::current($w,lightcolor) \
+                                                       ".TFrame"];
+
+                # If needed, create the border object style name.
+                if { $::ms::style($w,border) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                    _ttk_style configure $::ms::style($w,border)  -background $::ms::current($w,background) \
+                                                                 -bordercolor $::ms::current($w,bordercolor) \
+                                                                   -darkcolor $::ms::current($w,darkcolor) \
+                                                                  -lightcolor $::ms::current($w,lightcolor);
+
+                    # Add the border object style name to the theme styles list created by mustang.
+                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,border)
+                }
+
+                # Initialize the border object mapping.
+                set mapping [list ]
+
+                # background
+                switch -- $::ms::managed_by($w,background) {
+                    developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                    Tk  {
+                        # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                        switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                        }
+                    }
+                }
+
+                # bordercolor
+                switch -- $::ms::managed_by($w,bordercolor) {
+                    developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+                    Tk  {
+                        # Check if a 'bordercolor' mapping exists for 'stylename'.
+                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,bordercolor)] {
+                            1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$stylename,bordercolor) }
+                        }
+                    }
+                }
+
+                # darkcolor
+                switch -- $::ms::managed_by($w,darkcolor) {
+                    developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+                    Tk  {
+                        # Check if a 'darkcolor' mapping exists for 'stylename'.
+                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,darkcolor)] {
+                            1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$stylename,darkcolor) }
+                        }
+                    }
+                }
+
+                # lightcolor
+                switch -- $::ms::managed_by($w,lightcolor) {
+                    developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+                    Tk  {
+                        # Check if a 'lightcolor' mapping exists for 'stylename'.
+                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,lightcolor)] {
+                            1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$stylename,lightcolor) }
+                        }
+                    }
+                }
+
+                # If needed, create the border object mapping.
+                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                    _ttk_style map $::ms::style($w,border) {*}$mapping
+
+                    # Add the border object mapping to the stylemap list containing all the mappings
+                    # created by mustang for the current theme.
+                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                }
+
+                # Apply the changes.
+                $w.container.border configure -borderwidth $::ms::current($w,borderwidth) \
+                                                   -relief $::ms::current($w,relief) \
+                                                    -style $::ms::style($w,border);
             }
             true {
                 ###################################
