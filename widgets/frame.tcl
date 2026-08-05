@@ -2961,6 +2961,15 @@ proc ::ms::frame::Style_Update { stylename caller_info } {
                 $w.border.viewport.content configure  -cursor $::ms::current($w,cursor) \
                                                      -padding $::ms::current($w,padding) \
                                                        -style $::ms::style($w,content);
+
+                ########################
+                ##                    ##
+                ##     SCROLLBARS     ##
+                ##                    ##
+                ########################
+
+                # Update the scrollbars.
+                ::ms::frame::Scrollbar_Update $w
             }
         }
     }
