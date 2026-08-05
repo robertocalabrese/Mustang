@@ -829,6 +829,22 @@ proc ::ms::entry::Command { window { args "" } } {
                     }
                 }
             }
+
+            # Check the widget state and set the takefocus and cursor accordingly.
+            switch -- $::ms::current($w,state) {
+                disabled {
+                    set cursor    arrow
+                    set takefocus 0
+                }
+                readonly {
+                    set cursor    arrow
+                    set takefocus $::ms::current($w,takefocus)
+                }
+                normal   {
+                    set cursor    $::ms::current($w,cursor)
+                    set takefocus $::ms::current($w,takefocus)
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
