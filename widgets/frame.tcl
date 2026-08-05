@@ -160,6 +160,20 @@ namespace eval ::ms::frame {
                                              padding \
                                              relief \
                                              shellbackground];
+
+    # Set the default 'non-styleable' frame options values.
+    set ::ms::default(frame,class)            TFrame
+    set ::ms::default(frame,height)           0
+    set ::ms::default(frame,cmenu)            {}
+    set ::ms::default(frame,scrollable)       false
+    set ::ms::default(frame,state)            normal
+    set ::ms::default(frame,style)            TFrame
+    set ::ms::default(frame,takefocus)        0
+    set ::ms::default(frame,width)            0
+    set ::ms::default(frame,xscrollincrement) 0
+    set ::ms::default(frame,yscrollincrement) 0
+
+    # Note: The default 'styleable' frame options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **frame** and **ttk::frame** commands.
