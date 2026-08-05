@@ -1326,7 +1326,78 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        instate {}
+        instate {
+            # Synopsis:
+            #
+            # *window* **instate** *statespec* ?*script*?
+            switch -- [llength $args] {
+                0   { ::ms::Error "Missing statespec." $caller_info }
+                1   {
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { return [interp invokehidden {} $w instate $statespec] }
+                        true  { return [$w.border.viewport.content instate $statespec] }
+                    }
+                }
+                2   {
+                    set statespec [lindex $args 0]
+                    set script    [lindex $args 1]
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            # Execute the command.
+                            try {
+                                interp invokehidden {} $w instate $statespec $script
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        true {
+                            # Execute the command.
+                            try {
+                                $w.border.viewport.content instate $statespec $script
+                            } on error {} {
+                                ::ms::Error "Invalid script." $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         see {}
         state {}
         style {}
