@@ -3511,4 +3511,234 @@ proc ::ms::entry::Touchpad { w counter amount } {
     return ""
 }
 
+###################################
+##                               ##
+##     VALIDATION PROCEDURES     ##
+##                               ##
+###################################
+
+## Validate_KeyPress
+#
+# Limit the input keypresses in an entry widget and update the widget state ('invalid' or '!invalid').
+#
+# Where:
+#
+# w        should be the widget real address involved.
+#
+# string   should be the string to check.
+#
+# It returns a boolean value ['0' or '1'] indicating if the string provided
+# reached it's length limit or not.
+proc ::ms::entry::Validate_KeyPress { w string } {
+    # Check if the character is allowed to be displayed or not
+    switch -- $::ms::current($w,maxlength) {
+        0       {}
+        default {
+            # Check if the length of string is bigger than the maxlength allowed.
+            if { [string length $string] > $::ms::current($w,maxlength) } {
+                return 0
+            }
+        }
+    }
+
+    # Remove any leading and trailing spaces from 'string'.
+    set value [string trim $string]
+
+    # Check 'value'.
+    switch -- $value {
+        ""      {}
+        default {
+            # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
+            #       we made sure of that trough the widget bindings.
+            #       Nonetheless, they can be inserted trough a paste or pasteselection event.
+            #       If this is the case, we will let the illegal character be inserted but we will
+            #       mark the string as invalid.
+
+            # Check if the widget needs to change it's state from 'invalid' to '!invalid' or viceversa.
+            switch -- $::ms::current($w,datatype) {
+                alnum {
+                    # Check every character in 'value'.
+                    set i 0
+                    while { $i < [string length $value] } {
+                        set char [string index $value $i]
+                        switch -- $char {
+                            " "     -
+                            "."     -
+                            ","     -
+                            "-"     {}
+                            default {
+                                switch -- [string is alnum $char] {
+                                    0   {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+
+                        incr i
+                    }
+                }
+                alpha {
+                    # Check every character in 'value'.
+                    set i 0
+                    while { $i < [string length $value] } {
+                        set char [string index $value $i]
+                        switch -- $char {
+                            " "     {}
+                            default {
+                                switch -- [string is alpha $char] {
+                                    0   {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::combobox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+
+                        incr i
+                    }
+                }
+                hex8  -
+                hex12 -
+                hex16 {
+                    # Check the first character of 'value' to see if its an 'hash' sign.
+                    set hash [string index $value 0]
+                    switch -- $hash {
+                        "#" {
+                            switch -- $::ms::current($w,hash) {
+                                no  {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::entry::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                            }
+                        }
+                        default {
+                            set result [::ms::Check_Color [list $value $::ms::current($w,datatype)] invalid]
+                            switch -- $result {
+                                invalid {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::entry::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                            }
+                        }
+                    }
+                }
+                integer {
+                    # Check 'value' to see if its the 'minus' sign.
+                    switch -- $value {
+                        "-"     {}
+                        default {
+                            # Check if 'value' is an integer.
+                            switch -- [string is integer $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::entry::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    # Check that 'value' is not beyond the entry limits.
+                                    if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::entry::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                posinteger {
+                    # Check if 'value' is an integer.
+                    switch -- [string is integer $value] {
+                        0   {
+                            # Change the widget dynamic state to 'invalid'.
+                            ::ms::entry::Pathname_Cmd $w state invalid
+
+                            return 1
+                        }
+                        1   {
+                            # Check that 'value' is not beyond the entry limits.
+                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                # Change the widget dynamic state to 'invalid'.
+                                ::ms::entry::Pathname_Cmd $w state invalid
+
+                                return 1
+                            }
+                        }
+                    }
+                }
+                posreal {
+                    # Check if 'value' is the 'point' sign.
+                    switch -- $value {
+                        "."     {}
+                        default {
+                            # Check if 'value' is a double.
+                            switch -- [string is double $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::entry::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    # Check that 'value' is not beyond the entry limits.
+                                    if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::entry::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                real {
+                    # Check if 'value' is the 'point' or 'minus' sign.
+                    switch -- $value {
+                        "-"     -
+                        "."     {}
+                        default {
+                            # Check if 'value' is a double.
+                            switch -- [string is double $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::entry::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    # Check that 'value' is not beyond the entry limits.
+                                    if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::entry::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!invalid'.
+    ::ms::entry::Pathname_Cmd $w state !invalid
+
+    return 1
+}
+
 #*EOF*
