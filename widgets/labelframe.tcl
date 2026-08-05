@@ -4570,6 +4570,15 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                 $w.container.border.viewport.content configure  -cursor $::ms::current($w,cursor) \
                                                                -padding $::ms::current($w,padding) \
                                                                  -style $::ms::style($w,content);
+
+                ########################
+                ##                    ##
+                ##     SCROLLBARS     ##
+                ##                    ##
+                ########################
+
+                # Update the scrollbars.
+                ::ms::labelframe::Scrollbar_Update $w
             }
         }
     }
