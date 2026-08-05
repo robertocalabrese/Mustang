@@ -964,6 +964,28 @@ proc ::ms::frame::Command { window { args "" } } {
                     # Note: The widget's content is placed by the 'place' geometry manager.
                     #       The reasons around the 'place' choice is to intercepts any widget dimensions
                     #       changes or scrolls upon it.
+
+                    ########################
+                    ##                    ##
+                    ##     SCROLLBARS     ##
+                    ##                    ##
+                    ########################
+
+                    # Create the horizontal scrollbar address.
+                    _ttk_scrollbar $w.x     -class TScrollbar \
+                                          -command "" \
+                                           -cursor arrow \
+                                           -orient horizontal \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+                    # Create the vertical scrollbar address.
+                    _ttk_scrollbar $w.y     -class TScrollbar \
+                                          -command "" \
+                                           -cursor arrow \
+                                           -orient vertical \
+                                            -style TScrollbar \
+                                        -takefocus 0;
                 }
             }
         }
