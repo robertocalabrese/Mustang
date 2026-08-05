@@ -1926,6 +1926,43 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
+
+            #####################
+            ##                 ##
+            ##     CLOSING     ##
+            ##                 ##
+            #####################
+
+            # Hide the widget pathcommand.
+            interp hide {} $w
+
+            # Create an alias for the widget pathcommand.
+            lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::labelframe::Pathname_Cmd $w]
+
+            # If needed, create an alias for the widget short address pathcommand.
+            if { $short_addr ne $w } {
+                lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::labelframe::Pathname_Cmd $w]
+            }
+
+            # Add the widget address to the labelframe widgets real address list.
+            lappend ::ms::addr(labelframe) $w
+
+            # Add the widget address to the labelframe real address list with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),labelframe,addrs) $w
+
+            # Add the widget address to the labelframe real address list with style '::ms::current($w,style)'.
+            lappend ::ms::style($::ms::current($w,style),labelframe,addrs) $w
+
+            # If needed, add '::ms::current($w,style)' to the available styles for the labelframe classtype.
+            if { $::ms::current($w,style) ni $::ms::style(labelframe) } {
+                lappend ::ms::style(labelframe) $::ms::current($w,style)
+            }
+
+            # Depending on the address type provided, return the widget real or short address.
+            switch -- $type {
+                real  { return $w }
+                short { return $short_addr }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
