@@ -1835,6 +1835,60 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                     $w.border configure -borderwidth $::ms::current($w,borderwidth) \
                                                              -relief $::ms::current($w,relief) \
                                                               -style $::ms::style($w,border);
+
+                                    ##################################
+                                    ##                              ##
+                                    ##     VIEWPORT AND CONTENT     ##
+                                    ##                              ##
+                                    ##################################
+
+                                    # Note: The viewport and the content objects will have the same style, '::ms::style($w,content)'.
+
+                                    # Set the content and viewport objects style name.
+                                    set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
+                                                                            "." $::ms::current($w,style)];
+
+                                    # If needed, create the content and viewport objects style name.
+                                    if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                        _ttk_style configure $::ms::style($w,content) -background $::ms::current($w,background)
+
+                                        # Add the content and viewport objects style name to the theme styles list created by mustang.
+                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
+                                    }
+
+                                    # Initialize the content and viewport objects mapping.
+                                    set mapping [list ]
+
+                                    # background
+                                    switch -- $::ms::managed_by($w,background) {
+                                        developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                                        Tk  {
+                                            # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                                            }
+                                        }
+                                    }
+
+                                    # If needed, create the content and viewport objects mapping.
+                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                        _ttk_style map $::ms::style($w,content) {*}$mapping
+
+                                        # Add the content and viewport objects mapping to the stylemap list containing all the mappings
+                                        # created by mustang for the current theme.
+                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                                    }
+
+                                    # Apply the changes.
+                                    $w.border.viewport configure -cursor $::ms::current($w,cursor) \
+                                                                 -height $::ms::temp($w,height) \
+                                                                  -style $::ms::style($w,content) \
+                                                                  -width $::ms::temp($w,width);
+
+                                    $w.border.viewport.content configure    -cursor $::ms::current($w,cursor) \
+                                                                           -padding $::ms::current($w,padding) \
+                                                                             -style $::ms::style($w,content) \
+                                                                         -takefocus $::ms::current($w,takefocus);
                                 }
                             }
                         }
