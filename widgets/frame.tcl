@@ -219,6 +219,76 @@ proc ::ms::frame::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)            $::ms::default(frame,class)
+            set ::ms::default($w,cmenu)            $::ms::default(frame,cmenu)
+            set ::ms::default($w,height)           $::ms::default(frame,height)
+            set ::ms::default($w,scrollable)       $::ms::default(frame,scrollable)
+            set ::ms::default($w,state)            $::ms::default(frame,state)
+            set ::ms::default($w,style)            $::ms::default(frame,style)
+            set ::ms::default($w,takefocus)        $::ms::default(frame,takefocus)
+            set ::ms::default($w,width)            $::ms::default(frame,width)
+            set ::ms::default($w,xscrollincrement) $::ms::default(frame,xscrollincrement)
+            set ::ms::default($w,yscrollincrement) $::ms::default(frame,yscrollincrement)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)            $::ms::default(frame,class)
+            set ::ms::current($w,cmenu)            $::ms::default(frame,cmenu)
+            set ::ms::current($w,height)           $::ms::default(frame,height)
+            set ::ms::current($w,scrollable)       $::ms::default(frame,scrollable)
+            set ::ms::current($w,state)            $::ms::default(frame,state)
+            set ::ms::current($w,style)            $::ms::default(frame,style)
+            set ::ms::current($w,takefocus)        $::ms::default(frame,takefocus)
+            set ::ms::current($w,width)            $::ms::default(frame,width)
+            set ::ms::current($w,xscrollincrement) $::ms::default(frame,xscrollincrement)
+            set ::ms::current($w,yscrollincrement) $::ms::default(frame,yscrollincrement)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype)  frame
+            set ::ms::data($w,scrollx)    off
+            set ::ms::data($w,scrolly)    off
+            set ::ms::data($w,xview1)     0
+            set ::ms::data($w,xview2)     1.0
+            set ::ms::data($w,xview_diff) 1.0
+            set ::ms::data($w,yview1)     0
+            set ::ms::data($w,yview2)     1.0
+            set ::ms::data($w,yview_diff) 1.0
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a frame styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **frame** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)      Tk
+            set ::ms::managed_by($w,bordercolor)     Tk
+            set ::ms::managed_by($w,borderwidth)     Tk
+            set ::ms::managed_by($w,cursor)          Tk
+            set ::ms::managed_by($w,darkcolor)       Tk
+            set ::ms::managed_by($w,lightcolor)      Tk
+            set ::ms::managed_by($w,padding)         Tk
+            set ::ms::managed_by($w,relief)          Tk
+            set ::ms::managed_by($w,shellbackground) Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
