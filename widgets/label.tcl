@@ -169,6 +169,18 @@ namespace eval ::ms::label {
                                              padding \
                                              relief \
                                              wraplength];
+
+    # Set the default 'non-styleable' label options values.
+    set ::ms::default(label,class)        TLabel
+    set ::ms::default(label,cmenu)        {}
+    set ::ms::default(label,state)        normal
+    set ::ms::default(label,style)        TLabel
+    set ::ms::default(label,takefocus)    0
+    set ::ms::default(label,text)         {}
+    set ::ms::default(label,textvariable) {}
+    set ::ms::default(label,underline)    -1
+
+    # Note: The default 'styleable' label options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **label** and **ttk::label** commands.
