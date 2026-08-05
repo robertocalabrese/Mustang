@@ -3527,4 +3527,163 @@ proc ::ms::frame::Scrollbar_Drag { w orient x y } {
     return ""
 }
 
+## Scrollbar_Update
+#
+# Manage the scrollable frame scrollbars movements and displays.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::frame::Scrollbar_Update { w } {
+    update
+
+    set place_options [list ]
+
+    ##################################
+    ##                              ##
+    ##     HORIZONTAL SCROLLBAR     ##
+    ##                              ##
+    ##################################
+
+    # Get the content required width.
+    set ::ms::data($w,reqwidth) [_winfo reqwidth  $w.border.viewport.content]
+
+    if { $::ms::data($w,width) < $::ms::data($w,reqwidth) } {
+        # Update the content area along the horizontal axis.
+        set ::ms::data($w,xview_diff) [expr { ($::ms::data($w,width)*1.0)/$::ms::data($w,reqwidth) }]
+        set ::ms::data($w,xview2)     [expr { $::ms::data($w,xview1)+$::ms::data($w,xview_diff) }]
+        if { $::ms::data($w,xview2) > 1.0 } {
+            set ::ms::data($w,xview1) [expr { 1.0-$::ms::data($w,xview_diff) }]
+            set ::ms::data($w,xview2) 1.0
+        }
+
+        # Compute the new horizontal coordinate of the content object.
+        set x [expr { -$::ms::data($w,xview1)*$::ms::data($w,reqwidth) }]
+
+        # Horizontal scroll stopper.
+        set x_limit [expr { round(floor(($::ms::data($w,reqwidth)-($::ms::data($w,reqwidth)*$::ms::data($w,xview_diff)))*-1.0)) }]
+        if { $x < $x_limit } {
+            set x $x_limit
+        }
+
+        # Register the 'content' object place 'x' coordinate to enforce.
+        lappend place_options -x $x
+
+        # Check if the horizontal scrollbar is not currently displayed.
+        switch -- $::ms::data($w,scrollx) {
+            off {
+                # Display the horizontal scrollbar.
+                _grid $w.x -column 0 \
+                             -padx [list 0  0] \
+                             -pady [list 8p 0] \
+                              -row 1 \
+                           -sticky we;
+
+                # Set the horizontal scrollbar status to 'on'.
+                set ::ms::data($w,scrollx) on
+            }
+        }
+    } else {
+        # Update the content area along the horizontal axis.
+        set ::ms::data($w,xview1)     0
+        set ::ms::data($w,xview2)     1.0
+        set ::ms::data($w,xview_diff) 1.0
+
+        # Check if the horizontal scrollbar is currently displayed.
+        switch -- $::ms::data($w,scrollx) {
+            on  {
+                # Hide the horizontal scrollbar.
+                _grid remove $w.x
+
+                # Set the horizontal scrollbar status to 'off'.
+                set ::ms::data($w,scrollx) off
+
+                # Register the 'content' object place 'x' coordinate to enforce.
+                lappend place_options -x 0
+            }
+        }
+    }
+
+    ################################
+    ##                            ##
+    ##     VERTICAL SCROLLBAR     ##
+    ##                            ##
+    ################################
+
+    # Get the content required height.
+    set ::ms::data($w,reqheight) [_winfo reqheight $w.border.viewport.content]
+
+    if { $::ms::data($w,height) < $::ms::data($w,reqheight) } {
+        # Update the content area along the vertical axis.
+        set ::ms::data($w,yview_diff) [expr { ($::ms::data($w,height)*1.0)/$::ms::data($w,reqheight) }]
+        set ::ms::data($w,yview2)     [expr { $::ms::data($w,yview1)+$::ms::data($w,yview_diff) }]
+        if { $::ms::data($w,yview2) > 1.0 } {
+            set ::ms::data($w,yview1) [expr { 1.0-$::ms::data($w,yview_diff) }]
+            set ::ms::data($w,yview2) 1.0
+        }
+
+        # Compute the new vertical coordinate of the content object.
+        set y [expr { -$::ms::data($w,yview1)*$::ms::data($w,reqheight) }]
+
+        # Vertical scroll stopper.
+        set y_limit [expr { round(floor(($::ms::data($w,reqheight)-($::ms::data($w,reqheight)*$::ms::data($w,yview_diff)))*-1.0)) }]
+        if { $y < $y_limit } {
+            set y $y_limit
+        }
+
+        # Register the 'content' object place 'y' coordinate to enforce.
+        lappend place_options -y $y
+
+        # Check if the vertical scrollbar is not currently displayed.
+        switch -- $::ms::data($w,scrolly) {
+            off {
+                # Display the vertical scrollbar.
+                _grid $w.y -column 1 \
+                             -padx [list 8p 0] \
+                             -pady [list 0  0] \
+                              -row 0 \
+                           -sticky ns;
+
+                # Set the vertical scrollbar status to 'on'.
+                set ::ms::data($w,scrolly) on
+            }
+        }
+    } else {
+        # Update the content area along the vertical axis.
+        set ::ms::data($w,yview1)     0
+        set ::ms::data($w,yview2)     1.0
+        set ::ms::data($w,yview_diff) 1.0
+
+        # Check if the vertical scrollbar is currently displayed.
+        switch -- $::ms::data($w,scrolly) {
+            on  {
+                # Hide the vertical scrollbar.
+                _grid remove $w.y
+
+                # Set the vertical scrollbar status to 'off'.
+                set ::ms::data($w,scrolly) off
+
+                # Register the 'content' object place 'y' coordinate to enforce.
+                lappend place_options -y 0
+            }
+        }
+    }
+
+    # Update the horizontal and vertical scrollbars thumbs positions.
+    $w.x set $::ms::data($w,xview1) $::ms::data($w,xview2)
+    $w.y set $::ms::data($w,yview1) $::ms::data($w,yview2)
+
+    # Move the content, if needed.
+    switch -- $place_options {
+        ""      {}
+        default { _place configure $w.border.viewport.content {*}$place_options }
+    }
+
+    update idletasks
+
+    return ""
+}
+
 #*EOF*
