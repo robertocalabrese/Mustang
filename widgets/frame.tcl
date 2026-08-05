@@ -1598,7 +1598,56 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 
             return ""
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+            switch -- [llength $args] {
+                0   {
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { return [interp invokehidden {} $w state] }
+                        true  { return [$w.border.viewport.content state] }
+                    }
+                }
+                1   {
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    #####################################
+                    ##                                 ##
+                    ##     UPDATE THE WIDGET STATE     ##
+                    ##                                 ##
+                    #####################################
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { return [interp invokehidden {} $w state $statespec] }
+                        true  {
+                            # Propagate the new statespec to the hull, border and content objects of
+                            # the scrollable frame.
+                            interp invokehidden {} $w state $statespec
+                            $w.border state $statespec
+
+                            return [$w.border.viewport.content state $statespec]
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         xview {}
         yview {}
