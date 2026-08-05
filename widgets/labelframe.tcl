@@ -1579,6 +1579,92 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                                 -pady 0 \
                                                  -row 0 \
                                               -sticky nesw;
+
+                    ##################################
+                    ##                              ##
+                    ##     VIEWPORT AND CONTENT     ##
+                    ##                              ##
+                    ##################################
+
+                    # Note: The viewport and the content objects will have the same style, '::ms::style($w,content)'.
+
+                    # Set the content and viewport objects style name.
+                    set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
+                                                            "." $::ms::current($w,style)];
+
+                    # If needed, create the content and viewport objects style name.
+                    if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                        _ttk_style configure $::ms::style($w,content) -background $::ms::current($w,background)
+
+                        # Add the content and viewport objects style name to the theme styles list created by mustang.
+                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
+                    }
+
+                    # Initialize the content and viewport objects mapping.
+                    set mapping [list ]
+
+                    # background
+                    switch -- $::ms::managed_by($w,background) {
+                        developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                        Tk  {
+                            # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                            }
+                        }
+                    }
+
+                    # If needed, create the content and viewport objects mapping.
+                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                        _ttk_style map $::ms::style($w,content) {*}$mapping
+
+                        # Add the content and viewport objects mapping to the stylemap list containing all the mappings
+                        # created by mustang for the current theme.
+                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                    }
+
+                    # Create the viewport object.
+                    _ttk_frame $w.container.border.viewport -borderwidth 0 \
+                                                                  -class TFrame \
+                                                                 -cursor $::ms::current($w,cursor) \
+                                                                 -height $::ms::data($w,height) \
+                                                                -padding 0 \
+                                                                 -relief flat \
+                                                                  -style $::ms::style($w,content) \
+                                                              -takefocus 0 \
+                                                                  -width $::ms::data($w,width);
+
+                    # Pack the viewport object.
+                    _pack $w.container.border.viewport -anchor nw \
+                                                       -expand true \
+                                                         -fill both \
+                                                         -padx 0 \
+                                                         -pady 0 \
+                                                         -side top;
+
+                    # Create the content object.
+                    _ttk_frame $w.container.border.viewport.content -borderwidth 0 \
+                                                                          -class $::ms::current($w,class) \
+                                                                         -cursor $::ms::current($w,cursor) \
+                                                                         -height $::ms::data($w,height) \
+                                                                        -padding $::ms::current($w,padding) \
+                                                                         -relief flat \
+                                                                          -style $::ms::style($w,content) \
+                                                                      -takefocus $::ms::current($w,takefocus) \
+                                                                          -width $::ms::data($w,width);
+
+                    # Place the content object.
+                    _place $w.container.border.viewport.content     -anchor nw \
+                                                                -bordermode outside \
+                                                                        -in $w.container.border.viewport \
+                                                                 -relheight 1.0 \
+                                                                  -relwidth 1.0 \
+                                                                      -relx 0 \
+                                                                      -rely 0;
+
+                    # NOTE:  The widget's content is placed by the 'place' geometry manager.
+                    #        The reasons around the 'place' choice is to intercepts any widget dimensions
+                    #        changes or scrolls upon it.
                 }
             }
         }
