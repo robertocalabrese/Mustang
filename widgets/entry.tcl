@@ -1811,6 +1811,19 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     set takefocus $::ms::current($w,takefocus)
                                 }
                             }
+
+                            # Check if a new datatype was provided.
+                            switch -- $new_datatype {
+                                true {
+                                    # Remove any previously displayed value.
+                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w selection clear
+                                    interp invokehidden {} $w icursor 0
+
+                                    # Set the new current value to the empty string.
+                                    set ::ms::data($w,current_value) ""
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
