@@ -648,6 +648,28 @@ proc ::ms::frame::Command { window { args "" } } {
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        TFrame  { bindtags $w [list $w _Frame TFrame $::ms::addr($w,toplevel) all] }
+                        default { bindtags $w [list $w $::ms::current($w,class) _Frame TFrame $::ms::addr($w,toplevel) all] }
+                    }
+
+                    # Context menu
+                    _bind $w <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+                    # Enter/Leave
+                    _bind $w <Enter> { ::ms::frame::Pathname_Cmd %W state  hover; break }
+                    _bind $w <Leave> { ::ms::frame::Pathname_Cmd %W state !hover; break }
+
+                    # Add the simple frame to the related toplevel keyboard pages navigation bindings.
+                    ::ms::Enable_Traversal $w
                 }
                 true {
                     ##############################
