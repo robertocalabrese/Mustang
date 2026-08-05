@@ -1348,7 +1348,46 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        insert {}
+        insert {
+            # Synopsis:
+            #
+            # *window* **insert** *index* *string*
+            switch -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts stdout "'insert' is a deprecated entry command. Use 'set' instead." }
+            }
+
+            switch -- [llength $args] {
+                2   {
+                    set index  [lindex $args 0]
+                    set string [lindex $args 1]
+
+                    # Check the index value.
+                    switch -- [string is integer -strict $index] {
+                        0   { ::ms::Error "Invalid index, '$index'." $caller_info }
+                    }
+
+                    # Construct the new value that should be displayed inside the widget.
+                    set value [interp invokehidden {} $w get]
+                    if { $index < 1 } {
+                        set value [string cat $string $value]
+                    } elseif { $index >= [string length $value] } {
+                        set value [string cat $value $string]
+                    } else {
+                        set value [string cat [string range $value 0 $index-1] $string [string range $value $index end]]
+                    }
+
+                    # Launch the 'set' command.
+                    ::ms::entry::Pathname_Cmd $w set $value
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            return ""
+        }
         instate {}
         set {}
         state {}
