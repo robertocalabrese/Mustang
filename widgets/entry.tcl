@@ -3354,4 +3354,65 @@ proc ::ms::entry::Return { w } {
     return ""
 }
 
+## Shift_MouseWheel
+#
+# If the widget has the focus, move the insert cursor by one character to the left or to the right
+# (depending on the mousewheel direction), otherwise trys to find the innermost widget's scrollable
+# parent with an active horizontal scrollbar and move that scrollbar by one unit left or right
+# (again, depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, it doesn't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel** event.
+#          The delta value represents the rotation units the mousewheel has been moved.
+#          The sign of the value represents the direction the mousewheel was scrolled.
+#          *Amount* is normally delivered by the **MouseWheel** event with a value of
+#          **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# It doesn't return anything.
+proc ::ms::entry::Shift_MouseWheel { w amount } {
+    if { [_focus -displayof $w] eq $w } {
+        # Check that 'amount' is an integer or a float.
+        switch -- [string is double -strict $amount] {
+            0   { set amount 120.0 }
+            1   {
+                if { $amount == 0 } {
+                    set amount 120
+                } else {
+                    set amount [expr { $amount*1.0 }]
+                }
+            }
+        }
+
+        # Get the current cursor position
+        set index [interp invokehidden {} $w index insert]
+
+        # Move the cursor by one character to the left or to the right (depending
+        # on the mousewheel direction).
+        if { $amount > 0 } {
+            interp invokehidden {} $w icursor $index+1
+        } else {
+            interp invokehidden {} $w icursor $index-1
+        }
+
+        # Remove any previous selection on the widget.
+        interp invokehidden {} $w selection clear
+
+        # Make the index character visible.
+        ::ttk::entry::See $w $index
+    } else {
+        ::ms::Scroll_Parent_X $w $amount units
+    }
+
+    return ""
+}
+
 #*EOF*
