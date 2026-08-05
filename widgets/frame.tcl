@@ -2652,7 +2652,12 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::frame::Style_Update { stylename caller_info } {}
+proc ::ms::frame::Style_Update { stylename caller_info } {
+    # Update all the frame widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,frame,addrs) {}
+
+    return ""
+}
 
 ######################################
 ##                                  ##
