@@ -1464,7 +1464,8 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             switch -- $value {
                                 ""  {
                                     # Clear the widget field.
-                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w delete    0 end
+                                    interp invokehidden {} $w selection clear
                                 }
                                 default {
                                     # Check if the current value is a valid hexadecimal color.
@@ -1482,9 +1483,10 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     # If the corrected value is different than the current value,
                                     # clear the widget field, insert the corrected value and position the cursor at the end.
                                     if { $value ne $args } {
-                                        interp invokehidden {} $w delete 0 end
-                                        interp invokehidden {} $w insert 0 $value
-                                        interp invokehidden {} $w icursor end
+                                        interp invokehidden {} $w delete    0 end
+                                        interp invokehidden {} $w selection clear
+                                        interp invokehidden {} $w insert    0 $value
+                                        interp invokehidden {} $w icursor   end
                                     }
                                 }
                             }
@@ -1495,7 +1497,8 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             switch -- $value {
                                 ""  {
                                     # Clear the widget field.
-                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w delete    0 end
+                                    interp invokehidden {} $w selection clear
                                 }
                                 default {
                                     # Beautify 'value'.
@@ -1506,9 +1509,10 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                         0   {
                                             set value $::ms::data($w,current_value)
 
-                                            interp invokehidden {} $w delete 0 end
-                                            interp invokehidden {} $w insert 0 $value
-                                            interp invokehidden {} $w icursor end
+                                            interp invokehidden {} $w delete    0 end
+                                            interp invokehidden {} $w selection clear
+                                            interp invokehidden {} $w insert    0 $value
+                                            interp invokehidden {} $w icursor   end
                                         }
                                         1   {
                                             # Check 'value' against the 'from' and 'to' values.
@@ -1524,9 +1528,10 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                             # If the corrected value is different than the current value,
                                             # clear the widget field, insert the corrected value and position the cursor at the end.
                                             if { $value ne $args } {
-                                                interp invokehidden {} $w delete 0 end
-                                                interp invokehidden {} $w insert 0 $value
-                                                interp invokehidden {} $w icursor end
+                                                interp invokehidden {} $w delete    0 end
+                                                interp invokehidden {} $w selection clear
+                                                interp invokehidden {} $w insert    0 $value
+                                                interp invokehidden {} $w icursor   end
                                             }
                                         }
                                     }
@@ -1539,7 +1544,8 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             switch -- $value {
                                 ""  {
                                     # Clear the widget field.
-                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w delete    0 end
+                                    interp invokehidden {} $w selection clear
                                 }
                                 default {
                                     # Beautify 'value'.
@@ -1550,9 +1556,10 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                         0   {
                                             set value $::ms::data($w,current_value)
 
-                                            interp invokehidden {} $w delete 0 end
-                                            interp invokehidden {} $w insert 0 $value
-                                            interp invokehidden {} $w icursor end
+                                            interp invokehidden {} $w delete    0 end
+                                            interp invokehidden {} $w selection clear
+                                            interp invokehidden {} $w insert    0 $value
+                                            interp invokehidden {} $w icursor   end
                                         }
                                         1   {
                                             # Check 'value' against the 'from' and 'to' values.
@@ -1570,9 +1577,10 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                             # If the corrected value is different than the current value,
                                             # clear the widget field, insert the corrected value and position the cursor at the end.
                                             if { $value ne $args } {
-                                                interp invokehidden {} $w delete 0 end
-                                                interp invokehidden {} $w insert 0 $value
-                                                interp invokehidden {} $w icursor end
+                                                interp invokehidden {} $w delete    0 end
+                                                interp invokehidden {} $w selection clear
+                                                interp invokehidden {} $w insert    0 $value
+                                                interp invokehidden {} $w icursor   end
                                             }
                                         }
                                     }
@@ -1584,15 +1592,17 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             switch -- $value {
                                 ""  {
                                     # Clear the widget field.
-                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w delete    0 end
+                                    interp invokehidden {} $w selection clear
                                 }
                                 default {
                                     # If the corrected value is different than the current value,
                                     # clear the widget field, insert the corrected value and position the cursor at the end.
                                     if { $value ne $args } {
-                                        interp invokehidden {} $w delete 0 end
-                                        interp invokehidden {} $w insert 0 $value
-                                        interp invokehidden {} $w icursor end
+                                        interp invokehidden {} $w delete    0 end
+                                        interp invokehidden {} $w selection clear
+                                        interp invokehidden {} $w insert    0 $value
+                                        interp invokehidden {} $w icursor   end
                                     }
                                 }
                             }
