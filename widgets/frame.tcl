@@ -1591,6 +1591,33 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            ##################################
+                            ##                              ##
+                            ##     CONFIGURE THE WIDGET     ##
+                            ##                              ##
+                            ##################################
+
+                            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change
+                            #       if the statespec changes.
+
+                            # Check if the widget is scrollable or not.
+                            switch -- $::ms::current($w,scrollable) {
+                                false {
+                                    ##########################
+                                    ##                      ##
+                                    ##     SIMPLE FRAME     ##
+                                    ##                      ##
+                                    ##########################
+                                }
+                                true {
+                                    ##############################
+                                    ##                          ##
+                                    ##     SCROLLABLE FRAME     ##
+                                    ##                          ##
+                                    ##############################
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
