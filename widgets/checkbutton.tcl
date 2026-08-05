@@ -2635,6 +2635,15 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                     set x [lindex $args 1]
                     set y [lindex $args 2]
 
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+
                     # Get the root coordinates of the north-west corner of the container ('$w').
                     set rootx [_winfo rootx $w]
                     set rooty [_winfo rooty $w]
