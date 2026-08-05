@@ -1007,6 +1007,18 @@ proc ::ms::entry::Command { window { args "" } } {
                     }
                 }
             }
+
+            # Check the 'maxlength'.
+            switch -- $::ms::current($w,maxlength) {
+                0       {}
+                default {
+                    # Safeguard.
+                    # Check that 'charwidth' is not inferior to 'maxlength'.
+                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
+                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
