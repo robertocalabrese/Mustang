@@ -141,7 +141,17 @@ _bind _Label <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Label <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **label** package.
-namespace eval ::ms::label {}
+namespace eval ::ms::label {
+    # Set the 'non styleable' label option list.
+    set ::ms::label(non_styleable,options) [list class \
+                                                 cmenu \
+                                                 state \
+                                                 style \
+                                                 takefocus \
+                                                 text \
+                                                 textvariable \
+                                                 underline];
+}
 
 # Rename the original Tk **label** and **ttk::label** commands.
 rename label      _label
