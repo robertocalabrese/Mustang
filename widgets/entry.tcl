@@ -2578,6 +2578,11 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the entry widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,entry,addrs) {}
+
+    return ""
 }
 
 ######################################
