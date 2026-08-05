@@ -3216,4 +3216,20 @@ proc ::ms::frame::Destroy { w } {
     return ""
 }
 
+## Focus_In
+#
+# Manage the **FocusIn** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::frame::Focus_In { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::frame::Pathname_Cmd $w state focus
+
+    return ""
+}
+
 #*EOF*
