@@ -151,6 +151,24 @@ namespace eval ::ms::label {
                                                  text \
                                                  textvariable \
                                                  underline];
+
+    # Set the 'styleable' label option list.
+    set ::ms::label(styleable,options) [list anchor \
+                                             background \
+                                             bordercolor \
+                                             borderwidth \
+                                             charwidth \
+                                             compound \
+                                             cursor \
+                                             darkcolor \
+                                             font \
+                                             foreground \
+                                             image \
+                                             justify \
+                                             lightcolor \
+                                             padding \
+                                             relief \
+                                             wraplength];
 }
 
 # Rename the original Tk **label** and **ttk::label** commands.
