@@ -1328,7 +1328,32 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
         index     -
         selection -
         validate  -
-        xview     {}
+        xview     {
+            # Synopsis:
+            #
+            # *window* **bbox** *index*
+            # *window* **delete** *first* ?*last*?
+            # *window* **get**
+            # *window* **icursor** *index*
+            # *window* **identify** **element** *x* *y*
+            # *window* **index** *index*
+            # *window* **selection** *option* *arg*
+            #    *window* **selection** **clear**
+            #    *window* **selection** **present**
+            #    *window* **selection** **range** *start* *end*
+            # *window* **validate**
+            # *window* **xview** *option* *args*
+            #    *window* **xview**
+            #    *window* **xview** **moveto** *fraction*
+            #    *window* **xview** **scroll** *number* *what*
+            try {
+                interp invokehidden {} $w $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         cget {
             # Synopsis:
             #
