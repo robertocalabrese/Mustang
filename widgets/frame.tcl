@@ -2668,6 +2668,33 @@ proc ::ms::frame::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change
+        #       if the statespec changes.
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false {
+                ##########################
+                ##                      ##
+                ##     SIMPLE FRAME     ##
+                ##                      ##
+                ##########################
+            }
+            true {
+                ##############################
+                ##                          ##
+                ##     SCROLLABLE FRAME     ##
+                ##                          ##
+                ##############################
+            }
+        }
     }
 
     return ""
