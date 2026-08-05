@@ -2386,7 +2386,165 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        xview {}
+        xview {
+            # Synopsis:
+            #
+            # *window* **xview**
+            # *window* **xview** **moveto** *fraction*
+            # *window* **xview** **scroll** *number* *what*
+
+            # Check if the widget has an active horizontal scrollbar.
+            switch -- $::ms::data($w,scrollx) {
+                on  {
+                    set subcommand [lindex  $args 0]
+                    set args       [lremove $args 0]
+
+                    switch -nocase -- $subcommand {
+                        ""     { return [list $::ms::data($w,xview1) $::ms::data($w,xview2)] }
+                        moveto {
+                            # Check the number of arguments provided (after the 'moveto' word).
+                            switch -- [llength $args] {
+                                1       {}
+                                default { return "" }
+                            }
+
+                            # Check the fraction provided.
+                            set fraction $args
+                            switch -- [string is double -strict $fraction] {
+                                0   { return "" }
+                            }
+
+                            # Check that fraction is inside its limits [0,1.0].
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+
+                            # For performance reasons, we avoid the computation for the following cases:
+                            if { $::ms::data($w,xview1) == $fraction } {
+                                return ""
+                            } elseif { ($::ms::data($w,xview2) == 1.0) && ($::ms::data($w,xview1) <= $fraction) } {
+                                return ""
+                            }
+
+                            # Position the thumb with it's center placed at fraction.
+                            set half_xview_diff       [expr { $::ms::data($w,xview_diff)/2.0 }]
+                            set ::ms::data($w,xview1) [expr { $fraction-$half_xview_diff }]
+                            set ::ms::data($w,xview2) [expr { $fraction+$half_xview_diff }]
+
+                            if { $::ms::data($w,xview1) < 0 } {
+                                # Override the previous coordinates.
+                                # Position the thumb on the left side of the scrollbar.
+                                set ::ms::data($w,xview1) 0
+                                set ::ms::data($w,xview2) $::ms::data($w,xview_diff)
+                            } elseif { $::ms::data($w,xview2) > 1.0 } {
+                                # Override the previous coordinates.
+                                # Position the thumb on the right side of the scrollbar.
+                                set ::ms::data($w,xview1) [expr { 1.0-$::ms::data($w,xview_diff) }]
+                                set ::ms::data($w,xview2) 1.0
+                            }
+
+                            # Compute the new horizontal coordinate of the content object.
+                            set x [expr { round(floor(-$::ms::data($w,xview1)*$::ms::data($w,reqwidth))) }]
+
+                            # Horizontal scroll stopper.
+                            set x_limit [expr { round(floor(($::ms::data($w,reqwidth)-($::ms::data($w,reqwidth)*$::ms::data($w,xview_diff)))*-1.0)) }]
+                            if { $x < $x_limit } {
+                                set x $x_limit
+                            }
+
+                            # Move the content object horizontally.
+                            _place configure $w.container.border.viewport.content -x $x
+
+                            # Update the horizontal scrollbar thumb position.
+                            $w.container.x set $::ms::data($w,xview1) $::ms::data($w,xview2)
+
+                            return ""
+                        }
+                        scroll {
+                            # Check the number of arguments provided (after the 'scroll' word).
+                            switch -- [llength $args] {
+                                2       {}
+                                default { return "" }
+                            }
+
+                            # Check the 'number'.
+                            set number [lindex $args 0]
+                            switch -- [string is double -strict $number] {
+                                0   { return "" }
+                            }
+
+                            # Check the 'what'.
+                            switch -nocase -- [lindex $args 1] {
+                                pages {
+                                    # Note: A 'page' is 9/10 of the viewport width.
+                                    set page   [expr { $::ms::data($w,width)*0.9 }]
+                                    set amount [expr { $number*$page }]
+                                }
+                                units {
+                                    if { $::ms::current($w,xscrollincrement) > 0 } {
+                                        # Note: A 'unit' is '::ms::current($w,xscrollincrement)'.
+                                        set unit   $::ms::current($w,xscrollincrement)
+                                        set amount [expr { $number*$unit }]
+                                    } else {
+                                        # Note: A 'unit' is 1/10 of the viewport width.
+                                        set unit   [expr { $::ms::data($w,width)*0.1 }]
+                                        set amount [expr { $number*$unit }]
+                                    }
+                                }
+                                default { return "" }
+                            }
+
+                            # Compute the fraction [0,1.0].
+                            set fraction [expr { $::ms::data($w,xview1)+($amount/($::ms::data($w,reqwidth)*1.0)) }]
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+
+                            # For performance reasons, we avoid the computation for the following cases:
+                            if { $::ms::data($w,xview1) == $fraction } {
+                                return ""
+                            } elseif { ($::ms::data($w,xview2) == 1.0) && ($::ms::data($w,xview1) <= $fraction) } {
+                                return ""
+                            }
+
+                            # Update the content area along the horizontal axis.
+                            set ::ms::data($w,xview1) $fraction
+                            set ::ms::data($w,xview2) [expr { $::ms::data($w,xview1)+$::ms::data($w,xview_diff) }]
+                            if {$::ms::data($w,xview2) > 1.0} {
+                                # Override the previous coordinates.
+                                # Position the thumb on the right side of the scrollbar.
+                                set ::ms::data($w,xview1) [expr { 1.0-$::ms::data($w,xview_diff) }]
+                                set ::ms::data($w,xview2) 1.0
+                            }
+
+                            # Compute the new horizontal coordinate of the content object.
+                            set x [expr { round(floor(-$::ms::data($w,xview1)*$::ms::data($w,reqwidth))) }]
+
+                            # Horizontal scroll stopper.
+                            set x_limit [expr { round(floor(($::ms::data($w,reqwidth)-($::ms::data($w,reqwidth)*$::ms::data($w,xview_diff)))*-1.0)) }]
+                            if { $x < $x_limit } {
+                                set x $x_limit
+                            }
+
+                            # Move the content object horizontally.
+                            _place configure $w.container.border.viewport.content -x $x
+
+                            # Update the horizontal scrollbar thumb position.
+                            $w.container.x set $::ms::data($w,xview1) $::ms::data($w,xview2)
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+                    }
+                }
+            }
+
+            return ""
+        }
         yview {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
