@@ -1446,7 +1446,172 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        set {}
+        set {
+            # Synopsis:
+            #
+            # *window* **set** *value*?
+            switch -- [llength $args] {
+                1   {
+                    # Remove any consecutive whitespaces at the beginning or at the end of the current value.
+                    set value [string trim $args]
+
+                    # If the datatype is not 'none', 'alnum' or 'alpha' validate the current value.
+                    switch -- $::ms::current($w,datatype) {
+                        hex8  -
+                        hex12 -
+                        hex16 {
+                            # Check if current value is the empty string.
+                            switch -- $value {
+                                ""  {
+                                    # Clear the widget field.
+                                    interp invokehidden {} $w delete 0 end
+                                }
+                                default {
+                                    # Check if the current value is a valid hexadecimal color.
+                                    set value [::ms::Check_Hex $value $::ms::current($w,datatype) invalid]
+                                    switch -- $value {
+                                        invalid { set value $::ms::data($w,current_value) }
+                                        default {
+                                            # Check if the hash sign '#' should be included or not.
+                                            switch -- $::ms::current($w,hash) {
+                                                no  { set value [string trimleft $value "#"] }
+                                            }
+                                        }
+                                    }
+
+                                    # If the corrected value is different than the current value,
+                                    # clear the widget field, insert the corrected value and position the cursor at the end.
+                                    if { $value ne $args } {
+                                        interp invokehidden {} $w delete 0 end
+                                        interp invokehidden {} $w insert 0 $value
+                                        interp invokehidden {} $w icursor end
+                                    }
+                                }
+                            }
+                        }
+                        integer    -
+                        posinteger {
+                            # Check if current value is the empty string.
+                            switch -- $value {
+                                ""  {
+                                    # Clear the widget field.
+                                    interp invokehidden {} $w delete 0 end
+                                }
+                                default {
+                                    # Beautify 'value'.
+                                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+
+                                    # Check if 'value' is an integer.
+                                    switch -- [string is integer -strict $value] {
+                                        0   {
+                                            set value $::ms::data($w,current_value)
+
+                                            interp invokehidden {} $w delete 0 end
+                                            interp invokehidden {} $w insert 0 $value
+                                            interp invokehidden {} $w icursor end
+                                        }
+                                        1   {
+                                            # Check 'value' against the 'from' and 'to' values.
+                                            if { $value < $::ms::current($w,from) } {
+                                                set value $::ms::current($w,from)
+                                            } elseif { $value > $::ms::current($w,to) } {
+                                                set value $::ms::current($w,to)
+                                            }
+
+                                            # Set the widget dynamic state as '!invalid'.
+                                            ::ms::entry::Pathname_Cmd $w state !invalid
+
+                                            # If the corrected value is different than the current value,
+                                            # clear the widget field, insert the corrected value and position the cursor at the end.
+                                            if { $value ne $args } {
+                                                interp invokehidden {} $w delete 0 end
+                                                interp invokehidden {} $w insert 0 $value
+                                                interp invokehidden {} $w icursor end
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        posreal -
+                        real    {
+                            # Check if current value is the empty string.
+                            switch -- $value {
+                                ""  {
+                                    # Clear the widget field.
+                                    interp invokehidden {} $w delete 0 end
+                                }
+                                default {
+                                    # Beautify 'value'.
+                                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+
+                                    # Check if 'value' is a double.
+                                    switch -- [string is double -strict $value] {
+                                        0   {
+                                            set value $::ms::data($w,current_value)
+
+                                            interp invokehidden {} $w delete 0 end
+                                            interp invokehidden {} $w insert 0 $value
+                                            interp invokehidden {} $w icursor end
+                                        }
+                                        1   {
+                                            # Check 'value' against the 'from' and 'to' values.
+                                            if { $value < $::ms::current($w,from) } {
+                                                set value $::ms::current($w,from)
+                                            } elseif { $value > $::ms::current($w,to) } {
+                                                set value $::ms::current($w,to)
+                                            } else {
+                                                set value [format $::ms::data($w,format) $value]
+                                            }
+
+                                            # Set the widget dynamic state as '!invalid'.
+                                            ::ms::entry::Pathname_Cmd $w state !invalid
+
+                                            # If the corrected value is different than the current value,
+                                            # clear the widget field, insert the corrected value and position the cursor at the end.
+                                            if { $value ne $args } {
+                                                interp invokehidden {} $w delete 0 end
+                                                interp invokehidden {} $w insert 0 $value
+                                                interp invokehidden {} $w icursor end
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        default {
+                            # Check if current value is the empty string.
+                            switch -- $value {
+                                ""  {
+                                    # Clear the widget field.
+                                    interp invokehidden {} $w delete 0 end
+                                }
+                                default {
+                                    # If the corrected value is different than the current value,
+                                    # clear the widget field, insert the corrected value and position the cursor at the end.
+                                    if { $value ne $args } {
+                                        interp invokehidden {} $w delete 0 end
+                                        interp invokehidden {} $w insert 0 $value
+                                        interp invokehidden {} $w icursor end
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    # If the current value is different than the previous registered one, register it
+                    # and launch the external procedure provided, if any.
+                    if { $value ne $::ms::data($w,current_value) } {
+                        set ::ms::data($w,current_value) $value
+
+                        ::ms::Execute_Widget_Cmd $w
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
