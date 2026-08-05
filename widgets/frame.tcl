@@ -3021,4 +3021,199 @@ proc ::ms::frame::Configure { w width height } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::frame::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the frame widgets real address list.
+    set index [lsearch -exact $::ms::addr(frame) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(frame) [lremove $::ms::addr(frame) $index] }
+    }
+
+    # Remove the widget address from the frame real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),frame,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),frame,addrs) [lremove $::ms::class($::ms::current($w,class),frame,addrs) $index] }
+    }
+
+    # Remove the widget address from the frame real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),frame,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),frame,addrs) [lremove $::ms::style($::ms::current($w,style),frame,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the frame classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),frame,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(frame,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(frame,classtype) [lremove $::ms::style(frame,classtype) $index] }
+            }
+        }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            # Remove the widget real address from the list of all available real addresses.
+            set index [lsearch -exact $::ms::addr(reals) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+            }
+        }
+        true {
+            # Remove all the objects real addresses from the list of all available real addresses.
+            foreach object [list $w \
+                                 $w.border \
+                                 $w.border.viewport \
+                                 $w.border.viewport.content \
+                                 $w.x \
+                                 $w.y] {
+                set index [lsearch -exact $::ms::addr(reals) $object]
+                switch -- $index {
+                    -1      {}
+                    default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+                }
+            }
+
+            # Remove the widget address from the megawidget real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+            }
+
+            # Remove the widget address from the megawidget container real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets,containers) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets,containers) [lremove $::ms::addr(megawidgets,containers) $index] }
+            }
+
+            # Remove the widget address from the megawidget scrollable real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets,scrollable) [lremove $::ms::addr(megawidgets,scrollable) $index] }
+            }
+
+            # Destroy the bindings for the widget real address in its related toplevel.
+            ::ms::Clean_Up $w
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short) \
+                         ::ms::addr($w.border,short) \
+                         ::ms::addr($w.border.viewport,short) \
+                         ::ms::addr($w.border.viewport.content,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,cmenu) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,height) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,scrollable) \
+                         ::ms::current($w,shellbackground) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,width) \
+                         ::ms::current($w,xscrollincrement) \
+                         ::ms::current($w,yscrollincrement);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,height) \
+                         ::ms::data($w,reqheight) \
+                         ::ms::data($w,reqwidth) \
+                         ::ms::data($w,scrollx) \
+                         ::ms::data($w,scrolly) \
+                         ::ms::data($w,token) \
+                         ::ms::data($w,width) \
+                         ::ms::data($w,xview1) \
+                         ::ms::data($w,xview2) \
+                         ::ms::data($w,xview_diff) \
+                         ::ms::data($w,yview1) \
+                         ::ms::data($w,yview2) \
+                         ::ms::data($w,yview_diff);
+
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,cmenu) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,height) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,scrollable) \
+                         ::ms::default($w,shellbackground) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,width) \
+                         ::ms::default($w,xscrollincrement) \
+                         ::ms::default($w,yscrollincrement);
+
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,shellbackground);
+
+    unset -nocomplain -- ::ms::style($w,border) \
+                         ::ms::style($w,hull) \
+                         ::ms::style($w,content) \
+                         ::ms::style($w,widget);
+
+    return ""
+}
+
 #*EOF*
