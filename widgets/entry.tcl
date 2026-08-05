@@ -1329,7 +1329,24 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
         selection -
         validate  -
         xview     {}
-        cget {}
+        cget {
+            # Synopsis:
+            #
+            # *window* **cget** *option*
+            switch -- [llength $args] {
+                0   { ::ms::Error "Missing cget option." $caller_info }
+                1   {
+                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
+                    set option [string range $args 1 end]
+                    if { ($option in $::ms::entry(non_styleable,options)) || ($option in $::ms::entry(styleable,options))} {
+                        return $::ms::current($w,$option)
+                    } else {
+                        ::ms::Error "Invalid option, '$args'." $caller_info
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+            }
+        }
         configure {}
         insert {}
         instate {}
