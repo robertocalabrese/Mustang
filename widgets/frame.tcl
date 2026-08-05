@@ -532,6 +532,60 @@ proc ::ms::frame::Command { window { args "" } } {
                     }
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change
+            #       if the statespec changes.
+
+            # Check if the widget to create needs to be scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    ##########################
+                    ##                      ##
+                    ##     SIMPLE FRAME     ##
+                    ##                      ##
+                    ##########################
+
+                    # Set the actual xscrollincrement and yscrollincrement.
+                    set ::ms::current($w,xscrollincrement) 0
+                    set ::ms::current($w,yscrollincrement) 0
+                }
+                true {
+                    ##############################
+                    ##                          ##
+                    ##     SCROLLABLE FRAME     ##
+                    ##                          ##
+                    ##############################
+
+                    # Set the default height and width.
+                    set ::ms::default($w,height) 500
+                    set ::ms::default($w,width)  500
+
+                    # Check if the height provided is zero.
+                    switch -- $::ms::current($w,height) {
+                        0   { set ::ms::current($w,height) $::ms::default($w,height) }
+                    }
+
+                    # Check if the width provided is zero.
+                    switch -- $::ms::current($w,width) {
+                        0   { set ::ms::current($w,width) $::ms::default($w,width) }
+                    }
+
+                    # Convert the current height and width in pixels.
+                    set height [::ms::Convert_Measure $::ms::current($w,height) "" $::ms::default($w,height)]
+                    set width  [::ms::Convert_Measure $::ms::current($w,width)  "" $::ms::default($w,width)]
+
+                    set ::ms::data($w,height)    $height
+                    set ::ms::data($w,reqheight) $height
+                    set ::ms::data($w,width)     $width
+                    set ::ms::data($w,reqwidth)  $width
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
