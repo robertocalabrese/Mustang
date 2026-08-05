@@ -3125,4 +3125,61 @@ proc ::ms::entry::Focus_In { w } {
     return ""
 }
 
+## Focus_Out
+#
+# Manage the **FocusOut** event.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::entry::Focus_Out { w } {
+    # Check the contextual menu relative to this widget, if any.
+    switch -- $::ms::current($w,cmenu) {
+        ""      {}
+        default {
+            # If the contextual menu of the widget is open do not loose the focus (graphically),
+            # remove the selection, validate the data or change the placeholder.
+            switch -- [_winfo exists $::ms::current($w,cmenu)] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::entry::Pathname_Cmd $w state !focus
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
+    # Remove the widget selection, if any.
+    interp invokehidden {} $w selection clear
+
+    # Re-enable the placeholder.
+    interp invokehidden {} $w configure -placeholder $::ms::current($w,placeholder)
+
+    # Validate the widget string.
+    set value [::ms::entry::Validate_String $w]
+
+    # Clear the widget field, insert the validated value and put the cursor at the end.
+    interp invokehidden {} $w delete    0 end
+    interp invokehidden {} $w selection clear
+    interp invokehidden {} $w insert    0 $value
+    interp invokehidden {} $w icursor   end
+
+    # If 'value' is different than the previous registered one, register it
+    # and launch the external procedure provided, if any.
+    if { $value ne $::ms::data($w,current_value) } {
+        set ::ms::data($w,current_value) $value
+
+        ::ms::Execute_Widget_Cmd $w
+    }
+
+    return ""
+}
+
 #*EOF*
