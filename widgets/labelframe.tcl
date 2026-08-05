@@ -155,6 +155,22 @@ namespace eval ::ms::labelframe {
                                                       width \
                                                       xscrollincrement \
                                                       yscrollincrement];
+
+    # Set the labelframe 'styleable' labelframe option list.
+    set ::ms::labelframe(styleable,options) [list anchor \
+                                                  background \
+                                                  bordercolor \
+                                                  borderwidth \
+                                                  compound \
+                                                  cursor \
+                                                  darkcolor \
+                                                  font \
+                                                  foreground \
+                                                  image \
+                                                  lightcolor \
+                                                  padding \
+                                                  relief \
+                                                  shellbackground];
 }
 
 # Rename the original Tk **labelframe** and **ttk::labelframe** commands.
