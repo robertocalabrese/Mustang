@@ -2143,7 +2143,201 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        see {}
+        see {
+            # Synopsis:
+            #
+            # *window* **see** *widget*
+            set widget $args
+
+            # Get the 'widget' real address.
+            set result [::ms::Check_Pathname $widget invalid]
+            switch -- $result {
+                invalid { return "" }
+                default { set widget_real_pathname [lindex $result 0] }
+            }
+
+            # Get the parent address of the widget real pathname.
+            set parent_addr [_winfo parent $widget_real_pathname]
+            switch -- $parent_addr {
+                ""  { return "" }
+            }
+
+            # Start a recursive loop until either we find 'w' as parent (direct or not) of 'widget' or
+            # we have no more parents to check for.
+            set i 0
+            while { $i == 0 } {
+                # Check if the parent retrieved is equal to the labelframe address provided ('w').
+                if { $parent_addr eq $w } {
+                    update idletasks
+
+                    set place_options [list ]
+
+                    ##################################
+                    ##                              ##
+                    ##     HORIZONTAL SCROLLBAR     ##
+                    ##                              ##
+                    ##################################
+
+                    switch -- $::ms::data($w,scrollx) {
+                        on  {
+                            # Get the widget width and horizontal coordinates.
+                            set width  [_winfo width $widget_real_pathname]
+                            set x1     [_winfo x $widget_real_pathname]
+                            set x2     [expr { $x1+$width }]
+
+                            # Set the widget xview1 and xview2.
+                            set xview1 [expr { ($x1*1.0)/$::ms::data($w,reqwidth) }]
+                            set xview2 [expr { ($x2*1.0)/$::ms::data($w,reqwidth) }]
+
+                            if { ($xview1 >= $::ms::data($w,xview1)) && ($xview2 <= $::ms::data($w,xview2)) } {
+                                # Note: The width of the widget its already entirely visible.
+                                #       There will be no movement along the 'X' axis.
+                            } else {
+                                # Compute the movement along the 'X' axis.
+                                if { [expr { ($width*1.0)/$::ms::data($w,reqwidth) }] < $::ms::data($w,xview_diff) } {
+                                    # Note: The width of the widget can be entirely visible.
+                                    #       If possible, we will anchor its 'X' center to the 'X' center of the 'viewport' object.
+                                    #       The widget will be completely visible along the 'X' axis.
+
+                                    set x_center        [expr { round(floor($x1+($width/2.0))) }]
+                                    set xview_center    [expr { ($x_center*1.0)/$::ms::data($w,reqwidth) }]
+                                    set half_xview_diff [expr { $::ms::data($w,xview_diff)/2.0 }]
+
+                                    # Compute the new 'viewport' xview1 and xview2.
+                                    set ::ms::data($w,xview1) [expr { $xview_center-$half_xview_diff }]
+                                    set ::ms::data($w,xview2) [expr { $xview_center+$half_xview_diff }]
+
+                                    if { $::ms::data($w,xview1) < 0 } {
+                                        # We are near the left limit of the 'X' axis.
+                                        # Change the anchoring to the left of the 'X' axis.
+                                        set ::ms::data($w,xview1) 0
+                                        set ::ms::data($w,xview2) $::ms::data($w,xview_diff)
+                                    } elseif { $::ms::data($w,xview2) > 1.0 } {
+                                        # We are near the right limit of the 'X' axis.
+                                        # Change the anchoring to the right of the 'X' axis.
+                                        set ::ms::data($w,xview1) [expr { 1.0-$::ms::data($w,xview_diff) }]
+                                        set ::ms::data($w,xview2) 1.0
+                                    }
+                                } else {
+                                    # Note: The width of the widget cannot be entirely visible.
+                                    #       We will anchor its 'X' west to the 'X' west of the 'viewport' object.
+                                    #       The widget will be partially visible along the 'X' axis.
+
+                                    # Compute the new 'viewport' xview1 and xview2.
+                                    set ::ms::data($w,xview1) [expr { ($x1*1.0)/$::ms::data($w,reqwidth) }]
+                                    set ::ms::data($w,xview2) [expr { $::ms::data($w,xview1)+$::ms::data($w,xview_diff) }]
+                                }
+
+                                # Compute the content scroll along the 'X' axis.
+                                set x [expr { round(floor(-$::ms::data($w,xview1)*$::ms::data($w,reqwidth))) }]
+
+                                # Horizontal scroll stopper.
+                                set x_limit [expr { round(floor(($::ms::data($w,reqwidth)-($::ms::data($w,reqwidth)*$::ms::data($w,xview_diff)))*-1.0)) }]
+                                if { $x < $x_limit } {
+                                    set x $x_limit
+                                }
+
+                                # Register the 'content' object place 'x' coordinate to enforce.
+                                lappend place_options -x $x
+
+                                # Update the horizontal scrollbar thumb position.
+                                $w.container.x set $::ms::data($w,xview1) $::ms::data($w,xview2)
+                            }
+                        }
+                    }
+
+                    ################################
+                    ##                            ##
+                    ##     VERTICAL SCROLLBAR     ##
+                    ##                            ##
+                    ################################
+
+                    switch -- $::ms::data($w,scrolly) {
+                        on  {
+                            # Get the widget height and vertical coordinates.
+                            set height [_winfo height $widget_real_pathname]
+                            set y1     [_winfo y $widget_real_pathname]
+                            set y2     [expr { $y1+$height }]
+
+                            # Set the widget yview1 and yview2.
+                            set yview1 [expr { ($y1*1.0)/$::ms::data($w,reqheight) }]
+                            set yview2 [expr { ($y2*1.0)/$::ms::data($w,reqheight) }]
+
+                            if { ($yview1 >= $::ms::data($w,yview1)) && ($yview2 <= $::ms::data($w,yview2)) } {
+                                # Note: The height of the widget its already entirely visible.
+                                #       There will be no movement along the 'Y' axis.
+                            } else {
+                                # Compute the movement along the 'Y' axis.
+                                if { [expr { ($height*1.0)/$::ms::data($w,reqheight) }] < $::ms::data($w,yview_diff) } {
+                                    # Note: The height of the widget can be entirely visible.
+                                    #       If possible, we will anchor its 'Y' center to the 'Y' center of the 'viewport' object.
+                                    #       The widget will be completely visible along the 'Y' axis.
+
+                                    set y_center        [expr { round(floor($y1+($height/2.0))) }]
+                                    set yview_center    [expr { ($y_center*1.0)/$::ms::data($w,reqheight) }]
+                                    set half_yview_diff [expr { $::ms::data($w,yview_diff)/2.0 }]
+
+                                    # Compute the new 'viewport' yview1 and yview2.
+                                    set ::ms::data($w,yview1) [expr { $yview_center-$half_yview_diff }]
+                                    set ::ms::data($w,yview2) [expr { $yview_center+$half_yview_diff }]
+
+                                    if { $::ms::data($w,yview1) < 0 } {
+                                        # We are near the upper limit of the 'Y' axis.
+                                        # Change the anchoring to the top of the 'Y' axis.
+                                        set ::ms::data($w,yview1) 0
+                                        set ::ms::data($w,yview2) $::ms::data($w,yview_diff)
+                                    } elseif { $::ms::data($w,yview2) > 1.0 } {
+                                        # We are near the lower limit of the 'Y' axis.
+                                        # Change the anchoring to the bottom of the 'Y' axis.
+                                        set ::ms::data($w,yview1) [expr { 1.0-$::ms::data($w,yview_diff) }]
+                                        set ::ms::data($w,yview2) 1.0
+                                    }
+                                } else {
+                                    # Note: The height of the widget cannot be entirely visible.
+                                    #       We will anchor its 'Y' north to the 'Y' north of the 'viewport' object.
+                                    #       The widget will be partially visible along the 'Y' axis.
+
+                                    # Compute the new 'viewport' yview1 and yview2.
+                                    set ::ms::data($w,yview1) [expr { ($y1*1.0)/$::ms::data($w,reqheight) }]
+                                    set ::ms::data($w,yview2) [expr { $::ms::data($w,yview1)+$::ms::data($w,yview_diff) }]
+                                }
+
+                                # Compute the content scroll along the 'Y' axis.
+                                set y [expr { round(floor(-$::ms::data($w,yview1)*$::ms::data($w,reqheight))) }]
+
+                                # Vertical scroll stopper.
+                                set y_limit [expr { round(floor(($::ms::data($w,reqheight)-($::ms::data($w,reqheight)*$::ms::data($w,yview_diff)))*-1.0)) }]
+                                if { $y < $y_limit } {
+                                    set y $y_limit
+                                }
+
+                                # Register the 'content' object place 'y' coordinate to enforce.
+                                lappend place_options -y $y
+
+                                # Update the vertical scrollbar thumb position.
+                                $w.container.y set $::ms::data($w,yview1) $::ms::data($w,yview2)
+                            }
+                        }
+                    }
+
+                    # Scroll the 'content' object of the scrollablle labelframe, if needed.
+                    switch -- $place_options {
+                        ""      {}
+                        default { _place configure $w.container.border.viewport.content {*}$place_options }
+                    }
+
+                    break
+                }
+
+                # Continue the recursive loop, if needed.
+                set parent_addr [_winfo parent $parent_addr]
+                switch -- $parent_addr {
+                    ""  { break }
+                }
+            }
+
+            return ""
+        }
         state {}
         style {}
         xview {}
