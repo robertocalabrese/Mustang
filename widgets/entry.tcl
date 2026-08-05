@@ -234,7 +234,29 @@ _bind _Entry <TouchpadScroll> { ::ms::entry::Touchpad %W %# %D; break }
 _bind _Entry <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **entry** package.
-namespace eval ::ms::entry {}
+namespace eval ::ms::entry {
+    # Set the 'non styleable' entry option list.
+    set ::ms::entry(non_styleable,options) [list class \
+                                                 cmenu \
+                                                 command \
+                                                 datatype \
+                                                 decimals \
+                                                 exportselection \
+                                                 from \
+                                                 hash \
+                                                 invalidcommand \
+                                                 maxlength \
+                                                 placeholder \
+                                                 show \
+                                                 state \
+                                                 style \
+                                                 takefocus \
+                                                 textvariable \
+                                                 to \
+                                                 validate \
+                                                 validatecommand \
+                                                 xscrollcommand];
+}
 
 # Rename the original Tk **entry** and **ttk::entry** commands.
 rename entry      _entry
