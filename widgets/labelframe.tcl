@@ -3909,6 +3909,40 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
+        #       are not allowed to change if the statespec changes.
+
+        # Set the anchor variable.
+        switch -- $::ms::current($w,anchor) {
+            ne  { set anchor ne }
+            nw  { set anchor nw }
+            n   { set anchor center }
+        }
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false {
+                ###############################
+                ##                           ##
+                ##     SIMPLE LABELFRAME     ##
+                ##                           ##
+                ###############################
+            }
+            true {
+                ###################################
+                ##                               ##
+                ##     SCROLLABLE LABELFRAME     ##
+                ##                               ##
+                ###################################
+            }
+        }
     }
 
     return ""
