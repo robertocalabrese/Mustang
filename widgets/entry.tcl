@@ -3415,4 +3415,100 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
     return ""
 }
 
+## Touchpad
+#
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget has the focus, any movement along the X axis will move the insert cursor by one
+#       character to the left or to the right (depending on the mousewheel direction), otherwise any movement
+#       along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
+#       scrollbar and move that scrollbar by one unit left or right (again, depending on the mousewheel direction).
+#       If none of the widget's parent meets the required condition, it doesn't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, it doesn't do anything on the vertical axis.
+#
+# Where:
+#
+# w         Should be the widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll** event.
+#           The delta value represents the rotation units the mousewheel has been moved.
+#           The sign of the value represents the direction the mousewheel was scrolled.
+#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
+#           **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#           If the value provided as *amount* is not an integer or a float,
+#           defaults to **+120.0**.
+#
+#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# It doesn't return anything.
+proc ::ms::entry::Touchpad { w counter amount } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    # <TouchpadScroll> events can be generated about 60 times per second
+    # during a two-finger gestures.
+    # This allow the binding script to respond to every 5th <TouchpadScroll> event
+    # by testing is the 'counter' is divisible by 5.
+    if { [expr { $counter%5 }] != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'deltaX' and 'deltaY'.
+    lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
+
+    # Adjust 'deltaX' and 'deltaY' values, or the movement will be too slow.
+    set deltaX [expr { $deltaX*30 }]
+    set deltaY [expr { $deltaY*30 }]
+
+    if { [_focus -display $w] eq $w } {
+        # If there is a movement along the X axis, move the insert cursor by one
+        # character to the left or to the right (depending on the horizontal touchpad direction).
+        if { $deltaX != 0 } {
+            # Check that 'amount' is an integer or a float.
+            switch -- [string is double -strict $amount] {
+                0   { set amount 120.0 }
+                1   {
+                    if { $amount == 0 } {
+                        set amount 120
+                    } else {
+                        set amount [expr { $amount*1.0 }]
+                    }
+                }
+            }
+
+            # Get the current cursor position.
+            set index [interp invokehidden {} $w index insert]
+
+            # Move the cursor.
+            if { $amount > 0 } {
+                interp invokehidden {} $w icursor $index+1
+            } else {
+                interp invokehidden {} $w icursor $index-1
+            }
+
+            # Remove any previous selection on the widget.
+            interp invokehidden {} $w selection clear
+
+            # Make the index character visible.
+            ::ttk::entry::See $w $index
+        }
+
+        # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
+        if { $deltaY != 0 } {
+            ::ms::Scroll_Parent_Y $w $deltaY units
+        }
+    } else {
+        ::ms::Touchpad_Parent $w $counter $amount units
+    }
+
+    return ""
+}
+
 #*EOF*
