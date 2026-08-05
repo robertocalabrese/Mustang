@@ -477,6 +477,83 @@ namespace eval ttk::theme::Halo {
                                                       readonly ArrowDisabled] \
                             -selectforeground [list    invalid Invalid];
 
+        ###################
+        ##               ##
+        ##     ENTRY     ##
+        ##               ##
+        ###################
+
+        # Note: 'charwidth', 'cursor', 'focuswidth', 'font', 'insertwidth', 'justify', 'padding' and 'selectborderwidth'
+        #       will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'focuscolor' and 'focuswidth' will not be used by the 'clam' engine.
+        #       Instead the 'clam' engine will use a combination between 'bordercolor' and 'lightcolor'.
+        #       In the other engines 'focuscolor' and 'focuswidth' will be used instead of 'bordercolor' and 'lightcolor'.
+
+        # Layout
+        style layout TEntry {
+            Entry.field -sticky nswe -border 1 -children {
+                Entry.padding -sticky nswe -children {
+                    Entry.textarea -sticky nswe
+                }
+            }
+        }
+
+        # Normal state
+        style configure TEntry            -background Background \
+                                         -bordercolor Bordercolor \
+                                           -charwidth 8 \
+                                              -cursor xterm \
+                                           -darkcolor Background \
+                                     -fieldbackground Fieldbackground \
+                                          -focuscolor LightcolorAlternate \
+                                          -focuswidth 2 \
+                                                -font NormalFont \
+                                          -foreground TextAlternate \
+                                         -insertcolor TextAlternate \
+                                         -insertwidth 2 \
+                                             -justify left \
+                                          -lightcolor LightcolorAlternate \
+                                             -padding [list 4p 5p 4p 5p] \
+                               -placeholderforeground PlaceholderText \
+                                    -selectbackground White \
+                                   -selectborderwidth 0 \
+                                    -selectforeground TextAlternate;
+
+        # Mapping
+        style map TEntry       -background [list   disabled Background \
+                                                   readonly Background \
+                                                    invalid White \
+                                                      focus Background \
+                                                      hover Background] \
+                              -bordercolor [list background BordercolorBackground \
+                                                   disabled Background \
+                                                   readonly Background \
+                                                    invalid Text \
+                                                      focus Accent \
+                                                      hover Accent] \
+                               -focuscolor [list   disabled Background \
+                                                   readonly Background \
+                                                    invalid Text \
+                                                      focus Accent \
+                                                      hover Accent] \
+                          -fieldbackground [list   disabled Background \
+                                                   readonly Background \
+                                                    invalid Invalid \
+                                                      focus FieldbackgroundFocus] \
+                               -foreground [list   disabled TextDisabled \
+                                                   readonly Text \
+                                                    invalid White \
+                                                      focus TextAlternate] \
+                               -lightcolor [list   disabled Background \
+                                                   readonly Background \
+                                                    invalid Text \
+                                                      focus Accent \
+                                                      hover Accent] \
+                         -selectbackground [list   readonly FieldbackgroundFocus] \
+                         -selectforeground [list   readonly TextAlternate \
+                                                    invalid Invalid];
     }
 }
 
