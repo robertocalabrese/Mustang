@@ -64,6 +64,175 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::entry 0.1
 
+#############################
+##                         ##
+##     _ENTRY BINDINGS     ##
+##                         ##
+#############################
+
+# Activate/Deactivate
+_bind _Entry <Activate>   { ::ms::entry::Pathname_Cmd %W state !background; break }
+_bind _Entry <Deactivate> { ::ms::entry::Pathname_Cmd %W state  background; break }
+
+# Allowing some modifiers combination.
+switch -- [_tk windowingsystem] {
+    aqua {
+        _bind _Entry <Option-KeyPress>         { # Enable binding }
+        _bind _Entry <Option-Shift-KeyPress>   { # Enable binding }
+        _bind _Entry <Control-KeyPress>        { # Enable binding }
+        _bind _Entry <Control-Option-KeyPress> { # Enable binding }
+        _bind _Entry <Control-Shift-KeyPress>  { # Enable binding }
+        _bind _Entry <Command-KeyPress>        { # Enable binding }
+        _bind _Entry <Command-Shift-KeyPress>  { # Enable binding }
+    }
+    default {
+        _bind _Entry <Alt-KeyPress>           { # Enable binding }
+        _bind _Entry <Alt-Shift-KeyPress>     { # Enable binding }
+        _bind _Entry <Control-KeyPress>       { # Enable binding }
+        _bind _Entry <Control-Alt-KeyPress>   { # Enable binding }
+        _bind _Entry <Control-Shift-KeyPress> { # Enable binding }
+        _bind _Entry <Meta-KeyPress>          { # Enable binding }
+        _bind _Entry <Meta-Shift-KeyPress>    { # Enable binding }
+    }
+}
+
+# Backspace/Delete keys
+_bind _Entry <KeyPress-BackSpace> { # Enable binding }
+_bind _Entry <KeyPress-Delete>    { # Enable binding }
+_bind _Entry <KeyPress-KP_Delete> { ::ttk::entry::Delete %W; break }
+_bind _Entry <<DeleteChar>>       { ::ttk::entry::Delete %W; break }
+
+# Delete from the insertion cursor till the end of the line.
+switch -- [_tk windowingsystem] {
+    aqua    { _bind _Entry <Option-KeyPress-d> { %W delete insert end; break } }
+    default { _bind _Entry <Alt-KeyPress-d>    { %W delete insert end; break } }
+}
+
+# ButtonPress-1
+_bind _Entry <ButtonPress-1>    { ::ms::entry::ButtonPress %W %x; break }
+
+_bind _Entry <Button-2>         { ::ms::Scan_Or_Paste %W %x "Button-2"; break }
+_bind _Entry <B2-Motion>        { ::ms::Scan_Or_Paste %W %x "B2-Motion"; break }
+_bind _Entry <ButtonRelease-2>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-2"; break }
+
+_bind _Entry <Button-3>         { ::ms::Scan_Or_Paste %W %x "Button-3"; break }
+_bind _Entry <B3-Motion>        { ::ms::Scan_Or_Paste %W %x "B3-Motion"; break }
+_bind _Entry <ButtonRelease-3>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-3"; break }
+
+# Clear/Copy/Cut/Paste
+_bind _Entry <<Clear>> { ::ms::Clear %W; break }
+_bind _Entry <<Copy>>  { ::ms::Copy  %W; break }
+_bind _Entry <<Cut>>   { ::ms::Cut   %W; break }
+_bind _Entry <<Paste>> { ::ms::Paste %W CLIPBOARD; break }
+
+# Contextual menu
+_bind _Entry <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+# Destroy
+_bind _Entry <Destroy> { ::ms::entry::Destroy %W; break }
+
+# Enter/Leave
+_bind _Entry <Enter> { ::ms::entry::Pathname_Cmd %W state  hover; break }
+_bind _Entry <Leave> { ::ms::entry::Pathname_Cmd %W state !hover; break }
+
+# Escape key
+_bind _Entry <KeyPress-Escape> { ::ms::Escape %W; break }
+
+# F keys
+_bind _Entry <Fn-KeyPress> { # Enable binding }
+
+# FocusIn/FocusOut
+_bind _Entry <FocusIn>  { ::ms::entry::Focus_In  %W; break }
+_bind _Entry <FocusOut> { ::ms::entry::Focus_Out %W; break }
+
+# Insert cursor movements.
+_bind _Entry <<PrevChar>>   { ::ttk::entry::Move %W prevchar; break }
+_bind _Entry <<NextChar>>   { ::ttk::entry::Move %W nextchar; break }
+_bind _Entry <<PrevWord>>   { ::ttk::entry::Move %W prevword; break }
+_bind _Entry <<NextWord>>   { ::ttk::entry::Move %W nextword; break }
+_bind _Entry <<LineStart>>  { ::ttk::entry::Move %W home; break }
+_bind _Entry <<LineEnd>>    { ::ttk::entry::Move %W end; break }
+
+# Insert cursor selections.
+_bind _Entry <<SelectPrevChar>>  { ::ttk::entry::Extend %W prevchar; break }
+_bind _Entry <<SelectNextChar>>  { ::ttk::entry::Extend %W nextchar; break }
+_bind _Entry <<SelectPrevWord>>  { ::ttk::entry::Extend %W prevword; break }
+_bind _Entry <<SelectNextWord>>  { ::ttk::entry::Extend %W selectnextword; break }
+_bind _Entry <<SelectLineStart>> { ::ttk::entry::Extend %W home; break }
+_bind _Entry <<SelectLineEnd>>   { ::ttk::entry::Extend %W end; break }
+
+# Enabling only some keys depending on the datatype specified for the widget.
+_bind _Entry <KeyPress> { ::ms::entry::KeyPress %W %A; break }
+
+# Return
+_bind _Entry <KeyPress-Return>   { ::ms::entry::Return %W; break }
+_bind _Entry <KeyPress-KP_Enter> { ::ms::entry::Return %W; break }
+
+# Tab/Shift-Tab keys
+_bind _Entry <KeyPress-Tab> { # Enable binding }
+switch -- [_tk windowingsystem] {
+    x11 {
+        _bind _Entry <KeyPress-ISO_Left_Tab> { # Enable binding }
+
+        # This seems to be correct on *some* HP systems.
+        catch { _bind _Entry <KeyPress-hpBackTab> { # Enable binding } }
+    }
+    aqua  { _bind _Entry <KeyPress-ISO_Left_Tab> { # Enable binding } }
+    win32 { _bind _Entry <Shift-KeyPress-Tab>    { # Enable binding } }
+}
+
+# Enabling window traversal navigation.
+_bind _Entry <<PageLeft>>  { # Enable binding }
+_bind _Entry <<PageRight>> { # Enable binding }
+_bind _Entry <<PageUp>>    { # Enable binding }
+_bind _Entry <<PageDown>>  { # Enable binding }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar and move
+# that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Entry <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+
+# If the widget has the focus, move the insert cursor by one character to the left or to the right
+# (depending on the mousewheel direction), otherwise try to find the innermost widget's scrollable
+# parent with an active horizontal scrollbar and move that scrollbar by one unit left or right
+# (again, depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Entry <Shift-MouseWheel> { ::ms::entry::Shift_MouseWheel %W %D; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Entry <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Entry <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - View the **Shift-MouseWheel** event.
+#   2 - View the **MouseWheel** event.
+_bind _Entry <TouchpadScroll> { ::ms::entry::Touchpad %W %# %D; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Entry <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 # Create the mustang **entry** package.
 namespace eval ::ms::entry {}
 
