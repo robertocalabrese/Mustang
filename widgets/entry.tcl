@@ -1824,6 +1824,29 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     set ::ms::data($w,current_value) ""
                                 }
                             }
+
+                            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
+                            # relative to the datatype option provided.
+                            switch -- $::ms::current($w,datatype) {
+                                alnum      -
+                                alpha      -
+                                hex8       -
+                                hex12      -
+                                hex16      -
+                                integer    -
+                                posinteger -
+                                posreal    -
+                                real       {
+                                    set ::ms::current($w,invalidcommand)  {}
+                                    set ::ms::current($w,validate)        key
+                                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_Keypress %W %P]
+
+                                    switch -- $::ms::current($w,maxlength) {
+                                        0       {}
+                                        default { set ::ms::current($w,xscrollcommand) {} }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
