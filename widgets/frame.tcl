@@ -1816,7 +1816,165 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 
             return ""
         }
-        yview {}
+        yview {
+            # Synopsis:
+            #
+            # *window* **yview**
+            # *window* **yview** **moveto** *fraction*
+            # *window* **yview** **scroll** *number* *what*
+
+            # Check if the widget has an active vertical scrollbar.
+            switch -- $::ms::data($w,scrolly) {
+                on  {
+                    set subcommand [lindex  $args 0]
+                    set args       [lremove $args 0]
+
+                    switch -nocase -- $subcommand {
+                        ""     { return [list $::ms::data($w,yview1) $::ms::data($w,yview2)] }
+                        moveto {
+                            # Check the number of arguments provided (after the 'moveto' word).
+                            switch -- [llength $args] {
+                                1       {}
+                                default { return "" }
+                            }
+
+                            # Check the fraction provided.
+                            set fraction $args
+                            switch -- [string is double -strict $fraction] {
+                                0   { return "" }
+                            }
+
+                            # Check that fraction is inside its limits [0,1.0].
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+
+                            # For performance reasons, we avoid the computation for the following cases:
+                            if { $::ms::data($w,yview1) == $fraction } {
+                                return ""
+                            } elseif { ($::ms::data($w,yview2) == 1.0) && ($::ms::data($w,yview1) <= $fraction) } {
+                                return ""
+                            }
+
+                            # Position the thumb with it's center placed at fraction.
+                            set half_yview_diff       [expr { $::ms::data($w,yview_diff)/2.0 }]
+                            set ::ms::data($w,yview1) [expr { $fraction-$half_yview_diff }]
+                            set ::ms::data($w,yview2) [expr { $fraction+$half_yview_diff }]
+
+                            if { $::ms::data($w,yview1) < 0 } {
+                                # Override the previous coordinates.
+                                # Position the thumb on the top side of the scrollbar.
+                                set ::ms::data($w,yview1) 0
+                                set ::ms::data($w,yview2) $::ms::data($w,yview_diff)
+                            } elseif { $::ms::data($w,yview2) > 1.0 } {
+                                # Override the previous coordinates.
+                                # Position the thumb on the bottom side of the scrollbar.
+                                set ::ms::data($w,yview1) [expr { 1.0-$::ms::data($w,yview_diff) }]
+                                set ::ms::data($w,yview2) 1.0
+                            }
+
+                            # Compute the new vertical coordinate of the content object.
+                            set y [expr { round(floor(-$::ms::data($w,yview1)*$::ms::data($w,reqheight))) }]
+
+                            # Vertical scroll stopper.
+                            set y_limit [expr { round(floor(($::ms::data($w,reqheight)-($::ms::data($w,reqheight)*$::ms::data($w,yview_diff)))*-1.0)) }]
+                            if { $y < $y_limit } {
+                                set y $y_limit
+                            }
+
+                            # Move the content object vertically.
+                            _place configure $w.border.viewport.content -y $y
+
+                            # Update the vertical scrollbar thumb position.
+                            $w.y set $::ms::data($w,yview1) $::ms::data($w,yview2)
+
+                            return ""
+                        }
+                        scroll {
+                            # Check the number of arguments provided (after the 'scroll' word).
+                            switch -- [llength $args] {
+                                2       {}
+                                default { return "" }
+                            }
+
+                            # Check the 'number'.
+                            set number [lindex $args 0]
+                            switch -- [string is double -strict $number] {
+                                0   { return "" }
+                            }
+
+                            # Check the 'what'.
+                            switch -nocase -- [lindex $args 1] {
+                                pages {
+                                    # Note: A 'page' is 9/10 of the viewport height.
+                                    set page   [expr { $::ms::data($w,height)*0.9 }]
+                                    set amount [expr { $number*$page }]
+                                }
+                                units {
+                                    if { $::ms::current($w,yscrollincrement) > 0 } {
+                                        # Note: A 'unit' is '::ms::current($w,yscrollincrement)'.
+                                        set unit   $::ms::current($w,yscrollincrement)
+                                        set amount [expr { $number*$unit }]
+                                    } else {
+                                        # Note: A 'unit' is 1/10 of the viewport height.
+                                        set unit   [expr { $::ms::data($w,height)*0.1 }]
+                                        set amount [expr { $number*$unit }]
+                                    }
+                                }
+                                default { return "" }
+                            }
+
+                            # Compute the fraction [0,1.0].
+                            set fraction [expr { $::ms::data($w,yview1)+($amount/($::ms::data($w,reqheight)*1.0)) }]
+                            if {$fraction < 0} {
+                                set fraction 0
+                            } elseif {$fraction > 1.0} {
+                                set fraction 1.0
+                            }
+
+                            # For performance reasons, we avoid the computation for the following cases:
+                            if { $::ms::data($w,yview1) == $fraction } {
+                                return ""
+                            } elseif { ($::ms::data($w,yview2) == 1.0) && ($::ms::data($w,yview1) <= $fraction) } {
+                                return ""
+                            }
+
+                            # Update the content area along the vertical axis.
+                            set ::ms::data($w,yview1) $fraction
+                            set ::ms::data($w,yview2) [expr { $::ms::data($w,yview1)+$::ms::data($w,yview_diff) }]
+                            if { $::ms::data($w,yview2) > 1.0 } {
+                                # Override the previous coordinates.
+                                # Position the thumb on the bottom side of the scrollbar.
+                                set ::ms::data($w,yview1) [expr { 1.0-$::ms::data($w,yview_diff) }]
+                                set ::ms::data($w,yview2) 1.0
+                            }
+
+                            # Compute the new vertical coordinate of the content object.
+                            set y [expr { round(floor(-$::ms::data($w,yview1)*$::ms::data($w,reqheight))) }]
+
+                            # Vertical scroll stopper.
+                            set y_limit [expr { round(floor(($::ms::data($w,reqheight)-($::ms::data($w,reqheight)*$::ms::data($w,yview_diff)))*-1.0)) }]
+                            if { $y < $y_limit } {
+                                set y $y_limit
+                            }
+
+                            # Move the content object vertically.
+                            _place configure $w.border.viewport.content -y $y
+
+                            # Update the vertical scrollbar thumb position.
+                            $w.y set $::ms::data($w,yview1) $::ms::data($w,yview2)
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
+                    }
+                }
+            }
+
+            return ""
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
