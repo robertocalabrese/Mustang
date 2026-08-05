@@ -256,6 +256,27 @@ namespace eval ::ms::entry {
                                                  validate \
                                                  validatecommand \
                                                  xscrollcommand];
+
+    # Set the 'styleable' entry option list.
+    set ::ms::entry(styleable,options) [list background \
+                                             bordercolor \
+                                             charwidth \
+                                             cursor \
+                                             darkcolor \
+                                             fieldbackground \
+                                             focuscolor \
+                                             focuswidth \
+                                             font \
+                                             foreground \
+                                             insertcolor \
+                                             insertwidth \
+                                             justify \
+                                             lightcolor \
+                                             padding \
+                                             placeholderforeground \
+                                             selectbackground \
+                                             selectborderwidth \
+                                             selectforeground];
 }
 
 # Rename the original Tk **entry** and **ttk::entry** commands.
