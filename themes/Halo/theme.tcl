@@ -637,6 +637,87 @@ namespace eval ttk::theme::Halo {
 
         # Mapping
         style map TLabel -foreground [list disabled TextDisabled]
+
+        ########################
+        ##                    ##
+        ##     LABELFRAME     ##
+        ##                    ##
+        ########################
+
+        # Note: Not all possible anchor values are supported by the mustang labelframe.
+        #       Only "n" or "center","e" or "ne","w" or "nw" are supported.
+
+        # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
+        #       will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: The 'image' option supports mapping values but they need to be specified in the normal state declaration as a list.
+        #       The first element is the the image name to use in the normal state. The rest of the list is a sequence of statespec/value
+        #       pairs as per style map, specifying different images to use when the widget is in a particular state or combination of states.
+        #
+        #       Note that all images in the list should have the same size.
+        #
+        #       If an empty string is specified, it indicates that the widget has no image to display.
+        #       The image specified should have been allready created at the time the widget is created.
+        #
+        #       Any 'image' mapping values specified with the style map command will be ignored by mustang.
+
+        # Note: 'labelmargins' and 'labeloutside' are ignored by mustang.
+        #       They are here in case the developer needs to create a Tk labelframe widget.
+        #       To specify the labelmargins use the 'padding' option in the TLabelframe.Label style.
+        #       In mustang the label is always positioned outside the container ('labeloutside' true).
+
+        # Layouts
+        style layout TLabelframe {
+            Labelframe.border -sticky nswe
+        }
+
+        style layout TLabelframe.Label {
+            Label.border -sticky nsew -border 1 -children {
+                Label.padding -sticky nsew -border 1 -children {
+                    Label.label -sticky nsew
+                }
+            }
+        }
+
+        # Normal states
+        style configure TLabelframe          -anchor n \
+                                         -background Background \
+                                        -bordercolor Bordercolor \
+                                        -borderwidth 2 \
+                                           -compound text \
+                                             -cursor arrow \
+                                          -darkcolor Darkcolor \
+                                               -font BiggestFont \
+                                         -foreground TextBig \
+                                              -image {} \
+                                       -labelmargins [list 5p 8p 5p 8p] \
+                                       -labeloutside true \
+                                         -lightcolor Lightcolor \
+                                            -padding [list 4p 4p] \
+                                             -relief solid \
+                                    -shellbackground Background;
+
+        style configure TLabelframe.Label  -background Background \
+                                          -bordercolor Bordercolor \
+                                          -borderwidth 0 \
+                                            -charwidth 0 \
+                                               -cursor arrow \
+                                            -darkcolor Darkcolor \
+                                           -lightcolor Lightcolor \
+                                              -padding [list 8p 5p] \
+                                               -relief solid;
+
+        # Mappings
+        style map TLabelframe -bordercolor [list background BordercolorBackground \
+                                                   disabled BordercolorDisabled \
+                                                      hover Accent] \
+                               -foreground [list   disabled TextDisabled \
+                                                      hover Accent];
+
+        style map TLabelframe.Label -bordercolor [list background BordercolorBackground \
+                                                         disabled BordercolorDisabled \
+                                                            hover Accent];
     }
 }
 
