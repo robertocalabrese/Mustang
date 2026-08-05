@@ -171,6 +171,22 @@ namespace eval ::ms::labelframe {
                                                   padding \
                                                   relief \
                                                   shellbackground];
+
+    # Set the default 'non-styleable' labelframe options values.
+    set ::ms::default(labelframe,class)            TLabelframe
+    set ::ms::default(labelframe,cmenu)            {}
+    set ::ms::default(labelframe,height)           500
+    set ::ms::default(labelframe,scrollable)       false
+    set ::ms::default(labelframe,state)            normal
+    set ::ms::default(labelframe,style)            TLabelframe
+    set ::ms::default(labelframe,takefocus)        0
+    set ::ms::default(labelframe,text)             {}
+    set ::ms::default(labelframe,textvariable)     {}
+    set ::ms::default(labelframe,width)            500
+    set ::ms::default(labelframe,xscrollincrement) 0
+    set ::ms::default(labelframe,yscrollincrement) 0
+
+    # Note: The default 'styleable' options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **labelframe** and **ttk::labelframe** commands.
