@@ -5076,4 +5076,18 @@ proc ::ms::labelframe::Scrollbar_ButtonPress { w orient x y }  {
     return ""
 }
 
+## Scrollbar_ButtonRelease
+#
+# Manage the **ButtonRelease** event on the widget's internal scrollbars.
+#
+# It doesn't return anything.
+proc ::ms::labelframe::Scrollbar_ButtonRelease {} {
+    unset -nocomplain -- ::ms::temp(drag_allowed) \
+                         ::ms::temp(fraction) \
+                         ::ms::temp(xpress) \
+                         ::ms::temp(ypress);
+
+    return ""
+}
+
 #*EOF*
