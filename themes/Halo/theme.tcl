@@ -554,6 +554,38 @@ namespace eval ttk::theme::Halo {
                          -selectbackground [list   readonly FieldbackgroundFocus] \
                          -selectforeground [list   readonly TextAlternate \
                                                     invalid Invalid];
+
+        ###################
+        ##               ##
+        ##     FRAME     ##
+        ##               ##
+        ###################
+
+        # Note: 'shellbackground' is used exclusively by scrollable frames and ignored by simple frames.
+
+        # Note: 'borderwidth', 'cursor', 'padding' and 'relief' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Layout
+        style layout TFrame {
+            Frame.border -sticky nsew
+        }
+
+        # Normal state
+        style configure TFrame      -background Background \
+                                   -bordercolor Bordercolor \
+                                   -borderwidth 0 \
+                                        -cursor arrow \
+                                     -darkcolor Darkcolor \
+                                    -lightcolor Lightcolor \
+                                       -padding [list 0] \
+                                        -relief flat \
+                               -shellbackground Background;
+
+        # Mapping
+        style map TFrame -bordercolor [list background BordercolorBackground \
+                                              disabled BordercolorDisabled \
+                                                 hover Accent];
     }
 }
 
