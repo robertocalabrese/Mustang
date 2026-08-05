@@ -3094,4 +3094,35 @@ proc ::ms::entry::Destroy { w } {
     return ""
 }
 
+## Focus_In
+#
+# Manage the **FocusIn** event.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::entry::Focus_In { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Change the widget dynamic state to 'focus'.
+            ::ms::entry::Pathname_Cmd $w state focus
+
+            # Select all the widget textarea characters.
+            interp invokehidden {} $w selection range 0 end
+
+            # Remove the placeholder, if any.
+            interp invokehidden {} $w configure -placeholder ""
+        }
+        readonly {
+            # Change the widget dynamic state to 'focus'.
+            ::ms::entry::Pathname_Cmd $w state focus
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
