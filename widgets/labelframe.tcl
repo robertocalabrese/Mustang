@@ -4592,4 +4592,43 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Configure
+#
+# Manage the **Configure** event on a widget.
+#
+# Where:
+#
+# w               Should be the widget real address involved.
+#
+# width, height   Should be the new width and height of the widget.
+#                 These values should be provided by the **Configure** event.
+#
+# It doesn't return anything.
+proc ::ms::labelframe::Configure { w width height } {
+    # Check if we are here due to a widget configure command or not.
+    switch -- [info exists ::ms::temp($w,height)] {
+        1   {
+            set ::ms::current($w,height) $::ms::temp($w,height)
+            set ::ms::current($w,width)  $::ms::temp($w,width)
+        }
+    }
+
+    # Note: The configure event have already happened.
+    #       We just need to propagate the event inside the content
+    #       and check if the scrollbar/s are updated/needed.
+
+    set ::ms::data($w,height) $height
+    set ::ms::data($w,width)  $width
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        true {
+            # Update the scrollbars.
+            ::ms::labelframe::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
