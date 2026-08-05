@@ -1579,6 +1579,18 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Set the current option values for each styleable option managed by Tk.
+                            foreach option $::ms::frame(styleable,options) {
+                                switch -- $::ms::managed_by($w,$option) {
+                                    Tk  {
+                                        switch -- [info exists ::ms::styleopt($::ms::theme,$::ms::current($w,style),$option)] {
+                                            0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                                            1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$::ms::current($w,style),$option) }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
