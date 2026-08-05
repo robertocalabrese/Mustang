@@ -149,6 +149,17 @@ namespace eval ::ms::frame {
                                                  width \
                                                  xscrollincrement \
                                                  yscrollincrement];
+
+    # Set the 'styleable' frame option list.
+    set ::ms::frame(styleable,options) [list background \
+                                             bordercolor \
+                                             borderwidth \
+                                             cursor \
+                                             darkcolor \
+                                             lightcolor \
+                                             padding \
+                                             relief \
+                                             shellbackground];
 }
 
 # Rename the original Tk **frame** and **ttk::frame** commands.
