@@ -1804,6 +1804,9 @@ proc ::ms::labelframe::Command { window { args "" } } {
             ##                           ##
             ###############################
 
+            # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
+            #       are not allowed to change if the statespec changes.
+
             set background  $::ms::styleopt($::ms::theme,TLabelframe.Label,background)
             set bordercolor $::ms::styleopt($::ms::theme,TLabelframe.Label,bordercolor)
             set borderwidth $::ms::styleopt($::ms::theme,TLabelframe.Label,borderwidth)
@@ -1859,8 +1862,165 @@ proc ::ms::labelframe::Command { window { args "" } } {
             set ::ms::data($w,height) [::ms::Convert_Measure $::ms::current($w,height) "" $::ms::default($w,height)]
             set ::ms::data($w,width)  [::ms::Convert_Measure $::ms::current($w,width)  "" $::ms::default($w,width)]
 
-            # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
-            #       are not allowed to change if the statespec changes.
+            ##################
+            ##              ##
+            ##     HULL     ##
+            ##              ##
+            ##################
+
+            # Set the hull object style name.
+            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                  ".TFrame"];
+
+            # If needed, create the hull object style name.
+            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                # Add the hull object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+            }
+
+            # Initialize the hull object mapping.
+            set mapping [list ]
+
+            # shellbackground
+            switch -- $::ms::managed_by($w,shellbackground) {
+                developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                Tk  {
+                    # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
+                    }
+                }
+            }
+
+            # If needed, create the hull object mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                # Add the hull object mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the hull object.
+            _ttk_frame $w -borderwidth 0 \
+                                -class TFrame \
+                               -cursor arrow \
+                               -height 0 \
+                              -padding 0 \
+                               -relief flat \
+                                -style $::ms::style($w,hull) \
+                            -takefocus 0 \
+                                -width 0;
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ###################
+            ##               ##
+            ##     TITLE     ##
+            ##               ##
+            ###################
+
+            # Set the title object style name.
+            set ::ms::style($w,title) [string cat "_bg=" $background \
+                                                  "_bc=" $bordercolor \
+                                                  "_dc=" $darkcolor \
+                                                  "_fg=" $::ms::current($w,foreground) \
+                                                  "_lc=" $lightcolor \
+                                                  "." $labelframe_title_style];
+
+            # If needed, create the title object style name.
+            if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,title)  -background $background \
+                                                            -bordercolor $bordercolor \
+                                                              -darkcolor $darkcolor \
+                                                             -foreground $::ms::current($w,foreground) \
+                                                             -lightcolor $lightcolor;
+
+                # Add the title object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
+            }
+
+            # Initialize the title object mapping.
+            set mapping [list ]
+
+            # background
+            # Check if a 'background' mapping exists for 'labelframe_title_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
+                0   { lappend mapping -background [list pressed $background] }
+                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
+            }
+
+            # bordercolor
+            # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
+                0   { lappend mapping -bordercolor [list pressed $bordercolor] }
+                1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
+            }
+
+            # darkcolor
+            # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
+                0   { lappend mapping -darkcolor [list pressed $darkcolor] }
+                1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
+            }
+
+            # foreground
+            switch -- $::ms::managed_by($w,foreground) {
+                developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+                Tk  {
+                    # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
+                        1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
+                    }
+                }
+            }
+
+            # lightcolor
+            # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
+                0   { lappend mapping -lightcolor [list pressed $lightcolor] }
+                1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
+            }
+
+            # If needed, create the title object mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,title) {*}$mapping
+
+                # Add the title object mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the title object.
+            _ttk_label $w.title       -anchor $anchor \
+                                 -borderwidth $borderwidth \
+                                       -class $::ms::current($w,class) \
+                                    -compound $::ms::current($w,compound) \
+                                      -cursor $::ms::current($w,cursor) \
+                                        -font $::ms::current($w,font) \
+                                       -image $::ms::current($w,image) \
+                                     -justify left \
+                                     -padding $padding \
+                                      -relief $relief \
+                                       -state $::ms::current($w,state) \
+                                       -style $::ms::style($w,title) \
+                                   -takefocus $::ms::current($w,takefocus) \
+                                        -text "" \
+                                -textvariable $textvariable \
+                                   -underline -1 \
+                                       -width $charwidth \
+                                  -wraplength 0;
+
+            # Pack the title object.
+            _pack $w.title -anchor $::ms::current($w,anchor) \
+                           -expand false \
+                             -fill none \
+                             -padx 0 \
+                             -pady 0 \
+                             -side top;
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
@@ -1871,251 +2031,31 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     ##                           ##
                     ###############################
 
-                    ##################
-                    ##              ##
-                    ##     HULL     ##
-                    ##              ##
-                    ##################
+                    #####################
+                    ##                 ##
+                    ##     CONTENT     ##
+                    ##                 ##
+                    #####################
 
-                    # Set the hull object style name.
-                    set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                          ".TFrame"];
+                    # Set the content object style name.
+                    set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
+                                                            "_bc=" $::ms::current($w,bordercolor) \
+                                                            "_dc=" $::ms::current($w,darkcolor) \
+                                                            "_lc=" $::ms::current($w,lightcolor) \
+                                                            "." $::ms::current($w,style)];
 
-                    # If needed, create the hull object style name.
-                    if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                        _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                    # If needed, create the content object style name.
+                    if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                        _ttk_style configure $::ms::style($w,content)  -background $::ms::current($w,background) \
+                                                                      -bordercolor $::ms::current($w,bordercolor) \
+                                                                        -darkcolor $::ms::current($w,darkcolor) \
+                                                                       -lightcolor $::ms::current($w,lightcolor);
 
-                        # Add the hull object style name to the theme styles list created by mustang.
-                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                        # Add the content object style name to the theme styles list created by mustang.
+                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
                     }
 
-                    # Initialize the hull object mapping.
-                    set mapping [list ]
-
-                    # shellbackground
-                    switch -- $::ms::managed_by($w,shellbackground) {
-                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                        Tk  {
-                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                            }
-                        }
-                    }
-
-                    # If needed, create the hull object mapping.
-                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                        _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                        # Add the hull object mapping to the stylemap list containing all the mappings
-                        # created by mustang for the current theme.
-                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                    }
-
-                    # Create the hull object.
-                    _ttk_frame $w -borderwidth 0 \
-                                        -class TFrame \
-                                       -cursor arrow \
-                                       -height 0 \
-                                      -padding 0 \
-                                       -relief flat \
-                                        -style $::ms::style($w,hull) \
-                                    -takefocus 0 \
-                                        -width 0;
-
-                    # Set the widget toplevel.
-                    set ::ms::addr($w,toplevel) [_winfo toplevel $w]
-
-                    ###################
-                    ##               ##
-                    ##     TITLE     ##
-                    ##               ##
-                    ###################
-
-                    # Set the title object style name.
-                    set ::ms::style($w,title) [string cat "_bg=" $background \
-                                                          "_bc=" $bordercolor \
-                                                          "_dc=" $darkcolor \
-                                                          "_fg=" $::ms::current($w,foreground) \
-                                                          "_lc=" $lightcolor \
-                                                          "." $labelframe_title_style];
-
-                    # If needed, create the title object style name.
-                    if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                        _ttk_style configure $::ms::style($w,title)  -background $background \
-                                                                    -bordercolor $bordercolor \
-                                                                      -darkcolor $darkcolor \
-                                                                     -foreground $::ms::current($w,foreground) \
-                                                                     -lightcolor $lightcolor;
-
-                        # Add the title object style name to the theme styles list created by mustang.
-                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
-                    }
-
-                    # Initialize the title object mapping.
-                    set mapping [list ]
-
-                    # background
-                    # Check if a 'background' mapping exists for 'labelframe_title_style'.
-                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
-                        0   { lappend mapping -background [list pressed $background] }
-                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
-                    }
-
-                    # bordercolor
-                    # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
-                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
-                        0   { lappend mapping -bordercolor [list pressed $bordercolor] }
-                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
-                    }
-
-                    # darkcolor
-                    # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
-                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
-                        0   { lappend mapping -darkcolor [list pressed $darkcolor] }
-                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
-                    }
-
-                    # foreground
-                    switch -- $::ms::managed_by($w,foreground) {
-                        developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
-                        Tk  {
-                            # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
-                                1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
-                            }
-                        }
-                    }
-
-                    # lightcolor
-                    # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
-                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
-                        0   { lappend mapping -lightcolor [list pressed $lightcolor] }
-                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
-                    }
-
-                    # If needed, create the title object mapping.
-                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                        _ttk_style map $::ms::style($w,title) {*}$mapping
-
-                        # Add the title object mapping to the stylemap list containing all the mappings
-                        # created by mustang for the current theme.
-                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                    }
-
-                    # Create the title object.
-                    _ttk_label $w.title       -anchor $anchor \
-                                         -borderwidth $borderwidth \
-                                               -class $::ms::current($w,class) \
-                                            -compound $::ms::current($w,compound) \
-                                              -cursor $::ms::current($w,cursor) \
-                                                -font $::ms::current($w,font) \
-                                               -image $::ms::current($w,image) \
-                                             -justify left \
-                                             -padding $padding \
-                                              -relief $relief \
-                                               -state $::ms::current($w,state) \
-                                               -style $::ms::style($w,title) \
-                                           -takefocus $::ms::current($w,takefocus) \
-                                                -text "" \
-                                        -textvariable $textvariable \
-                                           -underline -1 \
-                                               -width $charwidth \
-                                          -wraplength 0;
-
-                    # Pack the title object.
-                    _pack $w.title -anchor $::ms::current($w,anchor) \
-                                   -expand false \
-                                     -fill none \
-                                     -padx 0 \
-                                     -pady 0 \
-                                     -side top;
-
-                    #######################
-                    ##                   ##
-                    ##     CONTAINER     ##
-                    ##                   ##
-                    #######################
-
-                    # Set the container object style name.
-                    set ::ms::style($w,container) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                              ".TFrame"];
-
-                    # If needed, create the container object style name.
-                    if { $::ms::style($w,container) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                        _ttk_style configure $::ms::style($w,container) -background $::ms::current($w,shellbackground)
-
-                        # Add the container object style name to the theme styles list created by mustang.
-                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,container)
-                    }
-
-                    # Initialize the hull object mapping.
-                    set mapping [list ]
-
-                    # shellbackground
-                    switch -- $::ms::managed_by($w,shellbackground) {
-                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                        Tk  {
-                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                            }
-                        }
-                    }
-
-                    # If needed, create the hull object mapping.
-                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                        _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                        # Add the hull object mapping to the stylemap list containing all the mappings
-                        # created by mustang for the current theme.
-                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                    }
-
-                    # Create the container object.
-                    _ttk_frame $w.container -borderwidth 0 \
-                                                  -class TFrame \
-                                                 -cursor arrow \
-                                                 -height 0 \
-                                                -padding 0 \
-                                                 -relief flat \
-                                                  -style $::ms::style($w,container) \
-                                              -takefocus 0 \
-                                                  -width 0;
-
-                    # Pack the container object.
-                    _pack $w.container -anchor nw \
-                                       -expand true \
-                                         -fill both \
-                                         -padx 0 \
-                                         -pady 0 \
-                                         -side top;
-
-                    ####################
-                    ##                ##
-                    ##     BORDER     ##
-                    ##                ##
-                    ####################
-
-                    # Set the border object style name.
-                    set ::ms::style($w,border) [string cat "_bg=" $::ms::current($w,background) \
-                                                           "_bc=" $::ms::current($w,bordercolor) \
-                                                           "_dc=" $::ms::current($w,darkcolor) \
-                                                           "_lc=" $::ms::current($w,lightcolor) \
-                                                           ".TFrame"];
-
-                    # If needed, create the border object style name.
-                    if { $::ms::style($w,border) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                        _ttk_style configure $::ms::style($w,border)  -background $::ms::current($w,background) \
-                                                                     -bordercolor $::ms::current($w,bordercolor) \
-                                                                       -darkcolor $::ms::current($w,darkcolor) \
-                                                                      -lightcolor $::ms::current($w,lightcolor);
-
-                        # Add the border object style name to the theme styles list created by mustang.
-                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,border)
-                    }
-
-                    # Initialize the border object mapping.
+                    # Initialize the content object mapping.
                     set mapping [list ]
 
                     # background
@@ -2162,66 +2102,6 @@ proc ::ms::labelframe::Command { window { args "" } } {
                         }
                     }
 
-                    # If needed, create the border object mapping.
-                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                        _ttk_style map $::ms::style($w,border) {*}$mapping
-
-                        # Add the border object mapping to the stylemap list containing all the mappings
-                        # created by mustang for the current theme.
-                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                    }
-
-                    # Create the border object.
-                    _ttk_frame $w.container.border -borderwidth $::ms::current($w,borderwidth) \
-                                                         -class TFrame \
-                                                        -cursor arrow \
-                                                        -height 0 \
-                                                       -padding 0 \
-                                                        -relief $::ms::current($w,relief) \
-                                                         -style $::ms::style($w,border) \
-                                                     -takefocus 0 \
-                                                         -width 0;
-
-                    # Pack the border object.
-                    _pack $w.container.border -anchor nw \
-                                              -expand true \
-                                                -fill both \
-                                                -padx 0 \
-                                                -pady 0 \
-                                                -side top;
-
-                    #####################
-                    ##                 ##
-                    ##     CONTENT     ##
-                    ##                 ##
-                    #####################
-
-                    # Set the content object style name.
-                    set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
-                                                            "." $::ms::current($w,style)];
-
-                    # If needed, create the content object style name.
-                    if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                        _ttk_style configure $::ms::style($w,content) -background $::ms::current($w,background)
-
-                        # Add the content object style name to the theme styles list created by mustang.
-                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
-                    }
-
-                    # Initialize the content object mapping.
-                    set mapping [list ]
-
-                    # background
-                    switch -- $::ms::managed_by($w,background) {
-                        developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
-                        Tk  {
-                            # Check if a 'background' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
-                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
-                            }
-                        }
-                    }
-
                     # If needed, create the content object mapping.
                     if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                         _ttk_style map $::ms::style($w,content) {*}$mapping
@@ -2232,23 +2112,23 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     }
 
                     # Create the content object.
-                    _ttk_frame $w.container.border.content -borderwidth 0 \
-                                                                 -class TFrame \
-                                                                -cursor $::ms::current($w,cursor) \
-                                                                -height $::ms::data($w,height) \
-                                                               -padding 0 \
-                                                                -relief flat \
-                                                                 -style $::ms::style($w,content) \
-                                                             -takefocus 0 \
-                                                                 -width $::ms::data($w,width);
+                    _ttk_frame $w.content -borderwidth $::ms::current($w,borderwidth) \
+                                                -class $::ms::current($w,class) \
+                                               -cursor $::ms::current($w,cursor) \
+                                               -height $::ms::data($w,height) \
+                                              -padding $::ms::current($w,padding) \
+                                               -relief $::ms::current($w,relief) \
+                                                -style $::ms::style($w,content) \
+                                            -takefocus $::ms::current($w,takefocus) \
+                                                -width $::ms::data($w,width);
 
                     # Pack the content object.
-                    _pack $w.container.border.content -anchor nw \
-                                                      -expand true \
-                                                        -fill both \
-                                                        -padx 0 \
-                                                        -pady 0 \
-                                                        -side top;
+                    _pack $w.content -anchor nw \
+                                     -expand true \
+                                       -fill both \
+                                       -padx 0 \
+                                       -pady 0 \
+                                       -side top;
 
                     ######################
                     ##                  ##
@@ -2263,63 +2143,52 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     }
 
                     # ButtonPress-1
-                    _bind $w.title            <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-                    _bind $w.container        <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-                    _bind $w.container.border <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent [_winfo parent %W]]; break }
+                    _bind $w.content <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
+                    _bind $w.title   <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
 
                     # Contextual menu
-                    _bind $w.title                    <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
-                    _bind $w.container                <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
-                    _bind $w.container.border         <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent %W]] %X %Y cmenu; break }
-                    _bind $w.container.border.content <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y cmenu; break }
+                    _bind $w.content <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+                    _bind $w.title   <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
                     # Configure
-                    _bind $w.container.border.content <Configure> { ::ms::labelframe::Configure [_winfo parent [_winfo parent [_winfo parent %W]]] %w %h; break }
+                    _bind $w.content <Configure> { ::ms::labelframe::Configure [_winfo parent %W] %w %h; break }
 
                     # Enter/Leave
-                    _bind $w.title                    <Enter> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.container                <Enter> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.container.border         <Enter> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.border.content <Enter> { ::ms::labelframe::Hover [_winfo parent [_winfo parent [_winfo parent %W]]] %X %Y; break }
+                    _bind $w.content <Enter> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w.title   <Enter> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
 
-                    _bind $w.title                    <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.container                <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.container.border         <Leave> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.border.content <Leave> { ::ms::labelframe::Hover [_winfo parent [_winfo parent [_winfo parent %W]]] %X %Y; break }
+                    _bind $w.content <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w.title   <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.container.border.content <FocusIn>  { ::ms::labelframe::Focus_In  [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
-                    _bind $w.container.border.content <FocusOut> { ::ms::labelframe::Focus_Out [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+                    _bind $w.content <FocusIn>  { ::ms::labelframe::Focus_In  [_winfo parent %W]; break }
+                    _bind $w.content <FocusOut> { ::ms::labelframe::Focus_Out [_winfo parent %W]; break }
 
                     # Mousewheel and Touchpad
 
                     # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container                <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
-                    _bind $w.container.border         <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent %W]] %D units; break }
-                    _bind $w.container.border.content <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent [_winfo parent %W]]] %D units; break }
+                    _bind $w.content <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+                    _bind $w.title   <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
                     # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
                     # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container                <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
-                    _bind $w.container.border         <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent %W]] %D units; break }
-                    _bind $w.container.border.content <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent [_winfo parent %W]]] %D units; break }
+                    _bind $w.content <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+                    _bind $w.title   <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
                     # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     # and move that scrollbar by one page up or down (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container                <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
-                    _bind $w.container.border         <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent %W]] %D pages; break }
-                    _bind $w.container.border.content <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent [_winfo parent %W]]] %D pages; break }
+                    _bind $w.content <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+                    _bind $w.title   <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
                     # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
                     # and move that scrollbar by one page left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container                <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
-                    _bind $w.container.border         <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent %W]] %D pages; break }
-                    _bind $w.container.border.content <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent [_winfo parent %W]]] %D pages; break }
+                    _bind $w.content <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+                    _bind $w.title   <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
                     # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
                     #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -2334,9 +2203,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
                     #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container                <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
-                    _bind $w.container.border         <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent %W]] %# %D units; break }
-                    _bind $w.container.border.content <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent [_winfo parent %W]]] %# %D units; break }
+                    _bind $w.content <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+                    _bind $w.title   <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
                     # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
                     # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -2348,9 +2216,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     #       and move that scrollbar by one page up or down (depending on the touchpad direction).
                     #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container                <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
-                    _bind $w.container.border         <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent %W]] %# %D pages; break }
-                    _bind $w.container.border.content <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent [_winfo parent %W]]] %# %D pages; break }
+                    _bind $w.content <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+                    _bind $w.title   <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
                     # Add the labelframe to the related toplevel keyboard pages navigation bindings.
                     ::ms::Enable_Traversal $w
@@ -2366,34 +2233,28 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
                     # Set the widget short addresses relative to its real address, 'w'.
                     # They will all point to the widget hull object short address.
-                    set ::ms::addr($w,short)                          $short_addr
-                    set ::ms::addr($w.title,short)                    $short_addr
-                    set ::ms::addr($w.container,short)                $short_addr
-                    set ::ms::addr($w.container.border,short)         $short_addr
-                    set ::ms::addr($w.container.border.content,short) $short_addr
+                    set ::ms::addr($w,short)         $short_addr
+                    set ::ms::addr($w.title,short)   $short_addr
+                    set ::ms::addr($w.content,short) $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.title \
-                                              $w.container \
-                                              $w.container.border \
-                                              $w.container.border.content;
+                                              $w.content;
 
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
-                    set ::ms::addr($w,border) $w.container.border
+                    set ::ms::addr($w,border) $w.content
 
                     # Set the actual widget address (the widget that the developer was intended to build).
-                    set ::ms::addr($w,widget) $w.container.border.content
+                    set ::ms::addr($w,widget) $w.content
 
                     # Set the structure addresses.
                     # Is important to note that the scrollbar addresses must not be included.
                     set ::ms::addr($w,structure) [list $w \
                                                        $w.title \
-                                                       $w.container \
-                                                       $w.container.border \
-                                                       $w.container.border.content];
+                                                       $w.content];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -2850,39 +2711,41 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     }
 
                     # ButtonPress-1
-                    _bind $w.title            <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-                    _bind $w.container        <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-                    _bind $w.container.border <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent [_winfo parent %W]]; break }
+                    _bind $w.container                         <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
+                    _bind $w.container.border                  <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent [_winfo parent %W]]; break }
+                    _bind $w.container.border.viewport.content <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+                    _bind $w.title                             <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
 
-                    _bind $w.container.x <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
+                    _bind $w.container.x <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress  [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
                     _bind $w.container.x <B1-Motion>       { ::ms::labelframe::Scrollbar_Drag         [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
                     _bind $w.container.x <ButtonRelease-1> { ::ms::labelframe::Scrollbar_ButtonRelease; break }
 
-                    _bind $w.container.y <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress [_winfo parent [_winfo parent %W]] vertical %x %y; break }
+                    _bind $w.container.y <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress  [_winfo parent [_winfo parent %W]] vertical %x %y; break }
                     _bind $w.container.y <B1-Motion>       { ::ms::labelframe::Scrollbar_Drag         [_winfo parent [_winfo parent %W]] vertical %x %y; break }
                     _bind $w.container.y <ButtonRelease-1> { ::ms::labelframe::Scrollbar_ButtonRelease; break }
 
                     # Contextual menu
-                    _bind $w.title                             <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
                     _bind $w.container                         <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
                     _bind $w.container.border                  <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent %W]] %X %Y cmenu; break }
                     _bind $w.container.border.viewport.content <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y cmenu; break }
+                    _bind $w.title                             <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
                     # Configure
                     _bind $w.container.border.viewport         <Configure> { ::ms::labelframe::Configure [_winfo parent [_winfo parent [_winfo parent %W]]] %w %h; break }
                     _bind $w.container.border.viewport.content <Configure> { update; break }
 
                     # Enter/Leave
-                    _bind $w.title                             <Enter> { ::ms::labelframe::Pathname_Cmd [_winfo parent %W] state !hover; break }
-                    _bind $w.container.border                  <Enter> { ::ms::labelframe::Pathname_Cmd [_winfo parent [_winfo parent %W]] state  hover; break }
-                    _bind $w.container.border.viewport.content <Enter> { ::ms::labelframe::Pathname_Cmd [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] state  hover; break }
-                    _bind $w.container.x                       <Enter> { ::ms::labelframe::Hover  [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.y                       <Enter> { ::ms::labelframe::Hover  [_winfo parent [_winfo parent %W]] %X %Y; break }
+                    _bind $w.container.border                  <Enter> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+                    _bind $w.container.border.viewport.content <Enter> { ::ms::labelframe::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
+                    _bind $w.container.x                       <Enter> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+                    _bind $w.container.y                       <Enter> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+                    _bind $w.title                             <Enter> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
 
                     _bind $w.container.border                  <Leave> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
                     _bind $w.container.border.viewport.content <Leave> { ::ms::labelframe::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
                     _bind $w.container.x                       <Leave> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
                     _bind $w.container.y                       <Leave> { ::ms::labelframe::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+                    _bind $w.title                             <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
                     _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::Focus_In  [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
@@ -2894,57 +2757,61 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
                     _bind $w.container <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+                    _bind $w.title     <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
                     # If the widget's vertical scrollbar is active, move the widget's content zone by one unit
                     # up or down (depending on the mousewheel direction).
                     # Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.y                       <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
                     _bind $w.container.border                  <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
                     _bind $w.container.border.viewport.content <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D units; break }
+                    _bind $w.container.y                       <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
 
                     # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
                     # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
                     _bind $w.container <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+                    _bind $w.title     <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
                     # If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
                     # left or right (depending on the mousewheel direction).
                     # Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
                     # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.x                       <MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
                     _bind $w.container.border                  <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
                     _bind $w.container.border.viewport.content <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D units; break }
+                    _bind $w.container.x                       <MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
 
                     # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     # and move that scrollbar by one page up or down (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
                     _bind $w.container <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+                    _bind $w.title     <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
                     # If the widget's vertical scrollbar is active, move the widget's content zone by one page
                     # up or down (depending on the mousewheel direction).
                     # Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     # and move that scrollbar by one page up or down (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.y                       <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
                     _bind $w.container.border                  <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
                     _bind $w.container.border.viewport.content <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D pages; break }
+                    _bind $w.container.y                       <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
 
                     # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
                     # and move that scrollbar by one page left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
                     _bind $w.container <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+                    _bind $w.title     <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
                     # If the widget's horizontal scrollbar is active, move the widget's content zone by one page
                     # left or right (depending on the mousewheel direction).
                     # Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
                     # and move that scrollbar by one page left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.x                       <Control-MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
                     _bind $w.container.border                  <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
                     _bind $w.container.border.viewport.content <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D pages; break }
+                    _bind $w.container.x                       <Control-MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
 
                     # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
                     #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -2960,6 +2827,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
                     #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
                     _bind $w.container <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+                    _bind $w.title     <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
                     # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
                     # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -2975,10 +2843,10 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     #       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
                     #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container.x                       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
-                    _bind $w.container.y                       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
                     _bind $w.container.border                  <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
                     _bind $w.container.border.viewport.content <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %# %D units; break }
+                    _bind $w.container.x                       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
+                    _bind $w.container.y                       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
 
                     # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
                     # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -2991,6 +2859,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     #       and move that scrollbar by one page up or down (depending on the touchpad direction).
                     #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
                     _bind $w.container <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+                    _bind $w.title     <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
                     # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
                     # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -3006,10 +2875,10 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     #       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
                     #       and move that scrollbar by one page up or down (depending on the touchpad direction).
                     #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container.x                       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
-                    _bind $w.container.y                       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
                     _bind $w.container.border                  <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
                     _bind $w.container.border.viewport.content <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %# %D pages; break }
+                    _bind $w.container.x                       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
+                    _bind $w.container.y                       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
 
                     # Add the labelframe to the related toplevel keyboard pages navigation bindings.
                     ::ms::Enable_Traversal $w
@@ -3608,6 +3477,145 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                 n   { set anchor center }
                             }
 
+                            ##################
+                            ##              ##
+                            ##     HULL     ##
+                            ##              ##
+                            ##################
+
+                            # Set the hull object style name.
+                            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                                 ".TFrame"];
+
+                            # If needed, create the hull object style name.
+                            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                                # Add the hull object style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                            }
+
+                            # Initialize the hull object mapping.
+                            set mapping [list ]
+
+                            # shellbackground
+                            switch -- $::ms::managed_by($w,shellbackground) {
+                                developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                                Tk  {
+                                    # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
+                                    }
+                                }
+                            }
+
+                            # If needed, create the hull object mapping.
+                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                                # Add the hull object mapping to the stylemap list containing all the mappings
+                                # created by mustang for the current theme.
+                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                            }
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                            ###################
+                            ##               ##
+                            ##     TITLE     ##
+                            ##               ##
+                            ###################
+
+                            # Set the title object style name.
+                            set ::ms::style($w,title) [string cat "_bg=" $background \
+                                                                  "_bc=" $bordercolor \
+                                                                  "_dc=" $darkcolor \
+                                                                  "_fg=" $::ms::current($w,foreground) \
+                                                                  "_lc=" $lightcolor \
+                                                                  "." $labelframe_title_style];
+
+                            # If needed, create the title object style name.
+                            if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,title)  -background $background \
+                                                                            -bordercolor $bordercolor \
+                                                                              -darkcolor $darkcolor \
+                                                                             -foreground $::ms::current($w,foreground) \
+                                                                             -lightcolor $lightcolor;
+
+                                # Add the title object style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
+                            }
+
+                            # Initialize the title object mapping.
+                            set mapping [list ]
+
+                            # background
+                            # Check if a 'background' mapping exists for 'labelframe_title_style'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
+                                0   { lappend mapping -background [list pressed $background] }
+                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
+                            }
+
+                            # bordercolor
+                            # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
+                                0   { lappend mapping -bordercolor [list pressed $bordercolor] }
+                                1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
+                            }
+
+                            # darkcolor
+                            # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
+                                0   { lappend mapping -darkcolor [list pressed $darkcolor] }
+                                1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
+                            }
+
+                            # foreground
+                            switch -- $::ms::managed_by($w,foreground) {
+                                developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+                                Tk  {
+                                    # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
+                                        1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
+                                    }
+                                }
+                            }
+
+                            # lightcolor
+                            # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
+                                0   { lappend mapping -lightcolor [list pressed $lightcolor] }
+                                1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
+                            }
+
+                            # If needed, create the title object mapping.
+                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                _ttk_style map $::ms::style($w,title) {*}$mapping
+
+                                # Add the title object mapping to the stylemap list containing all the mappings
+                                # created by mustang for the current theme.
+                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                            }
+
+                            # Apply the changes.
+                            $w.title configure      -anchor $anchor \
+                                               -borderwidth $borderwidth \
+                                                  -compound $::ms::current($w,compound) \
+                                                    -cursor $::ms::current($w,cursor) \
+                                                      -font $::ms::current($w,font) \
+                                                     -image $::ms::current($w,image) \
+                                                   -justify left \
+                                                   -padding $padding \
+                                                    -relief $relief \
+                                                     -style $::ms::style($w,title) \
+                                                 -takefocus $::ms::current($w,takefocus) \
+                                              -textvariable $textvariable \
+                                                     -width $charwidth \
+                                                -wraplength 0;
+
+                            _pack configure $w.title -anchor $::ms::current($w,anchor)
+
                             # Check if the widget is scrollable or not.
                             switch -- $ms::current($w,scrollable) {
                                 false {
@@ -3617,214 +3625,31 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                     ##                           ##
                                     ###############################
 
-                                    ##################
-                                    ##              ##
-                                    ##     HULL     ##
-                                    ##              ##
-                                    ##################
+                                    #####################
+                                    ##                 ##
+                                    ##     CONTENT     ##
+                                    ##                 ##
+                                    #####################
 
-                                    # Set the hull object style name.
-                                    set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                                         ".TFrame"];
+                                    # Set the content object style name.
+                                    set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
+                                                                            "_bc=" $::ms::current($w,bordercolor) \
+                                                                            "_dc=" $::ms::current($w,darkcolor) \
+                                                                            "_lc=" $::ms::current($w,lightcolor) \
+                                                                            "." $::ms::current($w,style)];
 
-                                    # If needed, create the hull object style name.
-                                    if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                                    # If needed, create the content object style name.
+                                    if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                        _ttk_style configure $::ms::style($w,content)  -background $::ms::current($w,background) \
+                                                                                      -bordercolor $::ms::current($w,bordercolor) \
+                                                                                        -darkcolor $::ms::current($w,darkcolor) \
+                                                                                       -lightcolor $::ms::current($w,lightcolor);
 
-                                        # Add the hull object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                                        # Add the content object style name to the theme styles list created by mustang.
+                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
                                     }
 
-                                    # Initialize the hull object mapping.
-                                    set mapping [list ]
-
-                                    # shellbackground
-                                    switch -- $::ms::managed_by($w,shellbackground) {
-                                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                                        Tk  {
-                                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                                            }
-                                        }
-                                    }
-
-                                    # If needed, create the hull object mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                                        # Add the hull object mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                                    }
-
-                                    # Apply the changes.
-                                    interp invokehidden {} $w configure -style $::ms::style($w,hull)
-
-                                    ###################
-                                    ##               ##
-                                    ##     TITLE     ##
-                                    ##               ##
-                                    ###################
-
-                                    # Set the title object style name.
-                                    set ::ms::style($w,title) [string cat "_bg=" $background \
-                                                                          "_bc=" $bordercolor \
-                                                                          "_dc=" $darkcolor \
-                                                                          "_fg=" $::ms::current($w,foreground) \
-                                                                          "_lc=" $lightcolor \
-                                                                          "." $labelframe_title_style];
-
-                                    # If needed, create the title object style name.
-                                    if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,title)  -background $background \
-                                                                                    -bordercolor $bordercolor \
-                                                                                      -darkcolor $darkcolor \
-                                                                                     -foreground $::ms::current($w,foreground) \
-                                                                                     -lightcolor $lightcolor;
-
-                                        # Add the title object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
-                                    }
-
-                                    # Initialize the title object mapping.
-                                    set mapping [list ]
-
-                                    # background
-                                    # Check if a 'background' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
-                                        0   { lappend mapping -background [list pressed $background] }
-                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
-                                    }
-
-                                    # bordercolor
-                                    # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
-                                        0   { lappend mapping -bordercolor [list pressed $bordercolor] }
-                                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
-                                    }
-
-                                    # darkcolor
-                                    # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
-                                        0   { lappend mapping -darkcolor [list pressed $darkcolor] }
-                                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
-                                    }
-
-                                    # foreground
-                                    switch -- $::ms::managed_by($w,foreground) {
-                                        developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
-                                        Tk  {
-                                            # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
-                                                1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
-                                            }
-                                        }
-                                    }
-
-                                    # lightcolor
-                                    # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
-                                        0   { lappend mapping -lightcolor [list pressed $lightcolor] }
-                                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
-                                    }
-
-                                    # If needed, create the title object mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,title) {*}$mapping
-
-                                        # Add the title object mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                                    }
-
-                                    # Apply the changes.
-                                    $w.title configure      -anchor $anchor \
-                                                       -borderwidth $borderwidth \
-                                                          -compound $::ms::current($w,compound) \
-                                                            -cursor $::ms::current($w,cursor) \
-                                                              -font $::ms::current($w,font) \
-                                                             -image $::ms::current($w,image) \
-                                                           -justify left \
-                                                           -padding $padding \
-                                                            -relief $relief \
-                                                             -style $::ms::style($w,title) \
-                                                         -takefocus $::ms::current($w,takefocus) \
-                                                      -textvariable $textvariable \
-                                                             -width $charwidth \
-                                                        -wraplength 0;
-
-                                    _pack configure $w.title -anchor $::ms::current($w,anchor)
-
-                                    #######################
-                                    ##                   ##
-                                    ##     CONTAINER     ##
-                                    ##                   ##
-                                    #######################
-
-                                    # Set the container object style name.
-                                    set ::ms::style($w,container) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                                              ".TFrame"];
-
-                                    # If needed, create the container object style name.
-                                    if { $::ms::style($w,container) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,container) -background $::ms::current($w,shellbackground)
-
-                                        # Add the container object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,container)
-                                    }
-
-                                    # Initialize the hull object mapping.
-                                    set mapping [list ]
-
-                                    # shellbackground
-                                    switch -- $::ms::managed_by($w,shellbackground) {
-                                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                                        Tk  {
-                                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                                            }
-                                        }
-                                    }
-
-                                    # If needed, create the hull object mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                                        # Add the hull object mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                                    }
-
-                                    # Apply the changes.
-                                    $w.container configure -style $::ms::style($w,container)
-
-                                    ####################
-                                    ##                ##
-                                    ##     BORDER     ##
-                                    ##                ##
-                                    ####################
-
-                                    # Set the border object style name.
-                                    set ::ms::style($w,border) [string cat "_bg=" $::ms::current($w,background) \
-                                                                           "_bc=" $::ms::current($w,bordercolor) \
-                                                                           "_dc=" $::ms::current($w,darkcolor) \
-                                                                           "_lc=" $::ms::current($w,lightcolor) \
-                                                                           ".TFrame"];
-
-                                    # If needed, create the border object style name.
-                                    if { $::ms::style($w,border) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,border)  -background $::ms::current($w,background) \
-                                                                                     -bordercolor $::ms::current($w,bordercolor) \
-                                                                                       -darkcolor $::ms::current($w,darkcolor) \
-                                                                                      -lightcolor $::ms::current($w,lightcolor);
-
-                                        # Add the border object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,border)
-                                    }
-
-                                    # Initialize the border object mapping.
+                                    # Initialize the content object mapping.
                                     set mapping [list ]
 
                                     # background
@@ -3871,52 +3696,6 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                         }
                                     }
 
-                                    # If needed, create the border object mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,border) {*}$mapping
-
-                                        # Add the border object mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                                    }
-
-                                    # Apply the changes.
-                                    $w.container.border configure -borderwidth $::ms::current($w,borderwidth) \
-                                                                       -relief $::ms::current($w,relief) \
-                                                                        -style $::ms::style($w,border);
-
-                                    #####################
-                                    ##                 ##
-                                    ##     CONTENT     ##
-                                    ##                 ##
-                                    #####################
-
-                                    # Set the content object style name.
-                                    set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
-                                                                            "." $::ms::current($w,style)];
-
-                                    # If needed, create the content object style name.
-                                    if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,content) -background $::ms::current($w,background)
-
-                                        # Add the content object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
-                                    }
-
-                                    # Initialize the content object mapping.
-                                    set mapping [list ]
-
-                                    # background
-                                    switch -- $::ms::managed_by($w,background) {
-                                        developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
-                                        Tk  {
-                                            # Check if a 'background' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
-                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
-                                            }
-                                        }
-                                    }
-
                                     # If needed, create the content object mapping.
                                     if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                                         _ttk_style map $::ms::style($w,content) {*}$mapping
@@ -3927,12 +3706,14 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                     }
 
                                     # Apply the changes.
-                                    $w.container.border.content configure    -cursor $::ms::current($w,cursor) \
-                                                                             -height $::ms::temp($w,height) \
-                                                                            -padding $::ms::current($w,padding) \
-                                                                              -style $::ms::style($w,content) \
-                                                                          -takefocus $::ms::current($w,takefocus) \
-                                                                              -width $::ms::temp($w,width);
+                                    $w.content configure -borderwidth $::ms::current($w,borderwidth) \
+                                                              -cursor $::ms::current($w,cursor) \
+                                                              -height $::ms::temp($w,height) \
+                                                             -padding $::ms::current($w,padding) \
+                                                              -relief $::ms::current($w,relief) \
+                                                               -style $::ms::style($w,content) \
+                                                           -takefocus $::ms::current($w,takefocus) \
+                                                               -width $::ms::temp($w,width);
                                 }
                                 true {
                                     ###################################
@@ -3940,145 +3721,6 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                     ##     SCROLLABLE LABELFRAME     ##
                                     ##                               ##
                                     ###################################
-
-                                    ##################
-                                    ##              ##
-                                    ##     HULL     ##
-                                    ##              ##
-                                    ##################
-
-                                    # Set the hull object style name.
-                                    set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                                         ".TFrame"];
-
-                                    # If needed, create the hull object style name.
-                                    if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
-
-                                        # Add the hull object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
-                                    }
-
-                                    # Initialize the hull object mapping.
-                                    set mapping [list ]
-
-                                    # shellbackground
-                                    switch -- $::ms::managed_by($w,shellbackground) {
-                                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                                        Tk  {
-                                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                                            }
-                                        }
-                                    }
-
-                                    # If needed, create the hull object mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                                        # Add the hull object mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                                    }
-
-                                    # Apply the changes.
-                                    interp invokehidden {} $w configure -style $::ms::style($w,hull)
-
-                                    ###################
-                                    ##               ##
-                                    ##     TITLE     ##
-                                    ##               ##
-                                    ###################
-
-                                    # Set the title object style name.
-                                    set ::ms::style($w,title) [string cat "_bg=" $background \
-                                                                          "_bc=" $bordercolor \
-                                                                          "_dc=" $darkcolor \
-                                                                          "_fg=" $::ms::current($w,foreground) \
-                                                                          "_lc=" $lightcolor \
-                                                                          "." $labelframe_title_style];
-
-                                    # If needed, create the title object style name.
-                                    if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,title)  -background $background \
-                                                                                    -bordercolor $bordercolor \
-                                                                                      -darkcolor $darkcolor \
-                                                                                     -foreground $::ms::current($w,foreground) \
-                                                                                     -lightcolor $lightcolor;
-
-                                        # Add the title object style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
-                                    }
-
-                                    # Initialize the title object mapping.
-                                    set mapping [list ]
-
-                                    # background
-                                    # Check if a 'background' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
-                                        0   { lappend mapping -background [list pressed $background] }
-                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
-                                    }
-
-                                    # bordercolor
-                                    # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
-                                        0   { lappend mapping -bordercolor [list pressed $bordercolor] }
-                                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
-                                    }
-
-                                    # darkcolor
-                                    # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
-                                        0   { lappend mapping -darkcolor [list pressed $darkcolor] }
-                                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
-                                    }
-
-                                    # foreground
-                                    switch -- $::ms::managed_by($w,foreground) {
-                                        developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
-                                        Tk  {
-                                            # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
-                                                1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
-                                            }
-                                        }
-                                    }
-
-                                    # lightcolor
-                                    # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
-                                        0   { lappend mapping -lightcolor [list pressed $lightcolor] }
-                                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
-                                    }
-
-                                    # If needed, create the title object mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,title) {*}$mapping
-
-                                        # Add the title object mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                                    }
-
-                                    # Apply the changes.
-                                    $w.title configure      -anchor $anchor \
-                                                       -borderwidth $borderwidth \
-                                                          -compound $::ms::current($w,compound) \
-                                                            -cursor $::ms::current($w,cursor) \
-                                                              -font $::ms::current($w,font) \
-                                                             -image $::ms::current($w,image) \
-                                                           -justify left \
-                                                           -padding $padding \
-                                                            -relief $relief \
-                                                             -style $::ms::style($w,title) \
-                                                         -takefocus $::ms::current($w,takefocus) \
-                                                      -textvariable $textvariable \
-                                                             -width $charwidth \
-                                                        -wraplength 0;
-
-                                    _pack configure $w.title -anchor $::ms::current($w,anchor)
 
                                     #######################
                                     ##                   ##
@@ -4333,11 +3975,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                 return "Labelframe.hull"
                             } elseif { $widget eq "$w.title" } {
                                 return "Labelframe.title"
-                            } elseif { $widget eq "$w.container" } {
-                                return "Labelframe.container"
-                            } elseif { $widget eq "$w.container.border" } {
-                                return "Labelframe.border"
-                            } elseif { $widget eq "$w.container.border.content" } {
+                            } elseif { $widget eq "$w.content" } {
                                 return "Labelframe.content"
                             } else {
                                 return ""
@@ -4643,13 +4281,25 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                     ##                                 ##
                     #####################################
 
-                    # Propagate the new statespec to the widget's hull, container, title, border and content objects.
-                    interp invokehidden {} $w state $statespec
-                    $w.title state $statespec
-                    $w.container state $statespec
-                    $w.container.border state $statespec
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            # Propagate the new statespec to the widget's hull, title and content objects.
+                            interp invokehidden {} $w state $statespec
+                            $w.title state $statespec
 
-                    return [$::ms::addr($w,widget) state $statespec]
+                            return [$w.content state $statespec]
+                        }
+                        true {
+                            # Propagate the new statespec to the widget's hull, title, container, border and content objects.
+                            interp invokehidden {} $w state $statespec
+                            $w.title state $statespec
+                            $w.container state $statespec
+                            $w.container.border state $statespec
+
+                            return [$w.container.border.content state $statespec]
+                        }
+                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -5075,6 +4725,143 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
             n   { set anchor center }
         }
 
+        ##################
+        ##              ##
+        ##     HULL     ##
+        ##              ##
+        ##################
+
+        # Set the hull object style name.
+        set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                             ".TFrame"];
+
+        # If needed, create the hull object style name.
+        if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+            # Add the hull object style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+        }
+
+        # Initialize the hull object mapping.
+        set mapping [list ]
+
+        # shellbackground
+        switch -- $::ms::managed_by($w,shellbackground) {
+            developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+            Tk  {
+                # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
+                }
+            }
+        }
+
+        # If needed, create the hull object mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+            # Add the hull object mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        # Apply the changes.
+        interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+        ###################
+        ##               ##
+        ##     TITLE     ##
+        ##               ##
+        ###################
+
+        # Set the title object style name.
+        set ::ms::style($w,title) [string cat "_bg=" $background \
+                                              "_bc=" $bordercolor \
+                                              "_dc=" $darkcolor \
+                                              "_fg=" $::ms::current($w,foreground) \
+                                              "_lc=" $lightcolor \
+                                              "." $labelframe_title_style];
+
+        # If needed, create the title object style name.
+        if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,title)  -background $background \
+                                                        -bordercolor $bordercolor \
+                                                          -darkcolor $darkcolor \
+                                                         -foreground $::ms::current($w,foreground) \
+                                                         -lightcolor $lightcolor;
+
+            # Add the title object style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
+        }
+
+        # Initialize the title object mapping.
+        set mapping [list ]
+
+        # background
+        # Check if a 'background' mapping exists for 'labelframe_title_style'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
+            0   { lappend mapping -background [list pressed $background] }
+            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
+        }
+
+        # bordercolor
+        # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
+            0   { lappend mapping -bordercolor [list pressed $bordercolor] }
+            1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
+        }
+
+        # darkcolor
+        # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
+            0   { lappend mapping -darkcolor [list pressed $darkcolor] }
+            1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
+        }
+
+        # foreground
+        switch -- $::ms::managed_by($w,foreground) {
+            developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+            Tk  {
+                # Check if a 'foreground' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,foreground)] {
+                    1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$stylename,foreground) }
+                }
+            }
+        }
+
+        # lightcolor
+        # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
+            0   { lappend mapping -lightcolor [list pressed $lightcolor] }
+            1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
+        }
+
+        # If needed, create the title object mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,title) {*}$mapping
+
+            # Add the title object mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        # Apply the changes.
+        $w.title configure      -anchor $anchor \
+                           -borderwidth $borderwidth \
+                              -compound $::ms::current($w,compound) \
+                                -cursor $::ms::current($w,cursor) \
+                                  -font $::ms::current($w,font) \
+                                 -image $::ms::current($w,image) \
+                               -justify left \
+                               -padding $padding \
+                                -relief $relief \
+                                 -style $::ms::style($w,title) \
+                                 -width $charwidth \
+                            -wraplength 0;
+
+        _pack configure $w.title -anchor $::ms::current($w,anchor)
+
         # Check if the widget is scrollable or not.
         switch -- $::ms::current($w,scrollable) {
             false {
@@ -5084,221 +4871,40 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                 ##                           ##
                 ###############################
 
-                ##################
-                ##              ##
-                ##     HULL     ##
-                ##              ##
-                ##################
+                #####################
+                ##                 ##
+                ##     CONTENT     ##
+                ##                 ##
+                #####################
 
-                # Set the hull object style name.
-                set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                     ".TFrame"];
+                # Set the content object style name.
+                set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
+                                                        "_bc=" $::ms::current($w,bordercolor) \
+                                                        "_dc=" $::ms::current($w,darkcolor) \
+                                                        "_lc=" $::ms::current($w,lightcolor) \
+                                                        "." $stylename];
 
-                # If needed, create the hull object style name.
-                if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                # If needed, create the content object style name.
+                if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                    _ttk_style configure $::ms::style($w,content)  -background $::ms::current($w,background) \
+                                                                  -bordercolor $::ms::current($w,bordercolor) \
+                                                                    -darkcolor $::ms::current($w,darkcolor) \
+                                                                   -lightcolor $::ms::current($w,lightcolor);
 
-                    # Add the hull object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                    # Add the content object style name to the theme styles list created by mustang.
+                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
                 }
 
-                # Initialize the hull object mapping.
-                set mapping [list ]
-
-                # shellbackground
-                switch -- $::ms::managed_by($w,shellbackground) {
-                    developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                    Tk  {
-                        # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                        }
-                    }
-                }
-
-                # If needed, create the hull object mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                    # Add the hull object mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                }
-
-                # Apply the changes.
-                interp invokehidden {} $w configure -style $::ms::style($w,hull)
-
-                ###################
-                ##               ##
-                ##     TITLE     ##
-                ##               ##
-                ###################
-
-                # Set the title object style name.
-                set ::ms::style($w,title) [string cat "_bg=" $background \
-                                                      "_bc=" $bordercolor \
-                                                      "_dc=" $darkcolor \
-                                                      "_fg=" $::ms::current($w,foreground) \
-                                                      "_lc=" $lightcolor \
-                                                      "." $labelframe_title_style];
-
-                # If needed, create the title object style name.
-                if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,title)  -background $background \
-                                                                -bordercolor $bordercolor \
-                                                                  -darkcolor $darkcolor \
-                                                                 -foreground $::ms::current($w,foreground) \
-                                                                 -lightcolor $lightcolor;
-
-                    # Add the title object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
-                }
-
-                # Initialize the title object mapping.
-                set mapping [list ]
-
-                # background
-                # Check if a 'background' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
-                    0   { lappend mapping -background [list pressed $background] }
-                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
-                }
-
-                # bordercolor
-                # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
-                    0   { lappend mapping -bordercolor [list pressed $bordercolor] }
-                    1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
-                }
-
-                # darkcolor
-                # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
-                    0   { lappend mapping -darkcolor [list pressed $darkcolor] }
-                    1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
-                }
-
-                # foreground
-                switch -- $::ms::managed_by($w,foreground) {
-                    developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
-                    Tk  {
-                        # Check if a 'foreground' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,foreground)] {
-                            1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$stylename,foreground) }
-                        }
-                    }
-                }
-
-                # lightcolor
-                # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
-                    0   { lappend mapping -lightcolor [list pressed $lightcolor] }
-                    1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
-                }
-
-                # If needed, create the title object mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,title) {*}$mapping
-
-                    # Add the title object mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                }
-
-                # Apply the changes.
-                $w.title configure      -anchor $anchor \
-                                   -borderwidth $borderwidth \
-                                      -compound $::ms::current($w,compound) \
-                                        -cursor $::ms::current($w,cursor) \
-                                          -font $::ms::current($w,font) \
-                                         -image $::ms::current($w,image) \
-                                       -justify left \
-                                       -padding $padding \
-                                        -relief $relief \
-                                         -style $::ms::style($w,title) \
-                                         -width $charwidth \
-                                    -wraplength 0;
-
-                _pack configure $w.title -anchor $::ms::current($w,anchor)
-
-                #######################
-                ##                   ##
-                ##     CONTAINER     ##
-                ##                   ##
-                #######################
-
-                # Set the container object style name.
-                set ::ms::style($w,container) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                          ".TFrame"];
-
-                # If needed, create the container object style name.
-                if { $::ms::style($w,container) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,container) -background $::ms::current($w,shellbackground)
-
-                    # Add the container object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,container)
-                }
-
-                # Initialize the hull object mapping.
-                set mapping [list ]
-
-                # shellbackground
-                switch -- $::ms::managed_by($w,shellbackground) {
-                    developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                    Tk  {
-                        # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                        }
-                    }
-                }
-
-                # If needed, create the hull object mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                    # Add the hull object mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                }
-
-                # Apply the changes.
-                $w.container configure -style $::ms::style($w,container)
-
-                ####################
-                ##                ##
-                ##     BORDER     ##
-                ##                ##
-                ####################
-
-                # Set the border object style name.
-                set ::ms::style($w,border) [string cat "_bg=" $::ms::current($w,background) \
-                                                       "_bc=" $::ms::current($w,bordercolor) \
-                                                       "_dc=" $::ms::current($w,darkcolor) \
-                                                       "_lc=" $::ms::current($w,lightcolor) \
-                                                       ".TFrame"];
-
-                # If needed, create the border object style name.
-                if { $::ms::style($w,border) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,border)  -background $::ms::current($w,background) \
-                                                                 -bordercolor $::ms::current($w,bordercolor) \
-                                                                   -darkcolor $::ms::current($w,darkcolor) \
-                                                                  -lightcolor $::ms::current($w,lightcolor);
-
-                    # Add the border object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,border)
-                }
-
-                # Initialize the border object mapping.
+                # Initialize the content object mapping.
                 set mapping [list ]
 
                 # background
                 switch -- $::ms::managed_by($w,background) {
                     developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
                     Tk  {
-                        # Check if a 'background' mapping exists for '::ms::current($w,style)'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
-                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                        # Check if a 'background' mapping exists for 'stylename'.
+                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
+                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
                         }
                     }
                 }
@@ -5336,52 +4942,6 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                     }
                 }
 
-                # If needed, create the border object mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,border) {*}$mapping
-
-                    # Add the border object mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                }
-
-                # Apply the changes.
-                $w.container.border configure -borderwidth $::ms::current($w,borderwidth) \
-                                                   -relief $::ms::current($w,relief) \
-                                                    -style $::ms::style($w,border);
-
-                #####################
-                ##                 ##
-                ##     CONTENT     ##
-                ##                 ##
-                #####################
-
-                # Set the content object style name.
-                set ::ms::style($w,content) [string cat "_bg=" $::ms::current($w,background) \
-                                                        "." $stylename];
-
-                # If needed, create the content object style name.
-                if { $::ms::style($w,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,content) -background $::ms::current($w,background)
-
-                    # Add the content object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,content)
-                }
-
-                # Initialize the content object mapping.
-                set mapping [list ]
-
-                # background
-                switch -- $::ms::managed_by($w,background) {
-                    developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
-                    Tk  {
-                        # Check if a 'background' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
-                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
-                        }
-                    }
-                }
-
                 # If needed, create the content object mapping.
                 if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                     _ttk_style map $::ms::style($w,content) {*}$mapping
@@ -5392,9 +4952,11 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                 }
 
                 # Apply the changes.
-                $w.container.border.content configure  -cursor $::ms::current($w,cursor) \
-                                                      -padding $::ms::current($w,padding) \
-                                                        -style $::ms::style($w,content);
+                $w.content configure -borderwidth $::ms::current($w,borderwidth) \
+                                          -cursor $::ms::current($w,cursor) \
+                                         -padding $::ms::current($w,padding) \
+                                          -relief $::ms::current($w,relief) \
+                                           -style $::ms::style($w,content);
             }
             true {
                 ###################################
@@ -5402,143 +4964,6 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                 ##     SCROLLABLE LABELFRAME     ##
                 ##                               ##
                 ###################################
-
-                ##################
-                ##              ##
-                ##     HULL     ##
-                ##              ##
-                ##################
-
-                # Set the hull object style name.
-                set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                     ".TFrame"];
-
-                # If needed, create the hull object style name.
-                if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
-
-                    # Add the hull object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
-                }
-
-                # Initialize the hull object mapping.
-                set mapping [list ]
-
-                # shellbackground
-                switch -- $::ms::managed_by($w,shellbackground) {
-                    developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                    Tk  {
-                        # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                        }
-                    }
-                }
-
-                # If needed, create the hull object mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                    # Add the hull object mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                }
-
-                # Apply the changes.
-                interp invokehidden {} $w configure -style $::ms::style($w,hull)
-
-                ###################
-                ##               ##
-                ##     TITLE     ##
-                ##               ##
-                ###################
-
-                # Set the title object style name.
-                set ::ms::style($w,title) [string cat "_bg=" $background \
-                                                      "_bc=" $bordercolor \
-                                                      "_dc=" $darkcolor \
-                                                      "_fg=" $::ms::current($w,foreground) \
-                                                      "_lc=" $lightcolor \
-                                                      "." $labelframe_title_style];
-
-                # If needed, create the title object style name.
-                if { $::ms::style($w,title) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    _ttk_style configure $::ms::style($w,title)  -background $background \
-                                                                -bordercolor $bordercolor \
-                                                                  -darkcolor $darkcolor \
-                                                                 -foreground $::ms::current($w,foreground) \
-                                                                 -lightcolor $lightcolor;
-
-                    # Add the title object style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,title)
-                }
-
-                # Initialize the title object mapping.
-                set mapping [list ]
-
-                # background
-                # Check if a 'background' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,background)] {
-                    0   { lappend mapping -background [list pressed $background] }
-                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$labelframe_title_style,background) }
-                }
-
-                # bordercolor
-                # Check if a 'bordercolor' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor)] {
-                    0   { lappend mapping -bordercolor [list pressed $bordercolor] }
-                    1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$labelframe_title_style,bordercolor) }
-                }
-
-                # darkcolor
-                # Check if a 'darkcolor' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor)] {
-                    0   { lappend mapping -darkcolor [list pressed $darkcolor] }
-                    1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,darkcolor) }
-                }
-
-                # foreground
-                switch -- $::ms::managed_by($w,foreground) {
-                    developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
-                    Tk  {
-                        # Check if a 'foreground' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,foreground)] {
-                            1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$stylename,foreground) }
-                        }
-                    }
-                }
-
-                # lightcolor
-                # Check if a 'lightcolor' mapping exists for 'labelframe_title_style'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor)] {
-                    0   { lappend mapping -lightcolor [list pressed $lightcolor] }
-                    1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$labelframe_title_style,lightcolor) }
-                }
-
-                # If needed, create the title object mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,title) {*}$mapping
-
-                    # Add the title object mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                }
-
-                # Apply the changes.
-                $w.title configure      -anchor $anchor \
-                                   -borderwidth $borderwidth \
-                                      -compound $::ms::current($w,compound) \
-                                        -cursor $::ms::current($w,cursor) \
-                                          -font $::ms::current($w,font) \
-                                         -image $::ms::current($w,image) \
-                                       -justify left \
-                                       -padding $padding \
-                                        -relief $relief \
-                                         -style $::ms::style($w,title) \
-                                         -width $charwidth \
-                                    -wraplength 0;
-
-                _pack configure $w.title -anchor $::ms::current($w,anchor)
 
                 #######################
                 ##                   ##
@@ -5835,6 +5260,7 @@ proc ::ms::labelframe::Destroy { w } {
                          $w.container.border.viewport.content \
                          $w.container.x \
                          $w.container.y \
+                         $w.content \
                          $w.title] {
         set index [lsearch -exact $::ms::addr(reals) $object]
         switch -- $index {
@@ -5884,6 +5310,7 @@ proc ::ms::labelframe::Destroy { w } {
                          ::ms::addr($w.container.border.viewport.content,short) \
                          ::ms::addr($w.container.x,short) \
                          ::ms::addr($w.container.y,short) \
+                         ::ms::addr($w.content,short) \
                          ::ms::addr($w.title,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
