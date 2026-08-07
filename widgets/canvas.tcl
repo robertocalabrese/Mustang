@@ -3025,7 +3025,7 @@ proc ::ms::canvas::Command { window { args "" } } {
             # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
             #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
             #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
-            #       like it behaves in other widgets that has it and understands it.
+            #       like it behaves in other widgets that understands the bordercolor.
 
             # Check the 'relief' type.
             switch -- $::ms::current($w,relief) {
@@ -4062,7 +4062,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                             # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
                             #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
                             #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
-                            #       like it behaves in other widgets that has it and understands it.
+                            #       like it behaves in other widgets that understands the bordercolor.
 
                             # Check the 'relief' type.
                             switch -- $::ms::current($w,relief) {
@@ -4620,7 +4620,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
                     #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
                     #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
-                    #       like it behaves in other widgets that has it and understands it.
+                    #       like it behaves in other widgets that understands the bordercolor.
 
                     # Check the 'relief' type.
                     switch -- $::ms::current($w,relief) {
@@ -5043,7 +5043,7 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
         # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
         #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
         #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
-        #       like it behaves in other widgets that has it and understands it.
+        #       like it behaves in other widgets that understands the bordercolor.
 
         # Check the 'relief' type.
         switch -- $::ms::current($w,relief) {
