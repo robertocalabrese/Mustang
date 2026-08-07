@@ -533,7 +533,7 @@
 #                             second fraction indicates the information just after the last portion that is visible.
 #                             The command is then passed to the Tcl interpreter for execution.
 #                             Typically the **-xscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
-#                             e.g. **.x.scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                             e.g. **.x_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
 #                             If this option is not specified, then no command will be executed.
 #
 #                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to 'auto'.
@@ -562,7 +562,7 @@
 #                             second fraction indicates the information just after the last portion that is visible.
 #                             The command is then passed to the Tcl interpreter for execution.
 #                             Typically the **-yscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
-#                             e.g. **.y.scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                             e.g. **.y_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
 #                             If this option is not specified, then no command will be executed.
 #
 #                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to 'auto'.
@@ -2601,8 +2601,6 @@ proc ::ms::canvas::Command { window { args "" } } {
             set ::ms::data($w,scrollx)        off
             set ::ms::data($w,scrolly)        off
             set ::ms::data($w,statespec)      $::ms::data(statespec,normal)
-            set ::ms::data($w,xscrollcommand) {}
-            set ::ms::data($w,yscrollcommand) {}
 
             # Set each styleable option to be managed by Tk.
             #
@@ -2909,36 +2907,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     }
                     -xscrollcommand {
                         switch -- [llength $value] {
-                            0   {}
-                            2   {
-                                set addr [lindex $value 0]
-                                set cmd  [lindex $value 1]
-
-                                # Get the 'addr' real address.
-                                set result [::ms::Check_Pathname $addr invalid]
-                                switch -- $result {
-                                    invalid { continue }
-                                    default { set addr [lindex $result 0] }
-                                }
-
-                                # Check that 'addr' corrisponds to a scrollbar widget with horizontal orientation.
-                                if { $addr in $::ms::addr(scrollbar) } {
-                                    switch -- $::ms::current($addr,orient) {
-                                        vertical { continue }
-                                    }
-                                } else {
-                                    continue
-                                }
-
-                                # Check the 'cmd' value.
-                                switch -nocase -- $cmd {
-                                    set     {}
-                                    default { continue }
-                                }
-
-                                set ::ms::current($w,xscrollcommand) $value
-                                set ::ms::data($w,xscrollcommand)    [list $addr $cmd]
-                            }
+                            2   { set ::ms::current($w,xscrollcommand) $value }
                         }
                     }
                     -xscrollincrement {
@@ -2948,36 +2917,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     }
                     -yscrollcommand {
                         switch -- [llength $value] {
-                            0   {}
-                            2   {
-                                set addr [lindex $value 0]
-                                set cmd  [lindex $value 1]
-
-                                # Get the 'addr' real address.
-                                set result [::ms::Check_Pathname $addr invalid]
-                                switch -- $result {
-                                    invalid { continue }
-                                    default { set addr [lindex $result 0] }
-                                }
-
-                                # Check that 'addr' corrisponds to a scrollbar widget with vertical orientation.
-                                if { $addr in $::ms::addr(scrollbar) } {
-                                    switch -- $::ms::current($addr,orient) {
-                                        horizontal { continue }
-                                    }
-                                } else {
-                                    continue
-                                }
-
-                                # Check the 'cmd' value.
-                                switch -nocase -- $cmd {
-                                    set     {}
-                                    default { continue }
-                                }
-
-                                set ::ms::current($w,yscrollcommand) $value
-                                set ::ms::data($w,yscrollcommand)    [list $addr $cmd]
-                            }
+                            2   { set ::ms::current($w,yscrollcommand) $value }
                         }
                     }
                     -yscrollincrement {
@@ -3071,9 +3011,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                                                  -state $::ms::current($w,state) \
                                              -takefocus $takefocus \
                                                  -width $::ms::current($w,width) \
-                                        -xscrollcommand $::ms::data($w,xscrollcommand) \
                                       -xscrollincrement $::ms::current($w,xscrollincrement) \
-                                        -yscrollcommand $::ms::data($w,yscrollcommand) \
                                       -yscrollincrement $::ms::current($w,yscrollincrement)];
 
             # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
@@ -3118,8 +3056,16 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # Note: Tk canvases don't understands styles, at least not natively.
                     #       No internal styles needs to be created.
 
+                    # Add the provided 'xscrollcommand' and 'yscrollcommand' data.
+                    lappend canvas_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                           -yscrollcommand $::ms::current($w,yscrollcommand);
+
                     # Create the widget.
-                    _canvas $w {*}$canvas_options
+                    try {
+                        _canvas $w {*}$canvas_options
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    }
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
@@ -3182,10 +3128,6 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with 'auto'.
                     set ::ms::current($w,xscrollcommand) auto
                     set ::ms::current($w,yscrollcommand) auto
-
-                    # Set the internal value for 'xscrollcommand' and 'yscrollcommand'.
-                    set ::ms::data($w,xscrollcommand) [list $w.x set]
-                    set ::ms::data($w,yscrollcommand) [list $w.y set]
 
                     # Check if the height provided is zero.
                     switch -- $::ms::current($w,height) {
@@ -3265,6 +3207,10 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Note: Tk Canvases don't understands styles, at least not natively.
                     #       No internal styles needs to be created.
+
+                    # Add the internal 'xscrollcommand' and 'yscrollcommand' data.
+                    lappend canvas_options -xscrollcommand [list $w.x set] \
+                                           -yscrollcommand [list $w.y set];
 
                     # Create the widget.
                     _canvas $w.canvas {*}$canvas_options
@@ -3989,39 +3935,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         }
 
                                         switch -- [llength $value] {
-                                            0   {
-                                                set ::ms::current($w,xscrollcommand) {}
-                                                set ::ms::data($w,xscrollcommand)    {}
-                                            }
-                                            2   {
-                                                set addr [lindex $value 0]
-                                                set cmd  [lindex $value 1]
-
-                                                # Get the 'addr' real address.
-                                                set result [::ms::Check_Pathname $addr invalid]
-                                                switch -- $result {
-                                                    invalid { continue }
-                                                    default { set addr [lindex $result 0] }
-                                                }
-
-                                                # Check that 'addr' corrisponds to a scrollbar widget with horizontal orientation.
-                                                if { $addr in $::ms::addr(scrollbar) } {
-                                                    switch -- $::ms::current($addr,orient) {
-                                                        vertical { continue }
-                                                    }
-                                                } else {
-                                                    continue
-                                                }
-
-                                                # Check the 'cmd' value.
-                                                switch -nocase -- $cmd {
-                                                    set     {}
-                                                    default { continue }
-                                                }
-
-                                                set ::ms::current($w,xscrollcommand) $value
-                                                set ::ms::data($w,xscrollcommand)    [list $addr set]
-                                            }
+                                            0   { set ::ms::current($w,xscrollcommand) [list ] }
+                                            2   { set ::ms::current($w,xscrollcommand) $value  }
                                         }
                                     }
                                     -xscrollincrement {
@@ -4035,39 +3950,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         }
 
                                         switch -- [llength $value] {
-                                            0   {
-                                                set ::ms::current($w,yscrollcommand) {}
-                                                set ::ms::data($w,yscrollcommand)    {}
-                                            }
-                                            2   {
-                                                set addr [lindex $value 0]
-                                                set cmd  [lindex $value 1]
-
-                                                # Get the 'addr' real address.
-                                                set result [::ms::Check_Pathname $addr invalid]
-                                                switch -- $result {
-                                                    invalid { continue }
-                                                    default { set addr [lindex $result 0] }
-                                                }
-
-                                                # Check that 'addr' corrisponds to a scrollbar widget with vertical orientation.
-                                                if { $addr in $::ms::addr(scrollbar) } {
-                                                    switch -- $::ms::current($addr,orient) {
-                                                        horizontal { continue }
-                                                    }
-                                                } else {
-                                                    continue
-                                                }
-
-                                                # Check the 'cmd' value.
-                                                switch -nocase -- $cmd {
-                                                    set     {}
-                                                    default { continue }
-                                                }
-
-                                                set ::ms::current($w,yscrollcommand) $value
-                                                set ::ms::data($w,yscrollcommand)    [list $addr set]
-                                            }
+                                            0   { set ::ms::current($w,yscrollcommand) [list ] }
+                                            2   { set ::ms::current($w,yscrollcommand) $value  }
                                         }
                                     }
                                     -yscrollincrement {
@@ -4164,9 +4048,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                                                  -state $::ms::current($w,state) \
                                                              -takefocus $takefocus \
                                                                  -width $::ms::temp($w,width) \
-                                                        -xscrollcommand $::ms::data($w,xscrollcommand) \
                                                       -xscrollincrement $::ms::current($w,xscrollincrement) \
-                                                        -yscrollcommand $::ms::data($w,yscrollcommand) \
                                                       -yscrollincrement $::ms::current($w,yscrollincrement)];
 
                             # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
@@ -4211,8 +4093,16 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     # Note: Tk Canvases don't understands styles, at least not natively.
                                     #       No internal styles needs to be created.
 
+                                    # Add the provided 'xscrollcommand' and 'yscrollcommand' data.
+                                    lappend canvas_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                                           -yscrollcommand $::ms::current($w,yscrollcommand);
+
                                     # Configure the widget.
-                                    interp invokehidden {} $w configure {*}$canvas_options
+                                    try {
+                                        interp invokehidden {} $w configure {*}$canvas_options
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    }
                                 }
                                 true {
                                     ###############################
@@ -4220,14 +4110,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     ##     SCROLLABLE CANVAS     ##
                                     ##                           ##
                                     ###############################
-
-                                    # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with 'auto'.
-                                    set ::ms::current($w,xscrollcommand) auto
-                                    set ::ms::current($w,yscrollcommand) auto
-
-                                    # Set the internal value for 'xscrollcommand' and 'yscrollcommand'.
-                                    set ::ms::data($w,xscrollcommand) [list $w.x set]
-                                    set ::ms::data($w,yscrollcommand) [list $w.y set]
 
                                     # Check if the height provided is zero.
                                     switch -- $::ms::temp($w,height) {
@@ -5486,9 +5368,7 @@ proc ::ms::canvas::Destroy { w } {
                          ::ms::data($w,scrollx) \
                          ::ms::data($w,scrolly) \
                          ::ms::data($w,statespec) \
-                         ::ms::data($w,token) \
-                         ::ms::data($w,xscrollcommand) \
-                         ::ms::data($w,yscrollcommand);
+                         ::ms::data($w,token);
 
     unset -nocomplain -- ::ms::default($w,background) \
                          ::ms::default($w,bordercolor) \
