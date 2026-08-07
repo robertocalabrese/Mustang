@@ -449,8 +449,10 @@
 #                             See also **-background**.
 #
 # **-state**                  Specifies the state for the widget.
-#                             Setting it changes the widget **physical** state and not the widget *look* (the state widget command
-#                             does that). Allowed states values are **normal** and **disabled**.
+#                             Setting it changes the widget **physical** state and the widget *look*.
+#                             Note that changing the widget *look* (through the state widget command) does not change the widget
+#                             *physical* state.
+#                             Allowed states values are **normal** and **disabled**.
 #
 #                             Individual canvas objects all have their own state option which may override the default state.
 #                             Many options can take separate specifications such that the appearance of the item can be different
@@ -2947,10 +2949,16 @@ proc ::ms::canvas::Command { window { args "" } } {
                 disabled {
                     set cursor    arrow
                     set takefocus 0
+
+                    # Set the widget dynamic state to 'disabled'.
+                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                 }
                 normal {
                     set cursor    $::ms::current($w,cursor)
                     set takefocus $::ms::current($w,takefocus)
+
+                    # Set the widget dynamic state to '!disabled'.
+                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
                 }
             }
 
@@ -3980,15 +3988,15 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     set cursor    arrow
                                     set takefocus 0
 
-                                    # Check if the disabled flag is active in the widget statespec.
-                                    if { "disabled" ni $::ms::data($w,statespec) } {
-                                        set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 disabled]
-                                    }
+                                    # Set the widget dynamic state to 'disabled'.
+                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                                 }
                                 normal {
                                     set cursor    $::ms::current($w,cursor)
-                                    set statespec $::ms::data($w,statespec)
                                     set takefocus $::ms::current($w,takefocus)
+
+                                    # Set the widget dynamic state to '!disabled'.
+                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
                                 }
                             }
 
@@ -4190,24 +4198,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                                     # Update the scrollbars.
                                     ::ms::canvas::Scrollbar_Update $w
-                                }
-                            }
-
-                            ##################################################
-                            ##                                              ##
-                            ##     IF NEEDED, UPDATE THE WIDGET'S STATE     ##
-                            ##                                              ##
-                            ##################################################
-
-                            # Note: There is no need to update the canvas object, it's a classic widget and
-                            #       it was already been taking care of.
-
-                            # Check if the widget is scrollable or not.
-                            switch -- $::ms::current($w,scrollable) {
-                                true {
-                                    switch -- $::ms::current($w,state) {
-                                        disabled { interp invokehidden {} $w state disabled }
-                                    }
                                 }
                             }
 
