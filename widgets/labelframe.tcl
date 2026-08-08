@@ -78,14 +78,14 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Note 2: The mustang simple labelframe is a megawidget composed by an hull object (the megawidget container), a title object,
-#         a container object (an internal container) a border object and a frame object (the content).
-#
-# Note 3: The mustang scrollable labelframe is a megawidget composed by an hull object (the megawidget container), a title object,
-#         a container object (an internal container) a border object, a viewport object, a frame object (the content)
+# Note 2: Depending on the **-scrollable** option value, two kinds of labelframe structures are possible.
+#         The mustang simple labelframe (**-scrollable** false) is a megawidget composed by an hull object (the megawidget container),
+#         a title object and a frame object (the content).
+#         The mustang scrollable labelframe (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
+#         a title object, a container object (an internal container) a border object, a viewport object, a frame object (the content)
 #         and two scrollbar objects (displayed only when needed).
 #
-# Note 4: The mustang labelframe widget is a complete rewrite of its Tk counterpart, no labelframe objects are used inside of it.
+# Note 3: The mustang labelframe widget is a complete rewrite of its Tk counterpart (with no Tk labelframes involved).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the labelframe.
 #
@@ -600,12 +600,20 @@
 #                             scrollbar are selected) will also be **xScrollIncrement**. If the value of this option is zero, then
 #                             horizontal scrolling is unconstrained.
 #
+#                             Note: The *-xscrollincrement* is meaningless and will be ignored for labelframe that are not scrollable.
+#
+#                             If not provided, defaults to **0**.
+#
 # **-yscrollincrement**       Specifies an integer indicating the increment for vertical scrolling.
 #                             If the value of this option is greater than zero, the vertical view in the widget will be constrained so
 #                             that the labelframe *y* coordinate at the left edge of the widget is always an even multiple of **xScrollIncrement**;
 #                             furthermore, the units for scrolling (e.g., the change in view when the left and right arrows of a
 #                             scrollbar are selected) will also be **yScrollIncrement**. If the value of this option is zero, then
 #                             vertical scrolling is unconstrained.
+#
+#                             Note: The *-xscrollincrement* is meaningless and will be ignored for labelframe that are not scrollable.
+#
+#                             If not provided, defaults to **0**.
 #
 #### WIDGET COMMAND:
 #
