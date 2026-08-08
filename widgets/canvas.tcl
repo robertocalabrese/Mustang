@@ -4653,127 +4653,120 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             set subcommand [lindex  $args 0]
             set args       [lremove $args 0]
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false {
-                    # Check the subcommand.
-                    switch -nocase -- $subcommand {
-                        ""     { return [interp invokehidden {} $w xview] }
-                        moveto {
-                            # Check the number of arguments provided (after the 'moveto' word).
-                            switch -- [llength $args] {
-                                1       {}
-                                default { return "" }
-                            }
+            # Check the subcommand.
+            switch -nocase -- $subcommand {
+                ""  {
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            ###########################
+                            ##                       ##
+                            ##     SIMPLE CANVAS     ##
+                            ##                       ##
+                            ###########################
 
-                            # Check the fraction provided.
-                            set fraction $args
-                            switch -- [string is double -strict $fraction] {
-                                0   { return "" }
-                            }
+                            return [interp invokehidden {} $w xview]
+                        }
+                        true {
+                            ###############################
+                            ##                           ##
+                            ##     SCROLLABLE CANVAS     ##
+                            ##                           ##
+                            ###############################
 
-                            # Check that fraction is inside its limits [0,1.0].
-                            if { $fraction < 0 } {
-                                set fraction 0
-                            } elseif { $fraction > 1.0 } {
-                                set fraction 1.0
-                            }
+                            return [$w.canvas xview]
+                        }
+                    }
+                }
+                moveto {
+                    # Check the number of arguments provided (after the 'moveto' word).
+                    switch -- [llength $args] {
+                        1       {}
+                        default { return "" }
+                    }
 
-                            # Move the content object horizontally.
+                    # Check the fraction provided.
+                    set fraction $args
+                    switch -- [string is double -strict $fraction] {
+                        0   { return "" }
+                    }
+
+                    # Check that fraction is inside its limits [0,1.0].
+                    if { $fraction < 0 } {
+                        set fraction 0
+                    } elseif { $fraction > 1.0 } {
+                        set fraction 1.0
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            ###########################
+                            ##                       ##
+                            ##     SIMPLE CANVAS     ##
+                            ##                       ##
+                            ###########################
+
                             interp invokehidden {} $w xview moveto $fraction
-
-                            return ""
                         }
-                        scroll {
-                            # Check the number of arguments provided (after the 'scroll' word).
-                            switch -- [llength $args] {
-                                2       {}
-                                default { return "" }
-                            }
+                        true {
+                            ###############################
+                            ##                           ##
+                            ##     SCROLLABLE CANVAS     ##
+                            ##                           ##
+                            ###############################
 
-                            # Check the 'number'.
-                            set number [lindex $args 0]
-                            switch -- [string is double -strict $number] {
-                                0   { return "" }
-                            }
+                            $w.canvas xview moveto $fraction
+                        }
+                    }
 
-                            # Check the 'what'.
-                            switch -nocase -- [lindex $args 1] {
-                                pages   { set what "pages" }
-                                units   { set what "units" }
-                                default { return "" }
-                            }
+                    return ""
+                }
+                scroll {
+                    # Check the number of arguments provided (after the 'scroll' word).
+                    switch -- [llength $args] {
+                        2       {}
+                        default { return "" }
+                    }
 
-                            # Move the content object horizontally.
+                    # Check the 'number'.
+                    set number [lindex $args 0]
+                    switch -- [string is double -strict $number] {
+                        0   { return "" }
+                    }
+
+                    # Check the 'what'.
+                    switch -nocase -- [lindex $args 1] {
+                        pages   { set what "pages" }
+                        units   { set what "units" }
+                        default { return "" }
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            ###########################
+                            ##                       ##
+                            ##     SIMPLE CANVAS     ##
+                            ##                       ##
+                            ###########################
+
                             interp invokehidden {} $w xview scroll $number $what
-
-                            return ""
                         }
-                        default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
-                    }
-                }
-                true {
-                    # Check if the widget has an active horizontal scrollbar.
-                    switch -- $::ms::data($w,scrollx) {
-                        on  {
-                            # Check the subcommand.
-                            switch -nocase -- $subcommand {
-                                ""     { return [$w.canvas xview] }
-                                moveto {
-                                    # Check the number of arguments provided (after the 'moveto' word).
-                                    switch -- [llength $args] {
-                                        1       {}
-                                        default { return "" }
-                                    }
+                        true {
+                            ###############################
+                            ##                           ##
+                            ##     SCROLLABLE CANVAS     ##
+                            ##                           ##
+                            ###############################
 
-                                    # Check the fraction provided.
-                                    set fraction $args
-                                    switch -- [string is double -strict $fraction] {
-                                        0   { return "" }
-                                    }
-
-                                    # Check that fraction is inside its limits [0,1.0].
-                                    if { $fraction < 0 } {
-                                        set fraction 0
-                                    } elseif { $fraction > 1.0 } {
-                                        set fraction 1.0
-                                    }
-
-                                    # Move the content object horizontally.
-                                    $w.canvas xview moveto $fraction
-
-                                    return ""
-                                }
-                                scroll {
-                                    # Check the number of arguments provided (after the 'scroll' word).
-                                    switch -- [llength $args] {
-                                        2       {}
-                                        default { return "" }
-                                    }
-
-                                    # Check the 'number'.
-                                    set number [lindex $args 0]
-                                    switch -- [string is double -strict $number] {
-                                        0   { return "" }
-                                    }
-
-                                    # Check the 'what'.
-                                    switch -nocase -- [lindex $args 1] {
-                                        pages   { set what "pages" }
-                                        units   { set what "units" }
-                                        default { return "" }
-                                    }
-
-                                    # Move the content object horizontally.
-                                    $w.canvas xview scroll $number $what
-
-                                    return ""
-                                }
-                                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
-                            }
+                            $w.canvas xview scroll $number $what
                         }
                     }
+
+                    return ""
                 }
+                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
             }
         }
         yview {
@@ -4785,125 +4778,119 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             set subcommand [lindex  $args 0]
             set args       [lremove $args 0]
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false {
-                    switch -nocase -- $subcommand {
-                        ""     { return [interp invokehidden {} $w yview] }
-                        moveto {
-                            # Check the number of arguments provided (after the 'moveto' word).
-                            switch -- [llength $args] {
-                                1       {}
-                                default { return "" }
-                            }
+            switch -nocase -- $subcommand {
+                ""  {
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            ###########################
+                            ##                       ##
+                            ##     SIMPLE CANVAS     ##
+                            ##                       ##
+                            ###########################
 
-                            # Check the fraction provided.
-                            set fraction $args
-                            switch -- [string is double -strict $fraction] {
-                                0   { return "" }
-                            }
+                            return [interp invokehidden {} $w yview]
+                        }
+                        true {
+                            ###############################
+                            ##                           ##
+                            ##     SCROLLABLE CANVAS     ##
+                            ##                           ##
+                            ###############################
 
-                            # Check that fraction is inside its limits [0,1.0].
-                            if { $fraction < 0 } {
-                                set fraction 0
-                            } elseif { $fraction > 1.0 } {
-                                set fraction 1.0
-                            }
+                            return [$w.canvas yview]
+                        }
+                    }
+                }
+                moveto {
+                    # Check the number of arguments provided (after the 'moveto' word).
+                    switch -- [llength $args] {
+                        1       {}
+                        default { return "" }
+                    }
 
-                            # Move the content object vertically.
+                    # Check the fraction provided.
+                    set fraction $args
+                    switch -- [string is double -strict $fraction] {
+                        0   { return "" }
+                    }
+
+                    # Check that fraction is inside its limits [0,1.0].
+                    if { $fraction < 0 } {
+                        set fraction 0
+                    } elseif { $fraction > 1.0 } {
+                        set fraction 1.0
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            ###########################
+                            ##                       ##
+                            ##     SIMPLE CANVAS     ##
+                            ##                       ##
+                            ###########################
+
                             interp invokehidden {} $w yview moveto $fraction
-
-                            return ""
                         }
-                        scroll {
-                            # Check the number of arguments provided (after the 'scroll' word).
-                            switch -- [llength $args] {
-                                2       {}
-                                default { return "" }
-                            }
+                        true {
+                            ###############################
+                            ##                           ##
+                            ##     SCROLLABLE CANVAS     ##
+                            ##                           ##
+                            ###############################
 
-                            # Check the 'number'.
-                            set number [lindex $args 0]
-                            switch -- [string is double -strict $number] {
-                                0   { return "" }
-                            }
+                            $w.canvas yview moveto $fraction
+                        }
+                    }
 
-                            # Check the 'what'.
-                            switch -nocase -- [lindex $args 1] {
-                                pages   { set what "pages" }
-                                units   { set what "units" }
-                                default { return "" }
-                            }
+                    return ""
+                }
+                scroll {
+                    # Check the number of arguments provided (after the 'scroll' word).
+                    switch -- [llength $args] {
+                        2       {}
+                        default { return "" }
+                    }
 
-                            # Move the content object vertically.
+                    # Check the 'number'.
+                    set number [lindex $args 0]
+                    switch -- [string is double -strict $number] {
+                        0   { return "" }
+                    }
+
+                    # Check the 'what'.
+                    switch -nocase -- [lindex $args 1] {
+                        pages   { set what "pages" }
+                        units   { set what "units" }
+                        default { return "" }
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            ###########################
+                            ##                       ##
+                            ##     SIMPLE CANVAS     ##
+                            ##                       ##
+                            ###########################
+
                             interp invokehidden {} $w yview scroll $number $what
-
-                            return ""
                         }
-                        default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
-                    }
-                }
-                true {
-                    # Check if the widget has an active vertical scrollbar.
-                    switch -- $::ms::data($w,scrolly) {
-                        on  {
-                            switch -nocase -- $subcommand {
-                                ""     { return [$w.canvas yview] }
-                                moveto {
-                                    # Check the number of arguments provided (after the 'moveto' word).
-                                    switch -- [llength $args] {
-                                        1       {}
-                                        default { return "" }
-                                    }
+                        true {
+                            ###############################
+                            ##                           ##
+                            ##     SCROLLABLE CANVAS     ##
+                            ##                           ##
+                            ###############################
 
-                                    # Check the fraction provided.
-                                    set fraction $args
-                                    switch -- [string is double -strict $fraction] {
-                                        0   { return "" }
-                                    }
-
-                                    # Check that fraction is inside its limits [0,1.0].
-                                    if { $fraction < 0 } {
-                                        set fraction 0
-                                    } elseif { $fraction > 1.0 } {
-                                        set fraction 1.0
-                                    }
-
-                                    # Move the content object vertically.
-                                    $w.canvas yview moveto $fraction
-
-                                    return ""
-                                }
-                                scroll {
-                                    # Check the number of arguments provided (after the 'scroll' word).
-                                    switch -- [llength $args] {
-                                        2       {}
-                                        default { return "" }
-                                    }
-
-                                    # Check the 'number'.
-                                    set number [lindex $args 0]
-                                    switch -- [string is double -strict $number] {
-                                        0   { return "" }
-                                    }
-
-                                    # Check the 'what'.
-                                    switch -nocase -- [lindex $args 1] {
-                                        pages   { set what "pages" }
-                                        units   { set what "units" }
-                                        default { return "" }
-                                    }
-
-                                    # Move the content object vertically.
-                                    $w.canvas yview scroll $number $what
-
-                                    return ""
-                                }
-                                default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
-                            }
+                            $w.canvas yview scroll $number $what
                         }
                     }
+
+                    return ""
                 }
+                default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
             }
         }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
