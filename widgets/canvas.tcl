@@ -86,7 +86,7 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Note 2: Depending on the **-scrollable** option value two kinds of canvas structures are possible.
+# Note 2: Depending on the **-scrollable** option value, two kinds of canvas structures are possible.
 #         The mustang simple canvas (**-scrollable** false) is a single canvas widget.
 #         The mustang scrollable canvas (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
 #         a canvas object and two scrollbar objects (displayed only when needed).
