@@ -4546,6 +4546,9 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                     # Note: 'borderwidth', 'cursor', 'insertwidth', 'relief' and 'selectborderwidth' are not allowed to change if the statespec changes.
 
+                    # Note: Tk canvases don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
+
                     # background
                     switch -- $::ms::managed_by($w,background) {
                         developer { set background $::ms::current($w,background) }
@@ -4600,12 +4603,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
-
                     # Check if the widget is scrollable or not.
                     switch -- $::ms::current($w,scrollable) {
                         false {
@@ -4614,9 +4611,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                             ##     SIMPLE CANVAS     ##
                             ##                       ##
                             ###########################
-
-                            # Note: Tk canvases don't understands styles, at least not natively.
-                            #       No internal styles needs to be created.
 
                             # Apply the changes.
                             interp invokehidden {} $w configure {*}$canvas_options
@@ -4627,8 +4621,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                             ##     SCROLLABLE CANVAS     ##
                             ##                           ##
                             ###############################
-
-                            # Note: Canvases don't understands styles natively.
 
                             # Propagate the new statespec to the widget's hull and border objects.
                             interp invokehidden {} $w state $::ms::data($w,statespec)
