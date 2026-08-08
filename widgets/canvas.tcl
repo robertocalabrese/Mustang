@@ -447,8 +447,9 @@
 #                             See also **-background**.
 #
 # **-state**                  Specifies the state for the widget.
-#                             This is a write-only option: setting it changes the widget state, but the state widget command does
-#                             not affect the *-state* option.
+#                             The canvas widget state acts differently than the other widgets states, because it's a classic widget
+#                             and do not support natively any dynamic states.
+#                             Changes to the widget 'physical' state affects it's dynamic state.
 #                             Allowed states values are **normal** and **disabled**.
 #
 #                             Individual canvas objects all have their own state option which may override the default state.
@@ -2838,7 +2839,12 @@ proc ::ms::canvas::Command { window { args "" } } {
                         set value [string tolower $value]
                         switch -- $value {
                             disabled {
-                            normal   { set ::ms::current($w,state) $value }
+                                set ::ms::current($w,state) disabled
+
+                                # Set the widget dynamic state to 'disabled'
+                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
+                            }
+                            normal { set ::ms::current($w,state) normal }
                         }
                     }
                     -style {
@@ -3832,7 +3838,17 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         set value [string tolower $value]
                                         switch -- $value {
                                             disabled {
-                                            normal   { set ::ms::current($w,state) $value }
+                                                set ::ms::current($w,state) disabled
+
+                                                # Set the widget dynamic state to 'disabled'
+                                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
+                                            }
+                                            normal {
+                                                set ::ms::current($w,state) normal
+
+                                                # Set the widget dynamic state to '!disabled'
+                                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
+                                            }
                                         }
                                     }
                                     -style {
