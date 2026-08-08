@@ -536,7 +536,7 @@
 #                             e.g. **.x_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
 #                             If this option is not specified, then no command will be executed.
 #
-#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to 'auto'.
+#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to the empty string.
 #
 #                             If not specified defaults to the empty string.
 #
@@ -567,7 +567,7 @@
 #                             e.g. **.y_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
 #                             If this option is not specified, then no command will be executed.
 #
-#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to 'auto'.
+#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to the empty string.
 #
 #                             If not specified defaults to the empty string.
 #
@@ -3094,9 +3094,9 @@ proc ::ms::canvas::Command { window { args "" } } {
                     ##                           ##
                     ###############################
 
-                    # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with 'auto'.
-                    set ::ms::current($w,xscrollcommand) auto
-                    set ::ms::current($w,yscrollcommand) auto
+                    # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with the empty string.
+                    set ::ms::current($w,xscrollcommand) ""
+                    set ::ms::current($w,yscrollcommand) ""
 
                     # Check if the height provided is zero.
                     switch -- $::ms::current($w,height) {
