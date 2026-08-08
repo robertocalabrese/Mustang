@@ -86,7 +86,7 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Note 2: The simple canvas widget is a megawidget composed by an hull object (the megawidget container) and a canvas object.
+# Note 2: The simple canvas widget is composed by a single canvas object.
 #
 # Note 3: The scrollable canvas widget is a megawidget composed by an hull object (the megawidget container), a border object,
 #         a canvas object and two scrollbar objects (displayed only when needed).
@@ -123,8 +123,6 @@
 #                             See the **COLOR OPTION** section to know how this list should be composed.
 #
 #                             Note: It's only meaningful for widgets with a **solid** or **flat** relief.
-#
-#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
 #
 #                             Note: This is a styleable option.
 #
