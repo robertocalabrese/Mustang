@@ -447,9 +447,8 @@
 #                             See also **-background**.
 #
 # **-state**                  Specifies the state for the widget.
-#                             Setting it changes the widget **physical** state and the widget *look*.
-#                             Note that changing the widget *look* (through the state widget command) does not change the widget
-#                             *physical* state.
+#                             This is a write-only option: setting it changes the widget state, but the state widget command does
+#                             not affect the *-state* option.
 #                             Allowed states values are **normal** and **disabled**.
 #
 #                             Individual canvas objects all have their own state option which may override the default state.
@@ -2835,10 +2834,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                         set value [string tolower $value]
                         switch -- $value {
                             disabled {
-                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
-                                set ::ms::current($w,state)  disabled
-                            }
-                            normal { set ::ms::current($w,state) normal }
+                            normal   { set ::ms::current($w,state) $value }
                         }
                     }
                     -style {
@@ -2910,16 +2906,10 @@ proc ::ms::canvas::Command { window { args "" } } {
                 disabled {
                     set cursor    arrow
                     set takefocus 0
-
-                    # Set the widget dynamic state to 'disabled'.
-                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                 }
                 normal {
                     set cursor    $::ms::current($w,cursor)
                     set takefocus $::ms::current($w,takefocus)
-
-                    # Set the widget dynamic state to '!disabled'.
-                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
                 }
             }
 
@@ -3837,7 +3827,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     -state {
                                         set value [string tolower $value]
                                         switch -- $value {
-                                            disabled -
+                                            disabled {
                                             normal   { set ::ms::current($w,state) $value }
                                         }
                                     }
@@ -3943,21 +3933,15 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the cursor, statespec and takefocus accordingly.
+                            # Check the widget state and set the cursor and takefocus accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
                                     set takefocus 0
-
-                                    # Set the widget dynamic state to 'disabled'.
-                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                                 }
                                 normal {
                                     set cursor    $::ms::current($w,cursor)
                                     set takefocus $::ms::current($w,takefocus)
-
-                                    # Set the widget dynamic state to '!disabled'.
-                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
                                 }
                             }
 
