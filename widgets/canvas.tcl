@@ -2413,43 +2413,6 @@ _bind _Canvas <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
-# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-# and move that scrollbar by one page up or down (depending on the mousewheel direction).
-# If none of the widget's parent meets the required condition, don't do anything.
-_bind _Canvas <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
-
-# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-# and move that scrollbar by one page left or right (depending on the mousewheel direction).
-# If none of the widget's parent meets the required condition, don't do anything.
-_bind _Canvas <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
-
-# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
-#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
-
-# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-# These two planes may involve different widgets depending on the active scrollbars on them and on the
-# touchpad direction.
-#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-#
-#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Canvas <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
-
-# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-# These two planes may involve different widgets depending on the active scrollbars on them and on the
-# touchpad direction.
-#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#       and move that scrollbar by one page left or right (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-#
-#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#       and move that scrollbar by one page up or down (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
-
 # Create the mustang **canvas** package.
 namespace eval ::ms::canvas {
     # Set the canvas 'non-styleable' canvas option list.
