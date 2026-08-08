@@ -96,387 +96,387 @@
 #          - Retrieved with the **configure** or **cget** command with no exceptions.
 #          - Changed with the **configure** command, unless stated otherwise.
 #
-# **-background**             It's a list that specifies the color to use as background.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-background**         It's a list that specifies the color to use as background.
+#                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-background** specified in its style.
-#                                                            If there isn't one, the **-background** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-background** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                               If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                        If there isn't one, the **-background** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-background** will always abide by its mapping values, if any.
+#                                                        Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-shellbackground**.
+#                         See also **-shellbackground**.
 #
-# **-bordercolor**            It's a list that specifies the color to use as bordercolor.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-bordercolor**        It's a list that specifies the color to use as bordercolor.
+#                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: It's only meaningful for widgets with a **solid** or **flat** relief.
+#                         Note: It's only meaningful for widgets with a **solid** or **flat** relief.
 #
-#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#                         Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
-#                                                            If there isn't one, the **-bordercolor** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-bordercolor** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                               If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                        If there isn't one, the **-bordercolor** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-bordercolor** will always abide by its mapping values, if any.
+#                                                        Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-borderwidth** and **-relief**.
+#                         See also **-borderwidth** and **-relief**.
 #
-# **-borderwidth**            Specifies the width of the three-dimensional border to draw around the outside of the widget,
-#                             if such a border is being drawn.
-#                             The **-relief** option typically determines this.
+# **-borderwidth**        Specifies the width of the three-dimensional border to draw around the outside of the widget,
+#                         if such a border is being drawn.
+#                         The **-relief** option typically determines this.
 #
-#                             The value may also be used when drawing three-dimensional effects in the widget's interior.
-#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters or centimeters).
+#                         The value may also be used when drawing three-dimensional effects in the widget's interior.
+#                         The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                         (pixels, points, inches, millimeters or centimeters).
 #
-#                             Note: A value of **0** means no border.
+#                         Note: A value of **0** means no border.
 #
-#                             Note: Only working with reliefs that are not *flat*.
+#                         Note: Only working with reliefs that are not *flat*.
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
-#                                                            If there isn't one, the **-borderwidth** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-borderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                               If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
+#                                                        If there isn't one, the **-borderwidth** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-borderwidth** will not abide by its mapping values, if any.
+#                                                        It is not supposed to change when the widget state changes.
 #
-#                             See also **-bordercolor** and **-relief**.
+#                         See also **-bordercolor** and **-relief**.
 #
-# **-class**                  Specifies a class for the widget.
-#                             It is mainly used to make bindings for widgets that have the same class.
+# **-class**              Specifies a class for the widget.
+#                         It is mainly used to make bindings for widgets that have the same class.
 #
-#                             Note: This option may only be provided while creating the widget.
-#                                   Attempts to change this value after the widget is created by using the **configure** command,
-#                                   will be ignored by mustang.
+#                         Note: This option may only be provided while creating the widget.
+#                               Attempts to change this value after the widget is created by using the **configure** command,
+#                               will be ignored by mustang.
 #
-#                             If not provided, defaults to **TFrame**.
+#                         If not provided, defaults to **TFrame**.
 #
-# **-cmenu**                  Specifies the contextual menu address that will be assigned to the widget.
+# **-cmenu**              Specifies the contextual menu address that will be assigned to the widget.
 #
-#                             Simple text:     The contextual menu will be assign to the entire megawidget.
-#                                              If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                                              toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
-#                                              contextual menu, nothing will happen.
+#                         Simple text:     The contextual menu will be assign to the entire megawidget.
+#                                          If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                                          toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                                          contextual menu, nothing will happen.
 #
-#                             Scrollable text: The contextual menu will be assign to the *content* and *border* objects of the megawidget.
-#                                              If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                                              toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
-#                                              contextual menu, nothing will happen.
+#                         Scrollable text: The contextual menu will be assign to the *content* and *border* objects of the megawidget.
+#                                          If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                                          toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                                          contextual menu, nothing will happen.
 #
-#                                              The *hull* object will rather use the contextual menu of the widget's toplevel, if any.
-#                                              If the developer needs a different contextual menu for it, a variable called
-#                                              '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
-#                                              order to be used instead of the toplevel one.
+#                                          The *hull* object will rather use the contextual menu of the widget's toplevel, if any.
+#                                          If the developer needs a different contextual menu for it, a variable called
+#                                          '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
+#                                          order to be used instead of the toplevel one.
 #
-#                                              Note: '$short_addr' must be the short address of the text widget.
-#                                                    See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
+#                                          Note: '$short_addr' must be the short address of the text widget.
+#                                                See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
-#                                              If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
-#                                              contextual menu address, it will be ignored and the contextual menu of the widget's toplevel
-#                                              (if any) will be used. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#                                          If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
+#                                          contextual menu address, it will be ignored and the contextual menu of the widget's toplevel
+#                                          (if any) will be used. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
 #
-#                                              The *viewport* and the *scrollbar* objects are not supposed to have a contextual menu and
-#                                              will not be link with any.
+#                                          The *viewport* and the *scrollbar* objects are not supposed to have a contextual menu and
+#                                          will not be link with any.
 #
-#                             Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple frame widget, it will be silently ignored.
+#                         Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple frame widget, it will be silently ignored.
 #
-#                             If not provided, defaults to the empty string.
+#                         If not provided, defaults to the empty string.
 #
-# **-cursor**                 Specifies the mouse cursor to be used inside the widget.
-#                             If an empty string is specified, it indicates that the widget should defer to it's parent for
-#                             cursor specification.
+# **-cursor**             Specifies the mouse cursor to be used inside the widget.
+#                         If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                         cursor specification.
 #
-#                             See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#                         See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-cursor** specified in its style.
-#                                                            If there isn't one, the **-cursor** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-cursor** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                               If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                        If there isn't one, the **-cursor** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-cursor** will not abide by its mapping values, if any.
+#                                                        It is not supposed to change when the widget state changes.
 #
-# **-darkcolor**              It's a list that specifies the color to use as darkcolor.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-darkcolor**          It's a list that specifies the color to use as darkcolor.
+#                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#                         Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
 #
-#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#                         Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-darkcolor** specified in its style.
-#                                                            If there isn't one, the **-darkcolor** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-darkcolor** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                               If it's not provided --> The widget will follow the **-darkcolor** specified in its style.
+#                                                        If there isn't one, the **-darkcolor** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-darkcolor** will always abide by its mapping values, if any.
+#                                                        Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-lightcolor**.
+#                         See also **-lightcolor**.
 #
-# **-height**                 Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters and centimeters).
+# **-height**             Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                         (pixels, points, inches, millimeters and centimeters).
 #
-#                             If this option is **0** then the widget will assume the minimum height possible that can accomodate
-#                             it's content height. Negative values will be ignored.
+#                         If this option is **0** then the widget will assume the minimum height possible that can accomodate
+#                         it's content height. Negative values will be ignored.
 #
-#                             Note that scrollable frames will ignore height of '0'.
-#                             This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across operating systems
-#                             a height value of '0' will not be accepted for scrollable frames.
+#                         Note that scrollable frames will ignore height of '0'.
+#                         This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across operating systems
+#                         a height value of '0' will not be accepted for scrollable frames.
 #
-#                             Note: "WINDOW MANAGERS"
+#                         Note: "WINDOW MANAGERS"
 #
-#                                 Any toplevel is managed by the *window manager*.
-#                                 Any widget's program-requested height may cause it's toplevel to change it's height as well.
-#                                 If the toplevel program-requested height is ignored (by the window manager),
-#                                 then any widget's program-requested height is ignored too (by Tk that follows the istructions
-#                                 received by the 'window manager').
+#                             Any toplevel is managed by the *window manager*.
+#                             Any widget's program-requested height may cause it's toplevel to change it's height as well.
+#                             If the toplevel program-requested height is ignored (by the window manager),
+#                             then any widget's program-requested height is ignored too (by Tk that follows the istructions
+#                             received by the 'window manager').
 #
-#                                 Some window managers ignores any toplevel program-requested height and demands only to the
-#                                 user to manually change the toplevel's height.
+#                             Some window managers ignores any toplevel program-requested height and demands only to the
+#                             user to manually change the toplevel's height.
 #
-#                                 Some window managers allows any toplevel program-requested height until the user will
-#                                 manually change the toplevel's height.
-#                                 Once the user has manually changed the toplevel's height, any subsequent toplevel program-requested
-#                                 height will be ignored.
+#                             Some window managers allows any toplevel program-requested height until the user will
+#                             manually change the toplevel's height.
+#                             Once the user has manually changed the toplevel's height, any subsequent toplevel program-requested
+#                             height will be ignored.
 #
-#                                 Others window managers allows any toplevel program-requested height in any circumstances.
+#                             Others window managers allows any toplevel program-requested height in any circumstances.
 #
-#                             "Tk"
+#                         "Tk"
 #
-#                                 Tk ignores any widget's program-requested height if the **grid** or **pack** geometry manager is used
-#                                 within the widget, since these geometry managers will override the widget's height in those cases.
+#                             Tk ignores any widget's program-requested height if the **grid** or **pack** geometry manager is used
+#                             within the widget, since these geometry managers will override the widget's height in those cases.
 #
-#                             If not provided, defaults to **0** for simple frames and **500** pixels for scrollable frames.
+#                         If not provided, defaults to **0** for simple frames and **500** pixels for scrollable frames.
 #
-#                             See also **-width**.
+#                         See also **-width**.
 #
-# **-lightcolor**             It's a list that specifies the color to use as lightcolor.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-lightcolor**         It's a list that specifies the color to use as lightcolor.
+#                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#                         Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
 #
-#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#                         Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-lightcolor** specified in its style.
-#                                                            If there isn't one, the **-lightcolor** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-lightcolor** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                               If it's not provided --> The widget will follow the **-lightcolor** specified in its style.
+#                                                        If there isn't one, the **-lightcolor** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-lightcolor** will always abide by its mapping values, if any.
+#                                                        Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-darkcolor**.
+#                         See also **-darkcolor**.
 #
-# **-padding**                Specifies the internal padding for the widget.
-#                             The padding is a list of up to four length specifications.
-#                             The values must be in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters or centimeters).
+# **-padding**            Specifies the internal padding for the widget.
+#                         The padding is a list of up to four length specifications.
+#                         The values must be in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                         (pixels, points, inches, millimeters or centimeters).
 #
-#                             A list of four values specifies the left, top, right and bottom padding.
-#                             A list of three values specifies the left, vertical, and right padding.
-#                             A list of two values specifies the horizontal and the vertical padding
-#                             A single value specifies the same padding all the way around the widget.
+#                         A list of four values specifies the left, top, right and bottom padding.
+#                         A list of three values specifies the left, vertical, and right padding.
+#                         A list of two values specifies the horizontal and the vertical padding
+#                         A single value specifies the same padding all the way around the widget.
 #
-#                             When computing how large a window it needs, the widget will add this amount to the width it would
-#                             normally need (as determined by the width of the things displayed in the widget).
-#                             If the geometry manager can satisfy this request, the widget will end up with extra internal space
-#                             to the left and/or right of what it displays inside.
+#                         When computing how large a window it needs, the widget will add this amount to the width it would
+#                         normally need (as determined by the width of the things displayed in the widget).
+#                         If the geometry manager can satisfy this request, the widget will end up with extra internal space
+#                         to the left and/or right of what it displays inside.
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-padding** specified in its style.
-#                                                            If there isn't one, the **-padding** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-padding** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                               If it's not provided --> The widget will follow the **-padding** specified in its style.
+#                                                        If there isn't one, the **-padding** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-padding** will not abide by its mapping values, if any.
+#                                                        It is not supposed to change when the widget state changes.
 #
-# **-relief**                 Specifies the three-dimensional effect desired for the widget.
-#                             The value indicates how the widget's interior should appear relative to its exterior.
-#                             For example, *raised* means the widget's interior should appear to protrude from the screen,
-#                             relative to the exterior of the widget.
+# **-relief**             Specifies the three-dimensional effect desired for the widget.
+#                         The value indicates how the widget's interior should appear relative to its exterior.
+#                         For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                         relative to the exterior of the widget.
 #
-#                             The widget will accept as relief any of the following values:
-#                                **flat**,
-#                                **groove**,
-#                                **raised**,
-#                                **ridge**,
-#                                **solid**,
-#                                **sunken**.
+#                         The widget will accept as relief any of the following values:
+#                            **flat**,
+#                            **groove**,
+#                            **raised**,
+#                            **ridge**,
+#                            **solid**,
+#                            **sunken**.
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-relief** specified in its style.
-#                                                            If there isn't one, the **-relief** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-relief** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                               If it's not provided --> The widget will follow the **-relief** specified in its style.
+#                                                        If there isn't one, the **-relief** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-relief** will not abide by its mapping values, if any.
+#                                                        It is not supposed to change when the widget state changes.
 #
-#                             See also **-bordercolor** and **-borderwidth**.
+#                         See also **-bordercolor** and **-borderwidth**.
 #
-# **-scrollable**             Specifies a boolean value indicating wheter or not the widget should be scrollable.
-#                             If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single frame widget.
+# **-scrollable**         Specifies a boolean value indicating wheter or not the widget should be scrollable.
+#                         If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single frame widget.
 #
-#                             The scrollbars will be automatically managed by Tk with the following rules:
-#                                The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
-#                                the widget *viewport* width and *not needed* when it's not.
+#                         The scrollbars will be automatically managed by Tk with the following rules:
+#                            The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
+#                            the widget *viewport* width and *not needed* when it's not.
 #
-#                                The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
-#                                the widget *viewport* height and *not needed* when it's not.
+#                            The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
+#                            the widget *viewport* height and *not needed* when it's not.
 #
-#                                If a scrollbar is currently needed, then it will be displayed (if it's not already displayed).
-#                                If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
-#                                already displayed).
+#                            If a scrollbar is currently needed, then it will be displayed (if it's not already displayed).
+#                            If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
+#                            already displayed).
 #
-#                             Note: This option may be provided while creating the widget.
-#                                   Attempts to change this value after the widget was created by using the **configure** command,
-#                                   will be ignored by mustang.
+#                         Note: This option may be provided while creating the widget.
+#                               Attempts to change this value after the widget was created by using the **configure** command,
+#                               will be ignored by mustang.
 #
-#                             If not provided, defaults to **false** (meaning no scrollbar).
+#                         If not provided, defaults to **false** (meaning no scrollbar).
 #
-# **-shellbackground**        It's a list that specifies the color to use as background structure.
-#                             This color will be used in the interspaces between the mustang objects that compose the scrollable widget and
-#                             should reflects the widget's parent background.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-shellbackground**    It's a list that specifies the color to use as background structure.
+#                         This color will be used in the interspaces between the mustang objects that compose the scrollable widget and
+#                         should reflects the widget's parent background.
+#                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: The *-shellbackground* is meaningless and will be ignored for frames that are not scrollable.
+#                         Note: The *-shellbackground* is meaningless and will be ignored for frames that are not scrollable.
 #
-#                             Note: This is a styleable option.
+#                         Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
-#                                                            If there isn't one, the **-shellbackground** of the **TFrame** style
-#                                                            will be used instead.
-#                                                            The **-shellbackground** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                               If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
+#                                                        If there isn't one, the **-shellbackground** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-shellbackground** will always abide by its mapping values, if any.
+#                                                        Styles, mappings and states events are allowed to change its value.
 #
-#                                                            Note: The **-shellbackground** should change rarely, for example upon
-#                                                                  an **Activate**/**Deactivate** event.
+#                                                        Note: The **-shellbackground** should change rarely, for example upon
+#                                                              an **Activate**/**Deactivate** event.
 #
-#                             See also **-background**.
+#                         See also **-background**.
 #
-# **-state**                  Specifies the state for the widget.
+# **-state**              Specifies the state for the widget.
 #
-#                             Note: Frames have only the **normal** state.
+#                         Note: Frames have only the **normal** state.
 #
-#                             Note: This option will be ignored if provided while creating the widget.
-#                                   Attempts to change this value after the widget was created, by using the **configure** command,
-#                                   will be ignored by mustang.
-#                                   This option can only be retrieved.
+#                         Note: This option will be ignored if provided while creating the widget.
+#                               Attempts to change this value after the widget was created, by using the **configure** command,
+#                               will be ignored by mustang.
+#                               This option can only be retrieved.
 #
-#                             It's set to **normal**.
+#                         It's set to **normal**.
 #
-# **-style**                  Specifies a custom widget style.
-#                             If not provided, defaults to **TFrame**.
+# **-style**              Specifies a custom widget style.
+#                         If not provided, defaults to **TFrame**.
 #
-#                             The *style* provided should already exists at the time the widget is created.
+#                         The *style* provided should already exists at the time the widget is created.
 #
-#                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#                         See the [style](/wiki/commands/style.md) wiki page to know more about styles.
 #
-# **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
-#                             and **Shift-Tab**).
+# **-takefocus**          Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                         and **Shift-Tab**).
 #
-#                             Before setting the focus to a widget, the traversal scripts consult the value of the
-#                             *-takefocus* option.
-#                                **0** --> It means that the widget should be skipped entirely during keyboard traversal.
-#                                **1** --> It means that the widget should receive the input focus as long as it is viewable
-#                                          and all of its ancestors are mapped.
+#                         Before setting the focus to a widget, the traversal scripts consult the value of the
+#                         *-takefocus* option.
+#                            **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                            **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                      and all of its ancestors are mapped.
 #
-#                             Differently than Tk, mustang does not allow the empty string as a valid value.
+#                         Differently than Tk, mustang does not allow the empty string as a valid value.
 #
-#                             If not provided, defaults to **0**.
+#                         If not provided, defaults to **0**.
 #
-# **-width**                  Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters and centimeters).
+# **-width**              Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                         (pixels, points, inches, millimeters and centimeters).
 #
-#                             If this option is **0** then the widget will assume the minimum width possible that can accomodate
-#                             it's content width. Negative values will be ignored.
+#                         If this option is **0** then the widget will assume the minimum width possible that can accomodate
+#                         it's content width. Negative values will be ignored.
 #
-#                             Note that scrollable frames will ignore width of '0'.
-#                             This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across operating systems
-#                             a width value of '0' will not be accepted for scrollable frames.
+#                         Note that scrollable frames will ignore width of '0'.
+#                         This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across operating systems
+#                         a width value of '0' will not be accepted for scrollable frames.
 #
-#                             Note: "WINDOW MANAGERS"
+#                         Note: "WINDOW MANAGERS"
 #
-#                                       Any toplevel is managed by the *window manager*.
-#                                       Any widget's program-requested width may cause it's toplevel to change it's width as well.
-#                                       If the toplevel program-requested width is ignored (by the window manager),
-#                                       then any widget's program-requested width is ignored too (by Tk that follows the istructions
-#                                       received by the window manager).
+#                                   Any toplevel is managed by the *window manager*.
+#                                   Any widget's program-requested width may cause it's toplevel to change it's width as well.
+#                                   If the toplevel program-requested width is ignored (by the window manager),
+#                                   then any widget's program-requested width is ignored too (by Tk that follows the istructions
+#                                   received by the window manager).
 #
-#                                       Some window managers ignores any toplevel program-requested width and demands only to the
-#                                       user to manually change the toplevel's width.
+#                                   Some window managers ignores any toplevel program-requested width and demands only to the
+#                                   user to manually change the toplevel's width.
 #
-#                                       Some window managers allows any toplevel program-requested width until the user will
-#                                       manually change the toplevel's width.
-#                                       Once the user has manually changed the toplevel's width, any subsequent toplevel program-requested
-#                                       width will be ignored.
+#                                   Some window managers allows any toplevel program-requested width until the user will
+#                                   manually change the toplevel's width.
+#                                   Once the user has manually changed the toplevel's width, any subsequent toplevel program-requested
+#                                   width will be ignored.
 #
-#                                       Others window managers allows any toplevel program-requested width in any circumstances.
+#                                   Others window managers allows any toplevel program-requested width in any circumstances.
 #
-#                                   "Tk"
+#                               "Tk"
 #
-#                                       Tk ignores any widget's program-requested width if the **grid** or **pack** geometry manager is used
-#                                       within the widget, since these geometry managers will override the widget's width in those cases.
+#                                   Tk ignores any widget's program-requested width if the **grid** or **pack** geometry manager is used
+#                                   within the widget, since these geometry managers will override the widget's width in those cases.
 #
-#                             If not provided, defaults to **0** for simple frames and **500** pixels for scrollable frames.
+#                         If not provided, defaults to **0** for simple frames and **500** pixels for scrollable frames.
 #
-#                             See also **-height**.
+#                         See also **-height**.
 #
-# **-xscrollincrement**       Specifies an integer indicating the increment for the horizontal scrolling.
+# **-xscrollincrement**   Specifies an integer indicating the increment for the horizontal scrolling.
 #
-#                             If the value of this option is greater than zero, the horizontal view in the widget will be constrained so
-#                             that the frame *x* coordinate at the left edge of the widget is always an even multiple of **xScrollIncrement**;
-#                             furthermore, the units for scrolling (e.g., the change in view when the left and right arrows of a
-#                             scrollbar are selected) will also be **xScrollIncrement**.
-#                             If the value of this option is **0**, then horizontal scrolling is unconstrained.
+#                         If the value of this option is greater than zero, the horizontal view in the widget will be constrained so
+#                         that the frame *x* coordinate at the left edge of the widget is always an even multiple of **xScrollIncrement**;
+#                         furthermore, the units for scrolling (e.g., the change in view when the left and right arrows of a
+#                         scrollbar are selected) will also be **xScrollIncrement**.
+#                         If the value of this option is **0**, then horizontal scrolling is unconstrained.
 #
-#                             Note: The *-xscrollincrement* is meaningless and will be ignored for frames that are not scrollable.
+#                         Note: The *-xscrollincrement* is meaningless and will be ignored for frames that are not scrollable.
 #
-#                             If not provided, defaults to **0**.
+#                         If not provided, defaults to **0**.
 #
-# **-yscrollincrement**       Specifies an integer indicating the increment for the vertical scrolling.
+# **-yscrollincrement**   Specifies an integer indicating the increment for the vertical scrolling.
 #
-#                             If the value of this option is greater than zero, the vertical view in the widget will be constrained so
-#                             that the frame *y* coordinate at the left edge of the widget is always an even multiple of **xScrollIncrement**;
-#                             furthermore, the units for scrolling (e.g., the change in view when the left and right arrows of a
-#                             scrollbar are selected) will also be **yScrollIncrement**.
-#                             If the value of this option is zero, then vertical scrolling is unconstrained.
+#                         If the value of this option is greater than zero, the vertical view in the widget will be constrained so
+#                         that the frame *y* coordinate at the left edge of the widget is always an even multiple of **xScrollIncrement**;
+#                         furthermore, the units for scrolling (e.g., the change in view when the left and right arrows of a
+#                         scrollbar are selected) will also be **yScrollIncrement**.
+#                         If the value of this option is zero, then vertical scrolling is unconstrained.
 #
-#                             Note: The *-yscrollincrement* is meaningless and will be ignored for frames that are not scrollable.
+#                         Note: The *-yscrollincrement* is meaningless and will be ignored for frames that are not scrollable.
 #
-#                             If not provided, defaults to **0**.
+#                         If not provided, defaults to **0**.
 #
 #### WIDGET COMMAND:
 #
@@ -1904,7 +1904,7 @@ proc ::ms::frame::Command { window { args "" } } {
                                        -row 0 \
                                     -sticky nesw;
 
-                                    ##################################
+                    ##################################
                     ##                              ##
                     ##     VIEWPORT AND CONTENT     ##
                     ##                              ##
