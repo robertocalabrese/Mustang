@@ -86,9 +86,9 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Note 2: The simple canvas widget is composed by a single canvas object.
-#
-# Note 3: The scrollable canvas widget is a megawidget composed by an hull object (the megawidget container), a border object,
+# Note 2: Depending on the **-scrollable** option value two kinds of canvas structures are possible.
+#         The mustang simple canvas (**-scrollable** false) is a single canvas widget.
+#         The mustang scrollable canvas (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
 #         a canvas object and two scrollbar objects (displayed only when needed).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the canvas.
@@ -550,6 +550,8 @@
 #
 #                             See also **-xscrollcommand**, **-yscrollcommand**, **-yscrollincrement** and **-scrollable**.
 #
+#                             If not provided, defaults to **0**.
+#
 # **-yscrollcommand**         Specifies the prefix for a command used to communicate with vertical scrollbars.
 #                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
 #                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
@@ -578,6 +580,8 @@
 #                             is zero, then vertical scrolling is unconstrained.
 #
 #                             See also **-xscrollcommand**, **-yscrollcommand**, **-xscrollincrement** and **-scrollable**.
+#
+#                             If not provided, defaults to **0**.
 #
 #### WIDGET COMMAND:
 #
