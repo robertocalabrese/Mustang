@@ -3174,7 +3174,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     ##                ##
                     ####################
 
-                    # Note: Tk Canvases don't understands styles, at least not natively.
+                    # Note: Tk canvases don't understands styles, at least not natively.
                     #       No internal styles needs to be created.
 
                     # Add the internal 'xscrollcommand' and 'yscrollcommand' data.
@@ -4063,7 +4063,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     ##                ##
                                     ####################
 
-                                    # Note: Tk Canvases don't understands styles, at least not natively.
+                                    # Note: Tk canvases don't understands styles, at least not natively.
                                     #       No internal styles needs to be created.
 
                                     # Add the provided 'xscrollcommand' and 'yscrollcommand' data.
@@ -4149,7 +4149,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     ##                ##
                                     ####################
 
-                                    # Note: Tk Canvases don't understands styles, at least not natively.
+                                    # Note: Tk canvases don't understands styles, at least not natively.
                                     #       No internal styles needs to be created.
 
                                     # Create the widget.
@@ -5023,7 +5023,7 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
                 ##                ##
                 ####################
 
-                # Note: Tk Canvases don't understands styles, at least not natively.
+                # Note: Tk canvases don't understands styles, at least not natively.
                 #       No internal styles needs to be created.
 
                 # Apply the changes.
