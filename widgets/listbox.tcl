@@ -1258,7 +1258,59 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        selection {}
+        selection {
+            # Synopsis:
+            #
+            # *window* **selection** *option* *arg*
+            #    *window* **selection** **anchor** *index*
+            #    *window* **selection** **clear** *first* ?*last*?
+            #    *window* **selection** **includes** *index*
+            #    *window* **selection** **set** *first* ?*last*?
+
+            # Check if there are items associated to the listbox.
+            switch -- $::ms::current($w,values) {
+                ""  { return "" }
+            }
+
+            try {
+                $w.listbox selection {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                set subcommand [lindex  $args 0]
+                set args       [lremove $args 0]
+
+                switch -- $subcommand {
+                    set {
+                        # Set the new preselected index.
+                        switch -- [llength $args] {
+                            1   { set ::ms::data($w,preselected_index) [lindex $args 0] }
+                            2   { set ::ms::data($w,preselected_index) [lindex $args 1] }
+                        }
+                    }
+                    clear {
+                        # Deselect the preselection of the indexes provided.
+                        switch -- [llength $args] {
+                            1   {
+                                $w.listbox itemconfigure [lindex $args 0] -background $::ms::current($w,background) \
+                                                                          -foreground $::ms::current($w,foreground);
+                            }
+                            2   {
+                                set index [lindex $args 0]
+                                while { $index < [expr { [lindex $args 1]+1 }] } {
+                                    $w.listbox itemconfigure $index -background $::ms::current($w,background) \
+                                                                    -foreground $::ms::current($w,foreground);
+
+                                    incr index
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return $result
+            }
+        }
         state {}
         style {}
         xview {}
