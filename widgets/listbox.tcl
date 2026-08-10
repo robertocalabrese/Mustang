@@ -1910,7 +1910,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
             # and move that scrollbar by one unit towards the right or left.
             # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
+            _bind $w.listbox <<NextChar>> { ::ms::listbox::NextChar [_winfo parent %W]; break }
             _bind $w.listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
 
             # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
@@ -4456,7 +4456,7 @@ proc ::ms::listbox::Motion { w x y } {
     return ""
 }
 
-## Next_Char
+## NextChar
 #
 # Scroll the listbox horizontally by one unit towards the right.
 #
@@ -4465,7 +4465,7 @@ proc ::ms::listbox::Motion { w x y } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Next_Char { w } {
+proc ::ms::listbox::NextChar { w } {
     switch -- $::ms::current($w,state) {
         normal {
             switch -- $::ms::data($w,scrollx) {
