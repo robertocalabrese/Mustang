@@ -216,10 +216,13 @@ interp alias {} listbox {} ::ms::listbox::Command
 #
 # Returns the pathname of the new window created.
 proc ::ms::listbox::Command { window { args "" } } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _listbox $window {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the 'window' address and set its real and short addresses.
+    set addresses  [::ms::Check_Widget_Address $window $caller_info]
+    set w          [lindex $addresses 0]
+    set short_addr [lindex $addresses 1]
 }
 
 #####################################
