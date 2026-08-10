@@ -584,6 +584,123 @@ proc ::ms::listbox::Command { window { args "" } } {
                     set takefocus $::ms::current($w,takefocus)
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
+            #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
+            #       and 'selectforeground' are not allowed to change if the statespec changes.
+
+            # bordercolor
+            switch -- $::ms::managed_by($w,bordercolor) {
+                developer { set bordercolor $::ms::current($w,bordercolor) }
+                Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+            }
+
+            # Set the listbox options.
+            set listbox_options [list         -activestyle $::ms::current($w,activestyle) \
+                                               -background $::ms::current($w,background) \
+                                                   -cursor $cursor \
+                                          -exportselection $::ms::current($w,exportselection) \
+                                       -disabledforeground $::ms::current($w,disabledforeground) \
+                                                     -font $::ms::current($w,font) \
+                                               -foreground $::ms::current($w,foreground) \
+                                                   -height $::ms::current($w,rows) \
+                                                  -justify $::ms::current($w,justify) \
+                                             -listvariable ::ms::data($w,listvariable) \
+                                         -selectbackground $::ms::current($w,selectbackground) \
+                                        -selectborderwidth $::ms::current($w,selectborderwidth) \
+                                         -selectforeground $::ms::current($w,selectforeground) \
+                                               -selectmode $::ms::current($w,selectmode) \
+                                                  -setgrid $::ms::current($w,setgrid) \
+                                                    -state $::ms::current($w,state) \
+                                                -takefocus $takefocus \
+                                                    -width $::ms::current($w,columns) \
+                                           -xscrollcommand [list $w.x set] \
+                                           -yscrollcommand [list $w.y set]];
+
+            # Note: The '-bordercolor' option is not understanded by Tk listboxes, but is made available trough
+            #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+            #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+            #       like it behaves in other widgets that understands the bordercolor.
+
+            # Check the 'relief' type.
+            switch -- $::ms::current($w,relief) {
+                flat  -
+                solid {
+                    lappend listbox_options         -borderwidth 0 \
+                                            -highlightbackground $bordercolor \
+                                                 -highlightcolor $bordercolor \
+                                             -highlightthickness $::ms::current($w,borderwidth) \
+                                                         -relief flat;
+                }
+                default {
+                    lappend listbox_options         -borderwidth $::ms::current($w,borderwidth) \
+                                            -highlightbackground $::ms::current($w,background) \
+                                                 -highlightcolor $::ms::current($w,background) \
+                                             -highlightthickness 0 \
+                                                         -relief $::ms::current($w,relief);
+                }
+            }
+
+            ##################
+            ##              ##
+            ##     HULL     ##
+            ##              ##
+            ##################
+
+            # Set the hull object style name.
+            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                 ".TFrame"];
+
+            # If needed, create the hull object style name.
+            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                # Add the hull object style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+            }
+
+            # Initialize the hull object mapping.
+            set mapping [list ]
+
+            # shellbackground
+            switch -- $::ms::managed_by($w,shellbackground) {
+                developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                Tk  {
+                    # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
+                    }
+                }
+            }
+
+            # If needed, create the hull object mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                # Add the hull object mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the hull object.
+            _ttk_frame $w -borderwidth 0 \
+                                -class TFrame \
+                               -cursor arrow \
+                               -height 0 \
+                              -padding 0 \
+                               -relief flat \
+                                -style $::ms::style($w,hull) \
+                            -takefocus 0 \
+                                -width 0;
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
