@@ -1109,7 +1109,7 @@ _bind _Frame <Configure> { ::ms::frame::Configure %W %w %h; break }
 _bind _Frame <Destroy> { ::ms::frame::Destroy %W; break }
 
 # FocusIn/FocusOut
-_bind _Frame <FocusIn>  { ::ms::frame::Focus_In  %W }
+_bind _Frame <FocusIn>  { ::ms::frame::FocusIn  %W }
 _bind _Frame <FocusOut> { ::ms::frame::Focus_Out %W }
 
 # Mousewheel and Touchpad
@@ -2059,7 +2059,7 @@ proc ::ms::frame::Command { window { args "" } } {
                     _bind $w.y                       <Leave> { ::ms::frame::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.border.viewport.content <FocusIn>  { ::ms::frame::Focus_In  [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+                    _bind $w.border.viewport.content <FocusIn>  { ::ms::frame::FocusIn  [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
                     _bind $w.border.viewport.content <FocusOut> { ::ms::frame::Focus_Out [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
                     # Mousewheel and Touchpad
@@ -4241,7 +4241,7 @@ proc ::ms::frame::Destroy { w } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the **FocusIn** event.
 #
@@ -4250,7 +4250,7 @@ proc ::ms::frame::Destroy { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::frame::Focus_In { w } {
+proc ::ms::frame::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::frame::Pathname_Cmd $w state focus
 
