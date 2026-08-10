@@ -1110,7 +1110,7 @@ _bind _Frame <Destroy> { ::ms::frame::Destroy %W; break }
 
 # FocusIn/FocusOut
 _bind _Frame <FocusIn>  { ::ms::frame::FocusIn  %W }
-_bind _Frame <FocusOut> { ::ms::frame::Focus_Out %W }
+_bind _Frame <FocusOut> { ::ms::frame::FocusOut %W }
 
 # Mousewheel and Touchpad
 
@@ -2060,7 +2060,7 @@ proc ::ms::frame::Command { window { args "" } } {
 
                     # FocusIn/FocusOut
                     _bind $w.border.viewport.content <FocusIn>  { ::ms::frame::FocusIn  [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
-                    _bind $w.border.viewport.content <FocusOut> { ::ms::frame::Focus_Out [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+                    _bind $w.border.viewport.content <FocusOut> { ::ms::frame::FocusOut [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
                     # Mousewheel and Touchpad
 
@@ -4257,7 +4257,7 @@ proc ::ms::frame::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -4266,7 +4266,7 @@ proc ::ms::frame::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::frame::Focus_Out { w } {
+proc ::ms::frame::FocusOut { w } {
     # Check the contextual menu associated with this widget, if any.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
