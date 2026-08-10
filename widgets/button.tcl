@@ -973,7 +973,7 @@ _bind _Button <Enter> { ::ms::button::Pathname_Cmd %W state  hover; break }
 _bind _Button <Leave> { ::ms::button::Pathname_Cmd %W state !hover; break }
 
 # FocusIn/FocusOut
-_bind _Button <FocusIn>  { ::ms::button::Focus_In  %W; break }
+_bind _Button <FocusIn>  { ::ms::button::FocusIn  %W; break }
 _bind _Button <FocusOut> { ::ms::button::Focus_Out %W; break }
 
 # Return/KP_Enter/space
@@ -2882,7 +2882,7 @@ proc ::ms::button::Destroy { w } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the **FocusIn** event.
 #
@@ -2891,7 +2891,7 @@ proc ::ms::button::Destroy { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::button::Focus_In { w } {
+proc ::ms::button::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::button::Pathname_Cmd $w state focus
 
