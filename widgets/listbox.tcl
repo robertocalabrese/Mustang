@@ -1581,6 +1581,80 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                             # Apply the changes.
                             interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                            #####################
+                            ##                 ##
+                            ##     LISTBOX     ##
+                            ##                 ##
+                            #####################
+
+                            # Note: Tk listboxes don't understands styles, at least not natively.
+                            #       No internal styles needs to be created.
+
+                            # Apply the changes.
+                            $w.listbox configure {*}$listbox_options
+
+                            # Check if there are any items associated to the listbox.
+                            switch -- $::ms::current($w,values) {
+                                ""      {}
+                                default {
+                                    # Recolor any index with the new default colors (background and foreground).
+                                    set index 0
+                                    while { $index < [$w.listbox size] } {
+                                        $w.listbox itemconfigure $index -background $::ms::current($w,background) \
+                                                                        -foreground $::ms::current($w,foreground);
+
+                                        incr index
+                                    }
+
+                                    # Check if a new set of values was provided.
+                                    switch -- $new_values {
+                                        false {
+                                            # Recolor any previously selected indexes with the new selected colors (selectedbackground and selectedforeground).
+                                            set selected_indexes [$w.listbox curselection]
+                                            foreach index $selected_indexes {
+                                                $w.listbox selection set $index
+                                            }
+
+                                            # Check if there is a preselected index.
+                                            switch -- $::ms::data($w,preselected_index) {
+                                                ""      {}
+                                                default {
+                                                    # If the preselected index is not also a selected index, recolor it with the new preselected colors
+                                                    # (preselectedbackground and preselectedforeground).
+                                                    if { $::ms::data($w,preselected_index) ni $selected_indexes } {
+                                                        $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                                                   -foreground $::ms::current($w,preselectforeground);
+
+                                                        # Remove the active style.
+                                                        $w.listbox configure -activestyle none
+                                                    } else {
+                                                        # Be sure that the active style is the one chosen by the developer.
+                                                        $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+                                                        # Activate the preselected index.
+                                                        $w.listbox activate $::ms::data($w,preselected_index)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        true {
+                                            # Select the first index of the listbox.
+                                            $w.listbox selection clear 0 end
+                                            $w.listbox selection set 0
+
+                                            # Set the selection anchor to the first index.
+                                            $w.listbox selection anchor 0
+
+                                            # Activate the selected index.
+                                            $w.listbox activate 0
+
+                                            # Adjust the listbox viewport.
+                                            $w.listbox see 0
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
