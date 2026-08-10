@@ -2476,4 +2476,88 @@ proc ::ms::listbox::Arrow_Down { w } {
     return ""
 }
 
+## Arrow_Up
+#
+# Moves the preselection up by one element.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Arrow_Up { w } {
+    # Note: This procedure was inspired by the listbox procedure 'ListboxUpDown'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check if there is a preselected index.
+            set preselected_index $::ms::data($w,preselected_index)
+            switch -- $preselected_index {
+                ""  { set preselected_index 0 }
+            }
+
+            # Set the new preselect index.
+            set preselected_index [expr { $preselected_index-1 }]
+
+            # Get the listbox size.
+            set size [$w.listbox size]
+
+            # Check the scrollstopper ('disabled' or 'enabled').
+            switch -- $::ms::scrollstopper {
+                disabled {
+                    # If 'preselected_index' reaches -1, cycle trough.
+                    if { $preselected_index < 0 } {
+                        set preselected_index [expr { $size-1 }]
+                    }
+                }
+                enabled {
+                    # If 'preselected_index' reaches -1, stop the movement.
+                    if { $preselected_index < 0 } {
+                        return ""
+                    }
+                }
+            }
+
+            # Register the new preselected index.
+            set ::ms::data($w,preselected_index) $preselected_index
+
+            # Deselect any preselected index.
+            set index 0
+            while { $index < $size } {
+                $w.listbox itemconfigure $index -background $::ms::current($w,background) \
+                                                -foreground $::ms::current($w,foreground);
+
+                incr index
+            }
+
+            # If the preselect index is not a selected index, preselect it.
+            if { $::ms::data($w,preselected_index) ni [$w.listbox curselection] } {
+                $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                           -foreground $::ms::current($w,preselectforeground);
+
+                # Remove the activestyle.
+                $w.listbox configure -activestyle none
+            } else {
+                # Be sure that the active style is the one chosen by the developer.
+                $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+                # Activate the preselected index.
+                $w.listbox activate $::ms::data($w,preselected_index)
+            }
+
+            # Adjust the listbox viewport.
+            $w.listbox see $::ms::data($w,preselected_index)
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
