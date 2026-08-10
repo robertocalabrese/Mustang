@@ -929,7 +929,7 @@ _bind _Checkbutton <Leave> { ::ms::radiobutton::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Checkbutton <FocusIn>  { ::ms::radiobutton::FocusIn  %W; break }
-_bind _Checkbutton <FocusOut> { ::ms::radiobutton::Focus_Out %W; break }
+_bind _Checkbutton <FocusOut> { ::ms::radiobutton::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
@@ -1793,9 +1793,9 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             _bind $w.label     <FocusIn>  { ::ms::checkbutton::FocusIn  [_winfo parent %W]; break }
             _bind $w.highlight <FocusIn>  { ::ms::checkbutton::FocusIn  [_winfo parent %W]; break }
 
-            _bind $w.indicator <FocusOut> { ::ms::checkbutton::Focus_Out [_winfo parent %W]; break }
-            _bind $w.label     <FocusOut> { ::ms::checkbutton::Focus_Out [_winfo parent %W]; break }
-            _bind $w.highlight <FocusOut> { ::ms::checkbutton::Focus_Out [_winfo parent %W]; break }
+            _bind $w.indicator <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
+            _bind $w.label     <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
+            _bind $w.highlight <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
 
             # Return/KP_Enter
             _bind $w.indicator <Return>   { ::ms::checkbutton::Return [_winfo parent %W]; break }
@@ -3344,7 +3344,7 @@ proc ::ms::checkbutton::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -3353,7 +3353,7 @@ proc ::ms::checkbutton::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::checkbutton::Focus_Out { w } {
+proc ::ms::checkbutton::FocusOut { w } {
     # Check the contextual menu associated with this widget, if any.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
