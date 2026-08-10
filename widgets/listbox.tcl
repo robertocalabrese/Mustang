@@ -3524,4 +3524,60 @@ proc ::ms::listbox::Prev_Char { w } {
     return ""
 }
 
+########################
+##                    ##
+##     SELECTIONS     ##
+##                    ##
+########################
+
+# Note: The following procedures were inspired by the listbox mechanism for selections.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Select_All
+#
+# This procedure is invoked to handle the "select all" operation.
+# For extended and multiple selectmode, it selects everything in the widget.
+# Otherwise, nothing will happen.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Select_All { w } {
+    # Check the 'selectmode'.
+    switch -- $::ms::current($w,selectmode) {
+        extended -
+        multiple {
+            # Check if there are items associated to the listbox.
+            switch -- $::ms::current($w,values) {
+                ""  { return "" }
+            }
+
+            # Check if there is a preselected index.
+            switch -- $::ms::data($w,preselected_index) {
+                ""  { set ::ms::data($w,preselected_index) 0 }
+            }
+
+            # Deselect any previously selected index.
+            $w.listbox selection clear 0 end
+
+            # Select all indexes.
+            $w.listbox selection set 0 end
+
+            # Be sure that the active style is the one chosen by the developer.
+            $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+            # Activate the preselected index.
+            $w.listbox activate $::ms::data($w,preselected_index)
+
+            # Fire up the selection event.
+            ::tk::FireListboxSelectEvent $w.listbox
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
