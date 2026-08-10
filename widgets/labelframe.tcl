@@ -1245,7 +1245,7 @@ _bind _Labelframe <Enter> { ::ms::labelframe::Hover %W %X %Y; break }
 _bind _Labelframe <Leave> { ::ms::labelframe::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Labelframe <FocusIn>  { ::ms::labelframe::Focus_In  %W; break }
+_bind _Labelframe <FocusIn>  { ::ms::labelframe::FocusIn  %W; break }
 _bind _Labelframe <FocusOut> { ::ms::labelframe::Focus_Out %W; break }
 
 # Mousewheel and Touchpad
@@ -2169,7 +2169,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     _bind $w.title   <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.content <FocusIn>  { ::ms::labelframe::Focus_In  [_winfo parent %W]; break }
+                    _bind $w.content <FocusIn>  { ::ms::labelframe::FocusIn  [_winfo parent %W]; break }
                     _bind $w.content <FocusOut> { ::ms::labelframe::Focus_Out [_winfo parent %W]; break }
 
                     # Mousewheel and Touchpad
@@ -2756,7 +2756,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     _bind $w.title                             <Leave> { ::ms::labelframe::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::Focus_In  [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+                    _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::FocusIn  [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
                     _bind $w.container.border.viewport.content <FocusOut> { ::ms::labelframe::Focus_Out [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
 
                     # Mousewheel and Touchpad
@@ -5417,7 +5417,7 @@ proc ::ms::labelframe::Destroy { w } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the **FocusIn** event.
 #
@@ -5426,7 +5426,7 @@ proc ::ms::labelframe::Destroy { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::labelframe::Focus_In { w } {
+proc ::ms::labelframe::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::labelframe::Pathname_Cmd $w state focus
 
