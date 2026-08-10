@@ -1246,7 +1246,7 @@ _bind _Labelframe <Leave> { ::ms::labelframe::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Labelframe <FocusIn>  { ::ms::labelframe::FocusIn  %W; break }
-_bind _Labelframe <FocusOut> { ::ms::labelframe::Focus_Out %W; break }
+_bind _Labelframe <FocusOut> { ::ms::labelframe::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
@@ -2170,7 +2170,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
                     # FocusIn/FocusOut
                     _bind $w.content <FocusIn>  { ::ms::labelframe::FocusIn  [_winfo parent %W]; break }
-                    _bind $w.content <FocusOut> { ::ms::labelframe::Focus_Out [_winfo parent %W]; break }
+                    _bind $w.content <FocusOut> { ::ms::labelframe::FocusOut [_winfo parent %W]; break }
 
                     # Mousewheel and Touchpad
 
@@ -2757,7 +2757,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
                     # FocusIn/FocusOut
                     _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::FocusIn  [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
-                    _bind $w.container.border.viewport.content <FocusOut> { ::ms::labelframe::Focus_Out [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+                    _bind $w.container.border.viewport.content <FocusOut> { ::ms::labelframe::FocusOut [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
 
                     # Mousewheel and Touchpad
 
@@ -5433,7 +5433,7 @@ proc ::ms::labelframe::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -5442,7 +5442,7 @@ proc ::ms::labelframe::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::labelframe::Focus_Out { w } {
+proc ::ms::labelframe::FocusOut { w } {
     # Check the contextual menu associated with this widget, if any.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
