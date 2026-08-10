@@ -2660,4 +2660,120 @@ proc ::ms::listbox::B1_Motion { w x y } {
     return ""
 }
 
+## Begin_Select
+#
+# Manage the **ButtonPress-1** event on the widget.
+# It begins the process of making a selection in the widget.
+# Its exact behavior depends on the selection mode currently in effect for the widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **ButtonPress-1** event.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Begin_Select { w x y } {
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Set the preselected index as the closest index near the mouse pointer coordinates where the 'ButtonPress' happened.
+            set ::ms::data($w,preselected_index) [$w.listbox index @$x,$y]
+
+            # Check the 'selectmode'.
+            switch -- $::ms::current($w,selectmode) {
+                browse -
+                single {
+                    # Check if the current preselected index is included in the current selection.
+                    switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+                        0   {
+                            # Select the preselected index.
+                            $w.listbox selection clear 0 end
+                            $w.listbox selection set $::ms::data($w,preselected_index)
+
+                            # Activate the preselected index.
+                            $w.listbox activate $::ms::data($w,preselected_index)
+
+                            set ::tk::Priv(listboxPrev)      $::ms::data($w,preselected_index)
+                            set ::tk::Priv(listboxSelection) {}
+                        }
+                    }
+                }
+                extended {
+                    # Register if the current selection includes the preselected index or not.
+                    set includes [$w.border.listbox selection includes $::ms::data($w,preselected_index)]
+
+                    # Clear the current selection, if any.
+                    $w.border.listbox selection clear 0 end
+
+                    # Check if the current preselected index is included in the current selection.
+                    switch -- $includes {
+                        0   {
+                            # Select the preselected index.
+                            $w.listbox selection set $::ms::data($w,preselected_index)
+                            $w.listbox selection anchor $::ms::data($w,preselected_index)
+
+                            # Activate the preselected index.
+                            $w.listbox activate $::ms::data($w,preselected_index)
+
+                            set ::tk::Priv(listboxPrev)      $::ms::data($w,preselected_index)
+                            set ::tk::Priv(listboxSelection) {}
+                        }
+                        1   {
+                            # Unselect the preselected index.
+                            $w.listbox selection clear $::ms::data($w,preselected_index)
+
+                            # Preselect the preselected index.
+                            $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                       -foreground $::ms::current($w,preselectforeground);
+                        }
+                    }
+                }
+                multiple {
+                    # Check if the current preselected index is included in the current selection.
+                    switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+                        0   {
+                            # Select the preselected index.
+                            $w.listbox selection set $::ms::data($w,preselected_index)
+
+                            # Activate the preselected index.
+                            $w.listbox activate $::ms::data($w,preselected_index)
+                        }
+                        1   {
+                            # Unselect the preselected index.
+                            $w.listbox selection clear $::ms::data($w,preselected_index)
+
+                            # Preselect the preselected index.
+                            $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                       -foreground $::ms::current($w,preselectforeground);
+                        }
+                    }
+                }
+            }
+
+            # Fire up the selection event.
+            ::tk::FireListboxSelectEvent $w.listbox
+
+            # Check if the widget have the focus.
+            switch -- [::ms::listbox::Pathname_Cmd $w instate focus] {
+                0   {
+                    # Focus the listbox.
+                    _focus -force $w.listbox
+
+                    # Change the widget dynamic state to 'focus'
+                    ::ms::listbox::Pathname_Cmd $w state focus
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
