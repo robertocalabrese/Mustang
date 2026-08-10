@@ -3243,4 +3243,52 @@ proc ::ms::listbox::Focus_Out { w } {
     return ""
 }
 
+## Home
+#
+# Select the first item of the list.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Home { w } {
+    # Note: This procedure was inspired by the listbox binding <Control-Home>.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Select the first index of the listbox.
+            $w.listbox selection clear 0 end
+            $w.listbox selection set 0
+
+            # Set the selection anchor to the first item.
+            $w.listbox selection anchor 0
+
+            # Activate the preselected index.
+            $w.listbox activate 0
+
+            # Adjust the listbox viewport.
+            $w.listbox see 0
+
+            # Register the new preselected index.
+            set ::ms::data($w,preselected_index) 0
+
+            # Be sure that the active style is the one chosen by the developer.
+            $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+            # Fire up the selection event.
+            ::tk::FireListboxSelectEvent $w.listbox
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
