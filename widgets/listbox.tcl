@@ -701,6 +701,40 @@ proc ::ms::listbox::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            #####################
+            ##                 ##
+            ##     LISTBOX     ##
+            ##                 ##
+            #####################
+
+            # Note: Tk listboxes don't understands styles, at least not natively.
+            #       No internal styles needs to be created.
+
+            # Create the widget.
+            _listbox $w.listbox {*}$listbox_options
+
+            # Grid the listbox object.
+            _grid $w.listbox -column 0 \
+                               -padx 0 \
+                               -pady 0 \
+                                -row 0 \
+                             -sticky nesw;
+
+            # Check if the widget has values.
+            switch -- $::ms::current($w,values) {
+                ""      {}
+                default {
+                    # Select the first index of the listbox.
+                    $w.listbox selection set 0
+
+                    # Set the selection anchor to the first index.
+                    $w.listbox selection anchor 0
+
+                    # Activate the selected index.
+                    $w.listbox activate 0
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
