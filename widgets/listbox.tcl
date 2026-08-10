@@ -141,7 +141,19 @@ _bind _Listbox <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **listbox** package.
-namespace eval ::ms::listbox {}
+namespace eval ::ms::listbox {
+    # Set the 'non-styleable' listbox option list.
+    set ::ms::listbox(non_styleable,options) [list activestyle \
+                                                   class \
+                                                   cmenu \
+                                                   exportselection \
+                                                   selectmode \
+                                                   setgrid \
+                                                   state \
+                                                   style \
+                                                   takefocus \
+                                                   values];
+}
 
 # Rename the original Tk **listbox** command.
 rename listbox _listbox
