@@ -1664,6 +1664,22 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                             # Update the scrollbars.
                             ::ms::listbox::Scrollbar_Update $w
+
+                            ##################################################
+                            ##                                              ##
+                            ##     IF NEEDED, UPDATE THE WIDGET'S STATE     ##
+                            ##                                              ##
+                            ##################################################
+
+                            # Note: There is no need to update the listbox object, it's a classic widget and
+                            #       it was already been taking care of.
+
+                            switch -- $::ms::current($w,state) {
+                                disabled { interp invokehidden {} $w state [list disabled]  }
+                                normal   { interp invokehidden {} $w state [list !disabled] }
+                            }
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
