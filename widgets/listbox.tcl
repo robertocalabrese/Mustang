@@ -172,6 +172,20 @@ namespace eval ::ms::listbox {
                                                selectborderwidth \
                                                selectforeground \
                                                shellbackground];
+
+    # Set the default 'non-styleable' listbox options values.
+    set ::ms::default(listbox,activestyle)     underline
+    set ::ms::default(listbox,class)           Listbox
+    set ::ms::default(listbox,cmenu)           {}
+    set ::ms::default(listbox,exportselection) 0
+    set ::ms::default(listbox,selectmode)      browse
+    set ::ms::default(listbox,setgrid)         0
+    set ::ms::default(listbox,state)           normal
+    set ::ms::default(listbox,style)           Listbox
+    set ::ms::default(listbox,takefocus)       1
+    set ::ms::default(listbox,values)          {}
+
+    # Note: The default 'styleable' listbox options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **listbox** command.
