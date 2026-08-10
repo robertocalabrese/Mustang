@@ -3419,4 +3419,25 @@ proc ::ms::listbox::Next_Char { w } {
     return ""
 }
 
+## PageDown
+#
+# Scroll the listbox horizontally by one page towards the bottom.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::PageDown { w } {
+    switch -- $::ms::current($w,state) {
+        normal {
+            switch -- $::ms::data($w,scrolly) {
+                on  { $w.listbox yview scroll 1 pages }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
