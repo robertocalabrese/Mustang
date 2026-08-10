@@ -1170,7 +1170,7 @@ _bind _Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Listbox <FocusIn>  { ::ms::listbox::FocusIn  %W; break }
-_bind _Listbox <FocusOut> { ::ms::listbox::Focus_Out %W; break }
+_bind _Listbox <FocusOut> { ::ms::listbox::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
@@ -1883,7 +1883,7 @@ proc ::ms::listbox::Command { window { args "" } } {
 
             # FocusIn/FocusOut
             _bind $w.listbox <FocusIn>  { ::ms::listbox::FocusIn  [_winfo parent %W]; break }
-            _bind $w.listbox <FocusOut> { ::ms::listbox::Focus_Out [_winfo parent %W]; break }
+            _bind $w.listbox <FocusOut> { ::ms::listbox::FocusOut [_winfo parent %W]; break }
 
             # If the widget state is normal or the listbox has no values, move the active row item to the very
             # first item, otherwise don't do anything.
@@ -4263,7 +4263,7 @@ proc ::ms::listbox::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the <FocusOut> event on the widget.
 #
@@ -4272,7 +4272,7 @@ proc ::ms::listbox::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Focus_Out { w } {
+proc ::ms::listbox::FocusOut { w } {
     # Check the contextual menu relative to this widget, if any.
     switch -- $::ms::current($w,cmenu) {
         ""      {}
