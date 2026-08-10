@@ -3178,4 +3178,31 @@ proc ::ms::listbox::Extend_Up_Down { w amount } {
     return ""
 }
 
+## Focus_In
+#
+# Manage the <FocusIn> event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Focus_In { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::listbox::Pathname_Cmd $w state focus
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Register the current rows selected.
+    set ::ms::temp($w,selected_rows) [$w.listbox curselection]
+    switch -- [llength $::ms::temp($w,selected_rows)] {
+        0   { set ::ms::temp($w,selected_rows) [list 0] }
+    }
+
+    return ""
+}
+
 #*EOF*
