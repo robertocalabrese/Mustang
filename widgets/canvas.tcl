@@ -2366,7 +2366,7 @@ _bind _Canvas <Destroy> { ::ms::canvas::Destroy %W; break }
 
 # FocusIn/FocusOut
 _bind _Canvas <FocusIn>  { ::ms::canvas::FocusIn  %W; break }
-_bind _Canvas <FocusOut> { ::ms::canvas::Focus_Out %W; break }
+_bind _Canvas <FocusOut> { ::ms::canvas::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
@@ -3255,7 +3255,7 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # FocusIn/FocusOut
                     _bind $w.canvas <FocusIn>  { ::ms::canvas::FocusIn  [_winfo parent %W]; break }
-                    _bind $w.canvas <FocusOut> { ::ms::canvas::Focus_Out [_winfo parent %W]; break }
+                    _bind $w.canvas <FocusOut> { ::ms::canvas::FocusOut [_winfo parent %W]; break }
 
                     # Scan
                     _bind $w.canvas <<ScanMark>>    { ::ms::ScanMark [_winfo parent %W] %x %y; break }
@@ -5366,7 +5366,7 @@ proc ::ms::canvas::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -5375,7 +5375,7 @@ proc ::ms::canvas::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::canvas::Focus_Out { w } {
+proc ::ms::canvas::FocusOut { w } {
     # Check the contextual menu associated with this widget, if any.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
