@@ -974,7 +974,7 @@ _bind _Button <Leave> { ::ms::button::Pathname_Cmd %W state !hover; break }
 
 # FocusIn/FocusOut
 _bind _Button <FocusIn>  { ::ms::button::FocusIn  %W; break }
-_bind _Button <FocusOut> { ::ms::button::Focus_Out %W; break }
+_bind _Button <FocusOut> { ::ms::button::FocusOut %W; break }
 
 # Return/KP_Enter/space
 _bind _Button <Return>   { ::ms::button::Invoke %W; break }
@@ -2898,7 +2898,7 @@ proc ::ms::button::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -2907,7 +2907,7 @@ proc ::ms::button::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::button::Focus_Out { w } {
+proc ::ms::button::FocusOut { w } {
     # Check the contextual menu relative to this widget, if any.
     switch -- $::ms::current($w,cmenu) {
         ""      {}
