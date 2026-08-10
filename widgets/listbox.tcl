@@ -3012,7 +3012,11 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
                     #       and 'selectforeground' are not allowed to change if the statespec changes.
 
-                    # Note: Listboxes don't understands styles natively.
+                    # Check the widget state and propagate the new statespec to the widget's hull and border objects..
+                    interp invokehidden {} $w state $::ms::data($w,statespec)
+
+                    # Note: Tk listboxes don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
 
                     # bordercolor
                     switch -- $::ms::managed_by($w,bordercolor) {
@@ -3037,9 +3041,6 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                                            -highlightcolor $::ms::current($w,background)];
                         }
                     }
-
-                    # Check the widget state and propagate the new statespec to the widget's hull and border objects..
-                    interp invokehidden {} $w state $::ms::data($w,statespec)
 
                     # Configure the listbox object.
                     $w.listbox configure {*}$listbox_options
