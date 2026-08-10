@@ -1933,8 +1933,8 @@ proc ::ms::listbox::Command { window { args "" } } {
             _bind $w.listbox <<SelectNone>>  { ::ms::listbox::Unselect_All [_winfo parent %W]; break }
 
             # If the widget state is normal, start selecting from the active item row towards the top or bottom.
-            _bind $w.listbox <<SelectNextLine>> { ::ms::listbox::Extend_Up_Down [_winfo parent %W]  1; break }
-            _bind $w.listbox <<SelectPrevLine>> { ::ms::listbox::Extend_Up_Down [_winfo parent %W] -1; break }
+            _bind $w.listbox <<SelectNextLine>> { ::ms::listbox::Extend [_winfo parent %W]  1; break }
+            _bind $w.listbox <<SelectPrevLine>> { ::ms::listbox::Extend [_winfo parent %W] -1; break }
 
             # If the widget state is normal, start selecting from the active item row to the very first or last item.
             _bind $w.listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End [_winfo parent %W] end; break }
@@ -4072,71 +4072,7 @@ proc ::ms::listbox::End { w } {
     return ""
 }
 
-## Extend_Home_End
-#
-# Moves the location cursor to the begin or end of the elements, and extends the selection to that point.
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# key   Should be a string that specifies the key pressed ('home' or 'end').
-#
-# It doesn't return anything.
-proc ::ms::listbox::Extend_Home_End { w key } {
-    # Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
-    #       The procedure have been slighty modified to work with mustang.
-    #       All credits goes to the original author/s.
-
-    # Check if there are items associated to the listbox.
-    switch -- $::ms::current($w,values) {
-        ""  { return "" }
-    }
-
-    switch -- $::ms::current($w,state) {
-        normal {
-            # Check the listbox selectmode.
-            switch -- $::ms::current($w,selectmode) {
-                extended {
-                    # Check if there is a preselected index.
-                    switch -- $::ms::data($w,preselected_index) {
-                        ""  { set ::ms::data($w,preselected_index) 0 }
-                    }
-
-                    # Check if there is a selection already.
-                    switch -- [$w.listbox curselection] {
-                        ""  { return "" }
-                    }
-
-                    # Clear the selection.
-                    $w.listbox selection clear 0 end
-
-                    # Do the selection.
-                    switch -nocase -- $key {
-                        home {
-                            # Select from the first index till the preselected index.
-                            $w.listbox selection set 0 $::ms::data($w,preselected_index)
-                        }
-                        default {
-                            # Select from the preselected index till the last index.
-                            $w.listbox selection set $::ms::data($w,preselected_index) [$w.listbox index end]
-                        }
-                    }
-
-                    # Be sure that the active style is the one chosen by the developer.
-                    $w.listbox configure -activestyle $::ms::current($w,activestyle)
-
-                    # Adjust the listbox viewport.
-                    $w.listbox see $::ms::data($w,preselected_index)
-                }
-            }
-        }
-    }
-
-    return ""
-}
-
-## Extend_Up_Down
+## Extend
 #
 # Moves the location cursor up or down by one element, and extends the selection to that point.
 #
@@ -4148,7 +4084,7 @@ proc ::ms::listbox::Extend_Home_End { w key } {
 #          Generally **+1** to move down one item, **-1** to move up one item.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Extend_Up_Down { w amount } {
+proc ::ms::listbox::Extend { w amount } {
     # Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
     #       The procedure have been slighty modified to work with mustang.
     #       All credits goes to the original author/s.
@@ -4228,6 +4164,70 @@ proc ::ms::listbox::Extend_Up_Down { w amount } {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
+## Extend_Home_End
+#
+# Moves the location cursor to the begin or end of the elements, and extends the selection to that point.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be a string that specifies the key pressed ('home' or 'end').
+#
+# It doesn't return anything.
+proc ::ms::listbox::Extend_Home_End { w key } {
+    # Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check the listbox selectmode.
+            switch -- $::ms::current($w,selectmode) {
+                extended {
+                    # Check if there is a preselected index.
+                    switch -- $::ms::data($w,preselected_index) {
+                        ""  { set ::ms::data($w,preselected_index) 0 }
+                    }
+
+                    # Check if there is a selection already.
+                    switch -- [$w.listbox curselection] {
+                        ""  { return "" }
+                    }
+
+                    # Clear the selection.
+                    $w.listbox selection clear 0 end
+
+                    # Do the selection.
+                    switch -nocase -- $key {
+                        home {
+                            # Select from the first index till the preselected index.
+                            $w.listbox selection set 0 $::ms::data($w,preselected_index)
+                        }
+                        default {
+                            # Select from the preselected index till the last index.
+                            $w.listbox selection set $::ms::data($w,preselected_index) [$w.listbox index end]
+                        }
+                    }
+
+                    # Be sure that the active style is the one chosen by the developer.
+                    $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+                    # Adjust the listbox viewport.
+                    $w.listbox see $::ms::data($w,preselected_index)
                 }
             }
         }
