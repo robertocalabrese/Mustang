@@ -2809,7 +2809,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     if { $widget eq $w } {
                         return "Listbox.hull"
                     } elseif { $widget eq "$w.listbox" } {
-                        return "Listbox.content"
+                        return "Listbox"
                     } elseif { $widget eq "$w.x" } {
                         return "Listbox.hscrollbar"
                     } elseif { $widget eq "$w.y" } {
