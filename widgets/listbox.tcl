@@ -1655,6 +1655,15 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            ########################
+                            ##                    ##
+                            ##     SCROLLBARS     ##
+                            ##                    ##
+                            ########################
+
+                            # Update the scrollbars.
+                            ::ms::listbox::Scrollbar_Update $w
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
