@@ -1903,7 +1903,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             # and move that scrollbar by one unit towards the top or bottom.
             # If none of the widget's parent meets the required condition, don't do anything.
             _bind $w.listbox <<NextLine>> { ::ms::listbox::ArrowDown [_winfo parent %W]; break }
-            _bind $w.listbox <<PrevLine>> { ::ms::listbox::Arrow_Up   [_winfo parent %W]; break }
+            _bind $w.listbox <<PrevLine>> { ::ms::listbox::ArrowUp   [_winfo parent %W]; break }
 
             # If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
             # right or left.
@@ -3534,7 +3534,7 @@ proc ::ms::listbox::ArrowDown { w } {
     return ""
 }
 
-## Arrow_Up
+## ArrowUp
 #
 # Moves the preselection up by one element.
 #
@@ -3543,7 +3543,7 @@ proc ::ms::listbox::ArrowDown { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Arrow_Up { w } {
+proc ::ms::listbox::ArrowUp { w } {
     # Note: This procedure was inspired by the listbox procedure 'ListboxUpDown'.
     #       The procedure have been slighty modified to work with mustang.
     #       All credits goes to the original author/s.
