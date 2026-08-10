@@ -3534,6 +3534,104 @@ proc ::ms::listbox::Prev_Char { w } {
 #       The procedures have been slighty modified to work with mustang.
 #       All credits goes to the original author/s.
 
+## Select
+#
+# Manage the **space**, **Return**, **KP_Enter** and **Control-ButtonPress** events on the widget by toggling the selection.
+#
+# If selectmode is *browse* or *single*     --> It will select the preselected index.
+#                                               If the preselected index is already selected it will stay selected.
+#
+# If selectmode is *extended* or *multiple* --> It will select the preselected index.
+#                                               If the preselected index is already selected it will be unselected.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Select { w } {
+    # Check if there is a preselected index.
+    switch -- $::ms::data($w,preselected_index) {
+        ""  { set ::ms::data($w,preselected_index) 0 }
+    }
+
+    # Check the 'selectmode'.
+    switch -- $::ms::current($w,selectmode) {
+        browse -
+        single {
+            switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+                0   {
+                    # Select the preselected index.
+                    $w.listbox selection clear 0 end
+                    $w.listbox selection set $::ms::data($w,preselected_index)
+
+                    # Activate the preselected index.
+                    $w.listbox activate $::ms::data($w,preselected_index)
+
+                    set ::tk::Priv(listboxPrev)      $::ms::data($w,preselected_index)
+                    set ::tk::Priv(listboxSelection) {}
+                }
+            }
+        }
+        extended {
+            switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+                0   {
+                    # Select the preselected index.
+                    $w.listbox selection set $::ms::data($w,preselected_index)
+                    $w.listbox selection anchor $::ms::data($w,preselected_index)
+
+                    # Activate the preselected index.
+                    $w.listbox activate $::ms::data($w,preselected_index)
+
+                    set ::tk::Priv(listboxPrev)      $::ms::data($w,preselected_index)
+                    set ::tk::Priv(listboxSelection) {}
+                }
+                1   {
+                    # Unselect the preselected index.
+                    $w.listbox selection clear $::ms::data($w,preselected_index)
+
+                    # Preselect the preselected index.
+                    $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                               -foreground $::ms::current($w,preselectforeground);
+                }
+            }
+        }
+        default {
+            # multiple
+            switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+                0   {
+                    # Select the preselected index.
+                    $w.listbox selection set $::ms::data($w,preselected_index)
+
+                    # Activate the preselected index.
+                    $w.listbox activate $::ms::data($w,preselected_index)
+                }
+                1   {
+                    # Unselect the preselected index.
+                    $w.listbox selection clear $::ms::data($w,preselected_index)
+
+                    # Preselect the preselected index.
+                    $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                               -foreground $::ms::current($w,preselectforeground);
+                }
+            }
+        }
+    }
+
+    # Adjust the listbox viewport.
+    $w.listbox see $::ms::data($w,preselected_index)
+
+    # Fire up the selection event.
+    ::tk::FireListboxSelectEvent $w.listbox
+
+    # If needed, focus the listbox (for buttonpress events).
+    if { ([_winfo exists $w.listbox] == 1) && ($::ms::current($w,state) eq "normal") && ([_focus] ne "$w.listbox)") } {
+        _focus $w.listbox
+    }
+
+    return ""
+}
+
 ## Select_All
 #
 # This procedure is invoked to handle the "select all" operation.
