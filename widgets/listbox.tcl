@@ -2792,4 +2792,178 @@ proc ::ms::listbox::Configure { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the listbox widgets real address list.
+    set index [lsearch -exact $::ms::addr(listbox) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(listbox) [lremove $::ms::addr(listbox) $index] }
+    }
+
+    # Remove all the objects real addresses from the list of all available real addresses.
+    foreach object [list $w \
+                         $w.listbox \
+                         $w.x \
+                         $w.y] {
+        set index [lsearch -exact $::ms::addr(reals) $object]
+        switch -- $index {
+            -1      {}
+            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+        }
+    }
+
+    # Remove the widget address from the listbox classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),listbox,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),listbox,addrs) [lremove $::ms::class($::ms::current($w,class),listbox,addrs) $index] }
+    }
+
+    # Remove the widget address from the listbox classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),listbox,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),listbox,addrs) [lremove $::ms::style($::ms::current($w,style),listbox,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the listbox classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),listbox,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(listbox,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(listbox,classtype) [lremove $::ms::style(listbox,classtype) $index] }
+            }
+        }
+    }
+
+    # Remove the widget address from the megawidget real address list.
+    set index [lsearch -exact $::ms::addr(megawidgets) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+    }
+
+    # Remove the widget address from the megawidget scrollable real address list.
+    set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(megawidgets,scrollable) [lremove $::ms::addr(megawidgets,scrollable) $index] }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short) \
+                         ::ms::addr($w.listbox,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,activestyle) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,columns) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,disabledforeground) \
+                         ::ms::current($w,exportselection) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,justify) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,rows) \
+                         ::ms::current($w,selectbackground) \
+                         ::ms::current($w,selectborderwidth) \
+                         ::ms::current($w,selectforeground) \
+                         ::ms::current($w,selectmode) \
+                         ::ms::current($w,setgrid) \
+                         ::ms::current($w,shellbackground) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,values);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,listvariable) \
+                         ::ms::data($w,preselected_index) \
+                         ::ms::data($w,scrollx) \
+                         ::ms::data($w,scrolly) \
+                         ::ms::data($w,statespec) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,activestyle) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,columns) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,disabledforeground) \
+                         ::ms::default($w,exportselection) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,justify) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,rows) \
+                         ::ms::default($w,selectbackground) \
+                         ::ms::default($w,selectborderwidth) \
+                         ::ms::default($w,selectforeground) \
+                         ::ms::default($w,selectmode) \
+                         ::ms::default($w,setgrid) \
+                         ::ms::default($w,shellbackground) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,values);
+
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,columns) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,disabledforeground) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,justify) \
+                         ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,rows) \
+                         ::ms::managed_by($w,selectbackground) \
+                         ::ms::managed_by($w,selectborderwidth) \
+                         ::ms::managed_by($w,selectforeground) \
+                         ::ms::managed_by($w,shellbackground);
+
+    unset -nocomplain -- ::ms::style($w,hull)
+
+    return ""
+}
+
 #*EOF*
