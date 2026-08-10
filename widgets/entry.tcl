@@ -2725,7 +2725,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
         delete    -
         get       -
         icursor   -
-        identify  -
         index     -
         selection -
         validate  -
@@ -2736,7 +2735,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             # *window* **delete** *first* ?*last*?
             # *window* **get**
             # *window* **icursor** *index*
-            # *window* **identify** **element** *x* *y*
             # *window* **index** *index*
             # *window* **selection** *option* *arg*
             #    *window* **selection** **clear**
@@ -3627,6 +3625,51 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
+            }
+        }
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    # Check that the first argument of 'args' is the word "element".
+                    switch -- [lindex $args 0] {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+
+                    # Get the root coordinates of the north-west corner of the container ('$w').
+                    set rootx [_winfo rootx $w]
+                    set rooty [_winfo rooty $w]
+
+                    # Transform the relative coordinates provided into root coordinates.
+                    set X [expr { $rootx+$x }]
+                    set Y [expr { $rooty+$y }]
+
+                    # Get the widget address containing the point given by the root coordinates calculated.
+                    set widget [_winfo containing -display $w $X $Y]
+
+                    # Return the name of the object, or an empty string if there are no entry objects at the coordinates provided.
+                    if { $widget eq $w } {
+                        return "Entry"
+                    } else {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         insert {
