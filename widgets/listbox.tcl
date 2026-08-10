@@ -1106,7 +1106,30 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
         nearest      -
         scan         -
         see          -
-        size         {}
+        size         {
+            # Synopsis:
+            #
+            # *window* **bbox** *index*
+            # *window* **curselection**
+            # *window* **delete** *first* ?*last*?
+            # *window* **get** *first* ?*last*?
+            # *window* **index** *index*
+            # *window* **insert** *index* ?*element* ... *element*?
+            # *window* **itemcget** *index* *option*
+            # *window* **nearest** *y*
+            # *window* **scan** *option* *args*
+            #    *window* **scan** **mark** *x* *y*
+            #    *window* **scan** **dragto** *x* *y*
+            # *window* **see** *index*
+            # *window* **size**
+            try {
+                $w.listbox $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         cget {
             # Synopsis:
             #
