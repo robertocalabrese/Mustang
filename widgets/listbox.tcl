@@ -1902,7 +1902,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
             # and move that scrollbar by one unit towards the top or bottom.
             # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextLine>> { ::ms::listbox::Arrow_Down [_winfo parent %W]; break }
+            _bind $w.listbox <<NextLine>> { ::ms::listbox::ArrowDown [_winfo parent %W]; break }
             _bind $w.listbox <<PrevLine>> { ::ms::listbox::Arrow_Up   [_winfo parent %W]; break }
 
             # If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
@@ -3452,7 +3452,7 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
-## Arrow_Down
+## ArrowDown
 #
 # Moves the preselection down by one element.
 #
@@ -3461,7 +3461,7 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Arrow_Down { w } {
+proc ::ms::listbox::ArrowDown { w } {
     # Note: This procedure was inspired by the listbox procedure 'ListboxUpDown'.
     #       The procedure have been slighty modified to work with mustang.
     #       All credits goes to the original author/s.
