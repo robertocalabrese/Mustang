@@ -735,6 +735,28 @@ proc ::ms::listbox::Command { window { args "" } } {
                     $w.listbox activate 0
                 }
             }
+
+            #######################
+            ##                   ##
+            ##     SCROLLBAR     ##
+            ##                   ##
+            #######################
+
+            # Create the horizontal scrollbar address.
+            _ttk_scrollbar $w.x     -class TScrollbar \
+                                  -command [list $w.listbox xview] \
+                                   -cursor arrow \
+                                   -orient horizontal \
+                                    -style TScrollbar \
+                                -takefocus 0;
+
+            # Create the vertical scrollbar address.
+            _ttk_scrollbar $w.y     -class TScrollbar \
+                                  -command [list $w.listbox yview] \
+                                   -cursor arrow \
+                                   -orient vertical \
+                                    -style TScrollbar \
+                                -takefocus 0;
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
