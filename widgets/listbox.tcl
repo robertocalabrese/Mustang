@@ -1855,15 +1855,15 @@ proc ::ms::listbox::Command { window { args "" } } {
             }
 
             # ButtonPress-1
-            _bind $w.listbox <ButtonPress-1> { ::ms::listbox::Begin_Select [_winfo parent %W] %x %y; break }
             _bind $w.listbox <B1-Motion>     { ::ms::listbox::B1_Motion    [_winfo parent %W] %x %y; break }
+            _bind $w.listbox <ButtonPress-1> { ::ms::listbox::Begin_Select [_winfo parent %W] %x %y; break }
 
-            _bind $w.x <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] horizontal %x %y; break }
             _bind $w.x <B1-Motion>       { ::ms::listbox::Scrollbar_Drag        [_winfo parent %W] horizontal %x %y; break }
+            _bind $w.x <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] horizontal %x %y; break }
             _bind $w.x <ButtonRelease-1> { ::ms::listbox::Scrollbar_ButtonRelease; break }
 
-            _bind $w.y <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] vertical %x %y; break }
             _bind $w.y <B1-Motion>       { ::ms::listbox::Scrollbar_Drag        [_winfo parent %W] vertical %x %y; break }
+            _bind $w.y <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] vertical %x %y; break }
             _bind $w.y <ButtonRelease-1> { ::ms::listbox::Scrollbar_ButtonRelease; break }
 
             # Contextual menu
@@ -1885,90 +1885,63 @@ proc ::ms::listbox::Command { window { args "" } } {
             _bind $w.listbox <FocusIn>  { ::ms::listbox::Focus_In  [_winfo parent %W]; break }
             _bind $w.listbox <FocusOut> { ::ms::listbox::Focus_Out [_winfo parent %W]; break }
 
+            # If the widget state is normal or the listbox has no values, move the active row item to the very
+            # first item, otherwise don't do anything.
+            _bind $w.listbox <<LineTop>>   { ::ms::listbox::Home [_winfo parent %W]; break }
+            _bind $w.listbox <<LineStart>> { ::ms::listbox::Home [_winfo parent %W]; break }
+
+            # If the widget state is normal or the listbox has no values, move the active row item to the very
+            # last item, otherwise don't do anything.
+            _bind $w.listbox <<LineBottom>> { ::ms::listbox::End [_winfo parent %W]; break }
+            _bind $w.listbox <<LineEnd>>    { ::ms::listbox::End [_winfo parent %W]; break }
+
             # Motion
             _bind $w.listbox <Motion> { ::ms::listbox::Motion [_winfo parent %W] %x %y; break }
+
+            # If the widget state is normal, move back or forward the active row item by one row (note that row cycling is active).
+            # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+            # and move that scrollbar by one unit towards the top or bottom.
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.listbox <<NextLine>> { ::ms::listbox::Arrow_Down [_winfo parent %W]; break }
+            _bind $w.listbox <<PrevLine>> { ::ms::listbox::Arrow_Up   [_winfo parent %W]; break }
+
+            # If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
+            # right or left.
+            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+            # and move that scrollbar by one unit towards the right or left.
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
+            _bind $w.listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
+
+            # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
+            # left, right, top or bottom.
+            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+            # and move that scrollbar by one page towards the left, right, top or bottom.
+            # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.listbox <<PageLeft>>  { ::ms::listbox::PageLeft  [_winfo parent %W]; break }
+            _bind $w.listbox <<PageRight>> { ::ms::listbox::PageRight [_winfo parent %W]; break }
+            _bind $w.listbox <<PageUp>>    { ::ms::listbox::PageUp    [_winfo parent %W]; break }
+            _bind $w.listbox <<PageDown>>  { ::ms::listbox::PageDown  [_winfo parent %W]; break }
 
             # Scan
             _bind $w.listbox <<ScanMark>>    { ::ms::Scan_Mark [_winfo parent %W] %x %y; break }
             _bind $w.listbox <<ScanDrag>>    { ::ms::Scan_Drag [_winfo parent %W] %x %y; break }
             _bind $w.listbox <<ScanRelease>> { ::ms::Scan_Release; break }
 
-            # Select/Unselect one item.
-            _bind $w.listbox <<ToggleSelection>> { ::ms::listbox::Select [_winfo parent %W]; break }
-
             # Select/Unselect all items.
             _bind $w.listbox <<SelectAll>>   { ::ms::listbox::Select_All   [_winfo parent %W]; break }
             _bind $w.listbox <<SelectNone>>  { ::ms::listbox::Unselect_All [_winfo parent %W]; break }
 
-            # If the widget state is normal, start selecting from the active item row towards the top.
+            # If the widget state is normal, start selecting from the active item row towards the top or bottom.
+            _bind $w.listbox <<SelectNextLine>> { ::ms::listbox::Extend_Up_Down [_winfo parent %W]  1; break }
             _bind $w.listbox <<SelectPrevLine>> { ::ms::listbox::Extend_Up_Down [_winfo parent %W] -1; break }
 
-            # If the widget state is normal, start selecting from the active item row towards the bottom.
-            _bind $w.listbox <<SelectNextLine>> { ::ms::listbox::Extend_Up_Down [_winfo parent %W] 1; break }
-
-            # If the widget state is normal, start selecting from the active item row to the very first item.
-            _bind $w.listbox <<SelectLineTop>> { ::ms::listbox::Extend_Home_End [_winfo parent %W] home; break }
-
-            # If the widget state is normal, start selecting from the active item row to the very last item.
+            # If the widget state is normal, start selecting from the active item row to the very first or last item.
             _bind $w.listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End [_winfo parent %W] end; break }
+            _bind $w.listbox <<SelectLineTop>>    { ::ms::listbox::Extend_Home_End [_winfo parent %W] home; break }
 
-            # If the widget state is normal or the listbox has no values, move the active row item to the very
-            # first item, if not don't do anything.
-            _bind $w.listbox <<LineTop>>   { ::ms::listbox::Home [_winfo parent %W]; break }
-            _bind $w.listbox <<LineStart>> { ::ms::listbox::Home [_winfo parent %W]; break }
-
-            # If the widget state is normal or the listbox has no values, move the active row item to the very
-            # last item, if not don't do anything.
-            _bind $w.listbox <<LineBottom>> { ::ms::listbox::End [_winfo parent %W]; break }
-            _bind $w.listbox <<LineEnd>>    { ::ms::listbox::End [_winfo parent %W]; break }
-
-            # If the widget state is normal, move back the active row item by one row (note that row cycling is active).
-            # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one unit towards the top.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PrevLine>> { ::ms::listbox::Arrow_Up [_winfo parent %W]; break }
-
-            # If the widget state is normal, move forward the active row item by one row (note that row cycling is active).
-            # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one unit towards the bottom.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextLine>> { ::ms::listbox::Arrow_Down [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the left.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one unit towards the left.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the right.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one unit towards the right.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the left.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one page towards the left.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PageLeft>> { ::ms::listbox::PageLeft [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the right.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one page towards the right.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PageRight>> { ::ms::listbox::PageRight [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active vertical scrollbar, move one page towards the top.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one page towards the top.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PageUp>> { ::ms::listbox::PageUp [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active vertical scrollbar, move one page towards the bottom.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one page towards the bottom.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PageDown>> { ::ms::listbox::PageDown [_winfo parent %W]; break }
+            # Select/Unselect one item.
+            _bind $w.listbox <<ToggleSelection>> { ::ms::listbox::Select [_winfo parent %W]; break }
 
             # Disable the following bindings to prevent Tk to fire them up:
             _bind $w.listbox <<Copy>>                 { break }
