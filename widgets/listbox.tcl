@@ -153,6 +153,25 @@ namespace eval ::ms::listbox {
                                                    style \
                                                    takefocus \
                                                    values];
+
+    # Set the 'styleable' listbox option list.
+    set ::ms::listbox(styleable,options) [list background \
+                                               bordercolor \
+                                               borderwidth \
+                                               columns \
+                                               cursor \
+                                               disabledforeground \
+                                               font \
+                                               foreground \
+                                               justify \
+                                               preselectbackground \
+                                               preselectforeground \
+                                               relief \
+                                               rows \
+                                               selectbackground \
+                                               selectborderwidth \
+                                               selectforeground \
+                                               shellbackground];
 }
 
 # Rename the original Tk **listbox** command.
