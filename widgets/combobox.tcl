@@ -1627,7 +1627,7 @@ _bind _Combobox <KeyPress-Escape> { ::ms::Escape %W; break }
 _bind _Combobox <Fn-KeyPress> { # Enable binding }
 
 # FocusIn/FocusOut
-_bind _Combobox <FocusIn>  { ::ms::combobox::Focus_In  %W; break }
+_bind _Combobox <FocusIn>  { ::ms::combobox::FocusIn  %W; break }
 _bind _Combobox <FocusOut> { ::ms::combobox::Focus_Out %W; break }
 
 # Insert cursor movements.
@@ -4709,7 +4709,7 @@ proc ::ms::combobox::Destroy { w } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the **FocusIn** event.
 #
@@ -4718,7 +4718,7 @@ proc ::ms::combobox::Destroy { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::combobox::Focus_In { w } {
+proc ::ms::combobox::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::combobox::Pathname_Cmd $w state focus
 
