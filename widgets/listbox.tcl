@@ -2319,6 +2319,61 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
 
         # Apply the changes.
         interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+        #####################
+        ##                 ##
+        ##     LISTBOX     ##
+        ##                 ##
+        #####################
+
+        # Note: Tk listboxes don't understands styles, at least not natively.
+        #       No internal styles needs to be created.
+
+        # Apply the changes.
+        $w.listbox configure {*}$listbox_options
+
+        # Check if there are any items associated to the listbox.
+        switch -- $::ms::current($w,values) {
+            ""      {}
+            default {
+                # Recolor any index with the new default colors (background and foreground).
+                set index 0
+                while { $index < [$w.listbox size] } {
+                    $w.listbox itemconfigure $index -background $::ms::current($w,background) \
+                                                    -foreground $::ms::current($w,foreground);
+
+                    incr index
+                }
+
+                # Recolor any previously selected indexes with the new selected colors (selectedbackground and selectedforeground).
+                set selected_indexes [$w.listbox curselection]
+                foreach index $selected_indexes {
+                    $w.listbox selection set $index
+                }
+
+                # Check if there is a preselected index.
+                switch -- $::ms::data($w,preselected_index) {
+                    ""      {}
+                    default {
+                        # If the preselected index is not also a selected row, recolor it with the new preselected colors
+                        # (preselectedbackground and preselectedforeground).
+                        if { $::ms::data($w,preselected_index) ni $selected_indexes } {
+                            $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                       -foreground $::ms::current($w,preselectforeground);
+
+                            # Remove the active style.
+                            $w.listbox configure -activestyle none
+                        } else {
+                            # Be sure that the active style is the one chosen by the developer.
+                            $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+                            # Activate the preselected index.
+                            $w.listbox activate $::ms::data($w,preselected_index)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return ""
