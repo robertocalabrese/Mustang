@@ -2966,4 +2966,52 @@ proc ::ms::listbox::Destroy { w } {
     return ""
 }
 
+## End
+#
+# Select the last item of the list.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::End { w } {
+    # Note: This procedure was inspired by the listbox binding <Control-End>.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Select the last index of the listbox.
+            $w.listbox selection clear 0 end
+            $w.listbox selection set end
+
+            # Set the selection anchor to the last index.
+            $w.listbox selection anchor end
+
+            # Activate the preselected index.
+            $w.listbox activate end
+
+            # Adjust the listbox viewport.
+            $w.listbox see end
+
+            # Register the new preselected index.
+            set ::ms::data($w,preselected_index) [$w.listbox index active]
+
+            # Be sure that the active style is the one chosen by the developer.
+            $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+            # Fire up the selection event.
+            ::tk::FireListboxSelectEvent $w.listbox
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
