@@ -897,7 +897,7 @@ _bind _Label <Leave> { ::ms::label::Pathname_Cmd %W state !hover; break }
 
 # FocusIn/FocusOut
 _bind _Label <FocusIn>  { ::ms::label::FocusIn  %W; break }
-_bind _Label <FocusOut> { ::ms::label::Focus_Out %W; break }
+_bind _Label <FocusOut> { ::ms::label::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
@@ -2637,7 +2637,7 @@ proc ::ms::label::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -2646,7 +2646,7 @@ proc ::ms::label::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::label::Focus_Out { w } {
+proc ::ms::label::FocusOut { w } {
     # Check the contextual menu associated with this widget, if any.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
