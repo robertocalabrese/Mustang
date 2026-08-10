@@ -1543,7 +1543,7 @@ _bind _Entry <KeyPress-Escape> { ::ms::Escape %W; break }
 _bind _Entry <Fn-KeyPress> { # Enable binding }
 
 # FocusIn/FocusOut
-_bind _Entry <FocusIn>  { ::ms::entry::Focus_In  %W; break }
+_bind _Entry <FocusIn>  { ::ms::entry::FocusIn  %W; break }
 _bind _Entry <FocusOut> { ::ms::entry::Focus_Out %W; break }
 
 # Insert cursor movements.
@@ -4495,7 +4495,7 @@ proc ::ms::entry::Destroy { w } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the **FocusIn** event.
 #
@@ -4504,7 +4504,7 @@ proc ::ms::entry::Destroy { w } {
 # w   should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::entry::Focus_In { w } {
+proc ::ms::entry::FocusIn { w } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
         normal {
