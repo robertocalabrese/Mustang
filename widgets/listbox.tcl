@@ -2673,7 +2673,10 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                             # Check if there are any items associated to the listbox.
                             switch -- $::ms::current($w,values) {
-                                ""      {}
+                                ""  {
+                                    # Clear the selection, if any.
+                                    $w.listbox selection clear 0 end
+                                }
                                 default {
                                     # Recolor any index with the new default colors (background and foreground).
                                     set index 0
