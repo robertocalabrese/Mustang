@@ -3205,4 +3205,42 @@ proc ::ms::listbox::Focus_In { w } {
     return ""
 }
 
+## Focus_Out
+#
+# Manage the <FocusOut> event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Focus_Out { w } {
+    # Check the contextual menu relative to this widget, if any.
+    switch -- $::ms::current($w,cmenu) {
+        ""      {}
+        default {
+            # If the contextual menu of the widget is open do not loose the focus (graphically).
+            switch -- [_winfo exists $::ms::current($w,cmenu)] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # Check if there is at least one selected row.
+    switch -- [$w.listbox curselection] {
+        ""  {
+            foreach index $::ms::temp($w,selected_rows) {
+                $w.listbox selection set $index
+            }
+        }
+    }
+
+    unset -nocomplain -- ::ms::temp($w,selected_rows)
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::listbox::Pathname_Cmd $w state !focus
+
+    return ""
+}
+
 #*EOF*
