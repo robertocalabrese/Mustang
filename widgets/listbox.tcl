@@ -229,6 +229,81 @@ proc ::ms::listbox::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,activestyle)     $::ms::default(listbox,activestyle)
+            set ::ms::default($w,class)           $::ms::default(listbox,class)
+            set ::ms::default($w,cmenu)           $::ms::default(listbox,cmenu)
+            set ::ms::default($w,exportselection) $::ms::default(listbox,exportselection)
+            set ::ms::default($w,selectmode)      $::ms::default(listbox,selectmode)
+            set ::ms::default($w,setgrid)         $::ms::default(listbox,setgrid)
+            set ::ms::default($w,state)           $::ms::default(listbox,state)
+            set ::ms::default($w,style)           $::ms::default(listbox,style)
+            set ::ms::default($w,takefocus)       $::ms::default(listbox,takefocus)
+            set ::ms::default($w,values)          $::ms::default(listbox,values)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,activestyle)     $::ms::default(listbox,activestyle)
+            set ::ms::current($w,class)           $::ms::default(listbox,class)
+            set ::ms::current($w,cmenu)           $::ms::default(listbox,cmenu)
+            set ::ms::current($w,exportselection) $::ms::default(listbox,exportselection)
+            set ::ms::current($w,selectmode)      $::ms::default(listbox,selectmode)
+            set ::ms::current($w,setgrid)         $::ms::default(listbox,setgrid)
+            set ::ms::current($w,state)           $::ms::default(listbox,state)
+            set ::ms::current($w,style)           $::ms::default(listbox,style)
+            set ::ms::current($w,takefocus)       $::ms::default(listbox,takefocus)
+            set ::ms::current($w,values)          $::ms::default(listbox,values)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype)         listbox
+            set ::ms::data($w,listvariable)      {}
+            set ::ms::data($w,preselected_index) ""
+            set ::ms::data($w,statespec)         $::ms::data(statespec,normal)
+            set ::ms::data($w,scrollx)           off
+            set ::ms::data($w,scrolly)           off
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a listbox styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **listbox** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)          Tk
+            set ::ms::managed_by($w,bordercolor)         Tk
+            set ::ms::managed_by($w,borderwidth)         Tk
+            set ::ms::managed_by($w,columns)             Tk
+            set ::ms::managed_by($w,cursor)              Tk
+            set ::ms::managed_by($w,disabledforeground)  Tk
+            set ::ms::managed_by($w,font)                Tk
+            set ::ms::managed_by($w,foreground)          Tk
+            set ::ms::managed_by($w,justify)             Tk
+            set ::ms::managed_by($w,preselectbackground) Tk
+            set ::ms::managed_by($w,preselectforeground) Tk
+            set ::ms::managed_by($w,relief)              Tk
+            set ::ms::managed_by($w,rows)                Tk
+            set ::ms::managed_by($w,selectbackground)    Tk
+            set ::ms::managed_by($w,selectborderwidth)   Tk
+            set ::ms::managed_by($w,selectforeground)    Tk
+            set ::ms::managed_by($w,shellbackground)     Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
