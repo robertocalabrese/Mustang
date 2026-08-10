@@ -2776,4 +2776,20 @@ proc ::ms::listbox::Begin_Select { w x y } {
     return ""
 }
 
+## Configure
+#
+# Manage the **Configure** event on a widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Configure { w } {
+    # Update the scrollbars.
+    ::ms::listbox::Scrollbar_Update $w
+
+    return ""
+}
+
 #*EOF*
