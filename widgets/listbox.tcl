@@ -3398,4 +3398,25 @@ proc ::ms::listbox::Motion { w x y } {
     return ""
 }
 
+## Next_Char
+#
+# Scroll the listbox horizontally by one unit towards the right.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Next_Char { w } {
+    switch -- $::ms::current($w,state) {
+        normal {
+            switch -- $::ms::data($w,scrollx) {
+                on  { $w.listbox xview scroll 1 units }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
