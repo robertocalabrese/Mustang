@@ -718,6 +718,45 @@ namespace eval ttk::theme::Halo {
         style map TLabelframe.Label -bordercolor [list background BordercolorBackground \
                                                          disabled BordercolorDisabled \
                                                             hover Accent];
+
+        #####################
+        ##                 ##
+        ##     LISTBOX     ##
+        ##                 ##
+        #####################
+
+        # Note: The layout is useless because the listbox widget doesn't understand styles, at least not natively.
+
+        # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground', justify',
+        #       'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground' and 'selectforeground'
+        #       will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # No layout
+
+        # Normal state
+        style configure Listbox          -background Background \
+                                        -bordercolor Bordercolor \
+                                        -borderwidth 2 \
+                                            -columns 20 \
+                                             -cursor arrow \
+                                 -disabledforeground TextDisabled \
+                                               -font BiggerFont \
+                                         -foreground Text \
+                                            -justify left \
+                                -preselectbackground FieldbackgroundFocus \
+                                -preselectforeground FieldbackgroundFocusText \
+                                             -relief solid \
+                                               -rows 10 \
+                                   -selectbackground Accent \
+                                  -selectborderwidth 0 \
+                                   -selectforeground AccentText \
+                                    -shellbackground Background;
+
+        # Mapping
+        style map Listbox -bordercolor [list background BordercolorBackground \
+                                               disabled BordercolorDisabled \
+                                                  hover Accent];
     }
 }
 
