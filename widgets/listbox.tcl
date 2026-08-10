@@ -1195,7 +1195,69 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        itemconfigure {}
+        itemconfigure {
+            # Synopsis:
+            #
+            # *window* **itemconfigure** *index* ?*option*? ?*value*? ?*option value* ... *option value*?
+            set index  [lindex  $args 0]
+            set args   [lremove $args 0]
+
+            switch -- [llength $args] {
+                0   -
+                1   {
+                    try {
+                        $w.listbox itemconfigure $index {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    # Check that the remaining 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Remove any duplicated options (retain only the last ones).
+                            set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+                            ######################################################
+                            ##                                                  ##
+                            ##     CHECK THE ITEMCONFIGURE OPTIONS PROVIDED     ##
+                            ##                                                  ##
+                            ######################################################
+
+                            # Check the remaining widget's options, if any.
+                            set new_args [list ]
+                            foreach { option value } $args {
+                                switch -nocase -- $option {
+                                    -background       -
+                                    -foreground       -
+                                    -selectbackground -
+                                    -selectforeground {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                            default { lappend new_args $option $value }
+                                        }
+                                    }
+                                    default { ::ms::Error "Invalid itemconfigure option, '$option'." $caller_info }
+                                }
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        $w.listbox itemconfigure $index {*}$new_args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return ""
+                    }
+                }
+            }
+        }
         selection {}
         state {}
         style {}
