@@ -62,6 +62,1087 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## listbox
+#
+#### DESCRIPTION:
+#
+# The listbox command creates a new window (given by the *window* argument) and makes it into a listbox widget.
+# A listbox is a widget that displays a list of strings, one per line. When first created, a new listbox has no elements.
+# Elements may be added or deleted using widget commands described below. In addition, one or more elements may be selected as described below.
+# If a listbox is exporting its selection (see -exportselection option), then it will observe the standard X11 protocols for handling the selection.
+# Listbox selections are available as type **STRING**; the value of the selection will be the text of the selected elements, with newlines separating
+# the elements.
+#
+# Note 1: At the time this command is invoked, there must not exist a window with the same pathname,
+#         but the pathname's parents must exists.
+#         *Window* may be provided either as a short or as a real address, the address returned will be:
+#            - A short address, if the *window* provided as input is a short address.
+#            - A real address, if the *window* provided as input is a real address.
+#
+# Note 2: The mustang listbox widget is a megawidget composed by an hull object (the megawidget container), a listbox object and
+#         two scrollbar objects (displayed only when needed).
+#
+# Additional options, described below, may be specified on the command line to configure aspects of the listbox.
+#
+#### SYNOPSIS:
+#
+#   **listbox**  *window* ?*option value*? ... ?*option value*?
+#
+#### WIDGET OPTIONS:
+#
+# Note: Every option listed here can be:
+#          - Retrieved with the **configure** or **cget** command with no exceptions.
+#          - Changed with the **configure** command, unless stated otherwise.
+#
+# **-activestyle**            It's a string that specifies the style in which to draw the active element.
+#                             Allowed values:
+#                                **dotbox**    --> Show a focus ring around the active element.
+#                                **none**      --> No special indication.
+#                                **underline** --> Underline the active element.
+#
+#                             The active element represent the cursor current location.
+#                             The active style will be visible only upon selected items, otherwise the cursor location
+#                             will be represented by the preselection color.
+#                             See the **BINDING** section to know more about preselected items.
+#
+#                             If not provided, defaults to **underline**.
+#
+# **-background**             It's a list that specifies the color to use as background.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                            If there isn't one, the **-background** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-background** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-shellbackground** and **-foreground**.
+#
+# **-bordercolor**            It's a list that specifies the color to use as bordercolor.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: It's only meaningful for widgets with a **solid** relief.
+#
+#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                            If there isn't one, the **-bordercolor** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-bordercolor** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                             See also **-borderwidth** and **-relief**.
+#
+# **-borderwidth**            Specifies the width of the three-dimensional border to draw around the outside of the widget,
+#                             if such a border is being drawn.
+#                             The **-relief** option typically determines this.
+#
+#                             The value may also be used when drawing three-dimensional effects in the widget's interior.
+#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                             (pixels, points, inches, millimeters or centimeters).
+#
+#                             Note: **0** is not accepted as a valid value, listboxes will always be bordered.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
+#                                                            If there isn't one, the **-borderwidth** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-borderwidth** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-bordercolor** and **-relief**.
+#
+# **-class**                  Specifies a class for the widget.
+#                             It is mainly used to make bindings for widgets that have the same class.
+#
+#                             Note: This option may only be provided while creating the widget.
+#                                   Attempts to change this value after the widget is created by using the **configure** command,
+#                                   will be ignored by mustang.
+#
+#                             If not provided, defaults to **Listbox**.
+#
+# **-cmenu**                  Specifies the contextual menu address that will be assigned to the widget.
+#
+#                             The contextual menu will be assign to the *listbox* and *border* objects of the megawidget.
+#                             If the *cmenu* value is the empty string or invalid, nothing will happen.
+#
+#                             The *hull* object will rather use the contextual menu of the widget's toplevel, if any.
+#                             If the developer needs a different contextual menu for it, a variable called
+#                             '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
+#                             order to be used instead of the toplevel one.
+#
+#                             Note: '$short_addr' must be the short address of the text widget.
+#                                   See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
+#
+#                             If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid contextual menu
+#                             address, it will be ignored and the contextual menu of the widget's toplevel (if any) will be used.
+#                             If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#
+#                             The *scrollbar* objects are not supposed to have a contextual menu and will not be link with any.
+#
+#                             Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple listbox widget, it will be silently ignored.
+#
+#                             If not provided, defaults to the empty string.
+#
+# **-columns**                Specifies the desired columns for the window in units of characters in the font given by the **-font** option.
+#                             If the font does not have a uniform width then the width of the character **0** is used in translating from
+#                             character units to screen units.
+#                             If zero or less, then the desired height for the window is made just large enough to hold all the elements in the listbox.
+#
+#                             See also **-rows**.
+#
+# **-cursor**                 Specifies the mouse cursor to be used inside the widget.
+#                             If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                             cursor specification.
+#
+#                             See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                            If there isn't one, the **-cursor** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-cursor** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+# **-disabledforeground**     It's a list that specifies the color to use as foreground color to use when drawing a disabled element.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#
+#                             Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-disabledforeground** specified in its style.
+#                                                            If there isn't one, the **-disabledforeground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-disabledforeground** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-foreground**.
+#
+# **-exportselection**        Specifies whether or not a selection in the widget should also be the X selection.
+#                             The value may have any of the forms accepted by [Tcl_GetBoolean](https://www.tcl-lang.org/man/tcl9.0/TclLib/GetInt.html),
+#                             such as **true**, **false**, **0**, **1**, **yes**, or **no**.
+#                             If the selection is exported, then selecting in the widget deselects the current X selection, selecting outside the
+#                             widget deselects any widget selection, and the widget will respond to selection retrieval requests when it has a selection.
+#
+#                             If not provided, defaults to **0**.
+#
+# **-font**                   Specifies the font to use for the elements displayed by the widget.
+#                             The widget will accept as fontname any font created with the **font** command, including any Tk
+#                             defaults fonts, the new mustang fonts (**BiggestFont**, **BiggerFont**, **NormalFont**, **SmallerFont**,
+#                             **SmallestFont** and **MonospaceFont**) or fonts defined by the developer itself.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-font** specified in its style.
+#                                                            If there isn't one, the **-font** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-font** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-foreground**.
+#
+# **-foreground**             It's a list that specifies the color to use as foreground.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-foreground** specified in its style.
+#                                                            If there isn't one, the **-foreground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-foreground** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-background** and **-font**.
+#
+# **-preselectbackground**    It's a list that specifies the color to use as preselected background.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-preselectbackground** specified in its style.
+#                                                            If there isn't one, the **-preselectbackground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-preselectbackground** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectbackground**.
+#
+# **-preselectforeground**    It's a list that specifies the color to use as preselected foreground.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-preselectforeground** specified in its style.
+#                                                            If there isn't one, the **-preselectforeground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-preselectforeground** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectforeground**.
+#
+# **-relief**                 Specifies the three-dimensional effect desired for the widget.
+#                             The value indicates how the widget's interior should appear relative to its exterior.
+#                             For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                             relative to the exterior of the widget.
+#
+#                             The widget will accept as relief any of the following values:
+#                                **flat**,
+#                                **groove**,
+#                                **raised**,
+#                                **ridge**,
+#                                **solid**,
+#                                **sunken**.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-relief** specified in its style.
+#                                                            If there isn't one, the **-relief** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-relief** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-bordercolor** and **-borderwidth**.
+#
+# **-rows**                   Specifies the desired rows for the window, in units of characters in the font given by the **-font** option.
+#                             If the font does not have a uniform height then the height of the character **0** is used in translating from
+#                             character units to screen units.
+#                             If zero or less, then the desired width for the window is made just large enough to hold all the elements in the listbox.
+#
+#                             See also **-columns**.
+#
+# **-selectbackground**       It's a list that specifies the background color to use when displaying selected items.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-selectbackground** specified in its style.
+#                                                            If there isn't one, the **-selectbackground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-selectbackground** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectforeground** and **-insertborderwidth**.
+#
+# **-selectborderwidth**      Specifies a non-negative value indicating the width of the 3-D border to draw around selected items.
+#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+#
+#                             Note: A value of **0** means no border.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-selectborderwidth** specified in its style.
+#                                                            If there isn't one, the **-selectborderwidth** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-selectborderwidth** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectbackground** and **-selectforeground**.
+#
+# **-selectforeground**       It's a list that specifies the foreground color to use when displaying selected items.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-selectforeground** specified in its style.
+#                                                            If there isn't one, the **-selectforeground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-selectforeground** will not abide by its mapping values, if any.
+#                                                            It is not supposed to change when the widget state changes.
+#
+#                             See also **-selectbackground** and **-selectborderwidth**.
+#
+# **-selectmode**             Specifies one of several styles for manipulating the selection.
+#                             Allowed values are **single**, **browse**, **multiple** or **extended**.
+#                             See the **BINDING** section to know more about the selectmode option.
+#
+#                             If not provided, defaults to **browse**.
+#
+# **-setgrid**                Specifies a boolean value that determines whether this widget controls the resizing grid for its top-level window.
+#                             This option is typically used in text widgets, where the information in the widget has a natural size (the size of
+#                             a character) and it makes sense for the window's dimensions to be integral numbers of these units.
+#                             These natural window sizes form a grid.
+#                             If the **-setgrid** option is set to true then the widget will communicate with the window manager so that when the user
+#                             interactively resizes the top-level window that contains the widget, the dimensions of the window will be displayed to the
+#                             user in grid units and the window size will be constrained to integral numbers of grid units.
+#                             See the section **GRIDDED GEOMETRY MANAGEMENT** in the [wm](/wiki/commands/wm.md) manual entry for more details.
+#
+# **-shellbackground**        It's a list that specifies the color to use as background structure.
+#                             This color will be used in the interspaces between the mustang objects that compose the listbox and should reflects
+#                             the widget's parent background.
+#                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: This is a styleable option.
+#
+#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                            Only the developer can.
+#
+#                                   If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
+#                                                            If there isn't one, the **-shellbackground** of the **Listbox** style
+#                                                            will be used instead.
+#                                                            The **-shellbackground** will always abide by its mapping values, if any.
+#                                                            Styles, mappings and states events are allowed to change its value.
+#
+#                                                            Note: The **-shellbackground** should change rarely, for example upon
+#                                                                  an **Activate**/**Deactivate** event.
+#
+#                             See also **-background** and **-foreground**.
+#
+# **-state**                  Specifies the state for the widget.
+#                             The listbox widget state acts differently than the other widgets states, because it's a classic widget
+#                             and do not support natively any dynamic states.
+#                             Changes to the widget 'physical' state affects it's dynamic state.
+#                             Allowed states values are **normal** and **disabled**.
+#
+#                             If the listbox is disabled then items may not be inserted or deleted, items are drawn in the **-disabledforeground** color,
+#                             and selection cannot be modified and is not shown (though selection information is retained).
+#
+#                             If not provided, defaults to **normal**.
+#
+# **-style**                  Specifies a custom widget style.
+#                             If not provided, defaults to **Listbox**.
+#
+#                             Style should be already exists at the time the widget is created.
+#
+#                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                             and **Shift-Tab**).
+#
+#                             Before setting the focus to a widget, the traversal scripts consult the value of the
+#                             *-takefocus* option.
+#                                **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                                **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                          and all of its ancestors are mapped.
+#
+#                             Differently than Tk, mustang does not allow the empty string as a valid value.
+#
+#                             Note: Widgets will ignore any takefocus values while in the **disabled** state.
+#                                   The moment the widget becomes **normal** the takefocus specified will be taken into consideration.
+#
+#                             If not provided, defaults to **0**.
+#
+# **-values**                 It's a list that specifies the items to display inside the widget.
+#                             If *values* changes, the widget will automatically update itself to reflect the new data.
+#
+#                             If not provided, defaults to the empty string (meaning no items will be displayed inside the widget).
+#
+#### WIDGET COMMAND:
+#
+# The listbox command creates a new command whose name is the same as the pathname of the listbox's window.
+# This command may be used to invoke various operations on the widget.
+# It has the following general form:
+#
+#   *window* *action* ?*arg* *arg* ... *arg*?
+#
+# *Window* is the name of the command, which is the same as the listbox widget's pathname.
+# *Actions* and the *arg*s determine the exact behavior of the *window* command.
+#
+# The following commands are possible for listbox widgets:
+#
+#   *window* **activate** *index*
+#     Sets the active element to the one indicated by *index*.
+#     If *index* is outside the range of elements in the listbox then the closest element is activated.
+#     The active element is drawn as specified by **-activestyle** when the widget has the input focus, and its index may be retrieved
+#     with the index **active**.
+#
+#   *window* **bbox** *index*
+#     Returns a list of four numbers describing the bounding box of the text in the element given by *index*.
+#     The first two elements of the list give the x and y coordinates of the upper-left corner of the screen area covered by the text
+#     (specified in pixels relative to the widget) and the last two elements give the width and height of the area, in pixels.
+#     If no part of the element given by *index* is visible on the screen, or if *index* refers to a non-existent element,
+#     then the result is an empty string; if the element is partially visible, the result gives the full area of the element,
+#     including any parts that are not visible.
+#
+#   *window* **cget** *option*
+#     Returns the current value of the option given by *option*.
+#     *Option* may be one of the widget options accepted by the listbox command (See **WIDGET OPTIONS**).
+#
+#   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+#     Query or modify the configuration options of the widget.
+#
+#     If no 'option' is specified, returns a list describing all of the available options with their current theme values and current values.
+#
+#     If an 'option' is specified with no value, then the command returns a list describing the one named option.
+#     This list will be identical to the corresponding sublist of the value returned if no option is specified.
+#
+#     If one or more 'option value' pairs are specified, then the command modifies the given widget option(s)
+#     to have the given value(s) and the command returns an empty string.
+#
+#     Some options are not configurable, some can only be setted at creation time.
+#     See 'WIDGET OPTIONS' to know which one is configurable and which one is not.
+#
+#   *window* **curselection**
+#     Returns a list containing the numerical indices of all of the elements in the listbox that are currently selected.
+#     If there are no elements selected in the listbox then an empty string is returned.
+#
+#   *window* **delete** *first* ?*last*?
+#     Deletes one or more elements of the listbox. *First* and *last* are indices specifying the first and last elements in the range to delete.
+#     If *last* is not specified it defaults to *first*, i.e. a single element is deleted.
+#
+#   *window* **get** *first* ?*last*?
+#     If *last* is omitted, returns the contents of the listbox element indicated by *first*, or an empty string if first refers to a non-existent element.
+#     If *last* is specified, the command returns a list whose elements are all of the listbox elements between *first* and *last*, inclusive.
+#     Both *first* and *last* may have any of the standard forms for indices.
+#
+#   *window* **index** *index*
+#     Returns the integer index value that corresponds to *index*.
+#     If *index* is end the return value is a count of the number of elements in the listbox (not the index of the last element).
+#
+#   *window* **insert** *index* ?*element* *element* ... *element*?
+#     Inserts zero or more new elements in the list just before the element given by *index*.
+#     If *index* is specified as end then the new elements are added to the end of the list.
+#     Returns an empty string.
+#
+#   *window* **instate** *statespec* ?*script*?
+#     Test the widget's state.
+#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     If *script* is specified it's equivalent to:
+#
+#        if { [*window* **instate** *stateSpec*] } *script*
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **see** *index*
+#     Adjust the view in the listbox so that the element given by index is visible.
+#     If the element is already visible then the command has no effect; if the element is near one edge of the window then the
+#     listbox scrolls to bring the element into view at the edge; otherwise the listbox scrolls to center the element.
+#
+#     Returns an empty string.
+#
+#   *window* **itemcget** *index* *option*
+#     Returns the current value of the item configuration option given by *option*.
+#     *Option* may have any of the values accepted by the itemconfigure command.
+#
+#   *window* **itemconfigure** *index* ?*option*? ?*value*? ?*option value* ... *option value*?
+#     Query or modify the configuration options of an item in the listbox.
+#     If no option is specified, returns a list describing all of the available options for the item (see Tk_ConfigureInfo
+#     for information on the format of this list).
+#     If *option* is specified with no value, then the command returns a list describing the one named option (this list will be identical
+#     to the corresponding sublist of the value returned if no option is specified).
+#     If one or more option-value pairs are specified, then the command modifies the given widget option(s) to have the given value(s);
+#     in this case the command returns an empty string.
+#     The following options are currently supported for items:
+#
+#        **-background** *color*
+#            Color specifies the background color to use when displaying the item.
+#            It may have any of the forms accepted by mustang.
+#
+#        **-foreground** *color*
+#            Color specifies the foreground color to use when displaying the item.
+#            It may have any of the forms accepted by mustang.
+#
+#        **-selectbackground** *color*
+#            color specifies the background color to use when displaying the item while it is selected.
+#            It may have any of the forms accepted by mustang.
+#
+#        **-selectforeground** *color*
+#            color specifies the foreground color to use when displaying the item while it is selected.
+#            It may have any of the forms accepted by mustang.
+#
+#   *window* **nearest** *y*
+#     Given a y-coordinate within the listbox window, this command returns the index of the (visible) listbox element nearest to that y-coordinate.
+#
+#   *window* **scan** *option* *args*
+#     This command is used to implement scanning on listboxes.
+#     It has two forms, depending on option:
+#
+#        *window* **scan** **mark** *x* *y*
+#            Records x and y and the current view in the listbox window; used in conjunction with later scan dragto commands.
+#            Typically this command is associated with a mouse button press in the widget.
+#            It returns an empty string.
+#
+#        *window* **scan** **dragto** *x* *y*.
+#            This command computes the difference between its x and y arguments and the x and y arguments to the last scan mark command for the widget.
+#            It then adjusts the view by 10 times the difference in coordinates.
+#            This command is typically associated with mouse motion events in the widget, to produce the effect of dragging the list at high speed through the window.
+#            The return value is an empty string.
+#
+#   *window* **selection** *option* *arg*
+#     This command is used to adjust the selection within a listbox.
+#     It has several forms, depending on option:
+#
+#        *window* **selection** **anchor** *index*
+#            Sets the selection anchor to the element given by *index*.
+#            If *index* refers to a non-existent element, then the closest element is used.
+#            The selection anchor is the end of the selection that is fixed while dragging out a selection with the mouse.
+#            The index **anchor** may be used to refer to the anchor element.
+#
+#        *window* **selection** **clear** *first* ?*last*?
+#            If any of the elements between *first* and *last* (inclusive) are selected, they are deselected.
+#            The selection state is not changed for elements outside this range.
+#
+#        *window* **selection** **includes** *index*
+#            Returns **1** if the element indicated by *index* is currently selected, **0** if it is not.
+#
+#        *window* **selection** **set** *first* ?*last*?
+#            Selects all of the elements in the range between *first* and *last*, inclusive, without affecting the selection state
+#            of elements outside that range.
+#
+#   *window* **size**
+#     Returns a decimal string indicating the total number of elements in the listbox.
+#
+#   *window* **state** ?*statespec*?
+#     Modify or inquire the widget state.
+#     If *statespec* is present       --> Sets the widget dynamic state.
+#                                         For each flag in *statespec*, sets the corresponding flag or clears it
+#                                         if prefixed by an exclamation point.
+#                                         Returns a new *statespec* indicating which flags were changed.
+#
+#     If *statespec* is not specified --> Returns a list of the currently enabled dynamic states.
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **style**
+#     Return the style used by the widget.
+#
+#   *window* **xview** ?args?
+#     *window* **xview**
+#        Returns a list containing two elements.
+#        Each element is a real fraction between **0** and **1.0**; together they describe the horizontal span
+#        that is visible in the window.
+#
+#     *window* **xview** *index*
+#        Adjusts the view in the window so that the character position given by *index* is displayed at the left edge of the window.
+#        Character positions are defined by the width of the character **0**.
+#
+#     *window* **xview** **moveto** *fraction*
+#        Adjusts the view in the window so that *fraction* of the total width of the widget is off-screen to the left.
+#        *Fraction* must be a fraction between **0** and **1.0**.
+#
+#     *window* **xview** **scroll** *number* *what*
+#        This command shifts the view in the window left or right according to *number* and *what*.
+#
+#        *Number* must be an integer or a float, but not **0**.
+#        If *number* is negative then information farther to the left becomes visible, if it is positive then information
+#        farther to the right becomes visible.
+#        If **0** is provided, the command will be ignored by mustang.
+#
+#        *what* must be either **pages** or **units**.
+#        If *what* is **pages** then the view adjusts in units of nine-tenths of the *window*'s width.
+#        If *what* is **units** then if *xscrollincrement* is greater than **0**, the horizontal view adjusts in units
+#        of *xscrollincrement*; if *xscrollincrement* is lesser than or equal to **0**, the horizontal view adjusts in
+#        units of one-tenths of the *window*'s width.
+#
+#   *window* **yview** ?args?
+#     *window* **yview**
+#        Returns a list containing two elements.
+#        Each element is a real fraction between **0** and **1.0**; together they describe the vertical span that
+#        is visible in the window.
+#
+#     *window* **yview** *index*
+#        Adjusts the view in the window so that the element given by *index* is displayed at the top of the window.
+#
+#     *window* **yview** **moveto** *fraction*
+#        Adjusts the view in the window so that *fraction* of the total height of the widget is off-screen to the top.
+#        *Fraction* must be a fraction between **0** and **1.0**.
+#
+#     *window* **yview** **scroll** *number* *what*
+#        This command shifts the view in the window up or down according to *number* and *what*.
+#
+#        *Number* must be an integer or a float, but not **0**.
+#        If *number* is negative higher information becomes visible, if it is positive then lower information becomes visible.
+#        If **0** is provided, the command will be ignored by mustang.
+#
+#        *what* must be either **pages** or **units**.
+#        If *what* is **pages** then the view adjusts in units of nine-tenths of the *window*'s height.
+#        If *what* is **units** then if *yscrollincrement* is greater than **0**, the vertical view adjusts in units
+#        of *yscrollincrement*; if *yscrollincrement* is lesser than or equal to **0**, the vertical view adjusts in
+#        units of one-tenths of the *window*'s height.
+#
+#### INDICES:
+#
+# Many of the widget commands for listboxes take one or more indices as arguments.
+# An index specifies a particular element of the listbox, in any of the following ways:
+#
+#   number
+#     Specifies the element as a numerical index, where **0** corresponds to the first element in the listbox.
+#
+#   active
+#     Indicates the element that has the location cursor.
+#     This element will be displayed as specified by **-activestyle** when the listbox has the keyboard focus,
+#     and it is specified with the activate widget command.
+#
+#   anchor
+#     Indicates the anchor point for the selection, which is set with the selection anchor widget command.
+#
+#   end
+#     Indicates the end of the listbox. For most commands this refers to the last element in the listbox,
+#     but for a few commands such as index and insert it refers to the element just after the last one.
+#
+#   @x,y
+#     Indicates the element that covers the point in the listbox window specified by x and y (in pixel coordinates).
+#     If no element covers that point, then the closest element to that point is used.
+#
+# Indexes support the same simple interpretation as for the command string index, with simple integer index arithmetic and indexing relative to end.
+# In the widget command descriptions below, arguments named index, first, and last always contain text indices in one of the above forms.
+#
+#### STATES:
+#
+# The listbox widget supports only the **normal** and **disabled** states.
+#
+#### STYLING OPTIONS:
+#
+# Default style name: **Listbox**
+#
+# Every listbox styleable option is supported and configurable with the [style](/wiki/commands/style.md) command.
+# Valid styleable options of other widgets will be ignored.
+# It is considered an error providing style options that are not managed by mustang or Tk.
+#
+# See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#### BINDINGS:
+#
+# Mustang automatically creates several bindings for the listboxs in order to facilitate the developer work and
+# augment the user experience at the same time.
+#
+# Much of the behavior of a listbox is determined by its **-selectmode** option, which selects one of four ways
+# of dealing with the selection.
+#
+# In every selection modes, clicking button 1 on a preselected element will select the element while clicking on
+# a selected element will deselect it. The same action can be achived using the keyboard by hitting the spacebar,
+# return or KP_Enter keys.
+#
+# If the selection mode is *single* or *browse*, at most one element can be selected in the listbox at once.
+# In *browse* mode it is also possible to drag the selection with button 1.
+# Clicking button 1 inside a listbox will also give it focus if it has a normal state.
+#
+# If the selection mode is *multiple* or *extended*, any number of elements may be selected at once, including
+# discontiguous ranges. Dragging the mouse with button 1 down extends the selection to include all the elements between
+# the anchor and the element under the mouse, inclusive.
+#
+# Most people will probably want to use *browse* mode for single selections and *extended* mode for multiple selections;
+# the other modes appear to be useful only in special situations.
+#
+# Any time the set of selected item(s) in the listbox is updated by the user through the keyboard or mouse, the virtual
+# event **ListboxSelect** will be generated. This virtual event will not be generated when adjusting the selection
+# with the **window selection** command.
+# It is easiest to bind to this event to be made aware of any user changes to listbox selection.
+#
+###### SCROLLING
+#
+# The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
+#
+# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+#       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
+#
+#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#
+# Note: Belows, when we talk about the widget's parents, we talk about it recursively.
+#       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       otherwise nothing will happen.
+#
+# Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
+#       for the Y axis, while **Control-TouchpadScroll** events abide by the same rules of the **Control-MouseWheel** for the X axis
+#       and the **Control-Shift-MouseWheel** for the Y axis.
+#
+# 1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of
+#     the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable
+#     parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 2.  If the widget have an active horizontal scrollbar, **Shift-MouseWheel** events will scroll one unit towards the left or the right
+#     of the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget
+#     scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the
+#     mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 3.  If the widget have an active vertical scrollbar, **Control-MouseWheel** events will scroll one page towards the top or the
+#     bottom of the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget
+#     scrollable parent with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the mousewheel
+#     direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 4.  If the widget have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will scroll one page towards the left or
+#     the right of the widget (depending on the direction of the mousewheel event).
+#
+#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget
+#     scrollable parent with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel
+#     direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
+#
+#        1 - If the widget have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try will scroll the widget
+#            scrollbar one unit towards the left or the right (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to find the
+#            innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
+#            or the right (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - If the widget have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try will scroll the widget
+#            scrollbar one unit towards the top or the bottom (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to find the
+#            innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
+#            or the bottom (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
+#
+#        1 - If the widget have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try will scroll the
+#            widget scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
+#            the innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
+#            or the right (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - If the widget have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try will scroll the
+#            widget scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
+#
+#            If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
+#            the innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
+#            or the bottom (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 7.  **ContextMenu** events will display the contextual menu associated with the widget.
+#     See the **-cmenu** option for more details.
+#
+###### INTERNAL MECHANISM:
+#
+# The following behavior will happen either if the widget does or does not have the focus.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth** and
+#     **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually indicate that
+#     the user is inside the widget.
+#
+# 2.  In *extended* mode, the selected range can be adjusted by pressing the left mouse button with the Shift key down:
+#     this modifies the selection to consist of the elements between the anchor and the element under the mouse, inclusive.
+#     The un-anchored end of this new selection can also be dragged with the button down.
+#     The same action can be achived with the keyboard by pressing **Shift-Up** and **Shift-Down**.
+#
+# 3.  In *extended* and *multiple* mode, **Control-a** and **Control-/** (**Command-a** in macOS) selects every element of the listbox.
+#
+# 4.  If the mouse is over a listbox row that is not selected, the related row element will be illuminated. In mustang, this action is
+#     called preselection. A preselection is only a graphical effect to aid the user and have nothing to do with the actual
+#     *selection* of a listbox element.
+#
+#     The **-activestyle** option will determine the visual aid for selected rows.
+#
+# 5.  If the mouse leaves the listbox window with the left mouse button pressed, the window scrolls away from the mouse, making information
+#     visible that used to be off-screen on the side of the mouse.
+#     The scrolling continues until the mouse re-enters the window, the button is released, or the end of the listbox is reached.
+#
+# 6.  The middle mouse button may be used for scanning. If it is pressed and dragged over the listbox, the contents
+#     of the listbox drag at high speed in the direction the mouse moves.
+#
+# The following behavior will happen if the listbox widget has the focus.
+#
+# 7.  The **Up** or **Down** arrow key, will cause the preselection to move up or down by one element for each keypress.
+#
+# 8.  The **Left** and **Right** keys move the listbox view left and right by the width of the character 0 for each keypress.
+#
+# 9.  The **Prior** and **Next** keys scrolls the listbox view up and down by one page (the height of the window) for each keypress.
+#
+# 10. The **Control-Prior** and **Control-Next** keys scrolls the listbox view left and right by one page (the width of the window)
+#     for each keypress.
+#
+# 11. The **Home** key scrolls the listbox view to the far left of the entire horizontal viewport.
+#
+# 12. The **End** key scrolls the listbox view to the far right of the entire horizontal viewport.
+#
+# 13. The **Control-Home** keys will position the preselected item to the very first item.
+#
+# 14. The **Control-End** keys will position the preselected item to to the very last item.
+#
+# 15. The **Shift-Home** keys selects all the rows from the active item to the very first element, and deselects everything else in
+#     the listbox.
+#     Note that the cursor location will not change with this movement.
+#
+# 16. The **Shift-End** keys selects all the rows from the active item to the very last element, and deselects everything else in
+#     the listbox.
+#     Note that the cursor location will not change with this movement.
+#
+# 17. The **Escape** key removes every selection.
+#
+# 18. The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the previous
+#     focussable widget.
+#
+# There are other bindings in place for internal mechanism on the widget like **Activate/Deactivate**, **Configure**, **Destroy**,
+# **Enter/Leave**, **FocusIn/FocusOut** and **Motion**, as well as **ButtonPress-1**, **B1-Motion** and **ButtonRelease-1** on
+# its scrollbar objects.
+#
+###### ALTERNATIVE BINDINGS:
+#
+# Check the [event](/wiki/commands/event.md) wiki page to see alternative keystrokes in case some keys are not present in the user
+# keyboard like the *Delete*, *Arrows*, *Home*, *End*, *PageUp* or *PageDown* keys.
+#
+#### COLOR OPTIONS:
+#
+# Each color option accepts colors provided in one of the following forms:
+#
+#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                               hexadecimals), with or without the **#**.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the color to validate and the second one (optional) indicates
+#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                               translated. If only one element is provided (the hexadecimal color) its color model will be
+#                               assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                               Note: Hexadecimal colors and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffffff'.
+#
+#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                          The color model is **HEX12**.
+#
+#                                                          The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ff0000'.
+#
+#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                          The color model is **HEX16**.
+#
+#                                                          The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#0000ff'.
+#
+#                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffff00'.
+#
+#   **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                               *Magenta*, or *Light Steel Blue*.
+#
+#                               In this form, the list should have at least one element. More precisely:
+#
+#                                    colorname   --> It's the textual color name that specifies the color.
+#                                                    Should always be written first. It can take more than one element of
+#                                                    the list depending on how many words are needed to define it.
+#
+#                                                    The only color names known by mustang are specified in its palettes.
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the allowed color names for the default **mustang** palette.
+#
+#                                    palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                    If present, it should always be the last element of the list if the color model
+#                                                    is not present, or the last but one if the color model is present.
+#
+#                                                    Allowed values are any palette name loaded into mustang.
+#                                                    If not provided, defaults to **mustang** or return the fallback value
+#                                                    if the **mustang** palette was not loaded.
+#
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the mustang palettes.
+#
+#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                    will be translated.
+#                                                    If present, the color model should always be the last element of the list.
+#
+#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                    If not provided, defaults to **HEX8**.
+#
+#                                                    Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                    about color models.
+#
+#                               Note: Colornames, palettes and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "teal"                --> The color name is *teal*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#008080"
+#
+#                                    "medium violet red"   --> The color name is *medium violet red*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#c71585"
+#
+#                                    "sepia MyPalette"     --> The color name is *sepia*.
+#                                                              The palette name is **MyPalette**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              Note that in this example **MyPalette** is a fictional
+#                                                              palette name that have been loaded into mustang.
+#
+#                                                              The color name is translated to the hexadecimal color at 8 bit
+#                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                    "light coral hex16"   --> The color name is *light coral*.
+#                                                              The color model is **HEX16**.
+#                                                              The palette name is **mustang**.
+#
+#                                                              The color name is translated to "#f0f080808080"
+#
+#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                             The palette name is **mustang**.
+#                                                                             The color model is **HEX8**.
+#
+#                                                                             The color name is translated to "#6ada8e"
+#
+#                               After its validation, the color name will be returned translated in its hexadecimal longform
+#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                               *HighlightAlternate* or *PlaceholderText*.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the theme color name to validate and the second one (optional)
+#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                               will be translated. If only one element is provided (the theme color name) its color model
+#                               will be assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                               theme color names are allowed.
+#
+#                               Note: Theme colors are case sensitive.
+#
+#### EXAMPLE:
+#
+#   # Create a listbox 10x10.
+#   listbox .l   -activestyle underline \
+#                -borderwidth 2 \
+#                    -columns 20 \
+#                     -cursor arrow \
+#                     -relief solid \
+#                       -rows 10 \
+#                 -selectmode extended \
+#                      -state normal \
+#                      -style Listbox \
+#                  -takefocus true \
+#                     -values [list item1 \
+#                                   item2 \
+#                                   item3 \
+#                                   item4 \
+#                                   item5 \
+#                                   item6 \
+#                                   item7 \
+#                                   item8 \
+#                                   item9 \
+#                                   item10 \
+#                                   item11 \
+#                                   item12 \
+#                                   item13 \
+#                                   item14 \
+#                                   item15 \
+#                                   item16 \
+#                                   item17 \
+#                                   item18 \
+#                                   item19 \
+#                                   item20];
+#
+#   # Pack the listbox and expand it in both directions.
+#   pack .l  -anchor nw \
+#            -expand true \
+#              -fill both \
+#              -padx [list 15 15] \
+#              -pady [list 15 15] \
+#              -side top;
+#
+#   # Focus the listbox.
+#   focus .l
+#
+#   # Select the first item of the listbox.
+#   .l activate 0
+#   .l selection set 0
+#   .l selection anchor 0
+#
+#   # After 3 seconds, change the accent color to orange.
+#   after 3000 [list set ::ms::accent orange]
+#
+#   # After 6 seconds, invert the colorscheme.
+#   switch -- [tk windowingsystem] {
+#       aqua {
+#           switch -- [wm attributes . -isdark] {
+#               0   { after 6000 [list set ::ms::colorscheme dark]  }
+#               1   { after 6000 [list set ::ms::colorscheme light] }
+#           }
+#       }
+#       default { after 6000 [list set ::ms::colorscheme dark] }
+#   }
 package provide ::ms::listbox 0.1
 
 ###############################
