@@ -3078,4 +3078,104 @@ proc ::ms::listbox::Extend_Home_End { w key } {
     return ""
 }
 
+## Extend_Up_Down
+#
+# Moves the location cursor up or down by one element, and extends the selection to that point.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be an integer that specifies the amount of the movement (in rows).
+#          Generally **+1** to move down one item, **-1** to move up one item.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Extend_Up_Down { w amount } {
+    # Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check the listbox selectmode.
+            switch -- $::ms::current($w,selectmode) {
+                extended {
+                    # Get the listbox item size.
+                    set size [$w.listbox size]
+
+                    # Check if there is a preselected index.
+                    switch -- $::ms::data($w,preselected_index) {
+                        ""  { set ::ms::data($w,preselected_index) 0 }
+                    }
+
+                    # Deselect any preselected index.
+                    set index 0
+                    while { $index < $size } {
+                        $w.listbox itemconfigure $index -background $::ms::current($w,background) \
+                                                        -foreground $::ms::current($w,foreground);
+
+                        incr index
+                    }
+
+                    # Check if there is a selection already.
+                    switch -- [$w.listbox curselection] {
+                        ""  {
+                            # No selection.
+
+                            # Select the current preselected index.
+                            $w.listbox selection set $::ms::data($w,preselected_index)
+                            $w.listbox selection anchor $::ms::data($w,preselected_index)
+
+                            # Activate the preselected index.
+                            $w.listbox activate $::ms::data($w,preselected_index)
+                        }
+                        default {
+                            # Move the preselected index by amount.
+                            set ::ms::data($w,preselected_index) [expr { $::ms::data($w,preselected_index)+$amount }]
+
+                            # Check that the preselected index didn't go out of its bounds.
+                            set limit [expr { $size-1 }]
+                            if { $::ms::data($w,preselected_index) < 0 } {
+                                set ::ms::data($w,preselected_index) 0
+                            } elseif { $::ms::data($w,preselected_index) > $limit } {
+                                set ::ms::data($w,preselected_index) $limit
+                            }
+
+                            # Be sure that the active style is the one chosen by the developer.
+                            $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+                            # Activate the preselected index.
+                            $w.listbox activate $::ms::data($w,preselected_index)
+
+                            # Adjust the listbox viewport.
+                            $w.listbox see $::ms::data($w,preselected_index)
+
+                            # Call the 'ListboxMotion' procedure.
+                            ::tk::ListboxMotion $w.listbox $::ms::data($w,preselected_index)
+
+                            # Bug correction.
+                            # Sometimes when deselecting items comes a point when the are only 2 items selected.
+                            # If these items are the first and second row (with the first one being the anchored one), further
+                            # deselection won't do anything except moving the cursor location.
+                            # The correct way is to always deselect every row that is not the anchored one everytime the 'anchor'
+                            # and the 'active' index refers to the same row.
+                            if { [$w index anchor] == [$w index active] } {
+                                $w.listbox selection clear 0 end
+                                $w.listbox selection set anchor anchor
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
