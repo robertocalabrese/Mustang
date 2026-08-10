@@ -1311,7 +1311,104 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 return $result
             }
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+            switch -- [llength $args] {
+                0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
+                1   {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { set statespec disabled }
+                        normal {
+                            # Check the 'statespec' provided.
+                            set statespec $args
+                            switch -- $statespec {
+                                ""      -
+                                normal  { set statespec $::ms::data(statespec,normal) }
+                                default {
+                                    foreach state $statespec {
+                                        switch -- [::ms::Check_State $state] {
+                                            invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    # Change the statespec and register the states that have changed.
+                    set states_that_have_changed [list ]
+                    foreach state $statespec {
+                        if { $state ni $::ms::data($w,statespec) } {
+                            # Note: The state analized is different than its equivalent currently active (old state).
+                            #       For example 'disabled' (state) and '!disabled' (old state).
+
+                            # Get the old state as the inverse of the new state.
+                            switch -glob -- $state {
+                                "!*"    { set old_state [string trimleft $state "!"] }
+                                default { set old_state [string cat      "!" $state] }
+                            }
+
+                            # Update the current statespec old state with the new state.
+                            set index [lsearch -exact $::ms::data($w,statespec) $old_state]
+
+                            # No need to check if 'index' is '-1'.
+                            set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) $index $index $state]
+
+                            # Add the old state to the list containing the states that have changed.
+                            lappend states_that_have_changed $old_state
+                        }
+                    }
+
+                    #####################################
+                    ##                                 ##
+                    ##     UPDATE THE WIDGET STATE     ##
+                    ##                                 ##
+                    #####################################
+
+                    # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
+                    #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
+                    #       and 'selectforeground' are not allowed to change if the statespec changes.
+
+                    # Note: Listboxes don't understands styles natively.
+
+                    # bordercolor
+                    switch -- $::ms::managed_by($w,bordercolor) {
+                        developer { set bordercolor $::ms::current($w,bordercolor) }
+                        Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+                    }
+
+                    # Note: The '-bordercolor' option is not understanded by Tk listboxes, but is made available trough
+                    #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                    #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                    #       like it behaves in other widgets that understands the bordercolor.
+
+                    # Check the 'relief' type.
+                    switch -- $::ms::current($w,relief) {
+                        flat  -
+                        solid {
+                            set listbox_options [list -highlightbackground $bordercolor \
+                                                           -highlightcolor $bordercolor];
+                        }
+                        default {
+                            set listbox_options [list -highlightbackground $::ms::current($w,background) \
+                                                           -highlightcolor $::ms::current($w,background)];
+                        }
+                    }
+
+                    # Check the widget state and propagate the new statespec to the widget's hull and border objects..
+                    interp invokehidden {} $w state $::ms::data($w,statespec)
+
+                    # Configure the listbox object.
+                    $w.listbox configure {*}$listbox_options
+
+                    return $states_that_have_changed
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         xview {}
         yview {}
