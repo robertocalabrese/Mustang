@@ -2365,7 +2365,7 @@ _bind _Canvas <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 _bind _Canvas <Destroy> { ::ms::canvas::Destroy %W; break }
 
 # FocusIn/FocusOut
-_bind _Canvas <FocusIn>  { ::ms::canvas::Focus_In  %W; break }
+_bind _Canvas <FocusIn>  { ::ms::canvas::FocusIn  %W; break }
 _bind _Canvas <FocusOut> { ::ms::canvas::Focus_Out %W; break }
 
 # Mousewheel and Touchpad
@@ -3254,7 +3254,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     _bind $w.y      <Leave> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.canvas <FocusIn>  { ::ms::canvas::Focus_In  [_winfo parent %W]; break }
+                    _bind $w.canvas <FocusIn>  { ::ms::canvas::FocusIn  [_winfo parent %W]; break }
                     _bind $w.canvas <FocusOut> { ::ms::canvas::Focus_Out [_winfo parent %W]; break }
 
                     # Scan
@@ -5350,7 +5350,7 @@ proc ::ms::canvas::Destroy { w } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the **FocusIn** event.
 #
@@ -5359,7 +5359,7 @@ proc ::ms::canvas::Destroy { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::canvas::Focus_In { w } {
+proc ::ms::canvas::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::canvas::Pathname_Cmd $w state focus
 
