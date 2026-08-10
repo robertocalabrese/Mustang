@@ -3280,7 +3280,7 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
             normal   { set cursor $::ms::current($w,cursor) }
         }
 
-         #####################################
+        #####################################
         ##                                 ##
         ##     UPDATE THE WIDGET STYLE     ##
         ##                                 ##
@@ -3289,49 +3289,6 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
         # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
         #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
         #       and 'selectforeground' are not allowed to change if the statespec changes.
-
-        # bordercolor
-        switch -- $::ms::managed_by($w,bordercolor) {
-            developer { set bordercolor $::ms::current($w,bordercolor) }
-            Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $statespec $::ms::default($w,bordercolor)] }
-        }
-
-        # Set the listbox options.
-        set listbox_options [list            -background $::ms::current($w,background) \
-                                                 -cursor $cursor \
-                                     -disabledforeground $::ms::current($w,disabledforeground) \
-                                                   -font $::ms::current($w,font) \
-                                             -foreground $::ms::current($w,foreground) \
-                                                 -height $::ms::current($w,rows) \
-                                                -justify $::ms::current($w,justify) \
-                                       -selectbackground $::ms::current($w,selectbackground) \
-                                      -selectborderwidth $::ms::current($w,selectborderwidth) \
-                                       -selectforeground $::ms::current($w,selectforeground) \
-                                                  -width $::ms::current($w,columns)];
-
-        # Note: The '-bordercolor' option is not understanded by Tk listboxes, but is made available trough
-        #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
-        #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
-        #       like it behaves in other widgets that understands the bordercolor.
-
-        # Check the 'relief' type.
-        switch -- $::ms::current($w,relief) {
-            flat  -
-            solid {
-                lappend listbox_options         -borderwidth 0 \
-                                        -highlightbackground $bordercolor \
-                                             -highlightcolor $bordercolor \
-                                         -highlightthickness $::ms::current($w,borderwidth) \
-                                                     -relief flat;
-            }
-            default {
-                lappend listbox_options         -borderwidth $::ms::current($w,borderwidth) \
-                                        -highlightbackground $::ms::current($w,background) \
-                                             -highlightcolor $::ms::current($w,background) \
-                                         -highlightthickness 0 \
-                                                     -relief $::ms::current($w,relief);
-            }
-        }
 
         ##################
         ##              ##
@@ -3385,6 +3342,49 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
 
         # Note: Tk listboxes don't understands styles, at least not natively.
         #       No internal styles needs to be created.
+
+        # bordercolor
+        switch -- $::ms::managed_by($w,bordercolor) {
+            developer { set bordercolor $::ms::current($w,bordercolor) }
+            Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $statespec $::ms::default($w,bordercolor)] }
+        }
+
+        # Set the listbox options.
+        set listbox_options [list            -background $::ms::current($w,background) \
+                                                 -cursor $cursor \
+                                     -disabledforeground $::ms::current($w,disabledforeground) \
+                                                   -font $::ms::current($w,font) \
+                                             -foreground $::ms::current($w,foreground) \
+                                                 -height $::ms::current($w,rows) \
+                                                -justify $::ms::current($w,justify) \
+                                       -selectbackground $::ms::current($w,selectbackground) \
+                                      -selectborderwidth $::ms::current($w,selectborderwidth) \
+                                       -selectforeground $::ms::current($w,selectforeground) \
+                                                  -width $::ms::current($w,columns)];
+
+        # Note: The '-bordercolor' option is not understanded by Tk listboxes, but is made available trough
+        #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+        #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+        #       like it behaves in other widgets that understands the bordercolor.
+
+        # Check the 'relief' type.
+        switch -- $::ms::current($w,relief) {
+            flat  -
+            solid {
+                lappend listbox_options         -borderwidth 0 \
+                                        -highlightbackground $bordercolor \
+                                             -highlightcolor $bordercolor \
+                                         -highlightthickness $::ms::current($w,borderwidth) \
+                                                     -relief flat;
+            }
+            default {
+                lappend listbox_options         -borderwidth $::ms::current($w,borderwidth) \
+                                        -highlightbackground $::ms::current($w,background) \
+                                             -highlightcolor $::ms::current($w,background) \
+                                         -highlightthickness 0 \
+                                                     -relief $::ms::current($w,relief);
+            }
+        }
 
         # Apply the changes.
         $w.listbox configure {*}$listbox_options
