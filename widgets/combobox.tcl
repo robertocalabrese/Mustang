@@ -3866,12 +3866,10 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             }
         }
         delete    -
-        identify  -
         selection {
             # Synopsis:
             #
             # *window* **delete** *first* ?*last*?
-            # *window* **identify** **element** *x* *y*
             # *window* **selection** *option* *arg*
             #    *window* **selection** **clear**
             #    *window* **selection** **present**
@@ -3887,6 +3885,27 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                         return $result
                     }
                 }
+            }
+        }
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    try {
+                        interp invokehidden {} $w identify {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        switch -nocase -- $result {
+                            textarea             { return "Combobox.textarea" }
+                            "Combobox.downarrow" { return "Combobox.downarrow" }
+                            default              { return "" }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         insert {
