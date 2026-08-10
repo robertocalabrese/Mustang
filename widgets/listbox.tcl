@@ -3580,4 +3580,38 @@ proc ::ms::listbox::Select_All { w } {
     return ""
 }
 
+## Unselect_All
+#
+# Manage the **Escape** event inside the widget by clearing all previously selected indexes.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Unselect_All { w } {
+    set ::tk::Priv(listboxPrev)      {}
+    set ::tk::Priv(listboxSelection) {}
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Deselect any previously selected index.
+    $w.listbox selection clear 0 end
+
+    # Preselect the current active row.
+    $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                               -foreground $::ms::current($w,preselectforeground);
+
+    # Remove the activestyle.
+    $w.listbox configure -activestyle none
+
+    # Fire up the selection event.
+    ::tk::FireListboxSelectEvent $w.listbox
+
+    return ""
+}
+
 #*EOF*
