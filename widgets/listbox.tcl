@@ -967,6 +967,82 @@ proc ::ms::listbox::Command { window { args "" } } {
             _bind $w.listbox <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
             _bind $w.x       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
             _bind $w.y       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
+
+            #####################
+            ##                 ##
+            ##     CLOSING     ##
+            ##                 ##
+            #####################
+
+            # Configure the internal widget rows and columns.
+            _grid rowconfigure    $w [list 0] -weight 1
+            _grid columnconfigure $w [list 0] -weight 1
+
+            # Hide the widget pathcommand.
+            interp hide {} $w
+
+            # Create an alias for the widget pathcommand.
+            lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::listbox::Pathname_Cmd $w]
+
+            # If needed, create an alias for the widget short address pathcommand.
+            if { $short_addr ne $w } {
+                lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::listbox::Pathname_Cmd $w]
+            }
+
+            # Set the widget real address relative to its short address, 'short_addr'.
+            set ::ms::addr($short_addr,real) $w
+
+            # Set the widget short addresses relative to its real address, 'w'.
+            # They will all point to the widget hull object short address.
+            set ::ms::addr($w,short)         $short_addr
+            set ::ms::addr($w.listbox,short) $short_addr
+            set ::ms::addr($w.x,short)       $short_addr
+            set ::ms::addr($w.y,short)       $short_addr
+
+            # Add the widget real and short address into the list of all available real and short addresses.
+            lappend ::ms::addr(reals) $w \
+                                      $w.listbox \
+                                      $w.x \
+                                      $w.y;
+
+            lappend ::ms::addr(shorts) $short_addr
+
+            # Add the widget address to the listbox widgets real address list.
+            lappend ::ms::addr(listbox) $w
+
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w.listbox
+
+            # Set the actual widget address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w.listbox
+
+            # Set the structure addresses.
+            # Is important to note that the scrollbar addresses must not be included.
+            set ::ms::addr($w,structure) [list $w \
+                                               $w.listbox];
+
+            # Add the widget address to the listbox classtype real address list with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),listbox,addrs) $w
+
+            # Add the widget address to the listbox classtype real address list with style '::ms::current($w,style)'.
+            lappend ::ms::style($::ms::current($w,style),listbox,addrs) $w
+
+            # If needed, add '::ms::current($w,style)' to the available styles for the listbox classtype.
+            if { $::ms::current($w,style) ni $::ms::style(listbox,classtype) } {
+                lappend ::ms::style(listbox,classtype) $::ms::current($w,style)
+            }
+
+            # Add the widget address to the megawidget addresses list.
+            lappend ::ms::addr(megawidgets) $w
+
+            # Add the widget address to the scrollable megawidget addresses list.
+            lappend ::ms::addr(megawidgets,scrollable) $w
+
+            # Depending on the address type provided, return the widget real or short address.
+            switch -- $type {
+                real  { return $w }
+                short { return $short_addr }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
