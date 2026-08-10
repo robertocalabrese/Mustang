@@ -1169,7 +1169,7 @@ _bind _Listbox <Enter> { ::ms::listbox::Hover %W %X %Y; break }
 _bind _Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Listbox <FocusIn>  { ::ms::listbox::Focus_In  %W; break }
+_bind _Listbox <FocusIn>  { ::ms::listbox::FocusIn  %W; break }
 _bind _Listbox <FocusOut> { ::ms::listbox::Focus_Out %W; break }
 
 # Mousewheel and Touchpad
@@ -1882,7 +1882,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             _bind $w.y       <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
 
             # FocusIn/FocusOut
-            _bind $w.listbox <FocusIn>  { ::ms::listbox::Focus_In  [_winfo parent %W]; break }
+            _bind $w.listbox <FocusIn>  { ::ms::listbox::FocusIn  [_winfo parent %W]; break }
             _bind $w.listbox <FocusOut> { ::ms::listbox::Focus_Out [_winfo parent %W]; break }
 
             # If the widget state is normal or the listbox has no values, move the active row item to the very
@@ -4236,7 +4236,7 @@ proc ::ms::listbox::Extend_Home_End { w key } {
     return ""
 }
 
-## Focus_In
+## FocusIn
 #
 # Manage the <FocusIn> event on the widget.
 #
@@ -4245,7 +4245,7 @@ proc ::ms::listbox::Extend_Home_End { w key } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Focus_In { w } {
+proc ::ms::listbox::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::listbox::Pathname_Cmd $w state focus
 
