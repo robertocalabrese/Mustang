@@ -1544,7 +1544,7 @@ _bind _Entry <Fn-KeyPress> { # Enable binding }
 
 # FocusIn/FocusOut
 _bind _Entry <FocusIn>  { ::ms::entry::FocusIn  %W; break }
-_bind _Entry <FocusOut> { ::ms::entry::Focus_Out %W; break }
+_bind _Entry <FocusOut> { ::ms::entry::FocusOut %W; break }
 
 # Insert cursor movements.
 _bind _Entry <<PrevChar>>   { ::ttk::entry::Move %W prevchar; break }
@@ -4526,7 +4526,7 @@ proc ::ms::entry::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -4535,7 +4535,7 @@ proc ::ms::entry::FocusIn { w } {
 # w   should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::entry::Focus_Out { w } {
+proc ::ms::entry::FocusOut { w } {
     # Check the contextual menu relative to this widget, if any.
     switch -- $::ms::current($w,cmenu) {
         ""      {}
