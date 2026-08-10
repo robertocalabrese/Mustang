@@ -1911,7 +1911,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             # and move that scrollbar by one unit towards the right or left.
             # If none of the widget's parent meets the required condition, don't do anything.
             _bind $w.listbox <<NextChar>> { ::ms::listbox::NextChar [_winfo parent %W]; break }
-            _bind $w.listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
+            _bind $w.listbox <<PrevChar>> { ::ms::listbox::PrevChar [_winfo parent %W]; break }
 
             # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
             # left, right, top or bottom.
@@ -4561,7 +4561,7 @@ proc ::ms::listbox::PageUp { w } {
     return ""
 }
 
-## Prev_Char
+## PrevChar
 #
 # Scroll the listbox horizontally by one unit towards the left.
 #
@@ -4570,7 +4570,7 @@ proc ::ms::listbox::PageUp { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::Prev_Char { w } {
+proc ::ms::listbox::PrevChar { w } {
     switch -- $::ms::current($w,state) {
         normal {
             switch -- $::ms::data($w,scrollx) {
