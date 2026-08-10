@@ -3014,4 +3014,68 @@ proc ::ms::listbox::End { w } {
     return ""
 }
 
+## Extend_Home_End
+#
+# Moves the location cursor to the begin or end of the elements, and extends the selection to that point.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be a string that specifies the key pressed ('home' or 'end').
+#
+# It doesn't return anything.
+proc ::ms::listbox::Extend_Home_End { w key } {
+    # Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check the listbox selectmode.
+            switch -- $::ms::current($w,selectmode) {
+                extended {
+                    # Check if there is a preselected index.
+                    switch -- $::ms::data($w,preselected_index) {
+                        ""  { set ::ms::data($w,preselected_index) 0 }
+                    }
+
+                    # Check if there is a selection already.
+                    switch -- [$w.listbox curselection] {
+                        ""  { return "" }
+                    }
+
+                    # Clear the selection.
+                    $w.listbox selection clear 0 end
+
+                    # Do the selection.
+                    switch -nocase -- $key {
+                        home {
+                            # Select from the first index till the preselected index.
+                            $w.listbox selection set 0 $::ms::data($w,preselected_index)
+                        }
+                        default {
+                            # Select from the preselected index till the last index.
+                            $w.listbox selection set $::ms::data($w,preselected_index) [$w.listbox index end]
+                        }
+                    }
+
+                    # Be sure that the active style is the one chosen by the developer.
+                    $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+                    # Adjust the listbox viewport.
+                    $w.listbox see $::ms::data($w,preselected_index)
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
