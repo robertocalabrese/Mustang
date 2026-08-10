@@ -3347,4 +3347,55 @@ proc ::ms::listbox::Hover { w X Y } {
     return ""
 }
 
+## Motion
+#
+# Manage the **Motion** event on the widget by graphically preselecting the item under the mouse pointer.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Motion { w x y } {
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # If needed, deselect the current preselected index.
+    switch -- $::ms::data($w,preselected_index) {
+        ""      {}
+        default {
+            $w.border.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,background) \
+                                                                              -foreground $::ms::current($w,foreground);
+        }
+    }
+
+    # Set the new preselect index.
+    set ::ms::data($w,preselected_index) [$w.listbox index @$x,$y]
+
+    # If the preselect index is not a selected index, preselect it.
+    if { $::ms::data($w,preselected_index) ni [$w.listbox curselection] } {
+        $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                   -foreground $::ms::current($w,preselectforeground);
+
+        # Remove the activestyle.
+        $w.listbox configure -activestyle none
+    } else {
+        # Be sure that the active style is the one chosen by the developer.
+        $w.listbox configure -activestyle $::ms::current($w,activestyle)
+
+        # Activate the preselected index.
+        $w.listbox activate $::ms::data($w,preselected_index)
+    }
+
+    # Adjust the listbox viewport.
+    $w.listbox see $::ms::data($w,preselected_index)
+
+    return ""
+}
+
 #*EOF*
