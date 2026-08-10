@@ -2374,6 +2374,15 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        ########################
+        ##                    ##
+        ##     SCROLLBARS     ##
+        ##                    ##
+        ########################
+
+        # Update the scrollbars.
+        ::ms::listbox::Scrollbar_Update $w
     }
 
     return ""
