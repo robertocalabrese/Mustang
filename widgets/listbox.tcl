@@ -3712,4 +3712,150 @@ proc ::ms::listbox::Unselect_All { w } {
     return ""
 }
 
+#######################
+##                   ##
+##     SCROLLBAR     ##
+##                   ##
+#######################
+
+## Scrollbar_ButtonPress
+#
+# Manage the **ButtonPress** event on the widget's internal scrollbars.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# orient   Specifies a string (**horizontal** or **vertical**) indicating
+#          the orientation of the scrollbar.
+#
+# x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#          These values should be provided by the **ButtonPress** event.
+#
+# It doesn't return anything.
+proc ::ms::listbox::Scrollbar_ButtonPress { w orient x y }  {
+    set ::ms::temp(xpress) $x
+    set ::ms::temp(ypress) $y
+
+    switch -nocase -- $orient {
+        horizontal {
+            switch -nocase -glob -- [$w.x identify $x $y] {
+                "*leftarrow"  { ::ms::Scroll_Widget_X $w +120 units }
+                "*rightarrow" { ::ms::Scroll_Widget_X $w -120 units }
+                "*grip"  -
+                "*thumb" {
+                    set ::ms::temp(drag_allowed) yes
+
+                    set xviews [$w.x get]
+                    set xview1 [lindex $xviews 0]
+                    set xview2 [lindex $xviews 1]
+
+                    # Compute the fraction for the center of the thumb.
+                    set ::ms::temp(fraction) [expr { ($xview2+$xview1)*0.5 }]
+                }
+                "*trough" {
+                    # Get the fraction for the center of the thumb.
+                    set ::ms::temp(fraction) [$w.x fraction $x $y]
+
+                    # Check if 'parent' has an active horizontal scrollbar linked to it.
+                    switch -- $::ms::data($w,scrollx) {
+                        on  {
+                            switch -nocase -- $::ms::clickaction {
+                                jump {
+                                    # Jump to the location on the scrollbar that was clicked.
+                                    ::ms::listbox::Pathname_Cmd $w xview moveto $::ms::temp(fraction)
+                                }
+                                scroll {
+                                    set xviews [$w.x get]
+                                    set xview1 [lindex $xviews 0]
+                                    set xview2 [lindex $xviews 1]
+
+                                    if { $::ms::temp(fraction) < $xview1 } {
+                                        # The User has click on the left trough.
+
+                                        # Scroll the thumb by one page towards the left.
+                                        ::ms::listbox::Pathname_Cmd $w xview scroll -1 pages
+
+                                        set ::ms::temp(drag_allowed) yes
+                                    } elseif { $::ms::temp(fraction) > $xview2 } {
+                                        # The User has click on the right trough.
+
+                                        # Scroll the thumb by one page towards the right.
+                                        ::ms::listbox::Pathname_Cmd $w xview scroll 1 pages
+
+                                        set ::ms::temp(drag_allowed) yes
+                                    } else {
+                                        # The User has click on the thumb (???).
+
+                                        set ::ms::temp(drag_allowed) no
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        vertical {
+            switch -nocase -glob -- [$w.y identify $x $y] {
+                "*uparrow"   { ::ms::Scroll_Widget_Y $w +120 units }
+                "*downarrow" { ::ms::Scroll_Widget_Y $w -120 units }
+                "*grip"  -
+                "*thumb" {
+                    set ::ms::temp(drag_allowed) yes
+
+                    set yviews [$w.y get]
+                    set yview1 [lindex $yviews 0]
+                    set yview2 [lindex $yviews 1]
+
+                    # Compute the fraction for the center of the thumb.
+                    set ::ms::temp(fraction) [expr { ($yview2+$yview1)*0.5 }]
+                }
+                "*trough" {
+                    # Get the fraction for the center of the thumb.
+                    set ::ms::temp(fraction) [$w.y fraction $x $y]
+
+                    # Check if 'parent' has an active vertical scrollbar linked to it.
+                    switch -- $::ms::data($w,scrolly) {
+                        on  {
+                            switch -nocase -- $::ms::clickaction {
+                                jump {
+                                    # Jump to the location on the scrollbar that was clicked.
+                                    ::ms::listbox::Pathname_Cmd $w yview moveto $::ms::temp(fraction)
+                                }
+                                scroll {
+                                    set yviews [$w.y get]
+                                    set yview1 [lindex $yviews 0]
+                                    set yview2 [lindex $yviews 1]
+
+                                    if { $::ms::temp(fraction) < $yview1 } {
+                                        # The User has click on the top trough.
+
+                                        # Scroll the thumb by one page towards the top.
+                                        ::ms::listbox::Pathname_Cmd $w yview scroll -1 pages
+
+                                        set ::ms::temp(drag_allowed) yes
+                                    } elseif { $::ms::temp(fraction) > $yview2 } {
+                                        # The User has click on the bottom trough.
+
+                                        # Scroll the thumb by one page towards the bottom.
+                                        ::ms::listbox::Pathname_Cmd $w yview scroll 1 pages
+
+                                        set ::ms::temp(drag_allowed) yes
+                                    } else {
+                                        # The User has click on the thumb (???).
+                                        set ::ms::temp(drag_allowed) no
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
