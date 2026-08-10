@@ -2560,4 +2560,104 @@ proc ::ms::listbox::Arrow_Up { w } {
     return ""
 }
 
+# B1_Motion
+#
+# Manage the **B1-Motion** event on the widget.
+# It moves or extends the current selection, if the widget's selection mode is **browse** or **extended**.
+# It does nothing if the selection mode is **single** or **multiple**.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **ButtonPress-1** event.
+#
+# It doesn't return anything.
+proc ::ms::listbox::B1_Motion { w x y } {
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Set the closest index near the mouse pointer coordinates where the 'ButtonPress' happened.
+            set index [$w.listbox index @$x,$y]
+
+            if { $index == $::tk::Priv(listboxPrev) } {
+                return ""
+            } else {
+                # Set the preselected index as 'index'.
+                set ::ms::data($w,preselected_index) $index
+            }
+
+            # Check the selection mode.
+            switch -- $::ms::current($w,selectmode) {
+                browse {
+                    # Select the preselected index.
+                    $w.listbox selection clear 0 end
+                    $w.listbox selection set $::ms::data($w,preselected_index)
+
+                    # Activate the preselected index.
+                    $w.listbox activate $::ms::data($w,preselected_index)
+
+                    set ::tk::Priv(listboxPrev) $::ms::data($w,preselected_index)
+
+                    # Fire up the selection event.
+                    ::tk::FireListboxSelectEvent $w.listbox
+                }
+                extended {
+                    set index $::tk::Priv(listboxPrev)
+                    if { $index < 0 } {
+                        set index $::ms::data($w,preselected_index)
+                        $w.listbox selection set $::ms::data($w,preselected_index)
+                    }
+
+                    # Get the current anchor index.
+                    set anchor [$w.listbox index anchor]
+
+                    # Check if the current selection includes the anchor index.
+                    switch -- [$w.listbox selection includes anchor] {
+                        0   {
+                            $w.listbox selection clear $index $::ms::data($w,preselected_index)
+                            $w.listbox selection clear anchor $::ms::data($w,preselected_index)
+                        }
+                        1   {
+                            $w.listbox selection clear $index $::ms::data($w,preselected_index)
+                            $w.listbox selection set anchor $::ms::data($w,preselected_index)
+                        }
+                    }
+
+                    switch -- [info exists ::tk::Priv(listboxSelection)] {
+                        0   { set ::tk::Priv(listboxSelection) [$w.listbox curselection] }
+                    }
+
+                    while { ($index < $::ms::data($w,preselected_index)) && ($index < $anchor) } {
+                        if { $index in $::tk::Priv(listboxSelection) } {
+                            $w.listbox selection set $index
+                        }
+                        incr index
+                    }
+
+                    while { ($index > $::ms::data($w,preselected_index)) && ($index > $anchor) } {
+                        if { $index in $::tk::Priv(listboxSelection) } {
+                            $w.listbox selection set $index
+                        }
+                        incr index -1
+                    }
+
+                    set ::tk::Priv(listboxPrev) $::ms::data($w,preselected_index)
+
+                    # Fire up the selection event.
+                    ::tk::FireListboxSelectEvent $w.listbox
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
