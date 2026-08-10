@@ -533,6 +533,10 @@
 #     If *last* is specified, the command returns a list whose elements are all of the listbox elements between *first* and *last*, inclusive.
 #     Both *first* and *last* may have any of the standard forms for indices.
 #
+#   *window* **identify** **element** *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if the mouse pointer does not lie within any element.
+#     *X* and *y* are pixel coordinates relative to the widget.
+#
 #   *window* **index** *index*
 #     Returns the integer index value that corresponds to *index*.
 #     If *index* is end the return value is a count of the number of elements in the listbox (not the index of the last element).
@@ -2764,6 +2768,57 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
+            }
+        }
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    # Check that the first argument of 'args' is the word "element".
+                    switch -- [lindex $args 0] {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+
+                    # Get the root coordinates of the north-west corner of the container ('$w').
+                    set rootx [_winfo rootx $w]
+                    set rooty [_winfo rooty $w]
+
+                    # Transform the relative coordinates provided into root coordinates.
+                    set X [expr { $rootx+$x }]
+                    set Y [expr { $rooty+$y }]
+
+                    # Get the widget address containing the point given by the root coordinates calculated.
+                    set widget [_winfo containing -display $w $X $Y]
+
+                    # Return the name of the object, or an empty string if there are no listbox objects at the coordinates provided.
+                    if { $widget eq $w } {
+                        return "Listbox.hull"
+                    } elseif { $widget eq "$w.listbox" } {
+                        return "Listbox.content"
+                    } elseif { $widget eq "$w.x" } {
+                        return "Listbox.hscrollbar"
+                    } elseif { $widget eq "$w.y" } {
+                        return "Listbox.vscrollbar"
+                    } else {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         instate {
