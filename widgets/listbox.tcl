@@ -1507,7 +1507,95 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        yview {}
+        yview {
+            # Synopsis:
+            #
+            # *window* **yview**
+            # *window* **yview** *index*
+            # *window* **yview** **moveto** *fraction*
+            # *window* **yview** **scroll** *number* *what*
+
+            # Check if the widget has an active vertical scrollbar.
+            switch -- $::ms::data($w,scrolly) {
+                on  {
+                    set subcommand [lindex  $args 0]
+                    set args       [lremove $args 0]
+
+                    switch -nocase -- $subcommand {
+                        ""     { return [$w.listbox yview] }
+                        moveto {
+                            # Check the number of arguments provided (after the 'moveto' word).
+                            switch -- [llength $args] {
+                                1       {}
+                                default { return "" }
+                            }
+
+                            # Check the fraction provided.
+                            set fraction $args
+                            switch -- [string is double -strict $fraction] {
+                                0   { return "" }
+                            }
+
+                            # Check that fraction is inside its limits [0,1.0].
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+
+                            # Move the content object vertically.
+                            $w.listbox yview moveto $fraction
+
+                            return ""
+                        }
+                        scroll {
+                            # Check the number of arguments provided (after the 'scroll' word).
+                            switch -- [llength $args] {
+                                2       {}
+                                default { return "" }
+                            }
+
+                            # Check the 'number'.
+                            set number [lindex $args 0]
+                            switch -- [string is double -strict $number] {
+                                0   { return "" }
+                            }
+
+                            # Check the 'what'.
+                            switch -nocase -- [lindex $args 1] {
+                                pages {
+                                    set what   "pages"
+                                    set number [expr { int($number) }]
+                                }
+                                pixels { set what "pixels" }
+                                units {
+                                    set what   "units"
+                                    set number [expr { int($number) }]
+                                }
+                                default { return "" }
+                            }
+
+                            # Move the content object vertically.
+                            $w.listbox yview scroll $number $what
+
+                            return ""
+                        }
+                        default {
+                            set index $subcommand
+
+                            # Move the content object vertically.
+                            try {
+                                $w.listbox yview $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return ""
+                            }
+                        }
+                    }
+                }
+            }
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
