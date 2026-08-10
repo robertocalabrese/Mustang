@@ -1628,7 +1628,7 @@ _bind _Combobox <Fn-KeyPress> { # Enable binding }
 
 # FocusIn/FocusOut
 _bind _Combobox <FocusIn>  { ::ms::combobox::FocusIn  %W; break }
-_bind _Combobox <FocusOut> { ::ms::combobox::Focus_Out %W; break }
+_bind _Combobox <FocusOut> { ::ms::combobox::FocusOut %W; break }
 
 # Insert cursor movements.
 _bind _Combobox <<LineEnd>>   { ::ttk::entry::Move %W end; break }
@@ -4733,7 +4733,7 @@ proc ::ms::combobox::FocusIn { w } {
     return ""
 }
 
-## Focus_Out
+## FocusOut
 #
 # Manage the **FocusOut** event.
 #
@@ -4742,7 +4742,7 @@ proc ::ms::combobox::FocusIn { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::combobox::Focus_Out { w } {
+proc ::ms::combobox::FocusOut { w } {
     # Check the contextual menu relative to this widget, if any.
     switch -- $::ms::current($w,cmenu) {
         ""      {}
