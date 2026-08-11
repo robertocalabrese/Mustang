@@ -412,7 +412,7 @@
 #
 #                              See also **-insertwidth**.
 #
-# ** insertwidth**             Specifies the width of the combobox cursor.
+# **-insertwidth**             Specifies the width of the combobox cursor.
 #                              The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
 #                              (pixels, points, inches, millimeters or centimeters).
 #
@@ -534,19 +534,19 @@
 #
 #                              See also **-font**, **-justify** and **-placeholder**.
 #
-# **posthook**                 Specifies a procedure to call just after the destroy of the popdown window.
+# **-posthook**                Specifies a procedure to call just after the destroy of the popdown window.
 #                              This procedure will be launched with one parameter, the real address of the combobox involved.
 #                              Providing an empty string will mean to not launch any procedure after the popdown window is destroyed.
 #
 #                              If not provided, defaults to the empty string.
 #
-# **prehook**                  Specifies a procedure to call just before the creation of the popdown window.
+# **-prehook**                 Specifies a procedure to call just before the creation of the popdown window.
 #                              This procedure will be launched with one parameter, the real address of the combobox involved.
 #                              Providing an empty string will mean to not launch any procedure before the creation of the popdown window.
 #
 #                              If not provided, defaults to the empty string.
 #
-# **rows**                     The number of rows to display inside the popdown window.
+# **-rows**                    The number of rows to display inside the popdown window.
 #                              If the number of row specified is less then the number of values specified then a vertical scrollbar will
 #                              be displayed inside the popdown.
 #
