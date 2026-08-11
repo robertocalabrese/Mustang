@@ -1815,47 +1815,6 @@ proc ::ms::labelframe::Command { window { args "" } } {
             # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
             #       are not allowed to change if the statespec changes.
 
-            set background  $::ms::styleopt($::ms::theme,TLabelframe.Label,background)
-            set bordercolor $::ms::styleopt($::ms::theme,TLabelframe.Label,bordercolor)
-            set borderwidth $::ms::styleopt($::ms::theme,TLabelframe.Label,borderwidth)
-            set charwidth   $::ms::styleopt($::ms::theme,TLabelframe.Label,charwidth)
-            set darkcolor   $::ms::styleopt($::ms::theme,TLabelframe.Label,darkcolor)
-            set lightcolor  $::ms::styleopt($::ms::theme,TLabelframe.Label,lightcolor)
-            set padding     $::ms::styleopt($::ms::theme,TLabelframe.Label,padding)
-            set relief      $::ms::styleopt($::ms::theme,TLabelframe.Label,relief)
-
-            # Check if '::ms::current($w,style).Label' exists among the styles known by the current theme.
-            # If not, set it as 'TLabelframe.Label'.
-            set labelframe_title_style [string cat $::ms::current($w,style) ".Label"]
-            if { ($labelframe_title_style in $::ms::style($::ms::theme)) && ($labelframe_title_style ne "TLabelframe.Label") } {
-                # Check if a layout exists for '::ms::current($w,style).Label'.
-                # If not, create one by mirroring the 'TLabelframe.Label' layout for the current theme.
-                if { $labelframe_title_style ni $::ms::layouts($::ms::theme) } {
-                    _ttk_style layout $labelframe_title_style [_ttk_style layout TLabelframe.Label]
-                }
-
-                # Get the labelframe title style options, if any.
-                foreach option [list  background \
-                                     bordercolor \
-                                     borderwidth \
-                                       charwidth \
-                                       darkcolor \
-                                      lightcolor \
-                                         padding \
-                                          relief] {
-                    switch -- [info exists ::ms::styleopt($::ms::theme,$labelframe_title_style,$option)] {
-                        1   { set $option $::ms::styleopt($::ms::theme,$labelframe_title_style,$option) }
-                    }
-                }
-            }
-
-            # Set the anchor variable.
-            switch -- $::ms::current($w,anchor) {
-                ne  { set anchor ne }
-                nw  { set anchor nw }
-                n   { set anchor center }
-            }
-
             # Check if the height provided is zero.
             switch -- $::ms::current($w,height) {
                 0   { set ::ms::current($w,height) $::ms::default($w,height) }
@@ -1930,6 +1889,47 @@ proc ::ms::labelframe::Command { window { args "" } } {
             ##     TITLE     ##
             ##               ##
             ###################
+
+            set background  $::ms::styleopt($::ms::theme,TLabelframe.Label,background)
+            set bordercolor $::ms::styleopt($::ms::theme,TLabelframe.Label,bordercolor)
+            set borderwidth $::ms::styleopt($::ms::theme,TLabelframe.Label,borderwidth)
+            set charwidth   $::ms::styleopt($::ms::theme,TLabelframe.Label,charwidth)
+            set darkcolor   $::ms::styleopt($::ms::theme,TLabelframe.Label,darkcolor)
+            set lightcolor  $::ms::styleopt($::ms::theme,TLabelframe.Label,lightcolor)
+            set padding     $::ms::styleopt($::ms::theme,TLabelframe.Label,padding)
+            set relief      $::ms::styleopt($::ms::theme,TLabelframe.Label,relief)
+
+            # Check if '::ms::current($w,style).Label' exists among the styles known by the current theme.
+            # If not, set it as 'TLabelframe.Label'.
+            set labelframe_title_style [string cat $::ms::current($w,style) ".Label"]
+            if { ($labelframe_title_style in $::ms::style($::ms::theme)) && ($labelframe_title_style ne "TLabelframe.Label") } {
+                # Check if a layout exists for '::ms::current($w,style).Label'.
+                # If not, create one by mirroring the 'TLabelframe.Label' layout for the current theme.
+                if { $labelframe_title_style ni $::ms::layouts($::ms::theme) } {
+                    _ttk_style layout $labelframe_title_style [_ttk_style layout TLabelframe.Label]
+                }
+
+                # Get the labelframe title style options, if any.
+                foreach option [list  background \
+                                     bordercolor \
+                                     borderwidth \
+                                       charwidth \
+                                       darkcolor \
+                                      lightcolor \
+                                         padding \
+                                          relief] {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$labelframe_title_style,$option)] {
+                        1   { set $option $::ms::styleopt($::ms::theme,$labelframe_title_style,$option) }
+                    }
+                }
+            }
+
+            # Set the anchor variable.
+            switch -- $::ms::current($w,anchor) {
+                ne  { set anchor ne }
+                nw  { set anchor nw }
+                n   { set anchor center }
+            }
 
             # Set the title object style name.
             set ::ms::style($w,title) [string cat "_bg=" $background \
@@ -3444,47 +3444,6 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
                             #       are not allowed to change if the statespec changes.
 
-                            set background  $::ms::styleopt($::ms::theme,TLabelframe.Label,background)
-                            set bordercolor $::ms::styleopt($::ms::theme,TLabelframe.Label,bordercolor)
-                            set borderwidth $::ms::styleopt($::ms::theme,TLabelframe.Label,borderwidth)
-                            set charwidth   $::ms::styleopt($::ms::theme,TLabelframe.Label,charwidth)
-                            set darkcolor   $::ms::styleopt($::ms::theme,TLabelframe.Label,darkcolor)
-                            set lightcolor  $::ms::styleopt($::ms::theme,TLabelframe.Label,lightcolor)
-                            set padding     $::ms::styleopt($::ms::theme,TLabelframe.Label,padding)
-                            set relief      $::ms::styleopt($::ms::theme,TLabelframe.Label,relief)
-
-                            # Check if '::ms::current($w,style).Label' exists among the styles known by the current theme.
-                            # If not, set it as 'TLabelframe.Label'.
-                            set labelframe_title_style [string cat $::ms::current($w,style) ".Label"]
-                            if { ($labelframe_title_style in $::ms::style($::ms::theme)) && ($labelframe_title_style ne "TLabelframe.Label") } {
-                                # Check if a layout exists for '::ms::current($w,style).Label'.
-                                # If not, create one by mirroring the 'TLabelframe' layout for the current theme.
-                                if { $labelframe_title_style ni $::ms::layouts($::ms::theme) } {
-                                    _ttk_style layout $labelframe_title_style [_ttk_style layout TLabelframe.Label]
-                                }
-
-                                # Get the labelframe title style options, if any.
-                                foreach option [list  background \
-                                                     bordercolor \
-                                                     borderwidth \
-                                                       charwidth \
-                                                       darkcolor \
-                                                      lightcolor \
-                                                         padding \
-                                                          relief] {
-                                    switch -- [info exists ::ms::styleopt($::ms::theme,$labelframe_title_style,$option)] {
-                                        1   { set $option $::ms::styleopt($::ms::theme,$labelframe_title_style,$option) }
-                                    }
-                                }
-                            }
-
-                            # Set the anchor variable.
-                            switch -- $::ms::current($w,anchor) {
-                                ne  { set anchor ne }
-                                nw  { set anchor nw }
-                                n   { set anchor center }
-                            }
-
                             ##################
                             ##              ##
                             ##     HULL     ##
@@ -3534,6 +3493,47 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             ##     TITLE     ##
                             ##               ##
                             ###################
+
+                            set background  $::ms::styleopt($::ms::theme,TLabelframe.Label,background)
+                            set bordercolor $::ms::styleopt($::ms::theme,TLabelframe.Label,bordercolor)
+                            set borderwidth $::ms::styleopt($::ms::theme,TLabelframe.Label,borderwidth)
+                            set charwidth   $::ms::styleopt($::ms::theme,TLabelframe.Label,charwidth)
+                            set darkcolor   $::ms::styleopt($::ms::theme,TLabelframe.Label,darkcolor)
+                            set lightcolor  $::ms::styleopt($::ms::theme,TLabelframe.Label,lightcolor)
+                            set padding     $::ms::styleopt($::ms::theme,TLabelframe.Label,padding)
+                            set relief      $::ms::styleopt($::ms::theme,TLabelframe.Label,relief)
+
+                            # Check if '::ms::current($w,style).Label' exists among the styles known by the current theme.
+                            # If not, set it as 'TLabelframe.Label'.
+                            set labelframe_title_style [string cat $::ms::current($w,style) ".Label"]
+                            if { ($labelframe_title_style in $::ms::style($::ms::theme)) && ($labelframe_title_style ne "TLabelframe.Label") } {
+                                # Check if a layout exists for '::ms::current($w,style).Label'.
+                                # If not, create one by mirroring the 'TLabelframe' layout for the current theme.
+                                if { $labelframe_title_style ni $::ms::layouts($::ms::theme) } {
+                                    _ttk_style layout $labelframe_title_style [_ttk_style layout TLabelframe.Label]
+                                }
+
+                                # Get the labelframe title style options, if any.
+                                foreach option [list  background \
+                                                     bordercolor \
+                                                     borderwidth \
+                                                       charwidth \
+                                                       darkcolor \
+                                                      lightcolor \
+                                                         padding \
+                                                          relief] {
+                                    switch -- [info exists ::ms::styleopt($::ms::theme,$labelframe_title_style,$option)] {
+                                        1   { set $option $::ms::styleopt($::ms::theme,$labelframe_title_style,$option) }
+                                    }
+                                }
+                            }
+
+                            # Set the anchor variable.
+                            switch -- $::ms::current($w,anchor) {
+                                ne  { set anchor ne }
+                                nw  { set anchor nw }
+                                n   { set anchor center }
+                            }
 
                             # Set the title object style name.
                             set ::ms::style($w,title) [string cat "_bg=" $background \
@@ -4726,13 +4726,6 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
         # Note: 'anchor', 'borderwidth', 'compound', 'cursor', 'font', 'padding' and 'relief'
         #       are not allowed to change if the statespec changes.
 
-        # Set the anchor variable.
-        switch -- $::ms::current($w,anchor) {
-            ne  { set anchor ne }
-            nw  { set anchor nw }
-            n   { set anchor center }
-        }
-
         ##################
         ##              ##
         ##     HULL     ##
@@ -4782,6 +4775,13 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
         ##     TITLE     ##
         ##               ##
         ###################
+
+        # Set the anchor variable.
+        switch -- $::ms::current($w,anchor) {
+            ne  { set anchor ne }
+            nw  { set anchor nw }
+            n   { set anchor center }
+        }
 
         # Set the title object style name.
         set ::ms::style($w,title) [string cat "_bg=" $background \
