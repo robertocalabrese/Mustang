@@ -757,6 +757,64 @@ namespace eval ttk::theme::Halo {
         style map Listbox -bordercolor [list background BordercolorBackground \
                                                disabled BordercolorDisabled \
                                                   hover Accent];
+
+        ######################
+        ##                  ##
+        ##     NOTEBOOK     ##
+        ##                  ##
+        ######################
+
+        # Note: The notebook client 'background' and 'cursor' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: The notebook tab 'compound', 'cursor', 'focuscolor', 'focussolid' and 'font' will not follow
+        #       any mapping rules. They are not supposed to change when the widget state changes.
+
+        # Note: The tab label padding is managed by the '::ms::Halo_NotebookTab_Fills' procedure.
+        #       located at the end of this file.
+        #       These paddings are relative to the notebook tab position and the tab state (normal or selected).
+
+        # Layouts
+        style layout TNotebook {
+            Notebook.client -sticky nswe
+        }
+
+        style layout TNotebook.Tab {
+            Notebook.tab -sticky nswe -children {
+                Notebook.padding -side top -sticky nswe -children {
+                    Notebook.focus -side top -sticky nswe -children {
+                        Notebook.label -side top -sticky {}
+                    }
+                }
+            }
+        }
+
+        # Normal states
+        style configure TNotebook  -background Background \
+                                  -bordercolor Bordercolor \
+                                       -cursor arrow \
+                                    -darkcolor Darkcolor \
+                                   -lightcolor Lightcolor \
+                                  -tabposition nw;
+
+        style configure TNotebook.Tab  -background TabBackground \
+                                      -bordercolor Bordercolor \
+                                         -compound left \
+                                           -cursor arrow \
+                                       -focuscolor Background \
+                                       -focussolid 1 \
+                                             -font BiggerFont \
+                                       -foreground TabForeground;
+
+        # Mappings
+        style map TNotebook.Tab -background [list           disabled TabBackgroundDisabled \
+                                                            selected Background \
+                                                  {active !selected} FieldbackgroundFocus \
+                                                           !selected TabBackground] \
+                                -foreground [list           disabled TabForegroundDisabled \
+                                                            selected Accent \
+                                                  {active !selected} FieldbackgroundFocusText \
+                                                           !selected TabForeground];
     }
 }
 
