@@ -1100,6 +1100,46 @@ proc ::ms::palette::Command { window { args "" } } {
                                -padx [list 0 3p] \
                                -pady 0 \
                                -side left;
+
+            ######################
+            ##                  ##
+            ##     PREVIEW      ##
+            ##                  ##
+            ######################
+
+            # Set the bordercolor of the preview object (black or white).
+            switch -- [string length $::ms::data($w,current_hex)] {
+                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+            }
+
+            # Create the preview object.
+            _frame $w.preview          -background $::ms::data($w,current_hex) \
+                                  -backgroundimage "" \
+                                      -borderwidth 0 \
+                                            -class Frame \
+                                         -colormap "" \
+                                        -container 0 \
+                                           -cursor arrow \
+                                           -height $::ms::styleopt($::ms::theme,Preview,height) \
+                              -highlightbackground $bordercolor \
+                                   -highlightcolor $bordercolor \
+                               -highlightthickness $::ms::styleopt($::ms::theme,Preview,borderwidth) \
+                                             -padx 0 \
+                                             -pady 0 \
+                                           -relief flat \
+                                        -takefocus 0 \
+                                             -tile 0 \
+                                           -visual "" \
+                                            -width $::ms::styleopt($::ms::theme,Preview,width);
+
+            # Pack the preview object.
+            pack $w.preview -expand false \
+                              -fill none \
+                              -padx [list 3p 0] \
+                              -pady 0 \
+                              -side left;
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
