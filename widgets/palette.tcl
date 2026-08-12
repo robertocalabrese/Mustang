@@ -250,6 +250,92 @@ proc ::ms::palette::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)           $::ms::default(palette,class)
+            set ::ms::default($w,cmenu)           $::ms::default(palette,cmenu)
+            set ::ms::default($w,command)         $::ms::default(palette,command)
+            set ::ms::default($w,exportselection) $::ms::default(palette,exportselection)
+            set ::ms::default($w,maxlength)       $::ms::default(palette,maxlength)
+            set ::ms::default($w,placeholder)     $::ms::default(palette,placeholder)
+            set ::ms::default($w,posthook)        $::ms::default(palette,posthook)
+            set ::ms::default($w,prehook)         $::ms::default(palette,prehook)
+            set ::ms::default($w,state)           $::ms::default(palette,state)
+            set ::ms::default($w,style)           $::ms::default(palette,style)
+            set ::ms::default($w,takefocus)       $::ms::default(palette,takefocus)
+            set ::ms::default($w,textvariable)    $::ms::default(palette,textvariable)
+            set ::ms::default($w,values)          $::ms::default(palette,values)
+            set ::ms::default($w,xscrollcommand)  $::ms::default(palette,xscrollcommand)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)           $::ms::default(palette,class)
+            set ::ms::current($w,cmenu)           $::ms::default(palette,cmenu)
+            set ::ms::current($w,command)         $::ms::default(palette,command)
+            set ::ms::current($w,exportselection) $::ms::default(palette,exportselection)
+            set ::ms::current($w,maxlength)       $::ms::default(palette,maxlength)
+            set ::ms::current($w,placeholder)     $::ms::default(palette,placeholder)
+            set ::ms::current($w,posthook)        $::ms::default(palette,posthook)
+            set ::ms::current($w,prehook)         $::ms::default(palette,prehook)
+            set ::ms::current($w,state)           $::ms::default(palette,state)
+            set ::ms::current($w,style)           $::ms::default(palette,style)
+            set ::ms::current($w,takefocus)       $::ms::default(palette,takefocus)
+            set ::ms::current($w,textvariable)    $::ms::default(palette,textvariable)
+            set ::ms::current($w,values)          $::ms::default(palette,values)
+            set ::ms::current($w,xscrollcommand)  $::ms::default(palette,xscrollcommand)
+
+            # Set the widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype)    palette
+            set ::ms::data($w,colornames)   [list ]
+            set ::ms::data($w,hexadecimals) [list ]
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a palette styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **palette** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,arrowcolor)            Tk
+            set ::ms::managed_by($w,arrowsize)             Tk
+            set ::ms::managed_by($w,background)            Tk
+            set ::ms::managed_by($w,bordercolor)           Tk
+            set ::ms::managed_by($w,charwidth)             Tk
+            set ::ms::managed_by($w,cursor)                Tk
+            set ::ms::managed_by($w,darkcolor)             Tk
+            set ::ms::managed_by($w,fieldbackground)       Tk
+            set ::ms::managed_by($w,focuscolor)            Tk
+            set ::ms::managed_by($w,focuswidth)            Tk
+            set ::ms::managed_by($w,font)                  Tk
+            set ::ms::managed_by($w,foreground)            Tk
+            set ::ms::managed_by($w,insertcolor)           Tk
+            set ::ms::managed_by($w,insertwidth)           Tk
+            set ::ms::managed_by($w,justify)               Tk
+            set ::ms::managed_by($w,lightcolor)            Tk
+            set ::ms::managed_by($w,padding)               Tk
+            set ::ms::managed_by($w,placeholderforeground) Tk
+            set ::ms::managed_by($w,rows)                  Tk
+            set ::ms::managed_by($w,selectbackground)      Tk
+            set ::ms::managed_by($w,selectborderwidth)     Tk
+            set ::ms::managed_by($w,selectforeground)      Tk
+            set ::ms::managed_by($w,shellbackground)       Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
