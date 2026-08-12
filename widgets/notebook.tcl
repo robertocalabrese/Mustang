@@ -1773,6 +1773,86 @@ proc ::ms::notebook::Style_Update { stylename caller_info } {
 
         # Register the tab cursor.
         set ::ms::data($w,cursor) $cursor
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: The notebook client 'background' and 'cursor' are not allowed to change if the statespec changes.
+
+        # Note: The notebook tabs 'compound', 'cursor', 'focuscolor', 'focussolid' and 'font' are not allowed
+        #       to change if the statespec changes.
+
+        ######################
+        ##                  ##
+        ##     NOTEBOOK     ##
+        ##                  ##
+        ######################
+
+        # Set the notebook style name.
+        set ::ms::style($w,widget) [string cat "_bg="  $::ms::current($w,background) \
+                                               "_bgt=" $background \
+                                               "_bc="  $::ms::current($w,bordercolor) \
+                                               "_bct=" $bordercolor \
+                                               "_cm="  $compound \
+                                               "_dc="  $::ms::current($w,darkcolor) \
+                                               "_fc="  $focuscolor \
+                                               "_fs="  $focussolid \
+                                               "_fn="  $font \
+                                               "_fg="  $foreground \
+                                               "_lc="  $::ms::current($w,lightcolor) \
+                                               "_tp="  $::ms::current($w,tabposition) \
+                                               "." $stylename];
+
+        # If needed, create the notebook style name.
+        if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,widget)  -background $::ms::current($w,background) \
+                                                         -bordercolor $::ms::current($w,bordercolor) \
+                                                           -darkcolor $::ms::current($w,darkcolor) \
+                                                          -lightcolor $::ms::current($w,lightcolor) \
+                                                         -tabposition $::ms::current($w,tabposition);
+
+            # Add the widget style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+        }
+
+        # Initialize the notebook mapping.
+        set mapping [list ]
+
+        # bordercolor
+        # Check if a 'bordercolor' mapping exists for 'stylename'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,bordercolor)] {
+            0   { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+            1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$stylename,bordercolor) }
+        }
+
+        # darkcolor
+        # Check if a 'darkcolor' mapping exists for 'stylename'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,darkcolor)] {
+            0   { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+            1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$stylename,darkcolor) }
+        }
+
+        # lightcolor
+        # Check if a 'lightcolor' mapping exists for 'stylename'.
+        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,lightcolor)] {
+            0   { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+            1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$stylename,lightcolor) }
+        }
+
+        # If needed, create the notebook mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+            # Add the notebook mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        interp invokehidden {} $w configure -cursor $::ms::current($w,cursor) \
+                                             -style $stylename;
     }
 
     return ""
