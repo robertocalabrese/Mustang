@@ -251,7 +251,7 @@
 #
 #                    See the [style](/wiki/commands/style.md) wiki page to know more about styles.
 #
-# **tabposition**    Specifies the position of the tab row or column as a string of length 1 or 2.
+# **-tabposition**   Specifies the position of the tab row or column as a string of length 1 or 2.
 #                    The first character indicates the side as **n**, **s**, **w**, or **e**, while the second character (if present)
 #                    is the sticky bit (specified as **w**, **e**, **n**, or **s**) within the tab position.
 #
