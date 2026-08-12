@@ -4388,4 +4388,126 @@ proc ::ms::palette::Validate_String { w } {
     return [lindex $::ms::data($w,colornames) $index]
 }
 
+#####################################
+##                                 ##
+##     MOUSEWHEEL AND TOUCHPAD     ##
+##                                 ##
+#####################################
+
+## MouseWheel
+#
+# If the widget is not in its disabled state and the list provided is not empty, scroll the items
+# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable
+# parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending
+# on the mousewheel direction). If none of the widget's parent meets the required condition,
+# don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#          *Amount* is normally delivered by the **MouseWheel** event with a value of
+#          **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# It doesn't return anything.
+proc ::ms::palette::MouseWheel { w amount } {
+    switch -- $::ms::current($w,state) {
+        disabled {
+            # Try to find a widget parent to scroll vertically, if any.
+            ::ms::Scroll_Parent_Y $w $amount units
+        }
+        default {
+            switch -- [winfo exists $w.popdown] {
+                1       {}
+                default {
+                    # Set the focus on the palette entry.
+                    _focus -force $w.combobox
+
+                    # Check the scrollmode.
+                    switch -- $::ms::scrollmode {
+                        natural { set amount [expr { -1.0*$amount }] }
+                    }
+
+                    # Change the widget textarea value by scrolling the items list provided up or down
+                    # (depending on the scroll direction).
+                    if { $amount > 0 } {
+                        set index [expr { $::ms::data($w,current_index)-1 }]
+                    } else {
+                        set index [expr { $::ms::data($w,current_index)+1 }]
+                    }
+
+                    # Check the scrollstopper ('disabled' or 'enabled').
+                    switch -- $::ms::scrollstopper {
+                        disabled {
+                            # If index is lesser than zero or bigger than the last available index, cycle trough.
+                            if { $index < 0 } {
+                                set index $::ms::data($w,last_available_index)
+                            } elseif { $index > $::ms::data($w,last_available_index) } {
+                                set index 0
+                            }
+                        }
+                        enabled {
+                            # If index is lesser than zero or bigger than the last available index, stop the scrolling.
+                            if { $index < 0 } {
+                                return ""
+                            } elseif { $index > $::ms::data($w,last_available_index) } {
+                                return ""
+                            }
+                        }
+                    }
+
+                    # Update the current index and value.
+                    set ::ms::data($w,current_index) $index
+                    set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames)   $index]
+                    set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $index]
+
+                    # Clear the widget textarea, remove any previous selection and display the new widget value.
+                    $w.combobox delete 0 end
+                    $w.combobox selection clear
+                    $w.combobox set $::ms::data($w,current_value)
+
+                    # If the widget is not in readonly state, select the palette entry.
+                    switch -- $::ms::current($w,state) {
+                        normal {
+                            $w.combobox selection range 0 end
+                            $w.combobox icursor end
+                        }
+                    }
+
+                    # Set the bordercolor of the preview object.
+                    switch -- [string length $::ms::data($w,current_hex)] {
+                        10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+                        13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+                        default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                    }
+
+                    # Apply the changes to the preview object.
+                    $w.preview configure          -background $::ms::data($w,current_hex) \
+                                         -highlightbackground $bordercolor \
+                                              -highlightcolor $bordercolor;
+
+                    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+                    #       executing the command. This timer will be resetted if, while active, another mousewheel action on the widget
+                    #       asks to launch again the command.
+                    if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
+                        after cancel $::ms::temp($w,pending_execute_cmd)
+                        unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+                    }
+                    set ::ms::temp($w,pending_execute_cmd) [after 50 [list ::ms::Execute_Widget_Cmd $w]]
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
