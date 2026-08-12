@@ -828,7 +828,54 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 return ""
             }
         }
-        hide {}
+        hide {
+            # Synopsis:
+            #
+            # *window* **hide** *tabid*
+
+            # Check if the 'tabid' provided is a tab index.
+            switch -- [string is integer -strict $args] {
+                0   {
+                    # Check if the 'tabid' provided is the word 'current'.
+                    switch -nocase -- $args {
+                        current { set tabid "current" }
+                        default {
+                            # Check if the 'tabid' provided is a short address.
+                            set result [::ms::Check_Pathname $args invalid]
+                            switch -- $result {
+                                invalid {
+                                    # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
+                                    switch -- [lindex $args 0] {
+                                        "@" {
+                                            set position [split [string range $args 1 end] ","]
+                                            foreach coordinate $position {
+                                                switch -- [string is integer -strict $coordinate] {
+                                                    0   { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                }
+                                            }
+
+                                            set tabid $args
+                                        }
+                                        default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                    }
+                                }
+                                default { set tabid [lindex $result 0] }
+                            }
+                        }
+                    }
+                }
+                1   { set tabid $args }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w hide $tabid
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
         identify {}
         index {}
         insert {}
