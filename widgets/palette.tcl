@@ -2993,6 +2993,17 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
                               -placeholder $::ms::current($w,placeholder) \
                                     -style $::ms::style($w,widget) \
                                     -width $::ms::current($w,charwidth);
+
+        ######################
+        ##                  ##
+        ##     PREVIEW      ##
+        ##                  ##
+        ######################
+
+        # Apply the changes to the preview object.
+        $w.preview configure             -height $::ms::styleopt($::ms::theme,Preview,height) \
+                             -highlightthickness $::ms::styleopt($::ms::theme,Preview,borderwidth) \
+                                          -width $::ms::styleopt($::ms::theme,Preview,width);
     }
 
     return ""
