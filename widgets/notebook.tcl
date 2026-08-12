@@ -2310,4 +2310,40 @@ proc ::ms::notebook::Reset_Cursor { w } {
     return ""
 }
 
+## Set_Cursor
+#
+# Set the cursor shape on a notebook tab.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates of the event.
+#        These values should be provided by the <Motion> event.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Set_Cursor { w x y } {
+    # Check if the is over a notebook tab.
+    switch -- [interp invokehidden {} $w identify tab $x $y] {
+        ""  {
+            # The cursor is over the notebook client.
+
+            # Check if the cursor is different than the '::ms::current($w,cursor)' provided.
+            if { [interp invokehidden {} $w cget -cursor] ne $::ms::current($w,cursor) } {
+                interp invokehidden {} $w configure -cursor $::ms::current($w,cursor)
+            }
+        }
+        default {
+            # The cursor is over a notebook tab.
+
+            # Check if the cursor is different than '::ms::data($w,cursor)'.
+            if { [interp invokehidden {} $w cget -cursor] ne $::ms::data($w,cursor) } {
+                interp invokehidden {} $w configure -cursor $::ms::data($w,cursor)
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
