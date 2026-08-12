@@ -5056,4 +5056,47 @@ proc ::ms::palette::Popdown_MouseWheel { w x y amount { what units } } {
     return -code break
 }
 
+## Popdown_PageDown
+#
+# Move the listbox view towards the bottom by one page and
+# select the first visible row.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_PageDown { w } {
+    if { [llength $::ms::data($w,colornames)] > $::ms::current($w,rows) } {
+        # Scroll one page towards the bottom of the popdown window.
+        $w.popdown.f.lb yview scroll +1 pages
+
+        # Get the index of the current bottom visible row.
+        set y     [_winfo height $w.popdown.f.lb]
+        set index [$w.popdown.f.lb index @0,$y]
+
+        # Select and activate the current bottom visible row.
+        $w.popdown.f.lb activate $index
+        $w.popdown.f.lb selection clear 0 end
+        $w.popdown.f.lb selection set $index
+
+        # Set the preview color and its bordercolor (black or white).
+        set preview_color [lindex $::ms::data($w,hexadecimals) $index]
+        switch -- [string length $preview_color] {
+            10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+            13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+            default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        }
+
+        # Apply the changes to the preview object.
+        $w.preview configure          -background $preview_color \
+                             -highlightbackground $bordercolor \
+                                  -highlightcolor $bordercolor;
+    } else {
+        ::ms::palette::Popdown_End $w
+    }
+
+    return -code break
+}
+
 #*EOF*
