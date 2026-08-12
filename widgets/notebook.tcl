@@ -164,6 +164,17 @@ namespace eval ::ms::notebook {
                                                 darkcolor \
                                                 lightcolor \
                                                 tabposition];
+
+    # Set the default 'non-styleable' notebook options values.
+    set ::ms::default(notebook,class)     TNotebook
+    set ::ms::default(notebook,cmenu)     {}
+    set ::ms::default(notebook,height)    0
+    set ::ms::default(notebook,state)     normal
+    set ::ms::default(notebook,style)     TNotebook
+    set ::ms::default(notebook,takefocus) 0
+    set ::ms::default(notebook,width)     0
+
+    # Note: The default 'styleable' notebook options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::notebook** command.
