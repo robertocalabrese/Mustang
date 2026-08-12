@@ -2125,7 +2125,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **identify** *component* *x* *y*
             #    *window* **identify** **element** *x* *y*
             #    *window* **identify** **tab** *x* *y*
-             try {
+            try {
                 interp invokehidden {} $w $cmd {*}$args
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
