@@ -3229,4 +3229,93 @@ proc ::ms::palette::FocusIn { w } {
     return ""
 }
 
+## FocusOut
+#
+# Manage the **FocusOut** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::FocusOut { w } {
+    # Check the contextual menu relative to this widget, if any.
+    switch -- $::ms::current($w,cmenu) {
+        ""      {}
+        default {
+            # If the contextual menu of the widget is open do not loose the focus (graphically),
+            # remove the selection or validate the data.
+            switch -- [_winfo exists $::ms::current($w,cmenu)] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # If the popdown window of the palette is currently displayed do not remove the selection
+    # or validate the data.
+    switch -- [_winfo exists $w.popdown] {
+        1   { return "" }
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::palette::Pathname_Cmd $w state !focus
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+        readonly { set value [interp invokehidden {} $w get] }
+        normal {
+            # Validate the widget string.
+            set value [::ms::palette::Validate_String $w]
+
+            # Clear the widget field, insert the validated value and put the cursor at the end.
+            $w.combobox delete 0 end
+            $w.combobox set $value
+            $w.combobox icursor end
+        }
+    }
+
+    # Remove the widget selection, if any.
+    $w.combobox selection clear
+
+    # Check the widget value.
+    if { $value ne $::ms::data($w,current_value) } {
+        # Update the current values.
+        set ::ms::data($w,current_value) $value
+        set ::ms::data($w,current_index) [lsearch -exact $::ms::data($w,colornames) $value]
+        set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
+
+        # Set the bordercolor of the preview object.
+        switch -- [string length $::ms::data($w,current_hex)] {
+            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+        }
+
+        # Apply the changes to the preview object.
+        $w.preview configure          -background $::ms::data($w,current_hex) \
+                             -highlightbackground $bordercolor \
+                                  -highlightcolor $bordercolor;
+
+        ::ms::Execute_Widget_Cmd $w
+    } else {
+        # Set the bordercolor of the preview object.
+        switch -- [string length $::ms::data($w,current_hex)] {
+            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+        }
+
+        # Apply the changes to the preview object.
+        $w.preview configure          -background $::ms::data($w,current_hex) \
+                             -highlightbackground $bordercolor \
+                                  -highlightcolor $bordercolor;
+    }
+
+    # Cleaning.
+    unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+
+    return ""
+}
+
 #*EOF*
