@@ -4018,4 +4018,103 @@ proc ::ms::palette::Return { w } {
     return ""
 }
 
+## Unpost
+#
+# Unpost the popdown window.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Unpost { w } {
+    # Release the grab.
+    _grab release $w.popdown
+
+    # Withdraw and destroy the popdown window.
+    _wm withdraw $w.popdown
+    _destroy $w.popdown
+
+    # Run the posthook callback, if any.
+    switch -- $::ms::current($w,posthook) {
+        ""      {}
+        default {
+            try {
+                uplevel #0 [list $::ms::current($w,posthook) $w]
+            } on error { errortext errorcode } {
+                ::ms::Error "Invalid posthook command for '$w'." ""
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!pressed'.
+    ::ms::palette::Pathname_Cmd $w state !pressed
+
+    # Unset the toplevel temporary variables.
+    unset -nocomplain -- ::ms::temp(toplevel_Xnw) \
+                         ::ms::temp(toplevel_Ynw) \
+                         ::ms::temp(toplevel_height) \
+                         ::ms::temp(toplevel_width) \
+                         ::ms::temp(toplevel_Xse) \
+                         ::ms::temp(toplevel_Yse);
+
+    # Focus on the combobox object.
+    _focus -force $w.combobox
+
+    # Check the current palette index.
+    set current_index [$w.combobox current]
+    switch -- $current_index {
+        ""  {
+            set execute_cmd no
+
+            # Hide the preview object.
+            set preview_color $::ms::current($w,shellbackground)
+            set bordercolor   $::ms::current($w,shellbackground)
+        }
+        default {
+            if { $current_index ne $::ms::data($w,current_index) } {
+                set execute_cmd yes
+
+                # Update the current values.
+                set ::ms::data($w,current_index) $current_index
+                set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames)   $current_index]
+                set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $current_index]
+            } else {
+                set execute_cmd no
+            }
+
+            # Set the preview color and its bordercolor (black or white).
+            set preview_color $::ms::data($w,current_hex)
+            switch -- [string length $::ms::data($w,current_hex)] {
+                10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+                13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+                default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+            }
+        }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    # Execute the external procedure provided, if needed and if any.
+    switch -- $execute_cmd {
+        yes {
+            switch -- $::ms::current($w,command) {
+                ""      {}
+                default {
+                    try {
+                        uplevel #0 [list $::ms::current($w,command) $w $::ms::data($w,current_value)]
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
