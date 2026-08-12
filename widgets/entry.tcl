@@ -3633,6 +3633,22 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 3   {
+                    try {
+                        interp invokehidden {} $w identify {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        switch -nocase -- $result {
+                            textarea { set result "Entry.textarea" }
+                        }
+
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+            switch -- [llength $args] {
+                3   {
                     # Check that the first argument of 'args' is the word "element".
                     switch -- [lindex $args 0] {
                         element {}
@@ -3664,7 +3680,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
                     # Return the name of the object, or an empty string if there are no entry objects at the coordinates provided.
                     if { $widget eq $w } {
-                        return "Entry"
+                        return "Entry.textarea"
                     } else {
                         return ""
                     }
