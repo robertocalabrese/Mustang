@@ -3953,4 +3953,69 @@ proc ::ms::palette::Post { w } {
     return ""
 }
 
+## Return
+#
+# Manage the **Return** keypress event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Return { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+        readonly { set value [interp invokehidden {} $w get] }
+        normal {
+            # Validate the widget string.
+            set value [::ms::palette::Validate_String $w]
+
+            # Clear the widget field, insert the validated value and put the cursor at the end.
+            $w.combobox delete 0 end
+            $w.combobox set $value
+            $w.combobox icursor end
+        }
+    }
+
+    # Remove the widget selection, if any.
+    $w.combobox selection clear
+
+    # Check the widget value.
+    if { $value ne $::ms::data($w,current_value) } {
+        # Update the current values.
+        set ::ms::data($w,current_value) $value
+        set ::ms::data($w,current_index) [lsearch -exact $::ms::data($w,colornames) $value]
+        set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
+
+        # Set the bordercolor of the preview object.
+        switch -- [string length $::ms::data($w,current_hex)] {
+            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+        }
+
+        # Apply the changes to the preview object.
+        $w.preview configure          -background $::ms::data($w,current_hex) \
+                             -highlightbackground $bordercolor \
+                                  -highlightcolor $bordercolor;
+
+        ::ms::Execute_Widget_Cmd $w
+    } else {
+        # Set the bordercolor of the preview object.
+        switch -- [string length $::ms::data($w,current_hex)] {
+            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+        }
+
+        # Apply the changes to the preview object.
+        $w.preview configure          -background $::ms::data($w,current_hex) \
+                             -highlightbackground $bordercolor \
+                                  -highlightcolor $bordercolor;
+    }
+
+    return ""
+}
+
 #*EOF*
