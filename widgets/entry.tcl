@@ -430,7 +430,7 @@
 #
 #                              See also **-insertwidth**.
 #
-# ** insertwidth**             Specifies the width of the entry cursor.
+# **-insertwidth**             Specifies the width of the entry cursor.
 #                              The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
 #                              (pixels, points, inches, millimeters or centimeters).
 #
