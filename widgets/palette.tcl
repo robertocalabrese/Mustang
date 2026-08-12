@@ -4741,4 +4741,130 @@ proc ::ms::palette::Popdown_ArrowUp { w } {
     return -code break
 }
 
+## Popdown_AutoSelection
+#
+# Automatic selection of the listbox item.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_AutoSelection { w } {
+    ##############################
+    ##                          ##
+    ##     VALUE CORRECTION     ##
+    ##                          ##
+    ##############################
+
+    # Remove any leading and trailing spaces from the widget textarea value.
+    set value [string trim [$w.combobox get]]
+
+    # Clear 'value' from illegal characters, if any.
+    set corrected_value ""
+    set i 0
+    while { $i < [string length $value] } {
+        set char [string index $value $i]
+        switch -- $char {
+            " "     -
+            "-"     {}
+            default {
+                # Check if 'char' is an alphanumeric character.
+                switch -- [string is alnum $char] {
+                    0   {
+                        incr i
+                        continue
+                    }
+                }
+            }
+        }
+
+        # Add char to the 'corrected_value' string.
+        append corrected_value $char
+
+        incr i
+    }
+
+    set value $corrected_value
+
+    ##########################################################
+    ##                                                      ##
+    ##     SEARCH THE INDEX OF THE CLOSEST LISTBOX ITEM     ##
+    ##                                                      ##
+    ##########################################################
+
+    switch -- $value {
+        ""      { set index 0 }
+        default {
+            #######################################
+            ##                                   ##
+            ##     ALPHABETIC INEXACT SEARCH     ##
+            ##                                   ##
+            #######################################
+
+            # Trasform 'value' in lowercase characters for comparison reasons.
+            set value [string tolower $value]
+
+            # Find the closest match to 'value' in the colorname lowercase list.
+            set found false
+            set i     0
+            set limit [string length $value]
+            while { $i < $limit } {
+                # Get the longest common characters in the list.
+                set longest [::tcl::prefix longest $::ms::data($w,colornames,lowercase) $value]
+
+                # Check the 'longest' variable.
+                switch -- $longest {
+                    ""  {
+                        # Remove the last character from 'value'.
+                        set value [string range $value 0 end-1]
+
+                        incr i
+                    }
+                }
+
+                break
+            }
+
+            # Check the resulting 'longest' value after the loop.
+            switch -- $longest {
+                ""      { set index 0 }
+                default {
+                    # Get the list of all elements that starts with the 'longest' value and sort it.
+                    set prefix_list [lsort -dictionary [::tcl::prefix all $::ms::data($w,colornames,lowercase) $longest]]
+
+                    # Get the index of the first element of 'prefix_list' relative to '::ms::data($w,colornames,lowercase)'.
+                    set index [lsearch -exact $::ms::data($w,colornames,lowercase) [lindex $prefix_list 0]]
+                    switch -- $index {
+                        ""  { set index $::ms::data($w,current_index) }
+                    }
+                }
+            }
+        }
+    }
+
+    # Select the listbox 'index' found.
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+    $w.popdown.f.lb activate $index
+
+    # Make sure that 'index' is visible.
+    $w.popdown.f.lb see $index
+
+    # Set the preview color and its bordercolor (black or white).
+    set preview_color [lindex $::ms::data($w,hexadecimals) $index]
+    switch -- [string length $preview_color] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    return ""
+}
+
 #*EOF*
