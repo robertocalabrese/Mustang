@@ -537,6 +537,66 @@ proc ::ms::notebook::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ##########################
+            ##                      ##
+            ##     NOTEBOOK.TAB     ##
+            ##                      ##
+            ##########################
+
+            # Set the notebook tabs style name.
+            set ::ms::style($w,tabs) [string cat $::ms::style($w,widget) ".Tab"]
+
+            # If needed, create the notebook tabs style name.
+            if { $::ms::style($w,tabs) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,tabs)  -background $background \
+                                                           -bordercolor $bordercolor \
+                                                              -compound $compound \
+                                                            -focuscolor $focuscolor \
+                                                            -focussolid $focussolid \
+                                                                  -font $font \
+                                                            -foreground $foreground;
+
+                # Add the notebook tabs style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,tabs)
+            }
+
+            # Initialize the notebook tabs mapping.
+            set mapping [list ]
+
+            # background
+            # Check if a 'background' mapping exists for 'notebook_tab_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$notebook_tab_style,background)] {
+                0   { lappend mapping -background [list pressed $background] }
+                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$notebook_tab_style,background) }
+            }
+
+            # bordercolor
+            # Check if a 'bordercolor' mapping exists for 'notebook_tab_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$notebook_tab_style,bordercolor)] {
+                0   { lappend mapping -bordercolor [list pressed $bordercolor] }
+                1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$notebook_tab_style,bordercolor) }
+            }
+
+            # foreground
+            # Check if a 'foreground' mapping exists for 'notebook_tab_style'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$notebook_tab_style,foreground)] {
+                0   { lappend mapping -foreground [list pressed $foreground] }
+                1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$notebook_tab_style,foreground) }
+            }
+
+            # If needed, create the notebook tabs mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,tabs) {*}$mapping
+
+                # Add the notebook tabs mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Configure the tab fills for the tabposition specified in the relative Tab style
+            # associated to '::ms::style($w,widget)', for the current theme.
+            [string cat "::ms::" $::ms::theme "_NotebookTab_Fills"] $::ms::style($w,widget)
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
