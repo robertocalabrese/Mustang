@@ -1715,6 +1715,45 @@ proc ::ms::notebook::Style_Update { stylename caller_info } {
     # Configure the tab fills for the tabposition specified in the relative tab style
     # associated to 'stylename', for the current theme.
     [string cat "::ms::" $::ms::theme "_NotebookTab_Fills"] $stylename
+
+    ##############################################
+    ##                                          ##
+    ##     GET THE WIDGET TAB STYLE OPTIONS     ##
+    ##                                          ##
+    ##############################################
+
+    set background  $::ms::styleopt($::ms::theme,TNotebook.Tab,background)
+    set bordercolor $::ms::styleopt($::ms::theme,TNotebook.Tab,bordercolor)
+    set compound    $::ms::styleopt($::ms::theme,TNotebook.Tab,compound)
+    set cursor      $::ms::styleopt($::ms::theme,TNotebook.Tab,cursor)
+    set focuscolor  $::ms::styleopt($::ms::theme,TNotebook.Tab,focuscolor)
+    set focussolid  $::ms::styleopt($::ms::theme,TNotebook.Tab,focussolid)
+    set font        $::ms::styleopt($::ms::theme,TNotebook.Tab,font)
+    set foreground  $::ms::styleopt($::ms::theme,TNotebook.Tab,foreground)
+
+    # Check if 'stylename.Tab' exists among the styles known by the current theme.
+    set notebook_tab_style [string cat $stylename ".Tab"]
+    if { ($notebook_tab_style in $::ms::style($::ms::theme)) && ($notebook_tab_style ne "TNotebook.Tab") } {
+        # Check if a layout exists for 'stylename.Tab'.
+        # If not, create one by mirroring the 'TNotebook.Tab' layout for the current theme.
+        if { $notebook_tab_style ni $::ms::layouts($::ms::theme) } {
+            _ttk_style layout $notebook_tab_style [_ttk_style layout TNotebook.Tab]
+        }
+
+        # Get the notebook tabs style extra options, if any.
+        foreach option [list  background \
+                             bordercolor \
+                                compound \
+                                  cursor \
+                              focuscolor \
+                              focussolid \
+                                    font \
+                              foreground] {
+            switch -- [info exists ::ms::styleopt($::ms::theme,$notebook_tab_style,$option)] {
+                1   { set $option $::ms::styleopt($::ms::theme,$notebook_tab_style,$option) }
+            }
+        }
+    }
 }
 
 ######################################
