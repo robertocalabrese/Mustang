@@ -3358,4 +3358,479 @@ proc ::ms::palette::Motion { w X Y } {
     return ""
 }
 
+## Post
+#
+# Post the popdown window.
+#
+# Note: The following procedure is a modified version of the 'ttk::palette::Post' procedure.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Post { w } {
+    # Note: This procedure have been highly influenced by many 'ttk::palette' procedures.
+    #       All credits goes to the original author/s.
+
+    # Check if the popdown should not be displayed.
+    if { $::ms::current($w,state) eq "disabled" } {
+        return ""
+    }
+
+    # Safeguard.
+    unset -nocomplain -- ::wait_for_user_response
+
+    # Run the prehook callback, if any.
+    switch -- $::ms::current($w,prehook) {
+        ""      {}
+        default {
+            try {
+                uplevel #0 [list $::ms::current($w,prehook) $w]
+            } on error { errortext errorcode } {
+                ::ms::Error "Invalid prehook command for '$w'." ""
+            }
+        }
+    }
+
+    ################################
+    ##                            ##
+    ##     CREATE THE POPDOWN     ##
+    ##                            ##
+    ################################
+
+    set background        $::ms::styleopt($::ms::theme,Popdown,background)
+    set bordercolor       $::ms::styleopt($::ms::theme,Popdown,bordercolor)
+    set borderwidth       $::ms::styleopt($::ms::theme,Popdown,borderwidth)
+    set cursor            $::ms::styleopt($::ms::theme,Popdown,cursor)
+    set darkcolor         $::ms::styleopt($::ms::theme,Popdown,darkcolor)
+    set font              $::ms::styleopt($::ms::theme,Popdown,font)
+    set foreground        $::ms::styleopt($::ms::theme,Popdown,foreground)
+    set justify           $::ms::styleopt($::ms::theme,Popdown,justify)
+    set lightcolor        $::ms::styleopt($::ms::theme,Popdown,lightcolor)
+    set padding           $::ms::styleopt($::ms::theme,Popdown,padding)
+    set relief            $::ms::styleopt($::ms::theme,Popdown,relief)
+    set selectbackground  $::ms::styleopt($::ms::theme,Popdown,selectbackground)
+    set selectborderwidth $::ms::styleopt($::ms::theme,Popdown,selectborderwidth)
+    set selectforeground  $::ms::styleopt($::ms::theme,Popdown,selectforeground)
+
+    # Change the widget dynamic state to 'pressed'.
+    ::ms::palette::Pathname_Cmd $w state pressed
+
+    ######################
+    ##                  ##
+    ##     TOPLEVEL     ##
+    ##                  ##
+    ######################
+
+    _toplevel $w.popdown          -background $background \
+                             -backgroundimage "" \
+                                 -borderwidth 0 \
+                                       -class ComboboxPopdown \
+                                    -colormap {} \
+                                   -container 0 \
+                                      -cursor arrow \
+                                      -height 0 \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor \
+                          -highlightthickness $borderwidth \
+                                        -menu {} \
+                                        -padx [list 0] \
+                                        -pady [list 0] \
+                                      -relief flat \
+                                      -screen {} \
+                                   -takefocus 0 \
+                                        -tile 0 \
+                                         -use {} \
+                                      -visual {} \
+                                       -width 0;
+
+    # OS specific attributes.
+    switch -- [_tk windowingsystem] {
+        aqua    { _wm attributes $w.popdown -alpha 1.0 }
+        win32   { _wm attributes $w.popdown -toolwindow 1 }
+        default { _wm attributes $w.popdown -type combo }
+
+    }
+
+    # Common attributes.
+    _wm group $w.popdown $::ms::addr($w,toplevel)
+    _wm overrideredirect $w.popdown true
+    _wm resizable $w.popdown 0 0
+    _wm withdraw $w.popdown
+
+    ###################
+    ##               ##
+    ##     FRAME     ##
+    ##               ##
+    ###################
+
+    # Set the popdown frame style.
+    set popdown_frame [string cat "_sb=" $background \
+                                  "_bc=" $bordercolor \
+                                  "_dc=" $darkcolor \
+                                  "_lc=" $lightcolor \
+                                  ".TFrame"];
+
+    # If needed, create the popdown frame style.
+    if { $popdown_frame ni $::ms::style($::ms::theme,created_by_mustang) } {
+        _ttk_style configure $popdown_frame  -background $background \
+                                            -bordercolor $bordercolor \
+                                              -darkcolor $darkcolor \
+                                             -lightcolor $lightcolor;
+    }
+
+    # Initialize the popdown frame mapping.
+    set mapping [list ]
+
+    # Check if a 'bordercolor' mapping exists for 'Popdown'.
+    switch -- [info exists ::ms::stylemap($::ms::theme,Popdown,bordercolor)] {
+        0   { lappend mapping -bordercolor [list pressed $bordercolor] }
+        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,Popdown,bordercolor) }
+    }
+
+    # Check if a 'darkcolor' mapping exists for 'Popdown'.
+    switch -- [info exists ::ms::stylemap($::ms::theme,Popdown,darkcolor)] {
+        0   { lappend mapping -darkcolor [list pressed $darkcolor] }
+        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,Popdown,darkcolor) }
+    }
+
+    # Check if a 'lightcolor' mapping exists for 'Popdown'.
+    switch -- [info exists ::ms::stylemap($::ms::theme,Popdown,lightcolor)] {
+        0   { lappend mapping -lightcolor [list pressed $lightcolor] }
+        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,Popdown,lightcolor) }
+    }
+
+    # If needed, create the popdown frame mapping.
+    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+        _ttk_style map $popdown_frame {*}$mapping
+
+        # Add the popdown frame mapping to the stylemap list containing all the mappings
+        # created by mustang for the current theme.
+        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+    }
+
+    # Create the popdown frame object.
+    _ttk_frame $w.popdown.f -borderwidth 0 \
+                                  -class TFrame \
+                                 -cursor arrow \
+                                 -height 0 \
+                                -padding $padding \
+                                 -relief flat \
+                                  -style $popdown_frame \
+                              -takefocus 0 \
+                                  -width 0;
+
+    #####################
+    ##                 ##
+    ##     LISTBOX     ##
+    ##                 ##
+    #####################
+
+    _listbox $w.popdown.f.lb         -activestyle none \
+                                      -background $background \
+                                     -borderwidth 0 \
+                                          -cursor $cursor \
+                                 -exportselection false \
+                                            -font $font \
+                                      -foreground $foreground \
+                                          -height $::ms::current($w,rows) \
+                             -highlightbackground $background \
+                                  -highlightcolor $background \
+                              -highlightthickness 0 \
+                                         -justify $justify \
+                                    -listvariable ::ms::data($w,colornames) \
+                                          -relief flat \
+                                -selectbackground $selectbackground \
+                               -selectborderwidth $selectborderwidth \
+                                -selectforeground $selectforeground \
+                                      -selectmode browse \
+                                         -setgrid 0 \
+                                           -state normal \
+                                       -takefocus 1 \
+                                           -width 0 \
+                                  -xscrollcommand {} \
+                                  -yscrollcommand {};
+
+    # Set the listbox bindtags.
+    _bindtags $w.popdown.f.lb [list $w.popdown.f.lb Popdown Listbox $w.popdown.f all]
+
+    ##############################
+    ##                          ##
+    ##     POPDOWN BINDINGS     ##
+    ##                          ##
+    ##############################
+
+    # ButtonRelease events outside of the popdown window.
+    switch -- [_tk windowingsystem] {
+        aqua    { _bind $w.popdown <ButtonPress-2> [list ::ms::External_Click $w %X %Y] }
+        default { _bind $w.popdown <ButtonPress-3> [list ::ms::External_Click $w %X %Y] }
+    }
+    _bind $w.popdown <ButtonPress-1> [list ::ms::External_Click $w %X %Y]
+
+    # Map/Unmap
+    _bind $w.popdown <Map>   { break }
+    _bind $w.popdown <Unmap> { break }
+
+    # Motion
+    _bind $w.popdown <Motion> [list ::ms::palette::Motion $w %X %Y]
+
+    # Scan
+    _bind $w.popdown <<ScanMark>>    [list ::ms::Scan_Mark $w.popdown.f.lb %x %y]
+    _bind $w.popdown <<ScanDrag>>    [list ::ms::Scan_Drag $w.popdown.f.lb %x %y]
+    _bind $w.popdown <<ScanRelease>> [list ::ms::Scan_Release]
+
+    # ArrowDown/ArrowUp
+    _bind $w.popdown.f.lb <<NextLine>> [list ::ms::palette::Popdown_Arrow_Down  $w]
+    _bind $w.popdown.f.lb <<PrevLine>> [list ::ms::palette::Popdown_Arrow_Up    $w]
+
+    # Control-End/Control-Home
+    _bind $w.popdown.f.lb <<LineEnd>>   [list ::ms::palette::Popdown_End  $w]
+    _bind $w.popdown.f.lb <<LineStart>> [list ::ms::palette::Popdown_Home $w]
+
+    # Escape
+    _bind $w.popdown.f.lb <KeyPress-Escape> { set ::wait_for_user_response "Unpost"; break }
+
+    # End/Home
+    _bind $w.popdown.f.lb <<LineBottom>> [list ::ms::palette::Popdown_End  $w]
+    _bind $w.popdown.f.lb <<LineTop>>    [list ::ms::palette::Popdown_Home $w]
+
+    # FocusOut, *only* do this on Windows (see #1814778).
+    # Dismiss the listbox when the user switches to a different application.
+    switch -- [_tk windowingsystem] {
+        win32 { _bind $w.popdown.f.lb <FocusOut> { set ::wait_for_user_response "Unpost"; break } }
+    }
+
+    # Motion
+    _bind $w.popdown.f.lb <Motion> [list ::ms::palette::Popdown_Hover $w %x %y]
+
+    # PageDown/PageUp
+    _bind $w.popdown.f.lb <<PageDown>> [list ::ms::palette::Popdown_PageDown  $w]
+    _bind $w.popdown.f.lb <<PageUp>>   [list ::ms::palette::Popdown_PageUp    $w]
+
+    # Selection
+    _bind $w.popdown.f.lb <ButtonRelease-1>   [list ::ms::palette::Popdown_Select $w]
+    _bind $w.popdown.f.lb <KeyPress-Return>   [list ::ms::palette::Popdown_Select $w]
+    _bind $w.popdown.f.lb <KeyPress-KP_Enter> [list ::ms::palette::Popdown_Select $w]
+    _bind $w.popdown.f.lb <KeyPress-space>    [list ::ms::palette::Popdown_Select $w]
+
+    # Shift-Tab/Tab
+    switch -- [_tk windowingsystem] {
+        win32   { _bind $w.popdown.f.lb <Shift-Tab> { ::ms::palette::Popdown_Tab %W previous; break } }
+        default {
+            _bind $w.popdown.f.lb <ISO_Left_Tab>    { ::ms::palette::Popdown_Tab %W previous; break }
+
+            try {
+                _bind $w.popdown.f.lb <hpBackTab>   { ::ms::palette::Popdown_Tab %W previous; break }
+            } on error {} {
+                # Do nothing.
+            }
+        }
+    }
+    _bind $w.popdown.f.lb <Tab> { ::ms::palette::Popdown_Tab %W next; break }
+
+    # If the listbox can scroll vertically, move the listbox viewpoint by one unit up or down
+    # (depending on the mousewheel direction), otherwise don't do anything.
+    _bind $w.popdown       <MouseWheel> [list ::ms::palette::Popdown_MouseWheel $w %x %y %D units]
+    _bind $w.popdown.f     <MouseWheel> [list ::ms::palette::Popdown_MouseWheel $w %x %y %D units]
+    _bind $w.popdown.f.lb  <MouseWheel> [list ::ms::palette::Popdown_MouseWheel $w %x %y %D units]
+
+    # If the listbox can scroll horizontally, move the listbox viewpoint by one unit left or right
+    # (depending on the mousewheel direction), otherwise don't do anything.
+    _bind $w.popdown       <Shift-MouseWheel> [list ::ms::palette::Popdown_Shift_MouseWheel $w %x %y %D units]
+    _bind $w.popdown.f     <Shift-MouseWheel> [list ::ms::palette::Popdown_Shift_MouseWheel $w %x %y %D units]
+    _bind $w.popdown.f.lb  <Shift-MouseWheel> [list ::ms::palette::Popdown_Shift_MouseWheel $w %x %y %D units]
+
+    # If the listbox can scroll vertically, move the listbox viewpoint by one page up or down
+    # (depending on the mousewheel direction), otherwise don't do anything.
+    _bind $w.popdown       <Control-MouseWheel> [list ::ms::palette::Popdown_MouseWheel $w %x %y %D pages]
+    _bind $w.popdown.f     <Control-MouseWheel> [list ::ms::palette::Popdown_MouseWheel $w %x %y %D pages]
+    _bind $w.popdown.f.lb  <Control-MouseWheel> [list ::ms::palette::Popdown_MouseWheel $w %x %y %D pages]
+
+    # If the listbox can scroll horizontally, move the listbox viewpoint by one page left or right
+    # (depending on the mousewheel direction), otherwise don't do anything.
+    _bind $w.popdown       <Control-Shift-MouseWheel> [list ::ms::palette::Popdown_Shift_MouseWheel $w %x %y %D pages]
+    _bind $w.popdown.f     <Control-Shift-MouseWheel> [list ::ms::palette::Popdown_Shift_MouseWheel $w %x %y %D pages]
+    _bind $w.popdown.f.lb  <Control-Shift-MouseWheel> [list ::ms::palette::Popdown_Shift_MouseWheel $w %x %y %D pages]
+
+    # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+    #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+    # If the listbox can scroll vertically, move the listbox viewpoint by one unit up or down
+    # (depending on the mousewheel direction), otherwise don't do anything.
+    _bind $w.popdown       <TouchpadScroll> [list ::ms::combobox::Popdown_Touchpad $w %x %y %# %D units]
+    _bind $w.popdown.f     <TouchpadScroll> [list ::ms::combobox::Popdown_Touchpad $w %x %y %# %D units]
+    _bind $w.popdown.f.lb  <TouchpadScroll> [list ::ms::combobox::Popdown_Touchpad $w %x %y %# %D units]
+
+    # If the listbox can scroll vertically, move the listbox viewpoint by one page up or down
+    # (depending on the mousewheel direction), otherwise don't do anything.
+    _bind $w.popdown       <Control-TouchpadScroll> [list ::ms::combobox::Popdown_Touchpad $w %x %y %# %D pages]
+    _bind $w.popdown.f     <Control-TouchpadScroll> [list ::ms::combobox::Popdown_Touchpad $w %x %y %# %D pages]
+    _bind $w.popdown.f.lb  <Control-TouchpadScroll> [list ::ms::combobox::Popdown_Touchpad $w %x %y %# %D pages]
+
+    #############################
+    ##                         ##
+    ##     GRID EVERYTHING     ##
+    ##                         ##
+    #############################
+
+    # Grid the elements of the popdown window.
+    _grid $w.popdown.f   -padx [list 0] \
+                         -pady [list 0] \
+                       -sticky news;
+
+    _grid $w.popdown.f.lb -column 0 \
+                            -padx [list 3p 3p] \
+                            -pady [list 3p 3p] \
+                             -row 0 \
+                          -sticky nsew;
+
+    # Configure the grids rows and columns.
+    _grid rowconfigure    $w.popdown 0 -weight 1
+    _grid columnconfigure $w.popdown 0 -weight 1
+
+    _grid columnconfigure $w.popdown.f 0 -weight 1
+    _grid rowconfigure    $w.popdown.f 0 -weight 1
+
+    #######################
+    ##                   ##
+    ##     SCROLLBAR     ##
+    ##                   ##
+    #######################
+
+    if { $::ms::current($w,rows) < [llength $::ms::data($w,colornames)] } {
+        _ttk_scrollbar $w.popdown.f.vsb     -class TScrollbar \
+                                          -command [list $w.popdown.f.lb yview] \
+                                           -cursor arrow \
+                                           -orient vertical \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+        $w.popdown.f.lb configure -yscrollcommand [list $w.popdown.f.vsb set]
+
+        _bind $w.popdown.f.vsb <MouseWheel>         [list ::ms::combobox::Scrollbar_Mousewheel $w %D units]
+        _bind $w.popdown.f.vsb <Control-MouseWheel> [list ::ms::combobox::Scrollbar_Mousewheel $w %D pages]
+
+        _bind $w.popdown.f.vsb <TouchpadScroll>         [list ::ms::combobox::Scrollbar_TouchpadScroll $w %# %D units]
+        _bind $w.popdown.f.vsb <Control-TouchpadScroll> [list ::ms::combobox::Scrollbar_TouchpadScroll $w %# %D pages]
+
+        _grid $w.popdown.f.vsb -column 1 \
+                                 -padx [list 0  3p] \
+                                 -pady [list 3p 3p] \
+                                  -row 0 \
+                               -sticky ns;
+    }
+
+    #######################################
+    ##                                   ##
+    ##     SET THE POPDOWN SELECTION     ##
+    ##                                   ##
+    #######################################
+
+    ::ms::palette::Popdown_AutoSelection $w
+
+    ###############################
+    ##                           ##
+    ##     PLACE THE POPDOWN     ##
+    ##                           ##
+    ###############################
+
+    update idletasks
+
+    # Get the (x,y) absolute coordinate of the NW point of the palette.
+    set palette_x [_winfo rootx $w]
+    set palette_y [_winfo rooty $w]
+
+    # Get the width and height of the palette.
+    set palette_height [_winfo height $w.combobox]
+    set palette_width  [_winfo width  $w.combobox]
+
+    # Adjust the coordinates and dimensions by the 'postoffset' specified in the palette style provided.
+    set postoffset [_ttk_style lookup $::ms::current($w,style) -postoffset {} [list 0 0 0 0]]
+    foreach var { palette_x palette_y palette_width palette_height } delta $postoffset {
+        incr $var $delta
+    }
+
+    # Compute if the popdown will show below the palette element or above it.
+    set popdown_height [_winfo reqheight $w.popdown]
+    if { [expr { $palette_y+$palette_height+$popdown_height+4 }] > [_winfo screenheight $w.popdown] } {
+        # Above the palette.
+        set popdown_y [expr { $palette_y-$popdown_height-4 }]
+    } else {
+        # Below the palette.
+        # This is the normal flow of the popdown window.
+        set popdown_y [expr { $palette_y+$palette_height+4 }]
+    }
+
+    # Set the popdown geometry.
+    _wm geometry $w.popdown ${palette_width}x${popdown_height}+${palette_x}+${popdown_y}
+
+    #####################################
+    ##                                 ##
+    ##     POST THE POPDOWN WINDOW     ##
+    ##                                 ##
+    #####################################
+
+    # Note: Need to set [wm transient] just before mapping the popdown
+    #       instead of when it's created, in case a containing frame
+    #       has been reparented [#1818441].
+    #
+    #       On Windows: setting [wm transient] prevents the parent
+    #       toplevel from becoming inactive when the popdown is posted
+    #       (Tk 8.4.8+)
+    #
+    #       On X11: WM_TRANSIENT_FOR on override-redirect windows
+    #       may be used by compositing managers and by EWMH-aware
+    #       window managers (even though the older ICCCM spec says
+    #       it's meaningless).
+    switch -- [_tk windowingsystem] {
+        win32 -
+        x11   { _wm transient $w.popdown $::ms::addr($w,toplevel) }
+    }
+
+    # Post the popdown window.
+    _wm attribute $w.popdown -topmost 1
+    _wm deiconify $w.popdown
+    _raise $w.popdown
+
+    # Focus on the 'popdown' object.
+    _focus -force $w.popdown.f.lb
+
+    # Get the combobox current fieldbackground color for the focus dynamic state.
+    set fieldbackground [_ttk_style lookup $::ms::current($w,style) -fieldbackground [list focus] $::ms::current($w,fieldbackground)]
+
+    # Create/Update the sub-style for the fieldbackground.
+    _ttk_style configure Fieldbackground.$::ms::style($w,widget) -fieldbackground $fieldbackground
+
+    # Change momentarily the combobox style to the sub-style.
+    $w.combobox configure -style Fieldbackground.$::ms::style($w,widget)
+
+    ###############################
+    ##                           ##
+    ##     SET A GLOBAL GRAB     ##
+    ##                           ##
+    ###############################
+
+    # Setting a global grab on the popdown window.
+    _grab set -global $w.popdown
+
+    # Waiting for '::wait_for_user_response'.
+    vwait ::wait_for_user_response
+
+    #######################################
+    ##                                   ##
+    ##     UNPOST THE POPDOWN WINDOW     ##
+    ##                                   ##
+    #######################################
+
+    # Change the combobox style back to its original style.
+    $w.combobox configure -style $::ms::style($w,widget)
+
+    # Unpost the popdown window.
+    ::ms::palette::Unpost $w
+
+    return ""
+}
+
 #*EOF*
