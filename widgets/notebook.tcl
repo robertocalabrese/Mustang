@@ -2546,4 +2546,36 @@ proc ::ms::notebook::Enable_Traversal { w } {
     return ""
 }
 
+## Enclosing_Notebook
+#
+# Return the nearest traversal-enabled notebook widget that contains 'w'.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# BUGS: This routine should follow the geometry manager hierarchy, not window ancestry,
+#       but that information is not available in Tk.
+#
+# Returns the nearest traversal enabled notebook address or an empty string is none is found.
+proc ::ms::notebook::Enclosing_Notebook { w } {
+    # Get the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
+    switch -- [info exists ::ms::notebook(traversal,$toplevel)] {
+        0   { return "" }
+    }
+
+    while { $w ne $toplevel && $w ne "" } {
+        switch -- [lsearch -exact $::ms::notebook(traversal,$toplevel) $w] {
+            -1      {}
+            default { return $w }
+        }
+
+        set w [_winfo parent $w]
+    }
+
+    return ""
+}
+
 #*EOF*
