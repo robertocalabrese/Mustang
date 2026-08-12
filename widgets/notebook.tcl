@@ -2656,4 +2656,28 @@ proc ::ms::notebook::Traverse_Clean_Up { w } {
     return ""
 }
 
+## Traverse_Cycle_Tab
+#
+# Toplevel binding procedure for **Control-Tab** and **Control-Shift-Tab**.
+# Select the next/previous tab in the nearest ancestor notebook.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# dir   Should be the amount of the movement.
+#       Its sign determines the direction to take (**+1.0** or **-1.0).
+#
+# If a suitable notebook is found, cycle the tab and return a TCL_BREAK, otherwise return an empty string.
+proc ::ms::notebook::Traverse_Cycle_Tab { w dir } {
+    set notebook_addr [::ms::notebook::Enclosing_Notebook $w]
+    switch -- $notebook_addr {
+        ""      { return "" }
+        default {
+            ::ms::notebook::Cycle_Tab $notebook_addr $dir -1.0
+            return -code break
+        }
+    }
+}
+
 #*EOF*
