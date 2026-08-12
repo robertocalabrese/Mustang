@@ -4867,4 +4867,38 @@ proc ::ms::palette::Popdown_AutoSelection { w } {
     return ""
 }
 
+## Popdown_End
+#
+# Move the listbox view to its bottom and select the very last row.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_End { w } {
+    # Select and activate the very last row.
+    $w.popdown.f.lb activate $::ms::data($w,last_available_index)
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $::ms::data($w,last_available_index)
+
+    # Make sure that the last available index is visible.
+    $w.popdown.f.lb see $::ms::data($w,last_available_index)
+
+    # Set the preview color and its bordercolor (black or white).
+    set preview_color [lindex $::ms::data($w,hexadecimals) $::ms::data($w,last_available_index)]
+    switch -- [string length $preview_color] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    return ""
+}
+
 #*EOF*
