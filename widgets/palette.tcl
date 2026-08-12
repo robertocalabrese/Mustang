@@ -740,6 +740,82 @@ proc ::ms::palette::Command { window { args "" } } {
                     set ::ms::current($w,xscrollcommand) {}
                 }
             }
+
+            # Check that the values provided forms a valid list of values (they must be divisible by two).
+            set value_length [llength $::ms::current($w,values)]
+            switch -- [expr { $value_length%2 }] {
+                0   {
+                    # Check if an empty list was provided.
+                    switch -- $value_length {
+                        0   {
+                            set ::ms::current($w,values) $::ms::default(palette,values)
+
+                            # Initialize the colornames and hexadecimal lists.
+                            set ::ms::data($w,colornames)   [list ]
+                            set ::ms::data($w,hexadecimals) [list ]
+
+                            # Add the colorname and its hexadecimal value in their relative lists.
+                            foreach { colorname hex } $values {
+                                lappend ::ms::data($w,colornames)   $colorname
+                                lappend ::ms::data($w,hexadecimals) $hex
+                            }
+                        }
+                        default {
+                            # Sort the values.
+                            set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
+
+                            # Initialize the colornames and hexadecimal lists.
+                            set ::ms::data($w,colornames)   [list ]
+                            set ::ms::data($w,hexadecimals) [list ]
+
+                            # Check the value list.
+                            foreach { colorname hex } $values {
+                                # Check every character in colorname.
+                                set i 0
+                                while { $i < [string length $colorname] } {
+                                    set char [string index $colorname $i]
+                                    switch -- $char {
+                                        " "     -
+                                        "-"     {}
+                                        default {
+                                            switch -- [string is alnum $char] {
+                                                0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
+                                            }
+                                        }
+                                    }
+
+                                    incr i
+                                }
+
+                                # Check the hexadecimal color value.
+                                set hex [::ms::Check_Color $hex invalid]
+                                switch -- $hex {
+                                    invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
+                                }
+
+                                # Add the colorname and its hexadecimal value in their relative lists.
+                                lappend ::ms::data($w,colornames)   $colorname
+                                lappend ::ms::data($w,hexadecimals) $hex
+                            }
+                        }
+                    }
+
+                    # Set the current index as the first one of the colorname list.
+                    set ::ms::data($w,current_index) 0
+
+                    # Set the current colorname value.
+                    set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
+
+                    # Set the current hexadecimal value.
+                    set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
+
+                    # Set the last available index.
+                    set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
+
+                    # Set the lowercase '::ms::data($w,colornames)' list.
+                    set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
