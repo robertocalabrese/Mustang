@@ -815,6 +815,121 @@ namespace eval ttk::theme::Halo {
                                                             selected Accent \
                                                   {active !selected} FieldbackgroundFocusText \
                                                            !selected TabForeground];
+
+        #####################
+        ##                 ##
+        ##     PALETTE     ##
+        ##                 ##
+        #####################
+
+        # Note: 'charwidth', 'cursor', 'focuswidth', 'font', 'insertwidth', 'justify', 'padding', 'rows'
+        #       and 'selectborderwidth' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'focuscolor' and 'focuswidth' will not be used by the 'clam' engine.
+        #       Instead the 'clam' engine will use a combination between 'bordercolor' and 'lightcolor'.
+        #       In the other engines 'focuscolor' and 'focuswidth' will be used instead of 'bordercolor' and 'lightcolor'.
+
+        # Layout
+        style layout TPalette {
+            Entry.field -sticky nswe -children {
+                Palette.padding -sticky nswe -children {
+                    Palette.downarrow -side right -sticky ns
+                    Palette.line -side right -sticky ns
+                    Palette.textarea -sticky {}
+                }
+            }
+        }
+
+        # Elements
+        style element create Palette.line     image [list            spacer \
+                                                            disabled spacer_disabled \
+                                                             invalid spacer_invalid] \
+                                            -border [list 0] \
+                                           -padding [list 8 0] \
+                                            -sticky ns;
+
+        style element create Palette.downarrow     image [list                   arrow_down \
+                                                                        disabled arrow_down_disabled \
+                                                                         invalid arrow_down_invalid \
+                                                                         pressed arrow_down_pressed] \
+                                                 -border [list 0] \
+                                                 -sticky {};
+
+        # Normal states
+        style configure TPalette             -arrowcolor Arrow \
+                                              -arrowsize $::ms::size(Halo,arrow_down) \
+                                             -background Background \
+                                            -borderwidth 1 \
+                                            -bordercolor Bordercolor \
+                                              -charwidth 8 \
+                                                 -cursor arrow \
+                                              -darkcolor Background \
+                                        -fieldbackground Fieldbackground \
+                                             -focuscolor LightcolorAlternate \
+                                              -focusfill FieldbackgroundFocus \
+                                             -focuswidth 2 \
+                                                   -font NormalFont \
+                                             -foreground TextAlternate \
+                                            -insertcolor TextAlternate \
+                                            -insertwidth 2 \
+                                                -justify left \
+                                             -lightcolor LightcolorAlternate \
+                                                -padding [list 4p 5p 4p 5p] \
+                                  -placeholderforeground PlaceholderText \
+                                             -postoffset [list 1 0 0 0] \
+                                                   -rows 6 \
+                                       -selectbackground White \
+                                      -selectborderwidth 0 \
+                                       -selectforeground TextAlternate \
+                                        -shellbackground Background;
+
+        style configure Preview -borderwidth 1 \
+                                     -height $::ms::size(Halo,preview_height) \
+                                      -width $::ms::size(Halo,preview_width);
+
+        # Mappings
+        style map TPalette        -arrowcolor [list   disabled ArrowDisabled \
+                                                       pressed ArrowPressed \
+                                                       invalid Text \
+                                                         hover Accent] \
+                                  -background [list   disabled Background \
+                                                      readonly Background \
+                                                       invalid White \
+                                                         focus Background \
+                                                         hover Background] \
+                                 -bordercolor [list background BordercolorBackground \
+                                                      disabled Bordercolor \
+                                                       invalid Text \
+                                                         focus Accent \
+                                                         hover Accent \
+                                                       pressed HighlightAlternate \
+                                                      readonly Bordercolor] \
+                             -fieldbackground [list   disabled ArrowDisabled \
+                                                      readonly ArrowDisabled \
+                                                       invalid Invalid \
+                                                         focus FieldbackgroundFocus] \
+                                  -focuscolor [list   disabled Background \
+                                                       invalid Text \
+                                                         focus Accent \
+                                                         hover Accent \
+                                                      readonly Background] \
+                                  -foreground [list   disabled TextAlternate \
+                                                      readonly TextAlternate \
+                                                       invalid White \
+                                                         focus TextAlternate] \
+                                  -lightcolor [list   disabled ArrowDisabled \
+                                                       invalid Text \
+                                                         focus Accent \
+                                                         hover Accent \
+                                                       pressed HighlightAlternate \
+                                                      readonly ArrowDisabled] \
+                            -selectforeground [list    invalid Invalid] \
+                            -shellbackground  [list   disabled Background \
+                                                      readonly Background \
+                                                       invalid White \
+                                                         focus Background \
+                                                         hover Background];
     }
 }
 
