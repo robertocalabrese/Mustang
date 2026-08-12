@@ -1711,7 +1711,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::notebook::Style_Update { stylename caller_info } {}
+proc ::ms::notebook::Style_Update { stylename caller_info } {
+    # Configure the tab fills for the tabposition specified in the relative tab style
+    # associated to 'stylename', for the current theme.
+    [string cat "::ms::" $::ms::theme "_NotebookTab_Fills"] $stylename
+}
 
 ######################################
 ##                                  ##
