@@ -1941,4 +1941,122 @@ proc ::ms::notebook::Configure { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget real address from the list of all available real addresses.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Remove the widget address from the notebook widgets real address list.
+    set index [lsearch -exact $::ms::addr(notebook) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(notebook) [lremove $::ms::addr(notebook) $index] }
+    }
+
+    # Remove the widget address from the notebook classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),notebook,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),notebook,addrs) [lremove $::ms::class($::ms::current($w,class),notebook,addrs) $index] }
+    }
+
+    # Remove the widget address from the notebook classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),notebook,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),notebook,addrs) [lremove $::ms::style($::ms::current($w,style),notebook,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the notebook classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),notebook,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(notebook,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(notebook,classtype) [lremove $::ms::style(notebook,classtype) $index] }
+            }
+        }
+    }
+
+    # Destroy the bindings for the widget real address in its related toplevel.
+    ::ms::notebook::Clean_Up $w
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,height) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,tabposition) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,width);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,cursor);
+
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,height) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,tabposition) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,width);
+
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,tabposition);
+
+    unset -nocomplain -- ::ms::style($w,tabs) \
+                         ::ms::style($w,widget);
+
+    return ""
+}
+
 #*EOF*
