@@ -4935,4 +4935,43 @@ proc ::ms::palette::Popdown_Home { w } {
     return ""
 }
 
+## Popdown_Hover
+#
+# Manage the **Motion** event on the widget.
+#
+# Note: The following procedure is a modified version of the 'ttk::combobox::LBHover' procedure.
+#       All credits goes to the original author/s.
+#
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Hover { w x y } {
+    # Get the index of the current hovered row.
+    set index [$w.popdown.f.lb index @$x,$y]
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    # Set the preview color and its bordercolor (black or white).
+    set preview_color [lindex $::ms::data($w,hexadecimals) $index]
+    switch -- [string length $preview_color] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    return -code break
+}
+
 #*EOF*
