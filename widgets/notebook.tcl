@@ -2481,4 +2481,69 @@ proc ::ms::notebook::Cycle_Tab { w dir { factor 1.0 } } {
     return ""
 }
 
+## Enable_Traversal
+#
+# Enable Tab and mnemonic keyboard traversal for a notebook widget by adding bindings to the containing toplevel window.
+#
+# '::ms::notebook(traversal,$toplevel)' keeps track of the list of all traversal-enabled notebooks
+# contained in the toplevel.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Enable_Traversal { w } {
+    # Get the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
+    switch -- [info exists ::ms::notebook(traversal,$toplevel)] {
+        0   {
+            ############################################################
+            ##                                                        ##
+            ##     AUGMENT THE NOTEBOOK RELATED TOPLEVEL BINDINGS     ##
+            ##                                                        ##
+            ############################################################
+
+            # Destroy
+            _bind $toplevel <Destroy> [list +::ms::notebook::Traverse_Clean_Up %W]
+
+            # Mnemonic key navigation.
+            switch -- [_tk windowingsystem] {
+                aqua    { _bind $toplevel <Option-KeyPress> [list +::ms::notebook::Mnemonic_Activation $toplevel %K] }
+                default { _bind $toplevel <Alt-KeyPress>    [list +::ms::notebook::Mnemonic_Activation $toplevel %K] }
+            }
+
+            # Tab navigation.
+            _bind $toplevel <Control-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W -1.0]
+
+            switch -- [_tk windowingsystem] {
+                win32   { _bind $toplevel <Control-Shift-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W 1.0] }
+                default {
+                    # Note: Some OS's define a goofy <Control-Shift-Tab> keysym.
+
+                    # This is needed for XFree86 systems and macOS.
+                    try {
+                        _bind $toplevel <Control-KeyPress-ISO_Left_Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W 1.0]
+                    } on error {} {
+                        # Do Nothing
+                    }
+
+                    # This seems to be correct on *some* HP systems.
+                    try {
+                        _bind $toplevel <Control-KeyPress-hpBackTab> [list +::ms::notebook::Traverse_Cycle_Tab %W 1.0]
+                    } on error {} {
+                        # Do Nothing
+                    }
+                }
+            }
+        }
+    }
+
+    # Add the notebook real address to the list of the traversal notebooks for its related toplevel.
+    lappend ::ms::notebook(traversal,$toplevel) $w
+
+    return ""
+}
+
 #*EOF*
