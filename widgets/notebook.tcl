@@ -213,6 +213,15 @@ proc ::ms::notebook::Command { window { args "" } } {
     set addresses  [::ms::Check_Widget_Address $window $caller_info]
     set w          [lindex $addresses 0]
     set short_addr [lindex $addresses 1]
+
+    # Check that the widget's 'args' forms a valid 'option/value' list.
+    switch -- [expr { [llength $args]%2 }] {
+        0   {
+            # Remove any duplicated options (retain only the last ones).
+            set args [lsort -increasing -stride 2 -index 0 -unique $args]
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
 }
 
 #####################################
