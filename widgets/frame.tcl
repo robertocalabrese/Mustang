@@ -2982,7 +2982,7 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                     switch -- $::ms::current($w,scrollable) {
                         false {
                             if { $widget eq $w } {
-                                return "Frame"
+                                return "Frame.frame"
                             } else {
                                 return ""
                             }
@@ -2993,7 +2993,7 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                             } elseif { $widget eq "$w.border" } {
                                 return "Frame.border"
                             } elseif { $widget eq "$w.border.viewport.content" } {
-                                return "Frame"
+                                return "Frame.frame"
                             } elseif { $widget eq "$w.x" } {
                                 return "Frame.hscrollbar"
                             } elseif { $widget eq "$w.y" } {
