@@ -4901,4 +4901,38 @@ proc ::ms::palette::Popdown_End { w } {
     return ""
 }
 
+## Popdown_Home
+#
+# Move the listbox view to its top and select the very first row.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Home { w } {
+    # Select and activate the very first row.
+    $w.popdown.f.lb activate 0
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set 0
+
+    # Make sure that index **0** is visible.
+    $w.popdown.f.lb see 0
+
+    # Set the preview color and its bordercolor (black or white).
+    set preview_color [lindex $::ms::data($w,hexadecimals) 0]
+    switch -- [string length $preview_color] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    return ""
+}
+
 #*EOF*
