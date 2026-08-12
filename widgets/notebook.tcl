@@ -2610,4 +2610,32 @@ proc ::ms::notebook::Mnemonic_Activation { toplevel key } {
     }
 }
 
+## Mnemonic_Tab
+#
+# Scan all tabs in the specified notebook for one with the specified mnemonic.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be the mnemonic key to search for.
+#
+# If a mnemonic is found, returns the path name of tab, otherwise returns the empty string.
+proc ::ms::notebook::Mnemonic_Tab { w key } {
+    set key [string toupper $key]
+    foreach tab [interp invokehidden {} $w tabs] {
+        set label     [interp invokehidden {} $w tab $tab -text]
+        set underline [interp invokehidden {} $w tab $tab -underline]
+
+        if { $underline >= 0 } {
+            set mnemonic [string toupper [string index $label $underline]]
+            if { $mnemonic eq $key } {
+                return $tab
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
