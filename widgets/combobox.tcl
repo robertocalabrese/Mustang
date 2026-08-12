@@ -3899,10 +3899,10 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
                         switch -nocase -- $result {
-                            textarea             { return "Combobox.textarea" }
-                            "Combobox.downarrow" { return "Combobox.downarrow" }
-                            default              { return "" }
+                            textarea { set result "Combobox.textarea" }
                         }
+
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
