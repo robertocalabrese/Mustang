@@ -156,6 +156,14 @@ namespace eval ::ms::notebook {
                                                     style \
                                                     takefocus \
                                                     width];
+
+    # Set the 'styleable' notebook option list.
+    set ::ms::notebook(styleable,options) [list background \
+                                                bordercolor \
+                                                cursor \
+                                                darkcolor \
+                                                lightcolor \
+                                                tabposition];
 }
 
 # Rename the original Tk **ttk::notebook** command.
