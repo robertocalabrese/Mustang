@@ -818,4 +818,68 @@ namespace eval ttk::theme::Halo {
     }
 }
 
+# Halo_NotebookTab_Fills
+#
+# Sets the Halo notebook tab fills related to the notebook style provided.
+#
+# Where:
+#
+# style   Should be the notebook style (for example 'TNotebook') in which
+#         the tab fills needs to be configured.
+#
+# Note:   Attention. Do not pass the notebook tab style (for example 'TNotebook.Tab') but
+#         rather its related notebook style (for example 'TNotebook').
+#
+# Note:   This is a minor rewrite of the 'ttk::theme::clam::configureNotebookStyle' of the
+#         official clam theme. All credits goes to the procedure author.
+#
+# It doesn't return anything.
+proc ::ms::Halo_NotebookTab_Fills { style } {
+    if { $style in [_ttk_style theme styles] } {
+        # Constroct the notebook tab style.
+        set tabs_style [string cat $style ".Tab"]
+
+        # Note: The original code of the clam theme have different padding between the normal and
+        #       the selected state for each tabposition.
+        #       This is not the case for the Halo theme, howewer the check is done as it behaves like
+        #       the clam theme so that a theme developer could easily change it at he/she pleases.
+
+        # Check the tabposition for the style provided.
+        switch -- [string index [_ttk_style lookup $style -tabposition {} nw] 0] {
+            s   {
+                # Tab fills for the normal state.
+                _ttk_style configure $tabs_style -padding [list 5p 5p]
+
+                # Tab fills for the selected state.
+                _ttk_style map $tabs_style -padding [list selected [list 5p 5p]]
+            }
+            w   {
+                # Tab fills for the normal state.
+                _ttk_style configure $tabs_style -padding [list 5p 5p]
+
+                # Tab fills for the selected state.
+                _ttk_style map $tabs_style -padding [list selected [list 5p 5p]]
+            }
+            e   {
+                # Tab fills for the normal state.
+                _ttk_style configure $tabs_style -padding [list 5p 5p]
+
+                # Tab fills for the selected state.
+                _ttk_style map $tabs_style -padding [list selected [list 5p 5p]]
+            }
+            default {
+                # Assume 'n'.
+
+                # Tab fills for the normal state.
+                _ttk_style configure $tabs_style -padding [list 5p 5p]
+
+                # Tab fills for the selected state.
+                _ttk_style map $tabs_style -padding [list selected [list 5p 5p]]
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
