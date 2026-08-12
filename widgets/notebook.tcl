@@ -615,6 +615,64 @@ proc ::ms::notebook::Command { window { args "" } } {
 
             # Add the notebook to the related toplevel keyboard Tab and mnemonics navigation bindings.
             ::ms::notebook::Enable_Traversal $w
+
+            #####################
+            ##                 ##
+            ##     CLOSING     ##
+            ##                 ##
+            #####################
+
+            # Hide the widget pathcommand.
+            interp hide {} $w
+
+            # Create an alias for the widget pathcommand.
+            lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::notebook::Pathname_Cmd $w]
+
+            # If needed, create an alias for the widget short address pathcommand.
+            if { $short_addr ne $w } {
+                lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::notebook::Pathname_Cmd $w]
+            }
+
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
+
+            # Set the actual widget address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w
+
+            # Set the structure addresses.
+            set ::ms::addr($w,structure) [list $w]
+
+            # Set the widget real address relative to its short address, 'short_addr'.
+            set ::ms::addr($short_addr,real) $w
+
+            # Set the widget short addresses relative to its real address, 'w'.
+            # They will all point to the widget hull object short address.
+            set ::ms::addr($w,short)      $short_addr
+            set ::ms::addr($w.tabs,short) $short_addr
+
+            # Add the widget real and short address into the list of all available real and short addresses.
+            lappend ::ms::addr(reals)  $w
+            lappend ::ms::addr(shorts) $short_addr
+
+            # Add the widget address to the notebook widgets real address list.
+            lappend ::ms::addr(notebook) $w
+
+            # Add the widget address to the notebook classtype real address list with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),notebook,addrs) $w
+
+            # Add the widget address to the notebook classtype real address list with style '::ms::current($w,style)'.
+            lappend ::ms::style($::ms::current($w,style),notebook,addrs) $w
+
+            # If needed, add '::ms::current($w,style)' to the available styles for the notebook classtype.
+            if { $::ms::current($w,style) ni $::ms::style(notebook,classtype) } {
+                lappend ::ms::style(notebook,classtype) $::ms::current($w,style)
+            }
+
+            # Depending on the address type provided, return the widget real or short address.
+            switch -- $type {
+                real  { return $w }
+                short { return $short_addr }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
