@@ -705,7 +705,54 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
 
     # Check the command provided.
     switch -nocase -- $cmd {
-        add {}
+        add {
+            # Synopsis:
+            #
+            # *window* **add** *subwindow* ?*option value*? ... ?*option value*?
+            set subwindow [lindex  $args 0]
+            set args      [lremove $args 0]
+
+            # Get the 'subwindow' real address.
+            set result [::ms::Check_Pathname $subwindow invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
+                default { set subwindow [lindex $result 0] }
+            }
+
+            # Check that the 'subwindow' provided is a direct child of the notebook widget.
+            if { [_winfo parent $subwindow] ne $w } {
+                return ""
+            }
+
+            # Check that the command 'args' forms a valid 'option/value' list.
+            switch -- [expr { [llength $args]%2 }] {
+                0       {}
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Register and remove the '-prehook' and '-posthook' tab options, if any.
+            foreach word [list -posthook \
+                                -prehook] {
+                set option [string range $word 1 end]
+                set index  [lsearch -exact $args $word]
+                switch -- $index {
+                    -1      { set ::ms::data($subwindow,$option) "" }
+                    default {
+                        set ::ms::data($subwindow,$option) [lindex $args $index+1]
+                        set args [lremove $args $index $index+1]
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w add $subwindow {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
         cget {}
         configure {}
         forget {}
