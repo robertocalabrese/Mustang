@@ -1176,7 +1176,116 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        tab {}
+        tab {
+            # Synopsis:
+            #
+            # *window* **tab** *tabid* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+            set tabid [lindex  $args 0]
+            set args  [lremove $args 0]
+
+            # Check if the 'tabid' provided is a tab index.
+            switch -- [string is integer -strict $tabid] {
+                0   {
+                    # Check if the 'tabid' provided is the word 'current'.
+                    switch -nocase -- $tabid {
+                        current { set tabid "current" }
+                        default {
+                            # Check if the 'tabid' provided is a short address.
+                            set result [::ms::Check_Pathname $tabid invalid]
+                            switch -- $result {
+                                invalid {
+                                    # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
+                                    switch -- [lindex $tabid 0] {
+                                        "@" {
+                                            set position [split [string range $tabid 1 end] ","]
+                                            foreach coordinate $position {
+                                                switch -- [string is integer -strict $coordinate] {
+                                                    0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                }
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                    }
+                                }
+                                default { set tabid [lindex $result 0] }
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Get the tabid address.
+            set tabid_index [interp invokehidden {} $w index $tabid]
+            set tabid_addr  [lindex [interp invokehidden {} $w tabs] $tabid_index]
+
+            switch -- [llength $args] {
+                0   {
+                    # case: Return all the tabid options/values.
+
+                    try {
+                        interp invokehidden {} $w tab $tabid
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Add the 'prehook' and 'posthook' options.
+                        lappend result "-posthook" "$::ms::data($tabid_addr,posthook)" \
+                                        "-prehook" "$::ms::data($tabid_addr,prehook)";
+
+                        # Return the sorted result.
+                        return [lsort -dictionary -increasing -stride 2 -index 0 $result]
+                    }
+                }
+                1   {
+                    # case: Return the tabid option value requested.
+
+                    switch -nocase -- $args {
+                        -posthook { return $::ms::data($tabid_addr,posthook) }
+                        -prehook  { return $::ms::data($tabid_addr,prehook) }
+                        default {
+                            try {
+                                interp invokehidden {} $w tab $tabid $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
+                default {
+                    # case: Set all the tabid options/values provided.
+
+                    # Check that the command 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0       {}
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+
+                    # Register and remove the '-prehook' and '-posthook' tab options, if any.
+                    foreach word [list -posthook \
+                                        -prehook] {
+                        set option [string range $word 1 end]
+                        set index  [lsearch -exact $args $word]
+                        switch -- $index {
+                            -1      {}
+                            default {
+                                set ::ms::data($tabid_addr,$option) [lindex $args $index+1]
+                                set args [lremove $args $index $index+1]
+                            }
+                        }
+                    }
+
+                    # Set the other Tk tab options provided.
+                    try {
+                        interp invokehidden {} $w tab $tabid {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+            }
+        }
         tabs {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
