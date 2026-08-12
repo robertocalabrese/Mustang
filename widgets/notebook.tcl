@@ -2282,4 +2282,32 @@ proc ::ms::notebook::Select_Tab { w x y } {
     return ""
 }
 
+###############################
+##                           ##
+##     CURSOR MANAGEMENT     ##
+##                           ##
+###############################
+
+# Note: The following procedures were inspired by the ttk::panedwindow cursor management.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Reset_Cursor
+#
+# Reset the cursor shape on a notebook.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Reset_Cursor { w } {
+    # Check if the cursor is different than the '::ms::current($w,cursor)' provided.
+    if { [interp invokehidden {} $w cget -cursor] ne $::ms::current($w,cursor) } {
+        interp invokehidden {} $w configure -cursor $::ms::current($w,cursor)
+    }
+
+    return ""
+}
+
 #*EOF*
