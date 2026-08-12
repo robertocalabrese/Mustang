@@ -3984,7 +3984,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             } elseif { $widget eq "$w.title" } {
                                 return "Labelframe.title"
                             } elseif { $widget eq "$w.content" } {
-                                return "Labelframe"
+                                return "Labelframe.frame"
                             } else {
                                 return ""
                             }
@@ -3999,7 +3999,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             } elseif { $widget eq "$w.container.border" } {
                                 return "Labelframe.border"
                             } elseif { $widget eq "$w.container.border.viewport.content" } {
-                                return "Labelframe"
+                                return "Labelframe.frame"
                             } elseif { $widget eq "$w.container.x" } {
                                 return "Labelframe.hscrollbar"
                             } elseif { $widget eq "$w.container.y" } {
