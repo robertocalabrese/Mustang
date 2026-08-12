@@ -1146,6 +1146,18 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                             # Configure the tab fills for the tabposition specified in the relative Tab style
                             # associated to '::ms::style($w,widget)', for the current theme.
                             [string cat "::ms::" $::ms::theme "_NotebookTab_Fills"] $::ms::style($w,widget)
+
+                            # Note: If width and/or height were provided by the developer, and these values were accepted by Tk,
+                            #       then a configure event will be invoked by Tk ('::ms::notebook::Configure').
+                            #       After this event, their values will be registered.
+
+                            update
+
+                            # Cleaning.
+                            unset -nocomplain -- ::ms::temp($w,height) \
+                                                 ::ms::temp($w,width);
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
