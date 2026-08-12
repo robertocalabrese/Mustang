@@ -140,7 +140,23 @@ _bind _Palette <TouchpadScroll> { ::ms::palette::Touchpad %W %# %D; break }
 _bind _Palette <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **palette** package.
-namespace eval ::ms::palette {}
+namespace eval ::ms::palette {
+    # Set the 'non styleable' palette option list.
+    set ::ms::palette(non_styleable,options) [list class \
+                                                   cmenu \
+                                                   command \
+                                                   exportselection \
+                                                   maxlength \
+                                                   placeholder \
+                                                   posthook \
+                                                   prehook \
+                                                   state \
+                                                   style \
+                                                   takefocus \
+                                                   textvariable \
+                                                   values \
+                                                   xscrollcommand];
+}
 
 # Create aliases for the mustang **palette** command.
 interp alias {} palette {} ::ms::palette::Command
