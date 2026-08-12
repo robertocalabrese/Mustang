@@ -64,6 +64,88 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::notebook 0.1
 
+################################
+##                            ##
+##     _NOTEBOOK BINDINGS     ##
+##                            ##
+################################
+
+# Activate/Deactivate
+_bind _Notebook <Activate>   { ::ms::notebook::Pathname_Cmd %W state !background; break  }
+_bind _Notebook <Deactivate> { ::ms::notebook::Pathname_Cmd %W state  background; break  }
+
+# ButtonPress-1
+_bind _Notebook <ButtonPress-1> { ::ms::notebook::Select_Tab %W %x %y; break  }
+
+# Configure
+_bind _Notebook <Configure> { ::ms::notebook::Configure %W; break  }
+
+# Contextual menu
+_bind _Notebook <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break  }
+
+# Cursor Management
+_bind _Notebook <Motion> { ::ms::notebook::Set_Cursor   %W %x %y; break  }
+_bind _Notebook <Enter>  { ::ms::notebook::Reset_Cursor %W; break  }
+_bind _Notebook <Leave>  { ::ms::notebook::Reset_Cursor %W; break  }
+
+# Destroy
+_bind _Notebook <Destroy> { ::ms::notebook::Destroy %W; break  }
+
+# Enter/Leave
+_bind _Notebook <Enter> [list +::ms::notebook::Hover %W %X %Y]
+_bind _Notebook <Leave> [list +::ms::notebook::Hover %W %X %Y]
+
+# FocusIn/FocusOut
+_bind _Notebook <FocusIn>  { ::ms::notebook::FocusIn  %W; break }
+_bind _Notebook <FocusOut> { ::ms::notebook::FocusOut %W; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Notebook <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Notebook <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Notebook <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Notebook <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Notebook <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Notebook <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 # Create the mustang **notebook** package.
 namespace eval ::ms::notebook {}
 
