@@ -2578,4 +2578,36 @@ proc ::ms::notebook::Enclosing_Notebook { w } {
     return ""
 }
 
+## Mnemonic_Activation
+#
+# Alt-Key binding procedure for mnemonic activation.
+# Scan all notebooks in specified toplevel for a tab with the specified mnemonic.
+#
+# Where:
+#
+# toplevel   Should be the toplevel related to the widget real address involved.
+#
+# key        Should be the mnemonic key to search for.
+#
+# If a tab with the specific mnemonic is found, activate it and return a TCL_BREAK,
+# otherwise return an empty string.
+proc ::ms::notebook::Mnemonic_Activation { toplevel key } {
+    foreach w $::ms::notebook(traversal,$toplevel) {
+        set tab [::ms::notebook::Mnemonic_Tab $w $key]
+        switch -- $tab {
+            ""      {}
+            default {
+                # Register the focussed widget for the current tab.
+                set current_tab [interp invokehidden {} $w select]
+                set ::ms::temp($w,$current_tab,focussed_widget) [_focus]
+
+                # Activate the new tab.
+                ::ms::notebook::Activate_Tab $w [interp invokehidden {} $w index $tab]
+
+                return -code break
+            }
+        }
+    }
+}
+
 #*EOF*
