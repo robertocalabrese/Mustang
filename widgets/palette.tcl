@@ -5141,4 +5141,48 @@ proc ::ms::palette::Popdown_PageUp { w } {
     return -code break
 }
 
+## Popdown_Select
+#
+# Manage the lisbox selection event.
+#
+# Note: The following procedure is a modified version of the 'ttk::palette::LBSelect' procedure.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Select { w } {
+    # Get the active index.
+    set index [$w.popdown.f.lb index active]
+
+    # Set the palette selection in response to a user action.
+    $w.combobox current $index
+    $w.combobox selection range 0 end
+    $w.combobox icursor end
+
+    # Change the widget dynamic state to '!invalid'.
+    ::ms::palette::Pathname_Cmd $w state !invalid
+
+    # Set the preview color and its bordercolor (black or white).
+    set preview_color [lindex $::ms::data($w,hexadecimals) $index]
+    switch -- [string length $preview_color] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    # Release the grab.
+    set ::wait_for_user_response "Selection"
+
+    return -code break
+}
+
 #*EOF*
