@@ -876,7 +876,30 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 return ""
             }
         }
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** *component* *x* *y*
+            #    *window* **identify** **element** *x* *y*
+            #    *window* **identify** **tab** *x* *y*
+             try {
+                interp invokehidden {} $w $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                # Check the subcommand provided.
+                switch -- [lindex $args 0] {
+                    element {
+                        switch -- $result {
+                            label   { set result "Notebook.tab" }
+                            default { set result "Notebook.client" }
+                        }
+                    }
+                }
+
+                return $result
+            }
+        }
         index {}
         insert {}
         instate {}
