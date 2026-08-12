@@ -2319,6 +2319,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                     set takefocus 0
                 }
                 readonly {
+                    # Check the windowing system.
                     switch -- [_tk windowingsystem] {
                         aqua    { set cursor hand1 }
                         default { set cursor arrow }
@@ -3419,6 +3420,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                     set takefocus 0
                                 }
                                 readonly {
+                                    # Check the windowing system.
                                     switch -- [_tk windowingsystem] {
                                         aqua    { set cursor hand1 }
                                         default { set cursor arrow }
@@ -4183,7 +4185,14 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
         # Check the widget state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
-            normal   { set cursor $::ms::current($w,cursor) }
+            readonly {
+                # Check the windowing system.
+                switch -- [_tk windowingsystem] {
+                    aqua    { set cursor hand1 }
+                    default { set cursor arrow }
+                }
+            }
+            normal { set cursor $::ms::current($w,cursor) }
         }
 
         # If the maxlength is not zero check that the charwidth is not less of it.
