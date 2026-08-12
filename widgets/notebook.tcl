@@ -1286,7 +1286,18 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        tabs {}
+        tabs {
+            # Synopsis:
+            #
+            # *window* **tabs**
+            try {
+                interp invokehidden {} $w tabs {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
