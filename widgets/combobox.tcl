@@ -208,8 +208,9 @@
 #
 #                              See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
 #
-#                              Note: If the combobox state is normal, the cursor upon the textarea will change to 'xterm'
-#                                    while in the other part of the combobox will remain the one provided.
+#                              Note: If the widget state is disabled, the cursor shape upon the textarea will always be the 'arrow'.
+#                                    If the widget state is readonly, the cursor shape upon the textarea will always be the 'arrow'
+#                                    (Windows and Linux) or 'hand1' (macOs).
 #
 #                              Note: This is a styleable option.
 #
@@ -2317,6 +2318,13 @@ proc ::ms::combobox::Command { window { args "" } } {
                     set cursor    arrow
                     set takefocus 0
                 }
+                readonly {
+                    switch -- [_tk windowingsystem] {
+                        aqua    { set cursor hand1 }
+                        default { set cursor arrow }
+                    }
+                    set takefocus $::ms::current($w,takefocus)
+                }
                 normal {
                     set cursor    $::ms::current($w,cursor)
                     set takefocus $::ms::current($w,takefocus)
@@ -3409,6 +3417,13 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                 disabled {
                                     set cursor    arrow
                                     set takefocus 0
+                                }
+                                readonly {
+                                    switch -- [_tk windowingsystem] {
+                                        aqua    { set cursor hand1 }
+                                        default { set cursor arrow }
+                                    }
+                                    set takefocus $::ms::current($w,takefocus)
                                 }
                                 normal {
                                     set cursor    $::ms::current($w,cursor)
