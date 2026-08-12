@@ -2689,7 +2689,20 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::palette::Style_Update { stylename caller_info } {}
+proc ::ms::palette::Style_Update { stylename caller_info } {
+    # Check the stylename charwidth, if any.
+    set index [lsearch -exact $::ms::styleopt($::ms::theme,$stylename) "-charwidth"]
+    switch -- $index {
+        -1      {}
+        default {
+            if { $::ms::styleopt($::ms::theme,$stylename,charwidth) <= 0 } {
+                # Update the stylename charwidth option for the current theme.
+                set ::ms::styleopt($::ms::theme,$stylename)           [lreplace $::ms::styleopt($::ms::theme,$stylename) $index+1 $index+1 8]
+                set ::ms::styleopt($::ms::theme,$stylename,charwidth) 8
+            }
+        }
+    }
+}
 
 ######################################
 ##                                  ##
