@@ -5266,4 +5266,44 @@ proc ::ms::palette::Popdown_Shift_MouseWheel { w x y amount { what units } } {
     return -code break
 }
 
+## Popdown_Tab
+#
+# Manage the **Tab** and **Shift-Tab** events on the palette listbox.
+# Set the selection, and navigate to next/prev widget.
+#
+# Where:
+#
+# popdown   Should be the popdown window real address involved.
+#
+# dir       The direction of the tab movement.
+#           Allowed values are 'previos' or 'next'.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Tab { popdown dir } {
+    # Get the palette real address.
+    set w [_winfo parent [_winfo parent [_winfo parent $popdown]]]
+
+    # Check if there is another widget to focus to.
+    switch -- $dir {
+        next     { set newFocus [tk_focusNext $w] }
+        previous { set newFocus [tk_focusPrev $w] }
+    }
+
+    # Chek the next/previous focussable widget found, if any.
+    switch -- $newFocus {
+        ""      {}
+        default {
+            # Release the grab.
+            set ::wait_for_user_response "Unpost"
+
+            # The [grab release] call in [Unpost] queues events that later
+            # re-set the focus (@@@ NOTE: this might not be true anymore).
+            # Set new focus later:
+            after 0 [list ::ttk::traverseTo $newFocus]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
