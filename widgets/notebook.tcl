@@ -147,7 +147,16 @@ _bind _Notebook <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Notebook <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **notebook** package.
-namespace eval ::ms::notebook {}
+namespace eval ::ms::notebook {
+    # Set the 'non-styleable' notebook option list.
+    set ::ms::notebook(non_styleable,options) [list class \
+                                                    cmenu \
+                                                    height \
+                                                    state \
+                                                    style \
+                                                    takefocus \
+                                                    width];
+}
 
 # Rename the original Tk **ttk::notebook** command.
 rename ttk::notebook _ttk_notebook
