@@ -1528,7 +1528,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
 
-                            # Set a variable that indicates if new values have been provided or not.
+                            # Set a variable that indicates if new valid list of values have been provided or not.
                             set new_values false
 
                             ##################################################
@@ -1925,10 +1925,72 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                     }
                                     -values {
                                         switch -- [llength $value] {
-                                            0       { ::ms::Error "An empty list was assigned to '$w'." $caller_info }
+                                            0       { ::ms::Error "An empty list of values was assigned to '$w'." $caller_info }
                                             default {
-                                                set ::ms::current($w,values) $value
-                                                set new_values true
+                                                # Check that the values provided forms a valid list of values (they must be divisible by two).
+                                                set value_length [llength $value]
+                                                switch -- [expr { $value_length%2 }] {
+                                                    0   {
+                                                        # Set the new current list of values.
+                                                        set ::ms::current($w,values) $value
+
+                                                        # Sort the values.
+                                                        set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
+
+                                                        # Initialize the colornames and hexadecimal lists.
+                                                        set ::ms::data($w,colornames)   [list ]
+                                                        set ::ms::data($w,hexadecimals) [list ]
+
+                                                        # Check the value list.
+                                                        foreach { colorname hex } $values {
+                                                            # Check every character in colorname.
+                                                            set i 0
+                                                            while { $i < [string length $colorname] } {
+                                                                set char [string index $colorname $i]
+                                                                switch -- $char {
+                                                                    " "     -
+                                                                    "-"     {}
+                                                                    default {
+                                                                        switch -- [string is alnum $char] {
+                                                                            0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                incr i
+                                                            }
+
+                                                            # Check the hexadecimal color value.
+                                                            set hex [::ms::Check_Color $hex invalid]
+                                                            switch -- $hex {
+                                                                invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
+                                                            }
+
+                                                            # Add the colorname and its hexadecimal value in their relative lists.
+                                                            lappend ::ms::data($w,colornames)   $colorname
+                                                            lappend ::ms::data($w,hexadecimals) $hex
+                                                        }
+
+                                                        # Set the current index as the first one of the colorname list.
+                                                        set ::ms::data($w,current_index) 0
+
+                                                        # Set the current colorname value.
+                                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
+
+                                                        # Set the current hexadecimal value.
+                                                        set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
+
+                                                        # Set the last available index.
+                                                        set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
+
+                                                        # Set the lowercase '::ms::data($w,colornames)' list.
+                                                        set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
+
+                                                        # Register the fact that a new valid list of values was provided.
+                                                        set new_values true
+                                                    }
+                                                    default { ::ms::Error "An invalid list of values was assigned to '$w', '$value'." $caller_info }
+                                                }
                                             }
                                         }
                                     }
@@ -1978,105 +2040,6 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
 
                                     # Ignore the xscrollcommand provided, if any.
                                     set ::ms::current($w,xscrollcommand) {}
-                                }
-                            }
-
-                            # Check if new values have been provided.
-                            switch -- $new_values {
-                                true {
-                                    # Check that the values provided forms a valid list of values (they must be divisible by two).
-                                    set value_length [llength $value]
-                                    switch -- [expr { $value_length%2 }] {
-                                        0   {
-                                            # Check if an empty list was provided.
-                                            switch -- $value_length {
-                                                0   {
-                                                    set ::ms::current($w,values) $::ms::default(palette,values)
-
-                                                    # Initialize the colornames and hexadecimal lists.
-                                                    set ::ms::data($w,colornames)   [list ]
-                                                    set ::ms::data($w,hexadecimals) [list ]
-
-                                                    # Add the colorname and its hexadecimal value in their relative lists.
-                                                    foreach { colorname hex } $values {
-                                                        lappend ::ms::data($w,colornames)   $colorname
-                                                        lappend ::ms::data($w,hexadecimals) $hex
-                                                    }
-                                                }
-                                                default {
-                                                    # Set the new current list of values.
-                                                    set ::ms::current($w,values) $value
-
-                                                    # Sort the values.
-                                                    set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
-
-                                                    # Initialize the colornames and hexadecimal lists.
-                                                    set ::ms::data($w,colornames)   [list ]
-                                                    set ::ms::data($w,hexadecimals) [list ]
-
-                                                    # Check the value list.
-                                                    foreach { colorname hex } $values {
-                                                        # Check every character in colorname.
-                                                        set i 0
-                                                        while { $i < [string length $colorname] } {
-                                                            set char [string index $colorname $i]
-                                                            switch -- $char {
-                                                                " "     -
-                                                                "-"     {}
-                                                                default {
-                                                                    switch -- [string is alnum $char] {
-                                                                        0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            incr i
-                                                        }
-
-                                                        # Check the hexadecimal color value.
-                                                        set hex [::ms::Check_Color $hex invalid]
-                                                        switch -- $hex {
-                                                            invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
-                                                        }
-
-                                                        # Add the colorname and its hexadecimal value in their relative lists.
-                                                        lappend ::ms::data($w,colornames)   $colorname
-                                                        lappend ::ms::data($w,hexadecimals) $hex
-                                                    }
-                                                }
-                                            }
-
-                                            # Set the current index as the first one of the colorname list.
-                                            set ::ms::data($w,current_index) 0
-
-                                            # Set the current colorname value.
-                                            set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
-
-                                            # Set the current hexadecimal value.
-                                            set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
-
-                                            # Set the last available index.
-                                            set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
-
-                                            # Set the lowercase '::ms::data($w,colornames)' list.
-                                            set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
-
-                                            # Apply the changes to the combobox object.
-                                            $w.combobox current $::ms::data($w,current_index)
-
-                                            # Set the bordercolor of the preview object (black or white).
-                                            switch -- [string length $::ms::data($w,current_hex)] {
-                                                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-                                                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-                                                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
-                                            }
-
-                                            # Apply the changes to the preview object.
-                                            $w.preview configure          -background $::ms::data($w,current_hex) \
-                                                                 -highlightbackground $bordercolor \
-                                                                      -highlightcolor $bordercolor;
-                                        }
-                                    }
                                 }
                             }
 
@@ -2332,6 +2295,32 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                                            -values $::ms::data($w,colornames) \
                                                             -width $::ms::current($w,charwidth) \
                                                    -xscrollcommand $::ms::current($w,xscrollcommand);
+
+                            ######################
+                            ##                  ##
+                            ##     PREVIEW      ##
+                            ##                  ##
+                            ######################
+
+                            # Check if a new list of values was provided.
+                            switch -- $new_values {
+                                true {
+                                    # Apply the changes to the combobox object.
+                                    $w.combobox current $::ms::data($w,current_index)
+
+                                    # Set the bordercolor of the preview object (black or white).
+                                    switch -- [string length $::ms::data($w,current_hex)] {
+                                        10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+                                        13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+                                        default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                                    }
+
+                                    # Apply the changes to the preview object.
+                                    $w.preview configure          -background $::ms::data($w,current_hex) \
+                                                         -highlightbackground $bordercolor \
+                                                              -highlightcolor $bordercolor;
+                                }
+                            }
 
                             return ""
                         }
