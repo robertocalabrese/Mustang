@@ -3015,4 +3015,194 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove all the objects real addresses from the list of all available real addresses.
+    foreach object [list $w \
+                         $w.preview \
+                         $w.combobox] {
+        set index [lsearch -exact $::ms::addr(reals) $object]
+        switch -- $index {
+            -1      {}
+            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+        }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the palette widgets real address list.
+    set index [lsearch -exact $::ms::addr(palette) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(palette) [lremove $::ms::addr(palette) $index] }
+    }
+
+    # Remove the widget address from the palette classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),palette,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),palette,addrs) [lremove $::ms::class($::ms::current($w,class),palette,addrs) $index] }
+    }
+
+    # Remove the widget address from the palette classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),palette,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),palette,addrs) [lremove $::ms::style($::ms::current($w,style),palette,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the palette classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),palette,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(palette,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(palette,classtype) [lremove $::ms::style(palette,classtype) $index] }
+            }
+        }
+    }
+
+    # Remove the widget address from the megawidget real address list.
+    set index [lsearch -exact $::ms::addr(megawidgets) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,arrowcolor) \
+                         ::ms::current($w,arrowsize) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,charwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,exportselection) \
+                         ::ms::current($w,fieldbackground) \
+                         ::ms::current($w,focuscolor) \
+                         ::ms::current($w,focuswidth) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,insertcolor) \
+                         ::ms::current($w,insertwidth) \
+                         ::ms::current($w,justify) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,maxlength) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,placeholder) \
+                         ::ms::current($w,placeholderforeground) \
+                         ::ms::current($w,posthook) \
+                         ::ms::current($w,prehook) \
+                         ::ms::current($w,selectbackground) \
+                         ::ms::current($w,selectborderwidth) \
+                         ::ms::current($w,selectforeground) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,textvariable) \
+                         ::ms::current($w,values) \
+                         ::ms::current($w,xscrollcommand);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,colornames) \
+                         ::ms::data($w,colornames,lowercase) \
+                         ::ms::data($w,current_index) \
+                         ::ms::data($w,current_hex) \
+                         ::ms::data($w,current_value) \
+                         ::ms::data($w,hexadecimals) \
+                         ::ms::data($w,last_available_index) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,arrowcolor) \
+                         ::ms::default($w,arrowsize) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,charwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,exportselection) \
+                         ::ms::default($w,fieldbackground) \
+                         ::ms::default($w,focuscolor) \
+                         ::ms::default($w,focuswidth) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,insertcolor) \
+                         ::ms::default($w,insertwidth) \
+                         ::ms::default($w,justify) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,maxlength) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,placeholder) \
+                         ::ms::default($w,placeholderforeground) \
+                         ::ms::default($w,posthook) \
+                         ::ms::default($w,prehook) \
+                         ::ms::default($w,selectbackground) \
+                         ::ms::default($w,selectborderwidth) \
+                         ::ms::default($w,selectforeground) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,textvariable) \
+                         ::ms::default($w,values) \
+                         ::ms::default($w,xscrollcommand);
+
+    unset -nocomplain -- ::ms::managed_by($w,arrowcolor) \
+                         ::ms::managed_by($w,arrowsize) \
+                         ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,charwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,fieldbackground) \
+                         ::ms::managed_by($w,focuscolor) \
+                         ::ms::managed_by($w,focuswidth) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,insertcolor) \
+                         ::ms::managed_by($w,insertwidth) \
+                         ::ms::managed_by($w,justify) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,placeholderforeground) \
+                         ::ms::managed_by($w,rows) \
+                         ::ms::managed_by($w,selectbackground) \
+                         ::ms::managed_by($w,selectborderwidth) \
+                         ::ms::managed_by($w,selectforeground);
+
+    unset -nocomplain -- ::ms::style($w,widget)
+
+    return ""
+}
+
 #*EOF*
