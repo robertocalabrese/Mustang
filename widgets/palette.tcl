@@ -4117,4 +4117,172 @@ proc ::ms::palette::Unpost { w } {
     return ""
 }
 
+###################################
+##                               ##
+##     VALIDATION PROCEDURES     ##
+##                               ##
+###################################
+
+## Validate_KeyPress
+#
+# Limit the input keypresses in a palette widget and set the widget state to 'invalid' or '!invalid'
+# depending if there are illegal characters or if the string is not contained inside any of the items
+# provided by the first column of the '::ms::current($w,values)' variable.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# string   Should be the string to check.
+#
+# It returns a boolean value ['0' or '1'] indicating if the string provided
+# reached it's length limit or not.
+proc ::ms::palette::Validate_KeyPress { w string } {
+    # Check if the character is allowed to be displayed or not.
+    switch -- $::ms::current($w,maxlength) {
+        0       {}
+        default {
+            # Check if the length of 'string' is bigger than the maxlength allowed.
+            if { [string length $string] > $::ms::current($w,maxlength) } {
+                # The character will not be inserted.
+                return 0
+            }
+        }
+    }
+
+    # Remove any leading and trailing spaces from 'string'.
+    set value [string trim $string]
+
+    # Check 'value'.
+    switch -- $value {
+        ""  {
+            # Change the widget dynamic state to '!invalid'.
+            ::ms::palette::Pathname_Cmd $w state !invalid
+
+            # Hide the preview object.
+            $w.preview configure          -background $::ms::current($w,shellbackground) \
+                                 -highlightbackground $::ms::current($w,shellbackground) \
+                                      -highlightcolor $::ms::current($w,shellbackground);
+
+            return 1
+        }
+        default {
+            # Note: Illegal characters cannot be inserted directly through the keyboard, we made
+            #       sure of that in the widget bindings section.
+            #       Nonetheless, they can be inserted trough a paste or pasteselection event.
+            #       If this is the case, we will let the illegal character be inserted but we will
+            #       mark the string as invalid.
+
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     -
+                    "-"     {}
+                    default {
+                        switch -- [string is alnum $char] {
+                            0   {
+                                # Change the widget dynamic state to 'invalid'.
+                                ::ms::palette::Pathname_Cmd $w state invalid
+
+                                # Hide the preview object.
+                                $w.preview configure          -background $::ms::current($w,shellbackground) \
+                                                     -highlightbackground $::ms::current($w,shellbackground) \
+                                                          -highlightcolor $::ms::current($w,shellbackground);
+
+                                return 1
+                            }
+                        }
+                    }
+                }
+
+                incr i
+            }
+        }
+    }
+
+    # Note: If we have arrived to this point, it means that no illegal characters have been found
+    #       in the string examined but the string could still be invalid because it may not be contained
+    #       inside the items of the list provided for the widget.
+
+    #######################################
+    ##                                   ##
+    ##     ALPHABETIC INEXACT SEARCH     ##
+    ##                                   ##
+    #######################################
+
+    # Trasform 'value' in lowercase characters for comparison reasons.
+    set value [string tolower $value]
+
+    # Find the closest match to 'value' in the colorname lowercase list.
+    set i     0
+    set limit [string length $value]
+    while { $i < $limit } {
+        # Get the longest common characters in the list.
+        set longest [::tcl::prefix longest $::ms::data($w,colornames,lowercase) $value]
+
+        # Check the 'longest' variable.
+        switch -- $longest {
+            ""  {
+                # Remove the last character from 'value'.
+                set value [string range $value 0 end-1]
+
+                incr i
+            }
+        }
+
+        break
+    }
+
+    # Check the resulting 'longest' value after the loop.
+    switch -- $longest {
+        ""  {
+            # Change the widget dynamic state to 'invalid'.
+            ::ms::palette::Pathname_Cmd $w state invalid
+
+            # Hide the preview object.
+            set preview_color $::ms::current($w,shellbackground)
+            set bordercolor   $::ms::current($w,shellbackground)
+        }
+        default {
+            # Get the list of all elements that starts with the 'longest' value and sort it.
+            set prefix_list [lsort -dictionary [::tcl::prefix all $::ms::data($w,colornames,lowercase) $longest]]
+
+            # Get the index of the first element of 'prefix_list' relative to '::ms::data($w,colornames,lowercase)'.
+            set index [lsearch -exact $::ms::data($w,colornames,lowercase) [lindex $prefix_list 0]]
+            switch -- $index {
+                ""  { set index $::ms::data($w,current_index) }
+            }
+
+            # Compare the longest common characters found in 'values' that contains consecutive characters of
+            # 'value' with 'value' itself and change the widget dynamic invalid state accordingly.
+            if { [string range $longest 0 $limit-1] eq $value } {
+                ::ms::palette::Pathname_Cmd $w state !invalid
+
+                # Set the preview color and its bordercolor (black or white).
+                set preview_color [lindex $::ms::data($w,hexadecimals) $index]
+                switch -- [string length $::ms::data($w,current_hex)] {
+                    10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+                    13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+                    default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+                }
+            } else {
+                ::ms::palette::Pathname_Cmd $w state invalid
+
+                # Hide the preview object.
+                set preview_color $::ms::current($w,shellbackground)
+                set bordercolor   $::ms::current($w,shellbackground)
+            }
+        }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    return 1
+}
+
 #*EOF*
