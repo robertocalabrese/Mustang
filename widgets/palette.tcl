@@ -156,6 +156,31 @@ namespace eval ::ms::palette {
                                                    textvariable \
                                                    values \
                                                    xscrollcommand];
+
+    # Set the 'styleable' palette option list.
+    set ::ms::palette(styleable,options) [list arrowcolor \
+                                               arrowsize \
+                                               background \
+                                               bordercolor \
+                                               charwidth \
+                                               cursor \
+                                               darkcolor \
+                                               fieldbackground \
+                                               focuscolor \
+                                               focuswidth \
+                                               font \
+                                               foreground \
+                                               insertcolor \
+                                               insertwidth \
+                                               justify \
+                                               lightcolor \
+                                               padding \
+                                               placeholderforeground \
+                                               rows \
+                                               selectbackground \
+                                               selectborderwidth \
+                                               selectforeground \
+                                               shellbackground];
 }
 
 # Create aliases for the mustang **palette** command.
