@@ -1770,6 +1770,9 @@ proc ::ms::notebook::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        # Register the tab cursor.
+        set ::ms::data($w,cursor) $cursor
     }
 
     return ""
