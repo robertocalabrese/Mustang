@@ -1498,7 +1498,6 @@ proc ::ms::button::Command { window { args "" } } {
             }
 
             # Check the widget state and set the takefocus and cursor accordingly.
-            # This is not strictly needed for buttons, it's here mostly for coherence with the other widgets.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2161,7 +2160,6 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                             }
 
                             # Check the widget state and set the takefocus and cursor accordingly.
-                            # This is not strictly needed for buttons, it's here mostly for coherence with the other widgets.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -2507,7 +2505,6 @@ proc ::ms::button::Style_Update { stylename caller_info } {
         }
 
         # Check the widget state and set the relative cursor.
-        # This is not strictly needed for buttons, it's here mostly for coherence with the other widgets.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
