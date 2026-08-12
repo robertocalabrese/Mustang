@@ -4285,4 +4285,107 @@ proc ::ms::palette::Validate_KeyPress { w string } {
     return 1
 }
 
+## Validate_String
+#
+# Validate the string inside the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# Return the validated string.
+proc ::ms::palette::Validate_String { w } {
+    ##############################
+    ##                          ##
+    ##     VALUE CORRECTION     ##
+    ##                          ##
+    ##############################
+
+    # Remove any leading and trailing spaces from the current value.
+    set value [string trim [$w.combobox get]]
+
+    # Clear 'value' from illegal characters, if any.
+    set corrected_value ""
+    set i 0
+    while { $i < [string length $value] } {
+        set char [string index $value $i]
+        switch -- $char {
+            " "     -
+            "-"     {}
+            default {
+                # Check if 'char' is an alphanumeric character.
+                switch -- [string is alnum $char] {
+                    0   {
+                        incr i
+                        continue
+                    }
+                }
+            }
+        }
+
+        # Add char to the 'corrected_value' string.
+        append corrected_value $char
+
+        incr i
+    }
+
+    set value $corrected_value
+
+    # Note: At this point, every illegal characters in string have been stripped out.
+
+    ########################
+    ##                    ##
+    ##     VALIDATION     ##
+    ##                    ##
+    ########################
+
+    switch -- $value {
+        ""      { set index $::ms::data($w,current_index) }
+        default {
+            # Trasform 'value' in lowercase characters for comnparison reasons.
+            set value [string tolower $value]
+
+            # Find the closest match to 'value' in the colorname lowercase list.
+            set i     0
+            set limit [string length $value]
+            while { $i < $limit } {
+                # Get the longest common characters in the list.
+                set longest [::tcl::prefix longest $::ms::data($w,colornames,lowercase) $value]
+
+                # Check the 'longest' variable.
+                switch -- $longest {
+                    ""  {
+                        # Remove the last character from 'value'.
+                        set value [string range $value 0 end-1]
+
+                        incr i
+                    }
+                }
+
+                break
+            }
+
+            # Check the resulting 'longest' value after the loop.
+            switch -- $longest {
+                ""      { set index $::ms::data($w,current_index) }
+                default {
+                    # Get the list of all elements that starts with the 'longest' value and sort it.
+                    set prefix_list [lsort -dictionary [::tcl::prefix all $::ms::data($w,colornames,lowercase) $longest]]
+
+                    # Get the index of the first element of 'prefix_list' relative to '::ms::data($w,colornames,lowercase)'.
+                    set index [lsearch -exact $::ms::data($w,colornames,lowercase) [lindex $prefix_list 0]]
+                    switch -- $index {
+                        ""  { set index $::ms::data($w,current_index) }
+                    }
+                }
+            }
+        }
+    }
+
+    # Set the widget dynamic state to '!invalid'.
+    ::ms::palette::Pathname_Cmd $w state !invalid
+
+    return [lindex $::ms::data($w,colornames) $index]
+}
+
 #*EOF*
