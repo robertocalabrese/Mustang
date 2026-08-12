@@ -1447,7 +1447,32 @@ proc ::ms::palette::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::palette::Pathname_Cmd { w cmd args } {}
+proc ::ms::palette::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        bbox    -
+        icursor -
+        index   {}
+        cget {}
+        configure {}
+        current {}
+        delete    -
+        selection {}
+        get      -
+        validate {}
+        identify {}
+        insert {}
+        instate {}
+        set {}
+        state {}
+        style {}
+        xview {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
