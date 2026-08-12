@@ -597,6 +597,24 @@ proc ::ms::notebook::Command { window { args "" } } {
             # Configure the tab fills for the tabposition specified in the relative Tab style
             # associated to '::ms::style($w,widget)', for the current theme.
             [string cat "::ms::" $::ms::theme "_NotebookTab_Fills"] $::ms::style($w,widget)
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TNotebook { bindtags $w [list $w _Notebook TNotebook $::ms::addr($w,toplevel) all] }
+                default   { bindtags $w [list $w $::ms::current($w,class) _Notebook TNotebook $::ms::addr($w,toplevel) all] }
+            }
+
+            # Add the notebook to the related toplevel keyboard pages navigation bindings.
+            ::ms::Enable_Traversal $w
+
+            # Add the notebook to the related toplevel keyboard Tab and mnemonics navigation bindings.
+            ::ms::notebook::Enable_Traversal $w
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
