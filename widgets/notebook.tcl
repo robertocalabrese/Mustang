@@ -1754,6 +1754,11 @@ proc ::ms::notebook::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the notebook widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,notebook,addrs) {}
+
+    return ""
 }
 
 ######################################
