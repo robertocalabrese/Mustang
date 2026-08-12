@@ -3703,7 +3703,7 @@ proc ::ms::palette::Post { w } {
 
     # ArrowDown/ArrowUp
     _bind $w.popdown.f.lb <<NextLine>> [list ::ms::palette::Popdown_ArrowDown  $w]
-    _bind $w.popdown.f.lb <<PrevLine>> [list ::ms::palette::Popdown_Arrow_Up    $w]
+    _bind $w.popdown.f.lb <<PrevLine>> [list ::ms::palette::Popdown_ArrowUp    $w]
 
     # Control-End/Control-Home
     _bind $w.popdown.f.lb <<LineEnd>>   [list ::ms::palette::Popdown_End  $w]
@@ -4659,6 +4659,59 @@ proc ::ms::palette::Popdown_ArrowDown { w } {
         enabled {
             # If index is bigger than the last available index, stop the movement.
             if { $index > $::ms::data($w,last_available_index) } {
+                return -code break
+            }
+        }
+    }
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    # Make sure that 'index' is visible.
+    $w.popdown.f.lb see $index
+
+    # Set the preview color and its bordercolor (black or white).
+    set preview_color [lindex $::ms::data($w,hexadecimals) $index]
+    switch -- [string length $preview_color] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $preview_color \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    return -code break
+}
+
+## Popdown_ArrowUp
+#
+# Move the current selected row towards the top by one row.
+#
+# Where:
+#
+# w   Should be the palette real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_ArrowUp { w } {
+    # Compute the new index.
+    set index [expr { [$w.popdown.f.lb index active]-1 }]
+
+    # Check the scrollstopper ('disabled' or 'enabled').
+    switch -- $::ms::scrollstopper {
+        disabled {
+            # If index is lesser than zero, cycle trough.
+            if { $index < 0 } {
+                set index $::ms::data($w,last_available_index)
+            }
+        }
+        enabled {
+            # If index is lesser than zero, stop the movement.
+            if { $index < 0 } {
                 return -code break
             }
         }
