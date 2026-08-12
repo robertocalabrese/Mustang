@@ -2050,6 +2050,19 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                     set takefocus $::ms::current($w,takefocus)
                                 }
                             }
+
+                            # If the maxlength is not zero check that the charwidth is not less of it.
+                            switch -- $::ms::current($w,maxlength) {
+                                0       {}
+                                default {
+                                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
+                                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                                    }
+
+                                    # Ignore the xscrollcommand provided, if any.
+                                    set ::ms::current($w,xscrollcommand) {}
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
