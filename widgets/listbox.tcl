@@ -212,6 +212,8 @@
 #
 #                             See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
 #
+#                             Note: If the widget state is disabled, the cursor shape upon the listbox will always be the 'arrow'.
+#
 #                             Note: This is a styleable option.
 #
 #                                   If it's provided     --> Styles, mappings and states events cannot change its value.
