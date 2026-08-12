@@ -2192,45 +2192,18 @@ proc ::ms::label::Pathname_Cmd { w cmd args } {
             }
         }
         identify {
-            # Synopsis:
-            #
-            # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
-                    switch -- [lindex $args 0] {
-                        element {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
-                    }
+                    try {
+                        interp invokehidden {} $w identify {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        switch -nocase -- $result {
+                            label { set result "Label.label" }
+                        }
 
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
-
-                    # Check that the coordinates provided are valid.
-                    switch -- [string is integer -strict $x] {
-                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
-                    }
-
-                    switch -- [string is integer -strict $y] {
-                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
-                    }
-
-                    # Get the root coordinates of the north-west corner of the container ('$w').
-                    set rootx [_winfo rootx $w]
-                    set rooty [_winfo rooty $w]
-
-                    # Transform the relative coordinates provided into root coordinates.
-                    set X [expr { $rootx+$x }]
-                    set Y [expr { $rooty+$y }]
-
-                    # Get the widget address containing the point given by the root coordinates calculated.
-                    set widget [_winfo containing -display $w $X $Y]
-
-                    # Return the name of the object, or an empty string if there are no label objects at the coordinates provided.
-                    if { $widget eq $w } {
-                        return "Label"
-                    } else {
-                        return ""
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
