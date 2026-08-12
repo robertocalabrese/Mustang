@@ -2974,7 +2974,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
 
-                            # Set a variable that indicates if new values or a new datatype has been provided or not.
+                            # Set a variable that indicates if new values or a new datatype have been provided or not.
                             set new_datatype false
                             set new_values   false
 
@@ -3467,7 +3467,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Check if a new list of values or a new datatype has been provided.
-                            if { ($newvalue eq "true") || ($new_datatype eq "true") } {
+                            if { ($new_value eq "true") || ($new_datatype eq "true") } {
                                 # Check the list of values against the datatype.
                                 switch -- $::ms::current($w,datatype) {
                                     alnum {
