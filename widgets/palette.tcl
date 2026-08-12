@@ -1493,7 +1493,61 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        current {}
+        current {
+            # Synopsis:
+            #
+            # *window* **current** ?newIndex?
+            switch -- [llength $args] {
+                0   {
+                    # Find the value in '::ms::data($w,colornames)' that corrisponds to the current index
+                    # displayed in the palette entry.
+                    set value [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
+
+                    # Return the index equivalent to '::ms::data($w,current_index)' in '::ms::current($w,values)'.
+                    return [lsearch -exact $::ms::current($w,values) $value]
+                }
+                1   {
+                    # Check that the argument provided is an integer.
+                    switch -- [string is integer $args] {
+                        0   { ::ms::Error "The argument provided is not an index, '$args'" $caller_info }
+                    }
+
+                    # Find the index in '::ms::data($w,colornames)' that corrisponds to the index provided
+                    # for '::ms::current($w,values)'.
+                    set value [lindex $::ms::current($w,values) $args]
+                    switch -- $value {
+                        ""      {}
+                        default {
+                            # Get the new index.
+                            set index [lsearch -exact -nocase $::ms::data($w,colornames) $value]
+
+                            # Update the current index, value and preview color.
+                            set ::ms::data($w,current_index) $index
+                            set ::ms::data($w,current_value) $value
+                            set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $index]
+
+                            # Apply the changes to the combobox object.
+                            $w.combobox current $index
+
+                            # Set the bordercolor of the preview object (black or white).
+                            switch -- [string length $::ms::data($w,current_hex)] {
+                                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+                                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+                                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                            }
+
+                            # Apply the changes to the preview object.
+                            $w.preview configure          -background $::ms::data($w,current_hex) \
+                                                 -highlightbackground $bordercolor \
+                                                      -highlightcolor $bordercolor;
+                        }
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         delete    -
         selection {}
         get      -
