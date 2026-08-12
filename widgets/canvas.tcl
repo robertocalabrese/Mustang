@@ -4395,7 +4395,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     switch -- $::ms::current($w,scrollable) {
                         false {
                             if { $widget eq $w } {
-                                return "Canvas"
+                                return "Canvas.canvas"
                             } else {
                                 return ""
                             }
@@ -4404,7 +4404,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                             if { $widget eq $w } {
                                 return "Canvas.hull"
                             } elseif { $widget eq "$w.canvas" } {
-                                return "Canvas"
+                                return "Canvas.canvas"
                             } elseif { $widget eq "$w.x" } {
                                 return "Canvas.hscrollbar"
                             } elseif { $widget eq "$w.y" } {
