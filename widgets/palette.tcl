@@ -3205,4 +3205,28 @@ proc ::ms::palette::Destroy { w } {
     return ""
 }
 
+## FocusIn
+#
+# Manage the **FocusIn** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::palette::FocusIn { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::palette::Pathname_Cmd $w state focus
+
+    # Check the widget stateis in its normal state, s
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Select all the widget textarea characters.
+            $w.combobox selection range 0 end
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
