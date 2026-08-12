@@ -2702,6 +2702,11 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the palette widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,palette,addrs) {}
+
+    return ""
 }
 
 ######################################
