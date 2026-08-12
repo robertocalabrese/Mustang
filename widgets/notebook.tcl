@@ -2346,4 +2346,74 @@ proc ::ms::notebook::Set_Cursor { w x y } {
     return ""
 }
 
+################################
+##                            ##
+##     KEYBOARD TRAVERSAL     ##
+##                            ##
+################################
+
+# Note: The following procedures were inspired by the ttk::notebook mechanism for traverse bindings.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Activate_Tab
+#
+# Select the specified tab and set focus.
+#
+# Desired behavior:
+#   + take focus when reselecting the currently-selected tab;
+#   + keep focus if the notebook already has it;
+#   + otherwise set focus to the first traversable widget in the newly-selected tab;
+#   + do not leave the focus in a deselected tab.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# tab   Should be the tab address to activate.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Activate_Tab { w tab } {
+    # Get the current selected tab.
+    set old_tab [interp invokehidden {} $w select]
+
+    # Select the new tab
+    interp invokehidden {} $w select $tab
+
+    # Get the new selected tab.
+    # NOTE: might not be $tab, if $tab is disabled.
+    set new_tab [interp invokehidden {} $w select]
+
+    # Check if 'new_tab' have been previously selected.
+    switch -- [info exists ::ms::temp($w,$new_tab,focussed_widget)] {
+        1   {
+            # Re-establish the focus on the last focussed widget for 'new_tab'.
+            ::ttk::traverseTo $::ms::temp($w,$new_tab,focussed_widget)
+
+            return ""
+        }
+    }
+
+    if { [_focus] eq $w } {
+        return ""
+    }
+
+    if { $new_tab eq $old_tab } {
+        _focus $w
+
+        return ""
+    }
+
+    # Needed so focus logic sees correct mapped states.
+    update idletasks
+
+    set focus_widget [::ttk::focusFirst $new_tab]
+    switch -- $focus_widget {
+        ""      { _focus $w }
+        default { ttk::traverseTo $focus_widget }
+    }
+
+    return ""
+}
+
 #*EOF*
