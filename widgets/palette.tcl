@@ -5306,4 +5306,69 @@ proc ::ms::palette::Popdown_Tab { popdown dir } {
     return ""
 }
 
+## Popdown_Touchpad
+#
+# Manage the **TouchpadScroll** and **Control-TouchpadScroll** events on the popdown window.
+#
+# Where:
+#
+# w         Should be the scrollable widget real address involved.
+#
+# x, y      Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#           These values should be provided by the **TouchpadScroll**/**Control-TouchpadScroll**
+#           event.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#           *Amount* is normally delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
+#           event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#           If the value provided as *amount* is not an integer or a float,
+#           defaults to **+120.0**.
+#
+#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
+#
+#           If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Touchpad { w x y counter amount { what units } } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    # **TouchpadScroll** events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This allow the binding script to respond to every 5th **TouchpadScroll** event
+    # by testing is the 'counter' is divisible by 5.
+    if { [expr { $counter%5 }] != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+    set delta_x [expr { $delta_x*30 }]
+    set delta_y [expr { $delta_y*30 }]
+
+    # If there is a movement along the X axis, launch '::ms::palette::Popdown_Shift_MouseWheel'.
+    if { $delta_x != 0 } {
+        ::ms::palette::Popdown_Shift_MouseWheel $w $x $y $delta_x $what
+    }
+
+    # If there is a movement along the Y axis, launch '::ms::palette::Popdown_Mousewheel'.
+    if { $delta_y != 0 } {
+        ::ms::palette::Popdown_Mousewheel $w $x $y $delta_y $what
+    }
+
+    return -code break
+}
+
 #*EOF*
