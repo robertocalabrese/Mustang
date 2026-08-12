@@ -2416,4 +2416,27 @@ proc ::ms::notebook::Activate_Tab { w tab } {
     return ""
 }
 
+## Clean_Up
+#
+# <Destroy> binding for notebooks.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Clean_Up { w } {
+    # Get the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
+    switch -- [info exists ::ms::notebook(traversal,$toplevel)] {
+        1   {
+            set index [lsearch -exact $::ms::notebook(traversal,$toplevel) $w]
+            set ::ms::notebook(traversal,$toplevel) [lreplace $::ms::notebook(traversal,$toplevel) $index $index]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
