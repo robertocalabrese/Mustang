@@ -403,7 +403,7 @@ namespace eval ttk::theme::Halo {
                                             -borderwidth 1 \
                                             -bordercolor Bordercolor \
                                               -charwidth 8 \
-                                                 -cursor arrow \
+                                                 -cursor xterm \
                                               -darkcolor Background \
                                         -fieldbackground Fieldbackground \
                                              -focuscolor LightcolorAlternate \
