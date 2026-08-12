@@ -1766,7 +1766,39 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+            switch -- [llength $args] {
+                0   { return [$w.combobox state] }
+                1   {
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    #####################################
+                    ##                                 ##
+                    ##     APPLY THE NEW STATESPEC     ##
+                    ##                                 ##
+                    #####################################
+
+                    return [$w.combobox state $statespec]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         xview {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
