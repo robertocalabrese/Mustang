@@ -949,7 +949,85 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 return ""
             }
         }
-        insert {}
+        insert {
+            # Synopsis:
+            #
+            # *window* **insert** *pos* *subwindow* ?*option value*? ... ?*option value*?
+            set pos       [lindex  $args 0]
+            set subwindow [lindex  $args 1]
+            set args      [lremove $args 0 1]
+
+            # Check the tab position provided.
+            switch -- [string is integer -strict $pos] {
+                0   {
+                    # Check if the 'pos' provided is the word 'end'.
+                    switch -nocase -- $pos {
+                        end     { set pos "end" }
+                        default {
+                            # Check if the 'pos' provided is a short address.
+                            set result [::ms::Check_Pathname $pos invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid tab option, '$pos'." $caller_info }
+                                default {
+                                    # Check if the pos real address is an already managed subwindow.
+                                    if { [lindex $result 0] ni [interp invokehidden {} $w tabs] } {
+                                        ::ms::Error "Invalid tab option, '$pos'." $caller_info
+                                    } else {
+                                        set pos [lindex $result 0]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                1   {
+                    if { $pos < 0 } {
+                        ::ms::Error "Invalid tab option, '$pos'." $caller_info
+                    }
+                }
+            }
+
+            # Get the 'subwindow' real address.
+            set result [::ms::Check_Pathname $subwindow invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
+                default { set subwindow [lindex $result 0] }
+            }
+
+            # Check that the 'subwindow' provided is a direct child of the notebook widget.
+            if { [_winfo parent $subwindow] ne $w } {
+                return ""
+            }
+
+            # Check that the command 'args' forms a valid 'option/value' list.
+            switch -- [expr { [llength $args]%2 }] {
+                0       {}
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Register and remove the '-prehook' and '-posthook' tab options, if any.
+            foreach word [list -posthook \
+                                -prehook] {
+                set option [string range $word 1 end]
+                set index  [lsearch -exact $args $word]
+                switch -- $index {
+                    -1      { set ::ms::data($subwindow,$option) "" }
+                    default {
+                        set ::ms::data($subwindow,$option) [lindex $args $index+1]
+                        set args [lremove $args $index $index+1]
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w insert $pos $subwindow {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
         instate {}
         select {}
         state {}
