@@ -1549,7 +1549,27 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
             }
         }
         delete    -
-        selection {}
+        selection {
+            # Synopsis:
+            #
+            # *window* **delete** *first* ?*last*?
+            # *window* **selection** *option* *arg*
+            #    *window* **selection** **clear**
+            #    *window* **selection** **present**
+            #    *window* **selection** **range** *start* *end*
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    try {
+                        $w.combobox $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+            }
+        }
         get      -
         validate {}
         identify {}
