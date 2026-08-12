@@ -2439,4 +2439,46 @@ proc ::ms::notebook::Clean_Up { w } {
     return ""
 }
 
+## Cycle_Tab
+#
+# Select the next/previous tab in the list.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# dir      Should be the amount of the movement.
+#          Its sign determines the direction to take (**+120.0** or **-120.0).
+#
+# factor   Should be a double.
+#          It's used as dividend of the amount provided.
+#          If not provided, **1.0** will be used.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Cycle_Tab { w dir { factor 1.0 } } {
+    set current [interp invokehidden {} $w index current]
+    if { $current >= 0 } {
+        set tab_count [interp invokehidden {} $w index end]
+        set d         [expr { $dir/$factor }]
+        set d         [expr { int($d > 0 ? ceil($d) : floor($d)) }]
+        set select    [expr { ($current+$d) % $tab_count }]
+        set step      [expr { $d > 0 ? 1 : -1 }]
+
+        while { [interp invokehidden {} $w tab $select -state] ne "normal" && ($select != $current) } {
+            set select [expr { ($select + $step) % $tab_count }]
+        }
+
+        if {$select != $current} {
+            # Register the focussed widget for the current tab.
+            set current_tab [interp invokehidden {} $w select]
+            set ::ms::temp($w,$current_tab,focussed_widget) [_focus]
+
+            # Activate the new tab.
+            ::ms::notebook::Activate_Tab $w $select
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
