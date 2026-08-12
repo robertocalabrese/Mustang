@@ -2638,4 +2638,22 @@ proc ::ms::notebook::Mnemonic_Tab { w key } {
     return ""
 }
 
+## Traverse_Clean_Up
+#
+# <Destroy> binding for traversal-enabled toplevels.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::notebook::Traverse_Clean_Up { w } {
+    # Check if the real address provided is a toplevel.
+    if { $w eq [_winfo toplevel $w] } {
+        unset -nocomplain -- ::ms::notebook(traversal,$w)
+    }
+
+    return ""
+}
+
 #*EOF*
