@@ -412,6 +412,131 @@ proc ::ms::notebook::Command { window { args "" } } {
                     }
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: The notebook client 'background' and 'cursor' are not allowed to change if the statespec changes.
+
+            # Note: The notebook tabs 'compound', 'cursor', 'focuscolor', 'focussolid' and 'font' are not allowed
+            #       to change if the statespec changes.
+
+            ######################
+            ##                  ##
+            ##     NOTEBOOK     ##
+            ##                  ##
+            ######################
+
+            set background  $::ms::styleopt($::ms::theme,TNotebook.Tab,background)
+            set bordercolor $::ms::styleopt($::ms::theme,TNotebook.Tab,bordercolor)
+            set compound    $::ms::styleopt($::ms::theme,TNotebook.Tab,compound)
+            set cursor      $::ms::styleopt($::ms::theme,TNotebook.Tab,cursor)
+            set focuscolor  $::ms::styleopt($::ms::theme,TNotebook.Tab,focuscolor)
+            set focussolid  $::ms::styleopt($::ms::theme,TNotebook.Tab,focussolid)
+            set font        $::ms::styleopt($::ms::theme,TNotebook.Tab,font)
+            set foreground  $::ms::styleopt($::ms::theme,TNotebook.Tab,foreground)
+
+            # Check if '::ms::current($w,style).Tab' exists among the styles known by the current theme.
+            set notebook_tab_style [string cat $::ms::current($w,style) ".Tab"]
+            if { ($notebook_tab_style in $::ms::style($::ms::theme)) && ($notebook_tab_style ne "TNotebook.Tab") } {
+                # Check if a layout exists for '::ms::current($w,style).Tab'.
+                # If not, create one by mirroring the 'TNotebook.Tab' layout for the current theme.
+                if { $notebook_tab_style ni $::ms::layouts($::ms::theme) } {
+                    _ttk_style layout $notebook_tab_style [_ttk_style layout TNotebook.Tab]
+                }
+
+                # Get the notebook tabs style extra options, if any.
+                foreach option [list  background \
+                                     bordercolor \
+                                        compound \
+                                          cursor \
+                                      focuscolor \
+                                      focussolid \
+                                            font \
+                                      foreground] {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$notebook_tab_style,$option)] {
+                        1   { set $option $::ms::styleopt($::ms::theme,$notebook_tab_style,$option) }
+                    }
+                }
+            }
+
+            # Register the tab cursor.
+            set ::ms::data($w,cursor) $cursor
+
+            # Set the notebook style name.
+            set ::ms::style($w,widget) [string cat "_bg="  $::ms::current($w,background) \
+                                                   "_bgt=" $background \
+                                                   "_bc="  $::ms::current($w,bordercolor) \
+                                                   "_bct=" $bordercolor \
+                                                   "_cm="  $compound \
+                                                   "_dc="  $::ms::current($w,darkcolor) \
+                                                   "_fc="  $focuscolor \
+                                                   "_fs="  $focussolid \
+                                                   "_fn="  $font \
+                                                   "_fg="  $foreground \
+                                                   "_lc="  $::ms::current($w,lightcolor) \
+                                                   "_tp="  $::ms::current($w,tabposition) \
+                                                   "." $::ms::current($w,style)];
+
+            # If needed, create the notebook style name.
+            if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,widget)  -background $::ms::current($w,background) \
+                                                             -bordercolor $::ms::current($w,bordercolor) \
+                                                               -darkcolor $::ms::current($w,darkcolor) \
+                                                              -lightcolor $::ms::current($w,lightcolor) \
+                                                             -tabposition $::ms::current($w,tabposition);
+
+                # Add the widget style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+            }
+
+            # Initialize the notebook mapping.
+            set mapping [list ]
+
+            # bordercolor
+            # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
+                0   { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+                1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
+            }
+
+            # darkcolor
+            # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
+                0   { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+                1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
+            }
+
+            # lightcolor
+            # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
+            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
+                0   { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+                1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
+            }
+
+            # If needed, create the notebook mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+                # Add the notebook mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the notebook object.
+            _ttk_notebook $w     -class $::ms::current($w,class) \
+                                -cursor $::ms::current($w,cursor) \
+                                -height $::ms::current($w,height) \
+                               -padding 0 \
+                                 -style $::ms::style($w,widget) \
+                             -takefocus $::ms::current($w,takefocus) \
+                                 -width $::ms::current($w,width);
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
