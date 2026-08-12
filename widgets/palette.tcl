@@ -1571,7 +1571,13 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
             }
         }
         get      -
-        validate {}
+        validate {
+            # Synopsis:
+            #
+            # *window* **get**
+            # *window* **validate**
+            return [$w.combobox $cmd]
+        }
         identify {}
         insert {}
         instate {}
