@@ -4510,4 +4510,56 @@ proc ::ms::palette::MouseWheel { w amount } {
     return ""
 }
 
+## Shift_MouseWheel
+#
+# If the widget is in its **normal** state and has the focus, move the insert cursor by one character
+# to the left or to the right (depending on the mousewheel direction), otherwise try to find the
+# innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
+# by one unit left or right (again, depending on the mousewheel direction). If none of the widget's
+# parent meets the required condition, don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel** event.
+#          The delta value represents the rotation units the mousewheel has been moved.
+#          The sign of the value represents the direction the mousewheel was scrolled.
+#          *Amount* is normally delivered by the **MouseWheel** event with a value of
+#          **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# It doesn't return anything.
+proc ::ms::palette::Shift_MouseWheel { w amount } {
+    switch -- $::ms::current($w,state) {
+        normal {
+            if { [_focus -displayof $w] eq "$w.combobox" } {
+                # Get the current cursor position
+                set index [$w.combobox index insert]
+
+                # Move the cursor by one character to the left or to the right (depending
+                # on the mousewheel direction).
+                if { $amount > 0 } {
+                    $w.combobox icursor $index+1
+                } else {
+                    $w.combobox icursor $index-1
+                }
+
+                # Make the index character visible.
+                ::ttk::entry::See $w.combobox $index
+            }
+        }
+        default {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
