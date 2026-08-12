@@ -181,6 +181,35 @@ namespace eval ::ms::palette {
                                                selectborderwidth \
                                                selectforeground \
                                                shellbackground];
+
+    # Set the default 'non-styleable' palette options values.
+    set ::ms::default(palette,class)           TPalette
+    set ::ms::default(palette,cmenu)           {}
+    set ::ms::default(palette,command)         {}
+    set ::ms::default(palette,exportselection) 1
+    set ::ms::default(palette,maxlength)       0
+    set ::ms::default(palette,placeholder)     {}
+    set ::ms::default(palette,posthook)        {}
+    set ::ms::default(palette,prehook)         {}
+    set ::ms::default(palette,state)           normal
+    set ::ms::default(palette,style)           TPalette
+    set ::ms::default(palette,takefocus)       1
+    set ::ms::default(palette,textvariable)    {}
+    set ::ms::default(palette,values)          [list Azure       #0080ff \
+                                                     Blue        #0000ff \
+                                                     Brown       #964b00 \
+                                                     Cyan        #00ffff \
+                                                     Green       #00ff00 \
+                                                     Lime        #c0ff00 \
+                                                     Magenta     #ff00ff \
+                                                     "Navy Blue" #000080 \
+                                                     Orange      #ffa500 \
+                                                     Pink        #ff0080 \
+                                                     Purple      #800080 \
+                                                     Red         #ff0000 \
+                                                     Violet      #8000ff \
+                                                     Yellow      #ffff00];
+    set ::ms::default(palette,xscrollcommand)  {}
 }
 
 # Create aliases for the mustang **palette** command.
