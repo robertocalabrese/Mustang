@@ -596,6 +596,17 @@ proc ::ms::radiobutton::Command { window { args "" } } {
                     set text_variable $::ms::current($w,textvariable)
                 }
             }
+
+            # Check if a variable was provided.
+            switch -- [llength $::ms::current($w,variable)] {
+                0   {
+                    # Depending on the address type provided, set the appropriate address.
+                    switch -- $type {
+                        real  { set ::ms::current($w,variable) $w }
+                        short { set ::ms::current($w,variable) $short_addr }
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
