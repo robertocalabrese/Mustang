@@ -930,7 +930,46 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        pane {}
+        pane {
+            # Synopsis:
+            #
+            # *window* **pane** *pane* *option* ?*value*?
+            set pane [lindex  $args 0]
+            set args [lremove $args 0]
+
+            # Check the 'pane' provided.
+            switch -- [string is integer -strict $pane] {
+                0   {
+                    # Get the 'pane' real address.
+                    set result [::ms::Check_Pathname $pane invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$pane'." $caller_info }
+                        default {
+                            # Check if the pane real address is an already managed subwindow.
+                            if { [lindex $result 0] ni [interp invokehidden {} $w panes] } {
+                                ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                            } else {
+                                set pane [lindex $result 0]
+                            }
+                        }
+                    }
+                }
+                1   {
+                    if { $pane < 0 } {
+                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w pane $pane {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         panes {}
         sashpos {}
         state {}
