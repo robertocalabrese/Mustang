@@ -98,6 +98,24 @@
 #          - Retrieved with the **configure** or **cget** command with no exceptions.
 #          - Changed with the **configure** command, unless stated otherwise.
 #
+# **-background**            It's a list that specifies the color to use as background structure.
+#                            This color will be used in the interspaces between the mustang objects that compose the widget and
+#                            should reflects the widget's parent background.
+#                            See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                            Note: This is a styleable option.
+#
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
+#
+#                                  If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                           If there isn't one, the **-background** of the **TCheckbutton** style
+#                                                           will be used instead.
+#                                                           The **-background** will not abide by its mapping values, if any.
+#                                                           It is not supposed to change when the widget state changes.
+#
+#                            See also **-foreground**.
+#
 # **-charwidth**             If greater than zero, specifies how much space, in character widths, to allocate for the widget's label.
 #                            If less than zero, specifies a minimum width.
 #                            If zero or unspecified, the natural width of the text checkbutton is used.
@@ -200,7 +218,7 @@
 #                                                           The **-foreground** will always abide by its mapping values, if any.
 #                                                           Styles, mappings and states events are allowed to change its value.
 #
-#                            See also **-shellbackground** and **-font**.
+#                            See also **-background** and **-font**.
 #
 # **-highlightcolor**        It's a list that specifies the color to use as highlightcolor.
 #                            See the **COLOR OPTION** section to know how this list should be composed.
@@ -270,235 +288,214 @@
 #                                                           The **-indicatorforeground** will always abide by its mapping values, if any.
 #                                                           Styles, mappings and states events are allowed to change its value.
 #
-#                           See also **-indicatorbackground** and **-indicatorrelief**.
+#                            See also **-indicatorbackground** and **-indicatorrelief**.
 #
-# **-indicatorrelief**      Specifies the three-dimensional effect desired for the indicator.
-#                           The value indicates how the widget's interior should appear relative to its exterior.
-#                           For example, *raised* means the widget's interior should appear to protrude from the screen,
-#                           relative to the exterior of the widget.
+# **-indicatorrelief**       Specifies the three-dimensional effect desired for the indicator.
+#                            The value indicates how the widget's interior should appear relative to its exterior.
+#                            For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                            relative to the exterior of the widget.
 #
-#                           The widget will accept as relief any of the following values:
-#                              **flat**,
-#                              **groove**,
-#                              **raised**,
-#                              **ridge**,
-#                              **solid**,
-#                              **sunken**.
+#                            The widget will accept as relief any of the following values:
+#                               **flat**,
+#                               **groove**,
+#                               **raised**,
+#                               **ridge**,
+#                               **solid**,
+#                               **sunken**.
 #
-#                           Note: This is a styleable option.
+#                            Note: This is a styleable option.
 #
-#                                 If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                          Only the developer can.
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
 #
-#                                 If it's not provided --> The widget will follow the **-indicatorrelief** specified in its style.
-#                                                          If there isn't one, the **-indicatorrelief** of the **TCheckbutton** style
-#                                                          will be used instead.
-#                                                          The '*-indicatorrelief*' will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                  If it's not provided --> The widget will follow the **-indicatorrelief** specified in its style.
+#                                                           If there isn't one, the **-indicatorrelief** of the **TCheckbutton** style
+#                                                           will be used instead.
+#                                                           The '*-indicatorrelief*' will not abide by its mapping values, if any.
+#                                                           It is not supposed to change when the widget state changes.
 #
-#                           See also **-indicatorbackground** and **-indicatorforeground**.
+#                            See also **-indicatorbackground** and **-indicatorforeground**.
 #
-# **-justify**              If there are multiple lines of text, specifies how the lines are laid out relative to one another.
-#                           Allowed values:
-#                               **left**,
-#                               **center**,
-#                               **right**.
+# **-justify**               If there are multiple lines of text, specifies how the lines are laid out relative to one another.
+#                            Allowed values:
+#                                **left**,
+#                                **center**,
+#                                **right**.
 #
-#                           Note: This is a styleable option.
+#                            Note: This is a styleable option.
 #
-#                                 If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                          Only the developer can.
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
 #
-#                                 If it's not provided --> The widget will follow the **-justify** specified in its style.
-#                                                          If there isn't one, the **-justify** of the **TCheckbutton** style
-#                                                          will be used instead.
-#                                                          The **-justify** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                  If it's not provided --> The widget will follow the **-justify** specified in its style.
+#                                                           If there isn't one, the **-justify** of the **TCheckbutton** style
+#                                                           will be used instead.
+#                                                           The **-justify** will not abide by its mapping values, if any.
+#                                                           It is not supposed to change when the widget state changes.
 #
-#                           See also **-anchor**.
+#                            See also **-anchor**.
 #
-# **-offvalue**             The value to store in the associated **-variable** when the widget is deselected.
-#                           If not provided, defaults to **0**.
+# **-offvalue**              The value to store in the associated **-variable** when the widget is deselected.
+#                            If not provided, defaults to **0**.
 #
-#                           See also **-onvalue** and **-variable**.
+#                            See also **-onvalue** and **-variable**.
 #
-# **-onvalue**              The value to store in the associated **-variable** when the widget is selected.
-#                           If not provided, defaults to **1**.
+# **-onvalue**               The value to store in the associated **-variable** when the widget is selected.
+#                            If not provided, defaults to **1**.
 #
-#                           See also **-offvalue** and **-variable**.
+#                            See also **-offvalue** and **-variable**.
 #
-# **-padding**              Specifies the internal padding for the widget.
-#                           The padding is a list of up to four length specifications.
-#                           The values must be in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                           (pixels, points, inches, millimeters or centimeters).
+# **-padding**               Specifies the internal padding for the widget.
+#                            The padding is a list of up to four length specifications.
+#                            The values must be in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                            (pixels, points, inches, millimeters or centimeters).
 #
-#                           A list of four values specifies the left, top, right and bottom padding.
-#                           A list of three values specifies the left, vertical, and right padding.
-#                           A list of two values specifies the horizontal and the vertical padding
-#                           A single value specifies the same padding all the way around the widget.
+#                            A list of four values specifies the left, top, right and bottom padding.
+#                            A list of three values specifies the left, vertical, and right padding.
+#                            A list of two values specifies the horizontal and the vertical padding
+#                            A single value specifies the same padding all the way around the widget.
 #
-#                           When computing how large a window it needs, the widget will add this amount to the width it would
-#                           normally need (as determined by the width of the things displayed in the widget).
-#                           If the geometry manager can satisfy this request, the widget will end up with extra internal space
-#                           to the left and/or right of what it displays inside.
+#                            When computing how large a window it needs, the widget will add this amount to the width it would
+#                            normally need (as determined by the width of the things displayed in the widget).
+#                            If the geometry manager can satisfy this request, the widget will end up with extra internal space
+#                            to the left and/or right of what it displays inside.
 #
-#                           Note: This is a styleable option.
+#                            Note: This is a styleable option.
 #
-#                                 If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                          Only the developer can.
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
 #
-#                                 If it's not provided --> The widget will follow the **-padding** specified in its style.
-#                                                          If there isn't one, the **-padding** of the **TCheckbutton** style
-#                                                          will be used instead.
-#                                                          The **-padding** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                  If it's not provided --> The widget will follow the **-padding** specified in its style.
+#                                                           If there isn't one, the **-padding** of the **TCheckbutton** style
+#                                                           will be used instead.
+#                                                           The **-padding** will not abide by its mapping values, if any.
+#                                                           It is not supposed to change when the widget state changes.
 #
-# **-shellbackground**      It's a list that specifies the color to use as background structure.
-#                           This color will be used in the interspaces between the mustang objects that compose the widget and
-#                           should reflects the widget's parent background.
-#                           See the **COLOR OPTION** section to know how this list should be composed.
+# **-spacer**                Specifies the distance between the indicator and its label.
+#                            The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                            (pixels, points, inches, millimeters or centimeters).
 #
-#                           Note: This is a styleable option.
+#                            Note: This is a styleable option.
 #
-#                                 If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                          Only the developer can.
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
 #
-#                                 If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
-#                                                          If there isn't one, the **-shellbackground** of the **TCheckbutton** style
-#                                                          will be used instead.
-#                                                          The **-shellbackground** will always abide by its mapping values, if any.
-#                                                          Styles, mappings and states events are allowed to change its value.
+#                                  If it's not provided --> The widget will follow the **-spacer** specified in its style.
+#                                                           If there isn't one, the **-spacer** of the **TCheckbutton** style
+#                                                           will be used instead.
+#                                                           The **-spacer** will always abide by its mapping values, if any.
+#                                                           Styles, mappings and states events are allowed to change its value.
 #
-#                                                          Note: The **-shellbackground** should change rarely, for example upon
-#                                                                an **Activate**/**Deactivate** event.
+# **-state**                 Specifies the state for the widget.
+#                            May be set to **normal** or **disabled** to control the disabled state bit.
+#                            This is a write-only option: setting it changes the widget state,
+#                            but the state widget command does not affect the *-state* option.
 #
-#                           See also **-background**.
+#                            If not provided, defaults to **normal**.
 #
-# **-spacer**               Specifies the distance between the indicator and its label.
-#                           The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                           (pixels, points, inches, millimeters or centimeters).
+# **-style**                 Specifies a custom widget style.
+#                            If not provided, defaults to **TCheckbutton**.
 #
-#                           Note: This is a styleable option.
+#                            The *style* provided should already exists at the time the widget is created.
 #
-#                                 If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                          Only the developer can.
+#                            See the [style](/wiki/commands/style.md) wiki page to know more about styles.
 #
-#                                 If it's not provided --> The widget will follow the **-spacer** specified in its style.
-#                                                          If there isn't one, the **-spacer** of the **TCheckbutton** style
-#                                                          will be used instead.
-#                                                          The **-spacer** will always abide by its mapping values, if any.
-#                                                          Styles, mappings and states events are allowed to change its value.
+# **-takefocus**             Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                            and **Shift-Tab**).
 #
-# **-state**                Specifies the state for the widget.
-#                           May be set to **normal** or **disabled** to control the disabled state bit.
-#                           This is a write-only option: setting it changes the widget state,
-#                           but the state widget command does not affect the *-state* option.
+#                            Before setting the focus to a widget, the traversal scripts consult the value of the
+#                            *-takefocus* option.
+#                               **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                               **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                         and all of its ancestors are mapped.
 #
-#                           If not provided, defaults to **normal**.
+#                            Differently than Tk, mustang does not allow the empty string as a valid value.
 #
-# **-style**                Specifies a custom widget style.
-#                           If not provided, defaults to **TCheckbutton**.
+#                            Note: It is not possible to set a takefocus of **1** to widgets in the disabled state.
 #
-#                           The *style* provided should already exists at the time the widget is created.
+#                            If not provided, defaults to **0**.
 #
-#                           See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+# **-text**                  Specifies a list containing the *text string* that will be displayed inside the widget's label.
+#                            The list should contain a *text string* as the first element, followed by any substitution strings
+#                            required to form the actual *text string* as separated elements.
 #
-# **-takefocus**            Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
-#                           and **Shift-Tab**).
+#                            If a *-textvariable* is not provided as well, the *text string* will be translated automatically
+#                            by mustang each time a widget is created and each time the current language changes.
 #
-#                           Before setting the focus to a widget, the traversal scripts consult the value of the
-#                           *-takefocus* option.
-#                              **0** --> It means that the widget should be skipped entirely during keyboard traversal.
-#                              **1** --> It means that the widget should receive the input focus as long as it is viewable
-#                                        and all of its ancestors are mapped.
+#                            In order to do so, mustang requires two things:
+#                                1 - The text string should be provided in English (*en*).
 #
-#                           Differently than Tk, mustang does not allow the empty string as a valid value.
+#                                    If presents, each of the substitution strings will substitute a single *%s*,
+#                                    and their numbers depend on how many *%s* are contained in the text string itself.
 #
-#                           Note: It is not possible to set a takefocus of **1** to widgets in the disabled state.
+#                                    Note1:  If there is no *%s* in the text string, then there's no need to provide any
+#                                            substitution strings.
 #
-#                           If not provided, defaults to **0**.
+#                                    Note2:  Each substitution string will be used verbatim (no translation will be performed on them).
 #
-# **-text**                 Specifies a list containing the *text string* that will be displayed inside the widget's label.
-#                           The list should contain a *text string* as the first element, followed by any substitution strings
-#                           required to form the actual *text string* as separated elements.
+#                                    Example1: No substitution string (single word)
 #
-#                           If a *-textvariable* is not provided as well, the *text string* will be translated automatically
-#                           by mustang each time a widget is created and each time the current language changes.
+#                                            -text [list "Settings:"]    or just     -text "Settings:"
 #
-#                           In order to do so, mustang requires two things:
-#                               1 - The text string should be provided in English (*en*).
+#                                    Example2: No substitution string (multiple words)
 #
-#                                   If presents, each of the substitution strings will substitute a single *%s*,
-#                                   and their numbers depend on how many *%s* are contained in the text string itself.
+#                                            -text [list "My Settings:"]
 #
-#                                   Note1:  If there is no *%s* in the text string, then there's no need to provide any
-#                                           substitution strings.
+#                                    Example3: One substitution string
 #
-#                                   Note2:  Each substitution string will be used verbatim (no translation will be performed on them).
+#                                            -text [list "The %s command is invalid." grid]
 #
-#                                   Example1: No substitution string (single word)
+#                                    Example4: Multiple substitution strings
 #
-#                                           -text [list "Settings:"]    or just     -text "Settings:"
+#                                            -text [list "The %s command address is invalid: '%s'" grid .myapp]
 #
-#                                   Example2: No substitution string (multiple words)
+#                                    ...
 #
-#                                           -text [list "My Settings:"]
+#                                2 - A message catalog should be provided with all the translations needed by the application and
+#                                    each language file present in the catalog, should have its translation defined in the
+#                                    **::ms** or in the **global** namespace.
 #
-#                                   Example3: One substitution string
+#                            If these requirements are not both satisfied, mustang will not do any translation.
 #
-#                                           -text [list "The %s command is invalid." grid]
+#                            If not provided, defaults to the empty string.
 #
-#                                   Example4: Multiple substitution strings
+#                            See also **-image** and **-textvariable**.
 #
-#                                           -text [list "The %s command address is invalid: '%s'" grid .myapp]
+# **-textvariable**          Specifies the name of a global variable whose value will be used in place of the *-text* resource.
+#                            The variable should already exist at the time the widget is created or this option will be ignored.
 #
-#                                   ...
+#                            If provided, mustang will perform no automatic translations (in any scenario).
+#                            If not provided, defaults to the empty string.
 #
-#                               2 - A message catalog should be provided with all the translations needed by the application and
-#                                   each language file present in the catalog, should have its translation defined in the
-#                                   **::ms** or in the **global** namespace.
+#                            See also **-image** and **-text**.
 #
-#                           If these requirements are not both satisfied, mustang will not do any translation.
+# **-underline**             If set, specifies the index of a character to underline in the widget's label.
+#                            The underlined character is used for mnemonic activation.
 #
-#                           If not provided, defaults to the empty string.
+#                            If not provided, defaults to **-1** (meaning no underline or mnemonic activation will be performed).
 #
-#                           See also **-image** and **-textvariable**.
+# **-variable**              The name of a Tcl variable (with absolute path) which is linked to the **-offvalue** and the **-onvalue**.
 #
-# **-textvariable**         Specifies the name of a global variable whose value will be used in place of the *-text* resource.
-#                           The variable should already exist at the time the widget is created or this option will be ignored.
+#                            If not provided, defaults to the widget address.
 #
-#                           If provided, mustang will perform no automatic translations (in any scenario).
-#                           If not provided, defaults to the empty string.
+#                            See also **-offvalue** and **-onvalue**.
 #
-#                           See also **-image** and **-text**.
+# **-wraplength**            Specifies the maximum line length of the widget's label.
+#                            The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                            (pixels, points, inches, millimeters or centimeters).
+#                            If this option is less than or equal to zero then automatic wrapping is not performed, otherwise
+#                            the text is split into lines such that no line is longer than the specified value.
 #
-# **-underline**            If set, specifies the index of a character to underline in the widget's label.
-#                           The underlined character is used for mnemonic activation.
+#                            Note: This is a styleable option.
 #
-#                           If not provided, defaults to **-1** (meaning no underline or mnemonic activation will be performed).
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
 #
-# **-variable**             The name of a Tcl variable (with absolute path) which is linked to the **-offvalue** and the **-onvalue**.
-#
-#                           If not provided, defaults to the widget address.
-#
-#                           See also **-offvalue** and **-onvalue**.
-#
-# **-wraplength**           Specifies the maximum line length of the widget's label.
-#                           The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                           (pixels, points, inches, millimeters or centimeters).
-#                           If this option is less than or equal to zero then automatic wrapping is not performed, otherwise
-#                           the text is split into lines such that no line is longer than the specified value.
-#
-#                           Note: This is a styleable option.
-#
-#                                 If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                          Only the developer can.
-#
-#                                 If it's not provided --> The widget will follow the **-wraplength** specified in its style.
-#                                                          If there isn't one, the **-wraplength** of the **TCheckbutton** style
-#                                                          will be used instead.
-#                                                          The **-wraplength** will always abide by its mapping values, if any.
-#                                                          Styles, mappings and states events are allowed to change its value.
+#                                  If it's not provided --> The widget will follow the **-wraplength** specified in its style.
+#                                                           If there isn't one, the **-wraplength** of the **TCheckbutton** style
+#                                                           will be used instead.
+#                                                           The **-wraplength** will always abide by its mapping values, if any.
+#                                                           Styles, mappings and states events are allowed to change its value.
 #
 #### WIDGET COMMAND:
 #
@@ -999,7 +996,8 @@ namespace eval ::ms::checkbutton {
                                                        variable];
 
     # Set the 'styleable' checkbutton option list.
-    set ::ms::checkbutton(styleable,options) [list charwidth \
+    set ::ms::checkbutton(styleable,options) [list background \
+                                                   charwidth \
                                                    cursor \
                                                    font \
                                                    foreground \
@@ -1010,7 +1008,6 @@ namespace eval ::ms::checkbutton {
                                                    indicatorrelief \
                                                    justify \
                                                    padding \
-                                                   shellbackground \
                                                    spacer \
                                                    wraplength];
 
@@ -1128,9 +1125,10 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             #       To make a checkbutton styleable option managed by the developer, just set your desired value
             #       for that option through the create or configure command, like:
             #
-            #           **checkbutton** *window* **-shellbackground** red
+            #           **checkbutton** *window* **-background** red
             #       or
-            #           *window* **configure** **-shellbackground** red
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)          Tk
             set ::ms::managed_by($w,charwidth)           Tk
             set ::ms::managed_by($w,cursor)              Tk
             set ::ms::managed_by($w,font)                Tk
@@ -1142,7 +1140,6 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             set ::ms::managed_by($w,indicatorrelief)     Tk
             set ::ms::managed_by($w,justify)             Tk
             set ::ms::managed_by($w,padding)             Tk
-            set ::ms::managed_by($w,shellbackground)     Tk
             set ::ms::managed_by($w,spacer)              Tk
             set ::ms::managed_by($w,wraplength)          Tk
 
@@ -1155,6 +1152,15 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             # Check the remaining options, if any.
             foreach { option value } $args {
                 switch -nocase -- $option {
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
                     -charwidth {
                         switch -- [string is integer -strict $value] {
                             0   { continue }
@@ -1324,15 +1330,6 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
                         set ::ms::managed_by($w,padding) developer
                     }
-                    -shellbackground {
-                        set value [::ms::Check_Color $value invalid]
-                        switch -- $value {
-                            invalid { continue }
-                        }
-
-                        set ::ms::current($w,shellbackground)    $value
-                        set ::ms::managed_by($w,shellbackground) developer
-                    }
                     -spacer {
                         set value [::ms::Check_Measure $value invalid]
                         switch -- $value {
@@ -1493,8 +1490,8 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             ##                           ##
             ###############################
 
-            # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-            #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+            # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
+            #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
 
             ##################
             ##              ##
@@ -1503,12 +1500,12 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             ##################
 
             # Set the hull object style name.
-            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+            set ::ms::style($w,hull) [string cat "_bg=" $::ms::current($w,background) \
                                                  ".TFrame"];
 
             # If needed, create the hull object style name.
             if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,background)
 
                 # Add the hull object style name to the theme styles list created by mustang.
                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
@@ -1539,7 +1536,7 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             #       the engine used by the current theme, everything will work as expected by the developer.
 
             # Set the indicator object style name.
-            set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+            set ::ms::style($w,indicator) [string cat "_bg=" $::ms::current($w,background) \
                                                       "_ib=" $::ms::current($w,indicatorbackground) \
                                                       "_if=" $::ms::current($w,indicatorforeground) \
                                                       "_ir=" $::ms::current($w,indicatorrelief) \
@@ -1547,7 +1544,7 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # If needed, create the indicator object style name.
             if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,background) \
                                                                 -indicatorbackground $::ms::current($w,indicatorbackground) \
                                                                      -indicatorcolor $::ms::current($w,indicatorforeground) \
                                                                 -indicatorforeground $::ms::current($w,indicatorforeground) \
@@ -1617,13 +1614,13 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             ###################
 
             # Set the label object style name.
-            set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+            set ::ms::style($w,label) [string cat "_bg=" $::ms::current($w,background) \
                                                   "_fg=" $::ms::current($w,foreground) \
                                                   ".TLabel"];
 
             # If needed, create the label object style name.
             if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,background) \
                                                             -foreground $::ms::current($w,foreground);
 
                 # Add the label object style name to the theme styles list created by mustang.
@@ -2043,6 +2040,15 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             # Check the widget options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
+                                    -background {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,background)    $value
+                                        set ::ms::managed_by($w,background) developer
+                                    }
                                     -charwidth {
                                         switch -- [string is integer -strict $value] {
                                             0   { continue }
@@ -2188,15 +2194,6 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                         }
 
                                         set ::ms::managed_by($w,padding) developer
-                                    }
-                                    -shellbackground {
-                                        set value [::ms::Check_Color $value invalid]
-                                        switch -- $value {
-                                            invalid { continue }
-                                        }
-
-                                        set ::ms::current($w,shellbackground)    $value
-                                        set ::ms::managed_by($w,shellbackground) developer
                                     }
                                     -spacer {
                                         set value [::ms::Check_Measure $value invalid]
@@ -2386,8 +2383,8 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             ##                              ##
                             ##################################
 
-                            # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-                            #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+                            # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
+                            #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
 
                             ##################
                             ##              ##
@@ -2396,12 +2393,12 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             ##################
 
                             # Set the hull object style name.
-                            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                            set ::ms::style($w,hull) [string cat "_bg=" $::ms::current($w,background) \
                                                                  ".TFrame"];
 
                             # If needed, create the hull object style name.
                             if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,background)
 
                                 # Add the hull object style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
@@ -2422,7 +2419,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             #       the engine used by the current theme, everything will work as expected by the developer.
 
                             # Set the indicator object style name.
-                            set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                            set ::ms::style($w,indicator) [string cat "_bg=" $::ms::current($w,background) \
                                                                       "_ib=" $::ms::current($w,indicatorbackground) \
                                                                       "_if=" $::ms::current($w,indicatorforeground) \
                                                                       "_ir=" $::ms::current($w,indicatorrelief) \
@@ -2430,7 +2427,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
 
                             # If needed, create the indicator object style name.
                             if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+                                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,background) \
                                                                                 -indicatorbackground $::ms::current($w,indicatorbackground) \
                                                                                      -indicatorcolor $::ms::current($w,indicatorforeground) \
                                                                                 -indicatorforeground $::ms::current($w,indicatorforeground) \
@@ -2490,13 +2487,13 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             ###################
 
                             # Set the label object style name.
-                            set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                            set ::ms::style($w,label) [string cat "_bg=" $::ms::current($w,background) \
                                                                   "_fg=" $::ms::current($w,foreground) \
                                                                   ".TLabel"];
 
                             # If needed, create the label object style name.
                             if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+                                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,background) \
                                                                             -foreground $::ms::current($w,foreground);
 
                                 # Add the label object style name to the theme styles list created by mustang.
@@ -2865,8 +2862,8 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
         ##                                 ##
         #####################################
 
-        # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-        #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+        # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
+        #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
 
         ##################
         ##              ##
@@ -2875,12 +2872,12 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
         ##################
 
         # Set the hull object style name.
-        set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+        set ::ms::style($w,hull) [string cat "_bg=" $::ms::current($w,background) \
                                              ".TFrame"];
 
         # If needed, create the hull object style name.
         if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+            _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,background)
 
             # Add the hull object style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
@@ -2901,7 +2898,7 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
         #       the engine used by the current theme, everything will work as expected by the developer.
 
         # Set the indicator object style name.
-        set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+        set ::ms::style($w,indicator) [string cat "_bg=" $::ms::current($w,background) \
                                                   "_ib=" $::ms::current($w,indicatorbackground) \
                                                   "_if=" $::ms::current($w,indicatorforeground) \
                                                   "_ir=" $::ms::current($w,indicatorrelief) \
@@ -2909,7 +2906,7 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
 
         # If needed, create the indicator object style name.
         if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+            _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,background) \
                                                             -indicatorbackground $::ms::current($w,indicatorbackground) \
                                                                  -indicatorcolor $::ms::current($w,indicatorforeground) \
                                                             -indicatorforeground $::ms::current($w,indicatorforeground) \
@@ -2963,13 +2960,13 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
         ###################
 
         # Set the label object style name.
-        set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+        set ::ms::style($w,label) [string cat "_bg=" $::ms::current($w,background) \
                                               "_fg=" $::ms::current($w,foreground) \
                                               ".TLabel"];
 
         # If needed, create the label object style name.
         if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+            _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,background) \
                                                         -foreground $::ms::current($w,foreground);
 
             # Add the label object style name to the theme styles list created by mustang.
@@ -3245,7 +3242,8 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
-    unset -nocomplain -- ::ms::current($w,charwidth) \
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,charwidth) \
                          ::ms::current($w,class) \
                          ::ms::current($w,command) \
                          ::ms::current($w,cursor) \
@@ -3259,7 +3257,6 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::current($w,offvalue) \
                          ::ms::current($w,onvalue) \
                          ::ms::current($w,padding) \
-                         ::ms::current($w,shellbackground) \
                          ::ms::current($w,spacer) \
                          ::ms::current($w,state) \
                          ::ms::current($w,style) \
@@ -3274,7 +3271,8 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::data($w,token) \
                          ::ms::data($w,translated_text);
 
-    unset -nocomplain -- ::ms::default($w,charwidth) \
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,charwidth) \
                          ::ms::default($w,class) \
                          ::ms::default($w,command) \
                          ::ms::default($w,cursor) \
@@ -3288,7 +3286,6 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::default($w,offvalue) \
                          ::ms::default($w,onvalue) \
                          ::ms::default($w,padding) \
-                         ::ms::default($w,shellbackground) \
                          ::ms::default($w,spacer) \
                          ::ms::default($w,state) \
                          ::ms::default($w,style) \
@@ -3299,7 +3296,8 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::default($w,variable) \
                          ::ms::default($w,wraplength);
 
-    unset -nocomplain -- ::ms::managed_by($w,charwidth) \
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,charwidth) \
                          ::ms::managed_by($w,cursor) \
                          ::ms::managed_by($w,font) \
                          ::ms::managed_by($w,foreground) \
@@ -3309,7 +3307,6 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::managed_by($w,indicatorrelief) \
                          ::ms::managed_by($w,justify) \
                          ::ms::managed_by($w,padding) \
-                         ::ms::managed_by($w,shellbackground) \
                          ::ms::managed_by($w,spacer) \
                          ::ms::managed_by($w,wraplength);
 
