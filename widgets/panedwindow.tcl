@@ -1821,10 +1821,10 @@ proc ::ms::panedwindow::Set_Cursor { w x y } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w      Should be the widget real address involved.
 #
-# x, y     Should be the (x,y) mouse pointer relative coordinates of the event.
-#          These values should be provided by the **ButtonPress** event.
+# x, y   Should be the (x,y) mouse pointer relative coordinates of the event.
+#        These values should be provided by the **ButtonPress** event.
 #
 # It doesn't return anything.
 proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
@@ -1875,6 +1875,40 @@ proc ::ms::panedwindow::Sash_ButtonRelease { w } {
 
     # Reset cursor.
     interp invokehidden {} $w configure -cursor $::ms::current($w,cursor)
+
+    return ""
+}
+
+## Sash_Drag
+#
+# Manage the **B1-Motion** event on the widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates of the event.
+#        These values should be provided by the **B1-Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::panedwindow::Sash_Drag { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Safeguard
+    switch -- [info exists ::ms::temp(sash,state)] {
+        1   {
+            switch -- $::ms::current($w,orient) {
+                horizontal { set delta [expr { $x-$::ms::data(sash,x) }] }
+                vertical   { set delta [expr { $y-$::ms::data(sash,y) }] }
+            }
+
+            # Place '::ms::data(sash,index)' under the mouse pointer.
+            $w sashpos $::ms::data(sash,index) [expr { $::ms::data(sash,pos)+$delta }]
+        }
+    }
 
     return ""
 }
