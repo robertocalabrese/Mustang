@@ -157,6 +157,21 @@ namespace eval ::ms::progressbar {
                                                        textvariable \
                                                        value \
                                                        variable];
+
+    # Set the 'styleable' progressbar option list.
+    set ::ms::progressbar(styleable,options) [list anchor \
+                                                   background \
+                                                   bordercolor \
+                                                   borderwidth \
+                                                   cursor \
+                                                   darkcolor \
+                                                   font \
+                                                   foreground \
+                                                   justify \
+                                                   lightcolor \
+                                                   thickness \
+                                                   troughcolor \
+                                                   wraplength];
 }
 
 # Rename the original Tk **ttk::progressbar** command.
