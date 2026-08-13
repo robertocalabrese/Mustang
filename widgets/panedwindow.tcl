@@ -152,6 +152,15 @@ namespace eval ::ms::panedwindow {
                                                        style \
                                                        takefocus \
                                                        width];
+
+    # Set the 'styleable' panedwindow option list.
+    set ::ms::panedwindow(styleable,options) [list background \
+                                                   bordercolor \
+                                                   borderwidth \
+                                                   cursor \
+                                                   darkcolor \
+                                                   lightcolor \
+                                                   relief];
 }
 
 # Rename the original Tk **panedwindow** and **ttk::panedwindow** commands.
