@@ -161,6 +161,17 @@ namespace eval ::ms::panedwindow {
                                                    darkcolor \
                                                    lightcolor \
                                                    relief];
+
+    # Set the default 'non-styleable' panedwindow options values.
+    set ::ms::default(panedwindow,class)     TPanedwindow
+    set ::ms::default(panedwindow,height)    0
+    set ::ms::default(panedwindow,orient)    horizontal
+    set ::ms::default(panedwindow,state)     normal
+    set ::ms::default(panedwindow,style)     TPanedwindow
+    set ::ms::default(panedwindow,takefocus) 0
+    set ::ms::default(panedwindow,width)     0
+
+    # Note: The default 'styleable' panedwindow options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **panedwindow** and **ttk::panedwindow** commands.
