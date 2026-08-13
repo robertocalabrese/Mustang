@@ -271,6 +271,158 @@ proc ::ms::panedwindow::Command { window { args "" } } {
             set ::ms::managed_by($w,darkcolor)   Tk
             set ::ms::managed_by($w,lightcolor)  Tk
             set ::ms::managed_by($w,relief)      Tk
+
+            #################################################
+            ##                                             ##
+            ##     CHECK THE WIDGET'S OPTIONS PROVIDED     ##
+            ##                                             ##
+            #################################################
+
+            # Check the remaining options, if any.
+            foreach { option value } $args {
+                switch -nocase -- $option {
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
+                    -bordercolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,bordercolor)    $value
+                        set ::ms::managed_by($w,bordercolor) developer
+                    }
+                    -borderwidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,borderwidth)    $value
+                        set ::ms::managed_by($w,borderwidth) developer
+                    }
+                    -class { set ::ms::current($w,class) $value }
+                    -cursor {
+                        set value [string tolower $value]
+                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                            set ::ms::current($w,cursor)    $value
+                            set ::ms::managed_by($w,cursor) developer
+                        }
+                    }
+                    -darkcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,darkcolor)    $value
+                        set ::ms::managed_by($w,darkcolor) developer
+                    }
+                    -height {
+                        switch -- [string is integer -strict $value] {
+                            0   {
+                                set value [::ms::Check_Measure $value invalid]
+                                switch -- $value {
+                                    invalid { continue }
+                                }
+                            }
+                            1   {
+                                if { $value < 0 } {
+                                    set value 0
+                                }
+                            }
+                        }
+
+                        set ::ms::current($w,height) $value
+                    }
+                    -lightcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,lightcolor)    $value
+                        set ::ms::managed_by($w,lightcolor) developer
+                    }
+                    -orient {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            horizontal -
+                            vertical   { set ::ms::current($w,orient) $value }
+                        }
+                    }
+                    -relief {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            flat   -
+                            groove -
+                            raised -
+                            ridge  -
+                            solid  -
+                            sunken {
+                                set ::ms::current($w,relief)    $value
+                                set ::ms::managed_by($w,relief) developer
+                            }
+                        }
+                    }
+                    -state {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            normal   -
+                            disabled { set ::ms::current($w,state) $value }
+                        }
+                    }
+                    -style {
+                        if { $value in $::ms::style($::ms::theme) } {
+                            # Check if exists a layout for the style provided.
+                            # If not, create one by mirroring the current theme 'TPanedwindow' layout.
+                            if { $value ni $::ms::layouts($::ms::theme) } {
+                                _ttk_style layout $value [_ttk_style layout TPanedwindow]
+                            }
+
+                            set ::ms::current($w,style) $value
+                        }
+                    }
+                    -takefocus {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,takefocus) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,takefocus) 1 }
+                        }
+                    }
+                    -width {
+                        switch -- [string is integer -strict $value] {
+                            0   {
+                                set value [::ms::Check_Measure $value invalid]
+                                switch -- $value {
+                                    invalid { continue }
+                                }
+                            }
+                            1   {
+                                if { $value < 0 } {
+                                    set value 0
+                                }
+                            }
+                        }
+
+                        set ::ms::current($w,width) $value
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
