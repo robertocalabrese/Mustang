@@ -2573,6 +2573,9 @@ proc ::ms::progressbar::Destroy { w } {
         }
     }
 
+    # Destroy the bindings for the widget real address in its related toplevel.
+    ::ms::Clean_Up $w
+
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short);
