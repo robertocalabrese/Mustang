@@ -1904,9 +1904,9 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # Set the structure addresses.
             set ::ms::addr($w,structure) [list $w \
+                                               $w.highlight \
                                                $w.indicator \
-                                               $w.label \
-                                               $w.highlight];
+                                               $w.label];
 
             # Add the widget address to the megawidget addresses list.
             lappend ::ms::addr(megawidgets) $w
@@ -1923,9 +1923,9 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # Add the widget real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals) $w \
+                                      $w.highlight \
                                       $w.indicator \
-                                      $w.label \
-                                      $w.highlight;
+                                      $w.label;
 
             lappend ::ms::addr(shorts) $short_addr
 
