@@ -1809,4 +1809,51 @@ proc ::ms::panedwindow::Set_Cursor { w x y } {
     return ""
 }
 
+#######################
+##                   ##
+##     SASH DRAG     ##
+##                   ##
+#######################
+
+## Sash_ButtonPress
+#
+# Manage the **ButtonPress** event on the widget.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# x, y     Should be the (x,y) mouse pointer relative coordinates of the event.
+#          These values should be provided by the **ButtonPress** event.
+#
+# It doesn't return anything.
+proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # If needed, focus the widget.
+    ::ms::Focus_The_Widget_Or_Its_Toplevel
+
+    # Check if the ButtonPress happened over the widget's sash.
+    set sash [interp invokehidden {} $w identify sash $x $y]
+    switch -- $sash {
+        ""      {}
+        default {
+            switch -- $::ms::current($w,takefocus) {
+                1   {
+                    set ::ms::temp(sash,state) enabled
+                    set ::ms::data(sash,index) $sash
+                    set ::ms::data(sash,pos)   [interp invokehidden {} $w sashpos $sash]
+                    set ::ms::data(sash,x)     $x
+                    set ::ms::data(sash,y)     $y
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
