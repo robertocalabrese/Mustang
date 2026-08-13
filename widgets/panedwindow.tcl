@@ -979,7 +979,25 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        sashpos {}
+        sashpos {
+            # Synopsis:
+            #
+            # *window* **sashpos** *index* ?*newpos*?
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
