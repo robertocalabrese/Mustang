@@ -110,8 +110,6 @@
 #                                                   The **-background** will always abide by its mapping values, if any.
 #                                                   Styles, mappings and states events are allowed to change its value.
 #
-#                    See also **-shellbackground**.
-#
 # **-bordercolor**   It's a list that specifies the color to use as bordercolor.
 #                    See the **COLOR OPTION** section to know how this list should be composed.
 #
