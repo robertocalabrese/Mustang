@@ -3180,9 +3180,9 @@ proc ::ms::checkbutton::Destroy { w } {
 
     # Remove all the objects real addresses from the list of all available real addresses.
     foreach object [list $w \
+                         $w.highlight \
                          $w.indicator \
-                         $w.label \
-                         $w.highlight] {
+                         $w.label] {
         set index [lsearch -exact $::ms::addr(reals) $object]
         switch -- $index {
             -1      {}
