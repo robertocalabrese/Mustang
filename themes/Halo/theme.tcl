@@ -930,6 +930,67 @@ namespace eval ttk::theme::Halo {
                                                        invalid White \
                                                          focus Background \
                                                          hover Background];
+
+        #########################
+        ##                     ##
+        ##     PANEDWINDOW     ##
+        ##                     ##
+        #########################
+
+        # Note: 'borderwidth', 'cursor' and 'relief' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: In mustang panedwindows and sashes are disabled for Windows and macOS systems.
+        #       See the panedwindow widget description for more infos.
+
+        # Layout
+        style layout TPanedwindow {
+            Panedwindow.background -sticky {}
+        }
+
+        # Normal state
+        style configure TPanedwindow      -background Background \
+                                         -bordercolor Bordercolor \
+                                         -borderwidth 2 \
+                                              -cursor arrow \
+                                           -darkcolor Darkcolor \
+                                          -lightcolor Lightcolor \
+                                              -relief solid;
+
+        # Mapping
+        style map TPanedwindow -bordercolor [list background Lightcolor \
+                                                       hover Accent];
+
+        ##################
+        ##              ##
+        ##     SASH     ##
+        ##              ##
+        ##################
+
+        # Layouts
+        style layout Horizontal.Sash {
+            Sash.hsash -sticky nswe -children {
+                Sash.hgrip -sticky nswe
+            }
+        }
+
+        style layout Vertical.Sash {
+            Sash.vsash -sticky nswe -children {
+                Sash.vgrip -sticky nswe
+            }
+        }
+
+        # Normal state
+        style configure Sash   -bordercolor Sash \
+                                  -gripsize $::ms::size(Halo,grip) \
+                                -lightcolor Sash \
+                             -sashthickness $::ms::size(Halo,sash);
+
+        # Mapping
+        style map Sash -bordercolor [list background Lightcolor \
+                                               hover Accent] \
+                        -lightcolor [list background Lightcolor \
+                                               hover Accent];
     }
 }
 
