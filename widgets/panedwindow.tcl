@@ -143,7 +143,16 @@ _bind _Panedwindow <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; brea
 _bind _Panedwindow <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **panedwindow** package.
-namespace eval ::ms::panedwindow {}
+namespace eval ::ms::panedwindow {
+    # Set the 'non-styleable' panedwindow option list.
+    set ::ms::panedwindow(non_styleable,options) [list class \
+                                                       height \
+                                                       orient \
+                                                       state \
+                                                       style \
+                                                       takefocus \
+                                                       width];
+}
 
 # Rename the original Tk **panedwindow** and **ttk::panedwindow** commands.
 rename panedwindow      _panedwindow
