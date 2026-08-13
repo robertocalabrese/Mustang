@@ -95,6 +95,22 @@
 #          - Retrieved with the **configure** or **cget** command with no exceptions.
 #          - Changed with the **configure** command, unless stated otherwise.
 #
+# **-background**            It's a list that specifies the color to use as background.
+#                            See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                            Note: This is a styleable option.
+#
+#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                           Only the developer can.
+#
+#                                  If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                           If there isn't one, the **-background** of the **TRadiobutton** style
+#                                                           will be used instead.
+#                                                           The **-background** will not abide by its mapping values, if any.
+#                                                           It is not supposed to change when the widget state changes.
+#
+#                            See also **-foreground**.
+#
 # **-charwidth**             If greater than zero, specifies how much space, in character widths, to allocate for the widget's label.
 #                            If less than zero, specifies a minimum width.
 #                            If zero or unspecified, the natural width of the text radiobutton is used.
@@ -195,7 +211,7 @@
 #                                                           The **-foreground** will always abide by its mapping values, if any.
 #                                                           Styles, mappings and states events are allowed to change its value.
 #
-#                            See also **-shellbackground** and **-font**.
+#                            See also **-background** and **-font**.
 #
 # **-highlightcolor**        It's a list that specifies the color to use as highlightcolor.
 #                            See the **COLOR OPTION** section to know how this list should be composed.
@@ -337,27 +353,6 @@
 #                                                           will be used instead.
 #                                                           The **-padding** will not abide by its mapping values, if any.
 #                                                           It is not supposed to change when the widget state changes.
-#
-# **-shellbackground**       It's a list that specifies the color to use as background structure.
-#                            This color will be used in the interspaces between the mustang objects that compose the widget and
-#                            should reflects the widget's parent background.
-#                            See the **COLOR OPTION** section to know how this list should be composed.
-#
-#                            Note: This is a styleable option.
-#
-#                                  If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                           Only the developer can.
-#
-#                                  If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
-#                                                           If there isn't one, the **-shellbackground** of the **TRadiobutton** style
-#                                                           will be used instead.
-#                                                           The **-shellbackground** will always abide by its mapping values, if any.
-#                                                           Styles, mappings and states events are allowed to change its value.
-#
-#                                                           Note: The **-shellbackground** should change rarely, for example upon
-#                                                                 an **Activate**/**Deactivate** event.
-#
-#                            See also **-background**.
 #
 # **-spacer**                Specifies the distance between the indicator and its label.
 #                            The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
@@ -994,7 +989,8 @@ namespace eval ::ms::radiobutton {
                                                        variable];
 
     # Set the 'styleable' radiobutton option list.
-    set ::ms::radiobutton(styleable,options) [list charwidth \
+    set ::ms::radiobutton(styleable,options) [list background \
+                                                   charwidth \
                                                    cursor \
                                                    font \
                                                    foreground \
@@ -1005,7 +1001,6 @@ namespace eval ::ms::radiobutton {
                                                    indicatorrelief \
                                                    justify \
                                                    padding \
-                                                   shellbackground \
                                                    spacer \
                                                    wraplength];
 
@@ -1120,9 +1115,10 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             #       To make a radiobutton styleable option managed by the developer, just set your desired value
             #       for that option through the create or configure command, like:
             #
-            #           **radiobutton** *window* **-shellbackground** red
+            #           **radiobutton** *window* **-background** red
             #       or
-            #           *window* **configure** **-shellbackground** red
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)          Tk
             set ::ms::managed_by($w,charwidth)           Tk
             set ::ms::managed_by($w,cursor)              Tk
             set ::ms::managed_by($w,font)                Tk
@@ -1134,7 +1130,6 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             set ::ms::managed_by($w,indicatorrelief)     Tk
             set ::ms::managed_by($w,justify)             Tk
             set ::ms::managed_by($w,padding)             Tk
-            set ::ms::managed_by($w,shellbackground)     Tk
             set ::ms::managed_by($w,spacer)              Tk
             set ::ms::managed_by($w,wraplength)          Tk
 
@@ -1147,6 +1142,15 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             # Check the remaining options, if any.
             foreach { option value } $args {
                 switch -nocase -- $option {
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
                     -charwidth {
                         switch -- [string is integer -strict $value] {
                             0   { continue }
@@ -1314,15 +1318,6 @@ proc ::ms::radiobutton::Command { window { args "" } } {
 
                         set ::ms::managed_by($w,padding) developer
                     }
-                    -shellbackground {
-                        set value [::ms::Check_Color $value invalid]
-                        switch -- $value {
-                            invalid { continue }
-                        }
-
-                        set ::ms::current($w,shellbackground)    $value
-                        set ::ms::managed_by($w,shellbackground) developer
-                    }
                     -spacer {
                         set value [::ms::Check_Measure $value invalid]
                         switch -- $value {
@@ -1482,8 +1477,8 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             ##                           ##
             ###############################
 
-            # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-            #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+            # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
+            #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
 
             ##################
             ##              ##
@@ -1492,12 +1487,12 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             ##################
 
             # Set the hull object style name.
-            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+            set ::ms::style($w,hull) [string cat "_bg=" $::ms::current($w,background) \
                                                  ".TFrame"];
 
             # If needed, create the hull object style name.
             if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,background)
 
                 # Add the hull object style name to the theme styles list created by mustang.
                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
@@ -1528,7 +1523,7 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             #       the engine used by the current theme, everything will work as expected by the developer.
 
             # Set the indicator object style name.
-            set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+            set ::ms::style($w,indicator) [string cat "_bg=" $::ms::current($w,background) \
                                                       "_ib=" $::ms::current($w,indicatorbackground) \
                                                       "_if=" $::ms::current($w,indicatorforeground) \
                                                       "_ir=" $::ms::current($w,indicatorrelief) \
@@ -1536,7 +1531,7 @@ proc ::ms::radiobutton::Command { window { args "" } } {
 
             # If needed, create the indicator object style name.
             if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,background) \
                                                                 -indicatorbackground $::ms::current($w,indicatorbackground) \
                                                                      -indicatorcolor $::ms::current($w,indicatorforeground) \
                                                                 -indicatorforeground $::ms::current($w,indicatorforeground) \
@@ -1605,13 +1600,13 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             ###################
 
             # Set the label object style name.
-            set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+            set ::ms::style($w,label) [string cat "_bg=" $::ms::current($w,background) \
                                                   "_fg=" $::ms::current($w,foreground) \
                                                   ".TLabel"];
 
             # If needed, create the label object style name.
             if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,background) \
                                                             -foreground $::ms::current($w,foreground);
 
                 # Add the label object style name to the theme styles list created by mustang.
@@ -2013,6 +2008,15 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                             # Check the widget options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
+                                    -background {
+                                        set value [::ms::Check_Color $value invalid]
+                                        switch -- $value {
+                                            invalid { continue }
+                                        }
+
+                                        set ::ms::current($w,background)    $value
+                                        set ::ms::managed_by($w,background) developer
+                                    }
                                     -charwidth {
                                         switch -- [string is integer -strict $value] {
                                             0   { continue }
@@ -2156,15 +2160,6 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                                         }
 
                                         set ::ms::managed_by($w,padding) developer
-                                    }
-                                    -shellbackground {
-                                        set value [::ms::Check_Color $value invalid]
-                                        switch -- $value {
-                                            invalid { continue }
-                                        }
-
-                                        set ::ms::current($w,shellbackground)    $value
-                                        set ::ms::managed_by($w,shellbackground) developer
                                     }
                                     -spacer {
                                         set value [::ms::Check_Measure $value invalid]
@@ -2353,8 +2348,8 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                             ##                              ##
                             ##################################
 
-                            # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-                            #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+                            # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
+                            #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
 
                             ##################
                             ##              ##
@@ -2363,12 +2358,12 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                             ##################
 
                             # Set the hull object style name.
-                            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                            set ::ms::style($w,hull) [string cat "_bg=" $::ms::current($w,background) \
                                                                  ".TFrame"];
 
                             # If needed, create the hull object style name.
                             if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,background)
 
                                 # Add the hull object style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
@@ -2389,7 +2384,7 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                             #       the engine used by the current theme, everything will work as expected by the developer.
 
                             # Set the indicator object style name.
-                            set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                            set ::ms::style($w,indicator) [string cat "_bg=" $::ms::current($w,background) \
                                                                       "_ib=" $::ms::current($w,indicatorbackground) \
                                                                       "_if=" $::ms::current($w,indicatorforeground) \
                                                                       "_ir=" $::ms::current($w,indicatorrelief) \
@@ -2397,7 +2392,7 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
 
                             # If needed, create the indicator object style name.
                             if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+                                _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,background) \
                                                                                 -indicatorbackground $::ms::current($w,indicatorbackground) \
                                                                                      -indicatorcolor $::ms::current($w,indicatorforeground) \
                                                                                 -indicatorforeground $::ms::current($w,indicatorforeground) \
@@ -2456,13 +2451,13 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                             ###################
 
                             # Set the label object style name.
-                            set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                            set ::ms::style($w,label) [string cat "_bg=" $::ms::current($w,background) \
                                                                   "_fg=" $::ms::current($w,foreground) \
                                                                   ".TLabel"];
 
                             # If needed, create the label object style name.
                             if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+                                _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,background) \
                                                                             -foreground $::ms::current($w,foreground);
 
                                 # Add the label object style name to the theme styles list created by mustang.
@@ -2816,8 +2811,8 @@ proc ::ms::radiobutton::Style_Update { stylename caller_info } {
         ##                                 ##
         #####################################
 
-        # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-        #       'shellbackground', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
+        # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
+        #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
 
         ##################
         ##              ##
@@ -2826,12 +2821,12 @@ proc ::ms::radiobutton::Style_Update { stylename caller_info } {
         ##################
 
         # Set the hull object style name.
-        set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+        set ::ms::style($w,hull) [string cat "_bg=" $::ms::current($w,background) \
                                              ".TFrame"];
 
         # If needed, create the hull object style name.
         if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+            _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,background)
 
             # Add the hull object style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
@@ -2852,7 +2847,7 @@ proc ::ms::radiobutton::Style_Update { stylename caller_info } {
         #       the engine used by the current theme, everything will work as expected by the developer.
 
         # Set the indicator object style name.
-        set ::ms::style($w,indicator) [string cat "_sb=" $::ms::current($w,shellbackground) \
+        set ::ms::style($w,indicator) [string cat "_bg=" $::ms::current($w,background) \
                                                   "_ib=" $::ms::current($w,indicatorbackground) \
                                                   "_if=" $::ms::current($w,indicatorforeground) \
                                                   "_ir=" $::ms::current($w,indicatorrelief) \
@@ -2860,7 +2855,7 @@ proc ::ms::radiobutton::Style_Update { stylename caller_info } {
 
         # If needed, create the indicator object style name.
         if { $::ms::style($w,indicator) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,shellbackground) \
+            _ttk_style configure $::ms::style($w,indicator)          -background $::ms::current($w,background) \
                                                             -indicatorbackground $::ms::current($w,indicatorbackground) \
                                                                  -indicatorcolor $::ms::current($w,indicatorforeground) \
                                                             -indicatorforeground $::ms::current($w,indicatorforeground) \
@@ -2914,13 +2909,13 @@ proc ::ms::radiobutton::Style_Update { stylename caller_info } {
         ###################
 
         # Set the label object style name.
-        set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+        set ::ms::style($w,label) [string cat "_bg=" $::ms::current($w,background) \
                                               "_fg=" $::ms::current($w,foreground) \
                                               ".TLabel"];
 
         # If needed, create the label object style name.
         if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+            _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,background) \
                                                         -foreground $::ms::current($w,foreground);
 
             # Add the label object style name to the theme styles list created by mustang.
@@ -3196,7 +3191,8 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
-    unset -nocomplain -- ::ms::current($w,charwidth) \
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,charwidth) \
                          ::ms::current($w,class) \
                          ::ms::current($w,command) \
                          ::ms::current($w,cursor) \
@@ -3208,7 +3204,6 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::current($w,indicatorrelief) \
                          ::ms::current($w,justify) \
                          ::ms::current($w,padding) \
-                         ::ms::current($w,shellbackground) \
                          ::ms::current($w,spacer) \
                          ::ms::current($w,state) \
                          ::ms::current($w,style) \
@@ -3224,7 +3219,8 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::data($w,token) \
                          ::ms::data($w,translated_text);
 
-    unset -nocomplain -- ::ms::default($w,charwidth) \
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,charwidth) \
                          ::ms::default($w,class) \
                          ::ms::default($w,command) \
                          ::ms::default($w,cursor) \
@@ -3236,7 +3232,6 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::default($w,indicatorrelief) \
                          ::ms::default($w,justify) \
                          ::ms::default($w,padding) \
-                         ::ms::default($w,shellbackground) \
                          ::ms::default($w,spacer) \
                          ::ms::default($w,state) \
                          ::ms::default($w,style) \
@@ -3248,7 +3243,8 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::default($w,variable) \
                          ::ms::default($w,wraplength);
 
-    unset -nocomplain -- ::ms::managed_by($w,charwidth) \
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,charwidth) \
                          ::ms::managed_by($w,cursor) \
                          ::ms::managed_by($w,font) \
                          ::ms::managed_by($w,foreground) \
@@ -3258,7 +3254,6 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::managed_by($w,indicatorrelief) \
                          ::ms::managed_by($w,justify) \
                          ::ms::managed_by($w,padding) \
-                         ::ms::managed_by($w,shellbackground) \
                          ::ms::managed_by($w,spacer) \
                          ::ms::managed_by($w,wraplength);
 

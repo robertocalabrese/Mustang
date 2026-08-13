@@ -1050,19 +1050,14 @@ namespace eval ttk::theme::Halo {
         ##                     ##
         #########################
 
-        # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
-        #       'shellbackground' and 'wraplength' will not follow any mapping rules.
+        # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
+        #       and 'wraplength' will not follow any mapping rules.
         #       They are not supposed to change when the widget state changes.
 
         # Note: 'indicatorbackground', 'indicatorcolor', 'indicatorforeground' and 'indicatorrelief' are setted in a way
         #       that reflects the default radiobutton images colors.
         #       Due to the fact that the Halo theme uses images for the indicator, they are silently ignored when the
         #       Halo theme is in use.
-
-        # Note: In mustang radiobuttons are megawidgets, but differently than other megawidgets their 'background' and
-        #       'shellbackground' coincides.
-        #       The correct option name to use as background inside a radiobutton style in mustang is '-shellbackground' and not
-        #       '-background', nonetheless a '-background' option is setted as well for those widgets that are not created by mustang.
 
         # Note: Mustang do not use '-compound' or '-indicatormargin' (the latter is replaced by a combinatioon of '-padding' and 'spacer').
         #       Nonetheless, these options are setted as well for those widgets that are not created by mustang.
@@ -1120,7 +1115,6 @@ namespace eval ttk::theme::Halo {
                                          -indicatorrelief flat \
                                                  -justify left \
                                                  -padding [list 1m 2m] \
-                                         -shellbackground Background \
                                                   -spacer $::ms::size(Halo,spacer) \
                                               -wraplength 0;
 
