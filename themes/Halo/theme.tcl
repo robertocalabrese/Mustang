@@ -991,6 +991,58 @@ namespace eval ttk::theme::Halo {
                                                hover Accent] \
                         -lightcolor [list background Lightcolor \
                                                hover Accent];
+
+        #########################
+        ##                     ##
+        ##     PROGRESSBAR     ##
+        ##                     ##
+        #########################
+
+        # Note: 'anchor', 'borderwidth', 'cursor', 'font', 'justify', 'thickness', 'troughcolor' and 'wraplength'
+        #       will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'sliderlength' (in the 'clam' engine) and 'barsize' (in the other engines) are ignored by mustang.
+        #       They are here in case the developer needs to create a Tk scale widget.
+        #       In mustang the developer should use the non styleable option 'length'.
+
+        # Note: 'arrowsize' (in the 'clam' engine) is ignored by mustang.
+        #       It's here in case the developer needs to create a Tk scale widget.
+        #       In mustang the developer should use the styleable option 'thickness'.
+
+        # Layouts
+        style layout Horizontal.TProgressbar {
+            Horizontal.Progressbar.trough -sticky nswe -children {
+                Horizontal.Progressbar.pbar -side left -sticky ns
+                Horizontal.Progressbar.ctext -expand 1 -sticky {}
+            }
+        }
+
+        style layout Vertical.TProgressbar {
+            Vertical.Progressbar.trough -sticky nswe -children {
+                Vertical.Progressbar.pbar -side bottom -sticky we
+            }
+        }
+
+        # Normal state
+        style configure TProgressbar      -anchor center \
+                                       -arrowsize 5 \
+                                      -background ProgressbarBackground \
+                                         -barsize 0 \
+                                     -bordercolor Bordercolor \
+                                     -borderwidth 2 \
+                                          -cursor arrow \
+                                       -darkcolor ProgressbarBackground \
+                                            -font SmallerFont \
+                                      -foreground ProgressbarText \
+                                         -justify left \
+                                      -lightcolor ProgressbarBackground \
+                                    -sliderlength 0 \
+                                       -thickness 5 \
+                                     -troughcolor Background5 \
+                                      -wraplength 0;
+
+        # No mapping
     }
 }
 
