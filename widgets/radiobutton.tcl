@@ -1240,7 +1240,24 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        invoke {}
+        invoke {
+            # Synopsis:
+            #
+            # *window* **invoke**
+            switch -- $::ms::current($w,state) {
+                normal {
+                    # Execute the command.
+                    try {
+                        uplevel #0 [list $w.indicator invoke]
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                disabled { return "" }
+            }
+        }
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
