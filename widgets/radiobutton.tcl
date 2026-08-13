@@ -139,7 +139,20 @@ _bind _Radiobutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; brea
 _bind _Radiobutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **radiobutton** package.
-namespace eval ::ms::radiobutton {}
+namespace eval ::ms::radiobutton {
+    # Set the 'non styleable' radiobutton option list.
+    set ::ms::radiobutton(non_styleable,options) [list class \
+                                                       cmenu \
+                                                       command \
+                                                       state \
+                                                       style \
+                                                       takefocus \
+                                                       text \
+                                                       textvariable \
+                                                       underline \
+                                                       value \
+                                                       variable];
+}
 
 # Rename the original Tk **radiobutton** and **ttk::radiobutton** commands.
 rename radiobutton      _radiobutton
