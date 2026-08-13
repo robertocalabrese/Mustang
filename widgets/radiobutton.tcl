@@ -1919,7 +1919,12 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::radiobutton::Style_Update { stylename caller_info } {}
+proc ::ms::radiobutton::Style_Update { stylename caller_info } {
+    # Update all the radiobutton widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,radiobutton,addrs) {}
+
+    return ""
+}
 
 ######################################
 ##                                  ##
