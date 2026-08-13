@@ -970,7 +970,15 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                 return $result
             }
         }
-        panes {}
+        panes {
+            # Synopsis:
+            #
+            # *window* **panes**
+            switch -- [llength $args] {
+                0       { return [interp invokehidden {} $w panes] }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         sashpos {}
         state {}
         style {}
