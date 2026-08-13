@@ -1766,32 +1766,32 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             }
 
             # ButtonPress-1
+            _bind $w.highlight <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
             _bind $w.indicator <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
             _bind $w.label     <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
-            _bind $w.highlight <ButtonPress-1> { ::ms::checkbutton::ButtonPress [_winfo parent %W]; break }
 
             # Contextual menu
+            _bind $w.highlight <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
             _bind $w.indicator <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
             _bind $w.label     <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
-            _bind $w.highlight <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
             # Enter/Leave
+            _bind $w.highlight <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
             _bind $w.indicator <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
             _bind $w.label     <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.highlight <Enter> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
 
+            _bind $w.highlight <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
             _bind $w.indicator <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
             _bind $w.label     <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.highlight <Leave> { ::ms::checkbutton::Hover [_winfo parent %W] %X %Y; break }
 
             # FocusIn/FocusOut
+            _bind $w.highlight <FocusIn>  { ::ms::checkbutton::FocusIn  [_winfo parent %W]; break }
             _bind $w.indicator <FocusIn>  { ::ms::checkbutton::FocusIn  [_winfo parent %W]; break }
             _bind $w.label     <FocusIn>  { ::ms::checkbutton::FocusIn  [_winfo parent %W]; break }
-            _bind $w.highlight <FocusIn>  { ::ms::checkbutton::FocusIn  [_winfo parent %W]; break }
 
+            _bind $w.highlight <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
             _bind $w.indicator <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
             _bind $w.label     <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
-            _bind $w.highlight <FocusOut> { ::ms::checkbutton::FocusOut [_winfo parent %W]; break }
 
             # Return/KP_Enter
             _bind $w.indicator <Return>   { ::ms::checkbutton::Return [_winfo parent %W]; break }
@@ -1816,30 +1816,30 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
             # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
             # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.highlight <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
             _bind $w.indicator <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
             _bind $w.label     <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
-            _bind $w.highlight <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
             # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
             # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
             # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.highlight <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
             _bind $w.indicator <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
             _bind $w.label     <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
-            _bind $w.highlight <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
             # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
             # and move that scrollbar by one page up or down (depending on the mousewheel direction).
             # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.highlight <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
             _bind $w.indicator <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
             _bind $w.label     <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
-            _bind $w.highlight <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
             # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
             # and move that scrollbar by one page left or right (depending on the mousewheel direction).
             # If none of the widget's parent meets the required condition, don't do anything.
+            _bind $w.highlight <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
             _bind $w.indicator <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
             _bind $w.label     <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
-            _bind $w.highlight <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
             # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
             #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1854,9 +1854,9 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
             #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
             #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+            _bind $w.highlight <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
             _bind $w.indicator <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
             _bind $w.label     <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
-            _bind $w.highlight <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
             # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
             # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1868,9 +1868,9 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
             #       and move that scrollbar by one page up or down (depending on the touchpad direction).
             #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+            _bind $w.highlight <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
             _bind $w.indicator <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
             _bind $w.label     <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
-            _bind $w.highlight <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
             #####################
             ##                 ##
