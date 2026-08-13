@@ -724,7 +724,46 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        forget {}
+        forget {
+            # Synopsis:
+            #
+            # *window* **forget** *pane*
+
+            # Check the 'pane' provided.
+            switch -- [string is integer -strict $args] {
+                0   {
+                    # Get the 'pane' real address.
+                    set result [::ms::Check_Pathname $args invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$args'." $caller_info }
+                        default {
+                            # Check if the pane real address is an already managed subwindow.
+                            if { [lindex $result 0] ni [interp invokehidden {} $w panes] } {
+                                ::ms::Error "Invalid pane option, '$args'." $caller_info
+                            } else {
+                                set pane [lindex $result 0]
+                            }
+                        }
+                    }
+                }
+                1   {
+                    if { $args < 0 } {
+                        ::ms::Error "Invalid pane option, '$args'." $caller_info
+                    } else {
+                        set pane $args
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w forget $pane
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
         identify {}
         insert {}
         instate {}
