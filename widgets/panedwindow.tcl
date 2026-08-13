@@ -1723,4 +1723,42 @@ proc ::ms::panedwindow::Hover { w X Y } {
     return ""
 }
 
+###############################
+##                           ##
+##     CURSOR MANAGEMENT     ##
+##                           ##
+###############################
+
+# Note: The following procedures were inspired by the ttk::panedwindow cursor management.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Reset_Cursor
+#
+# Reset the cursor shape on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::panedwindow::Reset_Cursor { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Safeguard
+    switch -- [info exists ::ms::temp(sash,state)] {
+        0   {
+            # Check if the cursor is different than the '::ms::current($w,cursor)' provided.
+            if { [interp invokehidden {} $w cget -cursor] ne $::ms::current($w,cursor) } {
+                interp invokehidden {} $w configure -cursor $::ms::current($w,cursor)
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
