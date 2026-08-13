@@ -62,6 +62,759 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## panedwindow
+#
+#### DESCRIPTION:
+#
+# The panedwindow command creates a new window (given by the *window* argument) and makes it into a panedwindow widget.
+# A panedwindow widget displays a number of subwindows (called *panes*), stacked either vertically or horizontally depending on
+# the **-orient** option provided. The user may adjust the relative sizes of the subwindows by dragging the sash between panes.
+#
+# Panes should be created as direct children of the panedwindow widget.
+#
+# Note 1: At the time this command is invoked, there must not exist a window with the same pathname,
+#         but the pathname's parents must exists.
+#         *Window* may be provided either as a short or as a real address, the address returned will be:
+#            - A short address, if the *window* provided as input is a short address.
+#            - A real address, if the *window* provided as input is a real address.
+#
+# Nota 2: The panedwindow is one of the few containers that do not support the scrollbar system, at least not directly.
+#         If you need scrollable panes, put two or more scrollable frames (the panes) inside the panedwindow.
+#         See the example at the end.
+#
+# Note 3: Panedwindows are available only on Linux and BSD systems. See the KNOWN ISSUES section at the end to know more.
+#
+# Note 4: The mustang panedwindow widget (either scrollable or not) is a megawidget.
+#         The simple panedwindow is composed by an hull object (the megawidget container) that acts also as a border object and a panedwindow object.
+#
+# Additional options, described below, may be specified on the command line to configure aspects of the panedwindow.
+#
+#### SYNOPSIS:
+#
+# **panedwindow**  *window* ?*option value*? ... ?*option value*?
+#
+#### WIDGET OPTIONS:
+#
+# Note: Every option listed here can be:
+#          - Retrieved with the **configure** or **cget** command with no exceptions.
+#          - Changed with the **configure** command, unless stated otherwise.
+#
+# **-background**      It's a list that specifies the color to use as background.
+#                      See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                     If there isn't one, the **-background** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The **-background** will always abide by its mapping values, if any.
+#                                                     Styles, mappings and states events are allowed to change its value.
+#
+# **-bordercolor**     It's a list that specifies the color to use as bordercolor.
+#                      See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                      Note: It's only meaningful for widget with a **solid** or **flat** relief.
+#
+#                      Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                     If there isn't one, the **-bordercolor** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The **-bordercolor** will always abide by its mapping values, if any.
+#                                                     Styles, mappings and states events are allowed to change its value.
+#
+#                      See also **-borderwidth** and **-relief**.
+#
+# **-borderwidth**     Specifies the width of the three-dimensional border to draw around the outside of the widget,
+#                      if such a border is being drawn.
+#                      The **-relief** option typically determines this.
+#
+#                      The value may also be used when drawing three-dimensional effects in the widget's interior.
+#                      The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                      (pixels, points, inches, millimeters or centimeters).
+#
+#                      Note: A value of **0** means no border.
+#
+#                      Note: Only working with reliefs that are not *flat*.
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
+#                                                     If there isn't one, the **-borderwidth** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The **-borderwidth** will not abide by its mapping values, if any.
+#                                                     It is not supposed to change when the widget state changes.
+#
+#                      See also **-bordercolor** and **-relief**.
+#
+# **-class**           Specifies a class for the widget.
+#                      It is mainly used to make bindings for widgets that have the same class.
+#
+#                      Note: This option may only be provided while creating the widget.
+#                            Attempts to change this value after the widget is created by using the **configure** command,
+#                            will be ignored by mustang.
+#
+#                      If not provided, defaults to **TPanedwindow**.
+#
+# **-cursor**          Specifies the mouse cursor to be used for the widget.
+#                      If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                      cursor specification.
+#
+#                      See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                     If there isn't one, the **-cursor** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The **-cursor** will not abide by its mapping values, if any.
+#                                                     It is not supposed to change when the widget state changes.
+#
+# **-darkcolor**       It's a list that specifies the color to use as darkcolor.
+#                      See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                      Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#
+#                      Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-darkcolor** specified in its style.
+#                                                     If there isn't one, the **-darkcolor** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The **-darkcolor** will always abide by its mapping values, if any.
+#                                                     Styles, mappings and states events are allowed to change its value.
+#
+#                      See also **-lightcolor**.
+#
+# **-height**          Specifies the desired height of the widget in pixels.
+#                      If **0**, the requested height is determined by the height of the managed windows.
+#
+#                      If not provided, defaults to **0**.
+#
+#                      See also **-width**.
+#
+# **-lightcolor**      It's a list that specifies the color to use as lightcolor.
+#                      See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                      Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#
+#                      Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-lightcolor** specified in its style.
+#                                                     If there isn't one, the **-lightcolor** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The **-lightcolor** will always abide by its mapping values, if any.
+#                                                     Styles, mappings and states events are allowed to change its value.
+#
+#                      See also **-darkcolor**.
+#
+# **-orient**          Specifies the orientation of the window.
+#                      If **vertical**, subpanes are stacked top-to-bottom; if **horizontal**, subpanes are stacked left-to-right.
+#
+#                      Note: This option may only be provided while creating the widget.
+#                            Attempts to change this value after the widget is created by using the **configure** command,
+#                            will be ignored by mustang.
+#
+#                      If not provided, defaults to **horizontal**.
+#
+# **-relief**          Specifies the three-dimensional effect desired for the widget.
+#                      The value indicates how the widget's interior should appear relative to its exterior.
+#                      For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                      relative to the exterior of the widget.
+#
+#                      The widget will accept as relief any of the following values:
+#                         **flat**,
+#                         **groove**,
+#                         **raised**,
+#                         **ridge**,
+#                         **solid**,
+#                         **sunken**.
+#
+#                      Note: This is a styleable option.
+#
+#                            If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                     Only the developer can.
+#
+#                            If it's not provided --> The widget will follow the **-relief** specified in its style.
+#                                                     If there isn't one, the **-relief** of the **TPanedwindow** style
+#                                                     will be used instead.
+#                                                     The '*-relief*' will not abide by its mapping values, if any.
+#                                                     It is not supposed to change when the widget state changes.
+#
+#                      See also **-bordercolor** and **-borderwidth**.
+#
+# **-state**           Setting it changes the widget **physical** state and not the widget *look* (the state widget command does that).
+#                      Allowed states values are **normal** and **disabled**.
+#
+#                      If the panedwindow is disabled then its sash will not be be draggable.
+#
+#                      If not provided, defaults to **normal**.
+#
+# **-style**           Specifies a custom widget style.
+#                      If not provided, defaults to **TPanedwindow**.
+#
+#                      The *style* provided should already exists at the time the widget is created.
+#
+#                      See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# **-takefocus**       Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                      and **Shift-Tab**).
+#
+#                      Before setting the focus to a widget, the traversal scripts consult the value of the
+#                      *-takefocus* option.
+#                         **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                         **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                   and all of its ancestors are mapped.
+#
+#                      Differently than Tk, mustang does not allow the empty string as a valid value.
+#
+#                      If not provided, defaults to **0**.
+#
+# **-width**           Specifies the desired width of the widget in pixels.
+#                      If **0**, the requested width is determined by the width of the managed windows.
+#
+#                      If not provided, defaults to **0**.
+#
+#                      See also **-height**.
+#
+#
+#### WIDGET COMMAND:
+#
+# The panedwindow command creates a new command whose name is the same as the pathname of the panedwindow's window.
+# This command may be used to invoke various operations on the widget.
+# It has the following general form:
+#
+#   *window* *action* ?*arg* *arg* ... *arg*?
+#
+# *Window* is the name of the command, which is the same as the panedwindow widget pathname.
+# *Actions* and the *arg*s determine the exact behavior of the *window* command.
+#
+# The following commands are possible for panedwindow widgets:
+#
+#   *window* **add** *subwindow* ?*option* *value* ... *option* *value*?
+#     Adds a new pane to the window.
+#     Each pane should be created as a child of the panedwindow in which will be attached.
+#     See **PANE OPTIONS** section below for the list of available options.
+#
+#   *window* **cget** ?*option*?
+#     Returns the current value of the option given by *option*.
+#     *Option* may be one of the widget options accepted by the panedwindow command (See **WIDGET OPTIONS**).
+#
+#   *window* **configure** ?*option*? ?*value*? ?*option* *value* ... *option* *value*?
+#     Query or modify the configuration options of the widget.
+#
+#     If no options are specified, returns a list describing all of the available options with their
+#     default and current values.
+#
+#     If a single *option* is specified with no *value*, then the command returns a list describing its default
+#     and current values.
+#
+#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     to have the given value(s) and the command returns an empty string.
+#
+#     Some options can only be setted at creation time.
+#     See **WIDGET OPTIONS** to know which one is configurable and which one is not.
+#
+#   *window* **forget** *pane*
+#     Removes the specified subpane from the widget.
+#     *Pane* is either an integer index or the name of a managed subwindow.
+#
+#   *window* **identify** *component* *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if no *component* is present at that location.
+#     *X* and *y* are pixel coordinates relative to the widget.
+#     *Component* may be **element** or *sash**
+#
+#        *window* **identify** **element** *x* *y*
+#          Returns the name of the element at the specified location.
+#
+#        *window* **identify** **sash** *x* *y*
+#          Returns the index of the sash at the specified location.
+#
+#   *window* **insert** *pos* *subwindow* ?*option* *value* ... *option* *value*?
+#     Inserts a pane at the specified position.
+#     *Pos* is either the string **end**, an integer index, or the name of a managed subwindow.
+#     If *subwindow* is already managed by the paned window, moves it to the specified position.
+#     See **PANE OPTIONS** section below for the list of available options.
+#
+#   *window* **instate** *statespec* ?*script*?
+#     Test the widget's state.
+#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     If *script* is specified it's equivalent to:
+#
+#        if { [*window* **instate** *stateSpec*] } *script*
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **pane** *pane* *option* ?*value*? ?*option* *value* ... *option* *value*?
+#     Query or modify the options of the specified pane, where *pane* is either an integer index or the name of a managed subwindow.
+#     If no *option* is specified, returns a dictionary of the pane option values.
+#     If one *option* is specified, returns the value of that option.
+#     Otherwise, sets the *option*s to the corresponding values.
+#
+#   *window* **panes**
+#     Returns the list of all windows managed by the widget, in the index order of their associated panes.
+#
+#   *window* **sashpos** *index* ?*newpos*?
+#     If *newpos* is specified, sets the position of sash number *index*.
+#     May adjust the positions of adjacent sashes to ensure that positions are monotonically increasing.
+#     Sash positions are further constrained to be between **0** and the total size of the widget.
+#     Returns the new position of sash number index.
+#
+#   *window* **state** ?*statespec*?
+#     Modify or inquire widget state.
+#     If *statespec* is present       --> Sets the widget dynamic state.
+#                                         For each flag in *statespec*, sets the corresponding flag or clears it
+#                                         if prefixed by an exclamation point.
+#                                         Returns a new *statespec* indicating which flags were changed.
+#
+#     If *statespec* is not specified --> Returns a list of the currently enabled dynamic states.
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **style**
+#     Return the style used by the widget.
+#
+#### PANE OPTIONS:
+#
+# The following options may be specified for each pane:
+#
+#   **-weight** *amount*
+#      *Amount* should be an integer specifying the relative stretchability of the pane.
+#      When the paned window is resized, the extra space is added or subtracted to each pane proportionally to its weight *amount*.
+#
+#### VIRTUAL EVENTS:
+#
+# The panedwindow widget generates an **EnteredChild** virtual event on **LeaveNotify**/**NotifyInferior** events.
+#
+#### STATES:
+#
+# The panedwindow widget supports the **normal** and **disabled** states.
+# In the **disabled** state the panedwindow sash will not be draggable.
+#
+#### STYLING OPTIONS:
+#
+# Default style name: **TPanedwindow**
+#
+# Every panedwindow styleable option is supported and configurable with the [style](/wiki/commands/style.md) command.
+# Valid styleable options of other widgets will be ignored.
+# It is considered an error providing style options that are not managed by mustang or Tk.
+#
+# See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# The sash is managed by the **Sash** style (The sash class is also **Sash**).
+# The following sash options are supported and configurable with the [style](/wiki/commands/style.md) command:
+#
+#   **-background** *color*
+#   **-bordercolor** *color*
+#   **-darkcolor** *color*
+#   **-gripsize** *size* (number of screen units)
+#   **-handlepad** *amount*
+#   **-handlesize** *amount*
+#   **-lightcolor** *color*
+#   **-sashpad** *amount*
+#   **-sashrelief** *relief*
+#   **-sashthickness** *amount*
+#
+# Note: Some options are only available for specific themes.
+#
+#### BINDINGS:
+#
+# Mustang automatically creates several bindings for the panedwindows in order to facilitate the developer work and
+# augment the user experience at the same time.
+#
+###### SCROLLING
+#
+# The following behavior will happen if the mouse pointer is over the widget (no matter if it has the
+# focus or not).
+#
+# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+#       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
+#
+#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#
+# Note: Belows, when we talk about the widget's parents, we talk about it recursively.
+#       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar
+#       active for the relative key combination examined. If mustang finds a suitable parent, it will scroll that
+#       widget scrollbar, otherwise nothing will happen.
+#
+# Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the
+#       **Shift-MouseWheel** for the Y axis, while **Control-TouchpadScroll** events abide by the same rules of the
+#       **Control-MouseWheel** for the X axis and the **Control-Shift-MouseWheel** for the Y axis.
+#
+# 1.  **MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#     and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 2.  **Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal
+#     scrollbar and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 3.  **Control-MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical
+#     scrollbar and move that scrollbar by one page up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 4.  **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active
+#     horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad
+#     direction.
+#
+#        1 - **TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with
+#            an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the direction
+#            of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with
+#            an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the direction of
+#            the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad
+#     direction.
+#
+#        1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent
+#            with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the
+#            direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent
+#            with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the direction
+#            of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# The following behavior will happen if the widget has the focus or if one of its children has the focus but do not have a
+# direct binding action setted for the key involved. Mustang will try to find the innermost widget's scrollable parent with an
+# active vertical/horizontal scrollbar and scroll that scrollbar.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  - **Prior**         Scrolls one page towards the top of the widget's parent vertical scrollbar.
+#     - **Next**          Scrolls one page towards the bottom of the widget's parent vertical scrollbar.
+#     - **Control-Prior** Scrolls one page towards the right of the widget's parent horizontal scrollbar.
+#     - **Control-Next**  Scrolls one page towards the left of the widget's parent horizontal scrollbar.
+#
+# If none of the widget's parents meets the required conditions, nothing will happen.
+#
+###### INTERNAL MECHANISM:
+#
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth**
+#     and **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually
+#     indicate that the user is inside the widget.
+#
+# The following behavior will happen if the widget has the focus or if one of its children has the focus but do not have a direct
+# binding action setted for the key involved.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the previous
+#     focussable widget.
+#
+# The following behavior will happen if the mouse pointer is over a panedwindow's sash (no matter if the widget has the focus or not).
+#
+# 1.  Holding **ButtonPress-1** and moving the mouse will move the sash.
+#
+# There are other bindings in place for internal mechanism like **Activate/Deactivate**, **Configure**, **Destroy**, **Enter/Leave** and
+# **FocusIn/FocusOut**.
+#
+###### ALTERNATIVE BINDINGS:
+#
+# Check the [event](/wiki/commands/event.md) wiki page to see alternative keystrokes in case some keys are not present in the user
+# keyboard like the *Delete*, *Arrows*, *Home*, *End*, *PageUp* or *PageDown* keys.
+#
+#### COLOR OPTIONS:
+#
+# Each color option accepts colors provided in one of the following forms:
+#
+#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                               hexadecimals), with or without the **#**.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the color to validate and the second one (optional) indicates
+#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                               translated. If only one element is provided (the hexadecimal color) its color model will be
+#                               assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                               Note: Hexadecimal colors and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffffff'.
+#
+#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                          The color model is **HEX12**.
+#
+#                                                          The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ff0000'.
+#
+#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                          The color model is **HEX16**.
+#
+#                                                          The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#0000ff'.
+#
+#                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffff00'.
+#
+#   **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                               *Magenta*, or *Light Steel Blue*.
+#
+#                               In this form, the list should have at least one element. More precisely:
+#
+#                                    colorname   --> It's the textual color name that specifies the color.
+#                                                    Should always be written first. It can take more than one element of
+#                                                    the list depending on how many words are needed to define it.
+#
+#                                                    The only color names known by mustang are specified in its palettes.
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the allowed color names for the default **mustang** palette.
+#
+#                                    palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                    If present, it should always be the last element of the list if the color model
+#                                                    is not present, or the last but one if the color model is present.
+#
+#                                                    Allowed values are any palette name loaded into mustang.
+#                                                    If not provided, defaults to **mustang** or return the fallback value
+#                                                    if the **mustang** palette was not loaded.
+#
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the mustang palettes.
+#
+#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                    will be translated.
+#                                                    If present, the color model should always be the last element of the list.
+#
+#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                    If not provided, defaults to **HEX8**.
+#
+#                                                    Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                    about color models.
+#
+#                               Note: Colornames, palettes and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "teal"                --> The color name is *teal*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#008080"
+#
+#                                    "medium violet red"   --> The color name is *medium violet red*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#c71585"
+#
+#                                    "sepia MyPalette"     --> The color name is *sepia*.
+#                                                              The palette name is **MyPalette**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              Note that in this example **MyPalette** is a fictional
+#                                                              palette name that have been loaded into mustang.
+#
+#                                                              The color name is translated to the hexadecimal color at 8 bit
+#                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                    "light coral hex16"   --> The color name is *light coral*.
+#                                                              The color model is **HEX16**.
+#                                                              The palette name is **mustang**.
+#
+#                                                              The color name is translated to "#f0f080808080"
+#
+#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                             The palette name is **mustang**.
+#                                                                             The color model is **HEX8**.
+#
+#                                                                             The color name is translated to "#6ada8e"
+#
+#                               After its validation, the color name will be returned translated in its hexadecimal longform
+#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                               *HighlightAlternate* or *PlaceholderText*.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the theme color name to validate and the second one (optional)
+#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                               will be translated. If only one element is provided (the theme color name) its color model
+#                               will be assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                               theme color names are allowed.
+#
+#                               Note: Theme colors are case sensitive.
+#
+#### KNOWN ISSUES:
+#
+# In Windows and macOS, when scrollable widget are attached to a panedwindow (as panes), graphical glitches will happen
+# everytime the sash is dragged. This is due to several factors like:
+#    - How the panedwindow updates its panes when one of its sash is dragged.
+#    - How the mustang scrollable widgets auto-updates their scrollbars when their widget dimensions changes.
+#    - How the Windows and macOS window manager works.
+#    - ...
+#
+# To me these glitches are simply not acceptable because they make any application look and feel very unprofessional.
+# Not using scrollable widgets inside a panedwindow is also unacceptable due to how sashs works.
+# I tried everything within my knowledge to address these issues but without any luck.
+# Until these problems will be resolved the panedwindows will not be available on Windows and macOS.
+# I'm opened to suggestions on how to proceed.
+#
+# All the above problematics do not exists on Linux and BSD systems where panedwindows works flawlessy in any contexts.
+#
+#### EXAMPLE:
+#
+#   # Create an horizontal panedwindow of 800x400 with 3 horizontal scrollable panes inside.
+#   panedwindow .p    -height 400 \
+#                     -orient horizontal \
+#                     -relief solid \
+#                      -state normal \
+#                      -style TPanedwindow \
+#                  -takefocus 0 \
+#                      -width 800;
+#
+#   # Create the scrollable panes:
+#   # pane1
+#   frame .p.f1 -borderwidth 0 \
+#                    -height 600 \
+#                    -relief solid \
+#                -scrollable true \
+#                     -style TFrame \
+#                 -takefocus 1 \
+#                     -width 300;
+#
+#   # pane2
+#   frame .p.f2 -borderwidth 0 \
+#                    -height 600 \
+#                    -relief solid \
+#                -scrollable true \
+#                     -style TFrame \
+#                 -takefocus 1 \
+#                     -width 300;
+#
+#   # pane3
+#   frame .p.f3 -borderwidth 0 \
+#                    -height 600 \
+#                    -relief solid \
+#                -scrollable true \
+#                     -style TFrame \
+#                 -takefocus 1 \
+#                     -width 300;
+#
+#   # Create 20 labels in each pane, the labels will be positioned in two columns.
+#   foreach pane [list f1 f2 f3] {
+#       set row 0
+#       set i 0
+#       while { $i < 120 } {
+#           label .p.$pane.l$i -text [list "Label $i"]
+#
+#           grid .p.$pane.l$i -column 0 \
+#                               -padx [list 15 15] \
+#                               -pady [list 15 15] \
+#                                -row $row \
+#                             -sticky we;
+#
+#           incr i
+#
+#           label .p.$pane.l$i -text [list "Label $i"]
+#
+#           grid .p.$pane.l$i -column 2 \
+#                               -padx [list 15 15] \
+#                               -pady [list 15 15] \
+#                                -row $row \
+#                             -sticky we;
+#
+#           incr row
+#           incr i
+#       }
+#   }
+#
+#   # Add the panes to the horizontal panedwindow.
+#   .p add .p.f1
+#   .p add .p.f2
+#   .p add .p.f3
+#
+#   # Pack the horizontal panedwindow and expand it only along the x axis.
+#   pack .p -anchor nw \
+#           -expand true \
+#             -fill x \
+#             -padx [list 15 15] \
+#             -pady [list 15 15] \
+#             -side top;
+#
+#
+#   # Focus the first pane
+#   focus .p.f1
+#
+#   # After 3 seconds, change the accent color to orange.
+#   after 3000 [list set ::ms::accent orange]
+#
+#   # After 6 seconds, invert the colorscheme.
+#   switch -- [tk windowingsystem] {
+#       aqua {
+#           switch -- [wm attributes . -isdark] {
+#               0   { after 6000 [list set ::ms::colorscheme dark]  }
+#               1   { after 6000 [list set ::ms::colorscheme light] }
+#           }
+#       }
+#       default { after 6000 [list set ::ms::colorscheme dark] }
+#   }
 package provide ::ms::panedwindow 0.1
 
 ###################################
