@@ -1856,4 +1856,27 @@ proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
     return ""
 }
 
+## Sash_ButtonRelease
+#
+# Manage the **ButtonRelease** event on the widget.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::panedwindow::Sash_ButtonRelease { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    unset -nocomplain -- ::ms::temp(sash,state)
+
+    # Reset cursor.
+    interp invokehidden {} $w configure -cursor $::ms::current($w,cursor)
+
+    return ""
+}
+
 #*EOF*
