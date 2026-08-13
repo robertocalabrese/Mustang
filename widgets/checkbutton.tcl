@@ -2683,6 +2683,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     try {
                         $w.indicator instate $statespec
                     } on error { errortext errorcode } {
@@ -2708,6 +2709,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     try {
                         $w.indicator instate $statespec $script
                     } on error { errortext errorcode } {
@@ -2725,6 +2727,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
             # *window* **invoke**
             switch -- $::ms::current($w,state) {
                 normal {
+                    # Execute the command.
                     try {
                         uplevel #0 [list $w.indicator invoke]
                     } on error { errortext errorcode } {
