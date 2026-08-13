@@ -2271,4 +2271,163 @@ proc ::ms::radiobutton::ButtonPress { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::radiobutton::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove all the objects real addresses from the list of all available real addresses.
+    foreach object [list $w \
+                         $w.highlight \
+                         $w.indicator \
+                         $w.label] {
+        set index [lsearch -exact $::ms::addr(reals) $object]
+        switch -- $index {
+            -1      {}
+            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+        }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the radiobutton widgets real address list.
+    set index [lsearch -exact $::ms::addr(radiobutton) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(radiobutton) [lremove $::ms::addr(radiobutton) $index] }
+    }
+
+    # Remove the widget address from the radiobutton classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),radiobutton,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),radiobutton,addrs) [lremove $::ms::class($::ms::current($w,class),radiobutton,addrs) $index] }
+    }
+
+    # Remove the widget address from the radiobutton classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),radiobutton,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),radiobutton,addrs) [lremove $::ms::style($::ms::current($w,style),radiobutton,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the radiobutton classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),radiobutton,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(radiobutton,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(radiobutton,classtype) [lremove $::ms::style(radiobutton,classtype) $index] }
+            }
+        }
+    }
+
+    # Remove the widget address from the megawidget real address list.
+    set index [lsearch -exact $::ms::addr(megawidgets) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,charwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,command) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,highlightcolor) \
+                         ::ms::current($w,indicatorbackground) \
+                         ::ms::current($w,indicatorforeground) \
+                         ::ms::current($w,indicatorrelief) \
+                         ::ms::current($w,justify) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,shellbackground) \
+                         ::ms::current($w,spacer) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,text) \
+                         ::ms::current($w,textvariable) \
+                         ::ms::current($w,underline) \
+                         ::ms::current($w,value) \
+                         ::ms::current($w,variable) \
+                         ::ms::current($w,wraplength);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,token) \
+                         ::ms::data($w,translated_text);
+
+    unset -nocomplain -- ::ms::default($w,charwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,command) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,highlightcolor) \
+                         ::ms::default($w,indicatorbackground) \
+                         ::ms::default($w,indicatorforeground) \
+                         ::ms::default($w,indicatorrelief) \
+                         ::ms::default($w,justify) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,shellbackground) \
+                         ::ms::default($w,spacer) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,text) \
+                         ::ms::default($w,textvariable) \
+                         ::ms::default($w,underline) \
+                         ::ms::default($w,value) \
+                         ::ms::default($w,variable) \
+                         ::ms::default($w,wraplength);
+
+    unset -nocomplain -- ::ms::managed_by($w,charwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,highlightcolor) \
+                         ::ms::managed_by($w,indicatorbackground) \
+                         ::ms::managed_by($w,indicatorforeground) \
+                         ::ms::managed_by($w,indicatorrelief) \
+                         ::ms::managed_by($w,justify) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,shellbackground) \
+                         ::ms::managed_by($w,spacer) \
+                         ::ms::managed_by($w,wraplength);
+
+    unset -nocomplain -- ::ms::style($w,hull) \
+                         ::ms::style($w,indicator) \
+                         ::ms::style($w,label) \
+                         ::ms::style($w,highlight);
+
+    return ""
+}
+
 #*EOF*
