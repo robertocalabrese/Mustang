@@ -998,7 +998,42 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+            switch -- [llength $args] {
+                0   { return [interp invokehidden {} $w state] }
+                1   {
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    #####################################
+                    ##                                 ##
+                    ##     UPDATE THE WIDGET STATE     ##
+                    ##                                 ##
+                    #####################################
+
+                    # Propagate the new statespec to the hull and panedwindow objects.
+                    interp invokehidden {} $w state $statespec
+
+                    return [interp invokehidden {} $w state $statespec]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
