@@ -580,6 +580,11 @@ proc ::ms::progressbar::Command { window { args "" } } {
                     }
                 }
             }
+
+            # If the parent style layout is not known by mustang, set it as the current theme layout orientation.
+            if { $parent_style ni $::ms::layouts($::ms::theme) } {
+                _ttk_style layout $parent_style [_ttk_style layout [string cat $orient "." TProgressbar]]
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
