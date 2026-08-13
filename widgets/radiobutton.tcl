@@ -1478,6 +1478,34 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Get the padding data.
+                            switch -- [llength $::ms::current($w,padding)] {
+                                1   {
+                                    set pad_left   [lindex $::ms::current($w,padding) 0]
+                                    set pad_right  [lindex $::ms::current($w,padding) 0]
+                                    set pad_top    [lindex $::ms::current($w,padding) 0]
+                                    set pad_bottom [lindex $::ms::current($w,padding) 0]
+                                }
+                                2   {
+                                    set pad_left   [lindex $::ms::current($w,padding) 0]
+                                    set pad_top    [lindex $::ms::current($w,padding) 1]
+                                    set pad_right  [lindex $::ms::current($w,padding) 0]
+                                    set pad_bottom [lindex $::ms::current($w,padding) 1]
+                                }
+                                3   {
+                                    set pad_left   [lindex $::ms::current($w,padding) 0]
+                                    set pad_top    [lindex $::ms::current($w,padding) 1]
+                                    set pad_right  [lindex $::ms::current($w,padding) 2]
+                                    set pad_bottom [lindex $::ms::current($w,padding) 1]
+                                }
+                                4   {
+                                    set pad_left   [lindex $::ms::current($w,padding) 0]
+                                    set pad_top    [lindex $::ms::current($w,padding) 1]
+                                    set pad_right  [lindex $::ms::current($w,padding) 2]
+                                    set pad_bottom [lindex $::ms::current($w,padding) 3]
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
