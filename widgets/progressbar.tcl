@@ -141,7 +141,23 @@ _bind _Progressbar <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; brea
 _bind _Progressbar <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **progressbar** package.
-namespace eval ::ms::progressbar {}
+namespace eval ::ms::progressbar {
+    # Set the 'non styleable' progressbar option list.
+    set ::ms::progressbar(non_styleable,options) [list class \
+                                                       cmenu \
+                                                       length \
+                                                       maximum \
+                                                       mode \
+                                                       orient \
+                                                       phase \
+                                                       state \
+                                                       style \
+                                                       takefocus \
+                                                       text \
+                                                       textvariable \
+                                                       value \
+                                                       variable];
+}
 
 # Rename the original Tk **ttk::progressbar** command.
 rename ttk::progressbar _ttk_progressbar
