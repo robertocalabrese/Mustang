@@ -308,6 +308,228 @@ proc ::ms::progressbar::Command { window { args "" } } {
             set ::ms::managed_by($w,thickness)   Tk
             set ::ms::managed_by($w,troughcolor) Tk
             set ::ms::managed_by($w,wraplength)  Tk
+
+            #################################################
+            ##                                             ##
+            ##     CHECK THE WIDGET'S OPTIONS PROVIDED     ##
+            ##                                             ##
+            #################################################
+
+            # Check the remaining options, if any.
+            foreach { option value } $args {
+                switch -nocase -- $option {
+                    -anchor {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            center -
+                            e      -
+                            n      -
+                            ne     -
+                            nw     -
+                            s      -
+                            se     -
+                            sw     -
+                            w      {
+                                set ::ms::current($w,anchor)    $value
+                                set ::ms::managed_by($w,anchor) developer
+                            }
+                        }
+                    }
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
+                    -bordercolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,bordercolor)    $value
+                        set ::ms::managed_by($w,bordercolor) developer
+                    }
+                    -borderwidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,borderwidth)    $value
+                        set ::ms::managed_by($w,borderwidth) developer
+                    }
+                    -class { set ::ms::current($w,class) $value }
+                    -cmenu {
+                        set value [string trim $value]
+                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                            set ::ms::current($w,cmenu) $value
+                        }
+                    }
+                    -cursor {
+                        set value [string tolower $value]
+                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                            set ::ms::current($w,cursor)    $value
+                            set ::ms::managed_by($w,cursor) developer
+                        }
+                    }
+                    -darkcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,darkcolor)    $value
+                        set ::ms::managed_by($w,darkcolor) developer
+                    }
+                    -font {
+                        if { $value in [font names] } {
+                            set ::ms::current($w,font)    $value
+                            set ::ms::managed_by($w,font) developer
+                        }
+                    }
+                    -foreground {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,foreground)    $value
+                        set ::ms::managed_by($w,foreground) developer
+                    }
+                    -justify {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            center -
+                            left   -
+                            right  {
+                                set ::ms::current($w,justify)    $value
+                                set ::ms::managed_by($w,justify) developer
+                            }
+                        }
+                    }
+                    -length {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,length) $value
+                    }
+                    -lightcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,lightcolor)    $value
+                        set ::ms::managed_by($w,lightcolor) developer
+                    }
+                    -maximum {
+                        switch -- [string is double -strict $value] {
+                            0   { continue }
+                            1   {
+                                if { $value > 0 } {
+                                    set ::ms::current($w,maximum) $value
+                                }
+                            }
+                        }
+                    }
+                    -mode {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            determinate   -
+                            indeterminate { set ::ms::current($w,orient) $value }
+                        }
+                    }
+                    -orient {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            horizontal -
+                            vertical   { set ::ms::current($w,orient) $value }
+                        }
+                    }
+                    -phase {
+                        switch -- [string is integer -strict $value] {
+                            0   { continue }
+                            1   {
+                                if { $value > 0 } {
+                                    set ::ms::current($w,phase) $value
+                                }
+                            }
+                        }
+                    }
+                    -state {}
+                    -style {
+                        if { $value ni $::ms::style($::ms::theme) } {
+                            continue
+                        }
+
+                        set ::ms::current($w,style) $value
+                    }
+                    -takefocus {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,takefocus) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,takefocus) 1 }
+                        }
+                    }
+                    -text { set ::ms::current($w,text) $value }
+                    -textvariable {
+                        switch -- [info exists $value] {
+                            1   { set ::ms::current($w,textvariable) $value }
+                        }
+                    }
+                    -thickness {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,thickness)    $value
+                        set ::ms::managed_by($w,thickness) developer
+                    }
+                    -troughcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,troughcolor)    $value
+                        set ::ms::managed_by($w,troughcolor) developer
+                    }
+                    -value {
+                        switch -- [string is double -strict $value] {
+                            0   { continue }
+                        }
+
+                        set ::ms::current($w,value) $value
+                    }
+                    -variable {
+                        switch -- [info exists $value] {
+                            1   { set ::ms::current($w,variable) $value }
+                        }
+                    }
+                    -wraplength {
+                        switch -- [string is integer -strict $value] {
+                            0   { continue }
+                        }
+
+                        set ::ms::current($w,wraplength)    $value
+                        set ::ms::managed_by($w,wraplength) developer
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
