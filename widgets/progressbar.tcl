@@ -234,6 +234,80 @@ proc ::ms::progressbar::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)        $::ms::default(progressbar,class)
+            set ::ms::default($w,cmenu)        $::ms::default(progressbar,cmenu)
+            set ::ms::default($w,length)       $::ms::default(progressbar,length)
+            set ::ms::default($w,maximum)      $::ms::default(progressbar,maximum)
+            set ::ms::default($w,mode)         $::ms::default(progressbar,mode)
+            set ::ms::default($w,orient)       $::ms::default(progressbar,orient)
+            set ::ms::default($w,phase)        $::ms::default(progressbar,phase)
+            set ::ms::default($w,state)        $::ms::default(progressbar,state)
+            set ::ms::default($w,style)        $::ms::default(progressbar,style)
+            set ::ms::default($w,takefocus)    $::ms::default(progressbar,takefocus)
+            set ::ms::default($w,text)         $::ms::default(progressbar,text)
+            set ::ms::default($w,textvariable) $::ms::default(progressbar,textvariable)
+            set ::ms::default($w,value)        $::ms::default(progressbar,value)
+            set ::ms::default($w,variable)     $::ms::default(progressbar,variable)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)        $::ms::default(progressbar,class)
+            set ::ms::current($w,cmenu)        $::ms::default(progressbar,cmenu)
+            set ::ms::current($w,length)       $::ms::default(progressbar,length)
+            set ::ms::current($w,maximum)      $::ms::default(progressbar,maximum)
+            set ::ms::current($w,mode)         $::ms::default(progressbar,mode)
+            set ::ms::current($w,orient)       $::ms::default(progressbar,orient)
+            set ::ms::current($w,phase)        $::ms::default(progressbar,phase)
+            set ::ms::current($w,state)        $::ms::default(progressbar,state)
+            set ::ms::current($w,style)        $::ms::default(progressbar,style)
+            set ::ms::current($w,takefocus)    $::ms::default(progressbar,takefocus)
+            set ::ms::current($w,text)         $::ms::default(progressbar,text)
+            set ::ms::current($w,textvariable) $::ms::default(progressbar,textvariable)
+            set ::ms::current($w,value)        $::ms::default(progressbar,value)
+            set ::ms::current($w,variable)     $::ms::default(progressbar,variable)
+
+            # Set the widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) progressbar
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a progressbar styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **progressbar** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,anchor)      Tk
+            set ::ms::managed_by($w,background)  Tk
+            set ::ms::managed_by($w,bordercolor) Tk
+            set ::ms::managed_by($w,borderwidth) Tk
+            set ::ms::managed_by($w,cursor)      Tk
+            set ::ms::managed_by($w,darkcolor)   Tk
+            set ::ms::managed_by($w,font)        Tk
+            set ::ms::managed_by($w,foreground)  Tk
+            set ::ms::managed_by($w,justify)     Tk
+            set ::ms::managed_by($w,lightcolor)  Tk
+            set ::ms::managed_by($w,thickness)   Tk
+            set ::ms::managed_by($w,troughcolor) Tk
+            set ::ms::managed_by($w,wraplength)  Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
