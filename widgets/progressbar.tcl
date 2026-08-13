@@ -1166,6 +1166,129 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                             if { $parent_style ni $::ms::layouts($::ms::theme) } {
                                 _ttk_style layout $parent_style [_ttk_style layout [string cat $orient "." TProgressbar]]
                             }
+
+                            ##################################
+                            ##                              ##
+                            ##     CONFIGURE THE WIDGET     ##
+                            ##                              ##
+                            ##################################
+
+                            # Note: 'anchor', 'borderwidth', 'cursor', 'font', 'justify', 'thickness', 'troughcolor' and 'wraplength' are not allowed
+                            #       to change if the statespec changes.
+
+                            #########################
+                            ##                     ##
+                            ##     PROGRESSBAR     ##
+                            ##                     ##
+                            #########################
+
+                            # Note: 'arrowsize' is only understood by the clam engine while 'thickness' is understood by the other engines.
+
+                            # Set the widget style name.
+                            set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
+                                                                   "_bc=" $::ms::current($w,bordercolor) \
+                                                                   "_bw=" $::ms::current($w,borderwidth) \
+                                                                   "_dc=" $::ms::current($w,darkcolor) \
+                                                                   "_lc=" $::ms::current($w,lightcolor) \
+                                                                   "_tn=" $::ms::current($w,thickness) \
+                                                                   "_tc=" $::ms::current($w,troughcolor) \
+                                                                   "." $parent_style];
+
+                            # If needed, create the widget style name.
+                            if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,widget)   -arrowsize $::ms::current($w,thickness) \
+                                                                              -background $::ms::current($w,background) \
+                                                                             -bordercolor $::ms::current($w,bordercolor) \
+                                                                             -borderwidth $::ms::current($w,borderwidth) \
+                                                                               -darkcolor $::ms::current($w,darkcolor) \
+                                                                              -lightcolor $::ms::current($w,lightcolor) \
+                                                                               -thickness $::ms::current($w,thickness) \
+                                                                             -troughcolor $::ms::current($w,troughcolor);
+
+                                # Add the widget style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+                            }
+
+                            # Initialize the widget mapping.
+                            set mapping [list ]
+
+                            # background
+                            switch -- $::ms::managed_by($w,background) {
+                                developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                                Tk  {
+                                    # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                                    }
+                                }
+                            }
+
+                            # bordercolor
+                            switch -- $::ms::managed_by($w,bordercolor) {
+                                developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+                                Tk  {
+                                    # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
+                                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
+                                    }
+                                }
+                            }
+
+                            # darkcolor
+                            switch -- $::ms::managed_by($w,darkcolor) {
+                                developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+                                Tk  {
+                                    # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
+                                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
+                                    }
+                                }
+                            }
+
+                            # lightcolor
+                            switch -- $::ms::managed_by($w,lightcolor) {
+                                developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+                                Tk  {
+                                    # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
+                                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
+                                    }
+                                }
+                            }
+
+                            # If needed, create the widget mapping.
+                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+                                # Add the widget mapping to the stylemap list containing all the mappings
+                                # created by mustang for the current theme.
+                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                            }
+
+                            # If not specified in the command line the foreground should follow it's mapping style, if any.
+                            switch -- $::ms::managed_by($w,background) {
+                                developer { set foreground $::ms::current($w,foreground) }
+                                Tk        { set foreground [_ttk_style lookup $::ms::current($w,style) -foreground [interp invokehidden {} $w state] $::ms::default($w,foreground)] }
+                            }
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure     -anchor $::ms::current($w,anchor) \
+                                                                    -cursor $::ms::current($w,cursor) \
+                                                                      -font $::ms::current($w,font) \
+                                                                -foreground $foreground \
+                                                                   -justify $::ms::current($w,justify) \
+                                                                    -length $::ms::current($w,length) \
+                                                                   -maximum $::ms::current($w,maximum) \
+                                                                      -mode $::ms::current($w,mode) \
+                                                                     -phase $::ms::current($w,phase) \
+                                                                     -style $::ms::style($w,widget) \
+                                                                 -takefocus $::ms::current($w,takefocus) \
+                                                                      -text $text_variable \
+                                                                     -value $::ms::current($w,value) \
+                                                                  -variable $::ms::current($w,variable) \
+                                                                -wraplength $::ms::current($w,wraplength);
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
