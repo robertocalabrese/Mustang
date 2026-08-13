@@ -228,6 +228,75 @@ proc ::ms::radiobutton::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)        $::ms::default(radiobutton,class)
+            set ::ms::default($w,cmenu)        $::ms::default(radiobutton,cmenu)
+            set ::ms::default($w,command)      $::ms::default(radiobutton,command)
+            set ::ms::default($w,state)        $::ms::default(radiobutton,state)
+            set ::ms::default($w,style)        $::ms::default(radiobutton,style)
+            set ::ms::default($w,takefocus)    $::ms::default(radiobutton,takefocus)
+            set ::ms::default($w,text)         $::ms::default(radiobutton,text)
+            set ::ms::default($w,textvariable) $::ms::default(radiobutton,textvariable)
+            set ::ms::default($w,underline)    $::ms::default(radiobutton,underline)
+            set ::ms::default($w,value)        $::ms::default(radiobutton,value)
+            set ::ms::default($w,variable)     $::ms::default(radiobutton,variable)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)        $::ms::default(radiobutton,class)
+            set ::ms::current($w,cmenu)        $::ms::default(radiobutton,cmenu)
+            set ::ms::current($w,command)      $::ms::default(radiobutton,command)
+            set ::ms::current($w,state)        $::ms::default(radiobutton,state)
+            set ::ms::current($w,style)        $::ms::default(radiobutton,style)
+            set ::ms::current($w,takefocus)    $::ms::default(radiobutton,takefocus)
+            set ::ms::current($w,text)         $::ms::default(radiobutton,text)
+            set ::ms::current($w,textvariable) $::ms::default(radiobutton,textvariable)
+            set ::ms::current($w,underline)    $::ms::default(radiobutton,underline)
+            set ::ms::current($w,value)        $::ms::default(radiobutton,value)
+            set ::ms::current($w,variable)     $::ms::default(radiobutton,variable)
+
+            # Set the widget variable needed for internal mechanisms.
+            set ::ms::data($w,classtype) radiobutton
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a radiobutton styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **radiobutton** *window* **-shellbackground** red
+            #       or
+            #           *window* **configure** **-shellbackground** red
+            set ::ms::managed_by($w,charwidth)           Tk
+            set ::ms::managed_by($w,cursor)              Tk
+            set ::ms::managed_by($w,font)                Tk
+            set ::ms::managed_by($w,foreground)          Tk
+            set ::ms::managed_by($w,highlightcolor)      Tk
+            set ::ms::managed_by($w,image)               Tk
+            set ::ms::managed_by($w,indicatorbackground) Tk
+            set ::ms::managed_by($w,indicatorforeground) Tk
+            set ::ms::managed_by($w,indicatorrelief)     Tk
+            set ::ms::managed_by($w,justify)             Tk
+            set ::ms::managed_by($w,padding)             Tk
+            set ::ms::managed_by($w,shellbackground)     Tk
+            set ::ms::managed_by($w,spacer)              Tk
+            set ::ms::managed_by($w,wraplength)          Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
