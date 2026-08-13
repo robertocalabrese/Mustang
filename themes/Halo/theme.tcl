@@ -1043,6 +1043,103 @@ namespace eval ttk::theme::Halo {
                                       -wraplength 0;
 
         # No mapping
+
+        #########################
+        ##                     ##
+        ##     RADIOBUTTON     ##
+        ##                     ##
+        #########################
+
+        # Note: 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify', 'padding',
+        #       'shellbackground' and 'wraplength' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'indicatorbackground', 'indicatorcolor', 'indicatorforeground' and 'indicatorrelief' are setted in a way
+        #       that reflects the default radiobutton images colors.
+        #       Due to the fact that the Halo theme uses images for the indicator, they are silently ignored when the
+        #       Halo theme is in use.
+
+        # Note: In mustang radiobuttons are megawidgets, but differently than other megawidgets their 'background' and
+        #       'shellbackground' coincides.
+        #       The correct option name to use as background inside a radiobutton style in mustang is '-shellbackground' and not
+        #       '-background', nonetheless a '-background' option is setted as well for those widgets that are not created by mustang.
+
+        # Note: Mustang do not use '-compound' or '-indicatormargin' (the latter is replaced by a combinatioon of '-padding' and 'spacer').
+        #       Nonetheless, these options are setted as well for those widgets that are not created by mustang.
+
+        # Note: The 'image' option supports mapping values but they need to be specified in the normal state declaration as a list.
+        #       The first element is the the image name to use in the normal state. The rest of the list is a sequence of statespec/value
+        #       pairs as per style map, specifying different images to use when the widget is in a particular state or combination of states.
+        #
+        #       Note that all images in the list should have the same size.
+        #
+        #       If an empty string is specified, it indicates that the widget has no image to display.
+        #       The image specified should have been allready created at the time the widget is created.
+        #
+        #       Any 'image' mapping values specified with the style map command will be ignored by mustang.
+
+        # Layout
+        style layout TRadiobutton {
+            Radiobutton.padding -sticky nswe -children {
+                Radiobutton.indicator -side left -sticky {}
+                Radiobutton.label -side left -sticky we
+            }
+        }
+
+        # Elements
+        # The first image normally represents the normal state, here is a decoy.
+        style element create Radiobutton.indicator    image [list                      radio_off \
+                                                                  {disabled  selected} radio_on_disabled \
+                                                                  {disabled !selected} radio_off_disabled \
+                                                                   {pressed  selected} radio_on_pressed \
+                                                                   {pressed !selected} radio_off_pressed \
+                                                                     {focus  selected} radio_on_hover \
+                                                                     {focus !selected} radio_off_hover \
+                                                                     {hover  selected} radio_on_hover \
+                                                                     {hover !selected} radio_off_hover \
+                                                                              selected radio_on \
+                                                                             !selected radio_off] \
+                                                    -border 0 \
+                                                    -height -1 \
+                                                   -padding [list 0 0 1 0] \
+                                                    -sticky {} \
+                                                     -width -1;
+
+        # Normal state
+        style configure TRadiobutton          -background Background \
+                                               -charwidth -10 \
+                                                -compound left \
+                                                  -cursor arrow \
+                                                    -font NormalFont \
+                                              -foreground Text \
+                                          -highlightcolor Background \
+                                                   -image {} \
+                                     -indicatorbackground Background \
+                                     -indicatorforeground Accent \
+                                         -indicatormargin [list 1m 2m 0 1m] \
+                                         -indicatorrelief flat \
+                                                 -justify left \
+                                                 -padding [list 1m 2m] \
+                                         -shellbackground Background \
+                                                  -spacer $::ms::size(Halo,spacer) \
+                                              -wraplength 0;
+
+        # Mapping
+        style map TRadiobutton          -foreground [list  disabled TextDisabled \
+                                                           readonly TextReadonly \
+                                                              hover Accent] \
+                                    -highlightcolor [list  disabled Background \
+                                                           readonly Background \
+                                                            pressed HighlightAlternate \
+                                                              focus Accent] \
+                               -indicatorforeground [list  disabled BordercolorDisabled \
+                                                           readonly TextReadonly \
+                                                            pressed HighlightAlternate \
+                                                              focus Highlight \
+                                                              hover Accent \
+                                                          alternate Accent \
+                                                           selected Accent \
+                                                          !selected BordercolorAlternate];
     }
 }
 
