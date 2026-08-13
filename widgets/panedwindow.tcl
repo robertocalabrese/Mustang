@@ -1761,4 +1761,52 @@ proc ::ms::panedwindow::Reset_Cursor { w } {
     return ""
 }
 
+## Set_Cursor
+#
+# Set the cursor shape on the widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates of the event.
+#        These values should be provided by the <Motion> event.
+#
+# It doesn't return anything.
+proc ::ms::panedwindow::Set_Cursor { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Safeguard
+    switch -- [info exists ::ms::temp(sash,state)] {
+        0   {
+            # Check if the is over a panedwindow sash.
+            switch -- [interp invokehidden {} $w identify sash $x $y] {
+                ""  {
+                    # The cursor is not over a panedwindow sash.
+
+                    # Check if the cursor is different than the '::ms::current($w,cursor)' provided.
+                    if { [interp invokehidden {} $w cget -cursor] ne $::ms::current($w,cursor) } {
+                        interp invokehidden {} $w configure -cursor $::ms::current($w,cursor) }
+                    }
+                default {
+                    # The cursor is over a panedwindow sash.
+
+                    # Check if the cursor is the '::ms::current($w,cursor)' provided.
+                    if { [interp invokehidden {} $w cget -cursor] eq $::ms::current($w,cursor) } {
+                        switch -- $::ms::current($w,orient) {
+                            horizontal { interp invokehidden {} $w configure -cursor [ttk::cursor hresize] }
+                            vertical   { interp invokehidden {} $w configure -cursor [ttk::cursor vresize] }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
