@@ -2066,6 +2066,60 @@ proc ::ms::radiobutton::Style_Update { stylename caller_info } {
 
         _grid configure $w.indicator -padx [list $pad_left 0] \
                                      -pady [list $pad_top 1m];
+
+        ###################
+        ##               ##
+        ##     LABEL     ##
+        ##               ##
+        ###################
+
+        # Set the label object style name.
+        set ::ms::style($w,label) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                              "_fg=" $::ms::current($w,foreground) \
+                                              ".TLabel"];
+
+        # If needed, create the label object style name.
+        if { $::ms::style($w,label) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,label) -background $::ms::current($w,shellbackground) \
+                                                        -foreground $::ms::current($w,foreground);
+
+            # Add the label object style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,label)
+        }
+
+        # Initialize the label object mapping.
+        set mapping [list ]
+
+        # foreground
+        switch -- $::ms::managed_by($w,foreground) {
+            developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+            Tk  {
+                # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
+                    1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
+                }
+            }
+        }
+
+        # If needed, create the label object mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,label) {*}$mapping
+
+            # Add the label object mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        # Apply the changes.
+        $w.label configure     -cursor $cursor \
+                                 -font $::ms::current($w,font) \
+                              -justify $::ms::current($w,justify) \
+                                -style $::ms::style($w,label) \
+                                -width $::ms::current($w,charwidth) \
+                           -wraplength $::ms::current($w,wraplength);
+
+        _grid configure $w.label -padx [list $::ms::current($w,spacer) $pad_right] \
+                                 -pady [list $pad_top 1m];
     }
 
     return ""
