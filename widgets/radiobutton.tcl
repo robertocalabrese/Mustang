@@ -168,6 +168,21 @@ namespace eval ::ms::radiobutton {
                                                    shellbackground \
                                                    spacer \
                                                    wraplength];
+
+    # Set the default 'non-styleable' radiobutton options values.
+    set ::ms::default(radiobutton,class)        TRadiobutton
+    set ::ms::default(radiobutton,cmenu)        {}
+    set ::ms::default(radiobutton,command)      {}
+    set ::ms::default(radiobutton,state)        normal
+    set ::ms::default(radiobutton,style)        TRadiobutton
+    set ::ms::default(radiobutton,takefocus)    1
+    set ::ms::default(radiobutton,text)         {}
+    set ::ms::default(radiobutton,textvariable) {}
+    set ::ms::default(radiobutton,underline)    -1
+    set ::ms::default(radiobutton,value)        {}
+    set ::ms::default(radiobutton,variable)     {}
+
+    # Note: The default 'styleable' radiobutton options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **radiobutton** and **ttk::radiobutton** commands.
