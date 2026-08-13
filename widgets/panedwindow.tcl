@@ -1423,7 +1423,12 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::panedwindow::Style_Update { stylename caller_info } {}
+proc ::ms::panedwindow::Style_Update { stylename caller_info } {
+    # Update all the panedwindow widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,panedwindow,addrs) {}
+
+    return ""
+}
 
 ######################################
 ##                                  ##
