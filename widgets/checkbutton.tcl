@@ -1438,19 +1438,13 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             # Enable/Disable the widget automatic translation.
             switch -- $::ms::current($w,textvariable) {
                 ""  {
-                    switch -- [llength $::ms::current($w,text)] {
-                        0       { set ::ms::data($w,translated_text) $::ms::current($w,text) }
-                        default {
-                            # Automatic translation: ON
-                            set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
-                        }
-                    }
-
-                    set textvariable ::ms::data($w,translated_text)
+                    # Automatic translation: ON
+                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+                    set text_variable ::ms::data($w,translated_text)
                 }
                 default {
                     # Automatic translation: OFF
-                    set textvariable $::ms::current($w,textvariable)
+                    set text_variable $::ms::current($w,textvariable)
                 }
             }
 
@@ -1674,7 +1668,7 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                        -style $::ms::style($w,label) \
                                    -takefocus 0 \
                                         -text "" \
-                                -textvariable $textvariable \
+                                -textvariable $text_variable \
                                    -underline $::ms::current($w,underline) \
                                        -width $::ms::current($w,charwidth) \
                                   -wraplength $::ms::current($w,wraplength);
@@ -2337,19 +2331,13 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             # Enable/Disable the widget automatic translation.
                             switch -- $::ms::current($w,textvariable) {
                                 ""  {
-                                    switch -- [llength $::ms::current($w,text)] {
-                                        0       { set ::ms::data($w,translated_text) $::ms::current($w,text) }
-                                        default {
-                                            # Automatic translation: ON
-                                            set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
-                                        }
-                                    }
-
-                                    set textvariable ::ms::data($w,translated_text)
+                                    # Automatic translation: ON
+                                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+                                    set text_variable ::ms::data($w,translated_text)
                                 }
                                 default {
                                     # Automatic translation: OFF
-                                    set textvariable $::ms::current($w,textvariable)
+                                    set text_variable $::ms::current($w,textvariable)
                                 }
                             }
 
@@ -2544,7 +2532,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                                     -justify $::ms::current($w,justify) \
                                                       -state $::ms::current($w,state) \
                                                       -style $::ms::style($w,label) \
-                                               -textvariable $textvariable \
+                                               -textvariable $text_variable \
                                                   -underline $::ms::current($w,underline) \
                                                       -width $::ms::current($w,charwidth) \
                                                  -wraplength $::ms::current($w,wraplength);
