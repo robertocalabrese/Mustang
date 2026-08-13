@@ -927,7 +927,26 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
             }
         }
         start -
-        step  {}
+        step  {
+            # Synopsis:
+            #
+            # *window* **start** ?*interval*?
+            # *window* **step** ?*amount*?
+            switch -- [llength $args] {
+                0   -
+                1   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         stop {}
         style {}
