@@ -172,6 +172,24 @@ namespace eval ::ms::progressbar {
                                                    thickness \
                                                    troughcolor \
                                                    wraplength];
+
+    # Set the default 'non-styleable' progressbar options values.
+    set ::ms::default(progressbar,class)        TProgressbar
+    set ::ms::default(progressbar,cmenu)        {}
+    set ::ms::default(progressbar,length)       75p
+    set ::ms::default(progressbar,maximum)      100.0
+    set ::ms::default(progressbar,mode)         determinate
+    set ::ms::default(progressbar,orient)       horizontal
+    set ::ms::default(progressbar,phase)        0
+    set ::ms::default(progressbar,state)        normal
+    set ::ms::default(progressbar,style)        TProgressbar
+    set ::ms::default(progressbar,takefocus)    1
+    set ::ms::default(progressbar,text)         {}
+    set ::ms::default(progressbar,textvariable) {}
+    set ::ms::default(progressbar,value)        0.0
+    set ::ms::default(progressbar,variable)     {}
+
+    # Note: The default 'styleable' progressbar options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::progressbar** command.
