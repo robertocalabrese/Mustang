@@ -152,6 +152,22 @@ namespace eval ::ms::radiobutton {
                                                        underline \
                                                        value \
                                                        variable];
+
+    # Set the 'styleable' radiobutton option list.
+    set ::ms::radiobutton(styleable,options) [list charwidth \
+                                                   cursor \
+                                                   font \
+                                                   foreground \
+                                                   highlightcolor \
+                                                   image \
+                                                   indicatorbackground \
+                                                   indicatorforeground \
+                                                   indicatorrelief \
+                                                   justify \
+                                                   padding \
+                                                   shellbackground \
+                                                   spacer \
+                                                   wraplength];
 }
 
 # Rename the original Tk **radiobutton** and **ttk::radiobutton** commands.
