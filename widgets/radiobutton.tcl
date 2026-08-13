@@ -1665,6 +1665,56 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
 
                             _grid configure $w.label -padx [list $::ms::current($w,spacer) $pad_right] \
                                                      -pady [list $pad_top 1m];
+
+                            #######################
+                            ##                   ##
+                            ##     HIGHLIGHT     ##
+                            ##                   ##
+                            #######################
+
+                            # Set the highlight object style name.
+                            set ::ms::style($w,highlight) [string cat "_hc=" $::ms::current($w,highlightcolor) \
+                                                                      ".TFrame"];
+
+                            # If needed, create the highlight object style name.
+                            if { $::ms::style($w,highlight) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,highlight) -background $::ms::current($w,highlightcolor)
+
+                                # Add the highlight object style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,highlight)
+                            }
+
+                            # Initialize the highlight object mapping.
+                            set mapping [list ]
+
+                            # highlightcolor
+                            switch -- $::ms::managed_by($w,highlightcolor) {
+                                developer { lappend mapping -background [list pressed $::ms::current($w,highlightcolor)] }
+                                Tk  {
+                                    # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),highlightcolor)] {
+                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),highlightcolor) }
+                                    }
+                                }
+                            }
+
+                            # If needed, create the highlight object mapping.
+                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                _ttk_style map $::ms::style($w,highlight) {*}$mapping
+
+                                # Add the highlight object mapping to the stylemap list containing all the mappings
+                                # created by mustang for the current theme.
+                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                            }
+
+                            # Apply the changes.
+                            $w.highlight configure -cursor $cursor \
+                                                    -style $::ms::style($w,highlight);
+
+                            _grid configure $w.highlight -padx [list $::ms::current($w,spacer) $pad_right] \
+                                                         -pady [list 1m $pad_bottom];
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
