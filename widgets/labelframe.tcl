@@ -1790,19 +1790,13 @@ proc ::ms::labelframe::Command { window { args "" } } {
             # Enable/Disable the widget automatic translation.
             switch -- $::ms::current($w,textvariable) {
                 ""  {
-                    switch -- [llength $::ms::current($w,text)] {
-                        0       { set ::ms::data($w,translated_text) $::ms::current($w,text) }
-                        default {
-                            # Automatic translation: ON
-                            set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
-                        }
-                    }
-
-                    set textvariable ::ms::data($w,translated_text)
+                    # Automatic translation: ON
+                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+                    set text_variable ::ms::data($w,translated_text)
                 }
                 default {
                     # Automatic translation: OFF
-                    set textvariable $::ms::current($w,textvariable)
+                    set text_variable $::ms::current($w,textvariable)
                 }
             }
 
@@ -2017,7 +2011,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                        -style $::ms::style($w,title) \
                                    -takefocus $::ms::current($w,takefocus) \
                                         -text "" \
-                                -textvariable $textvariable \
+                                -textvariable $text_variable \
                                    -underline -1 \
                                        -width $charwidth \
                                   -wraplength 0;
@@ -3419,19 +3413,13 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             # Enable/Disable the widget automatic translation.
                             switch -- $::ms::current($w,textvariable) {
                                 ""  {
-                                    switch -- [llength $::ms::current($w,text)] {
-                                        0       { set ::ms::data($w,translated_text) $::ms::current($w,text) }
-                                        default {
-                                            # Automatic translation: ON
-                                            set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
-                                        }
-                                    }
-
-                                    set textvariable ::ms::data($w,translated_text)
+                                    # Automatic translation: ON
+                                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+                                    set text_variable ::ms::data($w,translated_text)
                                 }
                                 default {
                                     # Automatic translation: OFF
-                                    set textvariable $::ms::current($w,textvariable)
+                                    set text_variable $::ms::current($w,textvariable)
                                 }
                             }
 
@@ -3618,7 +3606,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                                     -relief $relief \
                                                      -style $::ms::style($w,title) \
                                                  -takefocus $::ms::current($w,takefocus) \
-                                              -textvariable $textvariable \
+                                              -textvariable $text_variable \
                                                      -width $charwidth \
                                                 -wraplength 0;
 
@@ -5359,6 +5347,7 @@ proc ::ms::labelframe::Destroy { w } {
                          ::ms::data($w,scrollx) \
                          ::ms::data($w,scrolly) \
                          ::ms::data($w,token) \
+                         ::ms::data($w,translated_text) \
                          ::ms::data($w,width) \
                          ::ms::data($w,xview1) \
                          ::ms::data($w,xview2) \
