@@ -965,6 +965,106 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                                     set takefocus $::ms::current($w,takefocus)
                                 }
                             }
+
+                            #################################
+                            ##                             ##
+                            ##     COFIGURE THE WIDGET     ##
+                            ##                             ##
+                            #################################
+
+                            # Note: 'borderwidth', 'cursor' and 'relief' are not allowed to change if the statespec changes.
+
+                            #########################
+                            ##                     ##
+                            ##     PANEDWINDOW     ##
+                            ##                     ##
+                            #########################
+
+                            # Set the panedwindow object style name.
+                            set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
+                                                                   "_bc=" $::ms::current($w,bordercolor) \
+                                                                   "_bw=" $::ms::current($w,borderwidth) \
+                                                                   "_dc=" $::ms::current($w,darkcolor) \
+                                                                   "_lc=" $::ms::current($w,lightcolor) \
+                                                                   "_rl=" $::ms::current($w,relief) \
+                                                                   "." $::ms::current($w,style)];
+
+                            # If needed, create the panedwindow object style name.
+                            if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,widget)  -background $::ms::current($w,background) \
+                                                                             -bordercolor $::ms::current($w,bordercolor) \
+                                                                             -borderwidth $::ms::current($w,borderwidth) \
+                                                                               -darkcolor $::ms::current($w,darkcolor) \
+                                                                              -lightcolor $::ms::current($w,lightcolor) \
+                                                                                  -relief $::ms::current($w,relief);
+
+                                # Add the widget style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+                            }
+
+                            # Initialize the hull object mapping.
+                            set mapping [list ]
+
+                            # background
+                            switch -- $::ms::managed_by($w,background) {
+                                developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                                Tk  {
+                                    # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                                    }
+                                }
+                            }
+
+                            # bordercolor
+                            switch -- $::ms::managed_by($w,bordercolor) {
+                                developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+                                Tk  {
+                                    # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
+                                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
+                                    }
+                                }
+                            }
+
+                            # darkcolor
+                            switch -- $::ms::managed_by($w,darkcolor) {
+                                developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+                                Tk  {
+                                    # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
+                                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
+                                    }
+                                }
+                            }
+
+                            # lightcolor
+                            switch -- $::ms::managed_by($w,lightcolor) {
+                                developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+                                Tk  {
+                                    # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
+                                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
+                                    }
+                                }
+                            }
+
+                            # If needed, create the hull object mapping.
+                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                                # Add the hull object mapping to the stylemap list containing all the mappings
+                                # created by mustang for the current theme.
+                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                            }
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure    -cursor $cursor \
+                                                                   -height $::ms::temp($w,height) \
+                                                                   -orient $::ms::current($w,orient) \
+                                                                    -style $::ms::style($w,widget) \
+                                                                -takefocus $takefocus \
+                                                                    -width $::ms::temp($w,width);
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
