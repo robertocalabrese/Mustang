@@ -980,7 +980,20 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        stop {}
+        stop {
+            # Synopsis:
+            #
+            # *window* **stop**
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    interp invokehidden {} $w stop
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
