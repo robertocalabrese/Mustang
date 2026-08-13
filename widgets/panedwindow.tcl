@@ -764,7 +764,55 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                 return ""
             }
         }
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** *component* *x* *y*
+            #    *window* **identify** **element** *x* *y*
+            #    *window* **identify** **sash** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    # Check that the first argument of 'args' is the word 'element' or 'sash'.
+                    switch -- [lindex $args 0] {
+                        element -
+                        sash    {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+
+                    # Check if the coordinates provided falls upon the widget's sash.
+                    try {
+                        interp invokehidden {} $w identify sash $x $y
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check the subcommand provided.
+                        switch -- [lindex $args 0] {
+                            element {
+                                switch -- $result {
+                                    ""   { set result "Panedwindow.client" }
+                                    sash { set result "Panedwindow.sash"   }
+                                }
+                            }
+                        }
+
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         insert {}
         instate {}
         pane {}
