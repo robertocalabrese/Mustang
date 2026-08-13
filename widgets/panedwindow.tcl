@@ -671,7 +671,40 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
 
     # Check the command provided.
     switch -nocase -- $cmd {
-        add {}
+        add {
+            # Synopsis:
+            #
+            # *window* **add** *subwindow* ?*option value*? ... ?*option value*?
+            set subwindow [lindex  $args 0]
+            set args      [lremove $args 0]
+
+            # Get the 'subwindow' real address.
+            set result [::ms::Check_Pathname $subwindow invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
+                default { set subwindow [lindex $result 0] }
+            }
+
+            # Check that the 'subwindow' provided is a direct child of the panedwindow widget.
+            if { [_winfo parent $subwindow] ne "$w" } {
+                return ""
+            }
+
+            # Check that the command 'args' forms a valid 'option/value' list.
+            switch -- [expr { [llength $args]%2 }] {
+                0       {}
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w add $subwindow {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
         cget {}
         configure {}
         forget {}
