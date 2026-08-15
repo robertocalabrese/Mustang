@@ -4394,4 +4394,253 @@ proc ::ms::spinbox::Check_TextVariable { w name1 name2 op } {
     return ""
 }
 
+###################################
+##                               ##
+##     VALIDATION PROCEDURES     ##
+##                               ##
+###################################
+
+## Validate_KeyPress
+#
+# Limit the input keypresses in an spinbox widget and set the widget state to 'invalid' or '!invalid'
+# depending if there are illegal characters for the datatype specified or if the string is not contained
+# inside any of the items provided by the ::ms::current($w,values) variable.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# string   Should be the string to check.
+#
+# It returns a boolean value ['0' or '1'] indicating if the string provided
+# reached it's length limit or not.
+proc ::ms::spinbox::Validate_KeyPress { w string } {
+    # Check if the character is allowed to be displayed or not.
+    switch -- $::ms::current($w,maxlength) {
+        0       {}
+        default {
+            # Check if the length of 'string' is bigger than the maxlength allowed.
+            if { [string length $string] > $::ms::current($w,maxlength) } {
+                # The character will not be inserted.
+                return 0
+            }
+        }
+    }
+
+    # Remove any leading and trailing spaces from 'string'.
+    set value [string trim $string]
+
+    # Check 'value'.
+    switch -- $value {
+        ""      {}
+        default {
+            # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
+            #       we made sure of that in the widget bindings section.
+            #       Nonetheless, they can be inserted trough a paste or pasteselection event.
+            #       If this is the case, we will let the illegal character be inserted but we will
+            #       mark the string as invalid.
+
+            # Depending on the widget datatype, check for illegal characters in 'value'.
+            switch -- $::ms::current($w,datatype) {
+                alnum {
+                    # Check every character in 'value'.
+                    set i 0
+                    while { $i < [string length $value] } {
+                        set char [string index $value $i]
+                        switch -- $char {
+                            " "     -
+                            "."     -
+                            ","     -
+                            "-"     {}
+                            default {
+                                switch -- [string is alnum $char] {
+                                    0   {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+
+                        incr i
+                    }
+                }
+                alpha {
+                    # Check every character in 'value'.
+                    set i 0
+                    while { $i < [string length $value] } {
+                        set char [string index $value $i]
+                        switch -- $char {
+                            " "     {}
+                            default {
+                                switch -- [string is alpha $char] {
+                                    0   {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+
+                        incr i
+                    }
+                }
+                integer {
+                    switch -- $value {
+                        "-"     {}
+                        default {
+                            switch -- [string is integer $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    switch -- $::ms::data($w,type) {
+                                        incremental {
+                                            # Check if 'value' is between the 'from' and the 'to' values.
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Change the widget dynamic state to 'invalid'.
+                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                                return 1
+                                            }
+                                        }
+                                        default {
+                                            # Check if 'value' is between the first element and the last element values.
+                                            if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
+                                                # Change the widget dynamic state to 'invalid'.
+                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                                return 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                posinteger {
+                    switch -- [string is integer $value] {
+                        0   {
+                            # Change the widget dynamic state to 'invalid'.
+                            ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                            return 1
+                        }
+                        1   {
+                            switch -- $::ms::data($w,type) {
+                                incremental {
+                                    # Check if 'value' is between the 'from' and the 'to' values.
+                                    if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                                default {
+                                    # Check if 'value' is between the first element and the last element values.
+                                    if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
+                                        # Change the widget dynamic state to 'invalid'.
+                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                        return 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                posreal {
+                    switch -- $value {
+                        "."     {}
+                        default {
+                            switch -- [string is double $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    switch -- $::ms::data($w,type) {
+                                        incremental {
+                                            # Check if 'value' is between the 'from' and the 'to' values.
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Change the widget dynamic state to 'invalid'.
+                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                                return 1
+                                            }
+                                        }
+                                        default {
+                                            # Check if 'value' is between the first element and the last element values.
+                                            if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
+                                                # Change the widget dynamic state to 'invalid'.
+                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                                return 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                real {
+                    switch -- $value {
+                        "-"     -
+                        "."     {}
+                        default {
+                            switch -- [string is double $value] {
+                                0   {
+                                    # Change the widget dynamic state to 'invalid'.
+                                    ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                    return 1
+                                }
+                                1   {
+                                    switch -- $::ms::data($w,type) {
+                                        incremental {
+                                            # Check if 'value' is between the 'from' and the 'to' values.
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Change the widget dynamic state to 'invalid'.
+                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                                return 1
+                                            }
+                                        }
+                                        default {
+                                            # Check if 'value' is between the first element and the last element values.
+                                            if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
+                                                # Change the widget dynamic state to 'invalid'.
+                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+
+                                                return 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!invalid'.
+    ::ms::spinbox::Pathname_Cmd $w state !invalid
+
+    return 1
+}
+
 #*EOF*
