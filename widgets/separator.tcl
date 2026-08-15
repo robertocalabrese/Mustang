@@ -205,6 +205,53 @@ proc ::ms::separator::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)     $::ms::default(separator,class)
+            set ::ms::default($w,cmenu)     $::ms::default(separator,cmenu)
+            set ::ms::default($w,orient)    $::ms::default(separator,orient)
+            set ::ms::default($w,state)     $::ms::default(separator,state)
+            set ::ms::default($w,style)     $::ms::default(separator,style)
+            set ::ms::default($w,takefocus) $::ms::default(separator,takefocus)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)     $::ms::default(separator,class)
+            set ::ms::current($w,cmenu)     $::ms::default(separator,cmenu)
+            set ::ms::current($w,orient)    $::ms::default(separator,orient)
+            set ::ms::current($w,state)     $::ms::default(separator,state)
+            set ::ms::current($w,style)     $::ms::default(separator,style)
+            set ::ms::current($w,takefocus) $::ms::default(separator,takefocus)
+
+            # Set the widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) separator
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a separator styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **separator** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background) Tk
+            set ::ms::managed_by($w,cursor)     Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
