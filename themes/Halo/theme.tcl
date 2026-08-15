@@ -1242,6 +1242,38 @@ namespace eval ttk::theme::Halo {
                                        -cursor arrow;
 
         # No mapping
+
+        ######################
+        ##                  ##
+        ##     SIZEGRIP     ##
+        ##                  ##
+        ######################
+
+        # Note: 'background' and 'cursor' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Layout
+        style layout TSizegrip {
+            Sizegrip.sizegrip -side bottom -sticky se
+        }
+
+        # Element
+        # The first image represents the normal state.
+        style element create Sizegrip.sizegrip image [list         sizegrip \
+                                                           pressed sizegrip_pressed \
+                                                             hover sizegrip_hover \
+                                                            active sizegrip_hover] \
+                                                      -border 1 \
+                                                      -height -1 \
+                                                     -padding 0 \
+                                                      -sticky se \
+                                                       -width -1;
+
+        # Normal state
+        style configure TSizegrip -background Background \
+                                      -cursor bottom_right_corner;
+
+        # No mapping
     }
 }
 
