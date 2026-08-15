@@ -3521,4 +3521,149 @@ proc ::ms::spinbox::Arrows { w event { speed 1x } } {
     return ""
 }
 
+## ButtonPress
+#
+# Manage the **ButtonPress-1** event on the widget.
+#
+# Note: The following procedure is a modified version of the 'ttk::spinbox::Press' procedure.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **ButtonPress** event.
+#
+# mode   Should be the click type.
+#        Allowed values are:
+#           "" --> for single press
+#           2  --> for double press
+#           3  --> for triple press
+#           s  --> for shift press
+#
+# It doesn't return anything.
+proc ::ms::spinbox::ButtonPress { w x y mode } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled {
+            # Check the parent of the widget address provided, if any.
+            set parent [_winfo parent $w]
+            switch -- $parent {
+                ""      {}
+                default {
+                    # Propagate the action to the widget's parents.
+
+                    # ATTENTION!
+                    #
+                    # This is a recursive loop. The only way to exit is:
+                    #   - If there is no more parent to check for.
+                    #   - If 'parent' is a scrollable megawidget.
+                    set i 1
+                    while { $i > 0 } {
+                        # Check if 'parent' belongs to a scrollable megawidget.
+                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
+                            _focus -force $parent
+                            return ""
+                        }
+
+                        # Check the next parent, if any.
+                        set parent [_winfo parent $parent]
+                        switch -- $parent {
+                            ""  {
+                                # There are no more parents to check for.
+                                # Stop the recursive iteration.
+                                break
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Check if the widget's toplevel was created by mustang.
+            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
+                0   {
+                    # If possible, focus the widget's toplevel.
+                    try {
+                        _focus -force [_winfo toplevel $w]
+                    } on error {} {
+                        # Do nothing
+                    }
+                }
+                1   {
+                    # Check the widget's toplevel takefocus.
+                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
+                        0   {
+                            # Momentarily set the toplevel takefocus to '1'.
+                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
+                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
+                        }
+                    }
+
+                    # Focus the widget's toplevel.
+                    _focus -force $::ms::addr($w,toplevel)
+                }
+            }
+        }
+        readonly {
+            # Focus the spinbox if its not already focussed.
+            interp invokehidden {} $w instate [list !focus] {
+                _focus -force $w
+            }
+
+            # Check the cursor location.
+            switch -glob -- [interp invokehidden {} $w identify element $x $y] {
+                "textarea"  {}
+                *rightarrow -
+                *uparrow    { ::ttk::Repeatedly ::ms::spinbox::Repeat_Increment $w 1 }
+                *leftarrow  -
+                *downarrow  { ::ttk::Repeatedly ::ms::spinbox::Repeat_Decrement $w 1 }
+                default     {
+                    if { [expr { $y*2 }] >= [_winfo height $w] } {
+                        set cmd [list ::ms::spinbox::Repeat_Decrement $w 1]
+                    } else {
+                        set cmd [list ::ms::spinbox::Repeat_Increment $w 1]
+                    }
+
+                    ::ttk::Repeatedly {*}$cmd
+                }
+            }
+        }
+        default {
+            # Focus the spinbox if its not already focussed.
+            interp invokehidden {} $w instate [list !focus] {
+                _focus -force $w
+            }
+
+            # Check the cursor location.
+            switch -glob -- [interp invokehidden {} $w identify element $x $y] {
+                "textarea" {
+                    # Check the press type.
+                    switch -- $mode {
+                        s       { ::ttk::entry::Shift-Press $w $x }
+                        2       { ::ttk::entry::Select $w $x word }
+                        3       { ::ttk::entry::Select $w $x line }
+                        default { ::ttk::entry::Press  $w $x }
+                    }
+                }
+                *rightarrow -
+                *uparrow    { ::ttk::Repeatedly ::ms::spinbox::Repeat_Increment $w 1 }
+                *leftarrow  -
+                *downarrow  { ::ttk::Repeatedly ::ms::spinbox::Repeat_Decrement $w 1 }
+                default     {
+                    if { [expr { $y*2 }] >= [_winfo height $w] } {
+                        set cmd [list ::ms::spinbox::Repeat_Decrement $w 1]
+                    } else {
+                        set cmd [list ::ms::spinbox::Repeat_Increment $w 1]
+                    }
+
+                    ::ttk::Repeatedly {*}$cmd
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
