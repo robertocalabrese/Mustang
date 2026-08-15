@@ -1774,7 +1774,40 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        insert {}
+        insert {
+            # Synopsis:
+            #
+            # *window* **insert** *index* *string*
+            switch -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts stdout "'insert' is a deprecated mustang spinbox command. Use 'set' instead." }
+            }
+
+            # Check the widget state.
+            switch -- $::ms::current($w,state) {
+                normal {
+                    # Check the number of arguments provided.
+                    switch -- [llength $args] {
+                        2   {
+                            set index  [lindex $args 0]
+                            set string [lindex $args 1]
+
+                            try {
+                                interp invokehidden {} $w insert $index $string
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+
+            return ""
+        }
         get      -
         validate {}
         instate {}
