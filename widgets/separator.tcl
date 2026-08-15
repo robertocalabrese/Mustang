@@ -417,6 +417,18 @@ proc ::ms::separator::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TSeparator { bindtags $w [list $w _Separator TSeparator $::ms::addr($w,toplevel) all] }
+                default    { bindtags $w [list $w $::ms::current($w,class) _Separator TSeparator $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
