@@ -2174,4 +2174,62 @@ proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
     return ""
 }
 
+## Touchpad
+#
+# Scroll the widget's thumb with the touchpad.
+#
+# Where:
+#
+# w         Should be the widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# delta     Should be the delta of the scroll.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           If not provided, defaults to **units**.
+#
+# speed     Should be the scroll speed (1x, 2x, 3x ...)
+#
+# It doesn't return anything.
+proc ::ms::scale::Touchpad { w counter delta { what units } { speed 1x } } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    switch -- $::ms::current($w,state) {
+        disabled { ::ms::TouchpadScroll_Parent $w $counter $delta $what }
+        default  {
+            # <TouchpadScroll> events can be generated about 60 times per second
+            # during a two-finger gesture.
+            # This allow the binding script to respond to every 5th <TouchpadScroll> event
+            # by testing is the 'counter' is divisible by 5.
+            if { [expr { $counter%5 }] == 0 } {
+                # Set 'increment' based on the direction of the movement.
+                if { $delta > 0 } {
+                    set increment [expr { -1.0*$::ms::current($w,increment) }]
+                } else {
+                    set increment $::ms::current($w,increment)
+                }
+
+                # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
+                switch -- $::ms::scrollmode {
+                    natural { set increment [expr { -1.0*$increment }] }
+                }
+
+                # Augment 'increment' by 'speed'.
+                set speed [string range $speed 0 end-1]
+                switch -- [string is integer -strict $speed] {
+                    1   { set increment [expr { $increment*$speed }] }
+                }
+
+                # Move the widget's thumb.
+                interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
