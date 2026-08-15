@@ -270,6 +270,29 @@ namespace eval ::ms::spinbox {
                                                    validatecommand \
                                                    values \
                                                    xscrollcommand];
+
+    # Set the 'styleable' spinbox option list.
+    set ::ms::spinbox(styleable,options) [list arrowcolor \
+                                               arrowsize \
+                                               background \
+                                               bordercolor \
+                                               charwidth \
+                                               cursor \
+                                               darkcolor \
+                                               fieldbackground \
+                                               focuscolor \
+                                               focuswidth \
+                                               font \
+                                               foreground \
+                                               insertcolor \
+                                               insertwidth \
+                                               justify \
+                                               lightcolor \
+                                               padding \
+                                               placeholderforeground \
+                                               selectbackground \
+                                               selectborderwidth \
+                                               selectforeground];
 }
 
 # Rename the original Tk **ttk::spinbox** command.
