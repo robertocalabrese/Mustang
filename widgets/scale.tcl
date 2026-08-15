@@ -877,10 +877,25 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
         }
         configure {}
         coords -
-        get    {}
+        get    -
+        set    {
+            # Synopsis:
+            #
+            # *window* **coords** ?*value*?
+            # *window* **get** ?*x* *y*?
+            # *window* **set** *value*
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         identify {}
         instate {}
-        set {}
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
