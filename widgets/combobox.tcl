@@ -2332,16 +2332,6 @@ proc ::ms::combobox::Command { window { args "" } } {
                 }
             }
 
-            # If the maxlength is not zero check that the charwidth is not less of it.
-            switch -- $::ms::current($w,maxlength) {
-                0       {}
-                default {
-                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                    }
-                }
-            }
-
             # Check the invalidcommand, validate, validatecommand and xscrollcommand options
             # relative to the datatype option provided.
             switch -- $::ms::current($w,datatype) {
@@ -2572,6 +2562,16 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                     # Compute the index of the last available item in '::ms::data($w,values)'.
                     set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,values)]-1 }]
+                }
+            }
+
+            # If the maxlength is not zero check that the charwidth is not less of it.
+            switch -- $::ms::current($w,maxlength) {
+                0       {}
+                default {
+                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
+                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                    }
                 }
             }
 
