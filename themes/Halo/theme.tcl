@@ -1218,6 +1218,30 @@ namespace eval ttk::theme::Halo {
                                              pressed HighlightAlternate] \
                          -troughcolor [list disabled ScaleTroughDisabled \
                                                focus Highlight];
+
+        #######################
+        ##                   ##
+        ##     SEPARATOR     ##
+        ##                   ##
+        #######################
+
+        # Note: 'cursor' will not follow any mapping rules.
+        #       It's not supposed to change when the widget state changes.
+
+        # Layouts
+        style layout Horizontal.TSeparator {
+            Separator.separator -sticky we
+        }
+
+        style layout Vertical.TSeparator {
+            Separator.separator -sticky ns
+        }
+
+        # Normal state
+        style configure TSeparator -background Separator \
+                                       -cursor arrow;
+
+        # No mapping
     }
 }
 
