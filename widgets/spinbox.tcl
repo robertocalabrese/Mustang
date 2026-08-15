@@ -4314,4 +4314,22 @@ proc ::ms::spinbox::Repeat_Decrement { w amount } {
     return ""
 }
 
+## Repeat_Increment
+#
+# Manage a repeatedly **Increment** event upon the widget.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be an integer value indicating how many times
+#          the increment must be summed to value.
+#
+# It doesn't return anything.
+proc ::ms::spinbox::Repeat_Increment { w amount } {
+    ::ms::spinbox::Increment $w $::ms::data($w,current_value) $amount
+
+    return ""
+}
+
 #*EOF*
