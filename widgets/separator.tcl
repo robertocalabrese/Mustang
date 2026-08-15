@@ -252,6 +252,70 @@ proc ::ms::separator::Command { window { args "" } } {
             #           *window* **configure** **-background** red
             set ::ms::managed_by($w,background) Tk
             set ::ms::managed_by($w,cursor)     Tk
+
+            #################################################
+            ##                                             ##
+            ##     CHECK THE WIDGET'S OPTIONS PROVIDED     ##
+            ##                                             ##
+            #################################################
+
+            # Check the remaining options, if any.
+            foreach { option value } $args {
+                switch -nocase -- $option {
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
+                    -class { set ::ms::current($w,class) $value }
+                    -cmenu {
+                        set value [string trim $value]
+                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                            set ::ms::current($w,cmenu) $value
+                        }
+                    }
+                    -cursor {
+                        set value [string tolower $value]
+                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                            set ::ms::current($w,cursor)    $value
+                            set ::ms::managed_by($w,cursor) developer
+                        }
+                    }
+                    -orient {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            horizontal -
+                            vertical   { set ::ms::current($w,orient) $value }
+                        }
+                    }
+                    -state {}
+                    -style {
+                        if { $value ni $::ms::style($::ms::theme) } {
+                            continue
+                        }
+
+                        set ::ms::current($w,style) $value
+                    }
+                    -takefocus {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,takefocus) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,takefocus) 1 }
+                        }
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
