@@ -3249,6 +3249,16 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
             }
             normal { set cursor $::ms::current($w,cursor) }
         }
+
+        # If the maxlength is not zero check that the charwidth is not less of it.
+        switch -- $::ms::current($w,maxlength) {
+            0       {}
+            default {
+                if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
+                    set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                }
+            }
+        }
     }
 
     return ""
