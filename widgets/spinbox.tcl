@@ -1879,7 +1879,69 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        set {}
+        set {
+            # Synopsis:
+            #
+            # *window* **set** *value*
+            switch -- [llength $args] {
+                1   {
+                    set value $args
+
+                    switch -- $::ms::data($w,type) {
+                        incremental {
+                            switch -- $::ms::current($w,datatype) {
+                                integer    -
+                                posinteger {
+                                    switch -- [string is integer -strict $value] {
+                                        0   { return "" }
+                                    }
+
+                                    if { ($value >= $::ms::current($w,from)) && ($value <= $::ms::current($w,to)) } {
+                                        set ::ms::data($w,current_value) $value
+                                    } else {
+                                        return ""
+                                    }
+                                }
+                                posreal    -
+                                real       {
+                                    switch -- [string is double -strict $value] {
+                                        0   { return "" }
+                                    }
+
+                                    if { ($value >= $::ms::current($w,from)) && ($value <= $::ms::current($w,to)) } {
+                                        set ::ms::data($w,current_value) [format $::ms::data($w,format) $value]
+                                    } else {
+                                        return ""
+                                    }
+                                }
+                            }
+                        }
+                        default {
+                            # Check the widget datatype.
+                            switch -- $::ms::current($w,datatype) {
+                                integer    -
+                                posinteger { set index [lsearch -exact -integer $::ms::data($w,values) $value] }
+                                real       -
+                                posreal    { set index [lsearch -exact -real    $::ms::data($w,values) $value] }
+                                default    { set index [lsearch -exact -nocase  $::ms::data($w,values) $value] }
+                            }
+
+                            # Check that the value provided exists inside '::ms::data($w,values)'.
+                            switch -- $index {
+                                -1      { return "" }
+                                default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                            }
+                        }
+                    }
+
+                    # Apply the changes.
+                    interp invokehidden {} $w set $::ms::data($w,current_value)
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         style {}
         xview {}
