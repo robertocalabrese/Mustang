@@ -4048,4 +4048,68 @@ proc ::ms::spinbox::FocusOut { w } {
     return ""
 }
 
+## Home_End
+#
+# Manage the Control-Home and Control-End keypress on the widget.
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# event   Should be the event type.
+#         Allowed values are **home** for **Control-Home** and **end** for **Control-End**.
+#
+# It doesn't return anything.
+proc ::ms::spinbox::Home_End { w event } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check the spinbox type.
+    switch -- $::ms::data($w,type) {
+        incremental {
+            # Check the 'event' provided.
+            switch -- $event {
+                end  { set value $::ms::current($w,to) }
+                home { set value $::ms::current($w,from) }
+            }
+        }
+        default {
+            # Check the 'event' provided.
+            switch -- $event {
+                end  { set index end }
+                home { set index 0 }
+            }
+
+            # Get the value at 'index'.
+            set value [lindex $::ms::data($w,values) $index]
+        }
+    }
+
+    # Update the current value.
+    set ::ms::data($w,current_value) $value
+
+    # Clear the widget field and insert the 'value'.
+    interp invokehidden {} $w delete  0 end
+    interp invokehidden {} $w set     $value
+
+    # If the widget is not in readonly state, select the value.
+    switch -- $::ms::current($w,state) {
+        readonly {
+            # Remove the widget selection, if any.
+            interp invokehidden {} $w selection clear
+        }
+        normal {
+            interp invokehidden {} $w selection range 0 end
+            interp invokehidden {} $w icursor end
+        }
+    }
+
+    # Execute the associated widget command, if any.
+    ::ms::Execute_Widget_Cmd $w
+
+    return ""
+}
+
 #*EOF*
