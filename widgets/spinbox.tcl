@@ -62,6 +62,1433 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## spinbox
+#
+#### DESCRIPTION:
+#
+# A spinbox widget is an entry widget with built-in up and down buttons that are used to either modify a numeric value
+# or to select among a set of values. The widget implements all the features of the entry widget including support of
+# the **-textvariable** option to link the value displayed by the widget to a Tcl variable.
+# Spinbox widgets support horizontal scrolling with the standard **-xscrollcommand** option and **xview** widget command
+# but only if the **-datatype** option for the spinbox is **none** or the **-maxlength** option value is **0**.
+#
+# Two kind of spinbox are possible:
+#   - **incremental spinbox**: The only values accepted by the widget are all the values between the lowest (**-from**) and
+#                              the highest (**-to**) values provided.
+#                              *Incremental spinbox* are used exclusively by numerical datatypes.
+#
+#   - **listing spinbox**: The only values accepted by the widget are the ones present in the list provided (**-values**).
+#                          *Listing spinbox* can be used with every datatypes (even numerical datatypes).
+#
+# Note: At the time this command is invoked, there must not exist a window with the same pathname,
+#       but the pathname's parents must exists.
+#       *Window* may be provided either as a short or as a real address, the address returned will be:
+#          - A short address, if the *window* provided as input is a short address.
+#          - A real address, if the *window* provided as input is a real address.
+#
+# Additional options, described below, may be specified on the command line to configure aspects of the spinbox.
+#
+#### SYNOPSIS:
+#
+#   **spinbox**  *window* ?*option* *value*? ... ?*option* *value*?
+#
+#### WIDGET OPTIONS:
+#
+# Note: Every option listed here can be:
+#          - Retrieved with the **configure** or **cget** command with no exceptions.
+#          - Changed with the **configure** command, unless stated otherwise.
+#
+# **-arrowcolor**              It's a list that specifies the color to use for the arrow elements.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: It's only meaningful for themes that use the 'default' or 'clam' engine (like the 'Halo' theme).
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-arrowcolor** specified in its style.
+#                                                             If there isn't one, the **-arrowcolor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-arrowcolor** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-arrowsize**.
+#
+# **-arrowsize**               Specifies the size of the arrow elements.
+#                              The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                              (pixels, points, inches, millimeters or centimeters).
+#
+#                              Note: It's only meaningful for themes that use the 'default' or 'clam' engine (like the 'Halo' theme).
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-arrowsize** specified in its style.
+#                                                             If there isn't one, the **-arrowsize** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-arrowsize** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+#                              See also **-arrowcolor**.
+#
+# **-background**              It's a list that specifies the color to use as background.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                             If there isn't one, the **-background** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-background** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-fieldbackground** and **-foreground**.
+#
+# **-bordercolor**             It's a list that specifies the color to use as bordercolor.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: It's only meaningful for widget with a **solid** relief.
+#
+#                              Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                             If there isn't one, the **-bordercolor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-bordercolor** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-relief**.
+#
+# **-charwidth**               Specifies the desired width for the window in units of characters in the font given by the **-font** option.
+#                              If the font does not have a uniform width then the width of the character **0** is used in translating from
+#                              character units to screen units.
+#
+#                              Note: The spinbox **-charwidth** must be a positive integer (**0** not included).
+#                                    If it's not, the current theme value will be used instead.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-charwidth** specified in its style.
+#                                                             If there isn't one, the **-charwidth** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-charwidth** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+#                              See also **-datatype** and **-maxlength**.
+#
+# **-class**                   Specifies a class for the widget.
+#                              It is mainly used to make bindings for widgets that have the same class.
+#
+#                              Note: This option may only be provided while creating the widget.
+#                                    Attempts to change this value after the widget is created by using the **configure** command,
+#                                    will be ignored by mustang.
+#
+#                              If not provided, defaults to **TSpinbox**.
+#
+# **-cmenu**                   Specifies the contextual menu address that will be assigned to the widget.
+#                              If the *cmenu* value is the empty string or invalid, nothing will happen.
+#
+#                              If not provided, defaults to the empty string.
+#
+# **-command**                 Specifies a procedure to call after the validation on the data has been done.
+#                              This procedure will be launched with two parameters, the real address of the spinbox involved and the current
+#                              validated value. Providing an empty string will mean to not launch any procedure after the validation.
+#
+#                              If not provided, defaults to the empty string.
+#
+# **-cursor**                  Specifies the mouse cursor to be used for the widget.
+#                              If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                              cursor specification.
+#
+#                              See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#
+#                              Note: If the spinbox state is normal, the cursor upon the textarea will change to 'xterm'
+#                                    while in the other part of the spinbox will remain the one provided.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                             If there isn't one, the **-cursor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-cursor** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+# **-darkcolor**               It's a list that specifies the color to use as darkcolor.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#
+#                              Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-darkcolor** specified in its style.
+#                                                             If there isn't one, the **-darkcolor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-darkcolor** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-lightcolor**.
+#
+# **-datatype**                Specifies the type of data that the spinbox will accepts.
+#                              Allowed datatypes are:
+#
+#                                 alnum      --> Only alphanumeric and some puntuaction characters will be allowed inside the spinbox.
+#                                                The only keys that will work on the keyboard inside the spinbox will be [0-9a-zA-Z],
+#                                                and the point, comma, minus sign and space characters.
+#
+#                                 alpha      --> Only alphabetic characters and the space character will be allowed inside the spinbox.
+#                                                The only keys that will work on the keyboard inside the spinbox will be [a-zA-Z] and
+#                                                the space character.
+#
+#                                 integer    --> Only digits characters and the minus sign will be allowed inside the spinbox.
+#                                                The only keys that will work on the keyboard inside the spinbox will be [0-9]
+#                                                and the minus sign.
+#
+#                                 posinteger --> Only digits characters will be allowed inside the spinbox.
+#                                                The only keys that will work on the keyboard inside the spinbox will be [0-9].
+#
+#                                 posreal    --> Only digits characters and the point character will be allowed inside the spinbox.
+#                                                The only keys that will work on the keyboard inside the spinbox will be [0-9]
+#                                                and the point character.
+#
+#                                 real       --> Only digits characters, the point and minus sign will be allowed inside the spinbox.
+#                                                The only keys that will work on the keyboard inside the spinbox will be [0-9]
+#                                                the point character and the minus sign.
+#
+#                                 none       --> All characters are accepted by the spinbox and the keyboard is not blocked in any way.
+#
+#                              Automatic validation will be performed on each datatypes except **none**.
+#                              More precisely:
+#
+#                                 Alphabetic and alphanumeric datatypes will have only a partial validation, meaning that it will be check
+#                                 that the string is composed by the characters allowed by the alpha or alnum datatype and nothing else.
+#
+#                                 Numeric datatypes (integer, pointeger, posreal and real) will have a complete validation, meaning that it
+#                                 will be checked that the string is a proper integer, posinteger, posreal or real number (and corrected if
+#                                 it isn't) and if a maxlength is not **0** a maxvalue/minvalue check will be performed on it (truncation will
+#                                 happen if the number reaches the maxvalue or minvalue specified).
+#
+#                              Note: This option may only be provided while creating the widget.
+#                                    Attempts to change this value after the widget is created by using the **configure** command,
+#                                    will be ignored by mustang.
+#
+#                              See also **-charwidth**, **-invalidcommand**, **-maxlength**, **-validate** and **-validatecommand**.
+#
+# **-decimals**                Should be an integer that indicates how many decimal digits should be enforced.
+#
+#                              Note: This option is only meaningfull for **posreal** and **real** datatypes and will be ignored for any other
+#                                    datatypes.
+#
+#                              If not provided, defaults to **1**.
+#
+# **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
+#                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
+#                              selecting outside the widget deselects any widget selection, and the widget will respond to selection retrieval
+#                              requests when it has a selection.
+#
+#                              If a spinbox is exporting its selection then it will observe the standard X11 protocols for handling the selection;
+#                              spinbox selections are available as type **STRING**.
+#                              Spinboxes also observe the standard Tk rules for dealing with the input focus.
+#                              When a spinbox has the input focus it displays an insert cursor to indicate where new characters will be inserted.
+#
+#                              Spinboxes are capable of displaying strings that are too long to fit entirely within the widget's window.
+#                              In this case, only a portion of the string will be displayed; commands described below may be used to change the
+#                              view in the window. Spinboxes use the standard **-xscrollcommand** mechanism for interacting with scrollbars.
+#
+#                              If not provided, defaults to **1**.
+#
+#                              See also **-datatype** and **-xscrollcommand**.
+#
+# **-fieldbackground**         It's a list that specifies the color to use as fieldbackground.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-fieldbackground** specified in its style.
+#                                                             If there isn't one, the **-fieldbackground** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-fieldbackground** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-background** and **-foreground**.
+#
+# **-focuscolor**              It's a list that specifies the color to use as focuscolor (the color or the focus ring).
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: It's only meaningful for themes that use the 'alt', 'default' or 'classic' engine
+#                                    and ignored by themes that use the 'clam' engine'.
+#                                    If the current theme uses the 'clam' engine (like the 'Halo' theme) a combination of
+#                                    'bordercolor' and 'lightcolor' will be used instead.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-focuscolor** specified in its style.
+#                                                             If there isn't one, the **-focuscolor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-focuscolor** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-bordercolor**.
+#
+# **-focuswidth**              It's a list that specifies the color to use as focuswidth (the size of the focus ring).
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-focuswidth** specified in its style.
+#                                                             If there isn't one, the **-focuswidth** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-focuswidth** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+# **-font**                    Specifies the font to use for the text displayed by the widget.
+#                              The widget will accept as fontname any font created with the **font** command, including any Tk
+#                              defaults fonts, the new mustang fonts (**BiggestFont**, **BiggerFont**, **NormalFont**, **SmallerFont**,
+#                              **SmallestFont** and **MonospaceFont**) or fonts defined by the developer itself.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-font** specified in its style.
+#                                                             If there isn't one, the **-font** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-font** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+#                              See also **-foreground**.
+#
+# **-foreground**              It's a list that specifies the color to use as foreground.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-foreground** specified in its style.
+#                                                             If there isn't one, the **-foreground** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-foreground** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-background**, **-fieldbackground** and **-font**.
+#
+# **-from**                    Specifies the lowest value acceptable for a numerical datatype (integer, posinteger, posreal and real).
+#                              This is used in conjunction with **-to** and **-increment** to set a numerical range.
+#                              Note that the *from* value will be ignored for any other widget datatypes.
+#
+#                              The following rules must be taked in account when providing the *from* value:
+#                                - For **posinteger** and **posreal** datatypes only, the *from* value must be greater or equal to zero.
+#                                - For any numerical datatypes the *from* value must always be lesser or equal than the *to* value.
+#
+#                              Failing to respect one or both of these rules will cause the *from* and *to* values provided to be ignored
+#                              and their defaults values for the widget datatype to be used instead.
+#
+#                              A limit check will be performed during the validation process to assure that the value inserted by the user
+#                              is always between the *from* and *to* values (*from* and *to* included).
+#
+#                              If not provided, defaults to:
+#                                 - **-9**   for integer datatypes.
+#                                 - **-9.9** for real datatypes.
+#                                 - **0**    for posinteger and posreal datatypes.
+#
+#                              See also **-datatype**, **-decimals**, **-increment**, **-maxlength** and **-to**.
+#
+# **-increment**               Should be a positive number (an integer or a floating-point value depending on the datatype specified for
+#                              the widget) specifying the change in value to be applied each time one of the widget spin buttons is pressed.
+#                              The up button applies a positive increment, the down button applies a negative increment.
+#
+#                              If not provided, defaults to:
+#                                 - **1**   for integer and posinteger datatypes.
+#                                 - **1.0** for real and posreal datatypes.
+#
+#                              See also **-datatype**, **-decimals**, **-from**, **-maxlength** and **-to**.
+#
+# **-insertcolor**             It's a list that specifies the color to use for the spinbox cursor.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-insertcolor** specified in its style.
+#                                                             If there isn't one, the **-insertcolor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-insertcolor** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-insertwidth**.
+#
+# ** insertwidth**             Specifies the width of the spinbox cursor.
+#                              The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                              (pixels, points, inches, millimeters or centimeters).
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-insertwidth** specified in its style.
+#                                                             If there isn't one, the **-insertwidth** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-insertwidth** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+#                              See also **-insertcolor**.
+#
+# **-invalidcommand**          A script template to evaluate whenever the **-validatecommand** returns **0**.
+#                              Providing an empty string will mean to not launch any script when the **-validatecommand** returns **0**.
+#
+#                              Note that every **-datatype** except **none** will force this value to an the empty string to perform
+#                              automatic validation.
+#
+#                              If not provided, defaults to the empty string.
+#
+#                              See also **-datatype**, **-validate** and **-validatecommand**.
+#
+# **-justify**                 If there are multiple lines of text, specifies how the lines are laid out relative to one another.
+#                              Allowed values:
+#                                  **left**,
+#                                  **center**,
+#                                  **right**.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-justify** specified in its style.
+#                                                             If there isn't one, the **-justify** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-justify** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+# **-lightcolor**              It's a list that specifies the color to use as lightcolor.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#
+#                              Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-lightcolor** specified in its style.
+#                                                             If there isn't one, the **-lightcolor** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-lightcolor** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-darkcolor**.
+#
+# **-maxlength**               Specifies an integer that indicates the maximum number of characters that can be inserted inside a
+#                              spinbox widget. If this value is **0**, then any amount of characters can be inserted inside the spinbox
+#                              (that will be scrollable). Any other value will limit the possible characters that can be inserted.
+#
+#                              Note that numerical datatypes will always force their relative maxlength no matter if a different value
+#                              is provided, but rather it will be forced to whichever between the *from* and *to* values, have the
+#                              greater number of digits (point, sign and decimals included for the datatypes that allows them).
+#
+#                              The maxlength value can influence the **-charwidth** of the widget, more precisely:
+#
+#                                 maxlength  = 0                    --> any valid charwidth value is accepted (even **0**).
+#                                 maxlength != 0 and charwidth !=0  --> If the charwidth is lesser then the maxlength, the former will be
+#                                                                       set as the latter.
+#
+#                              If not provided, defaults to **0**.
+#
+#                              See also **-charwidth**, **-datatype**, **-validate** and **-xscrollcommand**.
+#
+# **-padding**                 Specifies the internal padding for the widget.
+#                              The padding is a list of up to four length specifications.
+#                              The values must be in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                              (pixels, points, inches, millimeters or centimeters).
+#
+#                              A list of four values specifies the left, top, right and bottom padding.
+#                              A list of three values specifies the left, vertical, and right padding.
+#                              A list of two values specifies the horizontal and the vertical padding
+#                              A single value specifies the same padding all the way around the widget.
+#
+#                              When computing how large a window it needs, the widget will add this amount to the width it would
+#                              normally need (as determined by the width of the things displayed in the widget).
+#                              If the geometry manager can satisfy this request, the widget will end up with extra internal space
+#                              to the left and/or right of what it displays inside.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-padding** specified in its style.
+#                                                             If there isn't one, the **-padding** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-padding** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+# **-placeholder**             Specifies a help text string to display if no text is otherwise displayed, that is when the widget is empty.
+#                              The placeholder text is displayed using the values of the **-font**, **-justify** and **-placeholderforeground**
+#                              options.
+#
+#                              The placeholder text will disappear when the widget will take the focus, and reappears (if the widget value is
+#                              empty) when the widget loses the focus. An empty string will mean no placeholder text to display.
+#
+#                              If not provided, defaults to the empty string.
+#
+#                              See also **-font**, **-justify** and **-placeholderforeground**.
+#
+# **-placeholderforeground**   It's a list that specifies the color to use as foreground for the placeholder text..
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-placeholderforeground** specified in its style.
+#                                                             If there isn't one, the **-placeholderforeground** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-placeholderforeground** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-font**, **-justify** and **-placeholder**.
+#
+# **-selectbackground**        It's a list that specifies the background color to use when displaying selected items.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-selectbackground** specified in its style.
+#                                                             If there isn't one, the **-selectbackground** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-selectbackground** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-selectforeground** and **-insertborderwidth**.
+#
+# **-selectborderwidth**       Specifies a non-negative value indicating the width of the 3-D border to draw around selected items.
+#                              The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+#
+#                              Note: A value of **0** means no border.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-selectborderwidth** specified in its style.
+#                                                             If there isn't one, the **-selectborderwidth** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-selectborderwidth** will not abide by its mapping values, if any.
+#                                                             It is not supposed to change when the widget state changes.
+#
+#                              See also **-selectbackground** and **-selectforeground**.
+#
+# **-selectforeground**        It's a list that specifies the foreground color to use when displaying selected items.
+#                              See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                              Note: This is a styleable option.
+#
+#                                    If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                             Only the developer can.
+#
+#                                    If it's not provided --> The widget will follow the **-selectforeground** specified in its style.
+#                                                             If there isn't one, the **-selectforeground** of the **TSpinbox** style
+#                                                             will be used instead.
+#                                                             The **-selectforeground** will always abide by its mapping values, if any.
+#                                                             Styles, mappings and states events are allowed to change its value.
+#
+#                              See also **-selectbackground** and **-selectborderwidth**.
+#
+# **-state**                   Specifies the state for the widget.
+#                              May be set to **normal**, **readonly** or **disabled**.
+#                              This is a write-only option: setting it changes the widget state, but the state widget command does not
+#                              affect the *-state* option.
+#
+#                              If not provided, defaults to **normal**.
+#
+# **-style**                   Specifies a custom widget style.
+#                              If not provided, defaults to **TSpinbox**.
+#
+#                              The *style* provided should already exists at the time the widget is created.
+#
+#                              See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# **-takefocus**               Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                              and **Shift-Tab**).
+#
+#                              Before setting the focus to a widget, the traversal scripts consult the value of the
+#                              *-takefocus* option.
+#                                 **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                                 **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                           and all of its ancestors are mapped.
+#
+#                              Differently than Tk, mustang does not allow the empty string as a valid value.
+#
+#                              Note: It is not possible to set a takefocus of **1** to widgets in the disabled state.
+#
+#                              If not provided, defaults to **1**.
+#
+# **-textvariable**            Specifies the name of a global variable whose value is linked to the spinbox widget's contents.
+#                              Whenever the variable changes value, the widget's contents are updated, and vice versa.
+#
+#                              If not provided, defaults to the empty string.
+#
+# **-to**                      Specifies the highest value acceptable for a numerical datatype (integer, posinteger, posreal and real).
+#                              This is used in conjunction with **-from** and **-increment** to set a numerical range.
+#                              Note that the *to* value will be ignored for any other widget datatypes.
+#
+#                              The following rules must be taked in account when providing the *to* value:
+#                                - For 'posinteger' and 'posreal' datatypes only, the *to* value must be greater or equal to zero.
+#                                - For any numerical datatypes the *to* value must always be greater or equal than the *from* value.
+#
+#                              Failing to respect one or both of these rules will cause the *from* and *to* values provided to be ignored
+#                              and their defaults values for the widget datatype to be used instead.
+#
+#                              A limit check will be performed during the validation process to assure that the value inserted by the user
+#                              is always between the *from* and *to* values (*from* and *to* included).
+#
+#                              If not provided, defaults to:
+#                                 - **9**   for integer and posinteger datatypes.
+#                                 - **9.9** for posreal and real datatypes.
+#
+#                              See also **-datatype**, **-decimals**, **-from**, **-increment** and **-maxlength**.
+#
+# **-validate**                Specifies the mode in which validation should operate.
+#                              There are two main validation modes:
+#
+#                                 *prevalidation* --> The **-validatecommand** is evaluated prior to each edit and the return value is
+#                                                     used to determine whether to accept or reject the change.
+#                                 *revalidation*  --> The **-validatecommand** is evaluated to determine whether the current value is valid.
+#
+#                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
+#
+#                                 none     --> The validation will only occur when specifically requested by the validate widget command.
+#                                 focus    --> The spinbox is revalidated when the spinbox receives or loses focus.
+#                                 focusin  --> The spinbox is revalidated when the spinbox receives focus.
+#                                 focusout --> The spinbox is revalidated when the spinbox loses focus.
+#                                 key      --> The spinbox will be prevalidated prior to each edit (specifically, whenever the insert or delete
+#                                              widget commands are called). If prevalidation fails, the edit is rejected.
+#                                 all      --> Validation is performed for all above conditions.
+#
+#                              Note that every **-datatype** except **none** will force this value to **key** to perform automatic validation.
+#
+#                              The **-invalidcommand** is evaluated whenever the **-validatecommand** returns a false value.
+#                              The **-validatecommand** and **-invalidcommand** may modify the spinbox widget's value via the widget insert or
+#                              delete commands, or by setting the linked **-textvariable**.
+#                              If either does so during prevalidation, then the edit is rejected regardless of the value returned by the
+#                              **-validatecommand**. If **-validatecommand** is empty, validation always succeeds.
+#
+#                              If not provided, defaults to none.
+#
+#                              See also **-datatype**, **-invalidcommand** and **-validatecommand**.
+#
+# **-validatecommand**         A script template to evaluate whenever validation is triggered.
+#                              If set to the empty string, validation is disabled.
+#                              The script must return a boolean value.
+#
+#                              Note that every **-datatype** except **none** will force this value to an internal procedure to perform
+#                              automatic validation.
+#
+#                              Note that the mustang spinbox widget only disables validation if one of the validation scripts raises an error,
+#                              or if **-validatecommand** does not return a valid boolean value. (Thus, it is not necessary to re-enable validation
+#                              after modifying the spinbox value in a validation script).
+#
+#                              If not provided, defaults to the empty string.
+#
+#                              See also **-datatype**, **-invalidcommand** and **-validate**.
+#
+# **-values**                  Specifies the list of values to display in the popdown window.
+#                              These values needs to be coherent with the **datatype** specified.
+#                              The values will be automatically sorted by mustang.
+#
+#                              If not provided or if provided as an empty string, defaults to the internal list of values for the datatype provided.
+#
+# **-xscrollcommand**          Specifies a command prefix, used to communicate with horizontal scrollbars.
+#                              When the view in the widget's window changes, the widget will generate a Tcl command by concatenating the
+#                              scroll command and two numbers. Each of the numbers is a fraction between **0** and **1** indicating a position
+#                              in the document; **0** indicates the beginning, and **1** indicates the end. The first fraction indicates the
+#                              first information in the widget that is visible in the window, and the second fraction indicates the information
+#                              just after the last portion that is visible.
+#
+#                              Typically the **-xscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                              e.g. **.x.scrollbar set**. This will cause the scrollbar to be updated whenever the view in the window changes.
+#
+#                              If this option is set to the empty string, then no command will be executed.
+#
+#                              Note that every **-datatype** except **none** will force this value to the empty string unless the **maxlength**
+#                              value is **0**.
+#
+#                              If not provided, defaults to the empty string.
+#
+#                              See also **-datatype** and **-maxlength**.
+#
+#### WIDGET COMMAND:
+#
+# The spinbox command creates a new command whose name is the same as the pathname of the spinbox's window.
+# This command may be used to invoke various operations on the widget.
+# It has the following general form:
+#
+#   *window* *action* ?*arg* *arg* ... *arg*?
+#
+# *Window* is the name of the command, which is the same as the spinbox widget pathname.
+# *Actions* and the *arg*s determine the exact behavior of the *window* command.
+#
+# The following commands are possible for spinbox widgets:
+#
+#   *window* **bbox** *index*
+#     Returns a list of four numbers describing the bounding box of the character given by *index*.
+#     The first two elements of the list give the **x** and **y** coordinates of the upper-left corner of the screen
+#     area covered by the character (in pixels relative to the widget) and the last two elements give the width and height
+#     of the character, in pixels.
+#     The bounding box may refer to a region outside the visible area of the window.
+#
+#   *window* **cget** ?*option*?
+#     Returns the current value of the option given by *option*.
+#     *Option* may be one of the widget options accepted by the spinbox command (See **WIDGET OPTIONS**).
+#
+#   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+#     Query or modify the configuration options of the widget.
+#
+#     If no options are specified, returns a list describing all of the available options with their
+#     default and current values.
+#
+#     If a single *option* is specified with no *value*, then the command returns a list describing its default
+#     and current values.
+#
+#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     to have the given value(s) and the command returns an empty string.
+#
+#     Some options can only be setted at creation time.
+#     See **WIDGET OPTIONS** to know which one is configurable and which one is not.
+#
+#   *window* **delete** *first* ?*last*?
+#     Delete one or more elements of the spinbox. *First* is the index of the first character to delete, and *last* is the
+#     index of the character just after the last one to delete. If *last* is not specified it defaults to *first*+1,
+#     i.e. a single character is deleted.
+#     This command returns the empty string.
+#
+#   *window* **get**
+#     Returns the spinbox's string.
+#
+#   *window* **icursor** *index*
+#     Arrange for the insert cursor to be displayed just before the character given by *index*.
+#     Returns the empty string.
+#
+#   *window* **identify** **element** *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if the mouse pointer does
+#     not lie within any element. *X* and *y* are pixel coordinates relative to the widget.
+#
+#   *window* **index** *index*
+#     Returns the numerical index corresponding to *index*.
+#
+#   *window* **insert** *index* *string*
+#     Insert *string* just before the character indicated by *index*.
+#     This command is deprecated, please use the **set** command instead.
+#     Returns the empty string.
+#
+#   *window* **instate** *statespec* ?*script*?
+#     Test the widget's state.
+#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     If *script* is specified it's equivalent to:
+#
+#        if { [*window* **instate** *stateSpec*] } *script*
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **selection** *option* *arg*
+#     This command is used to adjust the selection within a spinbox. It has several forms, depending on option:
+#
+#       *window* **selection** **clear**
+#         Clear the selection if it is currently in this widget.
+#         If the selection is not in this widget then the command has no effect.
+#         Returns the empty string.
+#
+#       *window* **selection** **present**
+#         Returns **1** if there is are characters selected in the spinbox, **0** if nothing is selected.
+#
+#       *window* **selection** **range** *start* *end*
+#         Sets the selection to include the characters starting with the one indexed by *start* and ending with the one
+#         just before *end*.
+#         If *end* refers to the same character as *start* or an earlier one, then the spinbox's selection is cleared.
+#
+#   *window* **set** *value*
+#     Sets the value of the spinbox to *value*.
+#     Returns the empty string.
+#
+#   *window* **state** ?*statespec*?
+#     Modify or inquire widget state.
+#     If *statespec* is present       --> Sets the widget dynamic state.
+#                                         For each flag in *statespec*, sets the corresponding flag or clears it
+#                                         if prefixed by an exclamation point.
+#                                         Returns a new *statespec* indicating which flags were changed.
+#
+#     If *statespec* is not specified --> Returns a list of the currently enabled dynamic states.
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **style**
+#     Return the style used by the widget.
+#
+#   *window* **validate**
+#     Force revalidation, independent of the conditions specified by the **-validate** option.
+#     Returns **0** if validation fails, **1** if it succeeds.
+#     Sets or clears the invalid state accordingly.
+#
+#     See the **-validate** option for more info.
+#
+#   *window* **xview** ?args?
+#     *window* **xview**
+#         Returns a list containing two elements.
+#         Each element is a real fraction between **0** and **1.0**; together they describe the horizontal span
+#         that is visible in the window.
+#
+#      *window* **xview** **moveto** *fraction*
+#         Adjusts the view in the window so that *fraction* of the total width of the scrollable widget is off-screen to the left.
+#         *Fraction* must be a fraction between **0** and **1.0**.
+#
+#      *window* **xview** **scroll** *number* *what*
+#         This command shifts the view in the window left or right according to *number* and *what*.
+#
+#         *Number* must be an integer or a float, but not **0**.
+#         If *number* is negative then information farther to the left becomes visible, if it is positive then information
+#         farther to the right becomes visible.
+#         If **0** is provided, the command will be ignored by mustang.
+#
+#         *what* must be either **pages** or **units**.
+#         If *what* is **pages** then the view adjusts in units of nine-tenths of the *window*'s width.
+#         If *what* is **units** then if *xscrollincrement* is greater than **0**, the horizontal view adjusts in units
+#         of *xscrollincrement*; if *xscrollincrement* is lesser than or equal to **0**, the horizontal view adjusts in
+#         units of one-tenths of the *window*'s width.
+#
+#### INDICES:
+#
+# Many of the spinbox widget commands take one or more indices as arguments.
+# An index specifies a particular character in the spinbox's string, in any of the following ways:
+#
+#   **number**
+#      Specifies the character as a numerical index, where **0** corresponds to the first character in the string.
+#
+#   **@number**
+#      In this form, number is treated as an x-coordinate in the spinbox's window; the character spanning that
+#      x-coordinate is used. For example, **@0** indicates the left-most character in the window.
+#
+#   **end**
+#      Indicates the character just after the last one in the spinbox's string.
+#      This is equivalent to specifying a numerical index equal to the length of the spinbox's string.
+#
+#   **insert**
+#      Indicates the character adjacent to and immediately following the insert cursor.
+#
+#   **sel.first**
+#      Indicates the first character in the selection.
+#      It is an error to use this form if the selection is not in the spinbox window.
+#
+#   **sel.last**
+#      Indicates the character just after the last one in the selection.
+#      It is an error to use this form if the selection is not in the spinbox window.
+#
+# Abbreviations may be used for any of the forms above, e.g.  **e** or **sel.l**.
+# In general, out-of-range indices are automatically rounded to the nearest legal value.
+# Indexes support the same simple interpretation as for the command string index, with simple integer index arithmetic
+# and indexing relative to end.
+#
+#### VALIDATION SCRIPT SUBSTITUTIONS:
+#
+# It is possible to perform percent substitutions on the **-validatecommand** and **-invalidcommand**, just as in a
+# bind script. The following substitutions are recognized:
+#
+#   **%d**
+#      Type of action: **1** for insert prevalidation, **0** for delete prevalidation, or **-1** for revalidation.
+#
+#   **%i**
+#      Index of character string to be inserted/deleted, if any, otherwise **-1**.
+#
+#   **%P**
+#      In prevalidation, the new value of the spinbox if the edit is accepted.
+#      In revalidation, the current value of the spinbox.
+#
+#   **%s**
+#      The current value of spinbox prior to editing.
+#
+#   **%S**
+#      The text string being inserted/deleted, if any, an empty string otherwise.
+#
+#   **%v**
+#      The current value of the **-validate** option.
+#
+#   **%V**
+#      The validation condition that triggered the callback (*key*, *focusin*, *focusout* or *forced*).
+#
+#   **%W**
+#      The name of the spinbox widget.
+#
+#### AUTOMATIC VALIDATIONS:
+#
+# As the entry widget, the spinbox performs automatic validation of the value inserted by the user unless its **-datatype**
+# is **none**. **Listing spinbox** widgets goes further (due to the fixed list of values that can be inserted) and uses two
+# types of validations (depending on its **-datatype**):
+#
+#    **alpha**      -
+#    **alnum**      --> An *alphabetic inexact search* will be performed.
+#    **integer**    -
+#    **posinteger** -
+#    **posreal**    -
+#    **real**       --> A *numerical inexact search* will be performed.
+#
+###### ALPHABETIC INEXACT SEARCH:
+#
+# This validation will search inside the list of values associated with the spinbox for the items that have the maximum consecutive
+# characters in common with *value* and then, after sorted them out, chooses the first in alphabetical order.
+#
+# Note that the maximum consecutive characters will be counted from the start of the word and any items that do not start with the
+# same character of *value* will be discarded and counted with having zero consecutive characters even if all the other characters matches
+# the ones in the rest of value. If there are no matches, the first value of the list or the last validated value will be used instead
+# (depending if its a keypress validation or the final string validation).
+#
+# For example if we have the following list of values:
+#
+#    "London" "Madrid" "Mari" "Milan" "Milwaukee" "Minneapolis" "Moscow" "New York"
+#
+# The value *Paris* will be matched by the first value of the list (*London* in this case) or by the last validated value.
+# The value *M*     will be matched by *Madrid*.
+# The value *Mi*    will be matched by *Milan*.
+# The value *Mil*   will be matched by *Milan*.
+# The value *Milw*  will be matched by *Milwaukee*.
+# The value *Milwo* will be matched by *Milwaukee*.
+# ... and so on and so forth ...
+#
+###### NUMERICAL INEXACT SEARCH:
+#
+# This validation will search the list of values associated with the spinbox for the item that is arithmetically closer to *value*.
+# If *value* is less than the first item than the first item will be matched, if it's greater then the last item then the last item
+# will be matched, otherwise it start to analize the items two at the times (for example the first and the second one), if *value*
+# is not enclosed by those items, it analizes the next two (the second and the third one) and so on and so forth until it finds two
+# items that enclose *value*. Once it finds these items, it calculates the distance between the items and *value* itself, and will
+# match the item that has the minor distance. If the two distance are the same, the bigger item will be matched.
+#
+# For example if we have the following list of values:
+#
+#    "1.0" "5.0" "10.0" "15.0" "20.0"
+#
+# The value "0.5"   will be macthed by "1.0"
+# The value "1.0"   will be macthed by "1.0"
+# The value "10.5"  will be matched by "10.0"
+# The value "12.5"  will be matched by "15.0"
+# The value "14.0"  will be matched by "15.0"
+# The value "16.0"  will be matched by "15.0"
+# The value "157.0" will be matched by "20.0"
+# ... and so on and so forth ...
+#
+#### STATES:
+#
+# The spinbox widget supports the **disabled**, **readonly** and **normal** state.
+#
+# In the **disabled** state, no insert cursor is displayed, the text cannot be selected, the spinbox cannot be edited
+# (specifically: the insert and delete commands have no effect) and the popdown window cannot be displayed.
+#
+# In the **readonly** state, no insert cursor is displayed, the text can be selected (depending on the theme), the spinbox
+# cannot be edited (specifically: the insert and delete commands have no effect) and the popdown window can be used to
+# change the widget textarea value.
+#
+# In the **normal** state, the insert cursor is displayed, the text can be selected, the spinbox can be edited and the
+# popdown window can be also used to change the widget textarea value.
+#
+# Note that changes to the linked **-textvariable** will still be reflected in the spinbox, even if it is **disabled**.
+#
+#### STYLING OPTIONS:
+#
+# Default style name: **TSpinbox**
+#
+# Every spinbox styleable option is supported and configurable with the [style](/wiki/commands/style.md) command.
+# Valid styleable options of other widgets will be ignored.
+# It is considered an error providing style options that are not managed by mustang or Tk.
+#
+# The following spinbox styling options are allowed only for themes that follows the **clam** engine (like the
+# **Halo** theme) and ignored by any other engine:
+#
+#   **-bordercolor**
+#   **-darkcolor**
+#   **-lightcolor**
+#
+# The following spinbox styling options are allowed only for themes that do not follows the **clam** engine:
+#
+#   **-focuscolor**
+#   **-focuswidth**
+#
+# See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#### BINDINGS:
+#
+# Mustang automatically creates several bindings for the spinboxs in order to facilitate the developer work and
+# augment the user experience at the same time.
+#
+###### SCROLLING
+#
+# The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
+#
+# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+#       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
+#
+#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#
+# Note: Belows, when we talk about the widget's parents, we talk about it recursively.
+#       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       otherwise nothing will happen.
+#
+# Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
+#       for the Y axis, while **Control-TouchpadScroll** events abide by the same rules of the **Control-MouseWheel** for the X axis
+#       and the **Control-Shift-MouseWheel** for the Y axis.
+#
+# 1.  If the widget is in its **normal** or **readonly** state and the items list is not empty, **MouseWheel** events will scroll the
+#     items list (**listing spinbox**) or increment/decrement the displayed value (**incremental spinbox**), otherwise the event will
+#     try to find the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one unit up
+#     or down (depending on the mousewheel direction). If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 2.  If the widget is in its **normal** or **readonly** state and has the focus, the **Shift-MouseWheel** events will move the insert
+#     cursor by one character towards the left or the right (depending on the direction of the mousewheel event), otherwise
+#     the event will try to find the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
+#     by one unit left or right (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 3.  **Control-MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar and
+#     move that scrollbar by one page up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 4.  **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#     and move that scrollbar by one page left or right (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad direction.
+#
+#        1 - View the **MouseWheel** event.
+#        2 - View the **Shift-MouseWheel** event.
+#
+# 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad direction.
+#
+#        1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an
+#            active horizontal scrollbar and move that scrollbar by one page left or right (depending on the direction of the touchpad
+#            event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an
+#            active vertical scrollbar and move that scrollbar by one page up or down (depending on the direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 7.  **ContextMenu** events will display the contextual menu associated with the widget.
+#     See the **-cmenu** option for more details.
+#
+# The following behavior will happen if the widget has the focus. Mustang will try to find the innermost widget's scrollable parent
+# with an active vertical/horizontal scrollbar and scroll that scrollbar.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  - **Prior**         Scrolls one page towards the top of the widget's parent vertical scrollbar.
+#     - **Next**          Scrolls one page towards the bottom of the widget's parent vertical scrollbar.
+#     - **Control-Prior** Scrolls one page towards the right of the widget's parent horizontal scrollbar.
+#     - **Control-Next**  Scrolls one page towards the left of the widget's parent horizontal scrollbar.
+#
+# If none of the widget's parents meets the required conditions, nothing will happen.
+#
+###### INTERNAL MECHANISM:
+#
+# The following behavior will happen if the mouse pointer is over the widget (no matter if it does or does not have the focus)
+# and its state is normal.
+#
+# Note: In the descriptions below, **word** refers to a contiguous group of letters, digits, or "_" characters, or any single
+#       character other than these.
+#
+# 1.  Clicking the left mouse button inside the widget textarea will put the insert cursor just before the character underneath
+#     the mouse cursor, sets the input focus to this widget, and clears any selection in the widget.
+#     Dragging with mouse **button 1** down strokes out a selection between the insert cursor and the character under the mouse.
+#
+#     Clicking the left mouse button upon the widget arrow will display the popdown window.
+#
+# 2.  Double-clicking with the left mouse button inside the widget textarea selects the word under the mouse and positions the
+#     insert cursor at the end of the word. Dragging after a double click strokes out a selection consisting of whole words.
+#
+# 3.  Triple-clicking with the left mouse button inside the widget textarea selects all of the text in the widget textarea and
+#     positions the insert cursor at the end of the line. The ends of the selection can be adjusted by dragging with left mouse
+#     button while the **Shift** key is down. If the button is double-clicked before dragging then the selection will be adjusted
+#     in units of whole words.
+#
+# 4.  Clicking the left mouse button inside the widget textarea with the **Control** key down will position the insert cursor in
+#     the widget textarea without affecting the selection.
+#
+# 5.  If the mouse is dragged out of the widget textarea on the left or right sides while the left mouse button is pressed and
+#     the datatype of the spinbox allows it, the widget textarea will automatically scroll to make more text visible (if there
+#     is more text off-screen on the side where the mouse left the window).
+#
+# 6.  If the arrow up button is pressed than **incremental spinbox** will increment the value in the textarea by **increment** while
+#     **listing spinbox** will display the next item in the list provided after the one present in the textarea.
+#     In both cases the value in the textarea will be validated before the actions occurs.
+#     The same actions could also be achived by pressing the arrow up key.
+#
+# 7.  If the arrow down button is pressed than **incremental spinbox** will decrement the value in the textarea by **increment** while
+#     **listing spinbox** will display the previous item in the list provided before the one present in the textarea.
+#     In both cases the value in the textarea will be validated before the actions occurs.
+#     The same actions could also be achived by pressing the arrow down key.
+#
+# The following behavior will happen if the spinbox widget has the focus and its state is normal.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  If any normal printing characters are typed in an widget textarea (according to its datatype), they are inserted at the
+#     point of the insert cursor.
+#
+# 2.  The **Left** and **Right** keys move the insert cursor one character to the left or right; they also clear any selection in
+#     the widget textarea. If **Shift-Left** or **Shift-Right** is typed then the insertion cursor moves and the selection is
+#     extended to include the new character. **Control-Left** and **Control-Right** move the insert cursor by words, and
+#     **Control-Shift-Left** and **Control-Shift-Right** move the insert cursor by words and also extend the selection.
+#
+# 3.  The **Up** key will increment the value in the textarea by **increment** (**incremental spinbox**) or will display the next
+#     item in the list provided after the one present in the textarea (**listing spinbox**).
+#     In both cases the value in the textarea will be validated before the actions occurs.
+#     The same actions could also be achived by pressing the arrow up button.
+#
+# 4.  The **Down** key will decrement the value in the textarea by **increment** (**incremental spinbox**) or will display the
+#     previous item in the list provided before the one present in the textarea (**listing spinbox**).
+#     In both cases the value in the textarea will be validated before the actions occurs.
+#     The same actions could also be achived by pressing the arrow down button.
+#
+# 5.  The **Home** key move the insert cursor to the beginning of the widget textarea  and clears any previous selection.
+#     **Shift-Home** moves the insert cursor to the beginning of the widget textarea and extends the selection to that point.
+#
+# 6.  The **End** key move the insert cursor to the end of the widget textarea and clears any previous selection.
+#     **Shift-End** moves the cursor to the end and extends the selection to that point.
+#
+# 7.  **Control-a** (**Command-a** for macOS) selects all the text in the widget textarea.
+#     **Control-Shift-a** (**Command-Shift-a** for macOS) clears any selection in the widget or does nothing if there isn't any.
+#
+# 8.  The standard Tk **Cut**, **Copy**, **Paste**, and **Clear** virtual events operate on the selection in the expected manner.
+#
+# 9.  The **Delete** key deletes the selection, if there is one in the widget textarea.
+#     If there is no selection, it deletes the character to the right of the insertion cursor.
+#     **Alt-d** (**Option-d** for macOS) deletes from the insertion cursor to the end of the widget textarea or does nothing if
+#     the insertion cursor is already at the end of the widget textarea.
+#
+# 10.  he **BackSpace** key delete the selection, if there is one in the widget textarea.
+#     If there is no selection, it deletes the character to the left of the insert cursor.
+#
+# 11. The **Escape** key clears any current value that is not yet validated and restore the last valid one.
+#
+# 12. The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the previous
+#     focussable widget.
+#
+# There are other bindings in place for internal mechanism like **Activate/Deactivate**, **Destroy**, **Enter/Leave** and
+# **FocusIn/FocusOut**.
+#
+###### ALTERNATIVE BINDINGS:
+#
+# Check the [event](/wiki/commands/event.md) wiki page to see alternative keystrokes in case some keys are not present in the user
+# keyboard like the *Delete*, *Arrows*, *Home*, *End*, *PageUp* or *PageDown* keys.
+#
+#### COLOR OPTIONS:
+#
+# Each color option accepts colors provided in one of the following forms:
+#
+#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                               hexadecimals), with or without the **#**.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the color to validate and the second one (optional) indicates
+#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                               translated. If only one element is provided (the hexadecimal color) its color model will be
+#                               assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                               Note: Hexadecimal colors and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffffff'.
+#
+#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                          The color model is **HEX12**.
+#
+#                                                          The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ff0000'.
+#
+#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                          The color model is **HEX16**.
+#
+#                                                          The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#0000ff'.
+#
+#                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffff00'.
+#
+#   **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                               *Magenta*, or *Light Steel Blue*.
+#
+#                               In this form, the list should have at least one element. More precisely:
+#
+#                                    colorname   --> It's the textual color name that specifies the color.
+#                                                    Should always be written first. It can take more than one element of
+#                                                    the list depending on how many words are needed to define it.
+#
+#                                                    The only color names known by mustang are specified in its palettes.
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the allowed color names for the default **mustang** palette.
+#
+#                                    palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                    If present, it should always be the last element of the list if the color model
+#                                                    is not present, or the last but one if the color model is present.
+#
+#                                                    Allowed values are any palette name loaded into mustang.
+#                                                    If not provided, defaults to **mustang** or return the fallback value
+#                                                    if the **mustang** palette was not loaded.
+#
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the mustang palettes.
+#
+#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                    will be translated.
+#                                                    If present, the color model should always be the last element of the list.
+#
+#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                    If not provided, defaults to **HEX8**.
+#
+#                                                    Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                    about color models.
+#
+#                               Note: Colornames, palettes and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "teal"                --> The color name is *teal*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#008080"
+#
+#                                    "medium violet red"   --> The color name is *medium violet red*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#c71585"
+#
+#                                    "sepia MyPalette"     --> The color name is *sepia*.
+#                                                              The palette name is **MyPalette**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              Note that in this example **MyPalette** is a fictional
+#                                                              palette name that have been loaded into mustang.
+#
+#                                                              The color name is translated to the hexadecimal color at 8 bit
+#                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                    "light coral hex16"   --> The color name is *light coral*.
+#                                                              The color model is **HEX16**.
+#                                                              The palette name is **mustang**.
+#
+#                                                              The color name is translated to "#f0f080808080"
+#
+#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                             The palette name is **mustang**.
+#                                                                             The color model is **HEX8**.
+#
+#                                                                             The color name is translated to "#6ada8e"
+#
+#                               After its validation, the color name will be returned translated in its hexadecimal longform
+#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                               *HighlightAlternate* or *PlaceholderText*.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the theme color name to validate and the second one (optional)
+#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                               will be translated. If only one element is provided (the theme color name) its color model
+#                               will be assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                               theme color names are allowed.
+#
+#                               Note: Theme colors are case sensitive.
+#
+#### EXAMPLE:
+#
+#   # Create the values lists.
+#   set alnum_values   [list Albatross Crow Eagle Falcon Hummingbird Parrot Pidgeon Osprey Quail Vulture]
+#   set integer_values [list 100 200 300 400 500 600 700 800 900 1000]
+#   set none_values    [list Bear Cat Dog Duck Elephant Horse Lion Panther Tiger Whale]
+#
+#   # Create spinboxes of different datatypes and states.
+#   spinbox .sp1  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype alnum \
+#                 -maxlength 11 \
+#                     -state normal \
+#                     -style TSpinbox \
+#                    -values $alnum_values;
+#
+#   spinbox .sp2  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype integer \
+#                 -maxlength 4 \
+#                     -state normal \
+#                     -style TSpinbox \
+#                    -values $integer_values;
+#
+#   spinbox .sp3  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype none \
+#                 -maxlength 8 \
+#                     -state normal \
+#                     -style TSpinbox \
+#                    -values $none_values;
+#
+#   spinbox .sp4  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype alnum \
+#                 -maxlength 11 \
+#                     -state readonly \
+#                     -style TSpinbox \
+#                    -values $alnum_values;
+#
+#   spinbox .sp5  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype integer \
+#                 -maxlength 4 \
+#                     -state readonly \
+#                     -style TSpinbox \
+#                    -values $integer_values;
+#
+#   spinbox .sp6  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype none \
+#                 -maxlength 8 \
+#                     -state readonly \
+#                     -style TSpinbox \
+#                    -values $none_values;
+#
+#   spinbox .sp7  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype alnum \
+#                 -maxlength 11 \
+#                     -state disabled \
+#                     -style TSpinbox \
+#                    -values $alnum_values;
+#
+#   spinbox .sp8  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype integer \
+#                 -maxlength 4 \
+#                     -state disabled \
+#                     -style TSpinbox \
+#                    -values $integer_values;
+#
+#   spinbox .sp9  -charwidth 11 \
+#                   -command [list ::AfterValidate] \
+#                  -datatype none \
+#                 -maxlength 8 \
+#                     -state disabled \
+#                     -style TSpinbox \
+#                    -values $none_values;
+#
+#   # Pack all the spinboxes.
+#   pack .sp1 -pady [list 20 10] -padx [list 50 50]
+#   pack .sp2 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp3 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp4 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp5 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp6 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp7 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp8 -pady [list 10 10] -padx [list 50 50]
+#   pack .sp9 -pady [list 10 20] -padx [list 50 50]
+#
+#   # Focus the first spinbox.
+#   focus .sp1
+#
+#   # After 3 seconds, change the accent color.
+#   after 3000 [list set ::ms::accent purple]
+#
+#   # After 6 seconds, change the colorscheme.
+#   switch -- [tk windowingsystem] {
+#       aqua {
+#           switch -- [wm attributes . -isdark] {
+#               0   { after 6000 [list set ::ms::colorscheme dark]  }
+#               1   { after 6000 [list set ::ms::colorscheme light] }
+#           }
+#       }
+#       default { after 6000 [list set ::ms::colorscheme dark] }
+#   }
+#
+#   proc ::AfterValidate { w value } {
+#       chan puts "$w --> $value"
+#   }
 package provide ::ms::spinbox 0.1
 
 ###############################
