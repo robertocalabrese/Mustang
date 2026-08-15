@@ -147,6 +147,10 @@ namespace eval ::ms::sizegrip {
                                                     state \
                                                     style \
                                                     takefocus];
+
+    # Set the 'styleable' sizegrip option list.
+    set ::ms::sizegrip(styleable,options) [list background \
+                                                cursor];
 }
 
 # Rename the original Tk **ttk::sizegrip** command.
