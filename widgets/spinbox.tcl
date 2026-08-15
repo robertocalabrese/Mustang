@@ -1573,6 +1573,18 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
             # Set the cursor at the end of the spinbox textarea.
             $w icursor end
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TSpinbox { bindtags $w [list $w _Spinbox TSpinbox $::ms::addr($w,toplevel) all] }
+                default  { bindtags $w [list $w $::ms::current($w,class) _Spinbox TSpinbox $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
