@@ -2108,7 +2108,7 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                             }
 
                             # If not specified in the command line the foreground should follow it's mapping style, if any.
-                            switch -- $::ms::managed_by($w,background) {
+                            switch -- $::ms::managed_by($w,foreground) {
                                 developer { set foreground $::ms::current($w,foreground) }
                                 Tk        { set foreground [_ttk_style lookup $::ms::current($w,style) -foreground [interp invokehidden {} $w state] $::ms::default($w,foreground)] }
                             }
@@ -2486,7 +2486,7 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
         }
 
         # If not specified in the command line the foreground should follow it's mapping style, if any.
-        switch -- $::ms::managed_by($w,background) {
+        switch -- $::ms::managed_by($w,foreground) {
             developer { set foreground $::ms::current($w,foreground) }
             Tk        { set foreground [_ttk_style lookup $stylename -foreground [interp invokehidden {} $w state] $::ms::default($w,foreground)] }
         }
