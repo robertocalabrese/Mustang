@@ -140,7 +140,14 @@ _bind _Sizegrip <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 _bind _Sizegrip <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **sizegrip** package.
-namespace eval ::ms::sizegrip {}
+namespace eval ::ms::sizegrip {
+    # Set the 'non styleable' sizegrip option list.
+    set ::ms::sizegrip(non_styleable,options) [list class \
+                                                    cmenu \
+                                                    state \
+                                                    style \
+                                                    takefocus];
+}
 
 # Rename the original Tk **ttk::sizegrip** command.
 rename ttk::sizegrip _ttk_sizegrip
