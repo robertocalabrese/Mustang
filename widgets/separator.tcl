@@ -960,6 +960,11 @@ proc ::ms::separator::Style_Update { stylename caller_info } {
             _ttk_style layout $parent_style($orient) [_ttk_style layout [string cat $dir "." TSeparator]]
         }
     }
+
+    # Update all the separator widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,separator,addrs) {}
+
+    return ""
 }
 
 ######################################
