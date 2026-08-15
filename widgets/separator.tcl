@@ -147,6 +147,10 @@ namespace eval ::ms::separator {
                                                      state \
                                                      style \
                                                      takefocus];
+
+    # Set the 'styleable' separator option list.
+    set ::ms::separator(styleable,options) [list background \
+                                                 cursor];
 }
 
 # Rename the original Tk **ttk::separator** command.
