@@ -757,6 +757,18 @@ proc ::ms::scale::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TScale  { bindtags $w [list $w _Scale TScale $::ms::addr($w,toplevel) all] }
+                default { bindtags $w [list $w $::ms::current($w,class) _Scale TScale $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
