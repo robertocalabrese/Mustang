@@ -1714,7 +1714,27 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
         }
         configure {}
         delete    -
-        selection {}
+        selection {
+            # Synopsis:
+            #
+            # *window* **delete** *first* ?*last*?
+            # *window* **selection** *option* *arg*
+            #    *window* **selection** **clear**
+            #    *window* **selection** **present**
+            #    *window* **selection** **range** *start* *end*
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+            }
+        }
         identify {}
         insert {}
         get      -
