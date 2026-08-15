@@ -162,7 +162,22 @@ _bind _Scale <TouchpadScroll> { ::ms::scale::Touchpad %W %# %D units 1x; break }
 _bind _Scale <Control-TouchpadScroll> { ::ms::scale::Touchpad %W %# %D pages 2x; break }
 
 # Create the mustang **scale** package.
-namespace eval ::ms::scale {}
+namespace eval ::ms::scale {
+    # Set the 'non styleable' scale option list.
+    set ::ms::scale(non_styleable,options) [list class \
+                                                 cmenu \
+                                                 command \
+                                                 from \
+                                                 increment \
+                                                 length \
+                                                 orient \
+                                                 state \
+                                                 style \
+                                                 takefocus \
+                                                 to \
+                                                 value \
+                                                 variable];
+}
 
 # Rename the original Tk **scale** and **ttk::scale** commands.
 rename scale      _scale
