@@ -1128,6 +1128,96 @@ namespace eval ttk::theme::Halo {
                                                           alternate Accent \
                                                            selected Accent \
                                                           !selected BordercolorAlternate];
+
+        ###################
+        ##               ##
+        ##     SCALE     ##
+        ##               ##
+        ###################
+
+        # Note: 'cursor', 'gripsize' and 'troughrelief' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'bordercolor', 'borderwidth', 'darkcolor', 'gripsize', 'innercolor', lightcolor', 'outercolor', 'troughcolor'
+        #       and 'troughrelief' are setted in a way that reflects the default thumb and trough images colors.
+        #       These options are silently ignored when the Halo theme is in use due to the fact that it uses images
+        #       instead of drawing the elements through its engine.
+
+        # Note: 'gripsize' is only meaningfull for themes that uses the 'clam' engine.
+        #       'innercolor' and 'outercolor' are only meaningfull for themes that use the 'default' engine.
+
+        # Note: 'sliderlength' is ignored by mustang.
+        #       It's here in case the developer needs to create a Tk scale widget.
+        #       In mustang the developer should use the non styleable option 'length'.
+
+        # Note: 'sliderrelief' is ignored by mustang.
+        #       It's here in case the developer needs to create a Tk scale widget.
+        #       In mustang the developer should use the styleable option 'thumbrelief'.
+
+        # Layouts
+        style layout Horizontal.TScale {
+            Horizontal.Scale.padding -sticky nswe -children {
+                Horizontal.Scale.trough -sticky we -children {
+                    Horizontal.Scale.slider -side left -sticky {}
+                }
+            }
+        }
+
+        style layout Vertical.TScale {
+            Vertical.Scale.padding -sticky nswe -children {
+                Vertical.Scale.trough -sticky ns -children {
+                    Vertical.Scale.slider -side top -sticky {}
+                }
+            }
+        }
+
+        # Elements
+        # The first image represents the normal state.
+        style element create Scale.slider    image [list          scale_thumb \
+                                                         disabled scale_thumb_disabled \
+                                                          pressed scale_thumb_pressed] \
+                                           -border 1 \
+                                          -padding 0 \
+                                           -sticky nsew;
+
+        style element create Horizontal.Scale.trough    image [list          scale_trough_horizontal \
+                                                                    disabled scale_trough_horizontal_disabled \
+                                                                       focus scale_trough_horizontal_focus] \
+                                                      -border 1 \
+                                                      -height 2 \
+                                                     -padding [list 0 4] \
+                                                      -sticky ew;
+
+        style element create Vertical.Scale.trough    image [list          scale_trough_vertical \
+                                                                  disabled scale_trough_vertical_disabled \
+                                                                     focus scale_trough_vertical_focus] \
+                                                    -border 1 \
+                                                   -padding [list 4 0] \
+                                                    -sticky ns \
+                                                     -width 2;
+
+        # Normal state
+        style configure TScale   -background Background \
+                                -bordercolor ScaleTrough \
+                                -borderwidth 0 \
+                                  -darkcolor Darkcolor \
+                                     -cursor arrow \
+                                   -gripsize 7.5p \
+                                 -innercolor Accent \
+                                 -lightcolor Lightcolor \
+                                 -outercolor Background \
+                               -sliderlength 22.5p \
+                               -sliderrelief flat \
+                                  -thickness 2 \
+                                -thumbrelief flat \
+                                -troughcolor ScaleTrough \
+                               -troughrelief flat;
+
+        # Mapping
+        style map TScale  -innercolor [list disabled ScaleThumbDisabled \
+                                             pressed HighlightAlternate] \
+                         -troughcolor [list disabled ScaleTroughDisabled \
+                                               focus Highlight];
     }
 }
 
