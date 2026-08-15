@@ -2118,4 +2118,60 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
     return ""
 }
 
+## MouseWheel
+#
+# Scroll the widget's thumb vertically with the mousewheel.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# delta    Should be the delta of the scroll.
+#
+# axis     Should be the axis of the scroll.
+#          Allowed values are **X** or **Y**.
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#          If not provided, defaults to **units**.
+#
+# speed    Should be the scroll speed (1x, 2x, 3x ...).
+#          If not provided, defaults to **1x**.
+#
+# It doesn't return anything.
+proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
+    switch -- $::ms::current($w,state) {
+        disabled {
+            switch -nocase -- $axis {
+                X       { ::ms::Scroll_Parent_X $w $delta $what }
+                default { ::ms::Scroll_Parent_Y $w $delta $what }
+            }
+        }
+        default {
+            # Set 'increment' based on the direction of the movement.
+            if { $delta > 0 } {
+                set increment [expr { -1.0*$::ms::current($w,increment) }]
+            } else {
+                set increment $::ms::current($w,increment)
+            }
+
+            # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
+            switch -- $::ms::scrollmode {
+                natural { set increment [expr { -1.0*$increment }] }
+            }
+
+            # Augment 'increment' by 'speed'.
+            set speed [string range $speed 0 end-1]
+            switch -- [string is integer -strict $speed] {
+                1   { set increment [expr { $increment*$speed }] }
+            }
+
+            # Move the widget's thumb.
+            interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
