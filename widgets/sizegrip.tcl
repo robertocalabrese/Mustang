@@ -1145,4 +1145,25 @@ proc ::ms::sizegrip::Drag { w X Y } {
     return ""
 }
 
+## Drag_Release
+#
+# Manage the **ButtonRelease-1** event on the widget.
+#
+# It doesn't return anything.
+proc ::ms::sizegrip::Drag_Release {} {
+    # Note: This procedure was inspired by the ttk::sizegrip procedure 'Release'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    unset -nocomplain -- ::ms::temp(state,height) \
+                         ::ms::temp(state,press,X) \
+                         ::ms::temp(state,press,Y) \
+                         ::ms::temp(state,pressed) \
+                         ::ms::temp(state,x) \
+                         ::ms::temp(state,y) \
+                         ::ms::temp(state,width);
+
+    return ""
+}
+
 #*EOF*
