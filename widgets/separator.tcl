@@ -976,6 +976,59 @@ proc ::ms::separator::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: 'cursor' is not allowed to change if the statespec changes.
+
+        #######################
+        ##                   ##
+        ##     SEPARATOR     ##
+        ##                   ##
+        #######################
+
+        # Set the widget style name.
+        set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
+                                               "." $parent_style($::ms::current($w,orient))];
+
+        # If needed, create the widget style.
+        if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,widget) -background $::ms::current($w,background)
+
+            # Add the widget style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+        }
+
+        # Initialize the widget mapping.
+        set mapping [list ]
+
+        # background
+        switch -- $::ms::managed_by($w,background) {
+            developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+            Tk  {
+                # Check if a 'background' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
+                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
+                }
+            }
+        }
+
+        # If needed, create the widget mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+            # Add the widget mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        # Apply the changes.
+        interp invokehidden {} $w configure -cursor $::ms::current($w,cursor) \
+                                             -style $::ms::style($w,widget);
     }
 
     return ""
