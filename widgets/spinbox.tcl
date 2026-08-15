@@ -1334,6 +1334,16 @@ proc ::ms::spinbox::Command { window { args "" } } {
                     set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
                 }
             }
+
+            # If the maxlength is not zero check that the charwidth is not less of it.
+            switch -- $::ms::current($w,maxlength) {
+                0       {}
+                default {
+                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
+                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
