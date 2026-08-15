@@ -248,7 +248,29 @@ _bind _Spinbox <TouchpadScroll> { ::ms::spinbox::Touchpad %W %# %D; break }
 _bind _Spinbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **spinbox** package.
-namespace eval ::ms::spinbox {}
+namespace eval ::ms::spinbox {
+    # Set the 'non styleable' spinbox option list.
+    set ::ms::spinbox(non_styleable,options) [list class \
+                                                   cmenu \
+                                                   command \
+                                                   datatype \
+                                                   decimals \
+                                                   exportselection \
+                                                   from \
+                                                   increment \
+                                                   invalidcommand \
+                                                   maxlength \
+                                                   placeholder \
+                                                   state \
+                                                   style \
+                                                   takefocus \
+                                                   textvariable \
+                                                   to \
+                                                   validate \
+                                                   validatecommand \
+                                                   values \
+                                                   xscrollcommand];
+}
 
 # Rename the original Tk **ttk::spinbox** command.
 rename ttk::spinbox _ttk_spinbox
