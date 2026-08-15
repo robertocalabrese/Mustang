@@ -1735,7 +1735,45 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    # Check that the first argument of 'args' is the word 'element' or 'sash'.
+                    switch -- [lindex $args 0] {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+
+                    # Check if the coordinates provided falls upon the widget.
+                    try {
+                        interp invokehidden {} $w identify $x $y
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        switch -- $result {
+                            textarea { set result "Spinbox.textarea" }
+                        }
+
+                        return $result
+                    }
+                }
+            }
+        }
         insert {}
         get      -
         validate {}
