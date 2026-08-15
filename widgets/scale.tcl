@@ -177,6 +177,21 @@ namespace eval ::ms::scale {
                                                  to \
                                                  value \
                                                  variable];
+
+    # Set the 'styleable' scale option list.
+    set ::ms::scale(styleable,options) [list background \
+                                             bordercolor \
+                                             borderwidth \
+                                             cursor \
+                                             darkcolor \
+                                             gripsize \
+                                             innercolor \
+                                             lightcolor \
+                                             outercolor \
+                                             thickness \
+                                             thumbrelief \
+                                             troughcolor \
+                                             troughrelief];
 }
 
 # Rename the original Tk **scale** and **ttk::scale** commands.
