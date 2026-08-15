@@ -2369,13 +2369,13 @@ proc ::ms::panedwindow::Destroy { w } {
         default { set ::ms::style($::ms::current($w,style),panedwindow,addrs) [lremove $::ms::style($::ms::current($w,style),panedwindow,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the palette classtype.
-    switch -- [llength $::ms::style($::ms::current($w,style),palette,addrs)] {
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the panedwindow classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),panedwindow,addrs)] {
         0   {
-            set index [lsearch -exact $::ms::style(palette,classtype) $::ms::current($w,style)]
+            set index [lsearch -exact $::ms::style(panedwindow,classtype) $::ms::current($w,style)]
             switch -- $index {
                 -1      {}
-                default { set ::ms::style(palette,classtype) [lremove $::ms::style(palette,classtype) $index] }
+                default { set ::ms::style(panedwindow,classtype) [lremove $::ms::style(panedwindow,classtype) $index] }
             }
         }
     }
