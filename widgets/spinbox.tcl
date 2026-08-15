@@ -4970,4 +4970,62 @@ proc ::ms::spinbox::Validate_String { w } {
     return $value
 }
 
+#####################################
+##                                 ##
+##     MOUSEWHEEL AND TOUCHPAD     ##
+##                                 ##
+#####################################
+
+## MouseWheel
+#
+# If the widget is not in its disabled state and the list provided is not empty, scroll the items
+# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable
+# parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending
+# on the mousewheel direction). If none of the widget's parent meets the required condition,
+# don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#          *Amount* is normally delivered by the **MouseWheel** event with a value of
+#          **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# It doesn't return anything.
+proc ::ms::spinbox::MouseWheel { w amount } {
+    switch -- $::ms::current($w,state) {
+        disabled {
+            # Try to find a widget parent to scroll vertically, if any.
+            ::ms::Scroll_Parent_Y $w $amount units
+        }
+        default {
+            # Set the focus on the spinbox entry.
+            _focus -force $w
+
+            # Check the scrollmode.
+            switch -- $::ms::scrollmode {
+                natural { set amount [expr { -1.0*$amount }] }
+            }
+
+            # Change the widget textarea value by scrolling the items list provided up or down
+            # (depending on the scroll direction).
+            if { $amount > 0 } {
+                ::ms::spinbox::Decrement $w [::ms::spinbox::Validate_String $w] 1
+            } else {
+                ::ms::spinbox::Increment $w [::ms::spinbox::Validate_String $w] 1
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
