@@ -64,6 +64,189 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::spinbox 0.1
 
+###############################
+##                           ##
+##     _SPINBOX BINDINGS     ##
+##                           ##
+###############################
+
+# Activate/Deactivate
+_bind _Spinbox <Activate>   { ::ms::spinbox::Pathname_Cmd %W state !background; break }
+_bind _Spinbox <Deactivate> { ::ms::spinbox::Pathname_Cmd %W state  background; break }
+
+# Allowing some modifiers combination.
+switch -- [_tk windowingsystem] {
+    aqua {
+        _bind _Spinbox <Option-KeyPress>         { # Enable binding }
+        _bind _Spinbox <Option-Shift-KeyPress>   { # Enable binding }
+        _bind _Spinbox <Control-KeyPress>        { # Enable binding }
+        _bind _Spinbox <Control-Option-KeyPress> { # Enable binding }
+        _bind _Spinbox <Control-Shift-KeyPress>  { # Enable binding }
+        _bind _Spinbox <Command-KeyPress>        { # Enable binding }
+        _bind _Spinbox <Command-Shift-KeyPress>  { # Enable binding }
+    }
+    default {
+        _bind _Spinbox <Alt-KeyPress>           { # Enable binding }
+        _bind _Spinbox <Alt-Shift-KeyPress>     { # Enable binding }
+        _bind _Spinbox <Control-KeyPress>       { # Enable binding }
+        _bind _Spinbox <Control-Alt-KeyPress>   { # Enable binding }
+        _bind _Spinbox <Control-Shift-KeyPress> { # Enable binding }
+        _bind _Spinbox <Meta-KeyPress>          { # Enable binding }
+        _bind _Spinbox <Meta-Shift-KeyPress>    { # Enable binding }
+    }
+}
+
+# Backspace/Delete keys
+_bind _Spinbox <KeyPress-BackSpace> { # Enable binding }
+_bind _Spinbox <KeyPress-Delete>    { # Enable binding }
+_bind _Spinbox <KeyPress-KP_Delete> { ::ttk::entry::Delete %W; break }
+
+# Buttonpress
+_bind _Spinbox <ButtonPress-1>        { ::ms::spinbox::ButtonPress %W %x %y "";  break }
+_bind _Spinbox <Shift-ButtonPress-1>  { ::ms::spinbox::ButtonPress %W %x %y "s"; break }
+_bind _Spinbox <Double-ButtonPress-1> { ::ms::spinbox::ButtonPress %W %x %y "2"; break }
+_bind _Spinbox <Triple-ButtonPress-1> { ::ms::spinbox::ButtonPress %W %x %y "3"; break }
+_bind _Spinbox <ButtonRelease-1>      { ::ttk::CancelRepeat; break }
+_bind _Spinbox <B1-Motion>            { ::ms::Drag %W %x %y; break }
+
+_bind _Spinbox <Button-2>         { ::ms::Scan_Or_Paste %W %x "Button-2"; break }
+_bind _Spinbox <B2-Motion>        { ::ms::Scan_Or_Paste %W %x "B2-Motion"; break }
+_bind _Spinbox <ButtonRelease-2>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-2"; break }
+
+_bind _Spinbox <Button-3>         { ::ms::Scan_Or_Paste %W %x "Button-3"; break }
+_bind _Spinbox <B3-Motion>        { ::ms::Scan_Or_Paste %W %x "B3-Motion"; break }
+_bind _Spinbox <ButtonRelease-3>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-3"; break }
+
+# Contextual menu
+_bind _Spinbox <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+# Clear/Copy/Cut/Paste
+_bind _Spinbox <<Clear>> { ::ms::Clear %W; break }
+_bind _Spinbox <<Copy>>  { ::ms::Copy  %W; break }
+_bind _Spinbox <<Cut>>   { ::ms::Cut   %W; break }
+_bind _Spinbox <<Paste>> { ::ms::Paste %W CLIPBOARD; break }
+
+# Cursor management.
+_bind _Spinbox <Motion> { ::ms::Set_Cursor %W %x %y; break }
+
+# Destroy
+_bind _Spinbox <Destroy> { ::ms::spinbox::Destroy %W; break }
+
+# Enter/Leave
+_bind _Spinbox <Enter> { ::ms::spinbox::Pathname_Cmd %W state  hover; break }
+_bind _Spinbox <Leave> { ::ms::spinbox::Pathname_Cmd %W state !hover; break }
+
+# Escape key
+_bind _Spinbox <KeyPress-Escape> { ::ms::Escape %W; break }
+
+# F keys
+_bind _Spinbox <Fn-KeyPress> { # Enable binding }
+
+# FocusIn/FocusOut
+_bind _Spinbox <FocusIn>  { ::ms::spinbox::FocusIn  %W; break }
+_bind _Spinbox <FocusOut> { ::ms::spinbox::FocusOut %W; break }
+
+# Increment/Decrement keys.
+_bind _Spinbox <<NextLine>> { ::ms::spinbox::Arrows %W incr 1x; break }
+_bind _Spinbox <<PrevLine>> { ::ms::spinbox::Arrows %W decr 1x; break }
+
+_bind _Spinbox <<NextPara>> { ::ms::spinbox::Arrows %W incr 2x; break }
+_bind _Spinbox <<PrevPara>> { ::ms::spinbox::Arrows %W decr 2x; break }
+
+_bind _Spinbox <<LineTop>>    { ::ms::spinbox::Home_End %W end; break }
+_bind _Spinbox <<LineBottom>> { ::ms::spinbox::Home_End %W home; break }
+
+# Insert cursor movements.
+_bind _Spinbox <<LineEnd>>   { ::ttk::entry::Move %W end; break }
+_bind _Spinbox <<LineStart>> { ::ttk::entry::Move %W home; break }
+_bind _Spinbox <<NextChar>>  { ::ttk::entry::Move %W nextchar; break }
+_bind _Spinbox <<NextWord>>  { ::ttk::entry::Move %W nextword; break }
+_bind _Spinbox <<PrevChar>>  { ::ttk::entry::Move %W prevchar; break }
+_bind _Spinbox <<PrevWord>>  { ::ttk::entry::Move %W prevword; break }
+
+_bind _Spinbox <<SelectLineEnd>>   { ::ttk::entry::Extend %W end; break }
+_bind _Spinbox <<SelectLineStart>> { ::ttk::entry::Extend %W home; break }
+_bind _Spinbox <<SelectNextChar>>  { ::ttk::entry::Extend %W nextchar; break }
+_bind _Spinbox <<SelectNextWord>>  { ::ttk::entry::Extend %W selectnextword; break }
+_bind _Spinbox <<SelectPrevChar>>  { ::ttk::entry::Extend %W prevchar; break }
+_bind _Spinbox <<SelectPrevWord>>  { ::ttk::entry::Extend %W prevword; break }
+
+_bind _Spinbox <<SelectAll>>  { %W selection range 0 end; break }
+_bind _Spinbox <<SelectNone>> { %W selection clear; break }
+
+# Enabling only some keys depending on the datatype specified for the widget.
+_bind _Spinbox <KeyPress> { ::ms::spinbox::KeyPress %W %A; break }
+
+# Return
+_bind _Spinbox <KeyPress-Return>   { ::ms::spinbox::Return %W; break }
+_bind _Spinbox <KeyPress-KP_Enter> { ::ms::spinbox::Return %W; break }
+
+# Tab/Shift-Tab keys
+_bind _Spinbox <KeyPress-Tab> { # Enable binding }
+switch -- [_tk windowingsystem] {
+    x11 {
+        _bind _Spinbox <KeyPress-ISO_Left_Tab> { # Enable binding }
+
+        # This seems to be correct on *some* HP systems.
+        catch { _bind _Spinbox <KeyPress-hpBackTab> { # Enable binding } }
+    }
+    aqua  { _bind _Spinbox <KeyPress-ISO_Left_Tab> { # Enable binding } }
+    win32 { _bind _Spinbox <Shift-KeyPress-Tab>    { # Enable binding } }
+}
+
+# Enabling window traversal navigation.
+_bind _Spinbox <<PageLeft>>  { # Enable binding }
+_bind _Spinbox <<PageRight>> { # Enable binding }
+_bind _Spinbox <<PageUp>>    { # Enable binding }
+_bind _Spinbox <<PageDown>>  { # Enable binding }
+
+# Mousewheel and Touchpad
+
+# If the widget is in its **normal** or **readonly** state and the items list is not empty, scroll the items
+# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable parent
+# with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the
+# mousewheel direction). If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Spinbox <MouseWheel> { ::ms::spinbox::MouseWheel %W %D; break }
+
+# If the widget is in its **normal** state and has the focus, move the insert cursor by one character
+# towards the left or the right (depending on the direction of the mousewheel event), otherwise try to
+# find the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
+# by one unit left or right (again, depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Spinbox <Shift-MouseWheel> { ::ms::spinbox::Shift_MouseWheel %W %D; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Spinbox <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Spinbox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - View the **Shift-MouseWheel** event.
+#   2 - View the **MouseWheel** event.
+_bind _Spinbox <TouchpadScroll> { ::ms::spinbox::Touchpad %W %# %D; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Spinbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 # Create the mustang **spinbox** package.
 namespace eval ::ms::spinbox {}
 
