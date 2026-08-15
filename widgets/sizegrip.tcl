@@ -204,6 +204,51 @@ proc ::ms::sizegrip::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)     $::ms::default(sizegrip,class)
+            set ::ms::default($w,cmenu)     $::ms::default(sizegrip,cmenu)
+            set ::ms::default($w,state)     $::ms::default(sizegrip,state)
+            set ::ms::default($w,style)     $::ms::default(sizegrip,style)
+            set ::ms::default($w,takefocus) $::ms::default(sizegrip,takefocus)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)     $::ms::default(sizegrip,class)
+            set ::ms::current($w,cmenu)     $::ms::default(sizegrip,cmenu)
+            set ::ms::current($w,state)     $::ms::default(sizegrip,state)
+            set ::ms::current($w,style)     $::ms::default(sizegrip,style)
+            set ::ms::current($w,takefocus) $::ms::default(sizegrip,takefocus)
+
+            # Set the widget variable needed for internal mechanisms.
+            set ::ms::data($w,classtype) sizegrip
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a sizegrip styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **sizegrip** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background) Tk
+            set ::ms::managed_by($w,cursor)     Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
