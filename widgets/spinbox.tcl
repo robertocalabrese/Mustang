@@ -4643,4 +4643,331 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
     return 1
 }
 
+## Validate_String
+#
+# Validate the string inside the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# Return the validated string.
+proc ::ms::spinbox::Validate_String { w } {
+    ##############################
+    ##                          ##
+    ##     VALUE CORRECTION     ##
+    ##                          ##
+    ##############################
+
+    # Remove any leading and trailing spaces from the current value.
+    set value [string trim [interp invokehidden {} $w get]]
+
+    # Clear 'value' from illegal characters, if any.
+    set corrected_value ""
+    switch -- $::ms::current($w,datatype) {
+        alnum {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     -
+                    "."     -
+                    ","     -
+                    "-"     {}
+                    default {
+                        # Check if 'char' is an alphanumeric character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        alpha {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    " "     {}
+                    default {
+                        # Check if 'char' is an alphabetic character.
+                        switch -- [string is alnum $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        integer {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "-"     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        posinteger {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                # Check if 'char' is an integer character.
+                set char [string index $value $i]
+                switch -- [string is integer $char] {
+                    0   {
+                        incr i
+                        continue
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        posreal {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "."     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+        real {
+            # Check every character in 'value'.
+            set i 0
+            while { $i < [string length $value] } {
+                set char [string index $value $i]
+                switch -- $char {
+                    "-"     -
+                    "."     {}
+                    default {
+                        # Check if 'char' is an integer character.
+                        switch -- [string is integer $char] {
+                            0   {
+                                incr i
+                                continue
+                            }
+                        }
+                    }
+                }
+
+                # Add char to the 'corrected_value' string.
+                append corrected_value $char
+
+                incr i
+            }
+
+            set value $corrected_value
+        }
+    }
+
+    # Note: At this point, every illegal characters in string (for the datatype specified) have been stripped out.
+
+    ########################
+    ##                    ##
+    ##     VALIDATION     ##
+    ##                    ##
+    ########################
+
+    switch -- $value {
+        ""      { set value $::ms::data($w,current_value) }
+        default {
+            switch -- $::ms::current($w,datatype) {
+                alnum -
+                alpha {
+                    #######################################
+                    ##                                   ##
+                    ##     ALPHABETIC INEXACT SEARCH     ##
+                    ##                                   ##
+                    #######################################
+
+                    # Trasform 'value' in lowercase characters for comparison reasons.
+                    set value [string tolower $value]
+
+                    # Find the closest match to value.
+                    set i     0
+                    set limit [string length $value]
+                    while { $i < $limit } {
+                        # Get the longest common characters in the lowercase list.
+                        set longest [::tcl::prefix longest $::ms::data($w,values,lowercase) $value]
+
+                        # Check the 'longest' variable.
+                        switch -- $longest {
+                            ""  {
+                                # Remove the last character from value.
+                                set value [string range $value 0 end-1]
+
+                                incr i
+                            }
+                        }
+
+                        break
+                    }
+
+                    # Check the resulting 'longest' value after the loop.
+                    switch -- $longest {
+                        ""      { set value $::ms::data($w,current_value) }
+                        default {
+                            # Get all the elements from the lowercase list that starts with the 'longest' value and sort it.
+                            set prefix_list [lsort -dictionary [::tcl::prefix all $::ms::data($w,values,lowercase) $longest]]
+
+                            # Get the index of the first element of 'prefix_list' relative to '::ms::data($w,values,lowercase)'.
+                            set index [lsearch -exact $::ms::data($w,values,lowercase) [lindex $prefix_list 0]]
+                            switch -- $index {
+                                ""      { set value $::ms::data($w,current_value) }
+                                default { set value [lindex $::ms::data($w,values) $index] }
+                            }
+                        }
+                    }
+                }
+                integer    -
+                posinteger -
+                posreal    -
+                real       {
+                    # Beautify and correct 'value' depending on the datatype specified.
+                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+
+                    # Check that 'value' is a valid number (double or integer).
+                    switch -- [string is double -strict $value] {
+                        0   { set value $::ms::data($w,current_value) }
+                        1   {
+                            switch -- $::ms::data($w,type) {
+                                incremental {
+                                    if { $value < $::ms::current($w,from) } {
+                                        set value $::ms::current($w,from)
+                                    } elseif { $value > $::ms::current($w,to) } {
+                                        set value $::ms::current($w,to)
+                                    }
+                                }
+                                default {
+                                    # Get the first and last elements of the ordered list.
+                                    set first [lindex $::ms::data($w,values) 0]
+                                    set last  [lindex $::ms::data($w,values) end]
+
+                                    # Check if 'value' is less than the first element or more of the last element.
+                                    if { $value <= $first } {
+                                        set value $first
+                                    } elseif { $value >= $last } {
+                                        set value $last
+                                    } else {
+                                        # 'value' is in between the first and last elements (both not included).
+
+                                        ######################################
+                                        ##                                  ##
+                                        ##     NUMERICAL INEXACT SEARCH     ##
+                                        ##                                  ##
+                                        ######################################
+
+                                        # Set the previous element as the first one.
+                                        set previous $first
+
+                                        # Find the closest match to 'value'.
+                                        set i 1
+                                        while { $i < [llength $::ms::data($w,values)] } {
+                                            # Set the 'next' element.
+                                            set next [lindex $::ms::data($w,values) $i]
+
+                                            if { $value == $next } {
+                                                set value $next
+                                                break
+                                            } elseif { $value < $next } {
+                                                # Set 'value' as the closest match between 'previous' and 'next'.
+                                                if { [expr { $next-$value }] < [expr { $value-$previous }] } {
+                                                    set value $next
+                                                } else {
+                                                    set value $previous
+                                                }
+
+                                                break
+                                            }
+
+                                            # Update the previous element for the next lap.
+                                            set previous $next
+
+                                            incr i
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                none {
+                    set index [lsearch -exact -nocase $::ms::data($w,values) $value]
+                    switch -- $index {
+                        -1      { set value $::ms::data($w,current_value) }
+                        default { set value [lindex $::ms::data($w,values) $index] }
+                    }
+                }
+            }
+        }
+    }
+
+    # Set the widget dynamic state to '!invalid'.
+    ::ms::spinbox::Pathname_Cmd $w state !invalid
+
+    return $value
+}
+
 #*EOF*
