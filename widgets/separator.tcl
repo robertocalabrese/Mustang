@@ -62,6 +62,472 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## separator
+#
+#### DESCRIPTION:
+#
+# A separator widget displays an horizontal or vertical separator bar.
+#
+# Note: At the time this command is invoked, there must not exist a window with the same pathname,
+#       but the pathname's parents must exists.
+#       *Window* may be provided either as a short or as a real address, the address returned will be:
+#          - A short address, if the *window* provided as input is a short address.
+#          - A real address, if the *window* provided as input is a real address.
+#
+# Additional options, described below, may be specified on the command line to configure aspects of the separator.
+#
+#### SYNOPSIS:
+#
+#   **separator**  *window* ?*option* *value*? ... ?*option* *value*?
+#
+#### WIDGET OPTIONS:
+#
+# Note: Every option listed here can be:
+#          - Retrieved with the **configure** or **cget** command with no exceptions.
+#          - Changed with the **configure** command, unless stated otherwise.
+#
+# **-background**   It's a list that specifies the color to use as background (the actual color of the separator line).
+#                   See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                   Note: This is a styleable option.
+#
+#                         If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                  Only the developer can.
+#
+#                         If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                  If there isn't one, the **-background** of the **TSeparator** style
+#                                                  will be used instead.
+#                                                  The **-background** will always abide by its mapping values, if any.
+#                                                  Styles, mappings and states events are allowed to change its value.
+#
+#                   Note: The background will be ignored by Tk is the current theme is not based on the clam engine
+#                         like the **Halo** theme.
+#
+# **-class**        Specifies a class for the widget.
+#                   It is mainly used to make bindings for widgets that have the same class.
+#
+#                   Note: This option may only be provided while creating the widget.
+#                         Attempts to change this value after the widget is created by using the **configure** command,
+#                         will be ignored by mustang.
+#
+#                   If not provided, defaults to **TSeparator**.
+#
+# **-cmenu**        Specifies the contextual menu address that will be assigned to the widget.
+#                   If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's toplevel (if any)
+#                   will be used. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#
+#                   If not provided, defaults to the empty string.
+#
+# **-cursor**       Specifies the mouse cursor to be used for the widget.
+#                   If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                   cursor specification.
+#
+#                   See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#
+#                   Note: This is a styleable option.
+#
+#                         If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                  Only the developer can.
+#
+#                         If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                  If there isn't one, the **-cursor** of the **TSeparator** style
+#                                                  will be used instead.
+#                                                  The **-cursor** will not abide by its mapping values, if any.
+#                                                  It is not supposed to change when the widget state changes.
+#
+# **-orient**       Specifies the orientation of the separator (**horizontal** or **vertical**).
+#
+#                   Note: This option may only be provided while creating the widget.
+#                         Attempts to change this value after the widget is created by using the **configure** command,
+#                         will be ignored by mustang.
+#
+#                   If not provided, defaults to **horizontal**.
+#
+# **-state**        Specifies the state for the widget.
+#
+#                   Note: Separators have only the **normal** state.
+#
+#                   Note: This option will be ignored if provided while creating the widget.
+#                         Attempts to change this value after the widget was created, by using the **configure** command,
+#                         will be ignored by mustang.
+#                         This option can only be retrieved.
+#
+#                   It's set to **normal**.
+#
+# **-style**        Specifies a custom widget style.
+#                   If not provided, defaults to **TSeparator**.
+#
+#                   The *style* provided should already exists at the time the widget is created.
+#
+#                   See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# **-takefocus**    Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                   and **Shift-Tab**).
+#
+#                   Before setting the focus to a widget, the traversal scripts consult the value of the
+#                   *-takefocus* option.
+#                      **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                      **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                and all of its ancestors are mapped.
+#
+#                   Differently than Tk, mustang does not allow the empty string as a valid value.
+#
+#                   If not provided, defaults to **0**.
+#
+#### WIDGET COMMAND:
+#
+# The separator command creates a new command whose name is the same as the pathname of the separator's window.
+# This command may be used to invoke various operations on the widget.
+# It has the following general form:
+#
+#   *window* *action* ?*arg* *arg* ... *arg*?
+#
+# *Window* is the name of the command, which is the same as the separator widget pathname.
+# *Actions* and the *arg*s determine the exact behavior of the *window* command.
+#
+# The following commands are possible for separator widgets:
+#
+#   *window* **cget** ?*option*?
+#     Returns the current value of the option given by *option*.
+#     *Option* may be one of the widget options accepted by the separator command (See **WIDGET OPTIONS**).
+#
+#   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+#     Query or modify the configuration options of the widget.
+#
+#     If no options are specified, returns a list describing all of the available options with their
+#     default and current values.
+#
+#     If a single *option* is specified with no *value*, then the command returns a list describing its default
+#     and current values.
+#
+#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     to have the given value(s) and the command returns an empty string.
+#
+#     Some options can only be setted at creation time.
+#     See **WIDGET OPTIONS** to know which one is configurable and which one is not.
+#
+#   *window* **identify** **element** *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if the mouse pointer
+#     does not lie within any element. *X* and *y* are pixel coordinates relative to the widget.
+#
+#   *window* **instate** *statespec* ?*script*?
+#     Test the widget's state.
+#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     If *script* is specified it's equivalent to:
+#
+#        if { [*window* **instate** *stateSpec*] } *script*
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **state** ?*statespec*?
+#     Modify or inquire widget state.
+#     If *statespec* is present       --> Sets the widget dynamic state.
+#                                         For each flag in *statespec*, sets the corresponding flag or clears it
+#                                         if prefixed by an exclamation point.
+#                                         Returns a new *statespec* indicating which flags were changed.
+#
+#     If *statespec* is not specified --> Returns a list of the currently enabled dynamic states.
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **style**
+#     Return the style used by the widget.
+#
+#### STATES:
+#
+# The separator widget supports only the **normal** state.
+#
+#### STYLING OPTIONS:
+#
+# Default style name: **TSeparator**
+#
+# Every separator styleable option is supported and configurable with the [style](/wiki/commands/style.md) command.
+# Valid styleable options of other widgets will be ignored.
+# It is considered an error providing style options that are not managed by mustang or Tk.
+#
+# See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# The background separator styling option is allowed only for themes that follows the **clam** engine (like the **Halo** theme) and ignored
+# by any other engine.
+#
+#### BINDINGS:
+#
+# Mustang automatically creates several bindings for the separators in order to facilitate the developer work and augment the
+# user experience at the same time.
+#
+###### SCROLLING
+#
+# The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
+#
+# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+#       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
+#
+#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#
+# Note: Belows, when we talk about the widget's parents, we talk about it recursively.
+#       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar
+#       active for the relative key combination examined. If mustang finds a suitable parent, it will scroll that
+#       widget scrollbar, otherwise nothing will happen.
+#
+# Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the
+#       **Shift-MouseWheel** for the Y axis, while **Control-TouchpadScroll** events abide by the same rules of the
+#       **Control-MouseWheel** for the X axis and the **Control-Shift-MouseWheel** for the Y axis.
+#
+# 1.  **MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#     and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 2.  **Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal
+#     scrollbar and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 3.  **Control-MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical
+#     scrollbar and move that scrollbar by one page up or down (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 4.  **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active
+#     horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel direction).
+#     If none of the widget's parents meets the required condition, nothing will happen.
+#
+# 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad
+#     direction.
+#
+#        1 - **TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with
+#            an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the direction
+#            of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with
+#            an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the direction of
+#            the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
+#     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad
+#     direction.
+#
+#        1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent
+#            with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the
+#            direction of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
+#
+#        2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent
+#            with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the direction
+#            of the touchpad event).
+#            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
+#
+# 7.  **ContextMenu** events will display the contextual menu associated with the widget.
+#     See the **-cmenu** option for more details.
+#
+# The following behavior will happen if the widget has the focus. Mustang will try to find the innermost widget's scrollable
+# parent with an active vertical/horizontal scrollbar and scroll that scrollbar.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  - **Prior**         Scrolls one page towards the top of the widget's parent vertical scrollbar.
+#     - **Next**          Scrolls one page towards the bottom of the widget's parent vertical scrollbar.
+#     - **Control-Prior** Scrolls one page towards the right of the widget's parent horizontal scrollbar.
+#     - **Control-Next**  Scrolls one page towards the left of the widget's parent horizontal scrollbar.
+#
+# If none of the widget's parents meets the required conditions, nothing will happen.
+#
+###### INTERNAL MECHANISM:
+#
+# The following behavior will happen if the widget has the focus.
+#
+# Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
+#       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
+#
+# 1.  The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the
+#     previous focussable widget.
+#
+# There are other bindings in place for internal mechanism like **Activate/Deactivate**, **Destroy**, **Enter/Leave** and
+# FocusIn/FocusOut**.
+#
+###### ALTERNATIVE BINDINGS:
+#
+# Check the [event](/wiki/commands/event.md) wiki page to see alternative keystrokes in case some keys are not present in
+# the user keyboard like the *Delete*, *Arrows*, *Home*, *End*, *PageUp* or *PageDown* keys.
+#
+#### COLOR OPTIONS:
+#
+# Each color option accepts colors provided in one of the following forms:
+#
+#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                               hexadecimals), with or without the **#**.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the color to validate and the second one (optional) indicates
+#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                               translated. If only one element is provided (the hexadecimal color) its color model will be
+#                               assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                               Note: Hexadecimal colors and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffffff'.
+#
+#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                          The color model is **HEX12**.
+#
+#                                                          The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ff0000'.
+#
+#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                          The color model is **HEX16**.
+#
+#                                                          The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#0000ff'.
+#
+#                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffff00'.
+#
+#   **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                               *Magenta*, or *Light Steel Blue*.
+#
+#                               In this form, the list should have at least one element. More precisely:
+#
+#                                    colorname   --> It's the textual color name that specifies the color.
+#                                                    Should always be written first. It can take more than one element of
+#                                                    the list depending on how many words are needed to define it.
+#
+#                                                    The only color names known by mustang are specified in its palettes.
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the allowed color names for the default **mustang** palette.
+#
+#                                    palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                    If present, it should always be the last element of the list if the color model
+#                                                    is not present, or the last but one if the color model is present.
+#
+#                                                    Allowed values are any palette name loaded into mustang.
+#                                                    If not provided, defaults to **mustang** or return the fallback value
+#                                                    if the **mustang** palette was not loaded.
+#
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the mustang palettes.
+#
+#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                    will be translated.
+#                                                    If present, the color model should always be the last element of the list.
+#
+#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                    If not provided, defaults to **HEX8**.
+#
+#                                                    Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                    about color models.
+#
+#                               Note: Colornames, palettes and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "teal"                --> The color name is *teal*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#008080"
+#
+#                                    "medium violet red"   --> The color name is *medium violet red*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#c71585"
+#
+#                                    "sepia MyPalette"     --> The color name is *sepia*.
+#                                                              The palette name is **MyPalette**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              Note that in this example **MyPalette** is a fictional
+#                                                              palette name that have been loaded into mustang.
+#
+#                                                              The color name is translated to the hexadecimal color at 8 bit
+#                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                    "light coral hex16"   --> The color name is *light coral*.
+#                                                              The color model is **HEX16**.
+#                                                              The palette name is **mustang**.
+#
+#                                                              The color name is translated to "#f0f080808080"
+#
+#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                             The palette name is **mustang**.
+#                                                                             The color model is **HEX8**.
+#
+#                                                                             The color name is translated to "#6ada8e"
+#
+#                               After its validation, the color name will be returned translated in its hexadecimal longform
+#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                               *HighlightAlternate* or *PlaceholderText*.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the theme color name to validate and the second one (optional)
+#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                               will be translated. If only one element is provided (the theme color name) its color model
+#                               will be assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                               theme color names are allowed.
+#
+#                               Note: Theme colors are case sensitive.
+#
+#### EXAMPLE:
+#
+#   # Create an horizontal separator.
+#   separator .sep -orient horizontal
+#
+#   # Pack it.
+#   pack .sep -expand true \
+#               -fill x \
+#               -padx 10 \
+#               -pady 20 \
+#               -side top;
+#
+#   # After 3 seconds, change the accent color.
+#   after 3000 [list set ::ms::accent orange]
+#
+#   # After 6 seconds, change the colorscheme.
+#   switch -- [tk windowingsystem] {
+#       aqua {
+#           switch -- [wm attributes . -isdark] {
+#               0   { after 6000 [list set ::ms::colorscheme dark]  }
+#               1   { after 6000 [list set ::ms::colorscheme light] }
+#           }
+#       }
+#       default { after 6000 [list set ::ms::colorscheme dark] }
+#   }
 package provide ::ms::separator 0.1
 
 #################################
