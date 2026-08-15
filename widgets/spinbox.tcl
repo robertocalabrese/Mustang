@@ -3259,6 +3259,11 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        # If the spinbox popdown is currently displayed, release the grab.
+        switch -- [_winfo exists $w.popdown] {
+            1   { set ::wait_for_user_response "Unpost" }
+        }
     }
 
     return ""
