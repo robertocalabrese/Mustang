@@ -3478,4 +3478,47 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Arrows
+#
+# Manage the arrow up and down (and Control-Up/Control-Down) keypress on the widget.
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# event   Should be the event type.
+#         Allowed values are **incr** for increments and **decr** for decrements.
+#
+# speed   Should be the scroll speed (1x, 2x, 3x ...).
+#         If not provided, defaults to **1x**.
+#
+# It doesn't return anything.
+proc ::ms::spinbox::Arrows { w event { speed 1x } } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Augment 'amount' by 'speed'.
+    set amount 1
+    set speed  [string range $speed 0 end-1]
+    switch -- [string is integer -strict $speed] {
+        1   { set amount [expr { $amount*$speed }] }
+    }
+
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        readonly { set value [interp invokehidden {} $w get] }
+        normal   { set value [::ms::spinbox::Validate_String $w] }
+    }
+
+    # Check the 'event' provided.
+    switch -- $event {
+        decr    { ::ms::spinbox::Decrement $w $value $amount }
+        default { ::ms::spinbox::Increment $w $value $amount }
+    }
+
+    return ""
+}
+
 #*EOF*
