@@ -3222,7 +3222,21 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
     }
 
     # Update all the spinbox widgets addresses that have stylename as a style.
-    foreach w $::ms::style($stylename,spinbox,addrs) {}
+    foreach w $::ms::style($stylename,spinbox,addrs) {
+        # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+        foreach option $::ms::spinbox(styleable,options) {
+            set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,TSpinbox,$option)
+
+            switch -- $::ms::managed_by($w,$option) {
+                Tk  {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$stylename,$option)] {
+                        0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                        1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$stylename,$option) }
+                    }
+                }
+            }
+        }
+    }
 
     return ""
 }
