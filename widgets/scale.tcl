@@ -64,6 +64,103 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::scale 0.1
 
+#############################
+##                         ##
+##     _SCALE BINDINGS     ##
+##                         ##
+#############################
+
+# Activate/Deactivate
+_bind _Scale <Activate>   { ::ms::scale::Pathname_Cmd %W state !background; break }
+_bind _Scale <Deactivate> { ::ms::scale::Pathname_Cmd %W state  background; break }
+
+# Buttonpress-1
+_bind _Scale <ButtonPress-1> { ::ms::scale::ButtonPress %W %x %y; break }
+
+# Contextual menu
+_bind _Scale <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+# Destroy
+_bind _Scale <Destroy> { ::ms::scale::Destroy %W; break }
+
+# Enter/Leave
+_bind _Scale <Enter> { ::ms::scale::Pathname_Cmd %W state  hover; break }
+_bind _Scale <Leave> { ::ms::scale::Pathname_Cmd %W state !hover; break }
+
+# FocusIn/FocusOut
+_bind _Scale <FocusIn>  { ::ms::scale::FocusIn  %W; break }
+_bind _Scale <FocusOut> { ::ms::scale::FocusOut %W; break }
+
+# PrevChar/NextChar
+_bind _Scale <<PrevChar>> { ::ms::scale::Increment %W -1 1x; break }
+_bind _Scale <<NextChar>> { ::ms::scale::Increment %W +1 1x; break }
+
+# PrevLine/NextLine
+_bind _Scale <<PrevLine>> { ::ms::scale::Increment %W -1 1x; break }
+_bind _Scale <<NextLine>> { ::ms::scale::Increment %W +1 1x; break }
+
+# PrevWord/NextWord
+_bind _Scale <<PrevWord>> { ::ms::scale::Increment %W -1 2x; break }
+_bind _Scale <<NextWord>> { ::ms::scale::Increment %W +1 2x; break }
+
+# PrevPara/NexPara
+_bind _Scale <<PrevPara>> { ::ms::scale::Increment %W -1 2x; break }
+_bind _Scale <<NextPara>> { ::ms::scale::Increment %W +1 2x; break }
+
+# Scan
+_bind _Scale <<ScanMark>>    { ::ttk::scale::Jump    %W %x %y; break }
+_bind _Scale <<ScanDrag>>    { ::ttk::scale::Drag    %W %x %y; break }
+_bind _Scale <<ScanRelease>> { ::ttk::scale::Release %W %x %y; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scale <MouseWheel> { ::ms::scale::MouseWheel %W %D Y units 1x; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scale <Shift-MouseWheel> { ::ms::scale::MouseWheel %W %D X units 1x; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scale <Control-MouseWheel> { ::ms::scale::MouseWheel %W %D Y pages 2x; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scale <Control-Shift-MouseWheel> { ::ms::scale::MouseWheel %W %D X pages 2x; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scale <TouchpadScroll> { ::ms::scale::Touchpad %W %# %D units 1x; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scale <Control-TouchpadScroll> { ::ms::scale::Touchpad %W %# %D pages 2x; break }
+
 # Create the mustang **scale** package.
 namespace eval ::ms::scale {}
 
