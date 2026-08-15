@@ -2184,7 +2184,7 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
                         0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
                     }
 
-                    # Check if the coordinates provided falls upon the widget's sash.
+                    # Check if the coordinates provided falls upon the widget.
                     try {
                         interp invokehidden {} $w identify element $x $y
                     } on error { errortext errorcode } {
