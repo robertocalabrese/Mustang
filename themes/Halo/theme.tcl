@@ -1274,6 +1274,114 @@ namespace eval ttk::theme::Halo {
                                       -cursor bottom_right_corner;
 
         # No mapping
+
+        #####################
+        ##                 ##
+        ##     SPINBOX     ##
+        ##                 ##
+        #####################
+
+        # Layout
+        style layout TSpinbox {
+            Entry.field -sticky nswe -children {
+                Spinbox.padding -sticky nswe -children {
+                    Spinbox.arrows -side right -sticky ew -children {
+                        Spinbox.uparrow -side top -sticky nswe
+                        Spinbox.downarrow -side bottom -sticky nswe
+                    }
+                    Spinbox.line -side right -sticky ns
+                    Spinbox.textarea -sticky {}
+                }
+            }
+        }
+
+        # Elements
+        # The first image represents the normal state.
+        style element create Spinbox.line    image [list                   spacer \
+                                                         disabled spacer_disabled \
+                                                          invalid spacer_invalid] \
+                                           -border [list 0] \
+                                          -padding [list 8 0] \
+                                           -sticky ns;
+
+        style element create Spinbox.downarrow   image [list                   arrow_down \
+                                                             disabled arrow_down_disabled \
+                                                               invalid arrow_down_invalid \
+                                                               pressed arrow_down_pressed] \
+                                               -border [list 0] \
+                                              -padding [list 0 9 9 4] \
+                                               -sticky s;
+
+        style element create Spinbox.uparrow   image [list                   arrow_up \
+                                                           disabled arrow_up_disabled \
+                                                             invalid arrow_up_invalid \
+                                                             pressed arrow_up_pressed] \
+                                             -border [list 0] \
+                                            -padding [list 0 9 9 4] \
+                                             -sticky n;
+
+        # Normal state
+        style configure TSpinbox            -arrowcolor Arrow \
+                                             -arrowsize $::ms::size(Halo,arrow_down) \
+                                            -background Background \
+                                           -borderwidth 1 \
+                                           -bordercolor Bordercolor \
+                                             -charwidth 8 \
+                                                -cursor arrow \
+                                             -darkcolor Background \
+                                       -fieldbackground Fieldbackground \
+                                            -focuscolor LightcolorAlternate \
+                                             -focusfill FieldbackgroundFocus \
+                                            -focuswidth 2 \
+                                                  -font NormalFont \
+                                            -foreground TextAlternate \
+                                           -insertcolor TextAlternate \
+                                           -insertwidth 2 \
+                                               -justify left \
+                                            -lightcolor LightcolorAlternate \
+                                               -padding [list 4p 5p 4p 5p] \
+                                 -placeholderforeground PlaceholderText \
+                                      -selectbackground White \
+                                     -selectborderwidth 0 \
+                                      -selectforeground TextAlternate;
+
+        # Mapping
+        style map TSpinbox        -arrowcolor [list   disabled ArrowDisabled \
+                                                       pressed ArrowPressed \
+                                                       invalid Text \
+                                                         hover Accent] \
+                                  -background [list   disabled Background \
+                                                      readonly Background \
+                                                       invalid White \
+                                                         focus Background \
+                                                         hover Background] \
+                                 -bordercolor [list background BordercolorBackground \
+                                                      disabled Bordercolor \
+                                                       invalid Text \
+                                                         focus Accent \
+                                                         hover Accent \
+                                                       pressed HighlightAlternate \
+                                                      readonly Bordercolor] \
+                             -fieldbackground [list   disabled ArrowDisabled \
+                                                      readonly ArrowDisabled \
+                                                       invalid Invalid \
+                                                         focus FieldbackgroundFocus] \
+                                  -focuscolor [list   disabled Background \
+                                                       invalid Text \
+                                                         focus Accent \
+                                                         hover Accent \
+                                                      readonly Background] \
+                                  -foreground [list   disabled TextAlternate \
+                                                      readonly TextAlternate \
+                                                       invalid White \
+                                                         focus TextAlternate] \
+                                  -lightcolor [list   disabled ArrowDisabled \
+                                                       invalid Text \
+                                                         focus Accent \
+                                                         hover Accent \
+                                                       pressed HighlightAlternate \
+                                                      readonly ArrowDisabled] \
+                            -selectforeground [list    invalid Invalid];
     }
 }
 
