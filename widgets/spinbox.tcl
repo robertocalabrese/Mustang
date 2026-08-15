@@ -2662,6 +2662,11 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # If the spinbox popdown is currently displayed, release the grab.
+                            switch -- [_winfo exists $w.popdown] {
+                                1   { set ::wait_for_user_response "Unpost" }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
