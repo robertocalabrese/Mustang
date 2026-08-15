@@ -139,7 +139,15 @@ _bind _Separator <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break 
 _bind _Separator <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **separator** package.
-namespace eval ::ms::separator {}
+namespace eval ::ms::separator {
+    # Set the 'non styleable' separator option list.
+    set ::ms::separator(non_styleable,options) [list class \
+                                                     cmenu \
+                                                     orient \
+                                                     state \
+                                                     style \
+                                                     takefocus];
+}
 
 # Rename the original Tk **ttk::separator** command.
 rename ttk::separator _ttk_separator
