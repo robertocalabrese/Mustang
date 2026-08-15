@@ -1863,7 +1863,7 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                                             continue
                                         }
 
-                                        # Remove the widget address from the progressbar real address list that contains all the
+                                        # Remove the widget address from the progressbar classtype real address list that contains all the
                                         # widgets addresses with style '::ms::current($w,style)'.
                                         set index [lsearch -exact $::ms::style($::ms::current($w,style),progressbar,addrs) $w]
                                         switch -- $index {

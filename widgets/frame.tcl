@@ -2517,7 +2517,7 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TFrame]
                                             }
 
-                                            # Remove the widget address from the frame real address list that contains all the
+                                            # Remove the widget address from the frame classtype real address list that contains all the
                                             # widgets addresses with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),frame,addrs) $w]
                                             switch -- $index {

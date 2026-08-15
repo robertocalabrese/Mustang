@@ -1944,7 +1944,7 @@ proc ::ms::label::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TLabel]
                                             }
 
-                                            # Remove the widget address from the label real address list that contains all the
+                                            # Remove the widget address from the label classtype real address list that contains all the
                                             # widgets addresses with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),label,addrs) $w]
                                             switch -- $index {

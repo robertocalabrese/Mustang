@@ -3138,7 +3138,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TEntry]
                                             }
 
-                                            # Remove the widget address from the entry real address list that contains all the
+                                            # Remove the widget address from the entry classtype real address list that contains all the
                                             # widgets addresses with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),entry,addrs) $w]
                                             switch -- $index {

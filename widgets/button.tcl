@@ -2078,7 +2078,7 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TButton]
                                             }
 
-                                            # Remove the widget address from the button real address list that contains all the
+                                            # Remove the widget address from the button classtype real address list that contains all the
                                             # widgets addresses with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),button,addrs) $w]
                                             switch -- $index {
