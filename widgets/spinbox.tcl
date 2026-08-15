@@ -1809,7 +1809,16 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
             return ""
         }
         get      -
-        validate {}
+        validate {
+            # Synopsis:
+            #
+            # *window* **get**
+            # *window* **validate**
+            switch -- [llength $args] {
+                0       { return [interp invokehidden {} $w $cmd] }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         instate {}
         set {}
         state {}
