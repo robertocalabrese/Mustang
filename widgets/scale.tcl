@@ -1582,6 +1582,11 @@ proc ::ms::scale::Style_Update { stylename caller_info } {
             _ttk_style layout $parent_style($orient) [_ttk_style layout [string cat $dir "." TProgressbar]]
         }
     }
+
+    # Update all the scale widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,scale,addrs) {}
+
+    return ""
 }
 
 ######################################
