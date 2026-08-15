@@ -564,7 +564,16 @@ proc ::ms::separator::Pathname_Cmd { w cmd args } {
                         ::ms::Error "Invalid configure option, '$args'." $caller_info
                     }
                 }
-                default {}
+                default {
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Remove any duplicated options (retain only the last ones).
+                            set args [lsort -increasing -stride 2 -index 0 -unique $args]
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
             }
         }
         identify {
