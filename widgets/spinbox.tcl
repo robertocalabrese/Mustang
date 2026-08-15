@@ -293,6 +293,30 @@ namespace eval ::ms::spinbox {
                                                selectbackground \
                                                selectborderwidth \
                                                selectforeground];
+
+    # Set the default 'non-styleable' spinbox options values.
+    set ::ms::default(spinbox,class)           TSpinbox
+    set ::ms::default(spinbox,cmenu)           {}
+    set ::ms::default(spinbox,command)         {}
+    set ::ms::default(spinbox,datatype)        none
+    set ::ms::default(spinbox,decimals)        1
+    set ::ms::default(spinbox,exportselection) 1
+    set ::ms::default(spinbox,from)            0
+    set ::ms::default(spinbox,increment)       1
+    set ::ms::default(spinbox,invalidcommand)  {}
+    set ::ms::default(spinbox,maxlength)       0
+    set ::ms::default(spinbox,placeholder)     {}
+    set ::ms::default(spinbox,state)           normal
+    set ::ms::default(spinbox,style)           TSpinbox
+    set ::ms::default(spinbox,takefocus)       1
+    set ::ms::default(spinbox,textvariable)    {}
+    set ::ms::default(spinbox,to)              0
+    set ::ms::default(spinbox,validate)        none
+    set ::ms::default(spinbox,validatecommand) {}
+    set ::ms::default(spinbox,values)          {}
+    set ::ms::default(spinbox,xscrollcommand)  {}
+
+    # Note: The default 'styleable' spinbox options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::spinbox** command.
