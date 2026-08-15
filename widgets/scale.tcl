@@ -1883,4 +1883,151 @@ proc ::ms::scale::ButtonPress { w x y } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::scale::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget real address from the widgets real address list.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the scale widgets real address list.
+    set index [lsearch -exact $::ms::addr(scale) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(scale) [lremove $::ms::addr(scale) $index] }
+    }
+
+    # Remove the widget address from the scale classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),scale,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),scale,addrs) [lremove $::ms::class($::ms::current($w,class),scale,addrs) $index] }
+    }
+
+    # Remove the widget address from the scale classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),scale,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),scale,addrs) [lremove $::ms::style($::ms::current($w,style),scale,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the scale classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),scale,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(scale,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(scale,classtype) [lremove $::ms::style(scale,classtype) $index] }
+            }
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,command) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,from) \
+                         ::ms::current($w,gripsize) \
+                         ::ms::current($w,increment) \
+                         ::ms::current($w,innercolor) \
+                         ::ms::current($w,length) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,orient) \
+                         ::ms::current($w,outercolor) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,thickness) \
+                         ::ms::current($w,thumbrelief) \
+                         ::ms::current($w,to) \
+                         ::ms::current($w,troughcolor) \
+                         ::ms::current($w,troughrelief) \
+                         ::ms::current($w,value) \
+                         ::ms::current($w,variable);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,command) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,from) \
+                         ::ms::default($w,gripsize) \
+                         ::ms::default($w,increment) \
+                         ::ms::default($w,innercolor) \
+                         ::ms::default($w,length) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,orient) \
+                         ::ms::default($w,outercolor) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,thickness) \
+                         ::ms::default($w,thumbrelief) \
+                         ::ms::default($w,to) \
+                         ::ms::default($w,troughcolor) \
+                         ::ms::default($w,troughrelief) \
+                         ::ms::default($w,value) \
+                         ::ms::default($w,variable);
+
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,gripsize) \
+                         ::ms::managed_by($w,innercolor) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,outercolor) \
+                         ::ms::managed_by($w,thickness) \
+                         ::ms::managed_by($w,thumbrelief) \
+                         ::ms::managed_by($w,troughcolor) \
+                         ::ms::managed_by($w,troughrelief);
+
+    unset -nocomplain -- ::ms::style($w,widget)
+
+    return ""
+}
+
 #*EOF*
