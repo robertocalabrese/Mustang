@@ -151,6 +151,16 @@ namespace eval ::ms::separator {
     # Set the 'styleable' separator option list.
     set ::ms::separator(styleable,options) [list background \
                                                  cursor];
+
+    # Set the default 'non-styleable' separator options values.
+    set ::ms::default(separator,class)     TSeparator
+    set ::ms::default(separator,cmenu)     {}
+    set ::ms::default(separator,orient)    horizontal
+    set ::ms::default(separator,state)     normal
+    set ::ms::default(separator,style)     TSeparator
+    set ::ms::default(separator,takefocus) 0
+
+    # Note: The default 'styleable' separator options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::separator** command.
