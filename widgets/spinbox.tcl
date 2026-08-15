@@ -4296,4 +4296,22 @@ proc ::ms::spinbox::KeyPress { w key } {
     return ""
 }
 
+## Repeat_Decrement
+#
+# Manage a repeatedly **Decrement** event upon the widget.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be an integer value indicating how many times
+#          the increment must be subtracted from value.
+#
+# It doesn't return anything.
+proc ::ms::spinbox::Repeat_Decrement { w amount } {
+    ::ms::spinbox::Decrement $w $::ms::data($w,current_value) $amount
+
+    return ""
+}
+
 #*EOF*
