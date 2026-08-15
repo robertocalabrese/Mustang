@@ -192,6 +192,23 @@ namespace eval ::ms::scale {
                                              thumbrelief \
                                              troughcolor \
                                              troughrelief];
+
+    # Set the default 'non-styleable' scale options values.
+    set ::ms::default(scale,class)     TScale
+    set ::ms::default(scale,cmenu)     {}
+    set ::ms::default(scale,command)   {}
+    set ::ms::default(scale,from)      0
+    set ::ms::default(scale,increment) 1
+    set ::ms::default(scale,length)    200
+    set ::ms::default(scale,orient)    horizontal
+    set ::ms::default(scale,state)     normal
+    set ::ms::default(scale,style)     TScale
+    set ::ms::default(scale,takefocus) 1
+    set ::ms::default(scale,to)        1.0
+    set ::ms::default(scale,value)     0
+    set ::ms::default(scale,variable)  {}
+
+    # Note: The default 'styleable' scale options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **scale** and **ttk::scale** commands.
