@@ -361,6 +361,101 @@ proc ::ms::spinbox::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)           $::ms::default(spinbox,class)
+            set ::ms::default($w,cmenu)           $::ms::default(spinbox,cmenu)
+            set ::ms::default($w,command)         $::ms::default(spinbox,command)
+            set ::ms::default($w,datatype)        $::ms::default(spinbox,datatype)
+            set ::ms::default($w,decimals)        $::ms::default(spinbox,decimals)
+            set ::ms::default($w,exportselection) $::ms::default(spinbox,exportselection)
+            set ::ms::default($w,from)            $::ms::default(spinbox,from)
+            set ::ms::default($w,increment)       $::ms::default(spinbox,increment)
+            set ::ms::default($w,invalidcommand)  $::ms::default(spinbox,invalidcommand)
+            set ::ms::default($w,maxlength)       $::ms::default(spinbox,maxlength)
+            set ::ms::default($w,placeholder)     $::ms::default(spinbox,placeholder)
+            set ::ms::default($w,state)           $::ms::default(spinbox,state)
+            set ::ms::default($w,style)           $::ms::default(spinbox,style)
+            set ::ms::default($w,takefocus)       $::ms::default(spinbox,takefocus)
+            set ::ms::default($w,textvariable)    $::ms::default(spinbox,textvariable)
+            set ::ms::default($w,to)              $::ms::default(spinbox,to)
+            set ::ms::default($w,validate)        $::ms::default(spinbox,validate)
+            set ::ms::default($w,validatecommand) $::ms::default(spinbox,validatecommand)
+            set ::ms::default($w,values)          $::ms::default(spinbox,values)
+            set ::ms::default($w,xscrollcommand)  $::ms::default(spinbox,xscrollcommand)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)           $::ms::default(spinbox,class)
+            set ::ms::current($w,cmenu)           $::ms::default(spinbox,cmenu)
+            set ::ms::current($w,command)         $::ms::default(spinbox,command)
+            set ::ms::current($w,datatype)        $::ms::default(spinbox,datatype)
+            set ::ms::current($w,decimals)        $::ms::default(spinbox,decimals)
+            set ::ms::current($w,exportselection) $::ms::default(spinbox,exportselection)
+            set ::ms::current($w,from)            $::ms::default(spinbox,from)
+            set ::ms::current($w,increment)       $::ms::default(spinbox,increment)
+            set ::ms::current($w,invalidcommand)  $::ms::default(spinbox,invalidcommand)
+            set ::ms::current($w,maxlength)       $::ms::default(spinbox,maxlength)
+            set ::ms::current($w,placeholder)     $::ms::default(spinbox,placeholder)
+            set ::ms::current($w,state)           $::ms::default(spinbox,state)
+            set ::ms::current($w,style)           $::ms::default(spinbox,style)
+            set ::ms::current($w,takefocus)       $::ms::default(spinbox,takefocus)
+            set ::ms::current($w,textvariable)    $::ms::default(spinbox,textvariable)
+            set ::ms::current($w,to)              $::ms::default(spinbox,to)
+            set ::ms::current($w,validate)        $::ms::default(spinbox,validate)
+            set ::ms::current($w,validatecommand) $::ms::default(spinbox,validatecommand)
+            set ::ms::current($w,values)          $::ms::default(spinbox,values)
+            set ::ms::current($w,xscrollcommand)  $::ms::default(spinbox,xscrollcommand)
+
+            # Set the widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) spinbox
+            set ::ms::data($w,format)    "%.1f"
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a spinbox styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **spinbox** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,arrowcolor)            Tk
+            set ::ms::managed_by($w,arrowsize)             Tk
+            set ::ms::managed_by($w,background)            Tk
+            set ::ms::managed_by($w,bordercolor)           Tk
+            set ::ms::managed_by($w,charwidth)             Tk
+            set ::ms::managed_by($w,cursor)                Tk
+            set ::ms::managed_by($w,darkcolor)             Tk
+            set ::ms::managed_by($w,fieldbackground)       Tk
+            set ::ms::managed_by($w,focuscolor)            Tk
+            set ::ms::managed_by($w,focuswidth)            Tk
+            set ::ms::managed_by($w,font)                  Tk
+            set ::ms::managed_by($w,foreground)            Tk
+            set ::ms::managed_by($w,insertcolor)           Tk
+            set ::ms::managed_by($w,insertwidth)           Tk
+            set ::ms::managed_by($w,justify)               Tk
+            set ::ms::managed_by($w,lightcolor)            Tk
+            set ::ms::managed_by($w,padding)               Tk
+            set ::ms::managed_by($w,placeholderforeground) Tk
+            set ::ms::managed_by($w,selectbackground)      Tk
+            set ::ms::managed_by($w,selectborderwidth)     Tk
+            set ::ms::managed_by($w,selectforeground)      Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
