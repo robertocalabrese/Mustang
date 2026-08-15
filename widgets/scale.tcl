@@ -2073,4 +2073,49 @@ proc ::ms::scale::FocusOut { w } {
     return ""
 }
 
+## Increment
+#
+# Move the widget's thumb by the increment specified for the widget.
+#
+# Where:
+#
+# w           Should be the widget real address involved.
+#
+# direction   Should be the direction of the movement.
+#             Allowed values are **-1** or **+1**.
+#                -1  --> Means towards the left for horizontal scales or towards the top for vertical scales.
+#                +1  --> Means towards the right for horizontal scales or towards the bottom for vertical scales.
+#
+# speed       Should be the scroll speed (1x, 2x, 3x ...).
+#             If not provided, defaults to **1x**.
+#
+# It doesn't return anything.
+proc ::ms::scale::Increment { w direction { speed 1x } } {
+    # Note: This procedure was inspired by the ttk::scale procedure 'Increment'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    switch -- $::ms::current($w,state) {
+        disabled {}
+        default  {
+            # Set 'increment' based on the direction of the movement.
+            switch -- $direction {
+                -1  { set increment [expr { -1.0*$::ms::current($w,increment) }] }
+                +1  { set increment $::ms::current($w,increment) }
+            }
+
+            # Augment 'increment' by 'speed'.
+            set speed [string range $speed 0 end-1]
+            switch -- [string is integer -strict $speed] {
+                1   { set increment [expr { $increment*$speed }] }
+            }
+
+            # Move the widget's thumb.
+            interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
