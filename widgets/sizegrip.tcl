@@ -324,6 +324,41 @@ proc ::ms::sizegrip::Command { window { args "" } } {
                     }
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'background' and 'cursor' are not allowed to change if the statespec changes.
+
+            ######################
+            ##                  ##
+            ##     SIZEGRIP     ##
+            ##                  ##
+            ######################
+
+            # Set the widget style name.
+            set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
+                                                   "." $::ms::current($w,style)];
+
+            # If needed, create the widget style name.
+            if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,widget) -background $::ms::current($w,background)
+
+                # Add the widget style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+            }
+
+            # Create the sizegrip widget.
+            _ttk_sizegrip $w     -class $::ms::current($w,class) \
+                                -cursor $::ms::current($w,cursor) \
+                                 -style $::ms::style($w,widget) \
+                             -takefocus $::ms::current($w,takefocus);
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
