@@ -1166,4 +1166,20 @@ proc ::ms::sizegrip::Drag_Release {} {
     return ""
 }
 
+## FocusIn
+#
+# Manage the **FocusIn** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::sizegrip::FocusIn { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::sizegrip::Pathname_Cmd $w state focus
+
+    return ""
+}
+
 #*EOF*
