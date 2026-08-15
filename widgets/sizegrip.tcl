@@ -151,6 +151,15 @@ namespace eval ::ms::sizegrip {
     # Set the 'styleable' sizegrip option list.
     set ::ms::sizegrip(styleable,options) [list background \
                                                 cursor];
+
+    # Set the default 'non-styleable' sizegrip options values.
+    set ::ms::default(sizegrip,class)     TSizegrip
+    set ::ms::default(sizegrip,cmenu)     {}
+    set ::ms::default(sizegrip,state)     normal
+    set ::ms::default(sizegrip,style)     TSizegrip
+    set ::ms::default(sizegrip,takefocus) 0
+
+    # Note: The default 'styleable' sizegrip options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::sizegrip** command.
