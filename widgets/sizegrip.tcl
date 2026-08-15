@@ -359,6 +359,18 @@ proc ::ms::sizegrip::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TSizegrip { bindtags $w [list $w _Sizegrip TSizegrip $::ms::addr($w,toplevel) all] }
+                default   { bindtags $w [list $w $::ms::current($w,class) _Sizegrip TSizegrip $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
