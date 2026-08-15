@@ -1027,7 +1027,20 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        style {}
+        style {
+            # Synopsis:
+            #
+            # *window* **style**
+            switch -- [llength $args] {
+                0   {
+                    switch -- [string last "." $::ms::current($w,style)] {
+                        -1      { return [string cat [string totitle $::ms::current($w,orient)] "." $::ms::current($w,style)] }
+                        default { return $::ms::current($w,style) }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
