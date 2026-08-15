@@ -358,6 +358,65 @@ proc ::ms::separator::Command { window { args "" } } {
             if { $parent_style ni $::ms::layouts($::ms::theme) } {
                 _ttk_style layout $parent_style [_ttk_style layout [string cat $orient "." TSeparator]]
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'cursor' is not allowed to change if the statespec changes.
+
+            #######################
+            ##                   ##
+            ##     SEPARATOR     ##
+            ##                   ##
+            #######################
+
+            # Set the widget style name.
+            set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
+                                                   "." $parent_style];
+
+            # If needed, create the widget style.
+            if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,widget) -background $::ms::current($w,background)
+
+                # Add the widget style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+            }
+
+            # Initialize the widget mapping.
+            set mapping [list ]
+
+            # background
+            switch -- $::ms::managed_by($w,background) {
+                developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                Tk  {
+                    # Check if a 'background' mapping exists for 'stylename'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
+                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
+                    }
+                }
+            }
+
+            # If needed, create the widget mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+                # Add the widget mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the separator widget.
+            _ttk_separator $w     -class $::ms::current($w,class) \
+                                 -cursor $::ms::current($w,cursor) \
+                                 -orient $::ms::current($w,orient) \
+                                  -style $::ms::style($w,widget) \
+                              -takefocus $::ms::current($w,takefocus);
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
