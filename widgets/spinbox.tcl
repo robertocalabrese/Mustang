@@ -3666,4 +3666,104 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
     return ""
 }
 
+## Decrement
+#
+# Manage the **Decrement** event upon the widget.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# value    Should be the starting value (eventually allready valuated).
+#
+# amount   Should be an integer value indicating how many times
+#          the increment must be subtracted from value.
+#
+# It doesn't return anything.
+proc ::ms::spinbox::Decrement { w value amount } {
+    # Check that spinbox type.
+    switch -- $::ms::data($w,type) {
+        incremental {
+            # Compute the increment to use.
+            set increment [expr { $amount*$::ms::current($w,increment) }]
+
+            # Get the decremented value.
+            set value [expr { $value-$increment }]
+
+            # Check the scrollstopper ('disabled' or 'enabled').
+            switch -- $::ms::scrollstopper {
+                disabled {
+                    # If value is less than the 'from' value, cycle trough.
+                    if { $value < $::ms::current($w,from) } {
+                        set value $::ms::current($w,to)
+                    }
+                }
+                enabled {
+                    # If value is less than the 'from' value, stop the scrolling.
+                    if { $value < $::ms::current($w,from) } {
+                        set value $::ms::current($w,from)
+                    }
+                }
+            }
+
+            # Check the widget datatype.
+            switch --$::ms::current($w,datatype) {
+                posreal -
+                real    { set value [format $::ms::data($w,format) $value] }
+            }
+        }
+        default {
+            # Get the validated value index.
+            set index [lsearch -exact $::ms::data($w,values) $value]
+
+            # Get the decremented value index.
+            set index [expr { $index-$amount }]
+
+            # Check the scrollstopper ('disabled' or 'enabled').
+            switch -- $::ms::scrollstopper {
+                disabled {
+                    # If index is less than zero, cycle trough.
+                    if { $index < 0 } {
+                        set index [expr { [llength $::ms::data($w,values)]-1 }]
+                    }
+                }
+                enabled {
+                    # If index is less than zero, stop the scrolling.
+                    if { $index < 0 } {
+                        set index 0
+                    }
+                }
+            }
+
+            # Get the decremented value.
+            set value [lindex $::ms::data($w,values) $index]
+        }
+    }
+
+    # Update the current value.
+    set ::ms::data($w,current_value) $value
+
+    # Display the decremented value.
+    interp invokehidden {} $w set $::ms::data($w,current_value)
+
+    # If the widget is not in readonly state, select the decremented value.
+    switch -- $::ms::current($w,state) {
+        normal {
+            interp invokehidden {} $w selection range 0 end
+            interp invokehidden {} $w icursor end
+        }
+    }
+
+    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+    #       executing the command. This timer will be resetted if, while active, another Increment or Decrement action
+    #       on the widget asks to launch again the command.
+    if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
+        after cancel $::ms::temp($w,pending_execute_cmd)
+        unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+    }
+    set ::ms::temp($w,pending_execute_cmd) [after 50 [list ::ms::Execute_Widget_Cmd $w]]
+
+    return ""
+}
+
 #*EOF*
