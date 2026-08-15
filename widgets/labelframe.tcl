@@ -5233,18 +5233,29 @@ proc ::ms::labelframe::Destroy { w } {
         default { set ::ms::addr(labelframe) [lremove $::ms::addr(labelframe) $index] }
     }
 
-    # Remove the widget address from the labelframe real address list with class '::ms::current($w,class)'.
+    # Remove the widget address from the labelframe classtype real address list with class '::ms::current($w,class)'.
     set index [lsearch -exact $::ms::class($::ms::current($w,class),labelframe,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::class($::ms::current($w,class),labelframe,addrs) [lremove $::ms::class($::ms::current($w,class),labelframe,addrs) $index] }
     }
 
-    # Remove the widget address from the labelframe real address list with style '::ms::current($w,style)'.
+    # Remove the widget address from the labelframe classtype real address list with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),labelframe,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),labelframe,addrs) [lremove $::ms::style($::ms::current($w,style),labelframe,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the labelframe classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),labelframe,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(labelframe,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(labelframe,classtype) [lremove $::ms::style(labelframe,classtype) $index] }
+            }
+        }
     }
 
     # Remove all the objects real addresses from the list of all available real addresses.
