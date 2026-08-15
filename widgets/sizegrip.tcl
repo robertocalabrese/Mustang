@@ -1095,4 +1095,54 @@ proc ::ms::sizegrip::Destroy { w } {
     return ""
 }
 
+## Drag
+#
+# Manage the **B1-Motion** event on the widget.
+#
+# Where:
+#
+#
+# w      Should be the widget real address involved.
+#
+# X, Y   Should be the (x,y) mouse pointer absolute coordinates at the time of the event.
+#        These values should be provided by the **B1-Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::sizegrip::Drag { w X Y } {
+    # Note: This procedure was inspired by the ttk::sizegrip procedure 'Drag'.
+    #       The procedure have been slighty modified to work with mustang.
+    #       All credits goes to the original author/s.
+
+    switch -- [info exists ::ms::temp(state,pressed)] {
+        0   { return "" }
+    }
+
+    # height
+    switch -- $::ms::temp(state,resize,Y) {
+        0       {}
+        default {
+            set ::ms::temp(state,height) [expr { $::ms::temp(state,height)+($Y-$::ms::temp(state,press,Y))/$::ms::temp(state,height,increment) }]
+            if { $::ms::temp(state,height) <= 0 } {
+                set ::ms::temp(state,height) 1
+            }
+        }
+    }
+
+    # width
+    switch -- $::ms::temp(state,resize,X) {
+        0       {}
+        default {
+            set ::ms::temp(state,width) [expr { $::ms::temp(state,width)+($X-$::ms::temp(state,press,X))/$::ms::temp(state,width,increment) }]
+            if { $::ms::temp(state,width) <= 0 } {
+                set ::ms::temp(state,width) 1
+            }
+        }
+    }
+
+    # Update the toplevel geometry.
+    wm geometry $::ms::addr($w,toplevel) [string cat $::ms::temp(state,width) "x" $::ms::temp(state,height) "+" $::ms::temp(state,x) "+" $::ms::temp(state,y)]
+
+    return ""
+}
+
 #*EOF*
