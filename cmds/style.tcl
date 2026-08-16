@@ -925,12 +925,23 @@ proc ::ms::style::Check_Option { option value } {
                 default { return $value }
             }
         }
-        -charwidth -
-        -columns   -
-        -rows      {
+        -charwidth {
             switch -- [string is integer -strict $value] {
                 0   { return invalid }
                 1   { return $value }
+            }
+        }
+        -columns -
+        -rows    {
+            switch -- [string is integer -strict $value] {
+                0   { return invalid }
+                1   {
+                    if { $value < 1 } {
+                        return invalid
+                    } else {
+                        return $value
+                    }
+                }
             }
         }
         -compound {
