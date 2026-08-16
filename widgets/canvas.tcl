@@ -4650,33 +4650,17 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **xview**
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
-            set subcommand [lindex  $args 0]
-            set args       [lremove $args 0]
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
 
             # Check the subcommand.
             switch -nocase -- $subcommand {
                 ""  {
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            ###########################
-                            ##                       ##
-                            ##     SIMPLE CANVAS     ##
-                            ##                       ##
-                            ###########################
-
-                            return [interp invokehidden {} $w xview]
-                        }
-                        true {
-                            ###############################
-                            ##                           ##
-                            ##     SCROLLABLE CANVAS     ##
-                            ##                           ##
-                            ###############################
-
-                            return [$w.canvas xview]
-                        }
-                    }
+                    # Execute the command.
+                    return [{*}$address xview]
                 }
                 moveto {
                     # Check the number of arguments provided (after the 'moveto' word).
@@ -4698,27 +4682,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         set fraction 1.0
                     }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            ###########################
-                            ##                       ##
-                            ##     SIMPLE CANVAS     ##
-                            ##                       ##
-                            ###########################
-
-                            interp invokehidden {} $w xview moveto $fraction
-                        }
-                        true {
-                            ###############################
-                            ##                           ##
-                            ##     SCROLLABLE CANVAS     ##
-                            ##                           ##
-                            ###############################
-
-                            $w.canvas xview moveto $fraction
-                        }
-                    }
+                    # Execute the command.
+                    {*}$address xview moveto $fraction
 
                     return ""
                 }
@@ -4742,27 +4707,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         default { return "" }
                     }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            ###########################
-                            ##                       ##
-                            ##     SIMPLE CANVAS     ##
-                            ##                       ##
-                            ###########################
-
-                            interp invokehidden {} $w xview scroll $number $what
-                        }
-                        true {
-                            ###############################
-                            ##                           ##
-                            ##     SCROLLABLE CANVAS     ##
-                            ##                           ##
-                            ###############################
-
-                            $w.canvas xview scroll $number $what
-                        }
-                    }
+                    # Execute the command.
+                    {*}$address xview scroll $number $what
 
                     return ""
                 }
@@ -4775,32 +4721,17 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **yview**
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
-            set subcommand [lindex  $args 0]
-            set args       [lremove $args 0]
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
 
+            # Check the subcommand.
             switch -nocase -- $subcommand {
                 ""  {
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            ###########################
-                            ##                       ##
-                            ##     SIMPLE CANVAS     ##
-                            ##                       ##
-                            ###########################
-
-                            return [interp invokehidden {} $w yview]
-                        }
-                        true {
-                            ###############################
-                            ##                           ##
-                            ##     SCROLLABLE CANVAS     ##
-                            ##                           ##
-                            ###############################
-
-                            return [$w.canvas yview]
-                        }
-                    }
+                    # Execute the command.
+                    return [{*}$address yview]
                 }
                 moveto {
                     # Check the number of arguments provided (after the 'moveto' word).
@@ -4822,27 +4753,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         set fraction 1.0
                     }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            ###########################
-                            ##                       ##
-                            ##     SIMPLE CANVAS     ##
-                            ##                       ##
-                            ###########################
-
-                            interp invokehidden {} $w yview moveto $fraction
-                        }
-                        true {
-                            ###############################
-                            ##                           ##
-                            ##     SCROLLABLE CANVAS     ##
-                            ##                           ##
-                            ###############################
-
-                            $w.canvas yview moveto $fraction
-                        }
-                    }
+                    # Execute the command.
+                    {*}$address yview moveto $fraction
 
                     return ""
                 }
@@ -4866,27 +4778,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         default { return "" }
                     }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            ###########################
-                            ##                       ##
-                            ##     SIMPLE CANVAS     ##
-                            ##                       ##
-                            ###########################
-
-                            interp invokehidden {} $w yview scroll $number $what
-                        }
-                        true {
-                            ###############################
-                            ##                           ##
-                            ##     SCROLLABLE CANVAS     ##
-                            ##                           ##
-                            ###############################
-
-                            $w.canvas yview scroll $number $what
-                        }
-                    }
+                    # Execute the command.
+                    {*}$address yview scroll $number $what
 
                     return ""
                 }
