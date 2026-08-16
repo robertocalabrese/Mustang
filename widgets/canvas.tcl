@@ -4656,7 +4656,13 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             switch -nocase -- $subcommand {
                 ""  {
                     # Execute the command.
-                    return [{*}$address xview]
+                    try {
+                        {*}$address xview
+                    } on error {} {
+                        return ""
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 moveto {
                     # Check the number of arguments provided (after the 'moveto' word).
@@ -4679,7 +4685,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     }
 
                     # Execute the command.
-                    {*}$address xview moveto $fraction
+                    try {
+                        {*}$address xview moveto $fraction
+                    } on error {} {
+                        return ""
+                    }
 
                     return ""
                 }
@@ -4704,7 +4714,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     }
 
                     # Execute the command.
-                    {*}$address xview scroll $number $what
+                    try {
+                        {*}$address xview scroll $number $what
+                    } on error {} {
+                        return ""
+                    }
 
                     return ""
                 }
@@ -4727,7 +4741,13 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             switch -nocase -- $subcommand {
                 ""  {
                     # Execute the command.
-                    return [{*}$address yview]
+                    try {
+                        {*}$address yview
+                    } on error {} {
+                        return ""
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 moveto {
                     # Check the number of arguments provided (after the 'moveto' word).
@@ -4750,7 +4770,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     }
 
                     # Execute the command.
-                    {*}$address yview moveto $fraction
+                    try {
+                        {*}$address yview moveto $fraction
+                    } on error {} {
+                        return ""
+                    }
 
                     return ""
                 }
@@ -4775,7 +4799,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     }
 
                     # Execute the command.
-                    {*}$address yview scroll $number $what
+                    try {
+                        {*}$address yview scroll $number $what
+                    } on error {} {
+                        return ""
+                    }
 
                     return ""
                 }
