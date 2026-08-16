@@ -480,10 +480,13 @@ proc ::tk_focusPrev { w } {
 proc ::tk::FocusOK { w } {
     # Check if 'w' is the hull of a megawidget of some kind.
     if { $w in $::ms::addr(megawidgets) } {
-        set w $::ms::addr($w,widget)
+        set address [list $::ms::addr($w,widget)]
+        set w       $::ms::addr($w,widget)
+    } else {
+        set address [list interp invokehidden {} $w]
     }
 
-    set code [catch { $w cget -takefocus } value]
+    set code [catch { {*}$address cget -takefocus } value]
     if { ($code == 0) && ($value ne "") } {
         switch -- $value {
             0       { return 0 }
@@ -502,7 +505,7 @@ proc ::tk::FocusOK { w } {
         0   { return 0 }
     }
 
-    set code [catch { $w cget -state } value]
+    set code [catch { {*}$address cget -state } value]
     if { ($code == 0) && $value eq "disabled" } {
         return 0
     }
