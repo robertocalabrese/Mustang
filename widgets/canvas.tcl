@@ -4020,9 +4020,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                                       -selectforeground $selectforeground \
                                                                  -state $::ms::current($w,state) \
                                                              -takefocus $takefocus \
-                                                                 -width $::ms::temp($w,width) \
-                                                      -xscrollincrement $::ms::current($w,xscrollincrement) \
-                                                      -yscrollincrement $::ms::current($w,yscrollincrement)];
+                                                                 -width $::ms::temp($w,width)];
 
                             # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
                             #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
