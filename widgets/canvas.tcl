@@ -4622,10 +4622,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                             ##                           ##
                             ###############################
 
-                            # Propagate the new statespec to the widget's hull and border objects.
-                            interp invokehidden {} $w state $::ms::data($w,statespec)
-
                             # Apply the changes.
+                            interp invokehidden {} $w state $::ms::data($w,statespec)
                             $w.canvas configure {*}$canvas_options
                         }
                     }
