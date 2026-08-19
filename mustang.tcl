@@ -2090,8 +2090,9 @@ proc ::ms::Init {} {
 
     # Set the default values of every point 'not styleable' option.
     set ::ms::default(.,class)     [lindex [. configure -class] 3]
-    set ::ms::default(.,colormap)  [lindex [. configure -colormap] 3]
     set ::ms::default(.,cmenu)     {}
+    set ::ms::default(.,colormap)  [lindex [. configure -colormap] 3]
+    set ::ms::default(.,container) [lindex [. configure -container] 3]
     set ::ms::default(.,height)    [lindex [. configure -height] 3]
     set ::ms::default(.,menu)      [lindex [. configure -menu] 3]
     set ::ms::default(.,screen)    [lindex [. configure -screen] 3]
@@ -2099,13 +2100,15 @@ proc ::ms::Init {} {
     set ::ms::default(.,style)     $::ms::default(toplevel,style)
     set ::ms::default(.,takefocus) 0
     set ::ms::default(.,title)     [_wm title .]
+    set ::ms::default(.,use)       [lindex [. configure -use] 3]
     set ::ms::default(.,visual)    [lindex [. configure -visual] 3]
     set ::ms::default(.,width)     [lindex [. configure -width] 3]
 
     # Set the current values of every point 'not styleable' option.
     set ::ms::current(.,class)     [lindex [. configure -class] 4]
-    set ::ms::current(.,colormap)  [lindex [. configure -colormap] 4]
     set ::ms::current(.,cmenu)     $::ms::default(.,cmenu)
+    set ::ms::current(.,colormap)  [lindex [. configure -colormap] 4]
+    set ::ms::current(.,container) [lindex [. configure -container] 4]
     set ::ms::current(.,height)    [lindex [. configure -height] 4]
     set ::ms::current(.,menu)      [lindex [. configure -menu] 4]
     set ::ms::current(.,screen)    [lindex [. configure -screen] 4]
@@ -2113,6 +2116,7 @@ proc ::ms::Init {} {
     set ::ms::current(.,style)     $::ms::default(.,style)
     set ::ms::current(.,takefocus) 0
     set ::ms::current(.,title)     $::ms::default(.,title)
+    set ::ms::current(.,use)       [lindex [. configure -use] 4]
     set ::ms::current(.,visual)    [lindex [. configure -visual] 4]
     set ::ms::current(.,width)     [lindex [. configure -width] 4]
 
@@ -2138,11 +2142,13 @@ proc ::ms::Init {} {
     #
     #           . configure -background red
     set ::ms::managed_by(.,background)      Tk
+    set ::ms::managed_by(.,backgroundimage) Tk
     set ::ms::managed_by(.,bordercolor)     Tk
     set ::ms::managed_by(.,borderwidth)     Tk
     set ::ms::managed_by(.,cursor)          Tk
     set ::ms::managed_by(.,padding)         Tk
     set ::ms::managed_by(.,relief)          Tk
+    set ::ms::managed_by(.,tile)            Tk
 
     # Set the default options values for each styleable option.
     foreach option $::ms::toplevel(styleable,options) {
@@ -2150,12 +2156,14 @@ proc ::ms::Init {} {
     }
 
     # Set the current values of every point 'styleable' option as their default values.
-    set ::ms::current(.,background)  $::ms::default(.,background)
-    set ::ms::current(.,bordercolor) $::ms::default(.,bordercolor)
-    set ::ms::current(.,borderwidth) $::ms::default(.,borderwidth)
-    set ::ms::current(.,cursor)      $::ms::default(.,cursor)
-    set ::ms::current(.,padding)     $::ms::default(.,padding)
-    set ::ms::current(.,relief)      $::ms::default(.,relief)
+    set ::ms::current(.,background)      $::ms::default(.,background)
+    set ::ms::current(.,backgroundimage) $::ms::default(.,backgroundimage)
+    set ::ms::current(.,bordercolor)     $::ms::default(.,bordercolor)
+    set ::ms::current(.,borderwidth)     $::ms::default(.,borderwidth)
+    set ::ms::current(.,cursor)          $::ms::default(.,cursor)
+    set ::ms::current(.,padding)         $::ms::default(.,padding)
+    set ::ms::current(.,relief)          $::ms::default(.,relief)
+    set ::ms::current(.,tile)            $::ms::default(.,tile)
 
     # Set the internal '-padding' option to always show the horizontal and vertical padding.
     switch -- [llength $::ms::current(.,padding)] {
@@ -2188,12 +2196,15 @@ proc ::ms::Init {} {
     }
 
     # Set the point options that needs to be configured.
-    set point_options [list -background $::ms::current(.,background) \
-                                -cursor $::ms::current(.,cursor) \
-                                  -padx [lindex $::ms::data(.,padding) 0] \
-                                  -pady [lindex $::ms::data(.,padding) 1] \
-                             -takefocus $::ms::current(.,takefocus)];
+    set point_options [list      -background $::ms::current(.,background) \
+                            -backgroundimage $::ms::current(.,backgroundimage) \
+                                     -cursor $::ms::current(.,cursor) \
+                                       -padx [lindex $::ms::data(.,padding) 0] \
+                                       -pady [lindex $::ms::data(.,padding) 1] \
+                                  -takefocus $::ms::current(.,takefocus) \
+                                       -tile $::ms::current(.,tile)];
 
+    # Check the 'relief' type.
     switch -- $::ms::current(.,relief) {
         flat  -
         solid {
@@ -2218,175 +2229,22 @@ proc ::ms::Init {} {
     # Set the widget toplevel.
     set ::ms::addr(.,toplevel) .
 
-    # Check the windowing system.
-    switch -- $windowingsystem {
-        aqua {
-            ######################
-            ##                  ##
-            ##     BINDINGS     ##
-            ##                  ##
-            ######################
+    # Set the point title, if any.
+    switch -- $::ms::current(.,title) {
+        ""      {}
+        default { wm title . [::msgcat::mc "$::ms::current(.,title)"] }
+    }
 
-            # Set the new bindtags for point.
-            switch -- $::ms::current(.,class) {
-                Toplevel { bindtags . [list . _Toplevel Toplevel $::ms::addr(.,toplevel) all] }
-                default  { bindtags . [list . $::ms::current(.,class) _Toplevel Toplevel $::ms::addr(.,toplevel) all] }
-            }
+    ######################
+    ##                  ##
+    ##     BINDINGS     ##
+    ##                  ##
+    ######################
 
-            #####################
-            ##                 ##
-            ##     CLOSING     ##
-            ##                 ##
-            #####################
-
-            # Set the widget real address relative to its short address, 'short_addr'.
-            set ::ms::addr(.,real) .
-
-            # Set the widget short address relative to its real address, 'w'.
-            set ::ms::addr(.,short) .
-
-            # Add the widget real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals)  .
-            lappend ::ms::addr(shorts) .
-
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr(.,border) .
-
-            # Set the actual widget address.
-            set ::ms::addr(.,widget) .
-
-            # Set the structure address.
-            set ::ms::addr(.,structure) [list .];
-        }
-        default {
-            #####################
-            ##                 ##
-            ##     CONTENT     ##
-            ##                 ##
-            #####################
-
-            # Set the content object style name.
-            set ::ms::style(.,content) [string cat "_bg=" $::ms::current(.,background) \
-                                                   ".TFrame"];
-
-            # If needed, create the content object style name.
-            if { $::ms::style(.,content) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style(.,content) -background $::ms::current(.,background)
-
-                # Add the content object style name to the theme styles list created by mustang.
-                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style(.,content)
-            }
-
-            # Initialize the content object mapping.
-            set mapping [list ]
-
-            # background
-            switch -- $::ms::managed_by(.,background) {
-                developer { lappend mapping -background [list pressed $::ms::current(.,background)] }
-                Tk  {
-                    # Check if a 'background' mapping exists for '::ms::current(.,style)'.
-                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current(.,style),background)] {
-                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current(.,style),background) }
-                    }
-                }
-            }
-
-            # If needed, create the content object mapping.
-            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                _ttk_style map $::ms::style(.,content) {*}$mapping
-
-                # Add the content object mapping to the stylemap list containing all the mappings
-                # created by mustang for the current theme.
-                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-            }
-
-            # Create the content object.
-            _ttk_frame .content -borderwidth 0 \
-                                      -class TFrame \
-                                     -cursor arrow \
-                                     -height $::ms::current(.,height) \
-                                    -padding 0 \
-                                     -relief flat \
-                                      -style $::ms::style(.,content) \
-                                  -takefocus 0 \
-                                      -width $::ms::current(.,width);
-
-            # Pack the content object.
-            _pack .content -anchor nw \
-                           -expand true \
-                             -fill both \
-                             -padx 0 \
-                             -pady 0 \
-                             -side top;
-
-            ######################
-            ##                  ##
-            ##     BINDINGS     ##
-            ##                  ##
-            ######################
-
-            # Set the new bindtags for the widget.
-            switch -- $::ms::current(.,class) {
-                Toplevel { bindtags . [list . _Toplevel Toplevel $::ms::addr(.,toplevel) all] }
-                default  { bindtags . [list . $::ms::current(.,class) _Toplevel Toplevel $::ms::addr(.,toplevel) all] }
-            }
-
-            # Activate/Deactivate
-            _bind .content <Activate>   { ::ms::toplevel::Pathname_Cmd . state !background; break }
-            _bind .content <Deactivate> { ::ms::toplevel::Pathname_Cmd . state  background; break }
-
-            # ButtonPress-1
-            _bind .content <ButtonPress-1> { ::ms::toplevel::Focus_Toplevel .; break }
-
-            # Contextual menu
-            _bind .content <<ContextMenu>> { ::ms::Show_ContextMenu . %X %Y cmenu; break }
-
-            # Destroy
-            _bind .content <Destroy> { ::ms::toplevel::Destroy .; break }
-
-            # Enter/Leave
-            _bind .content <Enter> { ::ms::toplevel::Hover . %X %Y; break }
-            _bind .content <Leave> { ::ms::toplevel::Hover . %X %Y; break }
-
-            # FocusIn/FocusOut
-            _bind .content <FocusIn>  { ::ms::toplevel::Focus_In  .; break }
-            _bind .content <FocusOut> { ::ms::toplevel::Focus_Out .; break }
-
-            #####################
-            ##                 ##
-            ##     CLOSING     ##
-            ##                 ##
-            #####################
-
-            # Set the widget real address relative to its short address, '.'.
-            set ::ms::addr(.,real) .
-
-            # Set the widget short address relative to its real address, '.'.
-            set ::ms::addr(.,short)        .
-            set ::ms::addr(.content,short) .
-
-            # Add the widget real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals) . \
-                                      .content;
-
-            lappend ::ms::addr(shorts) .
-
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr(.,border) .
-
-            # Set the actual widget address.
-            set ::ms::addr(.,widget) .content
-
-            # Set the structure address.
-            set ::ms::addr(.,structure) [list . \
-                                              .content];
-
-            # Add the widget address to the megawidget addresses list.
-            lappend ::ms::addr(megawidgets) .
-
-            # Add the widget address to the megawidget container addresses list.
-            lappend ::ms::addr(megawidgets,containers) .
-        }
+    # Set the new bindtags for the widget.
+    switch -- $::ms::current(.,class) {
+        Toplevel { bindtags . [list . _Toplevel Toplevel . all] }
+        default  { bindtags . [list . $::ms::current(.,class) _Toplevel Toplevel . all] }
     }
 
     #####################
@@ -2395,14 +2253,33 @@ proc ::ms::Init {} {
     ##                 ##
     #####################
 
-    # Hide the toplevel real address pathcommand.
+    # Hide the point pathcommand.
     interp hide {} .
 
-    # Create an alias for the toplevel real pathcommand.
-    lappend ::ms::data(.,token) [interp alias {} . {} ::ms::toplevel::Pathname_Cmd .]
+    # Create an alias for the point pathcommand.
+    set ::ms::data(.,token) [interp alias {} . {} ::ms::toplevel::Pathname_Cmd .]
 
-    # Add the widget address to the toplevel classtype real address list.
-    lappend ::ms::addr(toplevel,classtype) .
+    # Set the point real address relative to the point short address.
+    set ::ms::addr(.,real) .
+
+    # Set the point short address relative to the point real address.
+    set ::ms::addr(.,short) .
+
+    # Add the widget real and short address into the list of all available real and short addresses.
+    lappend ::ms::addr(reals)  .
+    lappend ::ms::addr(shorts) .
+
+    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+    set ::ms::addr(.,border) .
+
+    # Set the actual widget address.
+    set ::ms::addr(.,widget) .
+
+    # Set the structure address.
+    set ::ms::addr(.,structure) [list .];
+
+    # Add the widget address to the toplevel widgets real address list.
+    lappend ::ms::addr(toplevel) .
 
     # Add the widget address to the toplevel classtype real address list with class '::ms::current(.,class)'.
     lappend ::ms::class($::ms::current(.,class),toplevel,addrs) .
