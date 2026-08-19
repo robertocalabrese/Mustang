@@ -6043,4 +6043,51 @@ proc ::ms::text::Next_Word { w } {
     return ""
 }
 
+######################
+##                  ##
+##     PREVIOUS     ##
+##                  ##
+######################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+# Previous_Index
+#
+# Returns the index of the previous position before the given starting position.
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# start   Position at which to start search.
+#
+# op      Function to use to find the previous position.
+#
+# Returns the resulting index.
+proc ::ms::text::Previous_Index { w start op } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set text ""
+    set cur  $start
+    while { [{*}$address compare $cur > 0.0] } {
+        set text [string cat [{*}$address get -displaychars "$cur linestart - 1c" $cur] $text]
+
+        set pos [$op $text end]
+        if { $pos >= 0 } {
+            return [{*}$address index "$cur linestart - 1c + $pos display chars"]
+        }
+
+        set cur [{*}$address index "$cur linestart - 1c"]
+    }
+
+    return 0.0
+}
+
 #*EOF*
