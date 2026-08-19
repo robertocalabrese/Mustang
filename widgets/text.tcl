@@ -4544,4 +4544,99 @@ proc ::ms::text::Scrollbar_Drag { w orient x y } {
     return ""
 }
 
+## Scrollbar_Update
+#
+# Manage the widget's scrollbars movements and displays.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Scrollbar_Update { w } {
+    update
+
+    ##################################
+    ##                              ##
+    ##     HORIZONTAL SCROLLBAR     ##
+    ##                              ##
+    ##################################
+
+    # Get 'xview1' and 'xview2'.
+    set xviews [$w.x get]
+    set xview1 [lindex $xviews 0]
+    set xview2 [lindex $xviews 1]
+
+    if { ($xview1 == 0) && ($xview2 == 1.0) } {
+        # Check if the horizontal scrollbar is currently displayed.
+        switch -- $::ms::data($w,scrollx) {
+            on  {
+                # Hide the horizontal scrollbar.
+                _grid remove $w.x
+
+                # Set the horizontal scrollbar status to 'off'.
+                set ::ms::data($w,scrollx) off
+            }
+        }
+    } else {
+        # Check if the horizontal scrollbar is not currently displayed.
+        switch -- $::ms::data($w,scrollx) {
+            off {
+                # Display the horizontal scrollbar.
+                _grid $w.x -column 0 \
+                             -padx [list 0  0] \
+                             -pady [list 8p 0] \
+                              -row 1 \
+                           -sticky we;
+
+                # Set the horizontal scrollbar status to 'on'.
+                set ::ms::data($w,scrollx) on
+            }
+        }
+    }
+
+    ################################
+    ##                            ##
+    ##     VERTICAL SCROLLBAR     ##
+    ##                            ##
+    ################################
+
+    # Get 'yview1' and 'yview2'.
+    set yviews [$w.y get]
+    set yview1 [lindex $yviews 0]
+    set yview2 [lindex $yviews 1]
+
+    if { ($yview1 == 0) && ($yview2 == 1.0) } {
+        # Check if the vertical scrollbar is currently displayed.
+        switch -- $::ms::data($w,scrolly) {
+            on  {
+                # Hide the vertical scrollbar.
+                _grid remove $w.y
+
+                # Set the vertical scrollbar status to 'off'.
+                set ::ms::data($w,scrolly) off
+            }
+        }
+    } else {
+        # Check if the vertical scrollbar is not currently displayed.
+        switch -- $::ms::data($w,scrolly) {
+            off {
+                # Display the vertical scrollbar.
+                _grid $w.y -column 1 \
+                             -padx [list 8p 0] \
+                             -pady [list 0  0] \
+                              -row 0 \
+                           -sticky ns;
+
+                # Set the vertical scrollbar status to 'on'.
+                set ::ms::data($w,scrolly) on
+            }
+        }
+    }
+
+    update idletasks
+
+    return ""
+}
+
 #*EOF*
