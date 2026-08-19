@@ -5089,4 +5089,26 @@ proc ::ms::text::Clear_IME_Marked_Text { w } {
     return ""
 }
 
+## Start_IME_Marked_Text
+#
+# Bindings for IME text input.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Start_IME_Marked_Text { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    dict set ::tk::Priv(IMETextMark) "$::ms::addr($w,widget)" [{*}$address index insert]
+
+    return ""
+}
+
 #*EOF*
