@@ -320,6 +320,268 @@ _bind _Simple_Text <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; brea
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Simple_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
+#######################################
+##                                   ##
+##     _SCROLLABLE_TEXT BINDINGS     ##
+##                                   ##
+#######################################
+
+# Allowing some modifiers combination.
+switch -- [_tk windowingsystem] {
+    aqua {
+        _bind _Scrollable_Text <Option-KeyPress>         { # Enable binding }
+        _bind _Scrollable_Text <Option-Shift-KeyPress>   { # Enable binding }
+        _bind _Scrollable_Text <Control-KeyPress>        { # Enable binding }
+        _bind _Scrollable_Text <Control-Option-KeyPress> { # Enable binding }
+        _bind _Scrollable_Text <Control-Shift-KeyPress>  { # Enable binding }
+        _bind _Scrollable_Text <Command-KeyPress>        { # Enable binding }
+        _bind _Scrollable_Text <Command-Shift-KeyPress>  { # Enable binding }
+    }
+    default {
+        _bind _Scrollable_Text <Alt-KeyPress>           { # Enable binding }
+        _bind _Scrollable_Text <Alt-Shift-KeyPress>     { # Enable binding }
+        _bind _Scrollable_Text <Control-KeyPress>       { # Enable binding }
+        _bind _Scrollable_Text <Control-Alt-KeyPress>   { # Enable binding }
+        _bind _Scrollable_Text <Control-Shift-KeyPress> { # Enable binding }
+        _bind _Scrollable_Text <Meta-KeyPress>          { # Enable binding }
+        _bind _Scrollable_Text <Meta-Shift-KeyPress>    { # Enable binding }
+    }
+}
+
+# Backspace key
+# If a selection is present, delete the selected text, otherwise delete a character positioned
+# to the left of the cursor location.
+_bind _Scrollable_Text <KeyPress-BackSpace> { ::ms::text::Backspace [_winfo parent %W]; break }
+
+# ButtonPress-1
+_bind _Scrollable_Text <ButtonPress-1> { ::ms::text::ButtonPress [_winfo parent %W] %x %y; break }
+
+# Configure
+_bind _Scrollable_Text <Configure> { ::ms::text::Configure [_winfo parent %W]; break }
+
+# Contextual menu
+_bind _Scrollable_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+
+# Control-Tab/Control-Shift-Tab
+_bind _Scrollable_Text <Control-Tab>       { ::ms::text::Control_Tab [_winfo parent %W] +1; break }
+_bind _Scrollable_Text <Control-Shift-Tab> { ::ms::text::Control_Tab [_winfo parent %W] -1; break }
+
+# Cut/Copy/Paste/Clear
+_bind _Scrollable_Text <<Cut>>   { ::ms::text::Cut   [_winfo parent %W]; break }
+_bind _Scrollable_Text <<Copy>>  { ::ms::text::Copy  %W; break }
+_bind _Scrollable_Text <<Paste>> { ::ms::text::Paste [_winfo parent %W] %x %y CLIPBOARD; break }
+_bind _Scrollable_Text <<Clear>> { ::ms::text::Clear [_winfo parent %W]; break }
+
+# Delete key
+# If a selection is present, delete the selected text, otherwise delete a character positioned
+# to the right of the cursor location.
+_bind _Scrollable_Text <KeyPress-Delete>    { ::ms::text::Delete [_winfo parent %W]; break }
+_bind _Scrollable_Text <KeyPress-KP_Delete> { ::ms::text::Delete [_winfo parent %W]; break }
+_bind _Scrollable_Text <<DeleteChar>>       { ::ms::text::Delete [_winfo parent %W]; break }
+
+# Delete from the insertion cursor till the end of the line.
+switch -- [_tk windowingsystem] {
+    aqua    { _bind _Scrollable_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_Line_End [_winfo parent %W]; break } }
+    default { _bind _Scrollable_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_Line_End [_winfo parent %W]; break } }
+}
+
+# If a selection is present, delete the selected text, otherwise delete all the characters positioned
+# to the right of the cursor location till the start of the next word.
+_bind _Scrollable_Text <<DeleteWord>> { ::ms::text::Delete_Word [_winfo parent %W]; break }
+
+# Disable the following bindings to prevent Tk to fire them up:
+_bind _Scrollable_Text <Control-KeyPress-o>    { break }
+_bind _Scrollable_Text <Meta-KeyPress-b>       { break }
+_bind _Scrollable_Text <Meta-KeyPress-d>       { break }
+_bind _Scrollable_Text <Meta-KeyPress-f>       { break }
+_bind _Scrollable_Text <Meta-KeyPress-less>    { break }
+_bind _Scrollable_Text <Meta-KeyPress-greater> { break }
+
+# Disable the Escape key to prevent Tk from printing it.
+_bind _Scrollable_Text <Escape> { break }
+
+# Enter/Leave
+_bind _Scrollable_Text <Enter> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Text <Leave> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
+
+# FocusIn/FocusOut
+_bind _Scrollable_Text <FocusIn>  { ::ms::text::FocusIn  [_winfo parent %W]; break }
+_bind _Scrollable_Text <FocusOut> { ::ms::text::FocusOut [_winfo parent %W]; break }
+
+# Insert
+_bind _Scrollable_Text <KeyPress-Insert>    { ::ms::text::Insert [_winfo parent %W]; break }
+_bind _Scrollable_Text <KeyPress-KP_Insert> { ::ms::text::Insert [_winfo parent %W]; break }
+
+# Key
+_bind _Scrollable_Text <Key> { ::ms::text::Key [_winfo parent %W] %A; break }
+
+# Return
+_bind _Scrollable_Text <KeyPress-Return>   { ::ms::text::Return [_winfo parent %W]; break }
+_bind _Scrollable_Text <KeyPress-KP_Enter> { ::ms::text::Return [_winfo parent %W]; break }
+
+# Tk IME Text
+_bind _Scrollable_Text <<TkStartIMEMarkedText>> { ::ms::text::Start_IME_Marked_Text [_winfo parent %W]; break }
+_bind _Scrollable_Text <<TkEndIMEMarkedText>>   { ::ms::text::End_IME_Marked_Text   [_winfo parent %W]; break }
+_bind _Scrollable_Text <<TkClearIMEMarkedText>> { ::ms::text::Clear_IME_Marked_Text [_winfo parent %W]; break }
+_bind _Scrollable_Text <<TkAccentBackspace>>    { ::ms::text::Accent_Backspace      [_winfo parent %W]; break }
+
+# Transpose
+_bind _Scrollable_Text <Control-KeyPress-t> { ::ms::text::Transpose [_winfo parent %W]; break }
+
+# Undo/Redo
+_bind _Scrollable_Text <<Undo>> { ::ms::text::Undo [_winfo parent %W]; break }
+_bind _Scrollable_Text <<Redo>> { ::ms::text::Redo [_winfo parent %W]; break }
+
+# Scan or Paste.
+_bind _Scrollable_Text <Button-2>         { ::ms::text::Scan_Or_Paste %W %x %y "Button-2"; break }
+_bind _Scrollable_Text <B2-Motion>        { ::ms::text::Scan_Or_Paste %W %x %y "B2-Motion"; break }
+_bind _Scrollable_Text <ButtonRelease-2>  { ::ms::text::Scan_Or_Paste %W %x %y "ButtonRelease-2"; break }
+
+_bind _Scrollable_Text <Button-3>         { ::ms::text::Scan_Or_Paste %W %x %y "Button-3"; break }
+_bind _Scrollable_Text <B3-Motion>        { ::ms::text::Scan_Or_Paste %W %x %y "B3-Motion"; break }
+_bind _Scrollable_Text <ButtonRelease-3>  { ::ms::text::Scan_Or_Paste %W %x %y "ButtonRelease-3"; break }
+
+_bind _Scrollable_Text <<PasteSelection>> { ::ms::text::Scan_Or_Paste %W %x %y "PasteSelection"; break }
+
+# PageUp/PageDown/PageLeft/PageRight
+_bind _Scrollable_Text <Prior>         { ::ms::text::PageUp    [_winfo parent %W]; break }
+_bind _Scrollable_Text <Next>          { ::ms::text::PageDown  [_winfo parent %W]; break }
+_bind _Scrollable_Text <Control-Prior> { ::ms::text::PageLeft  [_winfo parent %W]; break }
+_bind _Scrollable_Text <Control-Next>  { ::ms::text::PageRight [_winfo parent %W]; break }
+
+# Go to the start/end of the line.
+_bind _Scrollable_Text <<LineStart>> { ::ms::text::Line_Start [_winfo parent %W]; break }
+_bind _Scrollable_Text <<LineEnd>>   { ::ms::text::Line_End   [_winfo parent %W]; break }
+
+# Go to the start/end of the entire text.
+_bind _Scrollable_Text <<LineTop>>    { ::ms::text::Line_Top    [_winfo parent %W]; break }
+_bind _Scrollable_Text <<LineBottom>> { ::ms::text::Line_Bottom [_winfo parent %W]; break }
+
+# Select all/none.
+_bind _Scrollable_Text <<SelectAll>>  { ::ms::text::Select_All  [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectNone>> { ::ms::text::Select_None [_winfo parent %W]; break }
+
+# Select from the insertion cursor to the previous/next character.
+_bind _Scrollable_Text <<SelectPrevChar>> { ::ms::text::Select_Previous_Char [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectNextChar>> { ::ms::text::Select_Next_Char     [_winfo parent %W]; break }
+
+# Select from the insertion cursor to the previous/next word.
+_bind _Scrollable_Text <<SelectPrevWord>> { ::ms::text::Select_Previous_Word [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectNextWord>> { ::ms::text::Select_Next_Word     [_winfo parent %W]; break }
+
+# Select from the insertion cursor to the previous/next paragraph.
+_bind _Scrollable_Text <<SelectPrevPara>> { ::ms::text::Select_Previous_Paragraph [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectNextPara>> { ::ms::text::Select_Next_Paragraph     [_winfo parent %W]; break }
+
+# Select from the insertion cursor to the previous/next line.
+_bind _Scrollable_Text <<SelectPrevLine>> { ::ms::text::Select_Previous_Line [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectNextLine>> { ::ms::text::Select_Next_Line     [_winfo parent %W]; break }
+
+# Select from the insertion cursor to the start/end of the line.
+_bind _Scrollable_Text <<SelectLineStart>> { ::ms::text::Select_Line_Start [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectLineEnd>>   { ::ms::text::Select_Line_End   [_winfo parent %W]; break }
+
+# Select from the insertion cursor to the start/end of the entire text.
+_bind _Scrollable_Text <<SelectLineTop>>    { ::ms::text::Select_Line_Top    [_winfo parent %W]; break }
+_bind _Scrollable_Text <<SelectLineBottom>> { ::ms::text::Select_Line_Bottom [_winfo parent %W]; break }
+
+# Select from the insertion cursor to one page up or down.
+_bind _Scrollable_Text <Shift-Prior> { ::ms::text::Select_PageUp   [_winfo parent %W]; break }
+_bind _Scrollable_Text <Shift-Next>  { ::ms::text::Select_PageDown [_winfo parent %W]; break }
+
+# If the widget state is normal, move the insertion cursor to the previous or next character.
+# If the widget state is disabled, try to move the widget horizontal scrollbar (if any) by one unit towards the
+# left or the right ; if it's not possible, try to find the innermost widget's scrollable parent with an active
+# horizontal scrollbar and move that scrollbar by one unit towards the left or the right, otherwise don't do anything.
+_bind _Scrollable_Text <<PrevChar>> { ::ms::text::Previous_Char [_winfo parent %W]; break }
+_bind _Scrollable_Text <<NextChar>> { ::ms::text::Next_Char     [_winfo parent %W]; break }
+
+# If the widget state is normal, move the insertion cursor to the previous or next line.
+# If the widget state is disabled, try to move the widget vertical scrollbar (if any) by one unit towards the
+# top or the bottom; if it's not possible, try to find the innermost widget's scrollable parent with an active
+# vertical scrollbar and move that scrollbar by one unit towards the top or the bottom, otherwise don't do anything.
+_bind _Scrollable_Text <<PrevLine>> { ::ms::text::Previous_Line [_winfo parent %W]; break }
+_bind _Scrollable_Text <<NextLine>> { ::ms::text::Next_Line     [_winfo parent %W]; break }
+
+# If the widget state is normal, move the insertion cursor to the previous or next word.
+# If the widget state is disabled, try to move the widget horizontal scrollbar (if any) by one page towards the
+# left or the right; if it's not possible, try to find the innermost widget's scrollable parent with an active
+# horizontal scrollbar and move that scrollbar by one page towards the left or right, otherwise don't do anything.
+_bind _Scrollable_Text <<PrevWord>> { ::ms::text::Previous_Word [_winfo parent %W]; break }
+_bind _Scrollable_Text <<NextWord>> { ::ms::text::Next_Word     [_winfo parent %W]; break }
+
+# If the widget state is normal, move the insertion cursor to the previous or next paragraph.
+# If the widget state is disabled, try to move the widget vertical scrollbar (if any) by one pagetowards the
+# top or the bottom; if it's not possible, try to find the innermost widget's scrollable parent with an active
+# vertical scrollbar and move that scrollbar by one page towards the top or bottom, otherwise don't do anything.
+_bind _Scrollable_Text <<PrevPara>> { ::ms::text::Previous_Paragraph [_winfo parent %W]; break }
+_bind _Scrollable_Text <<NextPara>> { ::ms::text::Next_Paragraph     [_winfo parent %W]; break }
+
+# Mousewheel and Touchpad
+
+# If the widget's vertical scrollbar is active, move the text object by one unit up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Text <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D units; break }
+
+# If the widget's horizontal scrollbar is active, move the text object by one unit left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Text <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
+
+# If the widget's vertical scrollbar is active, move the text object by one page up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Text <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D pages; break }
+
+# If the widget's horizontal scrollbar is active, move the text object by one page left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Text <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the text object by one unit left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the text object by one unit up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scrollable_Text <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the text object by one page left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the text object by one page up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scrollable_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
+
 # Create the mustang **text** package.
 namespace eval ::ms::text {}
 
