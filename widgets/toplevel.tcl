@@ -176,6 +176,15 @@ proc ::ms::toplevel::Command { window { args "" } } {
     # Toplevels have their short address always equal to their real address.
     set w          $window
     set short_addr $window
+
+    # Check that the widget's 'args' forms a valid 'option/value' list.
+    switch -- [expr { [llength $args]%2 }] {
+        0   {
+            # Remove any duplicated options (retain only the last ones).
+            set args [lsort -increasing -stride 2 -index 0 -unique $args]
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
 }
 
 #####################################
