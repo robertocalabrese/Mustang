@@ -5111,4 +5111,36 @@ proc ::ms::text::Start_IME_Marked_Text { w } {
     return ""
 }
 
+# End_IME_Marked_Text
+#
+# Handles input method text marking in a text widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::End_IME_Marked_Text { w } {
+    variable Priv
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    try {
+        dict get $Priv(IMETextMark) $::ms::addr($w,widget)
+    } on error {} {
+        bell
+        return ""
+    } on ok { mark } {
+        {*}$address tag add IMEmarkedtext $mark insert
+        {*}$address tag configure IMEmarkedtext -underline 1
+    }
+
+    return ""
+}
+
 #*EOF*
