@@ -1525,6 +1525,12 @@ proc ::ms::text::Command { window { args "" } } {
                     set takefocus $::ms::current($w,takefocus)
                 }
             }
+
+            # Set the internal '-padding' option to always show the horizontal and vertical padding.
+            switch -- [llength $::ms::current($w,padding)] {
+                1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
+                default { set ::ms::data($w,padding) $::ms::current($w,padding) }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
