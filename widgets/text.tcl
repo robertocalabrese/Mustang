@@ -5589,4 +5589,53 @@ proc ::ms::text::Line_Start { w } {
     return ""
 }
 
+## Line_End
+#
+# Manages the **LineEnd** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Line_End { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""      { ::ms::Scroll_Parent_X $w 120.0 pages }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
+                        normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget horizontal scrollbar is active or not.
+            switch -- $::ms::data($w,scrollx) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w 120.0 pages }
+                        normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
+                        normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
