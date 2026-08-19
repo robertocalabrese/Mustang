@@ -95,7 +95,23 @@ _bind _Toplevel <FocusIn>  { ::ms::toplevel::FocusIn  %W; break }
 _bind _Toplevel <FocusOut> { ::ms::toplevel::FocusOut %W; break }
 
 # Create the mustang **toplevel** package.
-namespace eval ::ms::toplevel {}
+namespace eval ::ms::toplevel {
+    # Set the 'non-styleable' toplevel option list.
+    set ::ms::toplevel(non_styleable,options) [list class \
+                                                    cmenu \
+                                                    colormap \
+                                                    container \
+                                                    height \
+                                                    menu \
+                                                    screen \
+                                                    state \
+                                                    style \
+                                                    takefocus \
+                                                    title \
+                                                    use \
+                                                    visual \
+                                                    width];
+}
 
 # Rename the original Tk **toplevel** command.
 rename toplevel _toplevel
