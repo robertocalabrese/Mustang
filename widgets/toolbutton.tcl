@@ -1667,7 +1667,21 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
 # It doesn't return anything.
 proc ::ms::toolbutton::Style_Update { stylename caller_info } {
     # Update all the toolbutton widgets addresses that have stylename as a style.
-    foreach w $::ms::style($stylename,toolbutton,addrs) {}
+    foreach w $::ms::style($stylename,toolbutton,addrs) {
+        # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+        foreach option $::ms::toolbutton(styleable,options) {
+            set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,Toolbutton,$option)
+
+            switch -- $::ms::managed_by($w,$option) {
+                Tk  {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$stylename,$option)] {
+                        0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                        1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$stylename,$option) }
+                    }
+                }
+            }
+        }
+    }
 
     return ""
 }
