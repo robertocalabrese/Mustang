@@ -1698,4 +1698,29 @@ proc ::ms::toplevel::FocusOut { w } {
     return ""
 }
 
+## Focus_Toplevel
+#
+# Focus the toplevel after a **ButtonPress-1** event on the widget.
+#
+# Where:
+#
+# w   Should be the real address on the widget involved.
+#
+# It doesn't return anything.
+proc ::ms::toplevel::Focus_Toplevel { w } {
+    # Check the widget takefocus.
+    switch -- $::ms::current($w,takefocus) {
+        0   {
+            # Momentarily set the takefocus to '1'.
+            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
+            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
+        }
+    }
+
+    # Focus the toplevel.
+    _focus -force $::ms::addr($w,toplevel)
+
+    return ""
+}
+
 #*EOF*
