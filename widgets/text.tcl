@@ -4639,4 +4639,64 @@ proc ::ms::text::Scrollbar_Update { w } {
     return ""
 }
 
+##########################################
+##                                      ##
+##     REWRITTEN TK TEXT PROCEDURES     ##
+##                                      ##
+##########################################
+
+##################################
+##                              ##
+##     CLEAR/COPY/CUT/PASTE     ##
+##                              ##
+##################################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Clear
+#
+# Manage the **Clear** event by deleting the selected text.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Clear { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    # Execute the command.
+    try {
+        {*}$address delete sel.first sel.last
+    } on error {} {
+        # Do nothing.
+    }
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
