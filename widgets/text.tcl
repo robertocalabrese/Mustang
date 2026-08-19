@@ -6485,4 +6485,22 @@ proc ::ms::text::Select_PageUp { w } {
     return ""
 }
 
+## Select_PageDown
+#
+# Scrolls the widget vertically by one page towards the bottom and extends the selections to that point.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_PageDown { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w 1] }
+    }
+
+    return ""
+}
+
 #*EOF*
