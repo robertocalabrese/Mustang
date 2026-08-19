@@ -5638,4 +5638,53 @@ proc ::ms::text::Line_End { w } {
     return ""
 }
 
+## Line_Top
+#
+# Manages the **LineTop** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Line_Top { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an vertical scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""      { ::ms::Scroll_Parent_Y $w -120.0 pages }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::text::Pathname_Cmd $w yview moveto 0 }
+                        normal   { ::ms::text::Move_Cursor  $w 1.0 }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget vertical scrollbar is active or not.
+            switch -- $::ms::data($w,scrolly) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 pages }
+                        normal   { ::ms::text::Move_Cursor $w 1.0 }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::text::Pathname_Cmd $w yview moveto 0 }
+                        normal   { ::ms::text::Move_Cursor  $w 1.0 }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
