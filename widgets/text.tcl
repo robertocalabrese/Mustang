@@ -1531,6 +1531,129 @@ proc ::ms::text::Command { window { args "" } } {
                 1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
                 default { set ::ms::data($w,padding) $::ms::current($w,padding) }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'borderwidth', 'columns', 'cursor', 'font', 'inactiveselectbackground', 'insertborderwidth', 'padding',
+            #       'relief', 'rows' and 'selectborderwidth' are not allowed to change if the statespec changes.
+
+            # background
+            switch -- $::ms::managed_by($w,background) {
+                developer { set background $::ms::current($w,background) }
+                Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+            }
+
+            # bordercolor
+            switch -- $::ms::managed_by($w,bordercolor) {
+                developer { set bordercolor $::ms::current($w,bordercolor) }
+                Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+            }
+
+            # foreground
+            switch -- $::ms::managed_by($w,foreground) {
+                developer { set foreground $::ms::current($w,foreground) }
+                Tk        { set foreground [_ttk_style lookup $::ms::current($w,style) -foreground $::ms::data($w,statespec) $::ms::default($w,foreground)] }
+            }
+
+            # insertbackground
+            switch -- $::ms::managed_by($w,insertbackground) {
+                developer { set insertbackground $::ms::current($w,insertbackground) }
+                Tk        { set insertbackground [_ttk_style lookup $::ms::current($w,style) -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
+            }
+
+            # selectbackground
+            switch -- $::ms::managed_by($w,selectbackground) {
+                developer { set selectbackground $::ms::current($w,selectbackground) }
+                Tk        { set selectbackground [_ttk_style lookup $::ms::current($w,style) -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
+            }
+
+            # selectforeground
+            switch -- $::ms::managed_by($w,selectforeground) {
+                developer { set selectforeground $::ms::current($w,selectforeground) }
+                Tk        { set selectforeground [_ttk_style lookup $::ms::current($w,style) -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
+            }
+
+            # Set the text options.
+            set text_options [list           -autoseparators $::ms::current($w,autoseparators) \
+                                                -blockcursor $::ms::current($w,blockcursor) \
+                                                 -background $background \
+                                                     -cursor $cursor \
+                                                    -endline $::ms::current($w,endline) \
+                                            -exportselection $::ms::current($w,exportselection) \
+                                                       -font $::ms::current($w,font) \
+                                                 -foreground $foreground \
+                                                     -height $::ms::current($w,rows) \
+                                   -inactiveselectbackground $::ms::current($w,inactiveselectbackground) \
+                                           -insertbackground $insertbackground \
+                                          -insertborderwidth $::ms::current($w,insertborderwidth) \
+                                              -insertofftime $::ms::current($w,insertofftime) \
+                                               -insertontime $::ms::current($w,insertontime) \
+                                           -insertunfocussed $::ms::current($w,insertunfocussed) \
+                                                -insertwidth $::ms::current($w,insertwidth) \
+                                                    -maxundo $::ms::current($w,maxundo) \
+                                                       -padx [lindex $::ms::data($w,padding) 0] \
+                                                       -pady [lindex $::ms::data($w,padding) 1] \
+                                           -selectbackground $selectbackground \
+                                          -selectborderwidth $::ms::current($w,selectborderwidth) \
+                                           -selectforeground $selectforeground \
+                                                    -setgrid $::ms::current($w,setgrid) \
+                                                   -spacing1 $::ms::current($w,spacing1) \
+                                                   -spacing2 $::ms::current($w,spacing2) \
+                                                   -spacing3 $::ms::current($w,spacing3) \
+                                                  -startline $::ms::current($w,startline) \
+                                                      -state $::ms::current($w,state) \
+                                                       -tabs $::ms::current($w,tabs) \
+                                                   -tabstyle $::ms::current($w,tabstyle) \
+                                                  -takefocus $takefocus \
+                                                       -undo $::ms::current($w,undo) \
+                                                      -width $::ms::current($w,columns) \
+                                                       -wrap $::ms::current($w,wrap)];
+
+            # Note: The '-bordercolor' option is not understanded by Tk texts, but is made available trough
+            #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+            #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+            #       like it behaves in other widgets that understands the bordercolor.
+
+            # Check the 'relief' type.
+            switch -- $::ms::current($w,relief) {
+                flat  -
+                solid {
+                    lappend text_options         -borderwidth 0 \
+                                         -highlightbackground $bordercolor \
+                                              -highlightcolor $bordercolor \
+                                          -highlightthickness $::ms::current($w,borderwidth) \
+                                                      -relief flat;
+                }
+                default {
+                    lappend text_options         -borderwidth $::ms::current($w,borderwidth) \
+                                         -highlightbackground $background \
+                                              -highlightcolor $background \
+                                          -highlightthickness 0 \
+                                                      -relief $::ms::current($w,relief);
+                }
+            }
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    #########################
+                    ##                     ##
+                    ##     SIMPLE TEXT     ##
+                    ##                     ##
+                    #########################
+                }
+                true {
+                    #############################
+                    ##                         ##
+                    ##     SCROLLABLE TEXT     ##
+                    ##                         ##
+                    #############################
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
