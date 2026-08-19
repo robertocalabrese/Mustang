@@ -5329,4 +5329,57 @@ proc ::ms::text::Return { w } {
     return ""
 }
 
+####################
+##                ##
+##     PAGES      ##
+##                ##
+####################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## PageUp
+#
+# Manages the **PageUp** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::PageUp { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to a vertical scrollbar.
+            switch -- $::current($w,yscrollcommand) {
+                ""      { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { interp invokehidden {}  $w yview scroll -1 pages }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget vertical scrollbar is active or not.
+            switch -- $::ms::data($w,scrolly) {
+                off { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_Y   $w 120.0 pages }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
