@@ -728,7 +728,21 @@ proc ::ms::toplevel::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::toplevel::Pathname_Cmd { w cmd args } {}
+proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        cget {}
+        configure {}
+        identify {}
+        instate {}
+        state {}
+        style {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
