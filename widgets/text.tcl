@@ -1645,6 +1645,29 @@ proc ::ms::text::Command { window { args "" } } {
                     ##     SIMPLE TEXT     ##
                     ##                     ##
                     #########################
+
+                    ##################
+                    ##              ##
+                    ##     TEXT     ##
+                    ##              ##
+                    ##################
+
+                    # Note: Tk texts don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
+
+                    # Add the provided 'xscrollcommand' and 'yscrollcommand' data.
+                    lappend text_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                         -yscrollcommand $::ms::current($w,yscrollcommand);
+
+                    # Create the widget.
+                    try {
+                        _text $w {*}$text_options
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    }
+
+                    # Set the widget toplevel.
+                    set ::ms::addr($w,toplevel) [_winfo toplevel $w]
                 }
                 true {
                     #############################
