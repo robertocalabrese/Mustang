@@ -822,6 +822,36 @@ namespace eval ::ms::text {
                                             selectborderwidth \
                                             selectforeground \
                                             shellbackground];
+
+    # Set the default 'non-styleable' text options values.
+    set ::ms::default(text,autoseparators)   1
+    set ::ms::default(text,blockcursor)      0
+    set ::ms::default(text,class)            Text
+    set ::ms::default(text,cmenu)            {}
+    set ::ms::default(text,endline)          {}
+    set ::ms::default(text,exportselection)  1
+    set ::ms::default(text,insertofftime)    300
+    set ::ms::default(text,insertontime)     600
+    set ::ms::default(text,insertunfocussed) none
+    set ::ms::default(text,insertwidth)      2
+    set ::ms::default(text,maxundo)          0
+    set ::ms::default(text,scrollable)       false
+    set ::ms::default(text,setgrid)          0
+    set ::ms::default(text,spacing1)         0
+    set ::ms::default(text,spacing2)         0
+    set ::ms::default(text,spacing3)         0
+    set ::ms::default(text,startline)        {}
+    set ::ms::default(text,state)            normal
+    set ::ms::default(text,style)            Text
+    set ::ms::default(text,tabs)             {}
+    set ::ms::default(text,tabstyle)         wordprocessor
+    set ::ms::default(text,takefocus)        0
+    set ::ms::default(text,undo)             0
+    set ::ms::default(text,wrap)             word
+    set ::ms::default(text,xscrollcommand)   {}
+    set ::ms::default(text,yscrollcommand)   {}
+
+    # Note: The default 'styleable' text options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **text** command.
