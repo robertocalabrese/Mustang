@@ -5881,4 +5881,58 @@ proc ::ms::text::Next_Char { w } {
     return ""
 }
 
+## Next_Line
+#
+# Manages the **NextLine** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Next_Line { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an vertical scrollbar.
+            switch -- $::current($w,yscrollcommand) {
+                ""  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                    }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget vertical scrollbar is active or not.
+            switch -- $::ms::data($w,scrolly) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
