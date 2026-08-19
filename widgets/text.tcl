@@ -6343,4 +6343,36 @@ proc ::ms::text::Previous_Word { w } {
     return ""
 }
 
+####################
+##                ##
+##     SELECT     ##
+##                ##
+####################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Select_All
+#
+# Select all the text inside the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_All { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    {*}$address tag add sel 1.0 end
+
+    return ""
+}
+
 #*EOF*
