@@ -2782,6 +2782,18 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 
                                     # Apply the changes.
                                     interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                                    ##################
+                                    ##              ##
+                                    ##     TEXT     ##
+                                    ##              ##
+                                    ##################
+
+                                    # Note: Tk Texts don't understands styles, at least not natively.
+                                    #       No internal styles needs to be created.
+
+                                    # Apply the changes.
+                                    $w.text configure {*}$text_options
                                 }
                             }
                         }
