@@ -6791,4 +6791,38 @@ proc ::ms::text::Undo { w } {
     return ""
 }
 
+## Redo
+#
+# Manage the **Redo** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Redo { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    try {
+        {*}$address edit redo
+    } on error {} {
+        # Do nothing
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
