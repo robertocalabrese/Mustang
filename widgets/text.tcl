@@ -6720,4 +6720,21 @@ proc ::ms::text::Select_Previous_Line { w } {
     return ""
 }
 
+## Select_Previous_Paragraph
+#
+# Select from the insertion cursor to the previous paragraph.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Previous_Paragraph { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Previous_Paragraph $w insert] }
+    }
+
+    return ""
+}
+
 #*EOF*
