@@ -4929,4 +4929,47 @@ proc ::ms::text::Backspace { w } {
     return ""
 }
 
+## Delete
+#
+# Manage the **Delete** event.
+# If a selection is present, delete the selected text, otherwise delete a character positioned
+# to the right of the cursor location.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Delete { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    switch -- [::ms::text::The_Cursor_Is_Inside_The_Selection $w] {
+        0   {
+            if { [{*}$address compare end != insert+1c] } {
+                set index1 [::ms::text::Next_Index     $w insert+1c ::tk::startOfCluster]
+                set index2 [::ms::text::Previous_Index $w insert    ::tk::endOfCluster]
+                {*}$address delete $index1 $index2
+            }
+
+            {*}$address see insert
+        }
+        1   { {*}$address delete sel.first sel.last }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
