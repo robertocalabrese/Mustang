@@ -5294,4 +5294,39 @@ proc ::ms::text::KeyPress { w key } {
     return ""
 }
 
+## Return
+#
+# Manage the **Return** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Return { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    ::ms::text::Insert_String $w \n
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
