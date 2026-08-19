@@ -2794,6 +2794,15 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 
                                     # Apply the changes.
                                     $w.text configure {*}$text_options
+
+                                    ########################
+                                    ##                    ##
+                                    ##     SCROLLBARS     ##
+                                    ##                    ##
+                                    ########################
+
+                                    # Update the scrollbars.
+                                    ::ms::text::Scrollbar_Update $w
                                 }
                             }
                         }
