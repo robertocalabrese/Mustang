@@ -1398,6 +1398,11 @@ proc ::ms::toplevel::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the toplevel widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,toplevel,addrs) {}
+
+    return ""
 }
 
 ######################################
