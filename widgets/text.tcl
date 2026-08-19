@@ -6825,4 +6825,61 @@ proc ::ms::text::Redo { w } {
     return ""
 }
 
+## Transpose
+#
+# This procedure implements the "transpose" function for text widgets.
+# It tranposes the characters on either side of the insertion cursor, unless the cursor is at the end of the line.
+# In this case it transposes the two characters to the left of the cursor.
+# In either case, the cursor ends up to the right of the transposed characters.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Transpose { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set pos insert
+
+    if { [{*}$address compare $pos != "$pos lineend"] } {
+        set pos [{*}$address index "$pos + 1 char"]
+    }
+
+    set new [string cat [{*}$address get "$pos - 1 char"] [{*}$address get  "$pos - 2 char"]]
+
+    if { [{*}$address compare "$pos - 1 char" == 1.0] } {
+        return ""
+    }
+
+    # Ensure this is seen as an atomic op to undo.
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   {
+            {*}$address configure -autoseparators 0
+            {*}$address edit separator
+        }
+    }
+
+    {*}$address delete "$pos - 2 char" $pos
+    {*}$address insert insert $new
+    {*}$address see insert
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   {
+            {*}$address edit separator
+            {*}$address configure -autoseparators $::ms::current($w,autoseparators)
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
