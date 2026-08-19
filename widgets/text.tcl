@@ -5005,4 +5005,34 @@ proc ::ms::text::Delete_Word { w } {
     return ""
 }
 
+## Delete_Till_Line_End
+#
+# Deletes from the insertion cursor to the end of its line.
+# If the insertion cursor is already at the end of a line, then deletes the newline character.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Delete_Till_Line_End { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    switch -- [{*}$address compare end != insert+1c] {
+        1   {
+            switch -- [{*}$address compare insert == { insert lineend }] {
+                0   { {*}$address delete insert { insert lineend } }
+                1   { {*}$address delete insert }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
