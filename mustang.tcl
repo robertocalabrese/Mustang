@@ -2193,7 +2193,7 @@ proc ::ms::Init {} {
     # Set the point title, if any.
     switch -- $::ms::current(.,title) {
         ""      {}
-        default { wm title . [::msgcat::mc "$::ms::current(.,title)"] }
+        default { _wm title . [::msgcat::mc "$::ms::current(.,title)"] }
     }
 
     ######################
@@ -2204,8 +2204,8 @@ proc ::ms::Init {} {
 
     # Set the new bindtags for the widget.
     switch -- $::ms::current(.,class) {
-        Toplevel { bindtags . [list . _Toplevel Toplevel . all] }
-        default  { bindtags . [list . $::ms::current(.,class) _Toplevel Toplevel . all] }
+        Toplevel { _bindtags . [list . _Toplevel Toplevel . all] }
+        default  { _bindtags . [list . $::ms::current(.,class) _Toplevel Toplevel . all] }
     }
 
     #####################
