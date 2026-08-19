@@ -6659,4 +6659,31 @@ proc ::ms::text::Select_Next_Paragraph { w } {
     return ""
 }
 
+#############################
+##                         ##
+##     SELECT PREVIOUS     ##
+##                         ##
+#############################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Select_Previous_Char
+#
+# Select from the insertion cursor to the previous character.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Previous_Char { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
+    }
+
+    return ""
+}
+
 #*EOF*
