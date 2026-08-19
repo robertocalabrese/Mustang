@@ -4699,4 +4699,41 @@ proc ::ms::text::Clear { w } {
     return ""
 }
 
+# Copy
+#
+# Manage the **Copy** event by copying the widget's selection into the clipboard.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Copy { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    try {
+        {*}$address get sel.first sel.last
+    } on error {} {
+        return ""
+    } on ok { data } {
+        _clipboard clear  -displayof $w
+        _clipboard append -displayof $w $data
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
