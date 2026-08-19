@@ -3590,6 +3590,12 @@ proc ::ms::text::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
         }
+
+        # Set the internal '-padding' option to always show the horizontal and vertical padding.
+        switch -- [llength $::ms::current($w,padding)] {
+            1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
+            default { set ::ms::data($w,padding) $::ms::current($w,padding) }
+        }
     }
 
     return ""
