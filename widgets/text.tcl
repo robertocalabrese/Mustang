@@ -5487,4 +5487,57 @@ proc ::ms::text::PageRight { w } {
     return ""
 }
 
+##################
+##              ##
+##     LINE     ##
+##              ##
+##################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+# Line_Index
+#
+# Returns the index of the character one display line above or below the insertion cursor.
+# There is a tricky thing here: we want to maintain the original x position across repeated operations,
+# even though some lines that will get passed through don't have enough characters to cover the original column.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# n   The number of display lines to move:
+#       -1 --> up one line
+#       +1 --> down one line
+#
+# Returns the resulting index.
+proc ::ms::text::Line_Index { w n } {
+    variable ::tk::Priv
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set i [{*}$address index insert]
+
+    if { $Priv(prevPos) ne $i } {
+        set Priv(textPosOrig) $i
+    }
+
+    set lines [{*}$address count -displaylines $Priv(textPosOrig) $i]
+    set new   [{*}$address index "$Priv(textPosOrig) + [expr { $lines + $n }] displaylines"]
+
+    set Priv(prevPos) $new
+
+    if { [{*}$address compare $new == "end display lineend"] || [{*}$address compare $new == "insert display linestart"] } {
+        set Priv(textPosOrig) $new
+    }
+
+    return $new
+}
+
 #*EOF*
