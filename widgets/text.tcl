@@ -6530,4 +6530,21 @@ proc ::ms::text::Select_Line_Start { w } {
     return ""
 }
 
+## Select_Line_End
+#
+# Select from the insertion cursor to the end of the line.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Line_End { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w {insert display lineend} }
+    }
+
+    return ""
+}
+
 #*EOF*
