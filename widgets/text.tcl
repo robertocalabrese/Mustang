@@ -2159,7 +2159,160 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+            switch -- [llength $args] {
+                0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
+                1   {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { set statespec disabled }
+                        normal {
+                            # Check the 'statespec' provided.
+                            set statespec $args
+                            switch -- $statespec {
+                                ""      -
+                                normal  { set statespec $::ms::data(statespec,normal) }
+                                default {
+                                    foreach state $statespec {
+                                        switch -- [::ms::Check_State $state] {
+                                            invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    # Change the statespec and register the states that have changed.
+                    set states_that_have_changed [list ]
+                    foreach state $statespec {
+                        if { $state ni $::ms::data($w,statespec) } {
+                            # Note: The state analized is different than its equivalent currently active (old state).
+                            #       For example 'disabled' (state) and '!disabled' (old state).
+
+                            # Get the old state as the inverse of the new state.
+                            switch -glob -- $state {
+                                "!*"    { set old_state [string trimleft $state "!"] }
+                                default { set old_state [string cat      "!" $state] }
+                            }
+
+                            # Update the current statespec old state with the new state.
+                            set index [lsearch -exact $::ms::data($w,statespec) $old_state]
+
+                            # No need to check if 'index' is '-1'.
+                            set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) $index $index $state]
+
+                            # Add the old state to the list containing the states that have changed.
+                            lappend states_that_have_changed $old_state
+                        }
+                    }
+
+                    # Note: 'borderwidth', 'columns', 'cursor', 'font', 'inactiveselectbackground', 'insertborderwidth', 'padding',
+                    #       'relief', 'rows' and 'selectborderwidth' are not allowed to change if the statespec changes.
+
+                    #####################################
+                    ##                                 ##
+                    ##     UPDATE THE WIDGET STATE     ##
+                    ##                                 ##
+                    #####################################
+
+                    # Note: Tk canvases don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
+
+                    # background
+                    switch -- $::ms::managed_by($w,background) {
+                        developer { set background $::ms::current($w,background) }
+                        Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+                    }
+
+                    # bordercolor
+                    switch -- $::ms::managed_by($w,bordercolor) {
+                        developer { set bordercolor $::ms::current($w,bordercolor) }
+                        Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+                    }
+
+                    # foreground
+                    switch -- $::ms::managed_by($w,foreground) {
+                        developer { set foreground $::ms::current($w,foreground) }
+                        Tk        { set foreground [_ttk_style lookup $::ms::current($w,style) -foreground $::ms::data($w,statespec) $::ms::default($w,foreground)] }
+                    }
+
+                    # insertbackground
+                    switch -- $::ms::managed_by($w,insertbackground) {
+                        developer { set insertbackground $::ms::current($w,insertbackground) }
+                        Tk        { set insertbackground [_ttk_style lookup $::ms::current($w,style) -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
+                    }
+
+                    # selectbackground
+                    switch -- $::ms::managed_by($w,selectbackground) {
+                        developer { set selectbackground $::ms::current($w,selectbackground) }
+                        Tk        { set selectbackground [_ttk_style lookup $::ms::current($w,style) -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
+                    }
+
+                    # selectforeground
+                    switch -- $::ms::managed_by($w,selectforeground) {
+                        developer { set selectforeground $::ms::current($w,selectforeground) }
+                        Tk        { set selectforeground [_ttk_style lookup $::ms::current($w,style) -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
+                    }
+
+                    # Set the text options.
+                    set text_options [list       -background $background \
+                                                 -foreground $foreground \
+                                           -insertbackground $insertbackground \
+                                           -selectbackground $selectbackground \
+                                           -selectforeground $selectforeground];
+
+                    # Note: The '-bordercolor' option is not understanded by Tk texts, but is made available trough
+                    #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                    #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                    #       like it behaves in other widgets that understands the bordercolor.
+
+                    # Check the 'relief' type.
+                    switch -- $::ms::current($w,relief) {
+                        flat  -
+                        solid {
+                            lappend text_options -highlightbackground $bordercolor \
+                                                      -highlightcolor $bordercolor;
+                        }
+                        default {
+                            lappend text_options -highlightbackground $background \
+                                                      -highlightcolor $background;
+                        }
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false {
+                            #########################
+                            ##                     ##
+                            ##     SIMPLE TEXT     ##
+                            ##                     ##
+                            #########################
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure {*}$text_options
+                        }
+                        true {
+                            #############################
+                            ##                         ##
+                            ##     SCROLLABLE TEXT     ##
+                            ##                         ##
+                            #############################
+
+                            # Apply the changes.
+                            interp invokehidden {} $w state $::ms::data($w,statespec)
+                            $w.text configure {*}$text_options
+                        }
+                    }
+
+                    return $states_that_have_changed
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         tag {}
         window {}
