@@ -111,6 +111,16 @@ namespace eval ::ms::toplevel {
                                                     use \
                                                     visual \
                                                     width];
+
+    # Set the 'styleable' toplevel option list.
+    set ::ms::toplevel(styleable,options) [list background \
+                                                backgroundimage \
+                                                bordercolor \
+                                                borderwidth \
+                                                cursor \
+                                                padding \
+                                                relief \
+                                                tile];
 }
 
 # Rename the original Tk **toplevel** command.
