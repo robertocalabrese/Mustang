@@ -475,6 +475,7 @@
 #                            If not provided, defaults to **-1** (meaning no underline or mnemonic activation will be performed).
 #
 # **-variable**              The name of a Tcl variable (with absolute path) which is linked to the **-offvalue** and the **-onvalue**.
+#                            The variable should already exist at the time the widget is created or this option will be ignored.
 #
 #                            If not provided, defaults to the widget address.
 #
