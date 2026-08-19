@@ -5235,4 +5235,37 @@ proc ::ms::text::Insert_String { w data } {
     return ""
 }
 
+#######################
+##                   ##
+##     KEYPRESS      ##
+##                   ##
+#######################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Control_Tab
+#
+# Change the focus from the text widget to the next or previous focussable widget, if any.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# dir   Should be the direction that the focus needs to take.
+#          +1 --> means go to the next focussable widget.
+#          -1 --> means go to the previous focussable widget.
+#
+# It doesn't return anything.
+proc ::ms::text::Control_Tab { w dir } {
+    # Check the focus direction.
+    switch -- $dir {
+        -1      { _focus [::tk_focusPrev $::ms::addr($w,widget)] }
+        default { _focus [::tk_focusNext $::ms::addr($w,widget)] }
+    }
+
+    return ""
+}
+
 #*EOF*
