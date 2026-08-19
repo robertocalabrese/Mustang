@@ -895,6 +895,113 @@ proc ::ms::text::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,autoseparators)   $::ms::default(text,autoseparators)
+            set ::ms::default($w,blockcursor)      $::ms::default(text,blockcursor)
+            set ::ms::default($w,class)            $::ms::default(text,class)
+            set ::ms::default($w,cmenu)            $::ms::default(text,cmenu)
+            set ::ms::default($w,endline)          $::ms::default(text,endline)
+            set ::ms::default($w,exportselection)  $::ms::default(text,exportselection)
+            set ::ms::default($w,insertofftime)    $::ms::default(text,insertofftime)
+            set ::ms::default($w,insertontime)     $::ms::default(text,insertontime)
+            set ::ms::default($w,insertunfocussed) $::ms::default(text,insertunfocussed)
+            set ::ms::default($w,insertwidth)      $::ms::default(text,insertwidth)
+            set ::ms::default($w,maxundo)          $::ms::default(text,maxundo)
+            set ::ms::default($w,scrollable)       $::ms::default(text,scrollable)
+            set ::ms::default($w,setgrid)          $::ms::default(text,setgrid)
+            set ::ms::default($w,spacing1)         $::ms::default(text,spacing1)
+            set ::ms::default($w,spacing2)         $::ms::default(text,spacing2)
+            set ::ms::default($w,spacing3)         $::ms::default(text,spacing3)
+            set ::ms::default($w,startline)        $::ms::default(text,startline)
+            set ::ms::default($w,state)            $::ms::default(text,state)
+            set ::ms::default($w,style)            $::ms::default(text,style)
+            set ::ms::default($w,tabs)             $::ms::default(text,tabs)
+            set ::ms::default($w,tabstyle)         $::ms::default(text,tabstyle)
+            set ::ms::default($w,takefocus)        $::ms::default(text,takefocus)
+            set ::ms::default($w,undo)             $::ms::default(text,undo)
+            set ::ms::default($w,wrap)             $::ms::default(text,wrap)
+            set ::ms::default($w,xscrollcommand)   $::ms::default(text,xscrollcommand)
+            set ::ms::default($w,yscrollcommand)   $::ms::default(text,yscrollcommand)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,autoseparators)   $::ms::default(text,autoseparators)
+            set ::ms::current($w,blockcursor)      $::ms::default(text,blockcursor)
+            set ::ms::current($w,class)            $::ms::default(text,class)
+            set ::ms::current($w,cmenu)            $::ms::default(text,cmenu)
+            set ::ms::current($w,endline)          $::ms::default(text,endline)
+            set ::ms::current($w,exportselection)  $::ms::default(text,exportselection)
+            set ::ms::current($w,insertofftime)    $::ms::default(text,insertofftime)
+            set ::ms::current($w,insertontime)     $::ms::default(text,insertontime)
+            set ::ms::current($w,insertunfocussed) $::ms::default(text,insertunfocussed)
+            set ::ms::current($w,insertwidth)      $::ms::default(text,insertwidth)
+            set ::ms::current($w,maxundo)          $::ms::default(text,maxundo)
+            set ::ms::current($w,scrollable)       $::ms::default(text,scrollable)
+            set ::ms::current($w,setgrid)          $::ms::default(text,setgrid)
+            set ::ms::current($w,spacing1)         $::ms::default(text,spacing1)
+            set ::ms::current($w,spacing2)         $::ms::default(text,spacing2)
+            set ::ms::current($w,spacing3)         $::ms::default(text,spacing3)
+            set ::ms::current($w,startline)        $::ms::default(text,startline)
+            set ::ms::current($w,state)            $::ms::default(text,state)
+            set ::ms::current($w,style)            $::ms::default(text,style)
+            set ::ms::current($w,tabs)             $::ms::default(text,tabs)
+            set ::ms::current($w,tabstyle)         $::ms::default(text,tabstyle)
+            set ::ms::current($w,takefocus)        $::ms::default(text,takefocus)
+            set ::ms::current($w,undo)             $::ms::default(text,undo)
+            set ::ms::current($w,wrap)             $::ms::default(text,wrap)
+            set ::ms::current($w,xscrollcommand)   $::ms::default(text,xscrollcommand)
+            set ::ms::current($w,yscrollcommand)   $::ms::default(text,yscrollcommand)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) text
+            set ::ms::data($w,statespec) $::ms::data(statespec,normal)
+            set ::ms::data($w,scrollx)   off
+            set ::ms::data($w,scrolly)   off
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a text styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **text** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)               Tk
+            set ::ms::managed_by($w,bordercolor)              Tk
+            set ::ms::managed_by($w,borderwidth)              Tk
+            set ::ms::managed_by($w,columns)                  Tk
+            set ::ms::managed_by($w,cursor)                   Tk
+            set ::ms::managed_by($w,darkcolor)                Tk
+            set ::ms::managed_by($w,font)                     Tk
+            set ::ms::managed_by($w,foreground)               Tk
+            set ::ms::managed_by($w,inactiveselectbackground) Tk
+            set ::ms::managed_by($w,insertbackground)         Tk
+            set ::ms::managed_by($w,insertborderwidth)        Tk
+            set ::ms::managed_by($w,lightcolor)               Tk
+            set ::ms::managed_by($w,padding)                  Tk
+            set ::ms::managed_by($w,relief)                   Tk
+            set ::ms::managed_by($w,rows)                     Tk
+            set ::ms::managed_by($w,selectbackground)         Tk
+            set ::ms::managed_by($w,selectborderwidth)        Tk
+            set ::ms::managed_by($w,selectforeground)         Tk
+            set ::ms::managed_by($w,shellbackground)          Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
