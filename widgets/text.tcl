@@ -167,7 +167,7 @@ _bind _Simple_Text <KeyPress-Insert>    { ::ms::text::Insert %W; break }
 _bind _Simple_Text <KeyPress-KP_Insert> { ::ms::text::Insert %W; break }
 
 # Key
-_bind _Simple_Text <Key> { ::ms::text::Key %W %A; break }
+_bind _Simple_Text <KeyPress> { ::ms::text::KeyPress %W %A; break }
 
 # Return
 _bind _Simple_Text <KeyPress-Return>   { ::ms::text::Return %W; break }
@@ -413,7 +413,7 @@ _bind _Scrollable_Text <KeyPress-Insert>    { ::ms::text::Insert [_winfo parent 
 _bind _Scrollable_Text <KeyPress-KP_Insert> { ::ms::text::Insert [_winfo parent %W]; break }
 
 # Key
-_bind _Scrollable_Text <Key> { ::ms::text::Key [_winfo parent %W] %A; break }
+_bind _Scrollable_Text <KeyPress> { ::ms::text::KeyPress [_winfo parent %W] %A; break }
 
 # Return
 _bind _Scrollable_Text <KeyPress-Return>   { ::ms::text::Return [_winfo parent %W]; break }
@@ -5263,6 +5263,32 @@ proc ::ms::text::Control_Tab { w dir } {
     switch -- $dir {
         -1      { _focus [::tk_focusPrev $::ms::addr($w,widget)] }
         default { _focus [::tk_focusNext $::ms::addr($w,widget)] }
+    }
+
+    return ""
+}
+
+## KeyPress
+#
+# Manage the **KeyPress** event.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be the unicode of the key involved.
+#
+# It doesn't return anything.
+proc ::ms::text::KeyPress { w key } {
+    # Execute the command.
+    ::ms::text::Insert_String $w $key
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
     }
 
     return ""
