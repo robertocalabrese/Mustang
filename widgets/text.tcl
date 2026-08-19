@@ -5783,4 +5783,48 @@ proc ::ms::text::Next_Index { w start op } {
     return end
 }
 
+# Next_Paragraph_Index
+#
+# Returns the index of the beginning of the paragraph just after a given position in the text
+# (the beginning of a paragraph is the first non-blank character after a blank line).
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# start   Position at which to start search.
+#
+# Returns the resulting index.
+proc ::ms::text::Next_Paragraph_Index { w start } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set pos [{*}$address index "$start linestart + 1 line"]
+
+    while { [{*}$address get $pos] ne "\n" } {
+        if { [{*}$address compare $pos == end] } {
+            return [{*}$address index "end - 1c"]
+        }
+
+        set pos [{*}$address index "$pos + 1 line"]
+    }
+
+    while { [{*}$address get $pos] eq "\n" } {
+        set pos [{*}$address index "$pos + 1 line"]
+        if { [{*}$address compare $pos == end] } {
+            return [{*}$address index "end - 1c"]
+        }
+    }
+
+    if { [regexp -indices -- {^[ \t]+(.)} [{*}$address get $pos "$pos lineend"] -> index]} {
+        return [{*}$address index "$pos + [lindex $index 0] chars"]
+    }
+
+    return $pos
+}
+
 #*EOF*
