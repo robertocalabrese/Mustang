@@ -149,7 +149,21 @@ _bind _Toolbutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break
 _bind _Toolbutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **toolbutton** package.
-namespace eval ::ms::toolbutton {}
+namespace eval ::ms::toolbutton {
+    # Set the 'non styleable' toolbutton option list.
+    set ::ms::toolbutton(non_styleable,options) [list class \
+                                                      cmenu \
+                                                      command \
+                                                      offvalue \
+                                                      onvalue \
+                                                      state \
+                                                      style \
+                                                      takefocus \
+                                                      text \
+                                                      textvariable \
+                                                      underline \
+                                                      variable];
+}
 
 # Create the alias for the mustang **toolbutton** command.
 interp alias {} toolbutton {} ::ms::toolbutton::Command
