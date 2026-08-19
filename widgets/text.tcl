@@ -2313,7 +2313,15 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        style {}
+        style {
+            # Synopsis:
+            #
+            # *window* **style**
+            switch -- [llength $args] {
+                0       { return $::ms::current($w,style) }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         tag {}
         window {}
         xview {}
