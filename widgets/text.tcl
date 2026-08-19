@@ -4174,4 +4174,20 @@ proc ::ms::text::Destroy { w } {
     return ""
 }
 
+## FocusIn
+#
+# Manage the **FocusIn** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::FocusIn { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::text::Pathname_Cmd $w state focus
+
+    return ""
+}
+
 #*EOF*
