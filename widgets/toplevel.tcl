@@ -1666,4 +1666,36 @@ proc ::ms::toplevel::FocusIn { w } {
     return ""
 }
 
+## FocusOut
+#
+# Manage the **FocusOut** event on the widget.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::toplevel::FocusOut { w } {
+    # Check the contextual menu relative to this widget, if any.
+    switch -- $::ms::current($w,cmenu) {
+        ""      {}
+        default {
+            # If the contextual menu of the widget or a menu popdown are open, do not loose the focus (graphically).
+            switch -- [_winfo exists $::ms::current($w,cmenu)] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # Re-establish the original toplevel takefocus to '0' in case it was momentarily changed by the 'Focus_Toplevel' procedure.
+    if { ($::ms::current($w,takefocus) == 0) && ([interp invokehidden {} $w cget -takefocus] == 1) } {
+        interp invokehidden {} $w configure -takefocus 0
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::toplevel::Pathname_Cmd $w state !focus
+
+    return ""
+}
+
 #*EOF*
