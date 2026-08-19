@@ -4258,4 +4258,76 @@ proc ::ms::text::Hover { w X Y } {
     return ""
 }
 
+## Scan_Or_Paste
+#
+# Manage various **ButtonPress** events.
+# Depending on the current value and the operating system it will scan the widget or paste the selection into it.
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# x, y    Should be the (x,y) relative coordinate of the mouse pointer at the time of the event.
+#         This parameter should be passed by the event itself.
+#
+# event   Should be the event name.
+#
+#         Allowed events are:
+#            Button-2
+#            B2-Motion
+#            ButtonRelease-2
+#            Button-3
+#            B3-Motion
+#            ButtonRelease-3
+#            PasteSelection
+#
+# It doesn't return anything.
+proc ::ms::text::Scan_Or_Paste { w x y event } {
+    # Check the middleclick variable.
+    switch -- $::ms::middleclick {
+        drag {
+            # Check the windowing system.
+            switch -- [_tk windowingsystem] {
+                aqua {
+                    # Disable dragging on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
+                    switch -- $event {
+                        "Button-3"        { ::ms::Scan_Mark $w $x $y }
+                        "B3-Motion"       { ::ms::Scan_Drag $w $x $y }
+                        "ButtonRelease-3" { ::ms::Scan_Release }
+                    }
+                }
+                default {
+                    # Disable dragging on ButtonPress-3 and enable it on ButtonPress-2 (Linux and Windows).
+                    switch -- $event {
+                        "Button-2"        { ::ms::Scan_Mark $w $x $y }
+                        "B2-Motion"       { ::ms::Scan_Drag $w $x $y }
+                        "ButtonRelease-2" { ::ms::Scan_Release }
+                    }
+                }
+            }
+        }
+        paste {
+            # Check the windowing system.
+            switch -- [_tk windowingsystem] {
+                aqua {
+                    # Disable paste selection on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
+                    switch -- $event {
+                        "PasteSelection"  -
+                        "ButtonRelease-3" { ::ms::text::Paste $w $x $y PRIMARY }
+                    }
+                }
+                default {
+                    # Disable paste selection on ButtonPress-3 and enable it on ButtonPress-2 (Linux and Windows).
+                    switch -- $event {
+                        "PasteSelection"  -
+                        "ButtonRelease-2" { ::ms::text::Paste $w $x $y PRIMARY }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
