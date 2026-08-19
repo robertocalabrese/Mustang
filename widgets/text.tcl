@@ -2322,7 +2322,124 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        tag {}
+        tag {
+            # Synopsis:
+            #
+            # *window* **tag** **add** *tagname* *index1* ?*index2* *index1* *index2* ...?
+            # *window* **tag** **bind** *tagname* ?*sequence*? ?*script*?
+            # *window* **tag** **cget** *tagname* *option*
+            # *window* **tag** **configure** *tagname* ?*option*? ?*value*? ?*option value* ... *option value*?
+            # *window* **tag** **delete** *tagname* ?*tagname* ...?
+            # *window* **tag** **lower** *tagname* ?*belowThis*?
+            # *window* **tag** **names** ?*index*?
+            # *window* **tag** **nextrange** *tagname* *index1* ?*index2*?
+            # *window* **tag** **prevrange** *tagname* *index1* ?*index2*?
+            # *window* **tag** **raise** *tagname* ?*aboveThis*?
+            # *window* **tag** **ranges** *tagname*
+            # *window* **tag** **remove** *tagname* *index1* ?*index2* *index1* *index2* ...?
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    set subcommand [lindex  $args 0]
+                    set args       [lremove $args 0]
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.text] }
+                    }
+
+                    # Check the 'subcommand'.
+                    switch -- $subcommand {
+                        configure {
+                            set tagname [lindex  $args 0]
+                            set args    [lremove $args 0]
+
+                            switch -- [llength $args] {
+                                0   -
+                                1   {
+                                    # Execute the command.
+                                    try {
+                                        {*}$address tag configure $tagname {*}$args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok { result } {
+                                        return $result
+                                    }
+                                }
+                                default {
+                                    # Check that the command's 'args' forms a valid 'option/value' list.
+                                    switch -- [expr { [llength $args]%2 }] {
+                                        0   {
+                                            # Check the remaining widget's options, if any.
+                                            set new_args [list ]
+                                            foreach { option value } $args {
+                                                switch -nocase -- $option {
+                                                    -background       -
+                                                    -foreground       -
+                                                    -lmargincolor     -
+                                                    -overstrikefg     -
+                                                    -rmargincolor     -
+                                                    -selectbackground -
+                                                    -selectforeground -
+                                                    -underlinefg      {
+                                                        set value [::ms::Check_Color $value invalid]
+                                                        switch -- $value {
+                                                            invalid { continue }
+                                                            default { lappend new_args $option $value }
+                                                        }
+                                                    }
+                                                    -bgstipple   -
+                                                    -borderwidth -
+                                                    -elide       -
+                                                    -fgstipple   -
+                                                    -font        -
+                                                    -justify     -
+                                                    -lmargin1    -
+                                                    -lmargin2    -
+                                                    -offset      -
+                                                    -overstrike  -
+                                                    -relief      -
+                                                    -rmargin     -
+                                                    -spacing1    -
+                                                    -spacing2    -
+                                                    -spacing3    -
+                                                    -tabs        -
+                                                    -tabstyle    -
+                                                    -underline   -
+                                                    -wrap        { lappend new_args $option $value }
+                                                    default      { ::ms::Error "Invalid tag option, '$option'." $caller_info }
+                                                }
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    }
+
+                                    # Execute the command.
+                                    try {
+                                        {*}$address tag configure $tagname {*}$new_args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok { result } {
+                                        return ""
+                                    }
+                                }
+                            }
+                        }
+                        default {
+                            # Execute the command.
+                            try {
+                                {*}$address tag $subcommand {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
+            }
+        }
         window {}
         xview {}
         yview {}
