@@ -782,7 +782,23 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                         ::ms::Error "Invalid configure option, '$args'." $caller_info
                     }
                 }
-                default {}
+                default {
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Note: The widget new dimensions will be updated only if they phisically change
+                            #       after the configure command was issued.
+                            #
+                            #       Their registration (if any) is done in the '::ms::toplevel::Configure' event procedure.
+                            set ::ms::temp($w,height) $::ms::current($w,height)
+                            set ::ms::temp($w,width)  $::ms::current($w,width)
+
+                            # Remove any duplicated options (retain only the last ones).
+                            set args [lsort -increasing -stride 2 -index 0 -unique $args]
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
             }
         }
         identify {
