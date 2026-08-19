@@ -966,6 +966,10 @@
 #     If the *-displaychars* option is given, then, within each range, only those characters which are not elided will be returned.
 #     This may have the effect that some of the returned ranges are empty strings.
 #
+#   *window* **identify** **element** *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if the mouse pointer does
+#     not lie within any element. *X* and *y* are pixel coordinates relative to the widget.
+#
 #   *window* **image** *option* ?*arg* ... *arg*?
 #     This command is used to manipulate embedded images.
 #     The behavior of the command depends on the option argument that follows the image argument.
