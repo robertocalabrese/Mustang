@@ -6375,4 +6375,60 @@ proc ::ms::text::Select_All { w } {
     return ""
 }
 
+# Select_Key
+#
+# This procedure is invoked when stroking out selections using the keyboard.
+# It moves the cursor to a new position, then extends the selection to that position.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# new   A new position for the insertion cursor (the cursor hasn't actually been moved to this position yet).
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Key { w new } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set anchorname [tk::TextAnchor $::ms::addr($w,widget)]
+
+    if { [{*}$address tag nextrange sel 1.0 end] eq "" } {
+        if { [{*}$address compare $new < insert] } {
+            {*}$address tag add sel $new insert
+        } else {
+            {*}$address tag add sel insert $new
+        }
+
+        {*}$address mark set $anchorname insert
+    } else {
+        if { [catch { {*}$address index $anchorname }] } {
+            {*}$address mark set $anchorname insert
+        }
+
+        if { [{*}$address compare $new < $anchorname] } {
+            set first $new
+            set last $anchorname
+        } else {
+            set first $anchorname
+            set last $new
+        }
+
+        {*}$address tag remove sel 1.0 $first
+        {*}$address tag add sel $first $last
+        {*}$address tag remove sel $last end
+    }
+
+    {*}$address mark set insert $new
+    {*}$address see insert
+
+    update idletasks
+
+    return ""
+}
+
 #*EOF*
