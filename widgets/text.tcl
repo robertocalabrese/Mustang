@@ -6608,4 +6608,21 @@ proc ::ms::text::Select_Next_Char { w } {
     return ""
 }
 
+## Select_Next_Word
+#
+# Select from the insertion cursor to the next word.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Next_Word { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Next_Index $w insert tk::endOfWord] }
+    }
+
+    return ""
+}
+
 #*EOF*
