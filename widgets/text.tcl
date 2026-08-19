@@ -6625,4 +6625,21 @@ proc ::ms::text::Select_Next_Word { w } {
     return ""
 }
 
+## Select_Next_Line
+#
+# Select from the insertion cursor to the next line.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Next_Line { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Line_Index 1] }
+    }
+
+    return ""
+}
+
 #*EOF*
