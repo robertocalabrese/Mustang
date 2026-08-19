@@ -6503,4 +6503,31 @@ proc ::ms::text::Select_PageDown { w } {
     return ""
 }
 
+#########################
+##                     ##
+##     SELECT LINE     ##
+##                     ##
+#########################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Select_Line_Start
+#
+# Select from the insertion cursor to the start of the line.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Line_Start { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w {insert display linestart} }
+    }
+
+    return ""
+}
+
 #*EOF*
