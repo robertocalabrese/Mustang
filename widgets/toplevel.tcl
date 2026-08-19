@@ -1350,6 +1350,11 @@ proc ::ms::toplevel::Command { window { args "" } } {
                                                 -visual $::ms::current($w,visual) \
                                                  -width $::ms::current($w,width)];
 
+            # Note: The '-bordercolor' option is not understanded by Tk toplevels, but is made available trough
+            #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+            #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+            #       like it behaves in other widgets that understands the bordercolor.
+
             # Check the 'relief' type.
             switch -- $::ms::current($w,relief) {
                 flat  -
@@ -2062,6 +2067,11 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                     # Set the toplevel options.
                     set toplevel_options [list -background $background]
 
+                    # Note: The '-bordercolor' option is not understanded by Tk toplevels, but is made available trough
+                    #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                    #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                    #       like it behaves in other widgets that understands the bordercolor.
+
                     # Check the 'relief' type.
                     switch -- $::ms::current($w,relief) {
                         flat  -
@@ -2189,6 +2199,11 @@ proc ::ms::toplevel::Style_Update { stylename caller_info } {
                                               -padx [lindex $::ms::data($w,padding) 0] \
                                               -pady [lindex $::ms::data($w,padding) 1] \
                                               -tile $::ms::current($w,tile)];
+
+         # Note: The '-bordercolor' option is not understanded by Tk toplevels, but is made available trough
+         #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+         #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+         #       like it behaves in other widgets that understands the bordercolor.
 
         # Check the 'relief' type.
         switch -- $::ms::current($w,relief) {
