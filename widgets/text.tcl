@@ -1844,6 +1844,58 @@ proc ::ms::text::Command { window { args "" } } {
                     # Set the new bindtags for the horizontal and vertical scrollbar objects.
                     bindtags $w.x [list $w.x _H_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
                     bindtags $w.y [list $w.y _V_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
+
+                    #####################
+                    ##                 ##
+                    ##     CLOSING     ##
+                    ##                 ##
+                    #####################
+
+                    # Configure the internal widget rows and columns.
+                    _grid rowconfigure    $w [list 0] -weight 1
+                    _grid columnconfigure $w [list 0] -weight 1
+
+                    # Set the widget real address relative to its short address, 'short_addr'.
+                    set ::ms::addr($short_addr,real) $w
+
+                    # Set the widget short addresses relative to its real address, 'w'.
+                    # They will all point to the widget hull object short address.
+                    set ::ms::addr($w,short)      $short_addr
+                    set ::ms::addr($w.text,short) $short_addr
+                    set ::ms::addr($w.x,short)    $short_addr
+                    set ::ms::addr($w.y,short)    $short_addr
+
+                    # Add the widget real and short address into the list of all available real
+                    # and short addresses.
+                    lappend ::ms::addr(reals) $w \
+                                              $w.text \
+                                              $w.x \
+                                              $w.y;
+
+                    lappend ::ms::addr(shorts) $short_addr
+
+                    # Add the widget address to the text widgets real address list.
+                    lappend ::ms::addr(text) $w
+
+                    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+                    set ::ms::addr($w,border) $w.text
+
+                    # Set the actual widget address (the widget that the developer was intended to build).
+                    set ::ms::addr($w,widget) $w.text
+
+                    # Set the structure addresses.
+                    # Is important to note that the scrollbar addresses must not be included.
+                    set ::ms::addr($w,structure) [list $w \
+                                                       $w.text];
+
+                    # Add the widget address to the megawidget addresses list.
+                    lappend ::ms::addr(megawidgets) $w
+
+                    # Add the widget address to the megawidget container addresses list.
+                    lappend ::ms::addr(megawidgets,containers) $w
+
+                    # Add the widget address to the scrollable megawidget addresses list.
+                    lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
         }
