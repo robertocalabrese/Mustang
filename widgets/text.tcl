@@ -4190,4 +4190,31 @@ proc ::ms::text::FocusIn { w } {
     return ""
 }
 
+## FocusOut
+#
+# Manage the **FocusOut** event on the widget.
+#
+# Where:
+#
+# w   should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::FocusOut { w } {
+    # Check the contextual menu relative to this widget, if any.
+    switch -- $::ms::current($w,cmenu) {
+        ""      {}
+        default {
+            # If the contextual menu of the widget is open do not loose the focus (graphically).
+            switch -- [_winfo exists $::ms::current($w,cmenu)] {
+                1   { return "" }
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    ::ms::text::Pathname_Cmd $w state !focus
+
+    return ""
+}
+
 #*EOF*
