@@ -3758,6 +3758,15 @@ proc ::ms::text::Style_Update { stylename caller_info } {
 
                 # Apply the changes.
                 $w.text configure {*}$text_options
+
+                ########################
+                ##                    ##
+                ##     SCROLLBARS     ##
+                ##                    ##
+                ########################
+
+                # Update the scrollbars.
+                ::ms::text::Scrollbar_Update $w
             }
         }
     }
