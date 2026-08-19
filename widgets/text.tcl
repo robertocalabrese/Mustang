@@ -2440,7 +2440,97 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        window {}
+        window {
+            # Synopsis:
+            #
+            # *window* **window** **cget** *index* *option*
+            # *window* **window** **configure** *index* ?*option value* ... *option value*?
+            # *window* **window** **create** *index* ?*option value* ... *option value*?
+            # *window* **window** **names**
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    set subcommand [lindex  $args 0]
+                    set args       [lremove $args 0]
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.text] }
+                    }
+
+                    # Check the 'subcommand'.
+                    switch -- $subcommand {
+                        create    -
+                        configure {
+                            set index [lindex  $args 0]
+                            set args  [lremove $args 0]
+
+                            switch -- [llength $args] {
+                                0   -
+                                1   {
+                                    # Execute the command.
+                                    try {
+                                        {*}$address window $subcommand $index {*}$args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok { result } {
+                                        return $result
+                                    }
+                                }
+                                default {
+                                    # Check that the command's 'args' forms a valid 'option/value' list.
+                                    switch -- [expr { [llength $args]%2 }] {
+                                        0   {
+                                            # Check the remaining widget's options, if any.
+                                            set new_args [list ]
+                                            foreach { option value } $args {
+                                                switch -nocase -- $option {
+                                                    -window {
+                                                        # Get the 'window' real address.
+                                                        set result [::ms::Check_Pathname $window invalid]
+                                                        switch -- $result {
+                                                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                                            default { lappend new_args -window [lindex $result 0] }
+                                                        }
+                                                    }
+                                                    -align   -
+                                                    -create  -
+                                                    -padx    -
+                                                    -pady    -
+                                                    -stretch { lappend new_args $option $value }
+                                                    default  { ::ms::Error "Invalid window option, '$option'." $caller_info }
+                                                }
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    }
+
+                                    # Execute the command.
+                                    try {
+                                        {*}$address window $subcommand $index {*}$new_args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok { result } {
+                                        return ""
+                                    }
+                                }
+                            }
+                        }
+                        default {
+                            # Execute the command.
+                            try {
+                                {*}$address window $subcommand {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
+            }
+        }
         xview {}
         yview {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
