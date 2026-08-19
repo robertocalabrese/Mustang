@@ -377,17 +377,6 @@ proc ::ms::Init {} {
     # Theme names are case sensitive.
     set ::ms::theme "Halo"
 
-    # Set the union symbol that should be displayed inside a shortcut that links two or more keys together like
-    # for example 'Ctrl+C' ('+'), 'Ctrl-C' ('-'), or 'Ctrl C' (space) for copy.
-    # It's used inside mustangs menu popups and contextual menus, but only on Linux and Windows operating system.
-    # It will be ignored in macOS systems where it will be setted to the empty string.
-    #
-    # ['+', '-' or 'space']
-    switch -- $windowingsystem {
-        aqua    { set ::ms::union ""  }
-        default { set ::ms::union "+" }
-    }
-
     ##############################################
     ##                                          ##
     ##     SET THE OPERATING SYSTEM FOLDERS     ##
@@ -1609,20 +1598,6 @@ proc ::ms::Init {} {
             chan puts $channel "Theme: $::ms::theme"
             chan puts $channel ""
 
-            # If needed save the 'union' value.
-            switch -- $windowingsystem {
-                aqua    {}
-                default {
-                    chan puts $channel "# Set the union symbol that should be displayed inside a shortcut that links two or more keys together like"
-                    chan puts $channel "# for example 'Ctrl+C' ('+'), 'Ctrl-C' ('-'), or 'Ctrl C' (space) for copy."
-                    chan puts $channel "# It's used inside mustangs menu popups and contextual menus, but only on Linux and Windows operating system."
-                    chan puts $channel "# It will be ignored in macOS systems."
-                    chan puts $channel "#"
-                    chan puts $channel "# \['+', '-' or 'space'\]"
-                    chan puts $channel "Union: $::ms::union"
-                }
-            }
-
             chan puts $channel "###################"
             chan puts $channel "##               ##"
             chan puts $channel "##     FONTS     ##"
@@ -1895,20 +1870,6 @@ proc ::ms::Init {} {
                             # Note: We will delay the theme check until we will have the list of all available themes.
 
                             set ::ms::theme $value
-                        }
-                        "Union:" {
-                            # If the operating system is not macOS, register the union value.
-                            switch -- $windowingsystem {
-                                aqua    {}
-                                default {
-                                    set value [string trim [string tolower $value]]
-                                    switch -- $value {
-                                        "+"     -
-                                        "-"     -
-                                        "space" { set ::ms::union $value }
-                                    }
-                                }
-                            }
                         }
                     }
                 }
@@ -2314,12 +2275,6 @@ proc ::ms::Init {} {
         default { set ::ms::temp(scale,last) $::ms::scale }
     }
 
-    # If the operating system is not macOS, create the temp value for the 'union' variable too.
-    switch -- $windowingsystem {
-        aqua    {}
-        default { set ::ms::temp(union,last) $::ms::union }
-    }
-
     # Set a trace on every mustang special variables for 'unset' and 'write' operations.
     trace add variable           ::ms::accent \
               [list unset write] [list ::ms::Check_And_React];
@@ -2349,9 +2304,6 @@ proc ::ms::Init {} {
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::theme \
-              [list unset write] [list ::ms::Check_And_React];
-
-    trace add variable           ::ms::union \
               [list unset write] [list ::ms::Check_And_React];
 
     # Set the end of the initialization phase.
@@ -2413,14 +2365,6 @@ proc ::ms::Check_And_React { name1 name2 op } {
                 "::ms::scrollmode"    { set ::ms::scrollmode    $::ms::temp(scrollmode,last) }
                 "::ms::scrollstopper" { set ::ms::scrollstopper $::ms::temp(scrollstopper,last) }
                 "::ms::theme"         { set ::ms::theme         $::ms::temp(theme,last) }
-                "::ms::union" {
-                    # If the operating system is macOS, set '::ms::union' to the empty string,
-                    # else set it back to its last valid value.
-                    switch -- [_tk windowingsystem] {
-                        aqua    { set ::ms::union "" }
-                        default { set ::ms::union $::ms::temp(union,last) }
-                    }
-                }
             }
         }
         write {
@@ -2670,28 +2614,6 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     } else {
                         # Restore the last valid 'theme' value.
                         set ::ms::theme $::ms::temp(theme,last)
-                    }
-                }
-                ::ms::union {
-                    # If the operating system is macOS, do not allow to change the 'union' value.
-                    switch -- [_tk windowingsystem] {
-                        aqua    { set ::ms::union "" }
-                        default {
-                            # Check that the new 'union' provided is a valid value.
-                            set ::ms::union [string trim [string tolower $::ms::union]]
-                            switch -- $::ms::union {
-                                "+"     -
-                                "-"     -
-                                "space" {
-                                    # Register the last valid 'union' value.
-                                    set ::ms::temp(union,last) $::ms::union
-                                }
-                                default {
-                                    # Restore the last valid 'union' value.
-                                    set ::ms::union $::ms::temp(union,last)
-                                }
-                            }
-                        }
                     }
                 }
             }
