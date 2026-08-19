@@ -2064,7 +2064,32 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             }
         }
         insert  -
-        replace {}
+        replace {
+            # Synopsis:
+            #
+            # *window* **insert** *index* *chars* ?*tagList* *chars* *tagList* ...?
+            # *window* **replace** *index1* *index2* *chars* ?*tagList* *chars* *tagList* ...?
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                switch -- $::ms::current($w,scrollable) {
+                    true {
+                        # Update the scrollbars.
+                        ::ms::text::Scrollbar_Update $w
+                    }
+                }
+
+                return ""
+            }
+        }
         instate {}
         state {}
         style {}
