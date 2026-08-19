@@ -62,6 +62,743 @@
 #
 # [text](https:\\...)  --> Link to an internet page.
 # [text](/wiki/...)    --> Link to another file in the wiki.
+
+## toplevel
+#
+#### DESCRIPTION:
+#
+# Create and manipulate *toplevel* main and popup window widgets.
+# The toplevel command creates a new toplevel widget (given by the *window* argument).
+#
+# The toplevel command returns the pathname of the new window.
+#
+# A toplevel is similar to a frame except that it is created as a top-level window: its **X** parent is the root window
+# of a screen rather than the logical parent from its pathname.
+# The primary purpose of a toplevel is to serve as a container for dialog boxes and other collections of widgets.
+# The only visible features of a toplevel are its background and an optional three-dimensional border to make the toplevel
+# appear raised or sunken.
+#
+# Note 1: At the time this command is invoked, there must not exist a window with the same pathname.
+#         *Window* may be provided either as a short or as a real address.
+#         Toplevels have their real addresses equals to their short addresses, this means that the address returned is
+#         at the same time the toplevel real address and the toplevel short address.
+#
+# Note 2: Be aware that bindings on toplevels may receive events from subwidgets.
+#
+# Note 3: The address '.' is a special toplevel preconstructed by Tk that will act, look and feel as any other toplevel.
+#
+# Nota 4: The toplevel is one of the few containers that do not support the scrollbar system, at least not directly.
+#         If you need a scrollable toplevel, put a scrollable frame inside a toplevel.
+#         See the examples at the end.
+#
+# Additional options, described below, may be specified on the command line to configure aspects of the toplevel.
+#
+#### SYNOPSIS:
+#
+#   **toplevel**  *window* ?*option* *value*? ... ?*option* *value*?
+#
+#### WIDGET OPTIONS:
+#
+# Note: Every option listed here can be:
+#          - Retrieved with the **configure** or **cget** command with no exceptions.
+#          - Changed with the **configure** command, unless stated otherwise.
+#
+# **-background**        It's a list that specifies the color to use as background.
+#                        See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                       If there isn't one, the **-background** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-background** will always abide by its mapping values, if any.
+#                                                       Styles, mappings and states events are allowed to change its value.
+#
+# **-backgroundimage**   This specifies an image to display on the toplevel's background within the border of the toplevel
+#                        (i.e., the image will be clipped by the toplevel's highlight ring and border, if either are present)
+#                        on top of the background; subwidgets of the toplevel will be drawn on top.
+#                        The image must have been created with the image create command.
+#                        If specified as the empty string, no image will be displayed.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-backgroundimage** specified in its style.
+#                                                       If there isn't one, the **-backgroundimage** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-backgroundimage** will not abide by its mapping values, if any.
+#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#
+#                        If not provided, defaults to the empty string.
+#
+#                        See also **-tile** in this section.
+#
+# **-bordercolor**       It's a list that specifies the color to use as bordercolor.
+#                        See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                        Note: It's only meaningful for widgets with a **solid** or **flat** relief.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                       If there isn't one, the **-bordercolor** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-bordercolor** will always abide by its mapping values, if any.
+#                                                       Styles, mappings and states events are allowed to change its value.
+#
+#                        See also **-borderwidth** and **-relief** in this section.
+#
+# **-borderwidth**       Specifies the width of the three-dimensional border to draw around the outside of the widget,
+#                        if such a border is being drawn.
+#                        The **-relief** option typically determines this.
+#
+#                        The value may also be used when drawing three-dimensional effects in the widget's interior.
+#                        The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                        (pixels, points, inches, millimeters or centimeters).
+#
+#                        Note: A value of **0** means no border.
+#
+#                        Note: Only working with reliefs that are not *flat*.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
+#                                                       If there isn't one, the **-borderwidth** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-borderwidth** will not abide by its mapping values, if any.
+#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#
+#                        See also **-bordercolor** and **-relief** in this section.
+#
+# **-class**             Specifies a class for the widget.
+#                        It is mainly used to make bindings for widgets that have the same class.
+#
+#                        Note: This option may only be provided while creating the widget.
+#                              Attempts to change this value after the widget is created by using the **configure** command,
+#                              will be ignored by mustang.
+#
+#                        Note: The point widget is already created by Tk.
+#                              This means that its *-class* option cannot be set, only retrieved.
+#
+#                        If not provided, defaults to **Toplevel**.
+#
+# **-cmenu**             Specifies the contextual menu address that will be assigned to the widget.
+#                        If the *cmenu* value is the empty string or invalid, nothing will happen.
+#
+#                        If not provided, defaults to the empty string.
+#
+# **-colormap**          Specifies a colormap to use for the window. The value may be either **new**, in which case a new colormap is
+#                        created for the window and its children, or the name of another window (which must be on the same screen and
+#                        have the same visual as *window*), in which case the new window will use the colormap from the specified window.
+#                        If the **-colormap** option is not specified, the new window uses the default colormap of its screen.
+#
+#                        Note: This option may only be provided while creating the widget.
+#                              Attempts to change this value after the widget is created by using the **configure** command,
+#                              will be ignored by mustang.
+#
+#                        Note: The point widget is already created by Tk.
+#                              This means that its *-colormap* option cannot be set, only retrieved.
+#
+#                        If not provided, defaults to the empty string.
+#
+#                        See also **-visual** in this section.
+#
+# **-container**         The value must be a boolean. If true, it means that this window will be used as a container in which some
+#                        other application will be embedded (for example, a Tk toplevel can be embedded using the **-use** option).
+#                        The window will support the appropriate window manager protocols for things like geometry requests.
+#                        The window should not have any children of its own in this application.
+#
+#                        Note: This option may only be provided while creating the widget.
+#                              Attempts to change this value after the widget is created by using the **configure** command,
+#                              will be ignored by mustang.
+#
+#                        Note: The point widget is already created by Tk.
+#                              This means that its *-container* option cannot be set, only retrieved.
+#
+#                        If not provided, defaults to **0**.
+#
+#                        See also **-use** in this section.
+#
+# **-cursor**            Specifies the mouse cursor to be used for the widget.
+#                        If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                        cursor specification.
+#
+#                        See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#
+#                        Note: This is a styleable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                       If there isn't one, the **-cursor** of the *Toplevel* style
+#                                                       will be used instead.
+#                                                       The **-cursor** will not abide by its mapping values, if any.
+#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#
+# **-height**            Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                        (pixels, points, inches, millimeters or centimeters).
+#
+#                        If this option is **0** then the widget will assume the minimum height possible that can accomodate
+#                        it's content height. Negative values will be ignored.
+#
+#                        Note: "WINDOW MANAGERS"
+#
+#                                  Any toplevel is managed by the *window manager*.
+#                                  Any widget's program-requested height may cause it's toplevel to change it's height as well.
+#                                  If the toplevel program-requested height is ignored (by the window manager),
+#                                  then any widget's program-requested height is ignored too (by Tk that follows the istructions
+#                                  received by the 'window manager').
+#
+#                                  Some window managers ignores any toplevel program-requested height and demands only to the
+#                                  user to manually change the toplevel's height.
+#
+#                                  Some window managers allows any toplevel program-requested height until the user will
+#                                  manually change the toplevel's height.
+#                                  Once the user has manually changed the toplevel's height, any subsequent toplevel program-requested
+#                                  height will be ignored.
+#
+#                                  Others window managers allows any toplevel program-requested height in any circumstances.
+#
+#                              "Tk"
+#
+#                                  Tk ignores any widget's program-requested height if the **grid** or **pack** geometry manager is used
+#                                  within the widget, since these geometry managers will override the widget's height in those cases.
+#
+#                        If not provided, defaults to **0**.
+#
+#                        See also **-width** in this section.
+#
+# **-menu**              Specifies a menu widget to be used as a menubar.
+#                        On the Macintosh, the menubar will be displayed across the top of the main monitor.
+#                        On Microsoft Windows and all UNIX platforms, the menu will appear across the toplevel window as part of
+#                        the window dressing maintained by the window manager.
+#
+#                        If not provided, defaults to the empty string.
+#
+# **-padding**           Specifies the internal padding for the widget.
+#                        The padding is normally a list of up to four length specifications.
+#
+#                        The values must be in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                        (pixels, points, inches, millimeters or centimeters).
+#
+#                        Toplevel, text and crate paddings differs from any other widget paddings.
+#                        A list of two values specifies the horizontal and the vertical padding.
+#                        A single value specifies the same padding all the way around the widget.
+#                        The third and forth values, if present, will be silently ignored.
+#                        If the '::DEBUG' variable is enabled a communication will be displayed in the stdout channel.
+#
+#                        When computing how large a window it needs, the widget will add this amount to the width it would
+#                        normally need (as determined by the width of the things displayed in the widget).
+#                        If the geometry manager can satisfy this request, the widget will end up with extra internal space
+#                        to the left and/or right of what it displays inside.
+#                        Most widgets only use this option for padding text: if they are displaying a bitmap or image,
+#                        then they usually ignore padding options.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-padding** specified in its style.
+#                                                       If there isn't one, the **-padding** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-padding** will not abide by its mapping values, if any.
+#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#
+# **-relief**            Specifies the three-dimensional effect desired for the widget.
+#                        The value indicates how the widget's interior should appear relative to its exterior.
+#                        For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                        relative to the exterior of the widget.
+#
+#                        The widget will accept as relief any of the following values:
+#                           **flat**,
+#                           **groove**,
+#                           **raised**,
+#                           **ridge**,
+#                           **solid**,
+#                           **sunken**.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-relief** specified in its style.
+#                                                       If there isn't one, the **-relief** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-relief** will not abide by its mapping values, if any.
+#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#
+#                        See also **-bordercolor** and **-borderwidth** in this section.
+#
+# **-screen**            Specifies the screen on which to place the new widget.
+#                        Any valid screen name may be used, even one associated with a different display.
+#
+#                        If specified as the empty string, its parent screen will be used.
+#
+#                        Note: This option may be provided while creating the widget.
+#                              Attempts to change this value after the widget was created by using the **configure** command,
+#                              will be ignored by mustang.
+#
+#                        Note: The point widget is already created by Tk.
+#                              This means that the *-screen* option cannot be set but only retrieved.
+#
+#                        If not provided, defaults to the empty string.
+#
+# **-state**             Specifies the 'physical' state for the widget.
+#
+#                        Note: Toplevels have only the **normal** state.
+#
+#                        Note: This option will be ignored if provided while creating the widget.
+#                              Attempts to change this value after the widget was created, by using the **configure** command,
+#                              will be ignored by mustang.
+#                              This option can only be retrieved.
+#
+#                        It's set to **normal**.
+#
+# **-style**             Specifies a custom widget style.
+#                        If not provided, defaults to **Toplevel**.
+#
+#                        See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+# **-takefocus**         Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                        and **Shift-Tab**).
+#
+#                        Before setting the focus to a widget, the traversal scripts consult the value of the *-takefocus* option.
+#                           **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                           **1** --> It means that the widget should receive the input focus as long as it is viewable and
+#                                     all of its ancestors are mapped.
+#
+#                        Differently than Tk, mustang does not allow the empty string as a valid value.
+#
+#                        If not provided, defaults to **0**.
+#
+# **-tile**              It's a boolean value that specifies how to draw the background image on the toplevel.
+#                        If true, the image will be tiled to fill the whole toplevel, with the origin of the first copy of the
+#                        image being the top left of the interior of the toplevel.
+#                        If false, the image will be centered within the toplevel.
+#
+#                        Note: This is a stylable option.
+#
+#                              If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                       Only the developer can.
+#
+#                              If it's not provided --> The widget will follow the **-tile** specified in its style.
+#                                                       If there isn't one, the **-tile** of the **Toplevel** style
+#                                                       will be used instead.
+#                                                       The **-tile** will not abide by its mapping values, if any.
+#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#
+#                        If not provided, defaults to **0** (false).
+#
+#                        See also **-backgroundimage** in this section.
+#
+# **-title**             Specifies the desired string to use as the toplevel title (the window manager should display this string
+#                        in the widget's title bar). If not provided, defaults to the toplevel address.
+#
+# **-use**               This option is used for embedding. If the value is not an empty string, it must be the window identifier
+#                        of a container window, specified as a hexadecimal string like the ones returned by the [winfo id](/wiki/commands/winfo.md) command.
+#                        The toplevel widget will be created as a child of the given container instead of the root window for the screen.
+#                        If the container window is in a Tk application, it must be a frame or toplevel widget for which the **-container**
+#                        option was specified.
+#
+#                        Note: This option may only be provided while creating the widget.
+#                              Attempts to change this value after the widget is created by using the **configure** command,
+#                              will be ignored by mustang.
+#
+#                        Note: The point widget is already created by Tk.
+#                              This means that its *-use* option cannot be set, only retrieved.
+#
+#                        See also **-container** in this section.
+#
+#                        If not provided, defaults to the empty string.
+#
+# **-visual**            Specifies visual information for the new window in any of the following forms:
+#
+#                           string   --> The string consists of a *class* name followed by an integer *depth*, with any amount of white
+#                                        space in between.
+#
+#                                        *Class* selects what sort of visual is desired and must be one of **directcolor**, **grayscale**,
+#                                        **greyscale**, **pseudocolor**, **staticcolor**, **staticgray**, **staticgrey**, or **truecolor**.
+#
+#                                        *Depth* specifies how many bits per pixel are needed for the visual.
+#
+#                           default  --> Use the default visual for *tkwin*'s screen.
+#
+#                           pathName --> Use the visual for the window given by *pathName*.
+#                                        *pathName* must be the name of a window on the same screen as *tkwin*.
+#
+#                           number   --> Use the visual whose X identifier is number.
+#
+#                        If this option is not specified, the new window will use the default visual for its screen.
+#
+#                        Note: This option may only be provided while creating the widget.
+#                              Attempts to change this value after the widget is created by using the **configure** command,
+#                              will be ignored by mustang.
+#
+#                        Note: The point widget is already created by Tk.
+#                              This means that its *-visual* option cannot be set, only retrieved.
+#
+#                        If not provided, defaults to the empty string.
+#
+#                        See also **-colormap** in this section.
+#
+# **-width**             Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                        (pixels, points, inches, millimeters or centimeters).
+#
+#                        If this option is **0** then the widget will assume the minimum width possible that can accomodate
+#                        it's content width. Negative values will be ignored.
+#
+#                        Note: "WINDOW MANAGERS"
+#
+#                                  Any toplevel is managed by the *window manager*.
+#                                  Any widget's program-requested width may cause it's toplevel to change it's width as well.
+#                                  If the toplevel program-requested width is ignored (by the window manager),
+#                                  then any widget's program-requested width is ignored too (by Tk that follows the istructions
+#                                  received by the window manager).
+#
+#                                  Some window managers ignores any toplevel program-requested width and demands only to the
+#                                  user to manually change the toplevel's width.
+#
+#                                  Some window managers allows any toplevel program-requested width until the user will
+#                                  manually change the toplevel's width.
+#                                  Once the user has manually changed the toplevel's width, any subsequent toplevel program-requested
+#                                  width will be ignored.
+#
+#                                  Others window managers allows any toplevel program-requested width in any circumstances.
+#
+#                              "Tk"
+#
+#                                  Tk ignores any widget's program-requested width if the **grid** or **pack** geometry manager is used
+#                                  within the widget, since these geometry managers will override the widget's width in those cases.
+#
+#                        If not provided, defaults to **0**.
+#
+#                        See also **-height** in this section.
+#
+#### WIDGET COMMAND:
+#
+# The toplevel command creates a new command whose name is the same as the pathname of the toplevel's window.
+# This command may be used to invoke various operations on the widget.
+# It has the following general form:
+#
+#   *window* *action* ?*arg* *arg* ... *arg*?
+#
+# *Window* is the name of the command, which is the same as the toplevel widget's pathname.
+# *Actions* and the *arg*s determine the exact behavior of the *window* command.
+#
+# The following commands are possible for toplevel widgets:
+#
+#   *window* **cget** ?*option*?
+#     Returns the current value of the option given by *option*.
+#     *Option* may be one of the widget options accepted by the toplevel command (See **WIDGET OPTIONS**).
+#
+#   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+#     Query or modify the configuration options of the widget.
+#
+#     If no options are specified, returns a list describing all of the available options with their
+#     default and current values.
+#
+#     If a single *option* is specified with no *value*, then the command returns a list describing its default
+#     and current values.
+#
+#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     to have the given value(s) and the command returns an empty string.
+#
+#     Some options can only be setted at creation time.
+#     See **WIDGET OPTIONS** to know which one is configurable and which one is not.
+#
+#   *window* **identify** **element** *x* *y*
+#     Returns the name of the element under the point given by *x* and *y*, or an empty string if the mouse pointer does
+#     not lie within any element. *X* and *y* are pixel coordinates relative to the widget.
+#
+#   *window* **instate** *statespec* ?*script*?
+#     Test the widget's state.
+#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     If *script* is specified it's equivalent to:
+#
+#        if { [*window* **instate** *stateSpec*] } *script*
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **state** ?*statespec*?
+#     Modify or inquire widget state.
+#     If *statespec* is present       --> Sets the widget dynamic state.
+#                                         For each flag in *statespec*, sets the corresponding flag or clears it
+#                                         if prefixed by an exclamation point.
+#                                         Returns a new *statespec* indicating which flags were changed.
+#
+#     If *statespec* is not specified --> Returns a list of the currently enabled dynamic states.
+#
+#     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
+#
+#   *window* **style**
+#     Return the style used by the widget.
+#
+#### STATES:
+#
+# The toplevel widget supports only the **normal** 'physical' state.
+#
+#### STYLING OPTIONS:
+#
+# Default style name: **Toplevel**
+#
+# Every toplevel styleable option is supported and configurable with the [style](/wiki/commands/style.md) command.
+# Valid styleable options of other widgets will be ignored.
+# It is considered an error providing style options that are not managed by mustang ot Tk.
+#
+# See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#### BINDINGS:
+#
+# Mustang automatically creates several bindings for the toplevels in order to facilitate the developer work and augment the
+# user experience at the same time.
+#
+###### INTERNAL MECHANISM:
+#
+# 1.  If the widget styleable options **-borderwidth** and **-bordercolor** allows it, everytime the mouse cursor enters the
+#     widget it will illuminate its borders to visually indicate that the user is inside the widget.
+#
+# 2.  **ContextMenu** events will display the contextual menu associated with the widget.
+#     See the **-cmenu** option for more details.
+#
+# There are other bindings in place for internal mechanism like **Activate/Deactivate**, **Configure**, **Destroy**,
+# **Enter/Leave** and **FocusIn/FocusOut**.
+#
+#### COLOR OPTIONS:
+#
+# Each color option accepts colors provided in one of the following forms:
+#
+#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
+#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
+#                               hexadecimals), with or without the **#**.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the color to validate and the second one (optional) indicates
+#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
+#                               translated. If only one element is provided (the hexadecimal color) its color model will be
+#                               assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
+#
+#                               Note: Hexadecimal colors and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "#FFF"            --> The hexadecimal color is "#FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffffff'.
+#
+#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
+#                                                          The color model is **HEX12**.
+#
+#                                                          The hexadecimal color is translated to '#FFF000FFF'.
+#
+#                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ff0000'.
+#
+#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
+#                                                          The color model is **HEX16**.
+#
+#                                                          The hexadecimal color is translated to '#0000ffff0000'.
+#
+#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#0000ff'.
+#
+#                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
+#                                                          The color model is **HEX8**.
+#
+#                                                          The hexadecimal color is translated to '#ffff00'.
+#
+#   **textual color names** --> These colors needs to be specified in textual form like *Azure*, *Brown*, *Dark Red*,
+#                               *Magenta*, or *Light Steel Blue*.
+#
+#                               In this form, the list should have at least one element. More precisely:
+#
+#                                    colorname   --> It's the textual color name that specifies the color.
+#                                                    Should always be written first. It can take more than one element of
+#                                                    the list depending on how many words are needed to define it.
+#
+#                                                    The only color names known by mustang are specified in its palettes.
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the allowed color names for the default **mustang** palette.
+#
+#                                    palette     --> Optional. Should be the name of the palette that contains the color name.
+#                                                    If present, it should always be the last element of the list if the color model
+#                                                    is not present, or the last but one if the color model is present.
+#
+#                                                    Allowed values are any palette name loaded into mustang.
+#                                                    If not provided, defaults to **mustang** or return the fallback value
+#                                                    if the **mustang** palette was not loaded.
+#
+#                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
+#                                                    the mustang palettes.
+#
+#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
+#                                                    will be translated.
+#                                                    If present, the color model should always be the last element of the list.
+#
+#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
+#                                                    If not provided, defaults to **HEX8**.
+#
+#                                                    Note that **HEX8** can be shortened into **HEX**.
+#
+#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
+#                                                    about color models.
+#
+#                               Note: Colornames, palettes and color models are case insensitive.
+#
+#                               Some examples:
+#
+#                                    "teal"                --> The color name is *teal*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#008080"
+#
+#                                    "medium violet red"   --> The color name is *medium violet red*.
+#                                                              The palette name is **mustang**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              The color name is translated to "#c71585"
+#
+#                                    "sepia MyPalette"     --> The color name is *sepia*.
+#                                                              The palette name is **MyPalette**.
+#                                                              The color model is **HEX8**.
+#
+#                                                              Note that in this example **MyPalette** is a fictional
+#                                                              palette name that have been loaded into mustang.
+#
+#                                                              The color name is translated to the hexadecimal color at 8 bit
+#                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
+#
+#                                    "light coral hex16"   --> The color name is *light coral*.
+#                                                              The color model is **HEX16**.
+#                                                              The palette name is **mustang**.
+#
+#                                                              The color name is translated to "#f0f080808080"
+#
+#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
+#                                                                             The palette name is **mustang**.
+#                                                                             The color model is **HEX8**.
+#
+#                                                                             The color name is translated to "#6ada8e"
+#
+#                               After its validation, the color name will be returned translated in its hexadecimal longform
+#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#
+#   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
+#                               *HighlightAlternate* or *PlaceholderText*.
+#
+#                               In this form, the list should have only one or two elements.
+#                               The first element indicates the theme color name to validate and the second one (optional)
+#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
+#                               will be translated. If only one element is provided (the theme color name) its color model
+#                               will be assumed to be **HEX8**.
+#
+#                               Note that **HEX8** can be shortened into **HEX**.
+#
+#                               After its validation, the color will be returned translated in its equivalent hexadecimal
+#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#
+#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
+#                               theme color names are allowed.
+#
+#                               Note: Theme colors are case sensitive.
+#
+#### EXAMPLES:
+#
+###### FIRST EXAMPLE - Make "." a scrollable toplevel.
+#
+#   # Create the scrollable frame:
+#   frame .main          -background [. cget -background] \
+#               -backgroundstructure [. cget -background] \
+#                       -borderwidth 0 \
+#                            -height 800
+#                         -scrollbar xy \
+#                            -relief flat \
+#                             -width 600;
+#
+#   # Pack the scrollable frame and expand it in both directions:
+#   pack .main -anchor nw \
+#              -expand true \
+#                -fill both \
+#                -padx [list 0 0] \
+#                -pady [list 0 0] \
+#                -side top;
+#
+#   # You can also use 'grid' instead of 'pack'.
+#   # If this is the case, comment the pack lines and comment out the grid lines.
+#   # If this is not the case, leave the pack and grid lines as they are.
+#
+#   ## Grid the scrollable frame and expand it in both directions.
+#   #grid .main -column 0 \
+#   #             -padx [list 0 0] \
+#   #             -pady [list 0 0] \
+#   #              -row 0 \
+#   #           -sticky nsew;
+#
+#   ## Configure the point rows and columns.
+#   #grid rowconfigure    . [list 0] -weight 1
+#   #grid columnconfigure . [list 0] -weight 1
+#
+###### SECOND EXAMPLE - Create a scrollable toplevel.
+#
+#   # Create the toplevel and the scrollable frame:
+#   toplevel .toplevel -background gray
+#
+#   frame .toplevel.main          -background gray \
+#                        -backgroundstructure gray \
+#                                -borderwidth 0 \
+#                                     -height 800
+#                                  -scrollbar xy \
+#                                     -relief flat \
+#                                      -width 600;
+#
+#   # Pack the scrollable frame and expand it in both directions:
+#   pack .toplevel.main -anchor nw \
+#                       -expand true \
+#                         -fill both \
+#                         -padx [list 0 0] \
+#                         -pady [list 0 0] \
+#                         -side top;
+#
+#   # You can also use 'grid' instead of 'pack'.
+#   # If this is the case, comment the pack lines and comment out the grid lines.
+#   # If this is not the case, leave the pack and grid lines as they are.
+#
+#   ## Grid the scrollable frame and expand it in both directions.
+#   #grid .toplevel.main -column 0 \
+#   #                      -padx [list 0 0] \
+#   #                      -pady [list 0 0] \
+#   #                       -row 0 \
+#   #                    -sticky nsew;
+#
+#   ## Configure the toplevel rows and columns.
+#   #grid rowconfigure    .toplevel [list 0] -weight 1
+#   #grid columnconfigure .toplevel [list 0] -weight 1
 package provide ::ms::toplevel 0.1
 
 ################################
