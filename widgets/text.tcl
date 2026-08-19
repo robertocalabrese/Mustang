@@ -5935,4 +5935,58 @@ proc ::ms::text::Next_Line { w } {
     return ""
 }
 
+## Next_Paragraph
+#
+# Manages the **NextPara** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Next_Paragraph { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an vertical scrollbar.
+            switch -- $::current($w,yscrollcommand) {
+                ""  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
+                    }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget vertical scrollbar is active or not.
+            switch -- $::ms::data($w,scrolly) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
