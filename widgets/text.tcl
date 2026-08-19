@@ -6882,4 +6882,39 @@ proc ::ms::text::Transpose { w } {
     return ""
 }
 
+######################
+##                  ##
+##     UTILITY      ##
+##                  ##
+######################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+# The_Cursor_Is_Inside_The_Selection
+#
+# Check whether the selection exists and contains the insertion cursor.
+# Note that it assumes that the selection is contiguous.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# Return '1' if the selection exists and contains the insertion cursor, otherwise returns '0'.
+proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    if { [llength [{*}$address tag ranges sel]] && [{*}$address compare sel.first <= insert] && [{*}$address compare sel.last >= insert] } {
+        return 1
+    } else {
+        return 0
+    }
+}
+
 #*EOF*
