@@ -6431,4 +6431,34 @@ proc ::ms::text::Select_Key { w new } {
     return ""
 }
 
+## Select_None
+#
+# Clears any selections.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_None { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Remove the selection, if any.
+    {*}$address tag remove sel 1.0 end
+
+    # An operation that clears the selection must insert an autoseparator,
+    # because the selection operation may have moved the insert mark
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    return ""
+}
+
 #*EOF*
