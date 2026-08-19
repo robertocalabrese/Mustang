@@ -5736,4 +5736,51 @@ proc ::ms::text::Line_Bottom { w } {
     return ""
 }
 
+##################
+##              ##
+##     NEXT     ##
+##              ##
+##################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+# Next_Index
+#
+# Returns the index of the next position after the given starting position.
+#
+# Where:
+#
+# w       Should be the widget real address involved.
+#
+# start   Position at which to start search.
+#
+# op      Function to use to find the next position.
+#
+# Returns the resulting index.
+proc ::ms::text::Next_Index { w start op } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set text ""
+    set cur  $start
+    while { [{*}$address compare $cur < end] } {
+        set text [string cat $text [{*}$address get -displaychars $cur "$cur lineend + 1c"]]
+
+        set pos [$op $text 0]
+        if { $pos >= 0 } {
+            return [{*}$address index "$start + $pos display chars"]
+        }
+
+        set cur [{*}$address index "$cur lineend +1c"]
+    }
+
+    return end
+}
+
 #*EOF*
