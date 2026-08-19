@@ -1420,6 +1420,49 @@ namespace eval ttk::theme::Halo {
         style map Text -bordercolor [list background BordercolorBackground \
                                             disabled BordercolorDisabled \
                                                hover Accent];
+
+        ########################
+        ##                    ##
+        ##     TOOLBUTTON     ##
+        ##                    ##
+        ########################
+
+        # Layout
+        style layout Toolbutton {
+            Toolbutton.border -sticky nswe -children {
+                Toolbutton.padding -sticky nswe -children {
+                    Toolbutton.label -sticky nswe
+                }
+            }
+        }
+
+        # Normal state
+        style configure Toolbutton      -anchor center \
+                                    -background Background \
+                                   -bordercolor ButtonBorder \
+                                   -borderwidth 2 \
+                                     -charwidth -1 \
+                                      -compound none \
+                                        -cursor arrow \
+                                     -darkcolor ButtonBackground \
+                                          -font NormalFont \
+                                    -foreground Text \
+                                         -image {} \
+                                       -justify left \
+                                    -lightcolor ButtonBorder \
+                                       -padding [list 4p 8p 4p 8p] \
+                                        -relief solid \
+                                   -shiftrelief -2;
+
+        # Mapping
+        style map Toolbutton -bordercolor [list background BordercolorBackground \
+                                                  disabled ButtonBackground \
+                                                     focus FieldbackgroundFocus \
+                                                     hover Accent] \
+                               -darkcolor [list    pressed ButtonBackgroundPressed] \
+                              -foreground [list   disabled ButtonTextDisabled \
+                                                   pressed Accent] \
+                              -lightcolor [list   disabled ButtonBackground];
     }
 }
 
