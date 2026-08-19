@@ -4972,4 +4972,37 @@ proc ::ms::text::Delete { w } {
     return ""
 }
 
+## Delete_Word
+#
+# If a selection is present, delete the selected text, otherwise delete all the characters positioned
+# to the right of the cursor location till the start of the next word.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Delete_Word { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    if { [{*}$address compare end != insert+1c] } {
+        {*}$address delete insert [::ms::text::Next_Word $w insert]
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
