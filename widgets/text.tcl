@@ -2531,7 +2531,95 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        xview {}
+        xview {
+            # Synopsis:
+            #
+            # *window* **xview**
+            # *window* **xview** **moveto** *fraction*
+            # *window* **xview** **scroll** *number* *what*
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
+
+            # Check the subcommand.
+            switch -nocase -- $subcommand {
+                ""  {
+                    # Execute the command.
+                    try {
+                        {*}$address xview
+                    } on error {} {
+                        return ""
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                moveto {
+                    # Check the number of arguments provided (after the 'moveto' word).
+                    switch -- [llength $args] {
+                        1       {}
+                        default { return "" }
+                    }
+
+                    # Check the fraction provided.
+                    set fraction $args
+                    switch -- [string is double -strict $fraction] {
+                        0   { return "" }
+                    }
+
+                    # Check that fraction is inside its limits [0,1.0].
+                    if { $fraction < 0 } {
+                        set fraction 0
+                    } elseif { $fraction > 1.0 } {
+                        set fraction 1.0
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address xview moveto $fraction
+                    } on error {} {
+                        return ""
+                    }
+
+                    return ""
+                }
+                scroll {
+                    # Check the number of arguments provided (after the 'scroll' word).
+                    switch -- [llength $args] {
+                        2       {}
+                        default { return "" }
+                    }
+
+                    # Check the 'number'.
+                    set number [lindex $args 0]
+                    switch -- [string is double -strict $number] {
+                        0   { return "" }
+                    }
+
+                    # Check the 'what'.
+                    switch -nocase -- [lindex $args 1] {
+                        pages   { set what "pages" }
+                        pixels  { set what "pixels" }
+                        units   { set what "units" }
+                        default { return "" }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address xview scroll $number $what
+                    } on error {} {
+                        return ""
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+            }
+        }
         yview {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
