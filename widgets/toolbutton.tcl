@@ -163,6 +163,24 @@ namespace eval ::ms::toolbutton {
                                                       textvariable \
                                                       underline \
                                                       variable];
+
+    # Set the 'styleable' toolbutton option list.
+    set ::ms::toolbutton(styleable,options) [list anchor \
+                                                  background \
+                                                  bordercolor \
+                                                  borderwidth \
+                                                  charwidth \
+                                                  compound \
+                                                  cursor \
+                                                  darkcolor \
+                                                  font \
+                                                  foreground \
+                                                  image \
+                                                  justify \
+                                                  lightcolor \
+                                                  padding \
+                                                  relief \
+                                                  shiftrelief];
 }
 
 # Create the alias for the mustang **toolbutton** command.
