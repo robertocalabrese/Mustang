@@ -5035,4 +5035,36 @@ proc ::ms::text::Delete_Till_Line_End { w } {
     return ""
 }
 
+#################
+##             ##
+##     IME     ##
+##             ##
+#################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Accent_Backspace
+#
+# Bindings for IME text input.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Accent_Backspace { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    {*}$address delete insert-1c
+
+    return ""
+}
+
 #*EOF*
