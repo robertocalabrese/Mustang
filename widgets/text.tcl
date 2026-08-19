@@ -5881,6 +5881,60 @@ proc ::ms::text::Next_Char { w } {
     return ""
 }
 
+## Next_Word
+#
+# Manages the **NextWord** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Next_Word { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget horizontal scrollbar is active or not.
+            switch -- $::ms::data($w,scrollx) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 ## Next_Line
 #
 # Manages the **NextLine** event.
@@ -5980,60 +6034,6 @@ proc ::ms::text::Next_Paragraph { w } {
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
-                    }
-                }
-            }
-        }
-    }
-
-    return ""
-}
-
-## Next_Word
-#
-# Manages the **NextWord** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::text::Next_Word { w } {
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
-        false {
-            # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
-                ""  {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
-                    }
-                default {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
-                    }
-                }
-            }
-        }
-        true {
-            # Check if the widget horizontal scrollbar is active or not.
-            switch -- $::ms::data($w,scrollx) {
-                off {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
-                    }
-                }
-                on  {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
             }
@@ -6181,6 +6181,60 @@ proc ::ms::text::Previous_Char { w } {
     return ""
 }
 
+## Previous_Word
+#
+# Manages the **PrevWord** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Previous_Word { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
+                    }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget horizontal scrollbar is active or not.
+            switch -- $::ms::data($w,scrollx) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 ## Previous_Line
 #
 # Manages the **PrevLine** event.
@@ -6280,60 +6334,6 @@ proc ::ms::text::Previous_Paragraph { w } {
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
-                    }
-                }
-            }
-        }
-    }
-
-    return ""
-}
-
-## Previous_Word
-#
-# Manages the **PrevWord** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::text::Previous_Word { w } {
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
-        false {
-            # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
-                ""  {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
-                    }
-                default {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
-                    }
-                }
-            }
-        }
-        true {
-            # Check if the widget horizontal scrollbar is active or not.
-            switch -- $::ms::data($w,scrollx) {
-                off {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
-                    }
-                }
-                on  {
-                    # Check the widget state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
             }
