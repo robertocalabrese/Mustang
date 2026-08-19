@@ -642,8 +642,7 @@
 #                                 Before setting the focus to a widget, the traversal scripts consult the value of the *-takefocus* option.
 #                                 Allowed values are:
 #                                    **0** --> It means that the widget should be skipped entirely during keyboard traversal.
-#                                    **1** --> It means that the widget should receive the input focus as long as it is viewable
-#                                              and all of its ancestors are mapped.
+#                                    **1** --> It means that the widget should receive the input focus as long as it is viewable and all of its ancestors are mapped.
 #
 #                                 Differently than Tk, mustang does not allow the empty string as a valid value.
 #
