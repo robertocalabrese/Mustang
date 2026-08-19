@@ -773,7 +773,35 @@ _bind _V_Scrollbar_Text <TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo paren
 _bind _V_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo parent %W] %# %D pages; break }
 
 # Create the mustang **text** package.
-namespace eval ::ms::text {}
+namespace eval ::ms::text {
+    # Set the 'non-styleable' text option list.
+    set ::ms::text(non_styleable,options) [list autoseparators \
+                                                blockcursor \
+                                                class \
+                                                cmenu \
+                                                endline \
+                                                exportselection \
+                                                insertofftime \
+                                                insertontime \
+                                                insertunfocussed \
+                                                insertwidth \
+                                                maxundo \
+                                                scrollable \
+                                                setgrid \
+                                                spacing1 \
+                                                spacing2 \
+                                                spacing3 \
+                                                startline \
+                                                state \
+                                                style \
+                                                tabs \
+                                                tabstyle \
+                                                takefocus \
+                                                undo \
+                                                wrap \
+                                                xscrollcommand \
+                                                yscrollcommand];
+}
 
 # Rename the original Tk **text** command.
 rename text _text
