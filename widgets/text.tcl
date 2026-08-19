@@ -4787,4 +4787,93 @@ proc ::ms::text::Cut { w } {
     return ""
 }
 
+## Paste
+#
+# Manages the **Paste** event by inserting the clipboard content ('CLIPBOARD' or 'PRIMARY')
+# at the current insert point.
+#
+# Where:
+#
+# w                Should be the widget real address involved.
+#
+# x, y             Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#                  These values should be provided by the **Paste** event.
+#
+# clipboard_type   Optional, should be a string indicating from which clipboard to take paste data.
+#                  Allowed values are:
+#                    'CLIPBOARD' --> the primary clipboard
+#                    'PRIMARY'   --> the secondary clipboard
+#
+# It doesn't return anything.
+proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Check the 'clipboard_type'.
+    switch -nocase -- $clipboard_type {
+        primary {
+            {*}$address mark set insert [::ms::text::ClosestGap $w $x $y]
+
+            set clipboard_type PRIMARY
+        }
+        default { set clipboard_type CLIPBOARD }
+    }
+
+    # Execute the command.
+    try {
+        ::tk::GetSelection $w $clipboard_type
+    } on error {} {
+        # Do nothing.
+    } on ok { selection } {
+        # If autoseparators are active, put an autoseparator.
+        switch -- $::ms::current($w,autoseparators) {
+            1   {
+                {*}$address configure -autoseparators 0
+                {*}$address edit separator
+            }
+        }
+
+        # Check if the windowing system is Linux.
+        switch -- [tk windowingsystem] {
+            x11 {
+                try {
+                    {*}$address delete sel.first sel.last
+                } on error {} {
+                    # Do nothing
+                }
+            }
+        }
+
+        {*}$address insert insert $selection
+
+        # If autoseparators are active, put an autoseparator.
+        switch -- $::ms::current($w,autoseparators) {
+            1   {
+                {*}$address edit separator
+                {*}$address configure -autoseparators 1
+            }
+        }
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollbar) {
+            true {
+                # Update the scrollbars.
+                ::ms::text::Scrollbar_Update $w
+            }
+        }
+    }
+
+    focus $::ms::addr($w,widget)
+
+    return ""
+}
+
 #*EOF*
