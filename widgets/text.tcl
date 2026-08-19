@@ -6581,4 +6581,31 @@ proc ::ms::text::Select_Line_Bottom { w } {
     return ""
 }
 
+#########################
+##                     ##
+##     SELECT NEXT     ##
+##                     ##
+#########################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Select_Next_Char
+#
+# Select from the insertion cursor to the next character.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Next_Char { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
+    }
+
+    return ""
+}
+
 #*EOF*
