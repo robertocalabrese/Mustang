@@ -1022,7 +1022,24 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        invoke {}
+        invoke {
+            # Synopsis:
+            #
+            # *window* **invoke**
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    try {
+                        uplevel #0 [list interp invokehidden {} $w invoke]
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
