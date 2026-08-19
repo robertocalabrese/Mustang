@@ -3882,7 +3882,7 @@ proc ::ms::text::ButtonPress { w x y } {
 
             set anchor_name [::tk::TextAnchor $::ms::addr($w,widget)]
 
-            {*}$address mark set insert [::ms::text::ClosestGap {*}$address $x $y]
+            {*}$address mark set insert [::ms::text::Closest_Gap {*}$address $x $y]
             {*}$address mark set $anchor_name insert
 
             # Set the anchor mark's gravity depending on the click position
@@ -4820,7 +4820,7 @@ proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
     # Check the 'clipboard_type'.
     switch -nocase -- $clipboard_type {
         primary {
-            {*}$address mark set insert [::ms::text::ClosestGap $w $x $y]
+            {*}$address mark set insert [::ms::text::Closest_Gap $w $x $y]
 
             set clipboard_type PRIMARY
         }
@@ -6994,6 +6994,43 @@ proc ::ms::text::Scroll_Pages { w n } {
     }
 
     return [{*}$address index $index]
+}
+
+# Closest_Gap
+#
+# Given the x and y coordinates, this procedure finds the closest boundary between characters to the given
+# coordinates and returns the index of the character just after the boundary.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) relative coordinates at the time of the event.
+#
+# Returns the resulting index.
+proc ::ms::text::Closest_Gap { w x y } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set pos [{*}$address index @$x,$y]
+
+    set bbox [{*}$address bbox $pos]
+    if { $bbox eq "" } {
+        return $pos
+    }
+
+    # The check on y coord of the line bbox with dlineinfo is to fix
+    # [a9cf210a42] to properly handle selecting and moving the mouse
+    # out of the widget.
+    if { $y < [lindex [{*}$address dlineinfo $pos] 1] || ($x - [lindex $bbox 0] < [lindex $bbox 2]/2) } {
+        return $pos
+    }
+
+    return [{*}$address index "$pos + 1 char"]
 }
 
 #*EOF*
