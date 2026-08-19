@@ -620,7 +620,6 @@ proc ::ms::toolbutton::Command { window { args "" } } {
             }
 
             # Check the widget state and set the takefocus and cursor accordingly.
-            # This is not strictly needed for toolbuttons, it's here mostly for coherence with the other widgets.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
