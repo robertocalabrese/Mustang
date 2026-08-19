@@ -1823,6 +1823,27 @@ proc ::ms::text::Command { window { args "" } } {
                                            -orient vertical \
                                             -style TScrollbar \
                                         -takefocus 0;
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Note: If a different class than 'Text' is provided, we need to adapt the bindtags.
+
+                    # Set the new bindtags for the hull object.
+                    bindtags $w [list $w _Hull_Text TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the text object.
+                    switch -- $::ms::current($w,class) {
+                        Text    { bindtags $w.text [list $w.text _Scrollable_Text Text $::ms::addr($w,toplevel) all] }
+                        default { bindtags $w.text [list $w.text $::ms::current($w,class) _Scrollable_Text Text $::ms::addr($w,toplevel) all] }
+                    }
+
+                    # Set the new bindtags for the horizontal and vertical scrollbar objects.
+                    bindtags $w.x [list $w.x _H_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
+                    bindtags $w.y [list $w.y _V_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
                 }
             }
         }
