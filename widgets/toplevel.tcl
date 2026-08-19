@@ -866,7 +866,105 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+            switch -- [llength $args] {
+                0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
+                1   {
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    # Change the statespec and register the states that have changed.
+                    set states_that_have_changed [list ]
+                    foreach state $statespec {
+                        if { $state ni $::ms::data($w,statespec) } {
+                            # Note: The state analized is different than its equivalent currently active (old state).
+                            #       For example 'disabled' (state) and '!disabled' (old state).
+
+                            # Get the old state as the inverse of the new state.
+                            switch -glob -- $state {
+                                "!*"    { set old_state [string trimleft $state "!"] }
+                                default { set old_state [string cat      "!" $state] }
+                            }
+
+                            # Update the current statespec old state with the new state.
+                            set index [lsearch -exact $::ms::data($w,statespec) $old_state]
+
+                            # No need to check if 'index' is '-1'.
+                            set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) $index $index $state]
+
+                            # Add the old state to the list containing the states that have changed.
+                            lappend states_that_have_changed $old_state
+                        }
+                    }
+
+                    #####################################
+                    ##                                 ##
+                    ##     UPDATE THE WIDGET STATE     ##
+                    ##                                 ##
+                    #####################################
+
+                    # Note: Toplevels don't understands styles natively.
+                    #       No internal styles needs to be created.
+
+                    # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change if the statespec changes.
+
+                    # background
+                    switch -- $::ms::managed_by($w,background) {
+                        developer { set background $::ms::current($w,background) }
+                        Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+                    }
+
+                    # bordercolor
+                    switch -- $::ms::managed_by($w,bordercolor) {
+                        developer { set bordercolor $::ms::current($w,bordercolor) }
+                        Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+                    }
+
+                    # Set the toplevel options.
+                    set toplevel_options [list -background $background]
+
+                    # Check the 'relief' type.
+                    switch -- $::ms::current($w,relief) {
+                        flat  -
+                        solid {
+                            lappend toplevel_options         -borderwidth 0 \
+                                                     -highlightbackground $bordercolor \
+                                                          -highlightcolor $bordercolor \
+                                                      -highlightthickness $::ms::current($w,borderwidth) \
+                                                                  -relief flat;
+                        }
+                        default {
+                            lappend toplevel_options         -borderwidth $::ms::current($w,borderwidth) \
+                                                     -highlightbackground $background \
+                                                          -highlightcolor $background \
+                                                      -highlightthickness 0 \
+                                                                  -relief $::ms::current($w,relief);
+                        }
+                    }
+
+                    # Apply the changes.
+                    interp invokehidden {} $w configure {*}$toplevel_options
+
+                    return $states_that_have_changed
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
