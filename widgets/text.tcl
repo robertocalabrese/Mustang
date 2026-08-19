@@ -1682,6 +1682,36 @@ proc ::ms::text::Command { window { args "" } } {
                         Text    { bindtags $w [list $w _Simple_Text Text $::ms::addr($w,toplevel) all] }
                         default { bindtags $w [list $w $::ms::current($w,class) _Simple_Text Text $::ms::addr($w,toplevel) all] }
                     }
+
+                    #####################
+                    ##                 ##
+                    ##     CLOSING     ##
+                    ##                 ##
+                    #####################
+
+                    # Set the widget real address relative to its short address, 'short_addr'.
+                    set ::ms::addr($short_addr,real) $w
+
+                    # Set the widget short addresses relative to its real address, 'w'.
+                    set ::ms::addr($w,short) $short_addr
+
+                    # Add the widget real and short address into the list of all available real
+                    # and short addresses.
+                    lappend ::ms::addr(reals)  $w
+                    lappend ::ms::addr(shorts) $short_addr
+
+                    # Add the widget address to the text widgets real address list.
+                    lappend ::ms::addr(text) $w
+
+                    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+                    set ::ms::addr($w,border) $w
+
+                    # Set the actual widget address (the widget that the developer was intended to build).
+                    set ::ms::addr($w,widget) $w
+
+                    # Set the structure addresses.
+                    # Is important to note that the scrollbar addresses must not be included.
+                    set ::ms::addr($w,structure) [list $w]
                 }
                 true {
                     #############################
