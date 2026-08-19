@@ -3596,6 +3596,102 @@ proc ::ms::text::Style_Update { stylename caller_info } {
             1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
             default { set ::ms::data($w,padding) $::ms::current($w,padding) }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: 'borderwidth', 'columns', 'cursor', 'font', 'inactiveselectbackground', 'insertborderwidth', 'padding',
+        #       'relief', 'rows' and 'selectborderwidth' are not allowed to change if the statespec changes.
+
+        # background
+        switch -- $::ms::managed_by($w,background) {
+            developer { set background $::ms::current($w,background) }
+            Tk        { set background [_ttk_style lookup $stylename -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+        }
+
+        # foreground
+        switch -- $::ms::managed_by($w,foreground) {
+            developer { set foreground $::ms::current($w,foreground) }
+            Tk        { set foreground [_ttk_style lookup $stylename -foreground $::ms::data($w,statespec) $::ms::default($w,foreground)] }
+        }
+
+        # insertbackground
+        switch -- $::ms::managed_by($w,insertbackground) {
+            developer { set insertbackground $::ms::current($w,insertbackground) }
+            Tk        { set insertbackground [_ttk_style lookup $stylename -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
+        }
+
+        # selectbackground
+        switch -- $::ms::managed_by($w,selectbackground) {
+            developer { set selectbackground $::ms::current($w,selectbackground) }
+            Tk        { set selectbackground [_ttk_style lookup $stylename -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
+        }
+
+        # selectforeground
+        switch -- $::ms::managed_by($w,selectforeground) {
+            developer { set selectforeground $::ms::current($w,selectforeground) }
+            Tk        { set selectforeground [_ttk_style lookup $stylename -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
+        }
+
+        # Set the text options.
+        set text_options [list      -background $background \
+                                          -cursor $cursor \
+                                            -font $::ms::current($w,font) \
+                                      -foreground $foreground \
+                                          -height $::ms::current($w,rows) \
+                                -insertbackground $insertbackground \
+                               -insertborderwidth $::ms::current($w,insertborderwidth) \
+                                            -padx [lindex $::ms::data($w,padding) 0] \
+                                            -pady [lindex $::ms::data($w,padding) 1] \
+                                -selectbackground $selectbackground \
+                               -selectborderwidth $::ms::current($w,selectborderwidth) \
+                                -selectforeground $selectforeground \
+                                           -width $::ms::current($w,columns)];
+
+        # Note: The '-bordercolor' option is not understanded by Tk texts, but is made available trough
+        #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+        #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+        #       like it behaves in other widgets that understands the bordercolor.
+
+        # Check the 'relief' type.
+        switch -- $::ms::current($w,relief) {
+            flat  -
+            solid {
+                lappend text_options         -borderwidth 0 \
+                                       -highlightbackground $bordercolor \
+                                            -highlightcolor $bordercolor \
+                                        -highlightthickness $::ms::current($w,borderwidth) \
+                                                    -relief flat;
+            }
+            default {
+                lappend text_options         -borderwidth $::ms::current($w,borderwidth) \
+                                       -highlightbackground $background \
+                                            -highlightcolor $background \
+                                        -highlightthickness 0 \
+                                                    -relief $::ms::current($w,relief);
+            }
+        }
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false {
+                #########################
+                ##                     ##
+                ##     SIMPLE TEXT     ##
+                ##                     ##
+                #########################
+            }
+            true {
+                ##############################
+                ##                          ##
+                ##     SSCROLLABLE TEXT     ##
+                ##                          ##
+                ##############################
+            }
+        }
     }
 
     return ""
