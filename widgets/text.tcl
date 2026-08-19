@@ -801,6 +801,27 @@ namespace eval ::ms::text {
                                                 wrap \
                                                 xscrollcommand \
                                                 yscrollcommand];
+
+    # Set the 'styleable' text option list.
+    set ::ms::text(styleable,options) [list background \
+                                            bordercolor \
+                                            borderwidth \
+                                            columns \
+                                            cursor \
+                                            darkcolor \
+                                            font \
+                                            foreground \
+                                            inactiveselectbackground \
+                                            insertbackground \
+                                            insertborderwidth \
+                                            lightcolor \
+                                            padding \
+                                            relief \
+                                            rows \
+                                            selectbackground \
+                                            selectborderwidth \
+                                            selectforeground \
+                                            shellbackground];
 }
 
 # Rename the original Tk **text** command.
