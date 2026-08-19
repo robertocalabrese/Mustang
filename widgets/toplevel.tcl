@@ -182,6 +182,72 @@ proc ::ms::toplevel::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)     $::ms::default(toplevel,class)
+            set ::ms::default($w,cmenu)     $::ms::default(toplevel,cmenu)
+            set ::ms::default($w,colormap)  $::ms::default(toplevel,colormap)
+            set ::ms::default($w,height)    $::ms::default(toplevel,height)
+            set ::ms::default($w,menu)      $::ms::default(toplevel,menu)
+            set ::ms::default($w,screen)    $::ms::default(toplevel,screen)
+            set ::ms::default($w,state)     $::ms::default(toplevel,state)
+            set ::ms::default($w,style)     $::ms::default(toplevel,style)
+            set ::ms::default($w,takefocus) $::ms::default(toplevel,takefocus)
+            set ::ms::default($w,title)     $::ms::default(toplevel,title)
+            set ::ms::default($w,visual)    $::ms::default(toplevel,visual)
+            set ::ms::default($w,width)     $::ms::default(toplevel,width)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)     $::ms::default(toplevel,class)
+            set ::ms::current($w,cmenu)     $::ms::default(toplevel,cmenu)
+            set ::ms::current($w,colormap)  $::ms::default(toplevel,colormap)
+            set ::ms::current($w,height)    $::ms::default(toplevel,height)
+            set ::ms::current($w,menu)      $::ms::default(toplevel,menu)
+            set ::ms::current($w,screen)    $::ms::default(toplevel,screen)
+            set ::ms::current($w,state)     $::ms::default(toplevel,state)
+            set ::ms::current($w,style)     $::ms::default(toplevel,style)
+            set ::ms::current($w,takefocus) $::ms::default(toplevel,takefocus)
+            set ::ms::current($w,title)     $::ms::default(toplevel,title)
+            set ::ms::current($w,visual)    $::ms::default(toplevel,visual)
+            set ::ms::current($w,width)     $::ms::default(toplevel,width)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) toplevel
+            set ::ms::data($w,statespec) $::ms::data(statespec,normal)
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a toplevel styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **toplevel** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)      Tk
+            set ::ms::managed_by($w,backgroundimage) Tk
+            set ::ms::managed_by($w,bordercolor)     Tk
+            set ::ms::managed_by($w,borderwidth)     Tk
+            set ::ms::managed_by($w,cursor)          Tk
+            set ::ms::managed_by($w,padding)         Tk
+            set ::ms::managed_by($w,relief)          Tk
+            set ::ms::managed_by($w,tile)            Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
