@@ -1647,4 +1647,23 @@ proc ::ms::toplevel::Destroy { w } {
     }
 }
 
+## FocusIn
+#
+# Manage the **FocusIn** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::toplevel::FocusIn { w } {
+    # Check if the toplevel takefocus value is still the original one.
+    if { ($::ms::current($w,takefocus) == 1) && ([interp invokehidden {} $w cget -takefocus] == 1) } {
+        # Change the widget dynamic state to 'focus'.
+        ::ms::toplevel::Pathname_Cmd $w state focus
+    }
+
+    return ""
+}
+
 #*EOF*
