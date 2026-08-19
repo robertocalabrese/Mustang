@@ -592,7 +592,8 @@ proc ::ms::toplevel::Command { window { args "" } } {
             # Note: Tk Toplevels don't understands styles, at least not natively.
             #       No internal styles needs to be created.
 
-            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change if the statespec changes.
+            # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
+            #       if the statespec changes.
 
             # Set the toplevel options.
             set toplevel_options [list      -background $::ms::current($w,background) \
@@ -752,7 +753,38 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid option, '$args'." $caller_info }
             }
         }
-        configure {}
+        configure {
+            # Synopsis:
+            #
+            # *window* **configure**
+            # *window* **configure** *option*
+            # *window* **configure** *option* *value*
+            # *window* **configure** *option* *value* ... ?*option* *value*?
+            switch -- [llength $args] {
+                0   {
+                    # 'non-styleable' options.
+                    foreach option $::ms::toplevel(non_styleable,options) {
+                        lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
+                    }
+
+                    # 'styleable' options.
+                    foreach option $::ms::toplevel(styleable,options) {
+                        lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
+                    }
+
+                    return [lsort -dictionary -increasing -index 0 $result]
+                }
+                1   {
+                    set option [string range $args 1 end]
+                    if { ($option in $::ms::toplevel(non_styleable,options)) || ($option in $::ms::toplevel(styleable,options)) } {
+                        return [list $::ms::default($w,$option) $::ms::current($w,$option)]
+                    } else {
+                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                    }
+                }
+                default {}
+            }
+        }
         identify {
             # Synopsis:
             #
@@ -921,7 +953,8 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                     # Note: Toplevels don't understands styles natively.
                     #       No internal styles needs to be created.
 
-                    # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change if the statespec changes.
+                    # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
+                    #       if the statespec changes.
 
                     # background
                     switch -- $::ms::managed_by($w,background) {
