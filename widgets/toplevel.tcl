@@ -1420,6 +1420,60 @@ proc ::ms::toplevel::Style_Update { stylename caller_info } {
             1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
             default { set ::ms::data($w,padding) $::ms::current($w,padding) }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: Toplevels don't understands styles natively.
+        #       No internal styles needs to be created.
+
+        # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
+        #       if the statespec changes.
+
+        # background
+        switch -- $::ms::managed_by($w,background) {
+            developer { set background $::ms::current($w,background) }
+            Tk        { set background [_ttk_style lookup $stylename -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+        }
+
+        # bordercolor
+        switch -- $::ms::managed_by($w,bordercolor) {
+            developer { set bordercolor $::ms::current($w,bordercolor) }
+            Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+        }
+
+        # Set the toplevel cli options.
+        set toplevel_options [list      -background $background \
+                                   -backgroundimage $::ms::current($w,backgroundimage) \
+                                            -cursor $::ms::current($w,cursor) \
+                                              -padx [lindex $::ms::data($w,padding) 0] \
+                                              -pady [lindex $::ms::data($w,padding) 1] \
+                                              -tile $::ms::current($w,tile)];
+
+        # Check the 'relief' type.
+        switch -- $::ms::current($w,relief) {
+            flat  -
+            solid {
+                lappend toplevel_options         -borderwidth 0 \
+                                         -highlightbackground $bordercolor \
+                                              -highlightcolor $bordercolor \
+                                          -highlightthickness $::ms::current($w,borderwidth) \
+                                                      -relief flat;
+            }
+            default {
+                lappend toplevel_options         -borderwidth $::ms::current($w,borderwidth) \
+                                         -highlightbackground $background \
+                                              -highlightcolor $background \
+                                          -highlightthickness 0 \
+                                                      -relief $::ms::current($w,relief);
+            }
+        }
+
+        # Apply the changes.
+        interp invokehidden {} $w configure {*}$toplevel_options
     }
 
     return ""
