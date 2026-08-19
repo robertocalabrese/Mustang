@@ -1309,6 +1309,19 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                                     set takefocus $::ms::current($w,takefocus)
                                 }
                             }
+
+                            # Enable/Disable the widget automatic translation.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Automatic translation: ON
+                                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+                                    set text_variable ::ms::data($w,translated_text)
+                                }
+                                default {
+                                    # Automatic translation: OFF
+                                    set text_variable $::ms::current($w,textvariable)
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
