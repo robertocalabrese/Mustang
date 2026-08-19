@@ -576,6 +576,72 @@ proc ::ms::toplevel::Command { window { args "" } } {
                 1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
                 default { set ::ms::data($w,padding) $::ms::current($w,padding) }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            ######################
+            ##                  ##
+            ##     TOPLEVEL     ##
+            ##                  ##
+            ######################
+
+            # Note: Tk Toplevels don't understands styles, at least not natively.
+            #       No internal styles needs to be created.
+
+            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change if the statespec changes.
+
+            # Set the toplevel options.
+            set toplevel_options [list      -background $::ms::current($w,background) \
+                                       -backgroundimage $::ms::current($w,backgroundimage) \
+                                                 -class $::ms::current($w,class) \
+                                              -colormap $::ms::current($w,colormap) \
+                                             -container $::ms::current($w,container) \
+                                                -cursor $::ms::current($w,cursor) \
+                                                -height $::ms::current($w,height) \
+                                                  -menu $::ms::current($w,menu) \
+                                                  -padx [lindex $::ms::data($w,padding) 0] \
+                                                  -pady [lindex $::ms::data($w,padding) 1] \
+                                                -screen $::ms::current($w,screen) \
+                                             -takefocus $::ms::current($w,takefocus) \
+                                                  -tile $::ms::current($w,tile) \
+                                                   -use $::ms::current($w,use) \
+                                                -visual $::ms::current($w,visual) \
+                                                 -width $::ms::current($w,width)];
+
+            # Check the 'relief' type.
+            switch -- $::ms::current($w,relief) {
+                flat  -
+                solid {
+                    lappend toplevel_options         -borderwidth 0 \
+                                             -highlightbackground $::ms::current($w,bordercolor) \
+                                                  -highlightcolor $::ms::current($w,bordercolor) \
+                                              -highlightthickness $::ms::current($w,borderwidth) \
+                                                          -relief flat;
+                }
+                default {
+                    lappend toplevel_options         -borderwidth $::ms::current($w,borderwidth) \
+                                             -highlightbackground $::ms::current($w,background) \
+                                                  -highlightcolor $::ms::current($w,background) \
+                                              -highlightthickness 0 \
+                                                          -relief $::ms::current($w,relief);
+                }
+            }
+
+            # Create the widget.
+            _toplevel $w {*}$toplevel_options
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) $w
+
+            # Set the toplevel title, if any.
+            switch -- $::ms::current($w,title) {
+                ""      {}
+                default { _wm title $w [::msgcat::mc "$::ms::current($w,title)"] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
