@@ -1400,7 +1400,21 @@ proc ::ms::toplevel::Style_Update { stylename caller_info } {
     }
 
     # Update all the toplevel widgets that have stylename as a style.
-    foreach w $::ms::style($stylename,toplevel,addrs) {}
+    foreach w $::ms::style($stylename,toplevel,addrs) {
+        # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+        foreach option $::ms::toplevel(styleable,options) {
+            set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,Toplevel,$option)
+
+            switch -- $::ms::managed_by($w,$option) {
+                Tk  {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$::ms::current($w,style),$option)] {
+                        0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                        1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$::ms::current($w,style),$option) }
+                    }
+                }
+            }
+        }
+    }
 
     return ""
 }
