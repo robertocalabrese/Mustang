@@ -248,6 +248,314 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::managed_by($w,padding)         Tk
             set ::ms::managed_by($w,relief)          Tk
             set ::ms::managed_by($w,tile)            Tk
+
+            #################################################
+            ##                                             ##
+            ##     CHECK THE WIDGET'S OPTIONS PROVIDED     ##
+            ##                                             ##
+            #################################################
+
+            # Check the remaining options, if any.
+            foreach { option value } $args {
+                switch -nocase -- $option {
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
+                    -backgroundimage {
+                        if { ($value eq "") || ($value in [image names]) } {
+                            set ::ms::current($w,backgroundimage)    $value
+                            set ::ms::managed_by($w,backgroundimage) developer
+                        }
+                    }
+                    -bordercolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,bordercolor)    $value
+                        set ::ms::managed_by($w,bordercolor) developer
+                    }
+                    -borderwidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,borderwidth)    $value
+                        set ::ms::managed_by($w,borderwidth) developer
+                    }
+                    -class { set ::ms::current($w,class) $value }
+                    -cmenu {
+                        set value [string trim $value]
+                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                            set ::ms::current($w,cmenu) $value
+                        }
+                    }
+                    -colormap {
+                        switch -nocase -- $value {
+                            ""      -
+                            "new"   {}
+                            default {
+                                switch -- [winfo exists $value] {
+                                    0   { continue }
+                                }
+                            }
+                        }
+
+                        set ::ms::current($w,colormap) $value
+                    }
+                    -container {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,container) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,container) 1 }
+                        }
+                    }
+                    -cursor {
+                        set value [string tolower $value]
+                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                            set ::ms::current($w,cursor)    $value
+                            set ::ms::managed_by($w,cursor) developer
+                        }
+                    }
+                    -height {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,height) $value
+                    }
+                    -menu {
+                        if { $value eq "" } {
+                            set ::ms::current($w,menu) $value
+                        } elseif { ($value in $::ms::addr(menu)) && ([_winfo toplevel $value] eq $w) } {
+                            set ::ms::current($w,menu) $value
+                        }
+                    }
+                    -padding {
+                        switch -- [llength $value] {
+                            1   {
+                                set value [::ms::Check_Measure $value invalid]
+                                switch -- $value {
+                                    invalid { continue }
+                                }
+
+                                set ::ms::current($w,padding) [list $value]
+                            }
+                            2   {
+                                set pad_horizontal [::ms::Check_Measure [lindex $value 0] invalid]
+                                switch -- $pad_horizontal {
+                                    invalid { continue }
+                                }
+
+                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                switch -- $pad_vertical {
+                                    invalid { continue }
+                                }
+
+                                set ::ms::current($w,padding) [list $pad_horizontal $pad_vertical]
+                            }
+                            3   {
+                                set pad_horizontal [::ms::Check_Measure [lindex $value 0] invalid]
+                                switch -- $pad_horizontal {
+                                    invalid { continue }
+                                }
+
+                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                switch -- $pad_vertical {
+                                    invalid { continue }
+                                }
+
+                                # If the '::DEBUG' variable is enabled, display the notificafion for the padding value ignored.
+                                switch -nocase -- $::DEBUG {
+                                    1       -
+                                    on      -
+                                    true    -
+                                    active  -
+                                    enabled { chan puts stdout "The toplevel '-padding' option can have a maximum of two values. Ignoring the rest." }
+                                }
+
+                                set ::ms::current($w,padding) [list $pad_horizontal $pad_vertical]
+                            }
+                            4   {
+                                set pad_horizontal [::ms::Check_Measure [lindex $value 0] invalid]
+                                switch -- $pad_horizontal {
+                                    invalid { continue }
+                                }
+
+                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                switch -- $pad_vertical {
+                                    invalid { continue }
+                                }
+
+                                # If the '::DEBUG' variable is enabled, display the notificafion for the padding values ignored.
+                                switch -nocase -- $::DEBUG {
+                                    1       -
+                                    on      -
+                                    true    -
+                                    active  -
+                                    enabled { chan puts stdout "The toplevel '-padding' option can have a maximum of two values. Ignoring the rest." }
+                                }
+
+                                set ::ms::current($w,padding) [list $pad_horizontal $pad_vertical]
+                            }
+                            default { continue }
+                        }
+
+                        set ::ms::managed_by($w,padding) developer
+                    }
+                    -relief {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            flat   -
+                            groove -
+                            raised -
+                            ridge  -
+                            solid  -
+                            sunken {
+                                set ::ms::current($w,relief)    $value
+                                set ::ms::managed_by($w,relief) developer
+                            }
+                        }
+                    }
+                    -screen { set ::ms::current($w,screen) $value }
+                    -state {}
+                    -style {
+                        if { $value in $::ms::style($::ms::theme) } {
+                            set ::ms::current($w,style) $value
+                        }
+                    }
+                    -takefocus {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,takefocus) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,takefocus) 1 }
+                        }
+                    }
+                    -tile {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,tile) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,tile) 1 }
+                        }
+                    }
+                    -title { set ::ms::current($w,title) $value }
+                    -use {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            ""      {}
+                            default {
+                                set prefix [string range $value 0 1]
+                                set hex    [string range $value 2 end]
+
+                                switch -- $prefix {
+                                    "0x"    {}
+                                    default { continue }
+                                }
+
+                                switch -- [string is xdigit -strict $hex] {
+                                    0   { continue }
+                                }
+                            }
+                        }
+
+                        set ::ms::current($w,use) $value
+                    }
+                    -visual {
+                        set value [string tolower $value]
+
+                        # Check if it's the empty string.
+                        switch -- $value {
+                            ""  {
+                                set ::ms::current($w,visual) ""
+                                continue
+                            }
+                        }
+
+                        # Check if it's the word 'default'.
+                        if { $value eq "default" } {
+                            set ::ms::current($w,visual) default
+                            continue
+                        }
+
+                        # Check if it's an integer.
+                        switch -- [string is integer -strict $value] {
+                            1   {
+                                set ::ms::current($w,visual) $value
+                                continue
+                            }
+                        }
+
+                        # Check if it's a class name with depth.
+                        switch -- [llength $value] {
+                            2   {
+                                # Check the class name.
+                                switch -- [lindex $value 0] {
+                                    directcolor -
+                                    grayscale   -
+                                    greyscale   -
+                                    pseudocolor -
+                                    staticcolor -
+                                    staticgray  -
+                                    staticgrey  -
+                                    truecolor   {
+                                        # Check the depth.
+                                        switch -- [lindex $value 1] {
+                                            1   -
+                                            2   -
+                                            4   -
+                                            8   -
+                                            16  -
+                                            32  -
+                                            64  {
+                                                set ::ms::current($w,visual) $value
+                                                continue
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    -width {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,width) $value
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
