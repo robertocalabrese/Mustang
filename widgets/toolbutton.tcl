@@ -2105,4 +2105,38 @@ proc ::ms::toolbutton::FocusOut { w } {
     return ""
 }
 
+## Invoke
+#
+# Invoke the command associated with the widget and set the correct state of the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::toolbutton::Invoke { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check the current widget state.
+            if { [interp invokehidden {} $w instate pressed] } {
+                set $::ms::current($w,variable) $::ms::current($w,offvalue)
+
+                # Change the widget dynamic state to '!pressed'.
+                interp invokehidden {} $w state !pressed
+            } else {
+                set $::ms::current($w,variable) $::ms::current($w,onvalue)
+
+                # Change the widget dynamic state to 'pressed'.
+                interp invokehidden {} $w state pressed
+            }
+
+            # Invoke the command associated with the widget.
+            uplevel #0 [list interp invokehidden {} $w invoke]
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
