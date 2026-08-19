@@ -6917,4 +6917,41 @@ proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
     }
 }
 
+# Move_Cursor
+#
+# Move the insertion cursor to a given position in a text.
+# Also clears the selection, if there is one in the text, and makes sure that the insertion cursor is visible.
+# Also, don't let the insertion cursor appear on the dummy last line of the text.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# pos   The desired new position for the cursor in the window.
+#
+# It doesn't return anything.
+proc ::ms::text::Move_Cursor { w pos } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    if { [{*}$address compare $pos == end] } {
+        set pos {end - 1 chars}
+    }
+
+    {*}$address mark set insert $pos
+    {*}$address tag remove sel 1.0 end
+    {*}$address see insert
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    return ""
+}
+
 #*EOF*
