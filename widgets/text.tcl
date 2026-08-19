@@ -6686,4 +6686,21 @@ proc ::ms::text::Select_Previous_Char { w } {
     return ""
 }
 
+## Select_Previous_Word
+#
+# Select from the insertion cursor to the previous word.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Select_Previous_Word { w } {
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::text::Select_Key $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
+    }
+
+    return ""
+}
+
 #*EOF*
