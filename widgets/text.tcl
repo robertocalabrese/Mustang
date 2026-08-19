@@ -4736,4 +4736,55 @@ proc ::ms::text::Copy { w } {
     return ""
 }
 
+## Cut
+#
+# Manage the **Cut** event by copying the widget's selection into the clipboard and
+# then deleting the widget's selection.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Cut { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    try {
+        {*}$address get sel.first sel.last
+    } on error {} {
+        return ""
+    } on ok { data } {
+        # make <<Cut>> an atomic operation on the Undo stack,
+        # i.e. separate it from other delete operations on either side
+
+        if { ($::ms::current($w,state) eq "normal") && ($::ms::current($w,autoseparators) == 1) } {
+            {*}$address edit separator
+        }
+
+        _clipboard clear  -displayof $w
+        _clipboard append -displayof $w $data
+
+        {*}$address delete sel.first sel.last
+
+        if { ($::ms::current($w,state) eq "normal") && ($::ms::current($w,autoseparators) == 1) } {
+            {*}$address edit separator
+        }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
