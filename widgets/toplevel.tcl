@@ -64,6 +64,36 @@
 # [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::toplevel 0.1
 
+################################
+##                            ##
+##     _TOPLEVEL BINDINGS     ##
+##                            ##
+################################
+
+# Activate/Deactivate
+_bind _Toplevel <Activate>   { ::ms::toplevel::Pathname_Cmd %W state !background; break }
+_bind _Toplevel <Deactivate> { ::ms::toplevel::Pathname_Cmd %W state  background; break }
+
+# ButtonPress-1
+_bind _Toplevel <ButtonPress-1> { ::ms::toplevel::Focus_Toplevel %W; break }
+
+# Configure
+_bind _Toplevel <Configure> { ::ms::toplevel::Configure %W; break }
+
+# Contextual menu
+_bind _Toplevel <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+# Destroy
+_bind _Toplevel <Destroy> { ::ms::toplevel::Destroy %W; break }
+
+# Enter/Leave
+_bind _Toplevel <Enter> { ::ms::toplevel::Hover %W %X %Y; break }
+_bind _Toplevel <Leave> { ::ms::toplevel::Hover %W %X %Y; break }
+
+# FocusIn/FocusOut
+_bind _Toplevel <FocusIn>  { ::ms::toplevel::FocusIn  %W; break }
+_bind _Toplevel <FocusOut> { ::ms::toplevel::FocusOut %W; break }
+
 # Create the mustang **toplevel** package.
 namespace eval ::ms::toplevel {}
 
