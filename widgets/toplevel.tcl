@@ -121,6 +121,24 @@ namespace eval ::ms::toplevel {
                                                 padding \
                                                 relief \
                                                 tile];
+
+    # Set the default 'non-styleable' toplevel options values.
+    set ::ms::default(toplevel,class)     Toplevel
+    set ::ms::default(toplevel,cmenu)     {}
+    set ::ms::default(toplevel,colormap)  {}
+    set ::ms::default(toplevel,container) 0
+    set ::ms::default(toplevel,height)    0
+    set ::ms::default(toplevel,menu)      {}
+    set ::ms::default(toplevel,screen)    {}
+    set ::ms::default(toplevel,state)     normal
+    set ::ms::default(toplevel,style)     Toplevel
+    set ::ms::default(toplevel,takefocus) 0
+    set ::ms::default(toplevel,title)     [string totitle [tk appname]]
+    set ::ms::default(toplevel,use)       {}
+    set ::ms::default(toplevel,visual)    {}
+    set ::ms::default(toplevel,width)     0
+
+    # Note: The default 'styleable' toplevel options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **toplevel** command.
