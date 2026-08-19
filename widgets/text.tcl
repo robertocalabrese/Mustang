@@ -5989,4 +5989,58 @@ proc ::ms::text::Next_Paragraph { w } {
     return ""
 }
 
+## Next_Word
+#
+# Manages the **NextWord** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Next_Word { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                default {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                }
+            }
+        }
+        true {
+            # Check if the widget horizontal scrollbar is active or not.
+            switch -- $::ms::data($w,scrollx) {
+                off {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                }
+                on  {
+                    # Check the widget state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
