@@ -3683,6 +3683,18 @@ proc ::ms::text::Style_Update { stylename caller_info } {
                 ##     SIMPLE TEXT     ##
                 ##                     ##
                 #########################
+
+                ##################
+                ##              ##
+                ##     TEXT     ##
+                ##              ##
+                ##################
+
+                # Note: Tk texts don't understands styles, at least not natively.
+                #       No internal styles needs to be created.
+
+                # Apply the changes.
+                interp invokehidden {} $w configure {*}$text_options
             }
             true {
                 ##############################
