@@ -3910,4 +3910,25 @@ proc ::ms::text::ButtonPress { w x y } {
     return ""
 }
 
+## Configure
+#
+# Manage the **Configure** event on a widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Configure { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
