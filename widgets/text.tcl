@@ -6954,4 +6954,46 @@ proc ::ms::text::Move_Cursor { w pos } {
     return ""
 }
 
+# Scroll_Pages
+#
+# It scrolls the view in the widget by *n* pages, and it returns the index of the character that
+# is at the same position in the new view as the insertion cursor used to be in the old view.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# n   Number of pages to scroll:
+#        -1 --> one page up
+#        +1 --> one page down
+#
+# Returns the resulting index.
+proc ::ms::text::Scroll_Pages { w n } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    {*}$address yview scroll $n pages
+
+    set bbox [{*}$address bbox insert]
+    switch -- $bbox {
+        ""  {
+            set index [string cat "@" \
+                                  [expr { [_winfo height $::ms::addr($w,widget)]/2} ] \
+                                  ",0"];
+        }
+        default {
+            set index [string cat "@" \
+                                  [lindex $bbox 0] \
+                                  "," \
+                                  [lindex $bbox 1]];
+        }
+    }
+
+    return [{*}$address index $index]
+}
+
 #*EOF*
