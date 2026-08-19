@@ -6737,4 +6737,58 @@ proc ::ms::text::Select_Previous_Paragraph { w } {
     return ""
 }
 
+##################################
+##                              ##
+##     UNDO/REDO/TRANSPOSE      ##
+##                              ##
+##################################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Undo
+#
+# Manage the **Undo** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Undo { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    # Execute the command.
+    try {
+        {*}$address edit undo
+    } on error {} {
+        # Do nothing
+    }
+
+    # If autoseparators are active, put an autoseparator.
+    switch -- $::ms::current($w,autoseparators) {
+        1   { {*}$address edit separator }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
