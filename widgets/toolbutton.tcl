@@ -181,6 +181,22 @@ namespace eval ::ms::toolbutton {
                                                   padding \
                                                   relief \
                                                   shiftrelief];
+
+    # Set the default 'non-styleable' toolbutton options values.
+    set ::ms::default(toolbutton,class)        Toolbutton
+    set ::ms::default(toolbutton,cmenu)        {}
+    set ::ms::default(toolbutton,command)      {}
+    set ::ms::default(toolbutton,offvalue)     0
+    set ::ms::default(toolbutton,onvalue)      1
+    set ::ms::default(toolbutton,state)        normal
+    set ::ms::default(toolbutton,style)        Toolbutton
+    set ::ms::default(toolbutton,takefocus)    1
+    set ::ms::default(toolbutton,text)         {}
+    set ::ms::default(toolbutton,textvariable) {}
+    set ::ms::default(toolbutton,underline)    -1
+    set ::ms::default(toolbutton,variable)     {}
+
+    # Note: The default 'styleable' toolbutton options values are always defined inside the current theme.
 }
 
 # Create the alias for the mustang **toolbutton** command.
