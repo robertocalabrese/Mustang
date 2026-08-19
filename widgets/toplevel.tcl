@@ -642,6 +642,18 @@ proc ::ms::toplevel::Command { window { args "" } } {
                 ""      {}
                 default { _wm title $w [::msgcat::mc "$::ms::current($w,title)"] }
             }
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                Toplevel { _bindtags $w [list $w _Toplevel Toplevel $::ms::addr($w,toplevel) all] }
+                default  { _bindtags $w [list $w $::ms::current($w,class) _Toplevel Toplevel $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
