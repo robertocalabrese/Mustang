@@ -1668,6 +1668,20 @@ proc ::ms::text::Command { window { args "" } } {
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Note: If a different class than 'Text' is provided, we need to adapt the bindtags.
+
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        Text    { bindtags $w [list $w _Simple_Text Text $::ms::addr($w,toplevel) all] }
+                        default { bindtags $w [list $w $::ms::current($w,class) _Simple_Text Text $::ms::addr($w,toplevel) all] }
+                    }
                 }
                 true {
                     #############################
