@@ -5456,4 +5456,35 @@ proc ::ms::text::PageLeft { w } {
     return ""
 }
 
+## PageRight
+#
+# Manages the **PageRight** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::PageRight { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false {
+            # Check if the simple text is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""      { ::ms::Scroll_Parent_X $w -120.0 pages }
+                default { interp invokehidden {} $w xview scroll 1 pages }
+            }
+        }
+        true {
+            # Check if the widget horizontal scrollbar is active or not.
+            switch -- $::ms::data($w,scrollx) {
+                off { ::ms::Scroll_Parent_X $w -120.0 pages }
+                on  { ::ms::Scroll_Widget_X $w -120.0 pages }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
