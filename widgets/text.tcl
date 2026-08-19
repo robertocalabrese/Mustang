@@ -808,13 +808,11 @@ namespace eval ::ms::text {
                                             borderwidth \
                                             columns \
                                             cursor \
-                                            darkcolor \
                                             font \
                                             foreground \
                                             inactiveselectbackground \
                                             insertbackground \
                                             insertborderwidth \
-                                            lightcolor \
                                             padding \
                                             relief \
                                             rows \
@@ -988,13 +986,11 @@ proc ::ms::text::Command { window { args "" } } {
             set ::ms::managed_by($w,borderwidth)              Tk
             set ::ms::managed_by($w,columns)                  Tk
             set ::ms::managed_by($w,cursor)                   Tk
-            set ::ms::managed_by($w,darkcolor)                Tk
             set ::ms::managed_by($w,font)                     Tk
             set ::ms::managed_by($w,foreground)               Tk
             set ::ms::managed_by($w,inactiveselectbackground) Tk
             set ::ms::managed_by($w,insertbackground)         Tk
             set ::ms::managed_by($w,insertborderwidth)        Tk
-            set ::ms::managed_by($w,lightcolor)               Tk
             set ::ms::managed_by($w,padding)                  Tk
             set ::ms::managed_by($w,relief)                   Tk
             set ::ms::managed_by($w,rows)                     Tk
