@@ -4876,4 +4876,57 @@ proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
     return ""
 }
 
+####################
+##                ##
+##     DELETE     ##
+##                ##
+####################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Backspace
+#
+# Manage the **Backspace** event.
+# If a selection is present, delete the selected text, otherwise delete a character positioned
+# to the left of the cursor location.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Backspace { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    switch -- [::ms::text::The_Cursor_Is_Inside_The_Selection $w] {
+        0   {
+            if { [{*}$address compare insert != 1.0] } {
+                set index1 [::ms::text::Next_Index     $w insert    ::tk::startOfCluster]
+                set index2 [::ms::text::Previous_Index $w insert-1c ::tk::endOfCluster]
+                {*}$address delete $index1 $index2
+            }
+
+            {*}$address see insert
+        }
+        1   { {*}$address delete sel.first sel.last }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
