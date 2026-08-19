@@ -1382,6 +1382,44 @@ namespace eval ttk::theme::Halo {
                                                        pressed HighlightAlternate \
                                                       readonly ArrowDisabled] \
                             -selectforeground [list    invalid Invalid];
+
+        ##################
+        ##              ##
+        ##     TEXT     ##
+        ##              ##
+        ##################
+
+        # Note: The layout is useless because the text widget doesn't understand styles, at least not natively.
+
+        # Note: 'borderwidth', 'columns', 'cursor', 'font', 'inactiveselectbackground', 'insertborderwidth', 'padding',
+        #       'relief', 'rows' and 'selectborderwidth' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # No layout
+
+        # Normal state
+        style configure Text               -background Background \
+                                          -bordercolor Background \
+                                          -borderwidth 0 \
+                                              -columns 80 \
+                                               -cursor xterm \
+                                                 -font BiggerFont \
+                                           -foreground Text \
+                             -inactiveselectbackground Background6 \
+                                     -insertbackground Text \
+                                    -insertborderwidth 0 \
+                                              -padding [list 0] \
+                                               -relief flat \
+                                                 -rows 4 \
+                                     -selectbackground FieldbackgroundFocus \
+                                    -selectborderwidth 0 \
+                                     -selectforeground FieldbackgroundFocusText \
+                                      -shellbackground Background;
+
+        # Mapping
+        style map Text -bordercolor [list background BordercolorBackground \
+                                            disabled BordercolorDisabled \
+                                               hover Accent];
     }
 }
 
