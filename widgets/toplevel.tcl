@@ -169,10 +169,13 @@ interp alias {} toplevel {} ::ms::toplevel::Command
 #
 # Returns the pathname of the new window created.
 proc ::ms::toplevel::Command { window { args "" } } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _toplevel $window {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Set the widget real and short addresses.
+    # Toplevels have their short address always equal to their real address.
+    set w          $window
+    set short_addr $window
 }
 
 #####################################
