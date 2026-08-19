@@ -2000,7 +2000,38 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid option, '$args'." $caller_info }
             }
         }
-        configure {}
+        configure {
+            # Synopsis:
+            #
+            # *window* **configure**
+            # *window* **configure** *option*
+            # *window* **configure** *option* *value*
+            # *window* **configure** *option* *value* ... ?*option* *value*?
+            switch -- [llength $args] {
+                0   {
+                    # 'non-styleable' options.
+                    foreach option $::ms::text(non_styleable,options) {
+                        lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
+                    }
+
+                    # 'styleable' options.
+                    foreach option $::ms::text(styleable,options) {
+                        lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
+                    }
+
+                    return [lsort -dictionary -increasing -index 0 $result]
+                }
+                1   {
+                    set option [string range $args 1 end]
+                    if { ($option in $::ms::text(non_styleable,options)) || ($option in $::ms::text(styleable,options)) } {
+                        return [list $::ms::default($w,$option) $::ms::current($w,$option)]
+                    } else {
+                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                    }
+                }
+                default {}
+            }
+        }
         identify {
             # Synopsis:
             #
@@ -2620,7 +2651,95 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
             }
         }
-        yview {}
+        yview {
+            # Synopsis:
+            #
+            # *window* **yview**
+            # *window* **yview** **moveto** *fraction*
+            # *window* **yview** **scroll** *number* *what*
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
+
+            # Check the subcommand.
+            switch -nocase -- $subcommand {
+                ""  {
+                    # Execute the command.
+                    try {
+                        {*}$address yview
+                    } on error {} {
+                        return ""
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                moveto {
+                    # Check the number of arguments provided (after the 'moveto' word).
+                    switch -- [llength $args] {
+                        1       {}
+                        default { return "" }
+                    }
+
+                    # Check the fraction provided.
+                    set fraction $args
+                    switch -- [string is double -strict $fraction] {
+                        0   { return "" }
+                    }
+
+                    # Check that fraction is inside its limits [0,1.0].
+                    if { $fraction < 0 } {
+                        set fraction 0
+                    } elseif { $fraction > 1.0 } {
+                        set fraction 1.0
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address yview moveto $fraction
+                    } on error {} {
+                        return ""
+                    }
+
+                    return ""
+                }
+                scroll {
+                    # Check the number of arguments provided (after the 'scroll' word).
+                    switch -- [llength $args] {
+                        2       {}
+                        default { return "" }
+                    }
+
+                    # Check the 'number'.
+                    set number [lindex $args 0]
+                    switch -- [string is double -strict $number] {
+                        0   { return "" }
+                    }
+
+                    # Check the 'what'.
+                    switch -nocase -- [lindex $args 1] {
+                        pages   { set what "pages" }
+                        pixels  { set what "pixels" }
+                        units   { set what "units" }
+                        default { return "" }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address yview scroll $number $what
+                    } on error {} {
+                        return ""
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
+            }
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
