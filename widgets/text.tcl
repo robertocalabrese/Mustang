@@ -3568,6 +3568,11 @@ proc ::ms::text::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the text widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,text,addrs) {}
+
+    return ""
 }
 
 ######################################
