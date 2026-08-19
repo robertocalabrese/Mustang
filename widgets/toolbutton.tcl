@@ -2062,4 +2062,20 @@ proc ::ms::toolbutton::Destroy { w } {
     return ""
 }
 
+## FocusIn
+#
+# Manage the **FocusIn** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::toolbutton::FocusIn { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::toolbutton::Pathname_Cmd $w state focus
+
+    return ""
+}
+
 #*EOF*
