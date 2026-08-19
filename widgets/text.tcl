@@ -3552,7 +3552,23 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::text::Style_Update { stylename caller_info } {}
+proc ::ms::text::Style_Update { stylename caller_info } {
+    # Check the stylename padding, if any.
+    set index [lsearch -exact $::ms::styleopt($::ms::theme,$stylename) "-padding"]
+    switch -- $index {
+        -1      {}
+        default {
+            switch -- [llength $::ms::styleopt($::ms::theme,$stylename,padding)] {
+                3   -
+                4   {
+                    # Update the stylename padding option for the current theme.
+                    set ::ms::styleopt($::ms::theme,$stylename)         [lreplace $::ms::styleopt($::ms::theme,$stylename) $index+1 $index+1 $::ms::styleopt($::ms::theme,$stylename,padding)]
+                    set ::ms::styleopt($::ms::theme,$stylename,padding) [list [lindex $::ms::styleopt($::ms::theme,$stylename,padding) 0] [lindex $::ms::styleopt($::ms::theme,$stylename,padding) 1]]
+                }
+            }
+        }
+    }
+}
 
 ######################################
 ##                                  ##
