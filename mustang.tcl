@@ -4508,6 +4508,62 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
     }
 }
 
+## Touchpad_Widget_X
+#
+# Scrolls the scrollbar (if any) related to the scrollable widget real address provided, along the X axis.
+# If the widget is not a scrollable widget or doesn't have an active scrollbar along the X axis,
+# check it's parents until an active one is found or we reach out of parents.
+#
+# Where:
+#
+# w         Should be the scrollable widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
+#           **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#           If the value provided as *amount* is not an integer or a float,
+#           defaults to **+120.0**.
+#
+#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    # <TouchpadScroll> events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # by testing is the 'counter' is divisible by 5.
+    if { [expr { $counter%5 }] != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Note: We don't need 'delta_y' for horizontal scrollbars.
+
+    # Adjust 'delta_x' or the movement will be too slow.
+    set delta_x [expr { $delta_x*30 }]
+
+    # If there is a movement along the X axis, launch '::ms::Scroll_Widget_X'.
+    if { $delta_x != 0 } {
+        ::ms::Scroll_Widget_X $w $delta_x $what
+    }
+
+    return ""
+}
+
 ##########################################
 ##                                      ##
 ##     KEYBOARD TRAVERSAL SCROLLING     ##
