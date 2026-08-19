@@ -2579,6 +2579,18 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Check the widget state and set the cursor and takefocus accordingly.
+                            switch -- $::ms::current($w,state) {
+                                disabled {
+                                    set cursor    arrow
+                                    set takefocus 0
+                                }
+                                normal {
+                                    set cursor    $::ms::current($w,cursor)
+                                    set takefocus $::ms::current($w,takefocus)
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
