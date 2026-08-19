@@ -1506,4 +1506,145 @@ proc ::ms::toplevel::Configure { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::toplevel::Destroy { w } {
+    # Toplevels may receive events from their subwidgets (a <Destroy> event in this case).
+    # Check if the toplevel was really destroyed or not.
+    switch -- [_winfo exists $w] {
+        0   {
+            # Check if the toplevel variables were already destoyed.
+            switch -- [info exists ::ms::current($w,class)] {
+                0   { return "" }
+            }
+
+            # Get the short address related to the widget real address.
+            set short_addr $w
+
+            # Destroy the aliased command.
+            interp alias {} $::ms::data($w,token) {}
+
+            # Remove the widget real address from the widgets real address list.
+            set index [lsearch -exact $::ms::addr(reals) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+            }
+
+            # Remove the widget short address from the widgets short address list.
+            set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+            }
+
+            # Remove the widget address from the toplevel widgets real address list.
+            set index [lsearch -exact $::ms::addr(toplevel) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(toplevel) [lremove $::ms::addr(toplevel) $index] }
+            }
+
+            # Remove the widget address from the toplevel classtype real address list with class '::ms::current($w,class)'.
+            set index [lsearch -exact $::ms::class($::ms::current($w,class),toplevel,addrs) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::class($::ms::current($w,class),toplevel,addrs) [lremove $::ms::class($::ms::current($w,class),toplevel,addrs) $index] }
+            }
+
+            # Remove the widget address from the toplevel classtype real address list with style '::ms::current($w,style)'.
+            set index [lsearch -exact $::ms::style($::ms::current($w,style),toplevel,addrs) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style($::ms::current($w,style),toplevel,addrs) [lremove $::ms::style($::ms::current($w,style),toplevel,addrs) $index] }
+            }
+
+            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the toplevel classtype.
+            switch -- [llength $::ms::style($::ms::current($w,style),toplevel,addrs)] {
+                0   {
+                    set index [lsearch -exact $::ms::style(toplevel,classtype) $::ms::current($w,style)]
+                    switch -- $index {
+                        -1      {}
+                        default { set ::ms::style(toplevel,classtype) [lremove $::ms::style(toplevel,classtype) $index] }
+                    }
+                }
+            }
+
+            # Destroy every widget's variables previously created.
+            unset -nocomplain -- ::ms::addr($short_addr,real) \
+                                 ::ms::addr($w,short);
+
+            unset -nocomplain -- ::ms::addr($w,border) \
+                                 ::ms::addr($w,structure) \
+                                 ::ms::addr($w,toplevel) \
+                                 ::ms::addr($w,widget);
+
+            unset -nocomplain -- ::ms::current($w,background) \
+                                 ::ms::current($w,backgroundimage) \
+                                 ::ms::current($w,bordercolor) \
+                                 ::ms::current($w,borderwidth) \
+                                 ::ms::current($w,class) \
+                                 ::ms::current($w,colormap) \
+                                 ::ms::current($w,container) \
+                                 ::ms::current($w,cursor) \
+                                 ::ms::current($w,height) \
+                                 ::ms::current($w,menu) \
+                                 ::ms::current($w,padding) \
+                                 ::ms::current($w,relief) \
+                                 ::ms::current($w,screen) \
+                                 ::ms::current($w,state) \
+                                 ::ms::current($w,style) \
+                                 ::ms::current($w,takefocus) \
+                                 ::ms::current($w,tile) \
+                                 ::ms::current($w,title) \
+                                 ::ms::current($w,use) \
+                                 ::ms::current($w,visual) \
+                                 ::ms::current($w,width);
+
+            unset -nocomplain -- ::ms::data($w,classtype) \
+                                 ::ms::data($w,padding) \
+                                 ::ms::data($w,statespec) \
+                                 ::ms::data($w,token);
+
+            unset -nocomplain -- ::ms::default($w,background) \
+                                 ::ms::default($w,backgroundimage) \
+                                 ::ms::default($w,bordercolor) \
+                                 ::ms::default($w,borderwidth) \
+                                 ::ms::default($w,class) \
+                                 ::ms::default($w,colormap) \
+                                 ::ms::default($w,container) \
+                                 ::ms::default($w,cursor) \
+                                 ::ms::default($w,height) \
+                                 ::ms::default($w,menu) \
+                                 ::ms::default($w,padding) \
+                                 ::ms::default($w,relief) \
+                                 ::ms::default($w,screen) \
+                                 ::ms::default($w,state) \
+                                 ::ms::default($w,style) \
+                                 ::ms::default($w,takefocus) \
+                                 ::ms::default($w,tile) \
+                                 ::ms::default($w,title) \
+                                 ::ms::default($w,use) \
+                                 ::ms::default($w,visual) \
+                                 ::ms::default($w,width);
+
+            unset -nocomplain -- ::ms::managed_by($w,background) \
+                                 ::ms::managed_by($w,backgroundimage) \
+                                 ::ms::managed_by($w,bordercolor) \
+                                 ::ms::managed_by($w,borderwidth) \
+                                 ::ms::managed_by($w,cursor) \
+                                 ::ms::managed_by($w,padding) \
+                                 ::ms::managed_by($w,relief) \
+                                 ::ms::managed_by($w,tile);
+        }
+    }
+}
+
 #*EOF*
