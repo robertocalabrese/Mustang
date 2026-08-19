@@ -5183,4 +5183,56 @@ proc ::ms::text::Insert { w } {
     return ""
 }
 
+# Insert_String
+#
+# Insert a string into a text at the point of the insertion cursor.
+# If there is a selection in the text, and it covers the point of the
+# insertion cursor, then delete the selection before inserting.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# data   The string to insert (usually just a single character)
+#
+# It doesn't return anything.
+proc ::ms::text::Insert_String { w data } {
+    if { $data eq "" || $::ms::current($w,state) eq "disabled" } {
+        return ""
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    # Execute the command.
+    set compound 0
+    switch -- [::ms::text::The_Cursor_Is_Inside_The_Selection $w] {
+        1   {
+            # If autoseparators are active, put an autoseparator.
+            switch -- $::ms::current($w,autoseparators) {
+                1   {
+                    {*}$address configure -autoseparators 0
+                    {*}$address edit separator
+                    set compound 1
+                }
+            }
+
+            {*}$address delete sel.first sel.last
+        }
+    }
+
+    {*}$address insert insert $data
+    {*}$address see insert
+
+    if { ($compound == 1) && ($::ms::current($w,autoseparators) == 1) } {
+        {*}$address edit separator
+        {*}$address configure -autoseparators 1
+    }
+
+    return ""
+}
+
 #*EOF*
