@@ -1463,6 +1463,29 @@ namespace eval ttk::theme::Halo {
                               -foreground [list   disabled ButtonTextDisabled \
                                                    pressed Accent] \
                               -lightcolor [list   disabled ButtonBackground];
+
+        ######################
+        ##                  ##
+        ##     TOPLEVEL     ##
+        ##                  ##
+        ######################
+
+        # Note: The layout is useless because the toplevel widget doesn't understand styles, at least not natively.
+
+        # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # No layout
+
+        # Normal state
+        style configure Toplevel      -background Background \
+                                 -backgroundimage {} \
+                                     -bordercolor Background \
+                                     -borderwidth 0 \
+                                          -cursor arrow \
+                                         -padding [list 0] \
+                                          -relief solid \
+                                            -tile 0;
     }
 }
 
