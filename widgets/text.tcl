@@ -5143,4 +5143,44 @@ proc ::ms::text::End_IME_Marked_Text { w } {
     return ""
 }
 
+#####################
+##                 ##
+##     INSERT      ##
+##                 ##
+#####################
+
+# Note: The following procedures are a modified version of their equivalent ones of the Tk text widget.
+#       The modifications were needed to let them work in mustang.
+#       All credits goes to the original author/s.
+
+## Insert
+#
+# Manage the **Insert** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::text::Insert { w } {
+    # Execute the command.
+    try {
+        ::tk::GetSelection $w PRIMARY
+    } on error {} {
+        # Do Nothing
+    } on ok { primary } {
+        ::ms::text::Insert_String $w $primary
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollbar) {
+        true {
+            # Update the scrollbars.
+            ::ms::text::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
