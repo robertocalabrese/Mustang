@@ -463,7 +463,8 @@
 #
 #                            See also **-variable**.
 #
-# **-variable**              The name of a global Tcl variable which is linked to the **-value**.
+# **-variable**              The name of a Tcl variable (with absolute path) which is linked to the **-value**.
+#                            The variable should already exist at the time the widget is created or this option will be ignored.
 #
 #                            If not provided, defaults to the widget address.
 #
