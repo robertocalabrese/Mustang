@@ -1958,7 +1958,45 @@ proc ::ms::text::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::text::Pathname_Cmd { w cmd args } {}
+proc ::ms::text::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        bbox        -
+        compare     -
+        count       -
+        debug       -
+        delete      -
+        dlineinfo   -
+        dump        -
+        edit        -
+        get         -
+        image       -
+        index       -
+        mark        -
+        peer        -
+        pendingsync -
+        scan        -
+        search      -
+        see         -
+        sync        {}
+        cget {}
+        configure {}
+        identify {}
+        insert  -
+        replace {}
+        instate {}
+        state {}
+        style {}
+        tag {}
+        window {}
+        xview {}
+        yview {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
