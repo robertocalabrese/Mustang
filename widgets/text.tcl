@@ -4476,4 +4476,18 @@ proc ::ms::text::Scrollbar_ButtonPress { w orient x y }  {
     return ""
 }
 
+## Scrollbar_ButtonRelease
+#
+# Manage the **ButtonRelease-1** event on the widget's internal scrollbar.
+#
+# It doesn't return anything.
+proc ::ms::text::Scrollbar_ButtonRelease {} {
+    unset -nocomplain -- ::ms::temp(drag_allowed) \
+                         ::ms::temp(fraction) \
+                         ::ms::temp(xpress) \
+                         ::ms::temp(ypress);
+
+    return ""
+}
+
 #*EOF*
