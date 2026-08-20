@@ -4309,9 +4309,17 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 
 ## Touchpad_Widget_X
 #
-# Scrolls the scrollbar (if any) related to the scrollable widget real address provided, along the X axis.
-# If the widget is not a scrollable widget or doesn't have an active scrollbar along the X axis,
-# check it's parents until an active one is found or we reach out of parents.
+# Along the X axis:
+#   Scrolls the scrollbar (if any) related to the scrollable widget real address provided.
+#   If the widget is not a scrollable widget or doesn't have an active scrollbar along the X axis,
+#   try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#   and move that scrollbar by one units/page left or right (depending on the touchpad direction).
+#   If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+# Along the Y axis:
+#   Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#   and move that scrollbar by one units/page up or down (depending on the touchpad direction).
+#   If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 #
 # Where:
 #
@@ -4350,14 +4358,18 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Note: We don't need 'delta_y' for horizontal scrollbars.
-
-    # Adjust 'delta_x' or the movement will be too slow.
+    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
     set delta_x [expr { $delta_x*30 }]
+    set delta_y [expr { $delta_y*30 }]
 
     # If there is a movement along the X axis, launch '::ms::Scroll_Widget_X'.
     if { $delta_x != 0 } {
         ::ms::Scroll_Widget_X $w $delta_x $what
+    }
+
+    # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
+    if { $delta_y != 0 } {
+        ::ms::Scroll_Parent_Y $w $delta_y $what
     }
 
     return ""
@@ -4365,9 +4377,17 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
 
 ## Touchpad_Widget_Y
 #
-# Scrolls the scrollbar (if any) related to the scrollable widget real address provided, along the Y axis.
-# If the widget is not a scrollable widget or doesn't have an active scrollbar along the Y axis,
-# check it's parents until an active one is found or we reach out of parents.
+# Along the X axis:
+#   Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#   and move that scrollbar by one units/page left or right (depending on the touchpad direction).
+#   If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+# Along the Y axis:
+#   Scrolls the scrollbar (if any) related to the scrollable widget real address provided.
+#   If the widget is not a scrollable widget or doesn't have an active scrollbar along the Y axis,
+#   try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#   and move that scrollbar by one units/page up or down (depending on the touchpad direction).
+#   If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 #
 # Where:
 #
@@ -4406,12 +4426,14 @@ proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-
-    # Note: We don't need 'delta_x' for vertical scrollbars.
-
     # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
     set delta_x [expr { $delta_x*30 }]
     set delta_y [expr { $delta_y*30 }]
+
+    # If there is a movement along the X axis, launch '::ms::Scroll_Parent_X'.
+    if { $delta_x != 0 } {
+        ::ms::Scroll_Parent_X $w $delta_x $what
+    }
 
     # If there is a movement along the Y axis, launch '::ms::Scroll_Widget_Y'.
     if { $delta_y != 0 } {
