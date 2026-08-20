@@ -4522,7 +4522,21 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
         scan        -
         search      -
         see         -
-        sync        {}
+        sync        {
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         cget {
             # Synopsis:
             #
