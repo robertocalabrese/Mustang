@@ -2540,6 +2540,7 @@
 #              -insertofftime 0 \
 #                     -relief solid \
 #                       -rows 4 \
+#                 -scrollable true \
 #                      -state normal \
 #                      -style Text \
 #                  -takefocus true \
