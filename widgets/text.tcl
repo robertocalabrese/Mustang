@@ -4236,9 +4236,6 @@ proc ::ms::text::Command { window { args "" } } {
                     lappend ::ms::addr(reals)  $w
                     lappend ::ms::addr(shorts) $short_addr
 
-                    # Add the widget address to the text widgets real address list.
-                    lappend ::ms::addr(text) $w
-
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w
 
@@ -4410,9 +4407,6 @@ proc ::ms::text::Command { window { args "" } } {
 
                     lappend ::ms::addr(shorts) $short_addr
 
-                    # Add the widget address to the text widgets real address list.
-                    lappend ::ms::addr(text) $w
-
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.text
 
@@ -4451,6 +4445,9 @@ proc ::ms::text::Command { window { args "" } } {
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::text::Pathname_Cmd $w]
             }
+
+            # Add the widget address to the text widgets real address list.
+            lappend ::ms::addr(text) $w
 
             # Add the widget address to the text classtype real address list with class '::ms::current($w,class)'.
             lappend ::ms::class($::ms::current($w,class),text,addrs) $w
