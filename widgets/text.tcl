@@ -3226,28 +3226,32 @@ _bind _H_Scrollbar_Text <Control-MouseWheel>       { ::ms::Scroll_Widget_X [_win
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
 
-# This binding movement will happen on two different planes, horizontal and vertical.
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
 # touchpad direction.
-# In this case, only the horizontal plane is involved.
+#   1 - If the widget's horizontal scrollbar is active, move the treeview object by one unit left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
 #
-# If the widget's horizontal scrollbar is active, move the text object by one unit left or right
-# (depending on the touchpad direction).
-# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-# and move that scrollbar by one unit left or right (depending on the touchpad direction).
-# If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one units up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _H_Scrollbar_Text <TouchpadScroll> { ::ms::Touchpad_Widget_X [_winfo parent %W] %# %D units; break }
 
-# This binding movement will happen on two different planes, horizontal and vertical.
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
 # touchpad direction.
-# In this case, only the horizontal plane is involved.
+#   1 - If the widget's horizontal scrollbar is active, move the treeview object by one page left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
 #
-# If the widget's horizontal scrollbar is active, move the text object by one page left or right
-# (depending on the touchpad direction).
-# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-# and move that scrollbar by one page left or right (depending on the touchpad direction).
-# If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _H_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget_X [_winfo parent %W] %# %D pages; break }
 
 ########################################
@@ -3284,28 +3288,32 @@ _bind _V_Scrollbar_Text <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo par
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
 
-# This binding movement will happen on two different planes, horizontal and vertical.
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
 # touchpad direction.
-# In this case, only the vertical plane is involved.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
 #
-# If the widget's vertical scrollbar is active, move the text object by one unit up or down
-# (depending on the touchpad direction).
-# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-# and move that scrollbar by one unit up or down (depending on the touchpad direction).
-# If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+#   2 - If the widget's vertical scrollbar is active, move the treeview object by one unit up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _V_Scrollbar_Text <TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo parent %W] %# %D units; break }
 
-# This binding movement will happen on two different planes, horizontal and vertical.
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
 # touchpad direction.
-# In this case, only the vertical plane is involved.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
 #
-# If the widget's vertical scrollbar is active, move the text object by one page up or down
-# (depending on the touchpad direction).
-# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-# and move that scrollbar by one page up or down (depending on the touchpad direction).
-# If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+#   2 - If the widget's vertical scrollbar is active, move the treeview object by one page up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _V_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo parent %W] %# %D pages; break }
 
 # Create the mustang **text** package.
