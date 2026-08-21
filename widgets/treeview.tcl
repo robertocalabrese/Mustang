@@ -3458,7 +3458,19 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::treeview::Style_Update { stylename caller_info } {}
+proc ::ms::treeview::Style_Update { stylename caller_info } {
+    # Check if the style provided is a parent of 'Treeview'.
+    set index [string last "." $stylename]
+    switch -- $index {
+        -1      { set parent_style ".Treeview" }
+        default {
+            switch -- [string range $stylename $index+1 end] {
+                Treeview { set parent_style "" }
+                default  { set parent_style ".Treeview"}
+            }
+        }
+    }
+}
 
 ######################################
 ##                                  ##
