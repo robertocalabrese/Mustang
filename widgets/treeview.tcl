@@ -5074,4 +5074,29 @@ proc ::ms::treeview::Identify_Cell { w x y } {
     return ""
 }
 
+######################################
+##                                  ##
+##     TREE STRUCTURE UTILITIES     ##
+##                                  ##
+######################################
+
+## Between
+#
+# Returns a list of all items between $item1 and $item2, in preorder traversal order.
+# $item1 and $item2 may be in either order.
+#
+# NOTES: This routine is O(N) in the size of the tree.
+#        There's probably a way to do this that's O(N) in the number
+#        of items returned, but I'm not clever enough to figure it out.
+#
+# Return the 'between' value.
+proc ::ms::treeview::Between { w item1 item2 } {
+    set ::ttk::treeview::between          [list ]
+    set ::ttk::treeview::selectingBetween 0
+
+    ::ms::treeview::Scan_Between $w $item1 $item2 {}
+
+    return $::ttk::treeview::between
+}
+
 #*EOF*
