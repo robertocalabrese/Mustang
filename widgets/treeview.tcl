@@ -3518,6 +3518,43 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
     switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_separator_style,background)] {
         0   { _ttk_style configure $treeview_separator_style -background $::ms::styleopt($::ms::theme,Treeview.Separator,background) }
     }
+
+    # Note: The 'Item', 'Cell' and 'Row' style options are here for completeness but it seems than Tk
+    #       doesn't look for them internally and they always be like the ones defined in the theme.
+
+    ################################
+    ##                            ##
+    ##     ITEM STYLE OPTIONS     ##
+    ##                            ##
+    ################################
+
+    set treeview_item_style [string cat $stylename $parent_style ".Item"]
+
+    # Check if a layout exists for 'stylename.Item'.
+    # If not, create one by mirroring the 'Item' layout for the current theme.
+    if { $treeview_item_style ni $::ms::layouts($::ms::theme) } {
+        _ttk_style layout $treeview_item_style [_ttk_style layout Item]
+    }
+
+    # foreground
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,foreground)] {
+        0   { _ttk_style configure $treeview_item_style -foreground $::ms::styleopt($::ms::theme,Item,foreground) }
+    }
+
+    # indicatormargins
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,indicatormargins)] {
+        0   { _ttk_style configure $treeview_item_style -indicatormargins $::ms::styleopt($::ms::theme,Item,indicatormargins) }
+    }
+
+    # indicatorsize
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,indicatorsize)] {
+        0   { _ttk_style configure $treeview_item_style -indicatorsize $::ms::styleopt($::ms::theme,Item,indicatorsize) }
+    }
+
+    # padding
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,padding)] {
+        0   { _ttk_style configure $treeview_item_style -padding $::ms::styleopt($::ms::theme,Item,padding) }
+    }
 }
 
 ######################################
