@@ -818,6 +818,347 @@ proc ::ms::treeview::Command { window { args "" } } {
             set ::ms::managed_by($w,padding)              Tk
             set ::ms::managed_by($w,shellbackground)      Tk
             set ::ms::managed_by($w,stripedbackground)    Tk
+
+            #################################################
+            ##                                             ##
+            ##     CHECK THE WIDGET'S OPTIONS PROVIDED     ##
+            ##                                             ##
+            #################################################
+
+            # Check the remaining options, if any.
+            foreach { option value } $args {
+                switch -nocase -- $option {
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
+                    -bordercolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,bordercolor)    $value
+                        set ::ms::managed_by($w,bordercolor) developer
+                    }
+                    -borderwidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,borderwidth)    $value
+                        set ::ms::managed_by($w,borderwidth) developer
+                    }
+                    -columnseparatorwidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,columnseparatorwidth)    $value
+                        set ::ms::managed_by($w,columnseparatorwidth) developer
+                    }
+                    -class { set ::ms::current($w,class) $value }
+                    -cmenu {
+                        set value [string trim $value]
+                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                            set ::ms::current($w,cmenu) $value
+                        }
+                    }
+                    -columns { set ::ms::current($w,columns) [list {*}$value] }
+                    -cursor {
+                        set value [string tolower $value]
+                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                            set ::ms::current($w,cursor)    $value
+                            set ::ms::managed_by($w,cursor) developer
+                        }
+                    }
+                    -darkcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,darkcolor)    $value
+                        set ::ms::managed_by($w,darkcolor) developer
+                    }
+                    -displaycolumns {
+                        switch -nocase -- $value {
+                            "#all"  { set ::ms::current($w,displaycolumns) "#all" }
+                            default { set ::ms::current($w,displaycolumns) [list {*}$value] }
+                        }
+                    }
+                    -fieldbackground {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,fieldbackground)    $value
+                        set ::ms::managed_by($w,fieldbackground) developer
+                    }
+                    -focuscolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,focuscolor)    $value
+                        set ::ms::managed_by($w,focuscolor) developer
+                    }
+                    -focuswidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,focuswidth)    $value
+                        set ::ms::managed_by($w,focuswidth) developer
+                    }
+                    -font {
+                        if { $value in [font names] } {
+                            set ::ms::current($w,font)    $value
+                            set ::ms::managed_by($w,font) developer
+                        }
+                    }
+                    -foreground {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,foreground)    $value
+                        set ::ms::managed_by($w,foreground) developer
+                    }
+                    -indent {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,indent)    $value
+                        set ::ms::managed_by($w,indent) developer
+                    }
+                    -lightcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,lightcolor)    $value
+                        set ::ms::managed_by($w,lightcolor) developer
+                    }
+                    -padding {
+                        switch -- [llength $value] {
+                            1   {
+                                set value [::ms::Check_Measure $value invalid]
+                                switch -- $value {
+                                    invalid { continue }
+                                }
+
+                                set ::ms::current($w,padding) [list $value]
+                            }
+                            2   {
+                                set pad_horizontal [::ms::Check_Measure [lindex $value 0] invalid]
+                                switch -- $pad_horizontal {
+                                    invalid { continue }
+                                }
+
+                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                switch -- $pad_vertical {
+                                    invalid { continue }
+                                }
+
+                                set ::ms::current($w,padding) [list $pad_horizontal $pad_vertical]
+                            }
+                            3   {
+                                set pad_left [::ms::Check_Measure [lindex $value 0] invalid]
+                                switch -- $pad_left {
+                                    invalid { continue }
+                                }
+
+                                set pad_vertical [::ms::Check_Measure [lindex $value 1] invalid]
+                                switch -- $pad_vertical {
+                                    invalid { continue }
+                                }
+
+                                set pad_right [::ms::Check_Measure [lindex $value 2] invalid]
+                                switch -- $pad_right {
+                                    invalid { continue }
+                                }
+
+                                set ::ms::current($w,padding) [list $pad_left $pad_vertical $pad_right]
+                            }
+                            4   {
+                                set pad_left [::ms::Check_Measure [lindex $value 0] invalid]
+                                switch -- $pad_left {
+                                    invalid { continue }
+                                }
+
+                                set pad_top [::ms::Check_Measure [lindex $value 1] invalid]
+                                switch -- $pad_top {
+                                    invalid { continue }
+                                }
+
+                                set pad_right [::ms::Check_Measure [lindex $value 2] invalid]
+                                switch -- $pad_right {
+                                    invalid { continue }
+                                }
+
+                                set pad_bottom [::ms::Check_Measure [lindex $value 3] invalid]
+                                switch -- $pad_bottom {
+                                    invalid { continue }
+                                }
+
+                                set ::ms::current($w,padding) [list $pad_left $pad_top $pad_right $pad_bottom]
+                            }
+                            default { continue }
+                        }
+
+                        set ::ms::managed_by($w,padding) developer
+                    }
+                    -rowheight {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,rowheight)    $value
+                        set ::ms::managed_by($w,rowheight) developer
+                    }
+                    -rows {
+                        switch -- [string is integer -strict $value] {
+                            1   {
+                                if { $value > 0 } {
+                                    set ::ms::current($w,rows)    $value
+                                    set ::ms::managed_by($w,rows) developer
+                                }
+                            }
+                        }
+                    }
+                    -selectmode {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            extended -
+                            browse   -
+                            none     { set ::ms::current($w,selectmode) $value }
+                        }
+                    }
+                    -selecttype {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            item -
+                            cell { set ::ms::current($w,selecttype) $value }
+                        }
+                    }
+                    -shellbackground {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,shellbackground)    $value
+                        set ::ms::managed_by($w,shellbackground) developer
+                    }
+                    -show {
+                        switch -- [llength $value] {
+                            0   { set ::ms::current($w,show) [list ] }
+                            1   -
+                            2   {
+                                switch -nocase -- $value {
+                                    tree            { set ::ms::current($w,show) [list tree] }
+                                    headings        { set ::ms::current($w,show) [list headings] }
+                                    "tree headings" -
+                                    "headings tree" { set ::ms::current($w,show) [list tree headings] }
+                                }
+                            }
+                        }
+                    }
+                    -state {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            disabled -
+                            normal   { set ::ms::current($w,state) $value }
+                        }
+                    }
+                    -striped {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,striped) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,striped) 1 }
+                        }
+                    }
+                    -stripedbackground {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,stripedbackground)    $value
+                        set ::ms::managed_by($w,stripedbackground) developer
+                    }
+                    -style {
+                        if { $value in $::ms::style($::ms::theme) } {
+                            set ::ms::current($w,style) $value
+                        }
+                    }
+                    -takefocus {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,takefocus) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,takefocus) 1 }
+                        }
+                    }
+                    -titlecolumns {
+                        switch -- [string is integer -strict $value] {
+                            1   {
+                                if { $value > -1 } {
+                                    set ::ms::current($w,titlecolumns) $value
+                                }
+                            }
+                        }
+                    }
+                    -titleitems {
+                        switch -- [string is integer -strict $value] {
+                            1   {
+                                if { $value > -1 } {
+                                    set ::ms::current($w,titleitems) $value
+                                }
+                            }
+                        }
+                    }
+                    -xscrollcommand {
+                        switch -- [llength $value] {
+                            2   { set ::ms::current($w,xscrollcommand) $value }
+                        }
+                    }
+                    -yscrollcommand {
+                        switch -- [llength $value] {
+                            2   { set ::ms::current($w,yscrollcommand) $value }
+                        }
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
