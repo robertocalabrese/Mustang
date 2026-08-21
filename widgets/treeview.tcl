@@ -3574,6 +3574,25 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
     switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_cell_style,padding)] {
         0   { _ttk_style configure $treeview_cell_style -padding $::ms::styleopt($::ms::theme,Cell,padding) }
     }
+
+    ###############################
+    ##                           ##
+    ##     ROW STYLE OPTIONS     ##
+    ##                           ##
+    ###############################
+
+    set treeview_row_style [string cat $stylename $parent_style ".Row"]
+
+    # Check if a layout exists for 'stylename.Row'.
+    # If not, create one by mirroring the 'Row' layout for the current theme.
+    if { $treeview_row_style ni $::ms::layouts($::ms::theme) } {
+        _ttk_style layout $treeview_row_style [_ttk_style layout Row]
+    }
+
+    # background
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_row_style,background)] {
+        0   { _ttk_style configure $treeview_row_style -background $::ms::styleopt($::ms::theme,Row,background) }
+    }
 }
 
 ######################################
