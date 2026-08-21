@@ -4558,4 +4558,24 @@ proc ::ms::treeview::Hover { w X Y } {
     return ""
 }
 
+## Map
+#
+# Manage the **Map** event on the widget.
+# It also remove the **Map** binding after it fires up the first time.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Map { w } {
+    # Remove the Map binding.
+    _bind $::ms::addr($w,widget) <Map> {}
+
+    # If needed, update the scrollbar/s.
+    ::ms::treeview::Scrollbar_Update $w
+
+    return ""
+}
+
 #*EOF*
