@@ -5099,4 +5099,31 @@ proc ::ms::treeview::Between { w item1 item2 } {
     return $::ttk::treeview::between
 }
 
+## Scan_Between
+#
+# Recursive worker routine for 'ttk::treeview::between'.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Scan_Between { w item1 item2 item } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    if { ($item eq $item1) || ($item eq $item2) } {
+        lappend ::ttk::treeview::between $item
+
+        set ::ttk::treeview::selectingBetween [expr { !$::ttk::treeview::selectingBetween }]
+    } elseif { $::ttk::treeview::selectingBetween } {
+        lappend ::ttk::treeview::between $item
+    }
+
+    foreach child [{*}$address children $item] {
+        ::ms::treeview::Scan_Between $w $item1 $item2 $child
+    }
+
+    return ""
+}
+
 #*EOF*
