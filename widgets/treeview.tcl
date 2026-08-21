@@ -89,7 +89,7 @@ _bind _Simple_Treeview <Configure> { ::ms::treeview::Configure %W; break }
 
 # Enter/Leave
 _bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y; break }
-_bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y }
+_bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y Leave; break }
 
 # FocusIn/FocusOut
 _bind _Simple_Treeview <FocusIn>  { ::ms::treeview::FocusIn  %W; break }
@@ -204,8 +204,8 @@ _bind _Scrollable_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo pare
 _bind _Scrollable_Treeview <Configure> { ::ms::treeview::Configure [_winfo parent %W]; break }
 
 # Enter/Leave
-_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %x %y }
+_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W]; break }
+_bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] Leave; break }
 
 # FocusIn/FocusOut
 _bind _Scrollable_Treeview <FocusIn>  { ::ms::treeview::FocusIn  [_winfo parent %W]; break }
@@ -4563,8 +4563,10 @@ proc ::ms::treeview::FocusOut { w } {
 # X, Y   Should be the mouse pointer (X,Y) root coordinates at the time of the event.
 #        These value are provided directly by the **Enter** or **Leave** event.
 #
+# type   Optional, specifies a **Leave** event upon a treeview object.
+#
 # It doesn't return anything.
-proc ::ms::treeview::Hover { w X Y } {
+proc ::ms::treeview::Hover { w X Y { type "" } } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
         normal {
@@ -4591,6 +4593,10 @@ proc ::ms::treeview::Hover { w X Y } {
 
                 # Change the widget dynamic state to 'hover'
                 ::ms::treeview::Pathname_Cmd $w state hover
+            }
+
+            switch -- $type {
+                Leave { ::ms::treeview::Activate_Heading $w {} }
             }
         }
     }
@@ -4852,6 +4858,60 @@ proc ::ms::treeview::Toggle_Focus { w } {
     switch -- $item {
         ""      {}
         default { ::ms::treeview::Toggle $w $item }
+    }
+
+    return ""
+}
+
+################################
+##                            ##
+##     HEADING ACTIVATION     ##
+##                            ##
+################################
+
+## Activate_Heading
+#
+# Track the active heading element.
+#
+# Where:
+#
+# w         Should be the widget real address involved.
+#
+# heading   Should be the 'heading' involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Activate_Heading { w heading } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    if { ($w != $::ttk::treeview::State(activeWidget)) || ($heading != $::ttk::treeview::State(activeHeading)) } {
+        if { [_winfo exists $::ttk::treeview::State(activeWidget)] && $::ttk::treeview::State(activeHeading) != {} } {
+            # It may happen that 'State(activeHeading)' no longer corresponds to an existing display column.
+            # This happens for instance when changing 'displaycolumns' in a bound script when this change triggers a **Leave** event.
+            # A proc checking if the display column 'State(activeHeading)' is really still present or not could be
+            # written but it would need to check several special cases:
+            #   a. 'displaycolumns' "#all" or being an explicit columns list
+            #   b. column #0 display is not governed by the 'displaycolumn' list but by the value of the 'show' option
+            #
+            # --> Let's rather catch the following line.
+            catch { $::ttk::treeview::State(activeWidget) heading $::ttk::treeview::State(activeHeading) state !active }
+        }
+
+        switch -- $heading {
+            ""      {}
+            default { {*}$address heading $heading state active }
+        }
+
+        set ::ttk::treeview::State(activeHeading) $heading
+        set ::ttk::treeview::State(activeWidget)  $w
     }
 
     return ""
