@@ -71,12 +71,12 @@ package provide ::ms::treeview 0.1
 #######################################
 
 # ButtonPress-1
-_bind _Simple_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress  %W %x %y; break }
-_bind _Simple_Treeview <ButtonRelease-1>   { ::ms::treeview::Release      %W %x %y; break }
-_bind _Simple_Treeview <B1-Motion>         { ::ms::treeview::Drag         %W %x %y; break }
-_bind _Simple_Treeview <Double-Button-1>   { ::ms::treeview::Double_Click %W %x %y; break }
-_bind _Simple_Treeview <Shift-Button-1>    { ::ms::treeview::Select       %W %x %y extend; break }
-_bind _Simple_Treeview <<ToggleSelection>> { ::ms::treeview::Select       %W %x %y toggle; break }
+_bind _Simple_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress   %W %x %y; break }
+_bind _Simple_Treeview <ButtonRelease-1>   { ::ms::treeview::ButtonRelease %W %x %y; break }
+_bind _Simple_Treeview <B1-Motion>         { ::ms::treeview::Drag          %W %x %y; break }
+_bind _Simple_Treeview <Double-Button-1>   { ::ms::treeview::Double_Click  %W %x %y; break }
+_bind _Simple_Treeview <Shift-Button-1>    { ::ms::treeview::Select        %W %x %y extend; break }
+_bind _Simple_Treeview <<ToggleSelection>> { ::ms::treeview::Select        %W %x %y toggle; break }
 
 # Motion
 _bind _Simple_Treeview <Motion> { ::ms::treeview::Motion %W %x %y; break }
@@ -187,12 +187,12 @@ _bind _Simple_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Widget %W %# %D
 ###########################################
 
 # ButtonPress-1
-_bind _Scrollable_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress  [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <ButtonRelease-1>   { ::ms::treeview::Release      [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <B1-Motion>         { ::ms::treeview::Drag         [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <Double-Button-1>   { ::ms::treeview::Double_Click [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <Shift-Button-1>    { ::ms::treeview::Select       [_winfo parent %W] %x %y extend; break }
-_bind _Scrollable_Treeview <<ToggleSelection>> { ::ms::treeview::Select       [_winfo parent %W] %x %y toggle; break }
+_bind _Scrollable_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress   [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <ButtonRelease-1>   { ::ms::treeview::ButtonRelease [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <B1-Motion>         { ::ms::treeview::Drag          [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <Double-Button-1>   { ::ms::treeview::Double_Click  [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <Shift-Button-1>    { ::ms::treeview::Select        [_winfo parent %W] %x %y extend; break }
+_bind _Scrollable_Treeview <<ToggleSelection>> { ::ms::treeview::Select        [_winfo parent %W] %x %y toggle; break }
 
 # Motion
 _bind _Scrollable_Treeview <Motion> { ::ms::treeview::Motion [_winfo parent %W] %x %y; break }
@@ -4106,7 +4106,6 @@ proc ::ms::treeview::ButtonPress { w x y } {
             # Identify the widget's region under the mouse pointer.
             switch -- [{*}$address identify region $x $y] {
                 heading {
-                    # Heading.Press
                     set column [{*}$address identify column $x $y]
 
                     set ::ttk::treeview::State(pressMode) heading
@@ -4116,7 +4115,6 @@ proc ::ms::treeview::ButtonPress { w x y } {
                     {*}$address heading $column state pressed
                 }
                 separator {
-                    # Resize.Press
                     set ::ttk::treeview::State(pressMode)    resize
                     set ::ttk::treeview::State(resizeColumn) [{*}$address identify column $x $y]
                 }
@@ -4142,6 +4140,48 @@ proc ::ms::treeview::ButtonPress { w x y } {
             }
         }
     }
+
+    return ""
+}
+
+## ButtonRelease
+#
+# Manages the **ButtonRel;ease-1** event.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::ButtonRelease { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    switch -- $::ttk::treeview::State(pressMode) {
+        resize  { {*}$address drop }
+        heading {
+            if { [lsearch -exact [{*}$address heading $::ttk::treeview::State(heading) state] pressed] >= 0 } {
+                after 0 [{*}$address heading $::ttk::treeview::State(heading) -command]
+            }
+
+            # Execute the command.
+            {*}$address heading $::ttk::treeview::State(heading) state !pressed
+        }
+    }
+
+    set ::ttk::treeview::State(pressMode) none
+
+    ::ms::treeview::Motion $w $x $y
 
     return ""
 }
