@@ -3884,4 +3884,80 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## ButtonPress
+#
+# Manage the **ButtonPress** event on the widget.
+#
+# Note: This procedure was inspired by the treeview procedure 'Press'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **ButtonPress** event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::ButtonPress { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { ::ms::Focus_The_Widget_Or_Its_Toplevel $w }
+        default  {
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.treeview] }
+            }
+
+            # Focus the treeview.
+            _focus -force $::ms::addr($w,widget)
+
+            # Change the widget dynamic state to 'focus'
+            ::ms::treeview::Pathname_Cmd $w state focus
+
+            # Identify the widget's region under the mouse pointer.
+            switch -- [{*}$address identify region $x $y] {
+                heading {
+                    # Heading.Press
+                    set column [{*}$address identify column $x $y]
+
+                    set ::ttk::treeview::State(pressMode) heading
+                    set ::ttk::treeview::State(heading)   $column
+
+                    # Execute the command.
+                    {*}$address heading $column state pressed
+                }
+                separator {
+                    # Resize.Press
+                    set ::ttk::treeview::State(pressMode)    resize
+                    set ::ttk::treeview::State(resizeColumn) [{*}$address identify column $x $y]
+                }
+                tree -
+                cell {
+                    # Identify the widget's item under the mouse pointer.
+                    set item [{*}$address identify item $x $y]
+
+                    # Identify the widget's cell under the mouse pointer.
+                    set cell [::ms::treeview::IdentifyCell $w $x $y]
+
+                    # Dispatch to the appropriate select operation depending on current value of '-selectmode'.
+                    ::ms::treeview::Select_Op $w $item $cell choose
+
+                    # Identify the widget's element under the mouse pointer.
+                    switch -glob -- [{*}$address identify element $x $y] {
+                        *indicator  -
+                        *disclosure -
+                        *text       -
+                        *padding    { ::ms::treeview::Toggle $w $item }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
