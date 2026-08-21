@@ -2416,6 +2416,301 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            ################################
+                            ##                            ##
+                            ##     CONFIGURE THE WIDGET   ##
+                            ##                            ##
+                            ################################
+
+                            # Note: 'borderwidth', 'columnseparatorwidth', 'cursor', 'focuswidth', 'font', 'indent', 'justify',
+                            #       'padding' and 'rowheight' are not allowed to change if the statespec changes.
+
+                            ###################################
+                            ##                               ##
+                            ##     HEADING STYLE OPTIONS     ##
+                            ##                               ##
+                            ###################################
+
+                            set treeview_heading_style [string cat $::ms::current($w,style) $parent_style ".Heading"]
+
+                            # Check if a layout exists for '::ms::current($w,style).Heading'.
+                            # If not, create one by mirroring the 'Heading' layout for the current theme.
+                            if { $treeview_heading_style ni $::ms::layouts($::ms::theme) } {
+                                _ttk_style layout $treeview_heading_style [_ttk_style layout Heading]
+                            }
+
+                            # background
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,background)] {
+                                0   { _ttk_style configure $treeview_heading_style -background $::ms::styleopt($::ms::theme,Heading,background) }
+                            }
+
+                            # font
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,font)] {
+                                0   { _ttk_style configure $treeview_heading_style -font $::ms::styleopt($::ms::theme,Heading,font) }
+                            }
+
+                            # relief
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,relief)] {
+                                0   { _ttk_style configure $treeview_heading_style -relief $::ms::styleopt($::ms::theme,Heading,relief) }
+                            }
+
+                            #####################################
+                            ##                                 ##
+                            ##     SEPARATOR STYLE OPTIONS     ##
+                            ##                                 ##
+                            #####################################
+
+                            set treeview_separator_style [string cat $::ms::current($w,style) $parent $parent_style ".Separator"]
+
+                            # Check if a layout exists for '::ms::current($w,style).Separator'.
+                            # If not, create one by mirroring the 'Separator' layout for the current theme.
+                            if { $treeview_separator_style ni $::ms::layouts($::ms::theme) } {
+                                _ttk_style layout $treeview_separator_style [_ttk_style layout Separator]
+                            }
+
+                            # background
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_separator_style,background)] {
+                                0   { _ttk_style configure $treeview_separator_style -background $::ms::styleopt($::ms::theme,Treeview.Separator,background) }
+                            }
+
+                            # Note: The 'Item', 'Cell' and 'Row' style options are here for completeness but it seems than Tk
+                            #       doesn't look for them internally and they always be like the ones defined in the theme.
+
+                            ################################
+                            ##                            ##
+                            ##     ITEM STYLE OPTIONS     ##
+                            ##                            ##
+                            ################################
+
+                            set treeview_item_style [string cat $::ms::current($w,style) $parent_style ".Item"]
+
+                            # Check if a layout exists for '::ms::current($w,style).Item'.
+                            # If not, create one by mirroring the 'Item' layout for the current theme.
+                            if { $treeview_item_style ni $::ms::layouts($::ms::theme) } {
+                                _ttk_style layout $treeview_item_style [_ttk_style layout Item]
+                            }
+
+                            # foreground
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,foreground)] {
+                                0   { _ttk_style configure $treeview_item_style -foreground $::ms::styleopt($::ms::theme,Item,foreground) }
+                            }
+
+                            # indicatormargins
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,indicatormargins)] {
+                                0   { _ttk_style configure $treeview_item_style -indicatormargins $::ms::styleopt($::ms::theme,Item,indicatormargins) }
+                            }
+
+                            # indicatorsize
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,indicatorsize)] {
+                                0   { _ttk_style configure $treeview_item_style -indicatorsize $::ms::styleopt($::ms::theme,Item,indicatorsize) }
+                            }
+
+                            # padding
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,padding)] {
+                                0   { _ttk_style configure $treeview_item_style -padding $::ms::styleopt($::ms::theme,Item,padding) }
+                            }
+
+                            ################################
+                            ##                            ##
+                            ##     CELL STYLE OPTIONS     ##
+                            ##                            ##
+                            ################################
+
+                            set treeview_cell_style [string cat $::ms::current($w,style) $parent_style ".Cell"]
+
+                            # Check if a layout exists for '::ms::current($w,style).Cell'.
+                            # If not, create one by mirroring the 'Cell' layout for the current theme.
+                            if { $treeview_cell_style ni $::ms::layouts($::ms::theme) } {
+                                _ttk_style layout $treeview_cell_style [_ttk_style layout Cell]
+                            }
+
+                            # padding
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_cell_style,padding)] {
+                                0   { _ttk_style configure $treeview_cell_style -padding $::ms::styleopt($::ms::theme,Cell,padding) }
+                            }
+
+                            ###############################
+                            ##                           ##
+                            ##     ROW STYLE OPTIONS     ##
+                            ##                           ##
+                            ###############################
+
+                            set treeview_row_style [string cat $::ms::current($w,style) $parent_style ".Row"]
+
+                            # Check if a layout exists for '::ms::current($w,style).Row'.
+                            # If not, create one by mirroring the 'Row' layout for the current theme.
+                            if { $treeview_row_style ni $::ms::layouts($::ms::theme) } {
+                                _ttk_style layout $treeview_row_style [_ttk_style layout Row]
+                            }
+
+                            # background
+                            switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_row_style,background)] {
+                                0   { _ttk_style configure $treeview_row_style -background $::ms::styleopt($::ms::theme,Row,background) }
+                            }
+
+                            ####################################
+                            ##                                ##
+                            ##     TREEVIEW STYLE OPTIONS     ##
+                            ##                                ##
+                            ####################################
+
+                            # Set the treeview object style name.
+                            set ::ms::style($w,treeview) [string cat "_bg="  $::ms::current($w,background) \
+                                                                     "_bc="  $::ms::current($w,bordercolor) \
+                                                                     "_csw=" $::ms::current($w,columnseparatorwidth) \
+                                                                     "_dc="  $::ms::current($w,darkcolor) \
+                                                                     "_fb="  $::ms::current($w,fieldbackground) \
+                                                                     "_fc="  $::ms::current($w,focuscolor) \
+                                                                     "_fg="  $::ms::current($w,foreground) \
+                                                                     "_fw="  $::ms::current($w,focuswidth) \
+                                                                     "_fn="  $::ms::current($w,font) \
+                                                                     "_in="  $::ms::current($w,indent) \
+                                                                     "_lc="  $::ms::current($w,lightcolor) \
+                                                                     "_rh="  $::ms::current($w,rowheight) \
+                                                                     "_stb=" $::ms::current($w,stripedbackground) \
+                                                                     "." $::ms::current($w,style) $parent_style];
+
+                            # If needed, create the treeview object style name.
+                            if { $::ms::style($w,treeview) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                _ttk_style configure $::ms::style($w,treeview) -background $::ms::current($w,background)
+
+                                # Add the treeview object style name to the theme styles list created by mustang.
+                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,treeview)
+                            }
+
+                            # Initialize the treeview object mapping.
+                            set mapping [list ]
+
+                            # background
+                            switch -- $::ms::managed_by($w,background) {
+                                developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                                Tk  {
+                                    # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                                    }
+                                }
+                            }
+
+                            # bordercolor
+                            switch -- $::ms::managed_by($w,bordercolor) {
+                                developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+                                Tk  {
+                                    # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
+                                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
+                                    }
+                                }
+                            }
+
+                            # darkcolor
+                            switch -- $::ms::managed_by($w,darkcolor) {
+                                developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+                                Tk  {
+                                    # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
+                                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
+                                    }
+                                }
+                            }
+
+                            # fieldbackground
+                            switch -- $::ms::managed_by($w,fieldbackground) {
+                                developer { lappend mapping -fieldbackground [list pressed $::ms::current($w,fieldbackground)] }
+                                Tk  {
+                                    # Check if a 'fieldbackground' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),fieldbackground)] {
+                                        1   { lappend mapping -fieldbackground $::ms::stylemap($::ms::theme,$::ms::current($w,style),fieldbackground) }
+                                    }
+                                }
+                            }
+
+                            # focuscolor
+                            switch -- $::ms::managed_by($w,focuscolor) {
+                                developer { lappend mapping -focuscolor [list pressed $::ms::current($w,focuscolor)] }
+                                Tk  {
+                                    # Check if a 'focuscolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),focuscolor)] {
+                                        1   { lappend mapping -focuscolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),focuscolor) }
+                                    }
+                                }
+                            }
+
+                            # foreground
+                            switch -- $::ms::managed_by($w,foreground) {
+                                developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+                                Tk  {
+                                    # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
+                                        1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
+                                    }
+                                }
+                            }
+
+                            # lightcolor
+                            switch -- $::ms::managed_by($w,lightcolor) {
+                                developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+                                Tk  {
+                                    # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
+                                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
+                                    }
+                                }
+                            }
+
+                            # stripedbackground
+                            switch -- $::ms::managed_by($w,stripedbackground) {
+                                developer { lappend mapping -stripedbackground [list pressed $::ms::current($w,stripedbackground)] }
+                                Tk  {
+                                    # Check if a 'stripedbackground' mapping exists for '::ms::current($w,style)'.
+                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),stripedbackground)] {
+                                        1   { lappend mapping -stripedbackground $::ms::stylemap($::ms::theme,$::ms::current($w,style),stripedbackground) }
+                                    }
+                                }
+                            }
+
+                            # If needed, create the treeview object mapping.
+                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                _ttk_style map $::ms::style($w,treeview) {*}$mapping
+
+                                # Add the treeview object mapping to the stylemap list containing all the mappings
+                                # created by mustang for the current theme.
+                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                            }
+
+                            # Set the treeview options.
+                            set treeview_options [list        -columns $::ms::current($w,columns) \
+                                                               -cursor $cursor \
+                                                       -displaycolumns $::ms::current($w,displaycolumns) \
+                                                               -height $::ms::current($w,rows) \
+                                                              -padding $::ms::current($w,padding) \
+                                                           -selectmode $::ms::current($w,selectmode) \
+                                                           -selecttype $::ms::current($w,selecttype) \
+                                                                 -show $::ms::current($w,show) \
+                                                              -striped $::ms::current($w,striped) \
+                                                                -style $::ms::style($w,treeview) \
+                                                            -takefocus $takefocus \
+                                                         -titlecolumns $::ms::current($w,titlecolumns) \
+                                                           -titleitems $::ms::current($w,titleitems)];
+
+                            # Check if the widget is scrollable or not.
+                            switch -- $::ms::current($w,scrollable) {
+                                false {
+                                    ###########################
+                                    ##                       ##
+                                    ##     SIMPLE TREEVIEW   ##
+                                    ##                       ##
+                                    ###########################
+                                }
+                                true {
+                                    ###############################
+                                    ##                           ##
+                                    ##     SCROLLABLE TREEVIEW   ##
+                                    ##                           ##
+                                    ###############################
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
