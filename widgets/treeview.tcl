@@ -633,7 +633,25 @@ _bind _Y_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent %W %# 
 _bind _Y_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **treeview** package.
-namespace eval ::ms::treeview {}
+namespace eval ::ms::treeview {
+    # Set the 'non-styleable' treeview option list.
+    set ::ms::treeview(non_styleable,options) [list class \
+                                                    cmenu \
+                                                    columns \
+                                                    displaycolumns \
+                                                    scrollable \
+                                                    selectmode \
+                                                    selecttype \
+                                                    show \
+                                                    state \
+                                                    striped \
+                                                    style \
+                                                    takefocus \
+                                                    titlecolumns \
+                                                    titleitems \
+                                                    xscrollcommand \
+                                                    yscrollcommand];
+}
 
 # Rename the original Tk **ttk::treeview** command.
 rename ttk::treeview _ttk_treeview
