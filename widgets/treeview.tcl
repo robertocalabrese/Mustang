@@ -735,6 +735,89 @@ proc ::ms::treeview::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)          $::ms::default(treeview,class)
+            set ::ms::default($w,cmenu)          $::ms::default(treeview,cmenu)
+            set ::ms::default($w,columns)        $::ms::default(treeview,columns)
+            set ::ms::default($w,displaycolumns) $::ms::default(treeview,displaycolumns)
+            set ::ms::default($w,selectmode)     $::ms::default(treeview,selectmode)
+            set ::ms::default($w,selecttype)     $::ms::default(treeview,selecttype)
+            set ::ms::default($w,show)           $::ms::default(treeview,show)
+            set ::ms::default($w,state)          $::ms::default(treeview,state)
+            set ::ms::default($w,striped)        $::ms::default(treeview,striped)
+            set ::ms::default($w,style)          $::ms::default(treeview,style)
+            set ::ms::default($w,takefocus)      $::ms::default(treeview,takefocus)
+            set ::ms::default($w,titlecolumns)   $::ms::default(treeview,titlecolumns)
+            set ::ms::default($w,titleitems)     $::ms::default(treeview,titleitems)
+            set ::ms::default($w,xscrollcommand) $::ms::default(treeview,xscrollcommand)
+            set ::ms::default($w,yscrollcommand) $::ms::default(treeview,yscrollcommand)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)          $::ms::default(treeview,class)
+            set ::ms::current($w,cmenu)          $::ms::default(treeview,cmenu)
+            set ::ms::current($w,columns)        $::ms::default(treeview,columns)
+            set ::ms::current($w,displaycolumns) $::ms::default(treeview,displaycolumns)
+            set ::ms::current($w,selectmode)     $::ms::default(treeview,selectmode)
+            set ::ms::current($w,selecttype)     $::ms::default(treeview,selecttype)
+            set ::ms::current($w,show)           $::ms::default(treeview,show)
+            set ::ms::current($w,state)          $::ms::default(treeview,state)
+            set ::ms::current($w,striped)        $::ms::default(treeview,striped)
+            set ::ms::current($w,style)          $::ms::default(treeview,style)
+            set ::ms::current($w,takefocus)      $::ms::default(treeview,takefocus)
+            set ::ms::current($w,titlecolumns)   $::ms::default(treeview,titlecolumns)
+            set ::ms::current($w,titleitems)     $::ms::default(treeview,titleitems)
+            set ::ms::current($w,xscrollcommand) $::ms::default(treeview,xscrollcommand)
+            set ::ms::current($w,yscrollcommand) $::ms::default(treeview,yscrollcommand)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) treeview
+            set ::ms::data($w,scrollx)   off
+            set ::ms::data($w,scrolly)   off
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a treeview styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **treeview** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,background)           Tk
+            set ::ms::managed_by($w,bordercolor)          Tk
+            set ::ms::managed_by($w,borderwidth)          Tk
+            set ::ms::managed_by($w,columnseparatorwidth) Tk
+            set ::ms::managed_by($w,cursor)               Tk
+            set ::ms::managed_by($w,darkcolor)            Tk
+            set ::ms::managed_by($w,fieldbackground)      Tk
+            set ::ms::managed_by($w,focuscolor)           Tk
+            set ::ms::managed_by($w,focuswidth)           Tk
+            set ::ms::managed_by($w,font)                 Tk
+            set ::ms::managed_by($w,foreground)           Tk
+            set ::ms::managed_by($w,indent)               Tk
+            set ::ms::managed_by($w,lightcolor)           Tk
+            set ::ms::managed_by($w,rowheight)            Tk
+            set ::ms::managed_by($w,rows)                 Tk
+            set ::ms::managed_by($w,padding)              Tk
+            set ::ms::managed_by($w,shellbackground)      Tk
+            set ::ms::managed_by($w,stripedbackground)    Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
