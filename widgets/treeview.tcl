@@ -3884,6 +3884,192 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Arrow_Keys
+#
+# Manage the Key navigation on the widget.
+#
+# Note: This procedure was inspired by the treeview procedure 'Keynav'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be arrow key event that happened on the widget.
+#       Allowed values are **down**, **left**, **right** and **up**.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Arrow_Keys { w key } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Check if the widget has no items.
+    set root_children [{*}$address children {}]
+    switch -- [llength $root_children] {
+        0   { return "" }
+    }
+
+    # Get the widget's item in focus.
+    set item [{*}$address focus]
+    switch -- $item {
+        ""  {
+            # Check the key pressed.
+            switch -- $key {
+                up   -
+                left {
+                    # Get the last 'item'
+                    set item [lindex $root_children end]
+                }
+                down  -
+                right {
+                    # Get the first 'item'.
+                    set item [lindex $root_children 0]
+                }
+            }
+
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell {
+                    # Select the first cell of 'item'
+                    ::ms::treeview::Select_Op $w $item [list $item #1] choose
+                }
+                default {
+                    # Select 'item'.
+                    ::ms::treeview::Select_Op $w $item "" choose
+                }
+            }
+
+            return ""
+        }
+    }
+
+    # Check the selection type.
+    switch -- $::ms::current($w,selecttype) {
+        cell {
+            set column [lindex $::ttk::treeview::State(cellAnchor) 1]
+            switch -- $column {
+                ""  { set column "#1" }
+            }
+        }
+    }
+
+    # Check the key pressed.
+    switch -- $key {
+        up  {
+            # Check if 'item' is the first root child.
+            if { $item eq [lindex $root_children 0] } {
+                # Check if we need to cycle (scrollstopper --> disabled).
+                switch -- $::ms::scrollstopper {
+                    disabled { set item [lindex $root_children end] }
+                    enabled  { return "" }
+                }
+            } else {
+                set up [{*}$address prev $item]
+                switch -- $up {
+                    ""      { set item [{*}$address parent $item] }
+                    default {
+                        while { [{*}$address item $up -open] && [llength [{*}$address children $up]] } {
+                            set up [lindex [{*}$address children $up] end]
+                        }
+
+                        set item $up
+                    }
+                }
+            }
+        }
+        down {
+            # Check if 'item' is the last root child.
+            if { $item eq [lindex $root_children end] } {
+                # Check if we need to cycle (scrollstopper --> disabled).
+                switch -- $::ms::scrollstopper {
+                    disabled { set item [lindex $root_children 0] }
+                    enabled  { return "" }
+                }
+            } else {
+                if { [{*}$address item $item -open] && [llength [{*}$address children $item]] } {
+                    set item [lindex [{*}$address children $item] 0]
+                } else {
+                    set up $item
+                    while { $up ne "" && [set down [{*}$address next $up]] eq "" } {
+                        set up [{*}$address parent $up]
+                    }
+                    set item $down
+                }
+            }
+        }
+        left {
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell {
+                    # This assumes that column is of the "#N" format.
+                    set columns [string range $column 1 end]
+
+                    if { "tree" in $::ms::current($w,show) } {
+                        set first_column 0
+                    } else {
+                        set first_column 1
+                    }
+
+                    if { $columns > $first_column } {
+                        incr columns -1
+                        set column [string cat "#" $columns]
+                    }
+                }
+                default {
+                    set children [{*}$address children $item]
+
+                    if { [{*}$address item $item -open] && [llength $children] } {
+                        ::ms::treeview::CloseItem $w $item
+                    } else {
+                        set item [{*}$address parent $item]
+                    }
+                }
+            }
+        }
+        right {
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell {
+                    switch -- $::ms::current($w,displaycolumns) {
+                        "#all"  { set last_column [llength $::ms::current($w,columns)] }
+                        default { set last_column [llength $::ms::current($w,displaycolumns)] }
+                    }
+
+                    set columns [string range $column 1 end]
+                    if { $columns < $last_column } {
+                        incr columns
+                        set column [string cat "#" $columns]
+                    }
+                }
+                default { ::ms::treeview::OpenItem $w $item }
+            }
+        }
+    }
+
+    # Check if 'item' is the empty string, if so don't do anything.
+    switch -- $item {
+        ""      {}
+        default {
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell    { ::ms::treeview::Select_Op $w $item [list $item $column] choose }
+                default { ::ms::treeview::Select_Op $w $item "" choose }
+            }
+        }
+    }
+
+    return ""
+}
+
 ## ButtonPress
 #
 # Manage the **ButtonPress** event on the widget.
