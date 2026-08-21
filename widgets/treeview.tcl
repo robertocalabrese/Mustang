@@ -64,6 +64,122 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::treeview 0.1
 
+#######################################
+##                                   ##
+##     _SIMPLE_TREEVIEW BINDINGS     ##
+##                                   ##
+#######################################
+
+# ButtonPress-1
+_bind _Simple_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress %W %x %y; break }
+_bind _Simple_Treeview <ButtonRelease-1>   { ::ms::treeview::Release     %W %x %y; break }
+_bind _Simple_Treeview <B1-Motion>         { ::ms::treeview::Drag        %W %x %y; break }
+_bind _Simple_Treeview <Double-Button-1>   { ::ms::treeview::DoubleClick %W %x %y; break }
+_bind _Simple_Treeview <Shift-Button-1>    { ::ms::treeview::Select      %W %x %y extend; break }
+_bind _Simple_Treeview <<ToggleSelection>> { ::ms::treeview::Select      %W %x %y toggle; break }
+
+# Motion
+_bind _Simple_Treeview <Motion> { ::ms::treeview::Motion %W %x %y; break }
+
+# Contextual menu
+_bind _Simple_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
+
+# Configure
+_bind _Simple_Treeview <Configure> { ::ms::treeview::Configure %W; break }
+
+# Enter/Leave
+_bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y; break }
+_bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y }
+
+# FocusIn/FocusOut
+_bind _Simple_Treeview <FocusIn>  { ::ms::treeview::FocusIn  %W; break }
+_bind _Simple_Treeview <FocusOut> { ::ms::treeview::FocusOut %W; break }
+
+# Keyboard navigation
+_bind _Simple_Treeview <<PrevLine>> { ::ms::treeview::Arrow_Keys %W up; break }
+_bind _Simple_Treeview <<NextLine>> { ::ms::treeview::Arrow_Keys %W down; break }
+_bind _Simple_Treeview <<NextChar>> { ::ms::treeview::Arrow_Keys %W right; break }
+_bind _Simple_Treeview <<PrevChar>> { ::ms::treeview::Arrow_Keys %W left; break }
+
+# Map
+_bind _Simple_Treeview <Map> { ::ms::treeview::Map %W; break }
+
+# Page navigation
+_bind _Simple_Treeview <<PageDown>>  { ::ms::treeview::Pages %W down; break }
+_bind _Simple_Treeview <<PageLeft>>  { ::ms::treeview::Pages %W left; break }
+_bind _Simple_Treeview <<PageRight>> { ::ms::treeview::Pages %W right; break }
+_bind _Simple_Treeview <<PageUp>>    { ::ms::treeview::Pages %W up; break }
+
+# Return/KP_Enter/space
+_bind _Simple_Treeview <KeyPress-Return>   { ::ms::treeview::Return %W; break }
+_bind _Simple_Treeview <KeyPress-KP_Enter> { ::ms::treeview::Return %W; break }
+_bind _Simple_Treeview <KeyPress-space>    { ::ms::treeview::Return %W; break }
+
+# Mousewheel and Touchpad
+
+# If the widget's vertical scrollbar is active, move the treeview object by one unit up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Treeview <MouseWheel> { ::ms::Scroll_Widget_Y %W %D units; break }
+
+# If the widget's horizontal scrollbar is active, move the treeview object by one unit left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Treeview <Shift-MouseWheel> { ::ms::Scroll_Widget_X %W %D units; break }
+
+# If the widget's vertical scrollbar is active, move the treeview object by one page up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Treeview <Control-MouseWheel> { ::ms::Scroll_Widget_Y %W %D pages; break }
+
+# If the widget's horizontal scrollbar is active, move the treeview object by one page left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the treeview object by one unit left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the treeview object by one unit up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Simple_Treeview <TouchpadScroll> { ::ms::Touchpad_Widget %W %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the treeview object by one page left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the treeview object by one page up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Simple_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Widget %W %# %D pages; break }
+
 # Create the mustang **treeview** package.
 namespace eval ::ms::treeview {}
 
