@@ -1951,7 +1951,47 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
         see      -
         set      {}
         configure {}
-        focus {}
+        focus {
+            # Synopsis:
+            #
+            # *window* **focus** ?*item*?
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.treeview] }
+            }
+
+            switch -- [llength $args] {
+                0   { return [{*}$address focus] }
+                1   {
+                    set item $args
+
+                    # Execute the command.
+                    try {
+                        {*}$address focus $item
+                    } on error {} {
+                        ::ms::Error "Invalid item, '$item'." $caller_info
+                    } on ok { result } {
+                        # Check the selection type.
+                        switch -- $::ms::current($w,selecttype) {
+                            item { ::ms::treeview::Select_Op $w $item "" choose }
+                            cell {
+                                # Select the first available column, either the tree column (#0) or '#1'.
+                                if { "tree" in $::ms::current($w,show) } {
+                                    ::ms::treeview::Select_Op $w $item [list $item #0] choose
+                                } else {
+                                    ::ms::treeview::Select_Op $w $item [list $item #1] choose
+                                }
+                            }
+                        }
+
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         identify {}
         instate {}
         selection {}
