@@ -4229,4 +4229,45 @@ proc ::ms::treeview::Double_Click { w x y } {
     return ""
 }
 
+## Drag
+#
+# Manages the **B1-Motion** event.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Drag { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    switch -- $::ttk::treeview::State(pressMode) {
+        resize  {
+            # Resize.Drag
+            {*}$address drag $::ttk::treeview::State(resizeColumn) $x
+        }
+        heading {
+            # Heading.Drag
+            if { ([{*}$address identify region $x $y] eq "heading") && ([{*}$address identify column $x $y] eq $::ttk::treeview::State(heading)) } {
+                {*}$address heading $::ttk::treeview::State(heading) state pressed
+            } else {
+                {*}$address heading $::ttk::treeview::State(heading) state !pressed
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
