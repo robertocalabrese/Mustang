@@ -3593,6 +3593,17 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
     switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_row_style,background)] {
         0   { _ttk_style configure $treeview_row_style -background $::ms::styleopt($::ms::theme,Row,background) }
     }
+
+    ####################################
+    ##                                ##
+    ##     UPDATE THE WIDGETS STYLE   ##
+    ##                                ##
+    ####################################
+
+    # Update all the treeview widgets that have stylename as a style.
+    foreach w $::ms::style($stylename,treeview,addrs) {}
+
+    return ""
 }
 
 ######################################
