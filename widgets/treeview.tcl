@@ -3985,4 +3985,209 @@ proc ::ms::treeview::Configure { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Destroy { w } {
+    # Get the short address related to the widget's real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget's pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget's short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget's address from the treeview widgets real address list.
+    set index [lsearch -exact $::ms::addr(treeview) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(treeview) [lremove $::ms::addr(treeview) $index] }
+    }
+
+    # Remove the widget's address from the treeview classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),treeview,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),treeview,addrs) [lremove $::ms::class($::ms::current($w,class),treeview,addrs) $index] }
+    }
+
+    # Remove the widget's address from the treeview classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),treeview,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),treeview,addrs) [lremove $::ms::style($::ms::current($w,style),treeview,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the treeview classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),treeview,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(treeview,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(treeview,classtype) [lremove $::ms::style(treeview,classtype) $index] }
+            }
+        }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            #############################
+            ##                         ##
+            ##     SIMPLE TREEVIEW     ##
+            ##                         ##
+            #############################
+
+            # Remove all the widget's objects real addresses from the list of all available real addresses.
+            # Remove the widget address from the list of all available real addresses.
+            set index [lsearch -exact $::ms::addr(reals) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+            }
+        }
+        true {
+            #################################
+            ##                             ##
+            ##     SCROLLABLE TREEVIEW     ##
+            ##                             ##
+            #################################
+
+            # Remove all the widget's objects real addresses from the list of all available real addresses.
+            foreach object [list $w \
+                                 $w.treeview \
+                                 $w.x \
+                                 $w.y] {
+                set index [lsearch -exact $::ms::addr(reals) $object]
+                switch -- $index {
+                    -1      {}
+                    default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+                }
+            }
+
+            # Remove the widget's address from the megawidget real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+            }
+
+            # Remove the widget's address from the megawidget scrollable real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets,scrollable) [lremove $::ms::addr(megawidgets,scrollable) $index] }
+            }
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short) \
+                         ::ms::addr($w.treeview,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,cmenu) \
+                         ::ms::current($w,columns) \
+                         ::ms::current($w,columnseparatorwidth) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,displaycolumns) \
+                         ::ms::current($w,fieldbackground) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,indent) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,rowheight) \
+                         ::ms::current($w,rows) \
+                         ::ms::current($w,scrollable) \
+                         ::ms::current($w,selectmode) \
+                         ::ms::current($w,selecttype) \
+                         ::ms::current($w,shellbackground) \
+                         ::ms::current($w,show) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,striped) \
+                         ::ms::current($w,stripedbackground) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,titlecolumns) \
+                         ::ms::current($w,titleitems) \
+                         ::ms::current($w,xscrollcommand) \
+                         ::ms::current($w,yscrollcommand);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,scrollx) \
+                         ::ms::data($w,scrolly) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,cmenu) \
+                         ::ms::default($w,columns) \
+                         ::ms::default($w,columnseparatorwidth) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,displaycolumns) \
+                         ::ms::default($w,fieldbackground) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,indent) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,rowheight) \
+                         ::ms::default($w,rows) \
+                         ::ms::default($w,scrollable) \
+                         ::ms::default($w,selectmode) \
+                         ::ms::default($w,selecttype) \
+                         ::ms::default($w,shellbackground) \
+                         ::ms::default($w,show) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,striped) \
+                         ::ms::default($w,stripedbackground) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,titlecolumns) \
+                         ::ms::default($w,titleitems) \
+                         ::ms::default($w,xscrollcommand) \
+                         ::ms::default($w,yscrollcommand);
+
+    unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,columnseparatorwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,fieldbackground) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,indent) \
+                         ::ms::managed_by($w,rowheight) \
+                         ::ms::managed_by($w,rows) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,shellbackground) \
+                         ::ms::managed_by($w,stripedbackground);
+
+    unset -nocomplain -- ::ms::style($w,hull) \
+                         ::ms::style($w,separator) \
+                         ::ms::style($w,treeview) \
+                         ::ms::style($w,widget);
+
+    return ""
+}
+
 #*EOF*
