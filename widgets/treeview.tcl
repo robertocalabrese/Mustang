@@ -4992,11 +4992,11 @@ proc ::ms::treeview::Select_Op { w item cell op } {
             {*}$address focus $item
             {*}$address see   $item
         }
-        browse { ::ms::treeview::BrowseTo $w $item $cell }
+        browse { ::ms::treeview::Browse_To $w $item $cell }
         extended {
             # Check the operation type.
             switch -- $op {
-                choose { ::ms::treeview::BrowseTo $w $item $cell }
+                choose { ::ms::treeview::Browse_To $w $item $cell }
                 toggle {
                     # Check if the 'cell' is the empty string or not.
                     switch -- $cell {
@@ -5014,7 +5014,7 @@ proc ::ms::treeview::Select_Op { w item cell op } {
                     switch -- $cell {
                         ""  {
                             switch -- $::ttk::treeview::State(cellAnchor) {
-                                ""      { ::ms::treeview::BrowseTo  $w $item $cell }
+                                ""      { ::ms::treeview::Browse_To $w $item $cell }
                                 default { {*}$address cellselection $::ttk::treeview::State(cellAnchorOp) $::ttk::treeview::State(cellAnchor) $cell }
                             }
                         }
@@ -5022,7 +5022,7 @@ proc ::ms::treeview::Select_Op { w item cell op } {
                             # Check if the 'anchor' is the empty string or not.
                             set anchor [{*}$address focus]
                             switch -- $anchor {
-                                ""      { ::ms::treeview::BrowseTo  $w $item $cell }
+                                ""      { ::ms::treeview::Browse_To $w $item $cell }
                                 default { {*}$address selection set [::ms::treeview::Between $w $anchor $item] }
                             }
                         }
@@ -5121,6 +5121,41 @@ proc ::ms::treeview::Scan_Between { w item1 item2 item } {
 
     foreach child [{*}$address children $item] {
         ::ms::treeview::Scan_Between $w $item1 $item2 $child
+    }
+
+    return ""
+}
+
+## Browse_To
+#
+# Navigate to specified item and set focus and selection.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# cell   Should be the 'cell' involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Browse_To { w item cell } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    {*}$address focus $item
+    {*}$address see   $item
+
+    set ::ttk::treeview::State(cellAnchor)   $cell
+    set ::ttk::treeview::State(cellAnchorOp) set
+
+    # Check if the 'cell' is the empty string or not.
+    switch -- $cell {
+        ""      { {*}$address selection set     [list $item] }
+        default { {*}$address cellselection set [list $cell] }
     }
 
     return ""
