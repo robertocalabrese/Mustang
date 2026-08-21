@@ -1950,7 +1950,38 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
         item     -
         see      -
         set      {}
-        configure {}
+        configure {
+            # Synopsis:
+            #
+            # *window* **configure**
+            # *window* **configure** *option*
+            # *window* **configure** *option* *value*
+            # *window* **configure** *option* *value* ... ?*option* *value*?
+            switch -- [llength $args] {
+                0   {
+                    # 'non-styleable' options.
+                    foreach option $::ms::treeview(non_styleable,options) {
+                        lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
+                    }
+
+                    # 'styleable' options.
+                    foreach option $::ms::treeview(styleable,options) {
+                        lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
+                    }
+
+                    return [lsort -dictionary -increasing -index 0 $result]
+                }
+                1   {
+                    set option [string range $args 1 end]
+                    if { ($option in $::ms::treeview(non_styleable,options)) || ($option in $::ms::treeview(styleable,options)) } {
+                        return [list $::ms::default($w,$option) $::ms::current($w,$option)]
+                    } else {
+                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                    }
+                }
+                default {}
+            }
+        }
         focus {
             # Synopsis:
             #
