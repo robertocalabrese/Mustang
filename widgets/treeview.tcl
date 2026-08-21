@@ -1707,6 +1707,29 @@ proc ::ms::treeview::Command { window { args "" } } {
                                       -pady [list 0  0] \
                                        -row 0 \
                                     -sticky ns;
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Set the new bindtags for the hull object.
+                    _bindtags $w [list $w _Hull_Treeview TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the treeview object.
+                    switch -- $::ms::current($w,class) {
+                        Treeview { _bindtags $w.treeview [list $w.treeview _Scrollable_Treeview Treeview $::ms::addr($w,toplevel) all] }
+                        default  { _bindtags $w.treeview [list $w.treeview $::ms::current($w,class) _Scrollable_Treeview Treeview $::ms::addr($w,toplevel) all] }
+                    }
+
+                    # Set the new bindtags for the horizontal and vertical scrollbar objects.
+                    _bindtags $w.x [list $w.x _H_Scrollbar_Treeview TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.y [list $w.y _H_Scrollbar_Treeview TScrollbar $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
+                    _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Treeview TFrame $::ms::addr($w,toplevel) all]
+                    _bindtags $w.fake_y [list $w.fake_y _Y_Fake_Scrollbar_Treeview TFrame $::ms::addr($w,toplevel) all]
                 }
             }
         }
