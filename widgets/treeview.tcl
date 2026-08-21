@@ -2789,6 +2789,26 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     ::ms::treeview::Scrollbar_Update $w
                                 }
                             }
+
+                            # Check if the developer changed the widget state as well.
+                            switch -- $state_changed {
+                                true {
+                                    # Note: The Tk treeview widget don't have a '-state' option.
+                                    #       We need to simulate it graphically.
+                                    switch -- $::ms::current($w,state) {
+                                        disabled {
+                                            # Change the widget dynamic state to 'disabled'.
+                                            ::ms::treeview::Pathname_Cmd $w state disabled
+                                        }
+                                        normal {
+                                            # Change the widget dynamic state to '!disabled'.
+                                            ::ms::treeview::Pathname_Cmd $w state !disabled
+                                        }
+                                    }
+                                }
+                            }
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
