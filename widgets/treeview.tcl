@@ -4687,4 +4687,22 @@ proc ::ms::treeview::Pages { w direction } {
     return ""
 }
 
+## Return
+#
+# Manage the **Return**/**KP_Enter**/**space** keypress events on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Return { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal { ::ms::treeview::ToggleFocus $w }
+    }
+
+    return ""
+}
+
 #*EOF*
