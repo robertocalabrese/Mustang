@@ -1730,6 +1730,51 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
                     _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Treeview TFrame $::ms::addr($w,toplevel) all]
                     _bindtags $w.fake_y [list $w.fake_y _Y_Fake_Scrollbar_Treeview TFrame $::ms::addr($w,toplevel) all]
+
+                    #####################
+                    ##                 ##
+                    ##     CLOSING     ##
+                    ##                 ##
+                    #####################
+
+                    # Configure the internal widget rows and columns.
+                    _grid rowconfigure    $w [list 0] -weight 1
+                    _grid columnconfigure $w [list 0] -weight 1
+
+                    # Set the widget real address relative to its short address, 'short_addr'.
+                    set ::ms::addr($short_addr,real) $w
+
+                    # Set the widget short addresses relative to its real address, 'w'.
+                    # They will all point to the widget hull object short address.
+                    set ::ms::addr($w,short)          $short_addr
+                    set ::ms::addr($w.treeview,short) $short_addr
+                    set ::ms::addr($w.x,short)        $short_addr
+                    set ::ms::addr($w.y,short)        $short_addr
+
+                    # Add the widget real and short address into the list of all available real and short addresses.
+                    lappend ::ms::addr(reals) $w \
+                                              $w.treeview \
+                                              $w.x \
+                                              $w.y;
+
+                    lappend ::ms::addr(shorts) $short_addr
+
+                    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+                    set ::ms::addr($w,border) $w.treeview
+
+                    # Set the actual widget address (the widget that the developer was intended to build).
+                    set ::ms::addr($w,widget) $w.treeview
+
+                    # Set the structure addresses.
+                    # Is important to note that the scrollbar addresses must not be included.
+                    set ::ms::addr($w,structure) [list $w \
+                                                       $w.treeview];
+
+                    # Add the widget address to the megawidget addresses list.
+                    lappend ::ms::addr(megawidgets) $w
+
+                    # Add the widget address to the scrollable megawidget addresses list.
+                    lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
         }
