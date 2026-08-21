@@ -3860,6 +3860,19 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
                 ::ms::treeview::Scrollbar_Update $w
             }
         }
+
+        # The Tk treeview widget don't have a '-state' option.
+        # We need to simulate it graphically.
+        switch -- $::ms::current($w,state) {
+            disabled {
+                # Change the widget dynamic state to 'disabled'.
+                ::ms::treeview::Pathname_Cmd $w state disabled
+            }
+            normal {
+                # Change the widget dynamic state to '!disabled'.
+                ::ms::treeview::Pathname_Cmd $w state !disabled
+            }
+        }
     }
 
     return ""
