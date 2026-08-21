@@ -4618,4 +4618,33 @@ proc ::ms::treeview::Motion { w x y } {
     return ""
 }
 
+## Pages
+#
+# Manage the **PageUp**/**PageDown**/**PageLeft**/**PageRight** events on the widget.
+#
+# Where:
+#
+# w           Should be the widget real address involved.
+#
+# direction   Should be the direction of the movement.
+#             Allowed values are **up**, **down**, **left** or **right**.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Pages { w direction } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        normal {
+            # Check the direction.
+            switch -- $direction {
+                down  { ::ms::Scroll_Widget_Y $w -1 pages }
+                left  { ::ms::Scroll_Widget_X $w  1 pages }
+                right { ::ms::Scroll_Widget_X $w -1 pages }
+                up    { ::ms::Scroll_Widget_Y $w  1 pages }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
