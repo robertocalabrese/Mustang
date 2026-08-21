@@ -7254,7 +7254,7 @@ proc ::ms::text::Clear { w } {
     return ""
 }
 
-# Copy
+## Copy
 #
 # Manage the **Copy** event by copying the widget's selection into the clipboard.
 #
@@ -7666,7 +7666,7 @@ proc ::ms::text::Start_IME_Marked_Text { w } {
     return ""
 }
 
-# End_IME_Marked_Text
+## End_IME_Marked_Text
 #
 # Handles input method text marking in a text widget.
 #
@@ -7738,7 +7738,7 @@ proc ::ms::text::Insert { w } {
     return ""
 }
 
-# Insert_String
+## Insert_String
 #
 # Insert a string into a text at the point of the insertion cursor.
 # If there is a selection in the text, and it covers the point of the
@@ -8052,7 +8052,7 @@ proc ::ms::text::PageRight { w } {
 #       The modifications were needed to let them work in mustang.
 #       All credits goes to the original author/s.
 
-# Line_Index
+## Line_Index
 #
 # Returns the index of the character one display line above or below the insertion cursor.
 # There is a tricky thing here: we want to maintain the original x position across repeated operations,
@@ -8301,7 +8301,7 @@ proc ::ms::text::Line_Bottom { w } {
 #       The modifications were needed to let them work in mustang.
 #       All credits goes to the original author/s.
 
-# Next_Index
+## Next_Index
 #
 # Returns the index of the next position after the given starting position.
 #
@@ -8338,7 +8338,7 @@ proc ::ms::text::Next_Index { w start op } {
     return end
 }
 
-# Next_Paragraph_Index
+## Next_Paragraph_Index
 #
 # Returns the index of the beginning of the paragraph just after a given position in the text
 # (the beginning of a paragraph is the first non-blank character after a blank line).
@@ -8608,7 +8608,7 @@ proc ::ms::text::Next_Paragraph { w } {
 #       The modifications were needed to let them work in mustang.
 #       All credits goes to the original author/s.
 
-# Previous_Index
+## Previous_Index
 #
 # Returns the index of the previous position before the given starting position.
 #
@@ -8645,7 +8645,7 @@ proc ::ms::text::Previous_Index { w start op } {
     return 0.0
 }
 
-# Previous_Paragraph_Index
+## Previous_Paragraph_Index
 #
 # Returns the index of the beginning of the paragraph just before a given position in the text
 # (the beginning of a paragraph is the first non-blank character after a blank line).
@@ -8930,7 +8930,7 @@ proc ::ms::text::Select_All { w } {
     return ""
 }
 
-# Select_Key
+## Select_Key
 #
 # This procedure is invoked when stroking out selections using the keyboard.
 # It moves the cursor to a new position, then extends the selection to that position.
@@ -9447,7 +9447,7 @@ proc ::ms::text::Transpose { w } {
 #       The modifications were needed to let them work in mustang.
 #       All credits goes to the original author/s.
 
-# The_Cursor_Is_Inside_The_Selection
+## The_Cursor_Is_Inside_The_Selection
 #
 # Check whether the selection exists and contains the insertion cursor.
 # Note that it assumes that the selection is contiguous.
@@ -9472,7 +9472,7 @@ proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
     }
 }
 
-# Move_Cursor
+## Move_Cursor
 #
 # Move the insertion cursor to a given position in a text.
 # Also clears the selection, if there is one in the text, and makes sure that the insertion cursor is visible.
@@ -9509,7 +9509,7 @@ proc ::ms::text::Move_Cursor { w pos } {
     return ""
 }
 
-# Scroll_Pages
+## Scroll_Pages
 #
 # It scrolls the view in the widget by *n* pages, and it returns the index of the character that
 # is at the same position in the new view as the insertion cursor used to be in the old view.
@@ -9551,7 +9551,7 @@ proc ::ms::text::Scroll_Pages { w n } {
     return [{*}$address index $index]
 }
 
-# Closest_Gap
+## Closest_Gap
 #
 # Given the x and y coordinates, this procedure finds the closest boundary between characters to the given
 # coordinates and returns the index of the character just after the boundary.
