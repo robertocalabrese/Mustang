@@ -4781,4 +4781,46 @@ proc ::ms::treeview::Close_Item { w item } {
     return ""
 }
 
+## Toggle
+#
+# Set the open state of an item and generate the relative event
+#
+# Note: This procedure was inspired by the treeview procedure 'Toggle'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Toggle { w item } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Don't allow toggling on indicators that are not present in front of leaf items.
+    switch -- [llength [{*}$address children $item]] {
+        0   { return "" }
+    }
+
+    # Not a leaf, toggle!
+    if { [{*}$address item $item -open] } {
+        ::ms::treeview::Close_Item $w $item
+    } else {
+        ::ms::treeview::Open_Item  $w $item
+    }
+
+    return ""
+}
+
 #*EOF*
