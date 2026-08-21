@@ -3834,6 +3834,14 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
 
                 # Apply the changes.
                 interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                ######################
+                ##                  ##
+                ##     TREEVIEW     ##
+                ##                  ##
+                ######################
+
+                $w.treeview configure {*}$treeview_options
             }
         }
     }
