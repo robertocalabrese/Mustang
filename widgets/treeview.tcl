@@ -3621,6 +3621,169 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
         }
+
+        ###################################
+        ##                               ##
+        ##     UPDATE THE WIDGET STYLE   ##
+        ##                               ##
+        ###################################
+
+        # Note: 'borderwidth', 'columnseparatorwidth', 'cursor', 'focuswidth', 'font', 'indent', 'justify',
+        #       'padding' and 'rowheight' are not allowed to change if the statespec changes.
+
+        ######################
+        ##                  ##
+        ##     TREEVIEW     ##
+        ##                  ##
+        ######################
+
+        # Set the treeview object style name.
+        set ::ms::style($w,treeview) [string cat "_bg="  $::ms::current($w,background) \
+                                                 "_bc="  $::ms::current($w,bordercolor) \
+                                                 "_csw=" $::ms::current($w,columnseparatorwidth) \
+                                                 "_dc="  $::ms::current($w,darkcolor) \
+                                                 "_fb="  $::ms::current($w,fieldbackground) \
+                                                 "_fc="  $::ms::current($w,focuscolor) \
+                                                 "_fg="  $::ms::current($w,foreground) \
+                                                 "_fw="  $::ms::current($w,focuswidth) \
+                                                 "_fn="  $::ms::current($w,font) \
+                                                 "_in="  $::ms::current($w,indent) \
+                                                 "_lc="  $::ms::current($w,lightcolor) \
+                                                 "_rh="  $::ms::current($w,rowheight) \
+                                                 "_stb=" $::ms::current($w,stripedbackground) \
+                                                 "." $stylename $parent_style];
+
+        # If needed, create the treeview object style name.
+        if { $::ms::style($w,treeview) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,treeview) -background $::ms::current($w,background)
+
+            # Add the treeview object style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,treeview)
+        }
+
+        # Initialize the treeview object mapping.
+        set mapping [list ]
+
+        # background
+        switch -- $::ms::managed_by($w,background) {
+            developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+            Tk  {
+                # Check if a 'background' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
+                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
+                }
+            }
+        }
+
+        # bordercolor
+        switch -- $::ms::managed_by($w,bordercolor) {
+            developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+            Tk  {
+                # Check if a 'bordercolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,bordercolor)] {
+                    1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$stylename,bordercolor) }
+                }
+            }
+        }
+
+        # darkcolor
+        switch -- $::ms::managed_by($w,darkcolor) {
+            developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+            Tk  {
+                # Check if a 'darkcolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,darkcolor)] {
+                    1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$stylename,darkcolor) }
+                }
+            }
+        }
+
+        # fieldbackground
+        switch -- $::ms::managed_by($w,fieldbackground) {
+            developer { lappend mapping -fieldbackground [list pressed $::ms::current($w,fieldbackground)] }
+            Tk  {
+                # Check if a 'fieldbackground' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,fieldbackground)] {
+                    1   { lappend mapping -fieldbackground $::ms::stylemap($::ms::theme,$stylename,fieldbackground) }
+                }
+            }
+        }
+
+        # focuscolor
+        switch -- $::ms::managed_by($w,focuscolor) {
+            developer { lappend mapping -focuscolor [list pressed $::ms::current($w,focuscolor)] }
+            Tk  {
+                # Check if a 'focuscolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,focuscolor)] {
+                    1   { lappend mapping -focuscolor $::ms::stylemap($::ms::theme,$stylename,focuscolor) }
+                }
+            }
+        }
+
+        # foreground
+        switch -- $::ms::managed_by($w,foreground) {
+            developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+            Tk  {
+                # Check if a 'foreground' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,foreground)] {
+                    1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$stylename,foreground) }
+                }
+            }
+        }
+
+        # lightcolor
+        switch -- $::ms::managed_by($w,lightcolor) {
+            developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+            Tk  {
+                # Check if a 'lightcolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,lightcolor)] {
+                    1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$stylename,lightcolor) }
+                }
+            }
+        }
+
+        # stripedbackground
+        switch -- $::ms::managed_by($w,stripedbackground) {
+            developer { lappend mapping -stripedbackground [list pressed $::ms::current($w,stripedbackground)] }
+            Tk  {
+                # Check if a 'stripedbackground' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,stripedbackground)] {
+                    1   { lappend mapping -stripedbackground $::ms::stylemap($::ms::theme,$stylename,stripedbackground) }
+                }
+            }
+        }
+
+        # If needed, create the treeview object mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,treeview) {*}$mapping
+
+            # Add the treeview object mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        # Set the treeview options.
+        set treeview_options [list  -cursor $cursor \
+                                    -height $::ms::current($w,rows) \
+                                   -padding $::ms::current($w,padding) \
+                                     -style $::ms::style($w,treeview)];
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false {
+                #############################
+                ##                         ##
+                ##     SIMPLE TREEVIEW     ##
+                ##                         ##
+                #############################
+            }
+            true {
+                #################################
+                ##                             ##
+                ##     SCROLLABLE TREEVIEW     ##
+                ##                             ##
+                #################################
+            }
+        }
     }
 
     return ""
