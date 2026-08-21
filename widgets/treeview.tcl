@@ -4958,4 +4958,81 @@ proc ::ms::treeview::Select { w x y op } {
     return ""
 }
 
+## Select_Op
+#
+# Dispatch to appropriate selection operation depending on current value of 'selectmode'.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# cell   Should be the 'cell' involved.
+#
+# op     Should be the 'operation' type.
+#        Allowed values are 'choose', 'extend' or 'toggle'.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Select_Op { w item cell op } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Check the 'selectmode'.
+    switch -- $::ms::current($w,selectmode) {
+        none {
+            {*}$address focus $item
+            {*}$address see   $item
+        }
+        browse { ::ms::treeview::BrowseTo $w $item $cell }
+        extended {
+            # Check the operation type.
+            switch -- $op {
+                choose { ::ms::treeview::BrowseTo $w $item $cell }
+                toggle {
+                    # Check if the 'cell' is the empty string or not.
+                    switch -- $cell {
+                        ""  {
+                            {*}$address cellselection toggle [list $cell]
+
+                            set ::ttk::treeview::State(cellAnchor)   $cell
+                            set ::ttk::treeview::State(cellAnchorOp) add
+                        }
+                        default { {*}$address selection toggle [list $item] }
+                    }
+                }
+                extend {
+                    # Check if the 'cell' is the empty string or not.
+                    switch -- $cell {
+                        ""  {
+                            switch -- $::ttk::treeview::State(cellAnchor) {
+                                ""      { ::ms::treeview::BrowseTo  $w $item $cell }
+                                default { {*}$address cellselection $::ttk::treeview::State(cellAnchorOp) $::ttk::treeview::State(cellAnchor) $cell }
+                            }
+                        }
+                        default {
+                            # Check if the 'anchor' is the empty string or not.
+                            set anchor [{*}$address focus]
+                            switch -- $anchor {
+                                ""      { ::ms::treeview::BrowseTo  $w $item $cell }
+                                default { {*}$address selection set [::ms::treeview::Between $w $anchor $item] }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
