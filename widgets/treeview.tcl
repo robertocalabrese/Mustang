@@ -2234,7 +2234,53 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        state {}
+        state {
+            # Synopsis:
+            #
+            # *window* **state** ?*statespec*?
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.treeview] }
+            }
+
+            switch -- [llength $args] {
+                0   { return [{*}$address state] }
+                1   {
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
+                                }
+                            }
+                        }
+                    }
+
+                    #####################################
+                    ##                                 ##
+                    ##     UPDATE THE WIDGET STATE     ##
+                    ##                                 ##
+                    #####################################
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { return [interp invokehidden {} $w state $statespec] }
+                        true  {
+                            interp invokehidden {} $w state $statespec
+                            return [$w.treeview state $statespec]
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         style {}
         xview {}
         yview {}
