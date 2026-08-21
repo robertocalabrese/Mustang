@@ -3555,6 +3555,25 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
     switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_item_style,padding)] {
         0   { _ttk_style configure $treeview_item_style -padding $::ms::styleopt($::ms::theme,Item,padding) }
     }
+
+    ################################
+    ##                            ##
+    ##     CELL STYLE OPTIONS     ##
+    ##                            ##
+    ################################
+
+    set treeview_cell_style [string cat $stylename $parent_style ".Cell"]
+
+    # Check if a layout exists for 'stylename.Cell'.
+    # If not, create one by mirroring the 'Cell' layout for the current theme.
+    if { $treeview_cell_style ni $::ms::layouts($::ms::theme) } {
+        _ttk_style layout $treeview_cell_style [_ttk_style layout Cell]
+    }
+
+    # padding
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_cell_style,padding)] {
+        0   { _ttk_style configure $treeview_cell_style -padding $::ms::styleopt($::ms::theme,Cell,padding) }
+    }
 }
 
 ######################################
