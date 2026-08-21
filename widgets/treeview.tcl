@@ -4699,7 +4699,7 @@ proc ::ms::treeview::Pages { w direction } {
 proc ::ms::treeview::Return { w } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
-        normal { ::ms::treeview::ToggleFocus $w }
+        normal { ::ms::treeview::Toggle_Focus $w }
     }
 
     return ""
@@ -4818,6 +4818,40 @@ proc ::ms::treeview::Toggle { w item } {
         ::ms::treeview::Close_Item $w $item
     } else {
         ::ms::treeview::Open_Item  $w $item
+    }
+
+    return ""
+}
+
+## Toggle_Focus
+#
+# Toggle the focus state of an item.
+#
+# Note: This procedure was inspired by the treeview procedure 'Toggle_Focus'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Toggle_Focus { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    set item [{*}$address focus]
+    switch -- $item {
+        ""      {}
+        default { ::ms::treeview::Toggle $w $item }
     }
 
     return ""
