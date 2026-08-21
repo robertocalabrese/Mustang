@@ -2774,6 +2774,19 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     ######################
 
                                     $w.treeview configure {*}$treeview_options
+
+                                    ######################
+                                    ##                  ##
+                                    ##     SCROLLBARS   ##
+                                    ##                  ##
+                                    ######################
+
+                                    # Configure the fake scrollbars.
+                                    $w.fake_x configure -style $::ms::style($w,hull)
+                                    $w.fake_y configure -style $::ms::style($w,hull)
+
+                                    # Update the scrollbars.
+                                    ::ms::treeview::Scrollbar_Update $w
                                 }
                             }
                         }
