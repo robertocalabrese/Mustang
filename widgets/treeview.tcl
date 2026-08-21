@@ -4050,7 +4050,7 @@ proc ::ms::treeview::Arrow_Keys { w key } {
                         set column [string cat "#" $columns]
                     }
                 }
-                default { ::ms::treeview::OpenItem $w $item }
+                default { ::ms::treeview::Open_Item $w $item }
             }
         }
     }
@@ -4701,6 +4701,47 @@ proc ::ms::treeview::Return { w } {
     switch -- $::ms::current($w,state) {
         normal { ::ms::treeview::ToggleFocus $w }
     }
+
+    return ""
+}
+
+#############################
+##                         ##
+##     OPEN/CLOSE ITEM     ##
+##                         ##
+#############################
+
+## Open_Item
+#
+# Open an item.
+#
+# Note: This procedure was inspired by the treeview procedure 'Open_Item'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Open_Item { w item } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    {*}$address focus $item
+    {*}$address item $item -open true
+
+    event generate $w <<TreeviewOpen>>
 
     return ""
 }
