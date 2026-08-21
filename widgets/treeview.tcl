@@ -4917,4 +4917,45 @@ proc ::ms::treeview::Activate_Heading { w heading } {
     return ""
 }
 
+##############################
+##                          ##
+##     SELECT OPERATION     ##
+##                          ##
+##############################
+
+## Select
+#
+# Binding procedure for selection operations. See "Selection modes", below.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# op    Should be the 'operation' type.
+#       Allowed values are 'choose', 'extend' or 'toggle'.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Select { w x y op } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    set item [{*}$address identify row $x $y]
+    switch -- $item {
+        ""      {}
+        default { ::ms::treeview::Select_Op $w $item [::ms::treeview::IdentifyCell $w $x $y] $op }
+    }
+
+    return ""
+}
+
 #*EOF*
