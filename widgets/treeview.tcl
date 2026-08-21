@@ -2702,6 +2702,19 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     ##     SIMPLE TREEVIEW   ##
                                     ##                       ##
                                     ###########################
+
+                                    ######################
+                                    ##                  ##
+                                    ##     TREEVIEW     ##
+                                    ##                  ##
+                                    ######################
+
+                                    # Add the internal 'xscrollcommand' and 'yscrollcommand' data.
+                                    lappend treeview_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                                             -yscrollcommand $::ms::current($w,yscrollcommand);
+
+                                    # Configure the widget.
+                                    interp invokehidden {} $w {*}$treeview_options
                                 }
                                 true {
                                     ###############################
