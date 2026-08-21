@@ -4028,7 +4028,7 @@ proc ::ms::treeview::Arrow_Keys { w key } {
                     set children [{*}$address children $item]
 
                     if { [{*}$address item $item -open] && [llength $children] } {
-                        ::ms::treeview::CloseItem $w $item
+                        ::ms::treeview::Close_Item $w $item
                     } else {
                         set item [{*}$address parent $item]
                     }
@@ -4742,6 +4742,41 @@ proc ::ms::treeview::Open_Item { w item } {
     {*}$address item $item -open true
 
     event generate $w <<TreeviewOpen>>
+
+    return ""
+}
+
+## Close_Item
+#
+# Close an item.
+#
+# Note: This procedure was inspired by the treeview procedure 'Close_Item'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Close_Item { w item } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    {*}$address item $item -open false
+    {*}$address focus $item
+
+    event generate $w <<TreeviewClose>>
 
     return ""
 }
