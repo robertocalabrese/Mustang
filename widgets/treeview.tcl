@@ -3470,6 +3470,35 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    ###################################
+    ##                               ##
+    ##     HEADING STYLE OPTIONS     ##
+    ##                               ##
+    ###################################
+
+    set treeview_heading_style [string cat $stylename $parent_style ".Heading"]
+
+    # Check if a layout exists for 'stylename.Heading'.
+    # If not, create one by mirroring the 'Heading' layout for the current theme.
+    if { $treeview_heading_style ni $::ms::layouts($::ms::theme) } {
+        _ttk_style layout $treeview_heading_style [_ttk_style layout Heading]
+    }
+
+    # background
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,background)] {
+        0   { _ttk_style configure $treeview_heading_style -background $::ms::styleopt($::ms::theme,Heading,background) }
+    }
+
+    # font
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,font)] {
+        0   { _ttk_style configure $treeview_heading_style -font $::ms::styleopt($::ms::theme,Heading,font) }
+    }
+
+    # relief
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,relief)] {
+        0   { _ttk_style configure $treeview_heading_style -relief $::ms::styleopt($::ms::theme,Heading,relief) }
+    }
 }
 
 ######################################
