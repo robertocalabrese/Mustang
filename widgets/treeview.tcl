@@ -1650,6 +1650,63 @@ proc ::ms::treeview::Command { window { args "" } } {
                             $w.treeview state !disabled
                         }
                     }
+
+                    ########################
+                    ##                    ##
+                    ##     SCROLLBARS     ##
+                    ##                    ##
+                    ########################
+
+                    # Create the horizontal scrollbar.
+                    _ttk_scrollbar $w.x     -class TScrollbar \
+                                          -command [list $w.treeview xview] \
+                                           -cursor arrow \
+                                           -orient horizontal \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+                    # Create the vertical scrollbar.
+                    _ttk_scrollbar $w.y     -class TScrollbar \
+                                          -command [list $w.treeview yview] \
+                                           -cursor arrow \
+                                           -orient vertical \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+                    # Create the fake horizontal scrollbar.
+                    _ttk_frame $w.fake_x -borderwidth 0 \
+                                               -class TFrame \
+                                              -cursor arrow \
+                                              -height $::ms::size($::ms::theme,scrollbar) \
+                                             -padding 0 \
+                                              -relief flat \
+                                               -style $::ms::style($w,hull) \
+                                           -takefocus 0 \
+                                               -width 0;
+
+                    # Create the fake vertical scrollbar.
+                    _ttk_frame $w.fake_y -borderwidth 0 \
+                                               -class TFrame \
+                                              -cursor arrow \
+                                              -height 0 \
+                                             -padding 0 \
+                                              -relief flat \
+                                               -style $::ms::style($w,hull) \
+                                           -takefocus 0 \
+                                               -width $::ms::size($::ms::theme,scrollbar);
+
+                    # Grid the fake scrollbars.
+                    _grid $w.fake_x -column 0 \
+                                      -padx [list 0  0] \
+                                      -pady [list 8p 0] \
+                                       -row 1 \
+                                    -sticky we;
+
+                    _grid $w.fake_y -column 1 \
+                                      -padx [list 8p 0] \
+                                      -pady [list 0  0] \
+                                       -row 0 \
+                                    -sticky ns;
                 }
             }
         }
