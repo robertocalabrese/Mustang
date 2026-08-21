@@ -1512,6 +1512,18 @@ proc ::ms::treeview::Command { window { args "" } } {
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        Treeview { _bindtags $w [list $w _Simple_Treeview Treeview $::ms::addr($w,toplevel) all] }
+                        default  { _bindtags $w [list $w $::ms::current($w,class) _Simple_Treeview Treeview $::ms::addr($w,toplevel) all] }
+                    }
                 }
                 true {
                     ###############################
