@@ -4578,4 +4578,44 @@ proc ::ms::treeview::Map { w } {
     return ""
 }
 
+## Motion
+#
+# Manages the **Motion** event by setting the cursor, active element, ...
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Motion { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    ::ttk::saveCursor $::ms::add($w,widget) State(userConfCursor) [::ttk::cursor hresize]
+
+    set cursor        $::ttk::treeview::State(userConfCursor)
+    set activeHeading {}
+
+    switch -- [{*}$address identify region $x $y] {
+        separator { set cursor         hresize }
+        heading   { set active_heading [{*}$address identify column $x $y] }
+    }
+
+    ::ttk::setCursor $::ms::add($w,widget) $cursor
+
+    ::ms::treeview::Activate_Heading $w $active_heading
+
+    return ""
+}
+
 #*EOF*
