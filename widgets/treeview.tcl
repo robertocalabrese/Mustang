@@ -3960,4 +3960,29 @@ proc ::ms::treeview::ButtonPress { w x y } {
     return ""
 }
 
+## Configure
+#
+# Manage the **Configure** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Configure { w } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        true {
+            # Note: The configure event have already happened.
+            #       We just need to propagate the event inside the content
+            #       and check if the scrollbar/s are updated/needed.
+
+            # Update the scrollbars.
+            ::ms::treeview::Scrollbar_Update $w
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
