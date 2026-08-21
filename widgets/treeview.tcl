@@ -671,6 +671,26 @@ namespace eval ::ms::treeview {
                                                 rows \
                                                 shellbackground \
                                                 stripedbackground];
+
+    # Set the default 'non-styleable' treeview options values.
+    set ::ms::default(treeview,class)          Treeview
+    set ::ms::default(treeview,cmenu)          {}
+    set ::ms::default(treeview,columns)        {}
+    set ::ms::default(treeview,displaycolumns) [list #all]
+    set ::ms::default(treeview,scrollable)     false
+    set ::ms::default(treeview,selectmode)     extended
+    set ::ms::default(treeview,selecttype)     item
+    set ::ms::default(treeview,show)           [list tree headings]
+    set ::ms::default(treeview,state)          normal
+    set ::ms::default(treeview,striped)        1
+    set ::ms::default(treeview,style)          Treeview
+    set ::ms::default(treeview,takefocus)      0
+    set ::ms::default(treeview,titlecolumns)   0
+    set ::ms::default(treeview,titleitems)     0
+    set ::ms::default(treeview,xscrollcommand) {}
+    set ::ms::default(treeview,yscrollcommand) {}
+
+    # Note: The default 'styleable' treeview options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **ttk::treeview** command.
