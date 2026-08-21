@@ -4124,7 +4124,7 @@ proc ::ms::treeview::ButtonPress { w x y } {
                     set item [{*}$address identify item $x $y]
 
                     # Identify the widget's cell under the mouse pointer.
-                    set cell [::ms::treeview::IdentifyCell $w $x $y]
+                    set cell [::ms::treeview::Identify_Cell $w $x $y]
 
                     # Dispatch to the appropriate select operation depending on current value of '-selectmode'.
                     ::ms::treeview::Select_Op $w $item $cell choose
@@ -4952,7 +4952,7 @@ proc ::ms::treeview::Select { w x y op } {
     set item [{*}$address identify row $x $y]
     switch -- $item {
         ""      {}
-        default { ::ms::treeview::Select_Op $w $item [::ms::treeview::IdentifyCell $w $x $y] $op }
+        default { ::ms::treeview::Select_Op $w $item [::ms::treeview::Identify_Cell $w $x $y] $op }
     }
 
     return ""
@@ -5029,6 +5029,45 @@ proc ::ms::treeview::Select_Op { w item cell op } {
                     }
                 }
             }
+        }
+    }
+
+    return ""
+}
+
+#####################
+##                 ##
+##     UTILITY     ##
+##                 ##
+#####################
+
+## Identify_Cell
+#
+# Locate the cell at coordinate.
+# Only active when 'selecttype' is 'cell', and leaves cell empty otherwise.
+# Down the call chain it is enough to check cell to know the selecttype.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Identify_Cell { w x y } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Check the current 'selecttype' option.
+    switch -- $::ms::current($w,selecttype) {
+        cell {
+            # Later handling assumes that the column in the cell ID is of the format #N,
+            # which is always the case from 'identify cell'.
+
+            return [{*}$address identify cell $x $y]
         }
     }
 
