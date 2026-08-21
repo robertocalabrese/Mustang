@@ -2766,6 +2766,14 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
 
                                     # Apply the changes.
                                     interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                                    ######################
+                                    ##                  ##
+                                    ##     TREEVIEW     ##
+                                    ##                  ##
+                                    ######################
+
+                                    $w.treeview configure {*}$treeview_options
                                 }
                             }
                         }
