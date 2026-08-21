@@ -71,12 +71,12 @@ package provide ::ms::treeview 0.1
 #######################################
 
 # ButtonPress-1
-_bind _Simple_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress %W %x %y; break }
-_bind _Simple_Treeview <ButtonRelease-1>   { ::ms::treeview::Release     %W %x %y; break }
-_bind _Simple_Treeview <B1-Motion>         { ::ms::treeview::Drag        %W %x %y; break }
-_bind _Simple_Treeview <Double-Button-1>   { ::ms::treeview::DoubleClick %W %x %y; break }
-_bind _Simple_Treeview <Shift-Button-1>    { ::ms::treeview::Select      %W %x %y extend; break }
-_bind _Simple_Treeview <<ToggleSelection>> { ::ms::treeview::Select      %W %x %y toggle; break }
+_bind _Simple_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress  %W %x %y; break }
+_bind _Simple_Treeview <ButtonRelease-1>   { ::ms::treeview::Release      %W %x %y; break }
+_bind _Simple_Treeview <B1-Motion>         { ::ms::treeview::Drag         %W %x %y; break }
+_bind _Simple_Treeview <Double-Button-1>   { ::ms::treeview::Double_Click %W %x %y; break }
+_bind _Simple_Treeview <Shift-Button-1>    { ::ms::treeview::Select       %W %x %y extend; break }
+_bind _Simple_Treeview <<ToggleSelection>> { ::ms::treeview::Select       %W %x %y toggle; break }
 
 # Motion
 _bind _Simple_Treeview <Motion> { ::ms::treeview::Motion %W %x %y; break }
@@ -187,12 +187,12 @@ _bind _Simple_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Widget %W %# %D
 ###########################################
 
 # ButtonPress-1
-_bind _Scrollable_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <ButtonRelease-1>   { ::ms::treeview::Release     [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <B1-Motion>         { ::ms::treeview::Drag        [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <Double-Button-1>   { ::ms::treeview::DoubleClick [_winfo parent %W] %x %y; break }
-_bind _Scrollable_Treeview <Shift-Button-1>    { ::ms::treeview::Select      [_winfo parent %W] %x %y extend; break }
-_bind _Scrollable_Treeview <<ToggleSelection>> { ::ms::treeview::Select      [_winfo parent %W] %x %y toggle; break }
+_bind _Scrollable_Treeview <ButtonPress-1>     { ::ms::treeview::ButtonPress  [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <ButtonRelease-1>   { ::ms::treeview::Release      [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <B1-Motion>         { ::ms::treeview::Drag         [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <Double-Button-1>   { ::ms::treeview::Double_Click [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Treeview <Shift-Button-1>    { ::ms::treeview::Select       [_winfo parent %W] %x %y extend; break }
+_bind _Scrollable_Treeview <<ToggleSelection>> { ::ms::treeview::Select       [_winfo parent %W] %x %y toggle; break }
 
 # Motion
 _bind _Scrollable_Treeview <Motion> { ::ms::treeview::Motion [_winfo parent %W] %x %y; break }
@@ -4186,6 +4186,45 @@ proc ::ms::treeview::Destroy { w } {
                          ::ms::style($w,separator) \
                          ::ms::style($w,treeview) \
                          ::ms::style($w,widget);
+
+    return ""
+}
+
+## Double_Click
+#
+# Manages the **Double-Button-1** event
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Double_Click { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled {
+            ::ms::Focus_The_Widget_Or_Its_Toplevel $w
+
+            return ""
+        }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    set row [{*}$address identify row $x $y]
+    switch -- $row {
+        ""  {
+            # Perform single-click action.
+            ::ms::treeview::Press $w $x $y
+        }
+        default { ::ms::treeview::Toggle $w $row }
+    }
 
     return ""
 }
