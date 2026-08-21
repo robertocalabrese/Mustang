@@ -5321,4 +5321,58 @@ proc ::ms::treeview::Scrollbar_ButtonRelease {} {
     return ""
 }
 
+## Scrollbar_Drag
+#
+# Manage the **B1-Motion** event on the widget's internal scrollbars.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# orient   Specifies a string (**horizontal** or **vertical**) indicating
+#          the orientation of the scrollbar.
+#
+# x, y     Should be the (x,y) mouse pointer coordinates of the event.
+#          These values should be provided by the <Motion> event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Scrollbar_Drag { w orient x y } {
+    # Safeguard.
+    # Check if the 'Scrollbar_Drag' operation is allowed or not.
+    switch -- [info exists ::ms::temp(drag_allowed)] {
+        0   { return "" }
+        1   {
+            switch -- $::ms::temp(drag_allowed) {
+                no  { return "" }
+            }
+        }
+    }
+
+    # Compute 'delta_x' and 'delta_y'.
+    set delta_x [expr { $x-$::ms::temp(xpress) }]
+    set delta_y [expr { $y-$::ms::temp(ypress) }]
+
+    # Check the orientation.
+    switch -nocase -- $orient {
+        horizontal {
+            # Compute the 'fraction' after the drag movement.
+            set delta    [$w.x delta $delta_x $delta_y]
+            set fraction [expr { $::ms::temp(fraction)+$delta }]
+
+            # Move the horizontal scrollbar to 'fraction'.
+            ::ms::treeview::Pathname_Cmd $w xview moveto $fraction
+        }
+        vertical {
+            # Compute the 'fraction' after the drag movement.
+            set delta    [$w.y delta $delta_x $delta_y]
+            set fraction [expr { $::ms::temp(fraction)+$delta }]
+
+            # Move the vertical scrollbar to 'fraction'.
+            ::ms::treeview::Pathname_Cmd $w yview moveto $fraction
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
