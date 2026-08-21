@@ -1483,6 +1483,35 @@ proc ::ms::treeview::Command { window { args "" } } {
                     ##     SIMPLE TREEVIEW   ##
                     ##                       ##
                     ###########################
+
+                    ######################
+                    ##                  ##
+                    ##     TREEVIEW     ##
+                    ##                  ##
+                    ######################
+
+                    # Add the internal 'xscrollcommand' and 'yscrollcommand' data.
+                    lappend treeview_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                             -yscrollcommand $::ms::current($w,yscrollcommand);
+
+                    # Create the widget.
+                    _ttk_treeview $w {*}$treeview_options
+
+                    # Note: The Tk treeview widget don't have a '-state' option.
+                    #       We need to simulate it graphically.
+                    switch -- $::ms::current($w,state) {
+                        disabled {
+                            # Change the widget dynamic state to 'disabled'.
+                            $w state disabled
+                        }
+                        normal {
+                            # Change the widget dynamic state to '!disabled'.
+                            $w state !disabled
+                        }
+                    }
+
+                    # Set the widget toplevel.
+                    set ::ms::addr($w,toplevel) [_winfo toplevel $w]
                 }
                 true {
                     ###############################
