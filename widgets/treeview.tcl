@@ -3499,6 +3499,25 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
     switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_heading_style,relief)] {
         0   { _ttk_style configure $treeview_heading_style -relief $::ms::styleopt($::ms::theme,Heading,relief) }
     }
+
+    #####################################
+    ##                                 ##
+    ##     SEPARATOR STYLE OPTIONS     ##
+    ##                                 ##
+    #####################################
+
+    set treeview_separator_style [string cat $stylename $parent_style ".Separator"]
+
+    # Check if a layout exists for 'stylename.Separator'.
+    # If not, create one by mirroring the 'Separator' layout for the current theme.
+    if { $treeview_separator_style ni $::ms::layouts($::ms::theme) } {
+        _ttk_style layout $treeview_separator_style [_ttk_style layout Separator]
+    }
+
+    # background
+    switch -- [info exists ::ms::styleopt($::ms::theme,$treeview_separator_style,background)] {
+        0   { _ttk_style configure $treeview_separator_style -background $::ms::styleopt($::ms::theme,Treeview.Separator,background) }
+    }
 }
 
 ######################################
