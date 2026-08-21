@@ -651,6 +651,26 @@ namespace eval ::ms::treeview {
                                                     titleitems \
                                                     xscrollcommand \
                                                     yscrollcommand];
+
+    # Set the 'styleable' treeview option list.
+    set ::ms::treeview(styleable,options) [list background \
+                                                bordercolor \
+                                                borderwidth \
+                                                columnseparatorwidth \
+                                                cursor \
+                                                darkcolor \
+                                                fieldbackground \
+                                                focuscolor \
+                                                focuswidth \
+                                                font \
+                                                foreground \
+                                                indent \
+                                                lightcolor \
+                                                padding \
+                                                rowheight \
+                                                rows \
+                                                shellbackground \
+                                                stripedbackground];
 }
 
 # Rename the original Tk **ttk::treeview** command.
