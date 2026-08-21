@@ -4270,4 +4270,20 @@ proc ::ms::treeview::Drag { w x y } {
     return ""
 }
 
+## FocusIn
+#
+# Manage the **FocusIn** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::FocusIn { w } {
+    # Change the widget dynamic state to 'focus'.
+    ::ms::treeview::Pathname_Cmd $w state focus
+
+    return ""
+}
+
 #*EOF*
