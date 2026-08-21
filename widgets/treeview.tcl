@@ -1840,7 +1840,46 @@ proc ::ms::treeview::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::treeview::Pathname_Cmd { w cmd args } {}
+proc ::ms::treeview::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        bbox     -
+        detached -
+        drag     -
+        drop     -
+        exists   -
+        index    -
+        move     -
+        next     -
+        parent   -
+        prev     -
+        tag      {}
+        cellselection {}
+        cget {}
+        children -
+        column   -
+        delete   -
+        detach   -
+        heading  -
+        insert   -
+        item     -
+        see      -
+        set      {}
+        configure {}
+        focus {}
+        identify {}
+        instate {}
+        selection {}
+        state {}
+        style {}
+        xview {}
+        yview {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
