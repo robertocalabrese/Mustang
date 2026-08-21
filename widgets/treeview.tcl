@@ -2404,6 +2404,18 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     set takefocus $::ms::current($w,takefocus)
                                 }
                             }
+
+                            # Check if the style provided is a parent of 'Treeview'.
+                            set index [string last "." $::ms::current($w,style)]
+                            switch -- $index {
+                                -1      { set parent_style ".Treeview" }
+                                default {
+                                    switch -- [string range $::ms::current($w,style) $index+1 end] {
+                                        Treeview { set parent_style "" }
+                                        default  { set parent_style ".Treeview"}
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
