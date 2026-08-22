@@ -89,7 +89,7 @@ _bind _Simple_Treeview <Configure> { ::ms::treeview::Configure %W; break }
 
 # Enter/Leave
 _bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y ""; break }
-_bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y Leave; break }
+_bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y ""; break }
 
 # FocusIn/FocusOut
 _bind _Simple_Treeview <FocusIn>  { ::ms::treeview::FocusIn  %W; break }
