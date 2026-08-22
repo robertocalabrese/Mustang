@@ -204,8 +204,8 @@ _bind _Scrollable_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo pare
 _bind _Scrollable_Treeview <Configure> { ::ms::treeview::Configure [_winfo parent %W]; break }
 
 # Enter/Leave
-_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] ""; break }
-_bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] Leave; break }
+_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y Leave; break }
 
 # FocusIn/FocusOut
 _bind _Scrollable_Treeview <FocusIn>  { ::ms::treeview::FocusIn  [_winfo parent %W]; break }
@@ -4202,7 +4202,28 @@ proc ::ms::treeview::FocusOut { w } {
 proc ::ms::treeview::Hover { w X Y { type "" } } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
-        normal {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            # Check if a **Leave** event has just happened upon a treeview object.
+            switch -- $type {
+                Leave {
+                    # Change the widget dynamic state to '!hover'
+                    ::ms::treeview::Pathname_Cmd $w state !hover
+
+                    # Reset the widget's active column.
+                    set ::ms::data($w,active,column) {}
+                }
+                default {
+                    # Change the widget dynamic state to 'hover'
+                    ::ms::treeview::Pathname_Cmd $w state hover
+                }
+            }
+        }
+        true  {
             # Get the dimensions of the widget that acts as a border object.
             set height [_winfo height $::ms::addr($w,border)]
             set width  [_winfo width  $::ms::addr($w,border)]
@@ -4221,16 +4242,16 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
 
                 # Change the widget dynamic state to '!hover'
                 ::ms::treeview::Pathname_Cmd $w state !hover
+
+                # Check if a **Leave** event has just happened upon a treeview object.
+                switch -- $type {
+                    Leave { set ::ms::data($w,active,column) {} }
+                }
             } else {
                 # The mouse cursor is inside the widget acting as a border object.
 
                 # Change the widget dynamic state to 'hover'
                 ::ms::treeview::Pathname_Cmd $w state hover
-            }
-
-            # Check if a **Leave** event has just happened upon a treeview object.
-            switch -- $type {
-                Leave { set ::ms::data($w,active,column) {} }
             }
         }
     }
