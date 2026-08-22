@@ -691,24 +691,6 @@ namespace eval ::ms::treeview {
     set ::ms::default(treeview,yscrollcommand) {}
 
     # Note: The default 'styleable' treeview options values are always defined inside the current theme.
-
-    # Enter/Leave/Motion
-    set ::ms::data(state,activeWidget)  {}
-    set ::ms::data(state,activeHeading) {}
-
-    # Press/Drag/Release:
-    set ::ms::data(state,pressMode) none
-    set ::ms::data(state,pressX)    0
-
-    # PressMode --> resize
-    set ::ms::data(state,resizeColumn) #0
-
-    # Pressmode --> heading
-    set ::ms::data(state,heading) {}
-
-    # Cell anchor
-    set ::ms::data(state,cellAnchor)   {}
-    set ::ms::data(state,cellAnchorOp) "set"
 }
 
 # Rename the original Tk **ttk::treeview** command.
@@ -795,9 +777,15 @@ proc ::ms::treeview::Command { window { args "" } } {
             set ::ms::current($w,yscrollcommand) $::ms::default(treeview,yscrollcommand)
 
             # Set some widget variables needed for internal mechanisms.
-            set ::ms::data($w,classtype) treeview
-            set ::ms::data($w,scrollx)   off
-            set ::ms::data($w,scrolly)   off
+            set ::ms::data($w,active,column)  {}
+            set ::ms::data($w,cell,anchor)    {}
+            set ::ms::data($w,cell,anchor,op) set
+            set ::ms::data($w,classtype)      treeview
+            set ::ms::data($w,press,column)   {}
+            set ::ms::data($w,press,mode)     {}
+            set ::ms::data($w,resize,column)  #0
+            set ::ms::data($w,scrollx)        off
+            set ::ms::data($w,scrolly)        off
 
             # Set each styleable option to be managed by Tk.
             #
@@ -4077,7 +4065,13 @@ proc ::ms::treeview::Destroy { w } {
                          ::ms::current($w,xscrollcommand) \
                          ::ms::current($w,yscrollcommand);
 
-    unset -nocomplain -- ::ms::data($w,classtype) \
+    unset -nocomplain -- ::ms::data($w,active,column) \
+                         ::ms::data($w,cell,anchor) \
+                         ::ms::data($w,cell,anchor,op) \
+                         ::ms::data($w,classtype) \
+                         ::ms::data($w,press,column) \
+                         ::ms::data($w,press,mode) \
+                         ::ms::data($w,resize,column) \
                          ::ms::data($w,scrollx) \
                          ::ms::data($w,scrolly) \
                          ::ms::data($w,token);
@@ -4236,10 +4230,7 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
 
             # Check if a **Leave** event has just happened upon a treeview object.
             switch -- $type {
-                Leave {
-                    set ::ms::data(state,activeHeading) {}
-                    set ::ms::data(state,activeWidget)  {}
-                }
+                Leave { set ::ms::data($w,active,column) {} }
             }
         }
     }
@@ -4726,7 +4717,7 @@ proc ::ms::treeview::Arrow_Keys { w key } {
     # Check the selection type.
     switch -- $::ms::current($w,selecttype) {
         cell {
-            set column [lindex $::ms::data(state,cellAnchor) 1]
+            set column [lindex $::ms::data($w,cell,anchor) 1]
             switch -- $column {
                 ""  { set column "#1" }
             }
@@ -4815,6 +4806,7 @@ proc ::ms::treeview::Arrow_Keys { w key } {
                         default { set last_column [llength $::ms::current($w,displaycolumns)] }
                     }
 
+                    # Set the 'column'.
                     set columns [string range $column 1 end]
                     if { $columns < $last_column } {
                         incr columns
@@ -4826,7 +4818,7 @@ proc ::ms::treeview::Arrow_Keys { w key } {
         }
     }
 
-    # Check if 'item' is the empty string, if so don't do anything.
+    # Check if 'item' is the empty string or not.
     switch -- $item {
         ""      {}
         default {
@@ -4876,16 +4868,16 @@ proc ::ms::treeview::ButtonPress { w x y } {
                     # Heading.Press
                     set column [{*}$address identify column $x $y]
 
-                    set ::ms::data(state,pressMode) heading
-                    set ::ms::data(state,heading)   $column
+                    set ::ms::data($w,press,mode)   heading
+                    set ::ms::data($w,press,column) $column
 
                     # Execute the command.
                     {*}$address heading $column state pressed
                 }
                 separator {
                     # Resize.Press
-                    set ::ms::data(state,pressMode)    resize
-                    set ::ms::data(state,resizeColumn) [{*}$address identify column $x $y]
+                    set ::ms::data($w,press,mode)    resize
+                    set ::ms::data($w,resize,column) [{*}$address identify column $x $y]
                 }
                 tree -
                 cell {
@@ -4936,20 +4928,27 @@ proc ::ms::treeview::ButtonRelease { w x y } {
         true  { set address [list $w.treeview] }
     }
 
-    switch -- $::ms::data(state,pressMode) {
-        resize  { {*}$address drop }
+    # Check the press mode.
+    switch -- $::ms::data($w,press,mode) {
+        resize {
+            # Resize.Release
+            {*}$address drop
+        }
         heading {
-            if { [lsearch -exact [{*}$address heading $::ms::data(state,heading) state] pressed] >= 0 } {
-                after 0 [{*}$address heading $::ms::data(state,heading) -command]
+            # Heading.Release
+            if { [lsearch -exact [{*}$address heading $::ms::data($w,press,column) state] pressed] >= 0 } {
+                after 0 [{*}$address heading $::ms::data($w,press,column) -command]
             }
 
             # Execute the command.
-            {*}$address heading $::ms::data(state,heading) state !pressed
+            {*}$address heading $::ms::data($w,press,column) state !pressed
         }
     }
 
-    set ::ms::data(state,pressMode) none
+    # Reset the press mode variable.
+    set ::ms::data($w,press,mode) {}
 
+    # Execute the **Motion** procedure.
     ::ms::treeview::Motion $w $x $y
 
     return ""
@@ -4982,6 +4981,7 @@ proc ::ms::treeview::DoubleClick { w x y } {
         true  { set address [list $w.treeview] }
     }
 
+    # Check the row under the coordinates provided.
     set row [{*}$address identify row $x $y]
     switch -- $row {
         ""  {
@@ -5017,17 +5017,18 @@ proc ::ms::treeview::Drag { w x y } {
         true  { set address [list $w.treeview] }
     }
 
-    switch -- $::ms::data(state,pressMode) {
-        resize  {
+    # Check the press mode.
+    switch -- $::ms::data($w,press,mode) {
+        resize {
             # Resize.Drag
-            {*}$address drag $::ms::data(state,resizeColumn) $x
+            {*}$address drag $::ms::data($w,resize,column) $x
         }
         heading {
             # Heading.Drag
-            if { ([{*}$address identify region $x $y] eq "heading") && ([{*}$address identify column $x $y] eq $::ms::data(state,heading)) } {
-                {*}$address heading $::ms::data(state,heading) state pressed
+            if { ([{*}$address identify region $x $y] eq "heading") && ([{*}$address identify column $x $y] eq $::ms::data($w,press,column)) } {
+                {*}$address heading $::ms::data($w,press,column) state  pressed
             } else {
-                {*}$address heading $::ms::data(state,heading) state !pressed
+                {*}$address heading $::ms::data($w,press,column) state !pressed
             }
         }
     }
@@ -5058,19 +5059,42 @@ proc ::ms::treeview::Motion { w x y } {
         true  { set address [list $w.treeview] }
     }
 
-    ::ttk::saveCursor $::ms::add($w,widget) ::ms::data(state,userConfCursor) [::ttk::cursor hresize]
-
-    set cursor        $::ms::data(state,userConfCursor)
-    set activeHeading {}
-
+    # Check the widget's region under the coordinates provided.
+    set active_column {}
+    set cursor        $::ms::current($w,cursor)
     switch -- [{*}$address identify region $x $y] {
-        separator { set cursor         hresize }
-        heading   { set active_heading [{*}$address identify column $x $y] }
+        separator { set cursor  hresize }
+        heading   { set active_column [{*}$address identify column $x $y] }
     }
 
-    ::ttk::setCursor $::ms::add($w,widget) $cursor
+    # If needed, change the cursor.
+    if { [{*}$address cget -cursor] ne $cursor } {
+        {*}$address configure -cursor $cursor
+    }
 
-    ::ms::treeview::Activate_Heading $w $active_heading
+    # Check if the active column is different than the one currently registered.
+    if { $active_column != $::ms::data($w,active,column) {
+        # If needed, deactivate the currently registered active column.
+        switch -- $::ms::data($w,active,column) {
+            ""      {}
+            default {
+                try {
+                    {*}$address heading $::ms::data($w,active,column) state !active
+                } on error {} {
+                    # Do Nothing.
+                }
+            }
+        }
+
+        # If needed, activate the current active column.
+        switch -- $active_column {
+            ""      {}
+            default { {*}$address heading $active_column state active }
+        }
+
+        # Register the new active column.
+        set ::ms::data($w,active,column) $active_column
+    }
 
     return ""
 }
@@ -5109,8 +5133,9 @@ proc ::ms::treeview::Open_Item { w item } {
     }
 
     {*}$address focus $item
-    {*}$address item $item -open true
+    {*}$address item  $item -open true
 
+    # Generate a **TreeviewOpen** event.
     event generate $w <<TreeviewOpen>>
 
     return ""
@@ -5139,9 +5164,10 @@ proc ::ms::treeview::Close_Item { w item } {
         true  { set address [list $w.treeview] }
     }
 
-    {*}$address item $item -open false
+    {*}$address item  $item -open false
     {*}$address focus $item
 
+    # Generate a **TreeviewClose** event.
     event generate $w <<TreeviewClose>>
 
     return ""
@@ -5206,68 +5232,11 @@ proc ::ms::treeview::Toggle_Focus { w } {
         true  { set address [list $w.treeview] }
     }
 
+    # If needed, toggle.
     set item [{*}$address focus]
     switch -- $item {
         ""      {}
         default { ::ms::treeview::Toggle $w $item }
-    }
-
-    return ""
-}
-
-################################
-##                            ##
-##     HEADING ACTIVATION     ##
-##                            ##
-################################
-
-# Note: The following procedure was inspired by its treeview equivalent one.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-
-## Activate_Heading
-#
-# Track the active heading element.
-#
-# Where:
-#
-# w         Should be the widget real address involved.
-#
-# heading   Should be the 'heading' involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Activate_Heading { w heading } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    if { ($w != $::ms::data(state,activeWidget)) || ($heading != $::ms::data(state,activeHeading)) } {
-        if { [_winfo exists $::ms::data(state,activeWidget)] && $::ms::data(state,activeHeading) != {} } {
-            # It may happen that 'State(activeHeading)' no longer corresponds to an existing display column.
-            # This happens for instance when changing 'displaycolumns' in a bound script when this change triggers a **Leave** event.
-            # A proc checking if the display column 'State(activeHeading)' is really still present or not could be
-            # written but it would need to check several special cases:
-            #   a. 'displaycolumns' "#all" or being an explicit columns list
-            #   b. column #0 display is not governed by the 'displaycolumn' list but by the value of the 'show' option
-            #
-            # --> Let's rather catch the following line.
-            catch { $::ms::data(state,activeWidget) heading $::ms::data(state,activeHeading) state !active }
-        }
-
-        switch -- $heading {
-            ""      {}
-            default { {*}$address heading $heading state active }
-        }
-
-        set ::ms::data(state,activeHeading) $heading
-        set ::ms::data(state,activeWidget)  $w
     }
 
     return ""
@@ -5309,6 +5278,7 @@ proc ::ms::treeview::Select { w x y op } {
         true  { set address [list $w.treeview] }
     }
 
+    # If needed, launch the corrispondent select operation.
     set item [{*}$address identify row $x $y]
     switch -- $item {
         ""      {}
@@ -5352,7 +5322,7 @@ proc ::ms::treeview::Select_Op { w item cell op } {
             {*}$address focus $item
             {*}$address see   $item
         }
-        browse { ::ms::treeview::Browse_To $w $item $cell }
+        browse   { ::ms::treeview::Browse_To $w $item $cell }
         extended {
             # Check the operation type.
             switch -- $op {
@@ -5363,8 +5333,8 @@ proc ::ms::treeview::Select_Op { w item cell op } {
                         ""  {
                             {*}$address cellselection toggle [list $cell]
 
-                            set ::ms::data(state,cellAnchor)   $cell
-                            set ::ms::data(state,cellAnchorOp) add
+                            set ::ms::data($w,cell,anchor)    $cell
+                            set ::ms::data($w,cell,anchor,op) add
                         }
                         default { {*}$address selection toggle [list $item] }
                     }
@@ -5373,16 +5343,17 @@ proc ::ms::treeview::Select_Op { w item cell op } {
                     # Check if the 'cell' is the empty string or not.
                     switch -- $cell {
                         ""  {
-                            switch -- $::ms::data(state,cellAnchor) {
-                                ""      { ::ms::treeview::Browse_To  $w $item $cell }
-                                default { {*}$address cellselection $::ms::data(state,cellAnchorOp) $::ms::data(state,cellAnchor) $cell }
+                            # Check if the 'cell anchor' is the empty string or not.
+                            switch -- $::ms::data($w,cell,anchor) {
+                                ""      { ::ms::treeview::Browse_To $w $item $cell }
+                                default { {*}$address cellselection $::ms::data($w,cell,anchor,op) $::ms::data($w,cell,anchor) $cell }
                             }
                         }
                         default {
                             # Check if the 'anchor' is the empty string or not.
                             set anchor [{*}$address focus]
                             switch -- $anchor {
-                                ""      { ::ms::treeview::Browse_To  $w $item $cell }
+                                ""      { ::ms::treeview::Browse_To $w $item $cell }
                                 default { {*}$address selection set [::ms::treeview::Between $w $anchor $item] }
                             }
                         }
@@ -5461,8 +5432,8 @@ proc ::ms::treeview::Browse_To { w item cell } {
     {*}$address focus $item
     {*}$address see   $item
 
-    set ::ms::data(state,cellAnchor)   $cell
-    set ::ms::data(state,cellAnchorOp) set
+    set ::ms::data($w,cell,anchor)    $cell
+    set ::ms::data($w,cell,anchor,op) set
 
     # Check if the 'cell' is the empty string or not.
     switch -- $cell {
