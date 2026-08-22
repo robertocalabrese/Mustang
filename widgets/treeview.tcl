@@ -88,7 +88,7 @@ _bind _Simple_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; 
 _bind _Simple_Treeview <Configure> { ::ms::treeview::Configure %W; break }
 
 # Enter/Leave
-_bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y; break }
+_bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y ""; break }
 _bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y Leave; break }
 
 # FocusIn/FocusOut
@@ -204,7 +204,7 @@ _bind _Scrollable_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo pare
 _bind _Scrollable_Treeview <Configure> { ::ms::treeview::Configure [_winfo parent %W]; break }
 
 # Enter/Leave
-_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W]; break }
+_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] ""; break }
 _bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] Leave; break }
 
 # FocusIn/FocusOut
@@ -316,8 +316,8 @@ _bind _Hull_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; br
 _bind _Hull_Treeview <Destroy> { ::ms::treeview::Destroy %W; break }
 
 # Enter/Leave
-_bind _Hull_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y; break }
-_bind _Hull_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y; break }
+_bind _Hull_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
+_bind _Hull_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
 
 # FocusIn/FocusOut
 _bind _Hull_Treeview <FocusIn>  { ::ms::treeview::FocusIn  %W; break }
@@ -384,8 +384,8 @@ _bind _X_Scrollbar_Treeview <B1-Motion>       { ::ms::treeview::Scrollbar_Drag  
 _bind _X_Scrollbar_Treeview <ButtonRelease-1> { ::ms::treeview::Scrollbar_ButtonRelease; break }
 
 # Enter/Leave
-_bind _X_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y; break }
-_bind _X_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _X_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
 
 # Mousewheel and Touchpad
 
@@ -448,8 +448,8 @@ _bind _Y_Scrollbar_Treeview <B1-Motion>       { ::ms::treeview::Scrollbar_Drag  
 _bind _Y_Scrollbar_Treeview <ButtonRelease-1> { ::ms::treeview::Scrollbar_ButtonRelease; break }
 
 # Enter/Leave
-_bind _Y_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y; break }
-_bind _Y_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Y_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
 
 # Mousewheel and Touchpad
 
@@ -515,8 +515,8 @@ _bind _X_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its
 _bind _X_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
 # Enter/Leave
-_bind _X_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y; break }
-_bind _X_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y; break }
+_bind _X_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
@@ -582,8 +582,8 @@ _bind _Y_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its
 _bind _Y_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
 # Enter/Leave
-_bind _Y_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y; break }
-_bind _Y_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y; break }
+_bind _Y_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
@@ -3902,308 +3902,6 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
-## Arrow_Keys
-#
-# Manage the Key navigation on the widget.
-#
-# Note: This procedure was inspired by the treeview procedure 'Keynav'.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# key   Should be arrow key event that happened on the widget.
-#       Allowed values are **down**, **left**, **right** and **up**.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Arrow_Keys { w key } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    # Check if the widget has no items.
-    set root_children [{*}$address children {}]
-    switch -- [llength $root_children] {
-        0   { return "" }
-    }
-
-    # Get the widget's item in focus.
-    set item [{*}$address focus]
-    switch -- $item {
-        ""  {
-            # Check the key pressed.
-            switch -- $key {
-                up   -
-                left {
-                    # Get the last 'item'
-                    set item [lindex $root_children end]
-                }
-                down  -
-                right {
-                    # Get the first 'item'.
-                    set item [lindex $root_children 0]
-                }
-            }
-
-            # Check the selection type.
-            switch -- $::ms::current($w,selecttype) {
-                cell {
-                    # Select the first cell of 'item'
-                    ::ms::treeview::Select_Op $w $item [list $item #1] choose
-                }
-                default {
-                    # Select 'item'.
-                    ::ms::treeview::Select_Op $w $item "" choose
-                }
-            }
-
-            return ""
-        }
-    }
-
-    # Check the selection type.
-    switch -- $::ms::current($w,selecttype) {
-        cell {
-            set column [lindex $::ms::data(state,cellAnchor) 1]
-            switch -- $column {
-                ""  { set column "#1" }
-            }
-        }
-    }
-
-    # Check the key pressed.
-    switch -- $key {
-        up  {
-            # Check if 'item' is the first root child.
-            if { $item eq [lindex $root_children 0] } {
-                # Check if we need to cycle (scrollstopper --> disabled).
-                switch -- $::ms::scrollstopper {
-                    disabled { set item [lindex $root_children end] }
-                    enabled  { return "" }
-                }
-            } else {
-                set up [{*}$address prev $item]
-                switch -- $up {
-                    ""      { set item [{*}$address parent $item] }
-                    default {
-                        while { [{*}$address item $up -open] && [llength [{*}$address children $up]] } {
-                            set up [lindex [{*}$address children $up] end]
-                        }
-
-                        set item $up
-                    }
-                }
-            }
-        }
-        down {
-            # Check if 'item' is the last root child.
-            if { $item eq [lindex $root_children end] } {
-                # Check if we need to cycle (scrollstopper --> disabled).
-                switch -- $::ms::scrollstopper {
-                    disabled { set item [lindex $root_children 0] }
-                    enabled  { return "" }
-                }
-            } else {
-                if { [{*}$address item $item -open] && [llength [{*}$address children $item]] } {
-                    set item [lindex [{*}$address children $item] 0]
-                } else {
-                    set up $item
-                    while { $up ne "" && [set down [{*}$address next $up]] eq "" } {
-                        set up [{*}$address parent $up]
-                    }
-                    set item $down
-                }
-            }
-        }
-        left {
-            # Check the selection type.
-            switch -- $::ms::current($w,selecttype) {
-                cell {
-                    # This assumes that column is of the "#N" format.
-                    set columns [string range $column 1 end]
-
-                    if { "tree" in $::ms::current($w,show) } {
-                        set first_column 0
-                    } else {
-                        set first_column 1
-                    }
-
-                    if { $columns > $first_column } {
-                        incr columns -1
-                        set column [string cat "#" $columns]
-                    }
-                }
-                default {
-                    set children [{*}$address children $item]
-
-                    if { [{*}$address item $item -open] && [llength $children] } {
-                        ::ms::treeview::Close_Item $w $item
-                    } else {
-                        set item [{*}$address parent $item]
-                    }
-                }
-            }
-        }
-        right {
-            # Check the selection type.
-            switch -- $::ms::current($w,selecttype) {
-                cell {
-                    switch -- $::ms::current($w,displaycolumns) {
-                        "#all"  { set last_column [llength $::ms::current($w,columns)] }
-                        default { set last_column [llength $::ms::current($w,displaycolumns)] }
-                    }
-
-                    set columns [string range $column 1 end]
-                    if { $columns < $last_column } {
-                        incr columns
-                        set column [string cat "#" $columns]
-                    }
-                }
-                default { ::ms::treeview::Open_Item $w $item }
-            }
-        }
-    }
-
-    # Check if 'item' is the empty string, if so don't do anything.
-    switch -- $item {
-        ""      {}
-        default {
-            # Check the selection type.
-            switch -- $::ms::current($w,selecttype) {
-                cell    { ::ms::treeview::Select_Op $w $item [list $item $column] choose }
-                default { ::ms::treeview::Select_Op $w $item "" choose }
-            }
-        }
-    }
-
-    return ""
-}
-
-## ButtonPress
-#
-# Manage the **ButtonPress** event on the widget.
-#
-# Note: This procedure was inspired by the treeview procedure 'Press'.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
-#        These values should be provided by the **ButtonPress** event.
-#
-# It doesn't return anything.
-proc ::ms::treeview::ButtonPress { w x y } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { ::ms::Focus_The_Widget_Or_Its_Toplevel $w }
-        default  {
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
-            # Focus the treeview.
-            _focus -force $::ms::addr($w,widget)
-
-            # Change the widget dynamic state to 'focus'
-            ::ms::treeview::Pathname_Cmd $w state focus
-
-            # Identify the widget's region under the mouse pointer.
-            switch -- [{*}$address identify region $x $y] {
-                heading {
-                    set column [{*}$address identify column $x $y]
-
-                    set ::ms::data(state,pressMode) heading
-                    set ::ms::data(state,heading)   $column
-
-                    # Execute the command.
-                    {*}$address heading $column state pressed
-                }
-                separator {
-                    set ::ms::data(state,pressMode)    resize
-                    set ::ms::data(state,resizeColumn) [{*}$address identify column $x $y]
-                }
-                tree -
-                cell {
-                    # Identify the widget's item under the mouse pointer.
-                    set item [{*}$address identify item $x $y]
-
-                    # Identify the widget's cell under the mouse pointer.
-                    set cell [::ms::treeview::Identify_Cell $w $x $y]
-
-                    # Dispatch to the appropriate select operation depending on current value of '-selectmode'.
-                    ::ms::treeview::Select_Op $w $item $cell choose
-
-                    # Identify the widget's element under the mouse pointer.
-                    switch -glob -- [{*}$address identify element $x $y] {
-                        *indicator  -
-                        *disclosure -
-                        *text       -
-                        *padding    { ::ms::treeview::Toggle $w $item }
-                    }
-                }
-            }
-        }
-    }
-
-    return ""
-}
-
-## ButtonRelease
-#
-# Manages the **ButtonRel;ease-1** event.
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
-#
-# It doesn't return anything.
-proc ::ms::treeview::ButtonRelease { w x y } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    switch -- $::ms::data(state,pressMode) {
-        resize  { {*}$address drop }
-        heading {
-            if { [lsearch -exact [{*}$address heading $::ms::data(state,heading) state] pressed] >= 0 } {
-                after 0 [{*}$address heading $::ms::data(state,heading) -command]
-            }
-
-            # Execute the command.
-            {*}$address heading $::ms::data(state,heading) state !pressed
-        }
-    }
-
-    set ::ms::data(state,pressMode) none
-
-    ::ms::treeview::Motion $w $x $y
-
-    return ""
-}
-
 ## Configure
 #
 # Manage the **Configure** event on the widget.
@@ -4434,86 +4132,6 @@ proc ::ms::treeview::Destroy { w } {
     return ""
 }
 
-## Double_Click
-#
-# Manages the **Double-Button-1** event
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Double_Click { w x y } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled {
-            ::ms::Focus_The_Widget_Or_Its_Toplevel $w
-
-            return ""
-        }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    set row [{*}$address identify row $x $y]
-    switch -- $row {
-        ""  {
-            # Perform single-click action.
-            ::ms::treeview::Press $w $x $y
-        }
-        default { ::ms::treeview::Toggle $w $row }
-    }
-
-    return ""
-}
-
-## Drag
-#
-# Manages the **B1-Motion** event.
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Drag { w x y } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    switch -- $::ms::data(state,pressMode) {
-        resize  {
-            # Resize.Drag
-            {*}$address drag $::ms::data(state,resizeColumn) $x
-        }
-        heading {
-            # Heading.Drag
-            if { ([{*}$address identify region $x $y] eq "heading") && ([{*}$address identify column $x $y] eq $::ms::data(state,heading)) } {
-                {*}$address heading $::ms::data(state,heading) state pressed
-            } else {
-                {*}$address heading $::ms::data(state,heading) state !pressed
-            }
-        }
-    }
-
-    return ""
-}
-
 ## FocusIn
 #
 # Manage the **FocusIn** event on the widget.
@@ -4581,7 +4199,10 @@ proc ::ms::treeview::FocusOut { w } {
 # X, Y   Should be the mouse pointer (X,Y) root coordinates at the time of the event.
 #        These value are provided directly by the **Enter** or **Leave** event.
 #
-# type   Optional, specifies a **Leave** event upon a treeview object.
+# type   Specifies if a **Leave** event has happened on the treeview object.
+#        Allowed values are **Leave** or the empty string.
+#
+#        If not provided, defaults to the empty string.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Hover { w X Y { type "" } } {
@@ -4613,8 +4234,12 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
                 ::ms::treeview::Pathname_Cmd $w state hover
             }
 
+            # Check if a **Leave** event has just happened upon a treeview object.
             switch -- $type {
-                Leave { ::ms::treeview::Activate_Heading $w {} }
+                Leave {
+                    set ::ms::data(state,activeHeading) {}
+                    set ::ms::data(state,activeWidget)  {}
+                }
             }
         }
     }
@@ -4638,46 +4263,6 @@ proc ::ms::treeview::Map { w } {
 
     # If needed, update the scrollbar/s.
     ::ms::treeview::Scrollbar_Update $w
-
-    return ""
-}
-
-## Motion
-#
-# Manages the **Motion** event by setting the cursor, active element, ...
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Motion { w x y } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    ::ttk::saveCursor $::ms::add($w,widget) State(userConfCursor) [::ttk::cursor hresize]
-
-    set cursor        $::ms::data(state,userConfCursor)
-    set activeHeading {}
-
-    switch -- [{*}$address identify region $x $y] {
-        separator { set cursor         hresize }
-        heading   { set active_heading [{*}$address identify column $x $y] }
-    }
-
-    ::ttk::setCursor $::ms::add($w,widget) $cursor
-
-    ::ms::treeview::Activate_Heading $w $active_heading
 
     return ""
 }
@@ -4724,456 +4309,6 @@ proc ::ms::treeview::Return { w } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::treeview::Toggle_Focus $w }
-    }
-
-    return ""
-}
-
-#############################
-##                         ##
-##     OPEN/CLOSE ITEM     ##
-##                         ##
-#############################
-
-## Open_Item
-#
-# Open an item.
-#
-# Note: This procedure was inspired by the treeview procedure 'Open_Item'.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# item   Should be the 'item' ID involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Open_Item { w item } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    {*}$address focus $item
-    {*}$address item $item -open true
-
-    event generate $w <<TreeviewOpen>>
-
-    return ""
-}
-
-## Close_Item
-#
-# Close an item.
-#
-# Note: This procedure was inspired by the treeview procedure 'Close_Item'.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# item   Should be the 'item' ID involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Close_Item { w item } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    {*}$address item $item -open false
-    {*}$address focus $item
-
-    event generate $w <<TreeviewClose>>
-
-    return ""
-}
-
-## Toggle
-#
-# Set the open state of an item and generate the relative event
-#
-# Note: This procedure was inspired by the treeview procedure 'Toggle'.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# item   Should be the 'item' ID involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Toggle { w item } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    # Don't allow toggling on indicators that are not present in front of leaf items.
-    switch -- [llength [{*}$address children $item]] {
-        0   { return "" }
-    }
-
-    # Not a leaf, toggle!
-    if { [{*}$address item $item -open] } {
-        ::ms::treeview::Close_Item $w $item
-    } else {
-        ::ms::treeview::Open_Item  $w $item
-    }
-
-    return ""
-}
-
-## Toggle_Focus
-#
-# Toggle the focus state of an item.
-#
-# Note: This procedure was inspired by the treeview procedure 'Toggle_Focus'.
-#       The procedure have been slighty modified to work with mustang.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Toggle_Focus { w } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    set item [{*}$address focus]
-    switch -- $item {
-        ""      {}
-        default { ::ms::treeview::Toggle $w $item }
-    }
-
-    return ""
-}
-
-################################
-##                            ##
-##     HEADING ACTIVATION     ##
-##                            ##
-################################
-
-## Activate_Heading
-#
-# Track the active heading element.
-#
-# Where:
-#
-# w         Should be the widget real address involved.
-#
-# heading   Should be the 'heading' involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Activate_Heading { w heading } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    if { ($w != $::ms::data(state,activeWidget)) || ($heading != $::ms::data(state,activeHeading)) } {
-        if { [_winfo exists $::ms::data(state,activeWidget)] && $::ms::data(state,activeHeading) != {} } {
-            # It may happen that 'State(activeHeading)' no longer corresponds to an existing display column.
-            # This happens for instance when changing 'displaycolumns' in a bound script when this change triggers a **Leave** event.
-            # A proc checking if the display column 'State(activeHeading)' is really still present or not could be
-            # written but it would need to check several special cases:
-            #   a. 'displaycolumns' "#all" or being an explicit columns list
-            #   b. column #0 display is not governed by the 'displaycolumn' list but by the value of the 'show' option
-            #
-            # --> Let's rather catch the following line.
-            catch { $::ms::data(state,activeWidget) heading $::ms::data(state,activeHeading) state !active }
-        }
-
-        switch -- $heading {
-            ""      {}
-            default { {*}$address heading $heading state active }
-        }
-
-        set ::ms::data(state,activeHeading) $heading
-        set ::ms::data(state,activeWidget)  $w
-    }
-
-    return ""
-}
-
-##############################
-##                          ##
-##     SELECT OPERATION     ##
-##                          ##
-##############################
-
-## Select
-#
-# Binding procedure for selection operations. See "Selection modes", below.
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
-#
-# op    Should be the 'operation' type.
-#       Allowed values are 'choose', 'extend' or 'toggle'.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Select { w x y op } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    set item [{*}$address identify row $x $y]
-    switch -- $item {
-        ""      {}
-        default { ::ms::treeview::Select_Op $w $item [::ms::treeview::Identify_Cell $w $x $y] $op }
-    }
-
-    return ""
-}
-
-## Select_Op
-#
-# Dispatch to appropriate selection operation depending on current value of 'selectmode'.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# item   Should be the 'item' ID involved.
-#
-# cell   Should be the 'cell' involved.
-#
-# op     Should be the 'operation' type.
-#        Allowed values are 'choose', 'extend' or 'toggle'.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Select_Op { w item cell op } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    # Check the 'selectmode'.
-    switch -- $::ms::current($w,selectmode) {
-        none {
-            {*}$address focus $item
-            {*}$address see   $item
-        }
-        browse { ::ms::treeview::Browse_To $w $item $cell }
-        extended {
-            # Check the operation type.
-            switch -- $op {
-                choose { ::ms::treeview::Browse_To $w $item $cell }
-                toggle {
-                    # Check if the 'cell' is the empty string or not.
-                    switch -- $cell {
-                        ""  {
-                            {*}$address cellselection toggle [list $cell]
-
-                            set ::ms::data(state,cellAnchor)   $cell
-                            set ::ms::data(state,cellAnchorOp) add
-                        }
-                        default { {*}$address selection toggle [list $item] }
-                    }
-                }
-                extend {
-                    # Check if the 'cell' is the empty string or not.
-                    switch -- $cell {
-                        ""  {
-                            switch -- $::ms::data(state,cellAnchor) {
-                                ""      { ::ms::treeview::Browse_To $w $item $cell }
-                                default { {*}$address cellselection $::ms::data(state,cellAnchorOp) $::ms::data(state,cellAnchor) $cell }
-                            }
-                        }
-                        default {
-                            # Check if the 'anchor' is the empty string or not.
-                            set anchor [{*}$address focus]
-                            switch -- $anchor {
-                                ""      { ::ms::treeview::Browse_To $w $item $cell }
-                                default { {*}$address selection set [::ms::treeview::Between $w $anchor $item] }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return ""
-}
-
-#####################
-##                 ##
-##     UTILITY     ##
-##                 ##
-#####################
-
-## Identify_Cell
-#
-# Locate the cell at coordinate.
-# Only active when 'selecttype' is 'cell', and leaves cell empty otherwise.
-# Down the call chain it is enough to check cell to know the selecttype.
-#
-# Where:
-#
-# w     Should be the widget real address involved.
-#
-# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Identify_Cell { w x y } {
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    # Check the current 'selecttype' option.
-    switch -- $::ms::current($w,selecttype) {
-        cell {
-            # Later handling assumes that the column in the cell ID is of the format #N,
-            # which is always the case from 'identify cell'.
-
-            return [{*}$address identify cell $x $y]
-        }
-    }
-
-    return ""
-}
-
-######################################
-##                                  ##
-##     TREE STRUCTURE UTILITIES     ##
-##                                  ##
-######################################
-
-## Between
-#
-# Returns a list of all items between $item1 and $item2, in preorder traversal order.
-# $item1 and $item2 may be in either order.
-#
-# NOTES: This routine is O(N) in the size of the tree.
-#        There's probably a way to do this that's O(N) in the number
-#        of items returned, but I'm not clever enough to figure it out.
-#
-# Return the 'between' value.
-proc ::ms::treeview::Between { w item1 item2 } {
-    set ::ttk::treeview::between          [list ]
-    set ::ttk::treeview::selectingBetween 0
-
-    ::ms::treeview::Scan_Between $w $item1 $item2 {}
-
-    return $::ttk::treeview::between
-}
-
-## Scan_Between
-#
-# Recursive worker routine for 'ttk::treeview::between'.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Scan_Between { w item1 item2 item } {
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    if { ($item eq $item1) || ($item eq $item2) } {
-        lappend ::ttk::treeview::between $item
-
-        set ::ttk::treeview::selectingBetween [expr { !$::ttk::treeview::selectingBetween }]
-    } elseif { $::ttk::treeview::selectingBetween } {
-        lappend ::ttk::treeview::between $item
-    }
-
-    foreach child [{*}$address children $item] {
-        ::ms::treeview::Scan_Between $w $item1 $item2 $child
-    }
-
-    return ""
-}
-
-## Browse_To
-#
-# Navigate to specified item and set focus and selection.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# item   Should be the 'item' ID involved.
-#
-# cell   Should be the 'cell' involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::Browse_To { w item cell } {
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.treeview] }
-    }
-
-    {*}$address focus $item
-    {*}$address see   $item
-
-    set ::ms::data(state,cellAnchor)   $cell
-    set ::ms::data(state,cellAnchorOp) set
-
-    # Check if the 'cell' is the empty string or not.
-    switch -- $cell {
-        ""      { {*}$address selection set     [list $item] }
-        default { {*}$address cellselection set [list $cell] }
     }
 
     return ""
@@ -5504,6 +4639,882 @@ proc ::ms::treeview::Scrollbar_Update { w } {
     }
 
     update idletasks
+
+    return ""
+}
+
+##############################################
+##                                          ##
+##     REWRITTEN TK TREEVIEW PROCEDURES     ##
+##                                          ##
+##############################################
+
+######################################
+##                                  ##
+##     EVENT RELATED PROCEDURES     ##
+##                                  ##
+######################################
+
+# Note: The following procedures were inspired by their treeview equivalent ones.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Arrow_Keys
+#
+# Manage the Key navigation on the widget.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be arrow key event that happened on the widget.
+#       Allowed values are **down**, **left**, **right** and **up**.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Arrow_Keys { w key } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Check if the widget has no items.
+    set root_children [{*}$address children {}]
+    switch -- [llength $root_children] {
+        0   { return "" }
+    }
+
+    # Get the widget's item in focus.
+    set item [{*}$address focus]
+    switch -- $item {
+        ""  {
+            # Check the key pressed.
+            switch -- $key {
+                up   -
+                left {
+                    # Get the last 'item'
+                    set item [lindex $root_children end]
+                }
+                down  -
+                right {
+                    # Get the first 'item'.
+                    set item [lindex $root_children 0]
+                }
+            }
+
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell {
+                    # Select the first cell of 'item'
+                    ::ms::treeview::Select_Op $w $item [list $item #1] choose
+                }
+                default {
+                    # Select 'item'.
+                    ::ms::treeview::Select_Op $w $item "" choose
+                }
+            }
+
+            return ""
+        }
+    }
+
+    # Check the selection type.
+    switch -- $::ms::current($w,selecttype) {
+        cell {
+            set column [lindex $::ms::data(state,cellAnchor) 1]
+            switch -- $column {
+                ""  { set column "#1" }
+            }
+        }
+    }
+
+    # Check the key pressed.
+    switch -- $key {
+        up  {
+            # Check if 'item' is the first root child.
+            if { $item eq [lindex $root_children 0] } {
+                # Check if we need to cycle (scrollstopper --> disabled).
+                switch -- $::ms::scrollstopper {
+                    disabled { set item [lindex $root_children end] }
+                    enabled  { return "" }
+                }
+            } else {
+                set up [{*}$address prev $item]
+                switch -- $up {
+                    ""      { set item [{*}$address parent $item] }
+                    default {
+                        while { [{*}$address item $up -open] && [llength [{*}$address children $up]] } {
+                            set up [lindex [{*}$address children $up] end]
+                        }
+
+                        set item $up
+                    }
+                }
+            }
+        }
+        down {
+            # Check if 'item' is the last root child.
+            if { $item eq [lindex $root_children end] } {
+                # Check if we need to cycle (scrollstopper --> disabled).
+                switch -- $::ms::scrollstopper {
+                    disabled { set item [lindex $root_children 0] }
+                    enabled  { return "" }
+                }
+            } else {
+                if { [{*}$address item $item -open] && [llength [{*}$address children $item]] } {
+                    set item [lindex [{*}$address children $item] 0]
+                } else {
+                    set up $item
+                    while { $up ne "" && [set down [{*}$address next $up]] eq "" } {
+                        set up [{*}$address parent $up]
+                    }
+                    set item $down
+                }
+            }
+        }
+        left {
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell {
+                    # This assumes that column is of the "#N" format.
+                    set columns [string range $column 1 end]
+
+                    if { "tree" in $::ms::current($w,show) } {
+                        set first_column 0
+                    } else {
+                        set first_column 1
+                    }
+
+                    if { $columns > $first_column } {
+                        incr columns -1
+                        set column [string cat "#" $columns]
+                    }
+                }
+                default {
+                    set children [{*}$address children $item]
+
+                    if { [{*}$address item $item -open] && [llength $children] } {
+                        ::ms::treeview::Close_Item $w $item
+                    } else {
+                        set item [{*}$address parent $item]
+                    }
+                }
+            }
+        }
+        right {
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell {
+                    switch -- $::ms::current($w,displaycolumns) {
+                        "#all"  { set last_column [llength $::ms::current($w,columns)] }
+                        default { set last_column [llength $::ms::current($w,displaycolumns)] }
+                    }
+
+                    set columns [string range $column 1 end]
+                    if { $columns < $last_column } {
+                        incr columns
+                        set column [string cat "#" $columns]
+                    }
+                }
+                default { ::ms::treeview::Open_Item $w $item }
+            }
+        }
+    }
+
+    # Check if 'item' is the empty string, if so don't do anything.
+    switch -- $item {
+        ""      {}
+        default {
+            # Check the selection type.
+            switch -- $::ms::current($w,selecttype) {
+                cell    { ::ms::treeview::Select_Op $w $item [list $item $column] choose }
+                default { ::ms::treeview::Select_Op $w $item "" choose }
+            }
+        }
+    }
+
+    return ""
+}
+
+## ButtonPress
+#
+# Manage the **ButtonPress** event on the widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **ButtonPress** event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::ButtonPress { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { ::ms::Focus_The_Widget_Or_Its_Toplevel $w }
+        default  {
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.treeview] }
+            }
+
+            # Focus the treeview.
+            _focus -force $::ms::addr($w,widget)
+
+            # Change the widget dynamic state to 'focus'
+            ::ms::treeview::Pathname_Cmd $w state focus
+
+            # Identify the widget's region under the mouse pointer.
+            switch -- [{*}$address identify region $x $y] {
+                heading {
+                    # Heading.Press
+                    set column [{*}$address identify column $x $y]
+
+                    set ::ms::data(state,pressMode) heading
+                    set ::ms::data(state,heading)   $column
+
+                    # Execute the command.
+                    {*}$address heading $column state pressed
+                }
+                separator {
+                    # Resize.Press
+                    set ::ms::data(state,pressMode)    resize
+                    set ::ms::data(state,resizeColumn) [{*}$address identify column $x $y]
+                }
+                tree -
+                cell {
+                    # Identify the widget's item under the mouse pointer.
+                    set item [{*}$address identify item $x $y]
+
+                    # Identify the widget's cell under the mouse pointer.
+                    set cell [::ms::treeview::Identify_Cell $w $x $y]
+
+                    # Dispatch to the appropriate select operation depending on current value of '-selectmode'.
+                    ::ms::treeview::Select_Op $w $item $cell choose
+
+                    # Identify the widget's element under the mouse pointer.
+                    switch -glob -- [{*}$address identify element $x $y] {
+                        *indicator  -
+                        *disclosure -
+                        *text       -
+                        *padding    { ::ms::treeview::Toggle $w $item }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
+## ButtonRelease
+#
+# Manages the **ButtonRel;ease-1** event.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::ButtonRelease { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    switch -- $::ms::data(state,pressMode) {
+        resize  { {*}$address drop }
+        heading {
+            if { [lsearch -exact [{*}$address heading $::ms::data(state,heading) state] pressed] >= 0 } {
+                after 0 [{*}$address heading $::ms::data(state,heading) -command]
+            }
+
+            # Execute the command.
+            {*}$address heading $::ms::data(state,heading) state !pressed
+        }
+    }
+
+    set ::ms::data(state,pressMode) none
+
+    ::ms::treeview::Motion $w $x $y
+
+    return ""
+}
+
+## DoubleClick
+#
+# Manages the **Double-Button-1** event
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::DoubleClick { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled {
+            ::ms::Focus_The_Widget_Or_Its_Toplevel $w
+
+            return ""
+        }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    set row [{*}$address identify row $x $y]
+    switch -- $row {
+        ""  {
+            # Perform single-click action.
+            ::ms::treeview::Press $w $x $y
+        }
+        default { ::ms::treeview::Toggle $w $row }
+    }
+
+    return ""
+}
+
+## Drag
+#
+# Manages the **B1-Motion** event.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Drag { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    switch -- $::ms::data(state,pressMode) {
+        resize  {
+            # Resize.Drag
+            {*}$address drag $::ms::data(state,resizeColumn) $x
+        }
+        heading {
+            # Heading.Drag
+            if { ([{*}$address identify region $x $y] eq "heading") && ([{*}$address identify column $x $y] eq $::ms::data(state,heading)) } {
+                {*}$address heading $::ms::data(state,heading) state pressed
+            } else {
+                {*}$address heading $::ms::data(state,heading) state !pressed
+            }
+        }
+    }
+
+    return ""
+}
+
+## Motion
+#
+# Manages the **Motion** event by setting the cursor, active element, ...
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Motion { w x y } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    ::ttk::saveCursor $::ms::add($w,widget) ::ms::data(state,userConfCursor) [::ttk::cursor hresize]
+
+    set cursor        $::ms::data(state,userConfCursor)
+    set activeHeading {}
+
+    switch -- [{*}$address identify region $x $y] {
+        separator { set cursor         hresize }
+        heading   { set active_heading [{*}$address identify column $x $y] }
+    }
+
+    ::ttk::setCursor $::ms::add($w,widget) $cursor
+
+    ::ms::treeview::Activate_Heading $w $active_heading
+
+    return ""
+}
+
+#############################
+##                         ##
+##     OPEN/CLOSE ITEM     ##
+##                         ##
+#############################
+
+# Note: The following procedures were inspired by their treeview equivalent ones.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Open_Item
+#
+# Open an item.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Open_Item { w item } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    {*}$address focus $item
+    {*}$address item $item -open true
+
+    event generate $w <<TreeviewOpen>>
+
+    return ""
+}
+
+## Close_Item
+#
+# Close an item.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Close_Item { w item } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    {*}$address item $item -open false
+    {*}$address focus $item
+
+    event generate $w <<TreeviewClose>>
+
+    return ""
+}
+
+## Toggle
+#
+# Set the open state of an item and generate the relative event
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Toggle { w item } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Don't allow toggling on indicators that are not present in front of leaf items.
+    switch -- [llength [{*}$address children $item]] {
+        0   { return "" }
+    }
+
+    # Not a leaf, toggle!
+    if { [{*}$address item $item -open] } {
+        ::ms::treeview::Close_Item $w $item
+    } else {
+        ::ms::treeview::Open_Item  $w $item
+    }
+
+    return ""
+}
+
+## Toggle_Focus
+#
+# Toggle the focus state of an item.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Toggle_Focus { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    set item [{*}$address focus]
+    switch -- $item {
+        ""      {}
+        default { ::ms::treeview::Toggle $w $item }
+    }
+
+    return ""
+}
+
+################################
+##                            ##
+##     HEADING ACTIVATION     ##
+##                            ##
+################################
+
+# Note: The following procedure was inspired by its treeview equivalent one.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Activate_Heading
+#
+# Track the active heading element.
+#
+# Where:
+#
+# w         Should be the widget real address involved.
+#
+# heading   Should be the 'heading' involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Activate_Heading { w heading } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    if { ($w != $::ms::data(state,activeWidget)) || ($heading != $::ms::data(state,activeHeading)) } {
+        if { [_winfo exists $::ms::data(state,activeWidget)] && $::ms::data(state,activeHeading) != {} } {
+            # It may happen that 'State(activeHeading)' no longer corresponds to an existing display column.
+            # This happens for instance when changing 'displaycolumns' in a bound script when this change triggers a **Leave** event.
+            # A proc checking if the display column 'State(activeHeading)' is really still present or not could be
+            # written but it would need to check several special cases:
+            #   a. 'displaycolumns' "#all" or being an explicit columns list
+            #   b. column #0 display is not governed by the 'displaycolumn' list but by the value of the 'show' option
+            #
+            # --> Let's rather catch the following line.
+            catch { $::ms::data(state,activeWidget) heading $::ms::data(state,activeHeading) state !active }
+        }
+
+        switch -- $heading {
+            ""      {}
+            default { {*}$address heading $heading state active }
+        }
+
+        set ::ms::data(state,activeHeading) $heading
+        set ::ms::data(state,activeWidget)  $w
+    }
+
+    return ""
+}
+
+###############################
+##                           ##
+##     SELECT OPERATIONS     ##
+##                           ##
+###############################
+
+# Note: The following procedures were inspired by their treeview equivalent ones.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Select
+#
+# Binding procedure for selection operations. See "Selection modes", below.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# op    Should be the 'operation' type.
+#       Allowed values are 'choose', 'extend' or 'toggle'.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Select { w x y op } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    set item [{*}$address identify row $x $y]
+    switch -- $item {
+        ""      {}
+        default { ::ms::treeview::Select_Op $w $item [::ms::treeview::Identify_Cell $w $x $y] $op }
+    }
+
+    return ""
+}
+
+## Select_Op
+#
+# Dispatch to appropriate selection operation depending on current value of 'selectmode'.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# cell   Should be the 'cell' involved.
+#
+# op     Should be the 'operation' type.
+#        Allowed values are 'choose', 'extend' or 'toggle'.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Select_Op { w item cell op } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Check the 'selectmode'.
+    switch -- $::ms::current($w,selectmode) {
+        none {
+            {*}$address focus $item
+            {*}$address see   $item
+        }
+        browse { ::ms::treeview::Browse_To $w $item $cell }
+        extended {
+            # Check the operation type.
+            switch -- $op {
+                choose { ::ms::treeview::Browse_To $w $item $cell }
+                toggle {
+                    # Check if the 'cell' is the empty string or not.
+                    switch -- $cell {
+                        ""  {
+                            {*}$address cellselection toggle [list $cell]
+
+                            set ::ms::data(state,cellAnchor)   $cell
+                            set ::ms::data(state,cellAnchorOp) add
+                        }
+                        default { {*}$address selection toggle [list $item] }
+                    }
+                }
+                extend {
+                    # Check if the 'cell' is the empty string or not.
+                    switch -- $cell {
+                        ""  {
+                            switch -- $::ms::data(state,cellAnchor) {
+                                ""      { ::ms::treeview::Browse_To  $w $item $cell }
+                                default { {*}$address cellselection $::ms::data(state,cellAnchorOp) $::ms::data(state,cellAnchor) $cell }
+                            }
+                        }
+                        default {
+                            # Check if the 'anchor' is the empty string or not.
+                            set anchor [{*}$address focus]
+                            switch -- $anchor {
+                                ""      { ::ms::treeview::Browse_To  $w $item $cell }
+                                default { {*}$address selection set [::ms::treeview::Between $w $anchor $item] }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
+##################################
+##                              ##
+##     UTILITIES PROCEDURES     ##
+##                              ##
+##################################
+
+# Note: The following procedures were inspired by their treeview equivalent ones.
+#       The procedures have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+
+## Identify_Cell
+#
+# Locate the cell at coordinate.
+# Only active when 'selecttype' is 'cell', and leaves cell empty otherwise.
+# Down the call chain it is enough to check cell to know the selecttype.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Identify_Cell { w x y } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    # Check the current 'selecttype' option.
+    switch -- $::ms::current($w,selecttype) {
+        cell {
+            # Later handling assumes that the column in the cell ID is of the format #N,
+            # which is always the case from 'identify cell'.
+
+            return [{*}$address identify cell $x $y]
+        }
+    }
+
+    return ""
+}
+
+## Browse_To
+#
+# Navigate to specified item and set focus and selection.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# item   Should be the 'item' ID involved.
+#
+# cell   Should be the 'cell' involved.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Browse_To { w item cell } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    {*}$address focus $item
+    {*}$address see   $item
+
+    set ::ms::data(state,cellAnchor)   $cell
+    set ::ms::data(state,cellAnchorOp) set
+
+    # Check if the 'cell' is the empty string or not.
+    switch -- $cell {
+        ""      { {*}$address selection set     [list $item] }
+        default { {*}$address cellselection set [list $cell] }
+    }
+
+    return ""
+}
+
+## Between
+#
+# Returns a list of all items between $item1 and $item2, in preorder traversal order.
+# $item1 and $item2 may be in either order.
+#
+# NOTES: This routine is O(N) in the size of the tree.
+#        There's probably a way to do this that's O(N) in the number
+#        of items returned, but I'm not clever enough to figure it out.
+#
+# Return the 'between' value.
+proc ::ms::treeview::Between { w item1 item2 } {
+    set ::ttk::treeview::between          [list ]
+    set ::ttk::treeview::selectingBetween 0
+
+    ::ms::treeview::Scan_Between $w $item1 $item2 {}
+
+    return $::ttk::treeview::between
+}
+
+## Scan_Between
+#
+# Recursive worker routine for 'ttk::treeview::between'.
+#
+# It doesn't return anything.
+proc ::ms::treeview::Scan_Between { w item1 item2 item } {
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
+    if { ($item eq $item1) || ($item eq $item2) } {
+        lappend ::ttk::treeview::between $item
+
+        set ::ttk::treeview::selectingBetween [expr { !$::ttk::treeview::selectingBetween }]
+    } elseif { $::ttk::treeview::selectingBetween } {
+        lappend ::ttk::treeview::between $item
+    }
+
+    foreach child [{*}$address children $item] {
+        ::ms::treeview::Scan_Between $w $item1 $item2 $child
+    }
 
     return ""
 }
