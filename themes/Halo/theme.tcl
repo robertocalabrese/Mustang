@@ -1486,6 +1486,124 @@ namespace eval ttk::theme::Halo {
                                          -padding [list 0] \
                                           -relief solid \
                                             -tile 0;
+
+        ######################
+        ##                  ##
+        ##     TREEVIEW     ##
+        ##                  ##
+        ######################
+
+        # Note: 'columnseparatorwidth', 'cursor', 'font', 'indent', 'justify', 'padding' and 'rowheight'
+        #       will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Layouts
+        style layout Treeview {
+           Treeview.field -sticky nswe -children {
+               Treeview.padding -sticky nswe -children {
+                   Treeview.treearea -sticky nswe
+               }
+           }
+        }
+
+        style layout Heading {
+           Treeheading.cell -sticky nswe
+           Treeheading.border -sticky nswe -children {
+               Treeheading.padding -sticky nswe -children {
+                   Treeheading.image -side right -sticky {}
+                   Treeheading.text -sticky we
+               }
+           }
+        }
+
+        style layout Item {
+           Treeitem.padding -sticky nswe -children {
+               Treeitem.indicator -side left -sticky {}
+               Treeitem.image -side left -sticky {}
+               Treeitem.text -side left -sticky {}
+           }
+        }
+
+        style layout Row {
+            Treeitem.row -sticky nsew
+        }
+
+        style layout Treeview.Separator {
+            Treeitem.Separator -sticky nsew
+        }
+
+        style layout Cell {
+            Treeheading.padding -sticky nswe -children {
+                Treeitem.text -sticky nswe
+            }
+        }
+
+        # Elements
+        if { $::tcl_version >= 9.1 } {
+            # The first image normally represents the normal state, here is a decoy.
+            style element create Treeitem.indicator   image [list                 treeview_indicator_close \
+                                                                    {!open focus} treeview_indicator_close_focus \
+                                                                          {!open} treeview_indicator_close
+                                                                     {open focus} treeview_indicator_open_focus \
+                                                                           {open} treeview_indicator_open] \
+                                                     -width [::ms::Convert_Measure $::ms::size(Halo,treeview_indicator) "" 14] \
+                                                    -sticky w;
+        }
+
+        # Normal states
+        style configure Treeview           -background Fieldbackground \
+                                          -borderwidth 2 \
+                                          -bordercolor Bordercolor \
+                                 -columnseparatorwidth 2 \
+                                               -cursor arrow \
+                                            -darkcolor Background \
+                                      -fieldbackground Fieldbackground \
+                                           -focuscolor LightcolorAlternate \
+                                           -focuswidth 2 \
+                                                 -font NormalFont \
+                                           -foreground TextAlternate \
+                                               -indent 20p \
+                                           -lightcolor LightcolorAlternate \
+                                              -padding [list 2] \
+                                            -rowheight [expr { [font metrics NormalFont -linespace]+10 }] \
+                                                 -rows 5 \
+                                      -shellbackground Background \
+                                    -stripedbackground TreeviewStripe;
+
+        style configure Cell -padding [list 2 0 0 0]
+
+        style configure Heading  -background TreeviewHeading \
+                                -bordercolor Accent \
+                                -borderwidth 2 \
+                                       -font BiggerFont \
+                                    -padding [list 2.25p] \
+                                     -relief raised;
+
+        style configure Item       -foreground Red \
+                             -indicatormargins [list 1.5p 1.5p 3p 1.5p] \
+                                -indicatorsize $::ms::size(Halo,treeview_indicator) \
+                                      -padding [list 0];
+
+        style configure Row -background Fieldbackground
+
+        style configure Treeview.Separator -background Accent
+
+        # Mapping
+        style map Treeview      -background [list   disabled Background \
+                                                  background Lightcolor \
+                                                    selected FieldbackgroundFocus] \
+                               -bordercolor [list background BordercolorBackground \
+                                                       focus Accent \
+                                                       hover Accent] \
+                           -fieldbackground [list background TreeviewFieldbackgroundBackground \
+                                                    disabled TreeviewFieldbackgroundDisabled] \
+                                -focuscolor [list   disabled Background \
+                                                       focus Accent \
+                                                       hover Accent] \
+                                -foreground [list   disabled TextDisabled] \
+                                -lightcolor [list   disabled Background \
+                                                       focus Accent \
+                                                       hover Accent];
     }
 }
 
