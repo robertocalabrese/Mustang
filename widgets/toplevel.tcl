@@ -1984,7 +1984,7 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
 
                     # Execute the script.
                     try {
-                        eval $script
+                        eval {*}$script
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {

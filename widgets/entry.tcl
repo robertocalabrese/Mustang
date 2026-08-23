@@ -1923,8 +1923,10 @@ proc ::ms::entry::Command { window { args "" } } {
                     }
                     -decimals {
                         switch -- [string is integer -strict $value] {
-                            set ::ms::current($w,decimals) $value
-                            set ::ms::data($w,format) "%.${value}f"
+                            1   {
+                                set ::ms::current($w,decimals) $value
+                                set ::ms::data($w,format) "%.${value}f"
+                            }
                         }
                     }
                     -exportselection {
@@ -2897,8 +2899,10 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     }
                                     -decimals {
                                         switch -- [string is integer -strict $value] {
-                                            set ::ms::current($w,decimals) $value
-                                            set ::ms::data($w,format) "%.${value}f"
+                                            1   {
+                                                set ::ms::current($w,decimals) $value
+                                                set ::ms::data($w,format) "%.${value}f"
+                                            }
                                         }
                                     }
                                     -exportselection {

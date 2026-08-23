@@ -5526,7 +5526,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 
                     # Execute the script.
                     try {
-                        eval $script
+                        eval {*}$script
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -8403,6 +8403,7 @@ proc ::ms::text::Next_Char { w } {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8457,6 +8458,7 @@ proc ::ms::text::Next_Word { w } {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8511,6 +8513,7 @@ proc ::ms::text::Next_Line { w } {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8565,6 +8568,7 @@ proc ::ms::text::Next_Paragraph { w } {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8703,6 +8707,7 @@ proc ::ms::text::Previous_Char { w } {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8757,6 +8762,7 @@ proc ::ms::text::Previous_Word { w } {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8811,6 +8817,7 @@ proc ::ms::text::Previous_Line { w } {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
@@ -8865,6 +8872,7 @@ proc ::ms::text::Previous_Paragraph { w } {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
+                }
                 default {
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {

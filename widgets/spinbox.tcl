@@ -1975,8 +1975,10 @@ proc ::ms::spinbox::Command { window { args "" } } {
                     }
                     -decimals {
                         switch -- [string is integer -strict $value] {
-                            set ::ms::current($w,decimals) $value
-                            set ::ms::data($w,format) "%.${value}f"
+                            1   {
+                                set ::ms::current($w,decimals) $value
+                                set ::ms::data($w,format) "%.${value}f"
+                            }
                         }
                     }
                     -exportselection {
@@ -2042,8 +2044,10 @@ proc ::ms::spinbox::Command { window { args "" } } {
                     }
                     -increment {
                         switch -- [string is double -strict $value] {
-                            if { $value > 0 } {
-                                set ::ms::current($w,increment) $value
+                            1   {
+                                if { $value > 0 } {
+                                    set ::ms::current($w,increment) $value
+                                }
                             }
                         }
                     }
@@ -3255,8 +3259,10 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                     -datatype {}
                                     -decimals {
                                         switch -- [string is integer -strict $value] {
-                                            set ::ms::current($w,decimals) $value
-                                            set ::ms::data($w,format) "%.${value}f"
+                                            1   {
+                                                set ::ms::current($w,decimals) $value
+                                                set ::ms::data($w,format) "%.${value}f"
+                                            }
                                         }
                                     }
                                     -exportselection {
@@ -3322,8 +3328,10 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                     }
                                     -increment {
                                         switch -- [string is double -strict $value] {
-                                            if { $value > 0 } {
-                                                set ::ms::current($w,increment) $value
+                                            1   {
+                                                if { $value > 0 } {
+                                                    set ::ms::current($w,increment) $value
+                                                }
                                             }
                                         }
                                     }

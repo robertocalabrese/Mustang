@@ -4957,8 +4957,9 @@ proc ::ms::treeview::ButtonRelease { w x y } {
         }
         heading {
             # Heading.Release
-            if { [lsearch -exact [{*}$address heading $::ms::data($w,press,column) state] pressed] >= 0 } {
-                after 0 [{*}$address heading $::ms::data($w,press,column) -command]
+            set state [{*}$address heading $::ms::data($w,press,column) state]
+            if { [lsearch -exact $state pressed] >= 0 } {
+                after 0 [list {*}$address heading $::ms::data($w,press,column) -command]
             }
 
             # Execute the command.
@@ -5094,7 +5095,7 @@ proc ::ms::treeview::Motion { w x y } {
     }
 
     # Check if the active column is different than the one currently registered.
-    if { $active_column != $::ms::data($w,active,column) {
+    if { $active_column != $::ms::data($w,active,column) } {
         # If needed, deactivate the currently registered active column.
         switch -- $::ms::data($w,active,column) {
             ""      {}

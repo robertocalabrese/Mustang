@@ -3983,7 +3983,10 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             #
             # *window* **get**
             # *window* **validate**
-            return [interp invokehidden {} $w $cmd]
+            switch -- [llength $args] {
+                0       { return [interp invokehidden {} $w $cmd] }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
         }
         instate {
             # Synopsis:
