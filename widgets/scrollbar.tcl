@@ -194,6 +194,63 @@ proc ::ms::scrollbar::Command { window { args "" } } {
         0   {
             # Remove any duplicated options (retain only the last ones).
             set args [lsort -increasing -stride 2 -index 0 -unique $args]
+
+            ###############################################
+            ##                                           ##
+            ##     INITIALIZE THE WIDGET'S VARIABLES     ##
+            ##                                           ##
+            ###############################################
+
+            # Set the default widget (not styleable) options.
+            set ::ms::default($w,class)     $::ms::default(scrollbar,class)
+            set ::ms::default($w,command)   $::ms::default(scrollbar,command)
+            set ::ms::default($w,orient)    $::ms::default(scrollbar,orient)
+            set ::ms::default($w,state)     $::ms::default(scrollbar,state)
+            set ::ms::default($w,style)     $::ms::default(scrollbar,style)
+            set ::ms::default($w,takefocus) $::ms::default(scrollbar,takefocus)
+
+            # Set the current widget (not styleable) options.
+            set ::ms::current($w,class)     $::ms::default(scrollbar,class)
+            set ::ms::current($w,command)   $::ms::default(scrollbar,command)
+            set ::ms::current($w,orient)    $::ms::default(scrollbar,orient)
+            set ::ms::current($w,state)     $::ms::default(scrollbar,state)
+            set ::ms::current($w,style)     $::ms::default(scrollbar,style)
+            set ::ms::current($w,takefocus) $::ms::default(scrollbar,takefocus)
+
+            # Set some widget variables needed for internal mechanisms.
+            set ::ms::data($w,classtype) scrollbar
+
+            # Set each styleable option to be managed by Tk.
+            #
+            # Note: developer --> The 'option' will be managed directly by the developer and will not follow
+            #                     the relative style indications, mappings included.
+            #
+            #       Tk        --> The 'option' will be managed directly by Tk by following the relative
+            #                     style indications, mappings included (unless stated otherwise in the 'option' info).
+            #
+            #       Each styleable option will always start as managed by Tk.
+            #
+            #       Once a styleable option is set to be managed by the developer, it will not be possible
+            #       to change it back to be managed by Tk.
+            #
+            #       To make a scrollbar styleable option managed by the developer, just set your desired value
+            #       for that option through the create or configure command, like:
+            #
+            #           **scrollbar** *window* **-background** red
+            #       or
+            #           *window* **configure** **-background** red
+            set ::ms::managed_by($w,arrowcolor)  Tk
+            set ::ms::managed_by($w,arrowsize)   Tk
+            set ::ms::managed_by($w,background)  Tk
+            set ::ms::managed_by($w,bordercolor) Tk
+            set ::ms::managed_by($w,borderwidth) Tk
+            set ::ms::managed_by($w,cursor)      Tk
+            set ::ms::managed_by($w,darkcolor)   Tk
+            set ::ms::managed_by($w,foreground)  Tk
+            set ::ms::managed_by($w,gripcount)   Tk
+            set ::ms::managed_by($w,lightcolor)  Tk
+            set ::ms::managed_by($w,relief)      Tk
+            set ::ms::managed_by($w,troughcolor) Tk
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
