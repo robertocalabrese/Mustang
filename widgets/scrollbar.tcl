@@ -1667,4 +1667,86 @@ proc ::ms::scrollbar::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## ButtonPress1
+#
+# Manage the **ButtonPress-1** event on the widget ('scroll', 'jump' or 'drag').
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer coordinates of the event.
+#        These values should be provided by the **ButtonPress-1** event.
+#
+# It doesn't return anything.
+proc ::ms::scrollbar::ButtonPress1 { w x y }  {
+    set ::ms::temp(xpress) $x
+    set ::ms::temp(ypress) $y
+
+    set views [interp invokehidden {} $w get]
+    set view1 [lindex $views 0]
+    set view2 [lindex $views 1]
+
+    switch -nocase -glob -- [interp invokehidden {} $w identify $x $y] {
+        "*uparrow"   -
+        "*leftarrow" {
+            # Scroll the thumb by one page towards the top or towards the left (depending on the widget orientation).
+            ::ms::scrollbar::Pathname_Cmd $w scroll -1 pages
+
+            set ::ms::temp(drag_allowed) no
+        }
+        "*downarrow"  -
+        "*rightarrow" {
+            # Scroll the thumb by one page towards the bottom or towards the right  (depending on the widget orientation).
+            ::ms::scrollbar::Pathname_Cmd $w scroll 1 pages
+
+            set ::ms::temp(drag_allowed) no
+        }
+        "*grip"  -
+        "*thumb" {
+            set ::ms::temp(drag_allowed) yes
+
+            # Compute the fraction for the center of the thumb.
+            set ::ms::temp(fraction) [expr { ($view2+$view1)*0.5 }]
+        }
+        "*trough" {
+            # Get the fraction for the center of the thumb.
+            set ::ms::temp(fraction) [interp invokehidden {} $w fraction $x $y]
+
+            # Check the clickaction variable.
+            switch -nocase -- $::ms::clickaction {
+                jump {
+                    # Jump to the location on the scrollbar that was clicked.
+                    ::ms::scrollbar::Pathname_Cmd $w moveto $::ms::temp(fraction)
+
+                    set ::ms::temp(drag_allowed) no
+                }
+                scroll {
+                    if { $::ms::temp(fraction) < $view1 } {
+                        # The User has click on the left or top trough  (depending on the widget orientation).
+
+                        # Scroll the thumb by one page towards the left or towards the top (depending on the widget orientation).
+                        ::ms::scrollbar::Pathname_Cmd $w scroll -1 pages
+
+                        set ::ms::temp(drag_allowed) yes
+                    } elseif { $::ms::temp(fraction) > $view2 } {
+                        # The User has click on the right or bottom trough (depending on the widget orientation).
+
+                        # Scroll the thumb by one page towards the right or towards the bottom (depending on the widget orientation).
+                        ::ms::scrollbar::Pathname_Cmd $w scroll 1 pages
+
+                        set ::ms::temp(drag_allowed) yes
+                    } else {
+                        # The User has click on the thumb (???).
+
+                        set ::ms::temp(drag_allowed) no
+                    }
+                }
+            }
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
