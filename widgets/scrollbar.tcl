@@ -139,6 +139,16 @@ namespace eval ::ms::scrollbar {
                                                  lightcolor \
                                                  relief \
                                                  troughcolor];
+
+    # Set the default 'non-styleable' scrollbar options values.
+    set ::ms::default(scrollbar,class)     TScrollbar
+    set ::ms::default(scrollbar,command)   {}
+    set ::ms::default(scrollbar,orient)    vertical
+    set ::ms::default(scrollbar,state)     normal
+    set ::ms::default(scrollbar,style)     TScrollbar
+    set ::ms::default(scrollbar,takefocus) 0
+
+    # Note: The default 'styleable' scrollbar options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **scrollbar** and **ttk::scrollbar** commands.
