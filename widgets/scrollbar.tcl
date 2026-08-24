@@ -1795,4 +1795,137 @@ proc ::ms::scrollbar::ButtonRelease1 {} {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::scrollbar::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $w
+
+    # Destroy the aliased command.
+    interp alias {} $::ms::data($w,token) {}
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget real address from the widgets real address list.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the scrollbar widgets real address list.
+    set index [lsearch -exact $::ms::addr(scrollbar) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(scrollbar) [lremove $::ms::addr(scrollbar) $index] }
+    }
+
+    # Remove the widget address from the scrollbar classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),scrollbar,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),scrollbar,addrs) [lremove $::ms::class($::ms::current($w,class),scrollbar,addrs) $index] }
+    }
+
+    # Remove the widget address from the scrollbar classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),scrollbar,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),scrollbar,addrs) [lremove $::ms::style($::ms::current($w,style),scrollbar,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the scrollbar classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),scrollbar,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(scrollbar,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(scrollbar,classtype) [lremove $::ms::style(scrollbar,classtype) $index] }
+            }
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,arrowcolor) \
+                         ::ms::current($w,arrowsize) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,command) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,gripcount) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,orient) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,troughcolor);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,arrowcolor) \
+                         ::ms::default($w,arrowsize) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,command) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,gripcount) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,orient) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,troughcolor);
+
+    unset -nocomplain -- ::ms::managed_by($w,arrowcolor) \
+                         ::ms::managed_by($w,arrowsize) \
+                         ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,gripcount) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,troughcolor);
+
+    unset -nocomplain -- ::ms::style($w,widget)
+}
+
 #*EOF*
