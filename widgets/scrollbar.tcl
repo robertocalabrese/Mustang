@@ -72,7 +72,7 @@ package provide ::ms::scrollbar 0.1
 
 # ButtonPress-1 (Scroll/Jump/Drag)
 bind _Scrollbar <Button-1>        { ::ms::scrollbar::ButtonPress1 %W %x %y; break }
-bind _Scrollbar <ButtonRelease-1> { ::ms::scrollbar::ButtonRelease; break }
+bind _Scrollbar <ButtonRelease-1> { ::ms::scrollbar::ButtonRelease1; break }
 bind _Scrollbar <B1-Motion>       { ::ms::scrollbar::Drag %W %x %y; break }
 
 # ButtonPress-2 (Jump only)
@@ -1777,6 +1777,20 @@ proc ::ms::scrollbar::ButtonPress2 { w x y }  {
             set ::ms::temp(drag_allowed) no
         }
     }
+
+    return ""
+}
+
+## ButtonRelease1
+#
+# Manage the **ButtonRelease** event on the widget.
+#
+# It doesn't return anything.
+proc ::ms::scrollbar::ButtonRelease1 {} {
+    unset -nocomplain -- ::ms::temp(drag_allowed) \
+                         ::ms::temp(fraction) \
+                         ::ms::temp(xpress) \
+                         ::ms::temp(ypress);
 
     return ""
 }
