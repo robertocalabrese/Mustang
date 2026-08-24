@@ -1323,8 +1323,8 @@ proc ::ms::panedwindow::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TPanedwindow { bindtags $w [list $w _Panedwindow TPanedwindow $::ms::addr($w,toplevel) all] }
-                default      { bindtags $w [list $w $::ms::current($w,class) _Panedwindow TPanedwindow $::ms::addr($w,toplevel) all] }
+                TPanedwindow { _bindtags $w [list $w _Panedwindow TPanedwindow $::ms::addr($w,toplevel) all] }
+                default      { _bindtags $w [list $w $::ms::current($w,class) _Panedwindow TPanedwindow $::ms::addr($w,toplevel) all] }
             }
 
             # Add the panedwindow to the related toplevel keyboard pages navigation bindings.

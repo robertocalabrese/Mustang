@@ -3047,8 +3047,8 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget.
                     switch -- $::ms::current($w,class) {
-                        Canvas  { bindtags $w [list $w _Canvas Canvas $::ms::addr($w,toplevel) all] }
-                        default { bindtags $w [list $w $::ms::current($w,class) _Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        Canvas  { _bindtags $w [list $w _Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Canvas Canvas $::ms::addr($w,toplevel) all] }
                     }
 
                     # Configure
@@ -3221,8 +3221,8 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget container ('w').
                     switch -- $::ms::current($w,class) {
-                        Canvas  { bindtags $w [list $w _Canvas Canvas $::ms::addr($w,toplevel) all] }
-                        default { bindtags $w [list $w $::ms::current($w,class) _Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        Canvas  { _bindtags $w [list $w _Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Canvas Canvas $::ms::addr($w,toplevel) all] }
                     }
 
                     # ButtonPress-1

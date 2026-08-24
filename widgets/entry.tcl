@@ -2634,8 +2634,8 @@ proc ::ms::entry::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TEntry  { bindtags $w [list $w _Entry TEntry $::ms::addr($w,toplevel) all] }
-                default { bindtags $w [list $w $::ms::current($w,class) _Entry TEntry $::ms::addr($w,toplevel) all] }
+                TEntry  { _bindtags $w [list $w _Entry TEntry $::ms::addr($w,toplevel) all] }
+                default { _bindtags $w [list $w $::ms::current($w,class) _Entry TEntry $::ms::addr($w,toplevel) all] }
             }
 
             #####################

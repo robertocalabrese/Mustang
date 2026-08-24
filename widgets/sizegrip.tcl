@@ -830,8 +830,8 @@ proc ::ms::sizegrip::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TSizegrip { bindtags $w [list $w _Sizegrip TSizegrip $::ms::addr($w,toplevel) all] }
-                default   { bindtags $w [list $w $::ms::current($w,class) _Sizegrip TSizegrip $::ms::addr($w,toplevel) all] }
+                TSizegrip { _bindtags $w [list $w _Sizegrip TSizegrip $::ms::addr($w,toplevel) all] }
+                default   { _bindtags $w [list $w $::ms::current($w,class) _Sizegrip TSizegrip $::ms::addr($w,toplevel) all] }
             }
 
             #####################

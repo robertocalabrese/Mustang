@@ -1856,8 +1856,8 @@ proc ::ms::listbox::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                Listbox { bindtags $w [list $w _Listbox Listbox $::ms::addr($w,toplevel) all] }
-                default { bindtags $w [list $w $::ms::current($w,class) _Listbox Listbox $::ms::addr($w,toplevel) all] }
+                Listbox { _bindtags $w [list $w _Listbox Listbox $::ms::addr($w,toplevel) all] }
+                default { _bindtags $w [list $w $::ms::current($w,class) _Listbox Listbox $::ms::addr($w,toplevel) all] }
             }
 
             # ButtonPress-1

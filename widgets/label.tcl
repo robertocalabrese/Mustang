@@ -1558,8 +1558,8 @@ proc ::ms::label::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TLabel  { bindtags $w [list $w _Label TLabel $::ms::addr($w,toplevel) all] }
-                default { bindtags $w [list $w $::ms::current($w,class) _Label TLabel $::ms::addr($w,toplevel) all] }
+                TLabel  { _bindtags $w [list $w _Label TLabel $::ms::addr($w,toplevel) all] }
+                default { _bindtags $w [list $w $::ms::current($w,class) _Label TLabel $::ms::addr($w,toplevel) all] }
             }
 
             #####################

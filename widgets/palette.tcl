@@ -2477,8 +2477,8 @@ proc ::ms::palette::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TPalette { bindtags $w [list $w _Palette TPalette $::ms::addr($w,toplevel) all] }
-                default  { bindtags $w [list $w $::ms::current($w,class) _Palette TPalette $::ms::addr($w,toplevel) all] }
+                TPalette { _bindtags $w [list $w _Palette TPalette $::ms::addr($w,toplevel) all] }
+                default  { _bindtags $w [list $w $::ms::current($w,class) _Palette TPalette $::ms::addr($w,toplevel) all] }
             }
 
             # Buttonpress-1

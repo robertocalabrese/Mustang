@@ -2140,8 +2140,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget.
                     switch -- $::ms::current($w,class) {
-                        TLabelFrame { bindtags $w [list $w _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
-                        default     { bindtags $w [list $w $::ms::current($w,class) _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        TLabelFrame { _bindtags $w [list $w _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        default     { _bindtags $w [list $w $::ms::current($w,class) _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
                     }
 
                     # ButtonPress-1
@@ -2708,8 +2708,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget.
                     switch -- $::ms::current($w,class) {
-                        TLabelFrame { bindtags $w [list $w _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
-                        default     { bindtags $w [list $w $::ms::current($w,class) _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        TLabelFrame { _bindtags $w [list $w _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        default     { _bindtags $w [list $w $::ms::current($w,class) _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
                     }
 
                     # ButtonPress-1

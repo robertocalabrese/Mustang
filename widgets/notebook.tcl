@@ -1455,8 +1455,8 @@ proc ::ms::notebook::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TNotebook { bindtags $w [list $w _Notebook TNotebook $::ms::addr($w,toplevel) all] }
-                default   { bindtags $w [list $w $::ms::current($w,class) _Notebook TNotebook $::ms::addr($w,toplevel) all] }
+                TNotebook { _bindtags $w [list $w _Notebook TNotebook $::ms::addr($w,toplevel) all] }
+                default   { _bindtags $w [list $w $::ms::current($w,class) _Notebook TNotebook $::ms::addr($w,toplevel) all] }
             }
 
             # Add the notebook to the related toplevel keyboard pages navigation bindings.

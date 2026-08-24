@@ -2808,8 +2808,8 @@ proc ::ms::combobox::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TCombobox { bindtags $w [list $w _Combobox TCombobox $::ms::addr($w,toplevel) all] }
-                default   { bindtags $w [list $w $::ms::current($w,class) _Combobox TCombobox $::ms::addr($w,toplevel) all] }
+                TCombobox { _bindtags $w [list $w _Combobox TCombobox $::ms::addr($w,toplevel) all] }
+                default   { _bindtags $w [list $w $::ms::current($w,class) _Combobox TCombobox $::ms::addr($w,toplevel) all] }
             }
 
             #####################

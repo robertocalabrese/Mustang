@@ -1682,8 +1682,8 @@ proc ::ms::frame::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget.
                     switch -- $::ms::current($w,class) {
-                        TFrame  { bindtags $w [list $w _Frame TFrame $::ms::addr($w,toplevel) all] }
-                        default { bindtags $w [list $w $::ms::current($w,class) _Frame TFrame $::ms::addr($w,toplevel) all] }
+                        TFrame  { _bindtags $w [list $w _Frame TFrame $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Frame TFrame $::ms::addr($w,toplevel) all] }
                     }
 
                     # Context menu
@@ -2020,8 +2020,8 @@ proc ::ms::frame::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget.
                     switch -- $::ms::current($w,class) {
-                        TFrame  { bindtags $w [list $w _Frame TFrame $::ms::addr($w,toplevel) all] }
-                        default { bindtags $w [list $w $::ms::current($w,class) _Frame TFrame $::ms::addr($w,toplevel) all] }
+                        TFrame  { _bindtags $w [list $w _Frame TFrame $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Frame TFrame $::ms::addr($w,toplevel) all] }
                     }
 
                     # ButtonPress-1

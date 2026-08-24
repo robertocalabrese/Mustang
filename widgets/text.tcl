@@ -4223,8 +4223,8 @@ proc ::ms::text::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget.
                     switch -- $::ms::current($w,class) {
-                        Text    { bindtags $w [list $w _Simple_Text Text $::ms::addr($w,toplevel) all] }
-                        default { bindtags $w [list $w $::ms::current($w,class) _Simple_Text Text $::ms::addr($w,toplevel) all] }
+                        Text    { _bindtags $w [list $w _Simple_Text Text $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Simple_Text Text $::ms::addr($w,toplevel) all] }
                     }
 
                     #####################
@@ -4374,17 +4374,17 @@ proc ::ms::text::Command { window { args "" } } {
                     # Note: If a different class than 'Text' is provided, we need to adapt the bindtags.
 
                     # Set the new bindtags for the hull object.
-                    bindtags $w [list $w _Hull_Text TFrame $::ms::addr($w,toplevel) all]
+                    _bindtags $w [list $w _Hull_Text TFrame $::ms::addr($w,toplevel) all]
 
                     # Set the new bindtags for the text object.
                     switch -- $::ms::current($w,class) {
-                        Text    { bindtags $w.text [list $w.text _Scrollable_Text Text $::ms::addr($w,toplevel) all] }
-                        default { bindtags $w.text [list $w.text $::ms::current($w,class) _Scrollable_Text Text $::ms::addr($w,toplevel) all] }
+                        Text    { _bindtags $w.text [list $w.text _Scrollable_Text Text $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w.text [list $w.text $::ms::current($w,class) _Scrollable_Text Text $::ms::addr($w,toplevel) all] }
                     }
 
                     # Set the new bindtags for the horizontal and vertical scrollbar objects.
-                    bindtags $w.x [list $w.x _X_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
-                    bindtags $w.y [list $w.y _Y_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.x [list $w.x _X_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.y [list $w.y _Y_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
 
                     #####################
                     ##                 ##

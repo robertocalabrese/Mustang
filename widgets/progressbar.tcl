@@ -1556,8 +1556,8 @@ proc ::ms::progressbar::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TProgressbar { bindtags $w [list $w _Progressbar TProgressbar $::ms::addr($w,toplevel) all] }
-                default      { bindtags $w [list $w $::ms::current($w,class) _Progressbar TProgressbar $::ms::addr($w,toplevel) all] }
+                TProgressbar { _bindtags $w [list $w _Progressbar TProgressbar $::ms::addr($w,toplevel) all] }
+                default      { _bindtags $w [list $w $::ms::current($w,class) _Progressbar TProgressbar $::ms::addr($w,toplevel) all] }
             }
 
             # Add the progressbar to the related toplevel keyboard pages navigation bindings.

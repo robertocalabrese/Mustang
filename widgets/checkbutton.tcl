@@ -1759,8 +1759,8 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # Set the new bindtags for the widget.
             switch -- $::ms::current($w,class) {
-                TCheckbutton { bindtags $w [list $w _Checkbutton TCheckbutton $::ms::addr($w,toplevel) all] }
-                default      { bindtags $w [list $w $::ms::current($w,class) _Checkbutton TCheckbutton $::ms::addr($w,toplevel) all] }
+                TCheckbutton { _bindtags $w [list $w _Checkbutton TCheckbutton $::ms::addr($w,toplevel) all] }
+                default      { _bindtags $w [list $w $::ms::current($w,class) _Checkbutton TCheckbutton $::ms::addr($w,toplevel) all] }
             }
 
             # ButtonPress-1
