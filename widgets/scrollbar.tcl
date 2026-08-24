@@ -1016,6 +1016,29 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            # Check if the style provided has children.
+                            set orient [string totitle $::ms::current($w,orient)]
+                            set index  [string last "." $::ms::current($w,style)]
+                            switch -- $index {
+                                -1      { set parent_style [string cat $orient "." $::ms::current($w,style)] }
+                                default {
+                                    # Check if the style child positioned at 'end-1' corresponds to the word 'Horizontal' or 'Vertical'.
+                                    set children [split $::ms::current($w,style) "."]
+                                    if { [lindex $children end-1] eq $orient } {
+                                        set parent_style [string cat $orient "." [lindex $children end]]
+                                    } else {
+                                        set parent_style $orient
+                                        foreach word $children {
+                                            switch -nocase -- $word {
+                                                Horizontal -
+                                                Vertical   { ::ms::Error "Invalid style name, '$::ms::current($w,style)'." $caller_info }
+                                                default    { set parent_style [string cat $parent_style "." $word] }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
