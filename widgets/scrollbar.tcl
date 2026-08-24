@@ -760,7 +760,25 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
         }
         configure {}
         delta    -
-        fraction {}
+        fraction {
+            # Synopsis:
+            #
+            # *window* **delta** *deltaX* *deltaY*
+            # *window* **fraction** *x* *y*
+            switch -- [llength $args] {
+                2   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "Invalid option, '$args'." $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+            }
+        }
         get {}
         identify {}
         instate {}
