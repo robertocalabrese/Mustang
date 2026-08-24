@@ -779,7 +779,15 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        get {}
+        get {
+            # Synopsis:
+            #
+            # *window* **get**
+            switch -- [llength $args] {
+                0       { return [interp invokehidden {} $w get] }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         identify {}
         instate {}
         moveto {}
