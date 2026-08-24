@@ -1221,6 +1221,56 @@ namespace eval ttk::theme::Halo {
 
         #######################
         ##                   ##
+        ##     SCROLLBAR     ##
+        ##                   ##
+        #######################
+
+        # Note: The scrollbar '-relief' option doesn't work on the 'clam' engine.
+        #       A 'solid' relief is automatically applied to the scrollbar object by the 'clam' engine.
+        #       It cannot be changed.
+
+        # Set the gripcount relative to the operating system.
+        switch -- [_tk windowingsystem] {
+            win32   { set gripcount 0 }
+            default { set gripcount 5 }
+        }
+
+        # Layouts
+        style layout Horizontal.TScrollbar {
+            Horizontal.Scrollbar.trough -sticky we -children {
+                Horizontal.Scrollbar.thumb -expand 1 -sticky nswe -children {
+                    Horizontal.Scrollbar.grip -sticky {}
+                }
+            }
+        }
+
+        style layout Vertical.TScrollbar {
+            Vertical.Scrollbar.trough -sticky ns -children {
+                Vertical.Scrollbar.thumb -expand 1 -sticky nswe -children {
+                    Vertical.Scrollbar.grip -sticky {}
+                }
+            }
+        }
+
+        # Normal state
+        style configure TScrollbar  -arrowcolor Arrow \
+                                     -arrowsize $::ms::size(Halo,scrollbar) \
+                                    -background ScrollbarBackground \
+                                   -bordercolor ScrollbarBordercolor \
+                                   -borderwidth 2 \
+                                        -cursor arrow \
+                                     -darkcolor Darkcolor \
+                                    -foreground ScrollbarForeground \
+                                     -gripcount $gripcount \
+                                    -lightcolor Lightcolor \
+                                        -relief solid \
+                                   -troughcolor Background5 \
+                                         -width $::ms::size(Halo,scrollbar);
+
+        # No mapping
+
+        #######################
+        ##                   ##
         ##     SEPARATOR     ##
         ##                   ##
         #######################
