@@ -442,6 +442,26 @@ proc ::ms::scrollbar::Command { window { args "" } } {
                     }
                 }
             }
+
+            # Check the '-command' option provided.
+            switch -- $::ms::current($w,command) {
+                ""      {}
+                default {
+                    # Check that the command provided is in sync with the widget orientation.
+                    switch -- $::ms::current($w,orient) {
+                        horizontal {
+                            switch -- [lindex $::ms::current($w,command) 1] {
+                                yview { set ::ms::current($w,command) "" }
+                            }
+                        }
+                        vertrical {
+                            switch -- [lindex $::ms::current($w,command) 1] {
+                                xview { set ::ms::current($w,command) "" }
+                            }
+                        }
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
