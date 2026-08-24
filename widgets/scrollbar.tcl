@@ -720,7 +720,28 @@ proc ::ms::scrollbar::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {}
+proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        activate {}
+        cget {}
+        configure {}
+        delta    -
+        fraction {}
+        get {}
+        identify {}
+        instate {}
+        moveto {}
+        set {}
+        scroll {}
+        state {}
+        style {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
