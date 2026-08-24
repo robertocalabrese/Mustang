@@ -737,7 +737,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0       -
                 1       { return "" }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         cget {
@@ -755,7 +755,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {}
@@ -776,7 +776,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         return $result
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         get {}
