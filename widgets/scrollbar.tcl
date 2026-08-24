@@ -1527,6 +1527,135 @@ proc ::ms::scrollbar::Style_Update { stylename caller_info } {
                 }
             }
         }
+
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET STYLE     ##
+        ##                                 ##
+        #####################################
+
+        # Note: 'arrowsize', 'borderwidth', 'cursor', 'gripcount', 'relief' and 'troughcolor' are not allowed to change
+        #       if the statespec changes.
+
+        #######################
+        ##                   ##
+        ##     SCROLLBAR     ##
+        ##                   ##
+        #######################
+
+        # Set the widget style name.
+        set ::ms::style($w,widget) [string cat "_ac=" $::ms::current($w,arrowcolor) \
+                                               "_as=" $::ms::current($w,arrowsize) \
+                                               "_bg=" $::ms::current($w,background) \
+                                               "_bc=" $::ms::current($w,bordercolor) \
+                                               "_bw=" $::ms::current($w,borderwidth) \
+                                               "_dc=" $::ms::current($w,darkcolor) \
+                                               "_fg=" $::ms::current($w,foreground) \
+                                               "_gc=" $::ms::current($w,gripcount) \
+                                               "_lc=" $::ms::current($w,lightcolor) \
+                                               "_rl=" $::ms::current($w,relief) \
+                                               "_tc=" $::ms::current($w,troughcolor) \
+                                               "." $parent_style];
+
+        # If needed, create the widget style name.
+        if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+            _ttk_style configure $::ms::style($w,widget)  -arrowcolor $::ms::current($w,arrowcolor) \
+                                                           -arrowsize $::ms::current($w,arrowsize) \
+                                                          -background $::ms::current($w,background) \
+                                                         -bordercolor $::ms::current($w,bordercolor) \
+                                                         -borderwidth $::ms::current($w,borderwidth) \
+                                                           -darkcolor $::ms::current($w,darkcolor) \
+                                                          -foreground $::ms::current($w,foreground) \
+                                                           -gripcount $::ms::current($w,gripcount) \
+                                                          -lightcolor $::ms::current($w,lightcolor) \
+                                                              -relief $::ms::current($w,relief) \
+                                                         -troughcolor $::ms::current($w,troughcolor);
+
+            # Add the widget style name to the theme styles list created by mustang.
+            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+        }
+
+        # Initialize the widget mapping.
+        set mapping [list ]
+
+        # arrowcolor
+        switch -- $::ms::managed_by($w,arrowcolor) {
+            developer { lappend mapping -arrowcolor [list pressed $::ms::current($w,arrowcolor)] }
+            Tk  {
+                # Check if a 'arrowcolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,arrowcolor)] {
+                    1   { lappend mapping -arrowcolor $::ms::stylemap($::ms::theme,$stylename,arrowcolor) }
+                }
+            }
+        }
+
+        # background
+        switch -- $::ms::managed_by($w,background) {
+            developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+            Tk  {
+                # Check if a 'background' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
+                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
+                }
+            }
+        }
+
+        # bordercolor
+        switch -- $::ms::managed_by($w,bordercolor) {
+            developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+            Tk  {
+                # Check if a 'bordercolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,bordercolor)] {
+                    1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$stylename,bordercolor) }
+                }
+            }
+        }
+
+        # darkcolor
+        switch -- $::ms::managed_by($w,darkcolor) {
+            developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+            Tk  {
+                # Check if a 'darkcolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,darkcolor)] {
+                    1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$stylename,darkcolor) }
+                }
+            }
+        }
+
+        # foreground
+        switch -- $::ms::managed_by($w,foreground) {
+            developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+            Tk  {
+                # Check if a 'foreground' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,foreground)] {
+                    1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$stylename,foreground) }
+                }
+            }
+        }
+
+        # lightcolor
+        switch -- $::ms::managed_by($w,lightcolor) {
+            developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+            Tk  {
+                # Check if a 'lightcolor' mapping exists for 'stylename'.
+                switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,lightcolor)] {
+                    1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$stylename,lightcolor) }
+                }
+            }
+        }
+
+        # If needed, create the widget mapping.
+        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+            _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+            # Add the widget mapping to the stylemap list containing all the mappings
+            # created by mustang for the current theme.
+            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+        }
+
+        # Apply the changes.
+        interp invokehidden {} $w configure -cursor $::ms::current($w,cursor) \
+                                             -style $::ms::style($w,widget);
     }
 
     return ""
