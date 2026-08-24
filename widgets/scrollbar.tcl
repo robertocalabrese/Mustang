@@ -949,7 +949,45 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        scroll {}
+        scroll {
+            # Synopsis:
+            #
+            # *window* **scroll** *number* *what*
+            switch -- [llength $args] {
+                2   {
+                    set number [lindex $args 0]
+                    set what   [lindex $args 1]
+
+                    # Check 'number'.
+                    switch -- [string is integer -strict $number] {
+                        0   { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    # Check 'what'.
+                    switch -- $what {
+                        units   -
+                        pages   {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    # Check the command associated with the widget.
+                    switch -- $::ms::current($w,command) {
+                        ""      { return "" }
+                        default {
+                            # Execute the command.
+                            try {
+                                {*}$::ms::current($w,command) scroll $number $what
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {}
         style {}
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
