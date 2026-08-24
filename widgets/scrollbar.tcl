@@ -117,7 +117,15 @@ _bind _Scrollbar <TouchpadScroll>         { ::ms::scrollbar::Touchpad %W %# %D u
 _bind _Scrollbar <Control-TouchpadScroll> { ::ms::scrollbar::Touchpad %W %# %D pages; break }
 
 # Create the mustang **scrollbar** package.
-namespace eval ::ms::scrollbar {}
+namespace eval ::ms::scrollbar {
+    # Set the 'non-styleable' scrollbar option list.
+    set ::ms::scrollbar(non_styleable,options) [list class \
+                                                     command \
+                                                     orient \
+                                                     state \
+                                                     style \
+                                                     takefocus];
+}
 
 # Rename the original Tk **scrollbar** and **ttk::scrollbar** commands.
 rename scrollbar      _scrollbar
