@@ -901,7 +901,36 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        moveto {}
+        moveto {
+            # Synopsis:
+            #
+            # *window* **moveto** *fraction*
+            switch -- [llength $args] {
+                1   {
+                    # Check the argument provided (fraction).
+                    set fraction $args
+                    if { ($fraction < 0) || ($fraction > 1.0) } {
+                        ::ms::Error "Invalid option, '$args'." $caller_info
+                    }
+
+                    # Check the command associated with the widget.
+                    switch -- $::ms::current($w,command) {
+                        ""      { return "" }
+                        default {
+                            # Execute the command.
+                            try {
+                                {*}$::ms::current($w,command) moveto $fraction
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         set {}
         scroll {}
         state {}
