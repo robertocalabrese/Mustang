@@ -125,6 +125,20 @@ namespace eval ::ms::scrollbar {
                                                      state \
                                                      style \
                                                      takefocus];
+
+    # Set the 'styleable' scrollbar option list.
+    set ::ms::scrollbar(styleable,options) [list arrowcolor \
+                                                 arrowsize \
+                                                 background \
+                                                 bordercolor \
+                                                 borderwidth \
+                                                 cursor \
+                                                 darkcolor \
+                                                 foreground \
+                                                 gripcount \
+                                                 lightcolor \
+                                                 relief \
+                                                 troughcolor];
 }
 
 # Rename the original Tk **scrollbar** and **ttk::scrollbar** commands.
