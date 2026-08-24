@@ -1749,4 +1749,36 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
     return ""
 }
 
+## ButtonPress2
+#
+# Manage the **ButtonPress-2/3** event on the widget ('jump').
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer coordinates of the event.
+#        These values should be provided by the **ButtonPress-2/3** event.
+#
+# It doesn't return anything.
+proc ::ms::scrollbar::ButtonPress2 { w x y }  {
+    set views [interp invokehidden {} $w get]
+    set view1 [lindex $views 0]
+    set view2 [lindex $views 1]
+
+    switch -nocase -glob -- [interp invokehidden {} $w identify $x $y] {
+        "*trough" {
+            # Get the fraction for the center of the thumb.
+            set ::ms::temp(fraction) [interp invokehidden {} $w fraction $x $y]
+
+            # Jump to the location on the scrollbar that was clicked.
+            ::ms::scrollbar::Pathname_Cmd $w moveto $::ms::temp(fraction)
+
+            set ::ms::temp(drag_allowed) no
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
