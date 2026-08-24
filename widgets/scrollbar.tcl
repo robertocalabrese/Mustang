@@ -64,6 +64,58 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::scrollbar 0.1
 
+#################################
+##                             ##
+##     _SCROLLBAR BINDINGS     ##
+##                             ##
+#################################
+
+# ButtonPress-1 (Scroll/Jump/Drag)
+bind _Scrollbar <Button-1>        { ::ms::scrollbar::ButtonPress1 %W %x %y; break }
+bind _Scrollbar <ButtonRelease-1> { ::ms::scrollbar::ButtonRelease; break }
+bind _Scrollbar <B1-Motion>       { ::ms::scrollbar::Drag %W %x %y; break }
+
+# ButtonPress-2 (Jump only)
+bind _Scrollbar <Button-2>        { ::ms::scrollbar::ButtonPress2 %W %x %y; break }
+bind _Scrollbar <ButtonRelease-2> { break }
+bind _Scrollbar <B2-Motion>       { break }
+
+# ButtonPress-3 (Jump only)
+bind _Scrollbar <Button-3>        { ::ms::scrollbar::ButtonPress2 %W %x %y; break }
+bind _Scrollbar <ButtonRelease-3> { break }
+bind _Scrollbar <B3-Motion>       { break }
+
+# Destroy
+_bind _Scrollbar <Destroy> { ::ms::scrollbar::Destroy %W; break }
+
+# Enter/Leave
+_bind _Scrollbar <Enter> { ::ms::frame::Pathname_Cmd %W state  hover; break }
+_bind _Scrollbar <Leave> { ::ms::frame::Pathname_Cmd %W state !hover; break }
+
+# FocusIn/FocusOut
+_bind _Scrollbar <FocusIn>  { ::ms::frame::Pathname_Cmd %W state  focus; break }
+_bind _Scrollbar <FocusOut> { ::ms::frame::Pathname_Cmd %W state !focus; break }
+
+# Mousewheel and Touchpad
+
+# Move the widget's content address by one unit up or down (depending on the mousewheel direction).
+_bind _Scrollbar <MouseWheel> { ::ms::scrollbar::Scroll %W %D units; break }
+
+# Move the widget's content address by one unit left or right (depending on the mousewheel direction).
+_bind _Scrollbar <Shift-MouseWheel> { ::ms::scrollbar::Scroll %W %D units; break }
+
+# Move the widget's content address by one page up or down (depending on the mousewheel direction).
+_bind _Scrollbar <Control-MouseWheel> { ::ms::scrollbar::Scroll %W %D pages; break }
+
+# Move the widget's content address by one page left or right (depending on the mousewheel direction).
+_bind _Scrollbar <Control-Shift-MouseWheel> { ::ms::scrollbar::Scroll %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+_bind _Scrollbar <TouchpadScroll>         { ::ms::scrollbar::Touchpad %W %# %D units; break }
+_bind _Scrollbar <Control-TouchpadScroll> { ::ms::scrollbar::Touchpad %W %# %D pages; break }
+
 # Create the mustang **scrollbar** package.
 namespace eval ::ms::scrollbar {}
 
