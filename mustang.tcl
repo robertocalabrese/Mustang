@@ -2781,6 +2781,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
 #                                           Note: Theme colors are case sensitive.
 #
 # fallback   Optional. Should be a string that specifies the fallback value to return if the color provided will result invalid.
+#
 #            If not provided, defaults to **invalid**.
 #
 # Return the validated color or the fallback value.
@@ -2867,12 +2868,15 @@ proc ::ms::Check_Color { value { fallback invalid } } {
 #
 # Where:
 #
-# color        Should be the color to validate expressed at **8**, **12** or **16** bits, without any *alpha* channel (transparency),
-#              in shortform (three hexadecimals) or longform (six, nine or twelve hexadecimals), with or without the **#**.
+# color        Should be the color to validate expressed at **8**, **12** or **16** bits,
+#              without any *alpha* channel (transparency), in shortform (three hexadecimals) or longform
+#              (six, nine or twelve hexadecimals), with or without the **#**.
 #
 #              *Color* values are case insensitive.
 #
-# colormodel   Optional. Should be a string that specifies the hexadecimal color model in which *color* will be evaluated.
+# colormodel   Optional. Should be a string that specifies the hexadecimal color model
+#              in which *color* will be evaluated.
+#
 #              Allowed values are:
 #                  **HEX** or **HEX8** --> 3 or 6  hexadecimals.
 #                  **HEX12**           --> 3 or 9  hexadecimals.
@@ -2883,7 +2887,9 @@ proc ::ms::Check_Color { value { fallback invalid } } {
 #              If not provided, defaults to **HEX8**.
 #
 # fallback     Optional. Should be a string that specifies the fallback value to return if the color provided will
-#              result invalid. If not provided, defaults to **invalid**.
+#              result invalid.
+#
+#              If not provided, defaults to **invalid**.
 #
 # Return the validated color in its hexadecimal longform expressed in the color model specified, or the fallback value.
 # Validated colors will always be returned with lowercase characters.
@@ -2980,8 +2986,10 @@ proc ::ms::Check_Hex { color { colormodel HEX8 } { fallback invalid } } {
 # Where:
 #
 # image   Should be an image list of one or more elements.
-#         The first element is the default image name. The rest of the list is a sequence of statespec/value pairs as per style map,
-#         specifying different images to use when the widget is in a particular state or combination of states.
+#         The first element is the default image name.
+#         The rest of the list is a sequence of statespec/value pairs as per style map,
+#         specifying different images to use when the widget is in a particular state
+#         or combination of states.
 #
 # Return **OK** if *image* is a valid image list or **invalid** if it's not.
 proc ::ms::Check_Image { image } {
@@ -3106,6 +3114,7 @@ proc ::ms::Check_Measure { measure { fallback invalid } } {
 #
 # fallback   Optional. Should be a string that specifies the fallback value to return
 #            if the color provided will result invalid.
+#
 #            If not provided, defaults to **invalid**.
 #
 # Return either a list containing (in order) the real address associated to *window* and
@@ -3418,9 +3427,12 @@ proc ::ms::Cut { w } {
 # w                Should be the widget real address involved.
 #
 # clipboard_type   Optional, should be a string indicating from which clipboard to take paste data.
+#
 #                  Allowed values are:
 #                    'CLIPBOARD' --> the primary clipboard
 #                    'PRIMARY'   --> the secondary clipboard
+#
+#                  If not provided, defaults to **CLIPBOARD**.
 #
 # It doesn't return anything.
 proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
@@ -3526,7 +3538,7 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
 #
 # event   Should be the event name.
 #
-#         Allowed events are:
+#         Allowed events name are:
 #            Button-2
 #            B2-Motion
 #            ButtonRelease-2
@@ -3861,6 +3873,7 @@ proc ::ms::Scrollable_Widgets_Propagation_Mechanism { w } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#
 #          If not provided, defaults to **units**.
 #
 # Note: 1.0/120.0 = 0.008333333333333333
@@ -3967,6 +3980,7 @@ proc ::ms::Scroll_Parent_X { w amount { what units } } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#
 #          If not provided, defaults to **units**.
 #
 # Note: 1.0/120.0 = 0.008333333333333333
@@ -4073,6 +4087,7 @@ proc ::ms::Scroll_Parent_Y { w amount { what units } } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#
 #          If not provided, defaults to **units**.
 #
 # Note: 1.0/120.0 = 0.008333333333333333
@@ -4149,6 +4164,7 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#
 #          If not provided, defaults to **units**.
 #
 # Note: 1.0/120.0 = 0.008333333333333333
@@ -4226,6 +4242,7 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#
 #           If not provided, defaults to **units**.
 #
 # It doesn't return anything.
@@ -4284,6 +4301,7 @@ proc ::ms::Touchpad_Parent { w counter amount { what units } } {
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#
 #           If not provided, defaults to **units**.
 #
 # It doesn't return anything.
@@ -4350,6 +4368,7 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#
 #           If not provided, defaults to **units**.
 #
 # It doesn't return anything.
@@ -4418,6 +4437,7 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#
 #           If not provided, defaults to **units**.
 #
 # It doesn't return anything.
@@ -4604,6 +4624,7 @@ proc ::ms::Traverse_CleanUp { w } {
 #
 # what      Optional. Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#
 #           If not provided, defaults to **units**.
 #
 # Note: 1.0/120.0 = 0.008333333333333333
@@ -5063,6 +5084,8 @@ proc ::ms::Beautify_Input_Number { number maxlength datatype } {
 # sign     Optional, should be a boolean value [**yes** or **no**] specifying if
 #          the procedure needs to take in account one spot for the sign or not.
 #
+#          If not provided, defaults to **no**.
+#
 # It returns the 'maximum' value allowed for that widget.
 proc ::ms::Compute_Maximum { digits { sign no } } {
     # Correct the digits available, if needed.
@@ -5087,7 +5110,9 @@ proc ::ms::Compute_Maximum { digits { sign no } } {
 # Where:
 #
 # measure    Should be a string (or an integer in case of pixels) that specifies
-#            the measure to convert and its unit. Allowed units are:
+#            the measure to convert and its unit.
+#
+#            Allowed units are:
 #                c --> centimeters
 #                i --> inches
 #                m --> millimeters
@@ -5096,16 +5121,20 @@ proc ::ms::Compute_Maximum { digits { sign no } } {
 #            The measure (intended as without its unit) should always be a positive integer value.
 #
 # to         Optional. Should be a string that specifies the new unit in which the result
-#            needs to be expressed. Allowed values are:
+#            needs to be expressed.
+#
+#            Allowed values are:
 #                c --> centimeters
 #                i --> inches
 #                m --> millimeters
 #                p --> points
 #            If an empty string is provided, the **to** parameter will be assumed to be in pixels.
+#
 #            If not provided, defaults to **pixels**.
 #
 # fallback   Optional. Should be a string that specifies the fallback value to return if
 #            the measure provided will result invalid.
+#
 #            If not provided, defaults to **invalid**.
 #
 # Some pre-computation have been made in order to increase the performance:
@@ -5243,6 +5272,8 @@ proc ::ms::Convert_Measure { measure { to "" } { fallback invalid } } {
 #
 # caller_info   Optional. Should be the location of the command that generated the error.
 #               For user related errors, this value should be the empty string.
+#
+#               If not provided, default to the empty string.
 #
 # It doesn't return anything.
 proc ::ms::Error { message { caller_info "" } } {
@@ -5955,7 +5986,8 @@ proc ::ms::Show_ContextMenu { w X Y { type cmenu } } {
 # char        Should be the character to strip from the string provided.
 #
 # startFrom   Optional, should be the index where the strip procedure will start analyzing the string.
-#             Defaults to '0', if not provided.
+#
+#             If not provided, defaults to **0**.
 #
 # Returns the eventualy stripped string.
 proc ::ms::Strip_Chars { string char { startFrom 0 } } {
@@ -5984,7 +6016,9 @@ proc ::ms::Strip_Chars { string char { startFrom 0 } } {
 # color      Should be the theme color to translate, like *AccentColor*, *LightColor*
 #            or *WindowBackgroundColor*.
 #
-# fallback   Should be the fallback value in case the color provided is not a theme color.
+# fallback   Optional. Should be the fallback value in case the color provided
+#            is not a theme color.
+#
 #            If not provided, defaults to **#ffffff**
 #
 # Return the translated theme color or the fallback value.
