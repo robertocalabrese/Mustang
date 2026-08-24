@@ -788,7 +788,65 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        identify {}
+        identify {
+            # Synopsis:
+            #
+            # *window* **identify** *x* *y*
+            # *window* **identify** **element** *x* *y*
+            switch -- [llength $args] {
+                2   {
+                    set x [lindex $args 0]
+                    set y [lindex $args 1]
+
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+                }
+                3   {
+                    # Check that the first argument of 'args' is the word "element".
+                    switch -- [lindex $args 0] {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+
+                    # Check that the coordinates provided are valid.
+                    switch -- [string is integer -strict $x] {
+                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+                    }
+
+                    switch -- [string is integer -strict $y] {
+                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w identify element $x $y
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                switch -glob -- $result {
+                    *downarrow  { return "Scrollbar.downarrow" }
+                    *leftarrow  { return "Scrollbar.leftarrow" }
+                    *rightarrow { return "Scrollbar.rightarrow" }
+                    *uparrow    { return "Scrollbar.uparrow" }
+                    *grip       { return "Scrollbar.grip" }
+                    *thumb      { return "Scrollbar.thumb" }
+                    *trough     { return "Scrollbar.trough" }
+                    default     { return ""}
+                }
+            }
+        }
         instate {}
         moveto {}
         set {}
