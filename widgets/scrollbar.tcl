@@ -726,7 +726,20 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
 
     # Check the command provided.
     switch -nocase -- $cmd {
-        activate {}
+        activate {
+            # Synopsis:
+            #
+            # *window* **activate** ?*element*?
+
+            # Note: This command does nothing.
+            #       It's here only to avoid an error in case a classic scrollbar was created.
+
+            switch -- [llength $args] {
+                0       -
+                1       { return "" }
+                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+            }
+        }
         cget {}
         configure {}
         delta    -
