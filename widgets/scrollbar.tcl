@@ -1928,4 +1928,42 @@ proc ::ms::scrollbar::Destroy { w } {
     unset -nocomplain -- ::ms::style($w,widget)
 }
 
+## Drag
+#
+# Manage the **B1-Motion** event on the widget.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer coordinates of the event.
+#        These values should be provided by the **Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::scrollbar::Drag { w x y } {
+    # Safeguard.
+    # Check if drag operations are allowed or not.
+    switch -- [info exists ::ms::temp(drag_allowed)] {
+        0   { return "" }
+        1   {
+            switch -- $::ms::temp(drag_allowed) {
+                no  { return "" }
+            }
+        }
+    }
+
+    # Compute 'delta_x' and 'delta_y'.
+    set delta_x [expr { $x-$::ms::temp(xpress) }]
+    set delta_y [expr { $y-$::ms::temp(ypress) }]
+
+    # Compute the 'fraction' after the drag movement.
+    set delta    [interp invokehidden {} $w delta $delta_x $delta_y]
+    set fraction [expr { $::ms::temp(fraction)+$delta }]
+
+    # Move the scrollbar to 'fraction'.
+    ::ms::scrollbar::Pathname_Cmd $w moveto $fraction
+
+    return ""
+}
+
 #*EOF*
