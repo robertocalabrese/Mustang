@@ -4622,6 +4622,8 @@ proc ::ms::Traverse_CleanUp { w } {
 #           Its sign determines the direction to take (left/right or up/down).
 #           It's normally delivered by the event (**+120.0** or **-120.0).
 #
+#           If not provided, defaults to **-120.0**.
+#
 # what      Optional. Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
 #
@@ -4724,10 +4726,10 @@ proc ::ms::Traverse_Scroll { w command { amount -120.0 } { what units } } {
 #    - If *number* ends with '.', a zero will be inserted after '.' ('real' and 'posreal' datatype only).
 #
 # Note: This procedure assumes that the following keybindings are in place on the widget:
-#          'integer'    --> The only keys enabled in the keyboard are [0123456789-].
-#          'posinteger' --> The only keys enabled in the keyboard are [0123456789].
-#          'posreal'    --> The only keys enabled in the keyboard are [0123456789.].
-#          'real'       --> The only keys enabled in the keyboard are [0123456789-.].
+#          'integer'    --> The only keys enabled in the keyboard are [0123456789-]
+#          'posinteger' --> The only keys enabled in the keyboard are [0123456789]
+#          'posreal'    --> The only keys enabled in the keyboard are [0123456789.]
+#          'real'       --> The only keys enabled in the keyboard are [0123456789-.]
 #
 # Where:
 #
