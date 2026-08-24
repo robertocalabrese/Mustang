@@ -3035,50 +3035,60 @@ proc ::ms::Check_Image { image } {
 # Where:
 #
 # measure    Should be a string (or an integer in case of pixels) that specifies
-#            the measure to convert and its unit. Allowed units are:
+#            the measure to convert and its unit.
+#
+#            Allowed units are:
 #                c --> centimeters
 #                i --> inches
 #                m --> millimeters
 #                p --> points
-#            If there is no unit, the measure will be assumed to be in **pixels**.
-#            The measure (intended as without its unit) should always be a positive integer value.
 #
-# fallback   Optional. Should be a string that specifies the fallback value to return if
-#            the measure provided will result invalid.
+#            If there is no unit, the measure will be assumed to be in **pixels**.
+#            The measure (intended as without its unit) should always be a
+#            positive integer value (**0** included).
+#
+# fallback   Optional. Should be a string that specifies the fallback value to
+#            return if the measure provided will result invalid.
+#
 #            If not provided, defaults to **invalid**.
 #
 # Return the validated measure or the fallback value.
 proc ::ms::Check_Measure { measure { fallback invalid } } {
-    # Check if the measure is a positive integer.
-    switch -- [string is integer -strict $measure] {
-        0   {
-            set measure [string tolower $measure]
+    # Check if measure is the empty string.
+    set measure [string tolower [string trim $measure]]
+    switch -- $measure {
+        ""      {}
+        default {
+            # Check if the measure is a positive integer.
+            switch -- [string is integer -strict $measure] {
+                0   {
+                    # Check the last digit of the measure provided.
+                    switch -- [string index $measure end] {
+                        c   -
+                        i   -
+                        m   -
+                        p   {
+                            # The measure have a valid unit, separate its value from its unit.
+                            set value [string range $measure 0 end-1]
 
-            # Check the last digit of the measure provided.
-            switch -- [string index $measure end] {
-                c   -
-                i   -
-                m   -
-                p   {
-                    # The measure have a valid unit, separate its value from its unit.
-                    set value [string range $measure 0 end-1]
-
-                    # Check if the value is a positive double.
-                    switch -- [string is double -strict $value] {
-                        1   {
-                            if { $value > 0 } {
-                                return $measure
-                            } elseif { $value == 0 } {
-                                return "0"
+                            # Check if the value is a positive double (**0** included).
+                            switch -- [string is double -strict $value] {
+                                1   {
+                                    if { $value > 0 } {
+                                        return $measure
+                                    } elseif { $value == 0 } {
+                                        return "0"
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
-        1   {
-            if { $measure >= 0 } {
-                return $measure
+                1   {
+                    if { $measure >= 0 } {
+                        return $measure
+                    }
+                }
             }
         }
     }
