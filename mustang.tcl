@@ -5148,6 +5148,12 @@ proc ::ms::Compute_Maximum { digits { sign no } } {
 #
 # Return the converted measure or the fallback value.
 proc ::ms::Convert_Measure { measure { to "" } { fallback invalid } } {
+    # Check if the measure provided is an empty string.
+    set measure [string tolower [string trim $measure]]
+    switch -- $measure {
+        ""  { return $fallback }
+    }
+
     # Check the measure provided and extract its unit.
     set from [string index $measure end]
     switch -- $from {
@@ -5161,7 +5167,7 @@ proc ::ms::Convert_Measure { measure { to "" } { fallback invalid } } {
         7   -
         8   -
         9   {
-            # The measure have no unit, its value is assumed to be in pixels.
+            # The measure have no unit, its value will be assumed to be in pixels.
             set from ""
 
             # Check if the measure is a positive integer.
@@ -5216,49 +5222,49 @@ proc ::ms::Convert_Measure { measure { to "" } { fallback invalid } } {
     switch -- $from {
         ""  {
             switch -- $to {
-                c   { set measure [expr { ($measure/$tkscaling)*0.035277777777777776 }] }
-                i   { set measure [expr { ($measure/$tkscaling)*0.013888888888888888 }] }
-                m   { set measure [expr { ($measure/$tkscaling)*0.352777777777777750 }] }
-                p   { set measure [expr { ($measure/$tkscaling) }] }
+                ""  { return $measure }
+                c   { return [string cat [expr { ($measure/$tkscaling)*0.035277777777777776 }] "c"] }
+                i   { return [string cat [expr { ($measure/$tkscaling)*0.013888888888888888 }] "i"] }
+                m   { return [string cat [expr { ($measure/$tkscaling)*0.352777777777777750 }] "o"] }
+                p   { return [string cat [expr { ($measure/$tkscaling) }] "p"] }
             }
         }
         c   {
             switch -- $to {
-                ""  { set measure [expr { round($measure*$tkscaling*28.346456692913385) }] }
-                i   { set measure [expr { $measure*0.39370078740157477 }] }
-                m   { set measure [expr { $measure*10 }] }
-                p   { set measure [expr { $measure*28.3464566929133850 }] }
+                ""  { return [expr { round($measure*$tkscaling*28.346456692913385) }] }
+                c   { return [string cat $measure "c"] }
+                i   { return [string cat [expr { $measure*0.39370078740157477 }] "i"] }
+                m   { return [string cat [expr { $measure*10 }] "m"] }
+                p   { return [string cat [expr { $measure*28.3464566929133850 }] "p"] }
             }
         }
         i   {
             switch -- $to {
-                ""  { set measure [expr { round($measure*$tkscaling*72.0) }] }
-                c   { set measure [expr { $measure*2.54 }] }
-                m   { set measure [expr { $measure*25.4 }] }
-                p   { set measure [expr { $measure*72.0 }] }
+                ""  { return [expr { round($measure*$tkscaling*72.0) }] }
+                c   { return [string cat [expr { $measure*2.54 }] "c"] }
+                i   { return [string cat $measure "i"] }
+                m   { return [string cat [expr { $measure*25.4 }] "m"] }
+                p   { return [string cat [expr { $measure*72.0 }] "p"] }
             }
         }
         m   {
             switch -- $to {
-                ""  { set measure [expr { round($measure*$tkscaling*2.834645669291339) }] }
-                c   { set measure [expr { $measure*0.1 }] }
-                i   { set measure [expr { $measure*0.03937007874015748 }] }
-                p   { set measure [expr { $measure*2.83464566929133900 }] }
+                ""  { return [expr { round($measure*$tkscaling*2.834645669291339) }] }
+                c   { return [string cat [expr { $measure*0.1 }] "c"] }
+                i   { return [string cat [expr { $measure*0.03937007874015748 }] "i"] }
+                m   { return [string cat $measure "m"] }
+                p   { return [string cat [expr { $measure*2.83464566929133900 }] "p"] }
             }
         }
         p   {
             switch -- $to {
-                ""  { set measure [expr { round($measure*$tkscaling) }] }
-                c   { set measure [expr { $measure*0.035277777777777776 }] }
-                i   { set measure [expr { $measure*0.013888888888888888 }] }
-                m   { set measure [expr { $measure*0.352777777777777750 }] }
+                ""  { return [expr { round($measure*$tkscaling) }] }
+                c   { return [string cat [expr { $measure*0.035277777777777776 }] "c"] }
+                i   { return [string cat [expr { $measure*0.013888888888888888 }] "i"] }
+                m   { return [string cat [expr { $measure*0.352777777777777750 }] "m"] }
+                p   { return [string cat $measure "p"] }
             }
         }
-    }
-
-    switch -- $to {
-        ""      { return $measure }
-        default { return [string cat $measure $to] }
     }
 }
 
