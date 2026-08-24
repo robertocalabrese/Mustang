@@ -931,7 +931,24 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        set {}
+        set {
+            # Synopsis:
+            #
+            # *window* **set** *first* *last*
+            switch -- [llength $args] {
+                2   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "Invalid option, '$args'." $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         scroll {}
         state {}
         style {}
