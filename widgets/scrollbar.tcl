@@ -1480,7 +1480,38 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
 # caller_info   Should be the information on the developer command that generated the call to this procedure.
 #
 # It doesn't return anything.
-proc ::ms::scrollbar::Style_Update { stylename caller_info } {}
+proc ::ms::scrollbar::Style_Update { stylename caller_info } {
+    # Check if exists the horizontal and vertical layout for 'stylename'.
+    foreach orient [list horizontal vertical] {
+        # Check if 'stylename' has style children.
+        set dir   [string totitle $orient]
+        set index [string last "." $stylename]
+        switch -- $index {
+            -1      { set parent_style($orient) [string cat $dir "." $stylename] }
+            default {
+                # Check if the style child positioned at 'end-1' corresponds to the word 'Horizontal' or 'Vertical'.
+                set children [split $stylename "."]
+                if { [lindex $children end-1] eq $dir } {
+                    set parent_style($orient) [string cat $dir "." [lindex $children end]]
+                } else {
+                    set parent_style($orient) $dir
+                    foreach word $children {
+                        switch -nocase -- $word {
+                            Horizontal -
+                            Vertical   { ::ms::Error "Invalid style name, '$stylename'." $caller_info }
+                            default    { set parent_style($orient) [string cat $parent_style($orient) "." $word] }
+                        }
+                    }
+                }
+            }
+        }
+
+        # If the parent style layout is not known by mustang, set it as the current theme layout '$orient.TScrollbar'.
+        if { $parent_style($orient) ni $::ms::layouts($::ms::theme) } {
+            _ttk_style layout $parent_style($orient) [_ttk_style layout [string cat $dir "." TScrollbar]]
+        }
+    }
+}
 
 ######################################
 ##                                  ##
