@@ -251,6 +251,183 @@ proc ::ms::scrollbar::Command { window { args "" } } {
             set ::ms::managed_by($w,lightcolor)  Tk
             set ::ms::managed_by($w,relief)      Tk
             set ::ms::managed_by($w,troughcolor) Tk
+
+            #################################################
+            ##                                             ##
+            ##     CHECK THE WIDGET'S OPTIONS PROVIDED     ##
+            ##                                             ##
+            #################################################
+
+            # Check the remaining options, if any.
+            foreach { option value } $args {
+                switch -nocase -- $option {
+                    -arrowcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,arrowcolor)    $value
+                        set ::ms::managed_by($w,arrowcolor) developer
+                    }
+                    -arrowsize {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,arrowsize)    $value
+                        set ::ms::managed_by($w,arrowsize) developer
+                    }
+                    -background {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,background)    $value
+                        set ::ms::managed_by($w,background) developer
+                    }
+                    -bordercolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,bordercolor)    $value
+                        set ::ms::managed_by($w,bordercolor) developer
+                    }
+                    -borderwidth {
+                        set value [::ms::Check_Measure $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,borderwidth)    $value
+                        set ::ms::managed_by($w,borderwidth) developer
+                    }
+                    -class { set ::ms::current($w,class) $value }
+                    -cmd     -
+                    -command {
+                        # Check if 'value' is the empty string.
+                        switch -- [string trim $value] {
+                            ""      {}
+                            default {
+                                set value [string tolower $value]
+                                switch -- [llength $value] {
+                                    2   {
+                                        # Check the first argument of 'value' (the address of the widget in which the scrollbar will act upon).
+                                        set address [lindex $value 0]
+                                        set result  [::ms::Check_Pathname $address invalid]
+                                        switch -- $result {
+                                            invalid { continue }
+                                        }
+
+                                        # Check the second argument of 'value' (the command, 'xview' or 'yview').
+                                        set cmd [string tolower [lindex $value 1]]
+                                        switch -- $cmd {
+                                            xview   -
+                                            yview   { set ::ms::current($w,command) [list $address $cmd] }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    -cursor {
+                        set value [string tolower $value]
+                        if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
+                            set ::ms::current($w,cursor)    $value
+                            set ::ms::managed_by($w,cursor) developer
+                        }
+                    }
+                    -darkcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,darkcolor)    $value
+                        set ::ms::managed_by($w,darkcolor) developer
+                    }
+                    -foreground {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,foreground)    $value
+                        set ::ms::managed_by($w,foreground) developer
+                    }
+                    -gripcount {
+                        switch -- [string is integer -strict $value] {
+                            1   {
+                                set ::ms::current($w,gripcount)    $value
+                                set ::ms::managed_by($w,gripcount) developer
+                            }
+                        }
+                    }
+                    -lightcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,lightcolor)    $value
+                        set ::ms::managed_by($w,lightcolor) developer
+                    }
+                    -orient {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            horizontal -
+                            vertical   { set ::ms::current($w,orient) $value }
+                        }
+                    }
+                    -relief {
+                        set value [string tolower $value]
+                        switch -- $value {
+                            flat   -
+                            groove -
+                            raised -
+                            ridge  -
+                            solid  -
+                            sunken {
+                                set ::ms::current($w,relief)    $value
+                                set ::ms::managed_by($w,relief) developer
+                            }
+                        }
+                    }
+                    -state {}
+                    -style {
+                        if { $value in $::ms::style($::ms::theme) } {
+                            set ::ms::current($w,style) $value
+                        }
+                    }
+                    -takefocus {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,takefocus) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,takefocus) 1 }
+                        }
+                    }
+                    -troughcolor {
+                        set value [::ms::Check_Color $value invalid]
+                        switch -- $value {
+                            invalid { continue }
+                        }
+
+                        set ::ms::current($w,troughcolor)    $value
+                        set ::ms::managed_by($w,troughcolor) developer
+                    }
+                }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
