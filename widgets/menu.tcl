@@ -637,7 +637,24 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        unpost {}
+        unpost {
+            # Synopsis:
+            #
+            # *window* **unpost**
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    try {
+                        $w unpost
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
     }
 }
