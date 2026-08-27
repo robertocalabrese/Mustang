@@ -523,7 +523,26 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
             }
         }
         clone  -
-        delete {}
+        delete {
+            # Synopsis:
+            #
+            # *window* **clone** *newWindow* ?*cloneType*?
+            # *window* **delete** *index1* ?*index2*?
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    try {
+                        $w $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         configure {}
         entrycget {}
         entryconfigure {}
