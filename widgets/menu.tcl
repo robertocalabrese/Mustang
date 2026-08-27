@@ -468,7 +468,24 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
 
     # Check the command provided.
     switch -nocase -- $cmd {
-        activate {}
+        activate {
+            # Synopsis:
+            #
+            # *window* **activate** *index*
+            switch -- [llength $args] {
+                1   {
+                    # Execute the command.
+                    try {
+                        $w $cmd $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         add {}
         cget {}
         clone  -
