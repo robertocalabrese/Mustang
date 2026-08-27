@@ -590,7 +590,25 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
         type        -
         xposition   -
         yposition   {}
-        insert {}
+        insert {
+            # Synopsis:
+            #
+            # *window* **insert** *index* *type* ?*id*? ?*option* *value* ... *option* *value**?
+            switch -- [llength $args] {
+                0       -
+                1       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    # Execute the command.
+                    try {
+                        $w insert {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { id } {
+                        return $id
+                    }
+                }
+            }
+        }
         post {}
         style {}
         unpost {}
