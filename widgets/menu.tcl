@@ -462,7 +462,34 @@ proc ::ms::menu::Command { window { args "" } } {
 #        The aliased command will provided this data.
 #
 # Returned values depends on the 'cmd' provided.
-proc ::ms::menu::Pathname_Cmd { w cmd args } {}
+proc ::ms::menu::Pathname_Cmd { w cmd args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Check the command provided.
+    switch -nocase -- $cmd {
+        activate {}
+        add {}
+        cget {}
+        clone  -
+        delete {}
+        configure {}
+        entrycget {}
+        entryconfigure {}
+        id          -
+        index       -
+        invoke      -
+        postcascade -
+        type        -
+        xposition   -
+        yposition   {}
+        insert {}
+        post {}
+        style {}
+        unpost {}
+        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+    }
+}
 
 #################################
 ##                             ##
