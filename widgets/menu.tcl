@@ -562,7 +562,27 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        entryconfigure {}
+        entryconfigure {
+            # Synopsis:
+            #
+            # *window* **entryconfigure** *index*
+            # *window* **entryconfigure** *index* *option*
+            # *window* **entryconfigure** *index* *option* *value*
+            # *window* **entryconfigure** *index* *option* *value* ... ?*option* *value*?
+            switch -- [llength $args] {
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                default {
+                    # Execute the command.
+                    try {
+                        $w entryconfigure {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+            }
+        }
         id          -
         index       -
         invoke      -
