@@ -371,6 +371,15 @@ proc ::ms::menu::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            _bindtags $w [list $w $::ms::current($w,class) Menu $::ms::addr($w,toplevel) all]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
