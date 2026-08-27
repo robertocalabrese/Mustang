@@ -65,7 +65,14 @@
 package provide ::ms::menu 0.1
 
 # Create the mustang **menu** package.
-namespace eval ::ms::menu {}
+namespace eval ::ms::menu {
+    # Set the 'non styleable' menu option list.
+    set ::ms::menu(non_styleable,options) [list class \
+                                                postcommand \
+                                                state \
+                                                style \
+                                                takefocus];
+}
 
 # Rename the original Tk **menu** command.
 rename menu _menu
