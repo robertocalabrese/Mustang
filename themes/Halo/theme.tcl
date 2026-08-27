@@ -752,6 +752,34 @@ namespace eval ttk::theme::Halo {
                                                disabled BordercolorDisabled \
                                                   hover Accent];
 
+        ##################
+        ##              ##
+        ##     MENU     ##
+        ##              ##
+        ##################
+
+        # Note: The layout is useless because the menu widget doesn't understand styles, at least not natively.
+
+        # Note: 'activebackground', 'activeborderwidth', 'activeforeground', 'activerelief', 'activerelief', 'background', 'borderwidth',
+        #       'cursor', 'disabledbackground', 'font', 'foreground', 'relief' and 'selectcolor' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # No layout
+
+        # Normal state
+        style configure Menu   -activebackground Background2 \
+                              -activeborderwidth 0 \
+                               -activeforeground Text \
+                                   -activerelief flat \
+                                     -background Background \
+                                    -borderwidth 0 \
+                                         -cursor arrow \
+                             -disabledforeground TextDisabled \
+                                           -font BiggerFont \
+                                     -foreground Text \
+                                         -relief flat \
+                                    -selectcolor Accent;
+
         ######################
         ##                  ##
         ##     NOTEBOOK     ##
