@@ -752,6 +752,33 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                             }
+
+                            ##################################
+                            ##                              ##
+                            ##     CONFIGURE THE WIDGET     ##
+                            ##                              ##
+                            ##################################
+
+                            # Note: 'activebackground', 'activeborderwidth', 'activeforeground', 'activerelief', 'activerelief', 'background', 'borderwidth', 'cursor',
+                            #       'disabledbackground', 'font', 'foreground', 'relief' and 'selectcolor' are not allowed to change if the statespec changes.
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure -activebackground $::ms::current($w,activebackground) \
+                                                               -activeborderwidth $::ms::current($w,activeborderwidth) \
+                                                                -activeforeground $::ms::current($w,activeforeground) \
+                                                                    -activerelief $::ms::current($w,activerelief) \
+                                                                      -background $::ms::current($w,background) \
+                                                                     -borderwidth $::ms::current($w,borderwidth) \
+                                                                          -cursor $::ms::current($w,cursor) \
+                                                              -disabledforeground $::ms::current($w,disabledforeground) \
+                                                                            -font $::ms::current($w,font) \
+                                                                      -foreground $::ms::current($w,foreground) \
+                                                                     -postcommand $::ms::current($w,postcommand) \
+                                                                          -relief $::ms::current($w,relief) \
+                                                                     -selectcolor $::ms::current($w,selectcolor) \
+                                                                       -takefocus $::ms::current($w,takefocus);
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
