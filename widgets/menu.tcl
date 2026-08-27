@@ -967,4 +967,132 @@ proc ::ms::menu::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menu::Destroy { w } {
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the menu widgets real address list.
+    set index [lsearch -exact $::ms::addr(menu) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(menu) [lremove $::ms::addr(menu) $index] }
+    }
+
+    # Remove the widget address from the menu real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),menu,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),menu,addrs) [lremove $::ms::class($::ms::current($w,class),menu,addrs) $index] }
+    }
+
+    # Remove the widget address from the menu real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),menu,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),menu,addrs) [lremove $::ms::style($::ms::current($w,style),menu,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the menu classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),menu,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(menu,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(menu,classtype) [lremove $::ms::style(menu,classtype) $index] }
+            }
+        }
+    }
+
+    # Remove the widget real address from the list of all available real addresses.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,activebackground) \
+                         ::ms::current($w,activeborderwidth) \
+                         ::ms::current($w,activeforeground) \
+                         ::ms::current($w,activerelief) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,borderwidth) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,disabledforeground) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,postcommand) \
+                         ::ms::current($w,selectcolor) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,activebackground) \
+                         ::ms::default($w,activeborderwidth) \
+                         ::ms::default($w,activeforeground) \
+                         ::ms::default($w,activerelief) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,borderwidth) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,disabledforeground) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,postcommand) \
+                         ::ms::default($w,selectcolor) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus);
+
+    unset -nocomplain -- ::ms::managed_by($w,activebackground) \
+                         ::ms::managed_by($w,activeborderwidth) \
+                         ::ms::managed_by($w,activeforeground) \
+                         ::ms::managed_by($w,activerelief) \
+                         ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,borderwidth) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,disabledforeground) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,selectcolor);
+
+    return ""
+}
+
 #*EOF*
