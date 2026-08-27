@@ -86,6 +86,15 @@ namespace eval ::ms::menu {
                                             foreground \
                                             relief \
                                             selectcolor];
+
+    # Set the default 'non-styleable' menu options values.
+    set ::ms::default(menu,class)       Menu
+    set ::ms::default(menu,postcommand) {}
+    set ::ms::default(menu,state)       normal
+    set ::ms::default(menu,style)       Menu
+    set ::ms::default(menu,takefocus)   0
+
+    # Note: The default 'styleable' menu options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **menu** command.
