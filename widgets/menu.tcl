@@ -544,7 +544,24 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
             }
         }
         configure {}
-        entrycget {}
+        entrycget {
+            # Synopsis:
+            #
+            # *window* **entrycget** *index* *option*
+            switch -- [llength $args] {
+                2   {
+                    # Execute the command.
+                    try {
+                        $w entrycget {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         entryconfigure {}
         id          -
         index       -
