@@ -72,6 +72,20 @@ namespace eval ::ms::menu {
                                                 state \
                                                 style \
                                                 takefocus];
+
+    # Set the 'styleable' menu option list.
+    set ::ms::menu(styleable,options) [list activebackground \
+                                            activeborderwidth \
+                                            activeforeground \
+                                            activerelief \
+                                            background \
+                                            borderwidth \
+                                            cursor \
+                                            disabledforeground \
+                                            font \
+                                            foreground \
+                                            relief \
+                                            selectcolor];
 }
 
 # Rename the original Tk **menu** command.
