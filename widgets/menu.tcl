@@ -729,6 +729,8 @@
 #   **-label** *value*
 #       Specifies a string to display as an identifying label in the menu entry.
 #
+#       Note: Differently than the other widgets, the menu doesn't do autotranslations.
+#
 #       This option is not available for separator entries.
 #
 #   **-menu** *value*
