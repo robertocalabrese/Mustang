@@ -2587,4 +2587,53 @@ proc ::ms::menubutton::Post_Position { w } {
     return [list $x $y $entry]
 }
 
+# Pulldown
+#
+# This procedure is called when **ButtonPress1** is pressed on a menubutton.
+# It posts the menu; a subsequent **ButtonRelease** or **Leave** event will set a grab on the menu.
+#
+# Note: Only used under X11.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::Pulldown { w } {
+    # Check if the popdown should not be displayed.
+    if { $::ms::current($w,state) eq "disabled" } {
+        return ""
+    }
+
+    # Check if there is a menu associated with the widget.
+    switch -- $::ms::current($w,menu) {
+        ""  { return "" }
+    }
+
+    # Set some temporary variables.
+    set ::ms::temp(pulldown) 1
+
+    # Change the widget dynamic state to 'pressed'.
+    interp invokehidden {} $w state [list pressed]
+
+    # Change the cursor of 'w' with the 'menu' one.
+    set menu_cursor [interp invokehidden {} $::ms::current($w,menu) cget -cursor]
+    interp invokehidden {} $w configure -cursor $menu_cursor
+
+    # Compute the position where to post the menu.
+    set values [::ms::menubutton::Post_Position $w]
+    set x      [lindex $values 0]
+    set y      [lindex $values 1]
+    set entry  [lindex $values 2]
+
+    # Check the entry retrieved and post the menu.
+    switch -- $entry {
+        ""      { interp invokehidden {} $::ms::current($w,menu) post $x $y }
+        default { interp invokehidden {} $::ms::current($w,menu) post $x $y $entry }
+    }
+
+    # Focus the menu.
+    ::tk_menuSetFocus $::ms::current($w,menu)
+}
+
 #*EOF*
