@@ -2375,4 +2375,31 @@ proc ::ms::menubutton::ButtonPress { w } {
     return ""
 }
 
+# Find_Menu_Index
+#
+# Hack to support **tk_optionMenus**.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# Returns the index of the menu entry with a matching '-label', or an empty string if not found.
+proc ::ms::menubutton::Find_Menu_Index { w } {
+    set last_available_index [interp invokehidden {} $::ms::current($w,menu) index last]
+    if { $last_available_index < 0 } {
+        return ""
+    }
+
+    set index 0
+    while { $index <= $last_available_index } {
+        if { ![catch { interp invokehidden {} $::ms::current($w,menu) entrycget $index -label } label] && ($label eq $::ms::current($w,text)) } {
+            return $index
+        }
+
+        incr index
+    }
+
+    return ""
+}
+
 #*EOF*
