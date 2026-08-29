@@ -1985,4 +1985,35 @@ proc ::ms::menubutton::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## ButtonRelease
+#
+# Manage the **ButtonRelease-1** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::ButtonRelease { w } {
+    # Run the posthook callback, if any.
+    switch -- $::ms::current($w,posthook) {
+        ""      {}
+        default {
+            try {
+                uplevel #0 [list $::ms::current($w,posthook) $w]
+            } on error { errortext errorcode } {
+                ::ms::Error "Invalid posthook command for '$w'." ""
+            }
+        }
+    }
+
+    # Change the widget dynamic state to '!pressed'.
+    interp invokehidden {} $w state [list !pressed]
+
+    # Focus on the menubutton.
+    _focus -force $w
+
+    return ""
+}
+
 #*EOF*
