@@ -202,6 +202,21 @@ namespace eval ::ms::menubutton {
                                                   lightcolor \
                                                   padding \
                                                   relief];
+
+    # Set the default 'non-styleable' menubutton options values.
+    set ::ms::default(menubutton,class)        TMenubutton
+    set ::ms::default(menubutton,direction)    below
+    set ::ms::default(menubutton,menu)         {}
+    set ::ms::default(menubutton,posthook)     {}
+    set ::ms::default(menubutton,prehook)      {}
+    set ::ms::default(menubutton,state)        normal
+    set ::ms::default(menubutton,style)        TMenubutton
+    set ::ms::default(menubutton,takefocus)    1
+    set ::ms::default(menubutton,text)         {}
+    set ::ms::default(menubutton,textvariable) {}
+    set ::ms::default(menubutton,underline)    -1
+
+    # Note: The default 'styleable' menubutton options values are always defined inside the current theme.
 }
 
 # Rename the original Tk **menubutton** and **ttk::menubutton** commands.
