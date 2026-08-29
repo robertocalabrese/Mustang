@@ -1784,7 +1784,21 @@ proc ::ms::menubutton::Style_Update { stylename caller_info } {
     }
 
     # Update all the menubutton widgets addresses that have stylename as a style.
-    foreach w $::ms::style($stylename,menubutton,addrs) {}
+    foreach w $::ms::style($stylename,menubutton,addrs) {
+        # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+        foreach option $::ms::menubutton(styleable,options) {
+            set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,TMenubutton,$option)
+
+            switch -- $::ms::managed_by($w,$option) {
+                Tk  {
+                    switch -- [info exists ::ms::styleopt($::ms::theme,$stylename,$option)] {
+                        0   { set ::ms::current($w,$option) $::ms::default($w,$option) }
+                        1   { set ::ms::current($w,$option) $::ms::styleopt($::ms::theme,$stylename,$option) }
+                    }
+                }
+            }
+        }
+    }
 
     return ""
 }
