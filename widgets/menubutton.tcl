@@ -2202,4 +2202,25 @@ proc ::ms::menubutton::FocusIn { w } {
     return ""
 }
 
+## FocusOut
+#
+# Manage the **FocusOut** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::FocusOut { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!focus'.
+    interp invokehidden {} $w state [list !focus]
+
+    return ""
+}
+
 #*EOF*
