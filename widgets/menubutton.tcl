@@ -169,7 +169,20 @@ _bind _Menubutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break
 _bind _Menubutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 # Create the mustang **menubutton** package.
-namespace eval ::ms::menubutton {}
+namespace eval ::ms::menubutton {
+    # Set the 'non styleable' menubutton option list.
+    set ::ms::menubutton(non_styleable,options) [list class \
+                                                      direction \
+                                                      menu \
+                                                      posthook \
+                                                      prehook \
+                                                      state \
+                                                      style \
+                                                      takefocus \
+                                                      text \
+                                                      textvariable \
+                                                      underline];
+}
 
 # Rename the original Tk **menubutton** and **ttk::menubutton** commands.
 rename menubutton      _menubutton
