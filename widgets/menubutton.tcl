@@ -2016,4 +2016,169 @@ proc ::ms::menubutton::ButtonRelease { w } {
     return ""
 }
 
+## Destroy
+#
+# Manage the **Destroy** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::Destroy { w } {
+    # If the menubutton popdown is currently displayed, release the grab.
+    switch -- [winfo exists $w.popdown] {
+        1   { set ::wait_for_user_response "Unpost" }
+    }
+
+    # Get the short address related to the widget real address.
+    set short_addr $::ms::addr($w,short)
+
+    # Destroy the aliased widget pathcommands.
+    foreach token $::ms::data($w,token) {
+        interp alias {} $token {}
+    }
+
+    # Remove the widget real address from the widgets real address list.
+    set index [lsearch -exact $::ms::addr(reals) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+    }
+
+    # Remove the widget short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+    }
+
+    # Remove the widget address from the menubutton widgets real address list.
+    set index [lsearch -exact $::ms::addr(menubutton) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(menubutton) [lremove $::ms::addr(menubutton) $index] }
+    }
+
+    # Remove the widget address from the menubutton classtype real address list with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),menubutton,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),menubutton,addrs) [lremove $::ms::class($::ms::current($w,class),menubutton,addrs) $index] }
+    }
+
+    # Remove the widget address from the menubutton classtype real address list with style '::ms::current($w,style)'.
+    set index [lsearch -exact $::ms::style($::ms::current($w,style),menubutton,addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::style($::ms::current($w,style),menubutton,addrs) [lremove $::ms::style($::ms::current($w,style),menubutton,addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the menubutton classtype.
+    switch -- [llength $::ms::style($::ms::current($w,style),menubutton,addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::style(menubutton,classtype) $::ms::current($w,style)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::style(menubutton,classtype) [lremove $::ms::style(menubutton,classtype) $index] }
+            }
+        }
+    }
+
+    # Destroy every widget's variables previously created.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w,short);
+
+    unset -nocomplain -- ::ms::addr($w,border) \
+                         ::ms::addr($w,structure) \
+                         ::ms::addr($w,toplevel) \
+                         ::ms::addr($w,widget);
+
+    unset -nocomplain -- ::ms::current($w,arrowcolor) \
+                         ::ms::current($w,arrowsize) \
+                         ::ms::current($w,background) \
+                         ::ms::current($w,bordercolor) \
+                         ::ms::current($w,charwidth) \
+                         ::ms::current($w,compound) \
+                         ::ms::current($w,class) \
+                         ::ms::current($w,cursor) \
+                         ::ms::current($w,darkcolor) \
+                         ::ms::current($w,direction) \
+                         ::ms::current($w,fieldbackground) \
+                         ::ms::current($w,focuscolor) \
+                         ::ms::current($w,focuswidth) \
+                         ::ms::current($w,font) \
+                         ::ms::current($w,foreground) \
+                         ::ms::current($w,image) \
+                         ::ms::current($w,justify) \
+                         ::ms::current($w,lightcolor) \
+                         ::ms::current($w,menu) \
+                         ::ms::current($w,padding) \
+                         ::ms::current($w,posthook) \
+                         ::ms::current($w,prehook) \
+                         ::ms::current($w,relief) \
+                         ::ms::current($w,state) \
+                         ::ms::current($w,style) \
+                         ::ms::current($w,takefocus) \
+                         ::ms::current($w,text) \
+                         ::ms::current($w,textvariable) \
+                         ::ms::current($w,underline);
+
+    unset -nocomplain -- ::ms::data($w,classtype) \
+                         ::ms::data($w,token);
+
+    unset -nocomplain -- ::ms::default($w,arrowcolor) \
+                         ::ms::default($w,arrowsize) \
+                         ::ms::default($w,background) \
+                         ::ms::default($w,bordercolor) \
+                         ::ms::default($w,charwidth) \
+                         ::ms::default($w,compound) \
+                         ::ms::default($w,class) \
+                         ::ms::default($w,cursor) \
+                         ::ms::default($w,darkcolor) \
+                         ::ms::default($w,direction) \
+                         ::ms::default($w,fieldbackground) \
+                         ::ms::default($w,focuscolor) \
+                         ::ms::default($w,focuswidth) \
+                         ::ms::default($w,font) \
+                         ::ms::default($w,foreground) \
+                         ::ms::default($w,image) \
+                         ::ms::default($w,justify) \
+                         ::ms::default($w,lightcolor) \
+                         ::ms::default($w,menu) \
+                         ::ms::default($w,padding) \
+                         ::ms::default($w,posthook) \
+                         ::ms::default($w,prehook) \
+                         ::ms::default($w,relief) \
+                         ::ms::default($w,state) \
+                         ::ms::default($w,style) \
+                         ::ms::default($w,takefocus) \
+                         ::ms::default($w,text) \
+                         ::ms::default($w,textvariable) \
+                         ::ms::default($w,underline);
+
+    unset -nocomplain -- ::ms::managed_by($w,arrowcolor) \
+                         ::ms::managed_by($w,arrowsize) \
+                         ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,bordercolor) \
+                         ::ms::managed_by($w,charwidth) \
+                         ::ms::managed_by($w,compound) \
+                         ::ms::managed_by($w,cursor) \
+                         ::ms::managed_by($w,darkcolor) \
+                         ::ms::managed_by($w,fieldbackground) \
+                         ::ms::managed_by($w,focuscolor) \
+                         ::ms::managed_by($w,focuswidth) \
+                         ::ms::managed_by($w,font) \
+                         ::ms::managed_by($w,foreground) \
+                         ::ms::managed_by($w,image) \
+                         ::ms::managed_by($w,justify) \
+                         ::ms::managed_by($w,lightcolor) \
+                         ::ms::managed_by($w,padding) \
+                         ::ms::managed_by($w,relief);
+
+    unset -nocomplain -- ::ms::style($w,widget)
+
+    return ""
+}
+
 #*EOF*
