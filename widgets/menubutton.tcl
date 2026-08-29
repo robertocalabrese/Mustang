@@ -871,6 +871,18 @@ proc ::ms::menubutton::Command { window { args "" } } {
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+            ######################
+            ##                  ##
+            ##     BINDINGS     ##
+            ##                  ##
+            ######################
+
+            # Set the new bindtags for the widget.
+            switch -- $::ms::current($w,class) {
+                TMenubutton { _bindtags $w [list $w _Menubutton TMenubutton $::ms::addr($w,toplevel) all] }
+                default     { _bindtags $w [list $w $::ms::current($w,class) _Menubutton TMenubutton $::ms::addr($w,toplevel) all] }
+            }
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
