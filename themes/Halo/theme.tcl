@@ -780,6 +780,109 @@ namespace eval ttk::theme::Halo {
                                          -relief flat \
                                     -selectcolor Accent;
 
+        ########################
+        ##                    ##
+        ##     MENUBUTTON     ##
+        ##                    ##
+        ########################
+
+        # Note: 'charwidth', 'cursor', 'focuswidth', 'font', 'insertwidth', 'justify', 'padding', 'rows'
+        #       and 'selectborderwidth' will not follow any mapping rules.
+        #       They are not supposed to change when the widget state changes.
+
+        # Note: 'focuscolor' and 'focuswidth' will not be used by the 'clam' engine.
+        #       Instead the 'clam' engine will use a combination between 'bordercolor' and 'lightcolor'.
+        #       In the other engines 'focuscolor' and 'focuswidth' will be used instead of 'bordercolor' and 'lightcolor'.
+
+        # Layout
+        style layout TMenubutton {
+            Entry.field -sticky nswe -children {
+                Menubutton.padding -sticky nswe -children {
+                    Menubutton.downarrow -side right -sticky ns
+                    Menubutton.line -side right -sticky ns
+                    Menubutton.label -sticky {}
+                }
+            }
+        }
+
+        # Elements
+        style element create Menubutton.line    image [list          spacer \
+                                                            disabled spacer_disabled \
+                                                             invalid spacer_invalid] \
+                                              -border [list 0] \
+                                             -padding [list 8 0] \
+                                              -sticky ns;
+
+        style element create Menubutton.downarrow    image [list          arrow_down \
+                                                                 disabled arrow_down_disabled \
+                                                                  invalid arrow_down_invalid \
+                                                                  pressed arrow_down_pressed] \
+                                                   -border [list 0] \
+                                                   -sticky {};
+
+        # Normal state
+        style configure TMenubutton            -arrowcolor Arrow \
+                                                -arrowsize $::ms::size(Halo,arrow_down) \
+                                               -background Background \
+                                              -borderwidth 1 \
+                                              -bordercolor Bordercolor \
+                                                -charwidth 8 \
+                                                   -cursor arrow \
+                                                -darkcolor Background \
+                                          -fieldbackground Fieldbackground \
+                                               -focuscolor LightcolorAlternate \
+                                                -focusfill FieldbackgroundFocus \
+                                               -focuswidth 2 \
+                                                     -font NormalFont \
+                                               -foreground TextAlternate \
+                                              -insertcolor TextAlternate \
+                                              -insertwidth 2 \
+                                                  -justify left \
+                                               -lightcolor LightcolorAlternate \
+                                                  -padding [list 4p 5p 4p 5p] \
+                                    -placeholderforeground PlaceholderText \
+                                               -postoffset [list 1 0 0 0] \
+                                                     -rows 6 \
+                                         -selectbackground White \
+                                        -selectborderwidth 0 \
+                                         -selectforeground TextAlternate;
+
+        # Mapping
+        style map TMenubutton       -arrowcolor [list   disabled ArrowDisabled \
+                                                         pressed ArrowPressed \
+                                                         invalid Text \
+                                                           hover Accent] \
+                                    -background [list   disabled Background \
+                                                        readonly Background \
+                                                         invalid White \
+                                                           focus Background \
+                                                           hover Background] \
+                                   -bordercolor [list background BordercolorBackground \
+                                                        disabled Bordercolor \
+                                                         invalid Text \
+                                                           focus Accent \
+                                                           hover Accent \
+                                                         pressed HighlightAlternate \
+                                                        readonly Bordercolor] \
+                               -fieldbackground [list   disabled ArrowDisabled \
+                                                        readonly ArrowDisabled \
+                                                           focus FieldbackgroundFocus] \
+                                    -focuscolor [list   disabled Background \
+                                                         invalid Text \
+                                                           focus Accent \
+                                                           hover Accent \
+                                                        readonly Background] \
+                                    -foreground [list   disabled TextAlternate \
+                                                        readonly TextAlternate \
+                                                         invalid White \
+                                                           focus TextAlternate] \
+                                    -lightcolor [list   disabled ArrowDisabled \
+                                                         invalid Text \
+                                                           focus Accent \
+                                                           hover Accent \
+                                                         pressed HighlightAlternate \
+                                                        readonly ArrowDisabled];
+
         ######################
         ##                  ##
         ##     NOTEBOOK     ##
