@@ -2636,4 +2636,35 @@ proc ::ms::menubutton::Pulldown { w } {
     ::tk_menuSetFocus $::ms::current($w,menu)
 }
 
+# Transfer_Grab
+#
+# Switch from pulldown mode (menubutton has an implicit grab) to popdown mode (menu has an explicit grab).
+#
+# Note: Only used under X11.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::Transfer_Grab { w } {
+    switch -- [info exists ::ms::temp(pulldown)] {
+        1   {
+            # Re-establish the original cursor for 'w'.
+            interp invokehidden {} $w configure -cursor $::ms::current($w,cursor)
+
+            # Change the widget dynamic state to '!pressed !active'.
+            interp invokehidden {} $w state [list !pressed !active]
+
+            # Post the menu.
+            ::tk_popup $::ms::current($w,menu) [_winfo rootx $::ms::current($w,menu)] [_winfo rooty $::ms::current($w,menu)]
+
+            # Remove the temporary variables that were created by the 'Pulldown' procedure.
+            unset -nocomplain -- ::ms::temp(pulldown)
+        }
+    }
+
+    return ""
+}
+
 #*EOF*
