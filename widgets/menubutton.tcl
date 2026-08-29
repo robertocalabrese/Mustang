@@ -2443,4 +2443,148 @@ proc ::ms::menubutton::Return { w } {
     return ""
 }
 
+# Post_Position
+#
+# Computes the (x,y) coordinates of the menu that needs to be posted.
+#
+# If the index computed is not an empty string the menu should be posted so that the
+# upper left corner of the indexed menu item is located at the point (x,y).
+# Otherwise the top left corner of the menu itself should be located at that point.
+#
+# TODO: Adjust menu width to be at least as wide as the button for -direction above, below.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# Returns a list formed by three elements (in order):
+#   - the 'x' root coordinate of the menu that needs to be posted.
+#   - the 'y' root coordinate of the menu that needs to be posted.
+#   - An item index of the menu that needs to be posted (or an empty string if there is no such thing).
+proc ::ms::menubutton::Post_Position { w } {
+    # Check the windowing system.
+    switch -- [_tk windowingsystem] {
+        aqua {
+            # MacOS
+            set menuPad   5
+            set buttonPad 1
+            set flushPad  4
+
+            set menubutton_reqheight [_winfo reqheight $::ms::current($w,menu)]
+            set menubutton_reqwidth  [_winfo reqwidth  $::ms::current($w,menu)]
+
+            set menu_width  [_winfo width $w]
+            set menu_height [expr { [_winfo height $w]+$buttonPad }]
+
+            # Get the entry index, if any.
+            set entry [::ms::menubutton::Find_Menu_Index $w]
+            switch -- $entry {
+                ""  { set entry 0 }
+            }
+
+            # Get the (x,y) root coordinates of the widget.
+            set x [_winfo rootx $w]
+            set y [_winfo rooty $w]
+
+            # Check the direction provided for the widget menu.
+            switch -- $::ms::current($w,direction) {
+                above {
+                    set menuPad [expr { 2*$menuPad }]
+                    incr y [expr { -menubutton_reqheight+$menuPad }]
+
+                    set entry ""
+                }
+                below {
+                    incr y $menu_height
+
+                    set entry ""
+                }
+                left {
+                    incr y  $menuPad
+                    incr x -$menubutton_reqwidth
+                }
+                right {
+                    incr y $menuPad
+                    incr x $menu_width
+                }
+                default {
+                    # Flush
+
+                    incr y  $flushPad
+                    incr x -$flushPad
+                }
+            }
+        }
+        default {
+            set menu_reqheight [expr { [_winfo reqheight $::ms::current($w,menu)] }]
+            set menu_reqwidth  [expr { [_winfo reqwidth  $::ms::current($w,menu)] }]
+
+            set menubutton_height [expr { [_winfo height $w] }]
+            set menubutton_width  [expr { [_winfo width  $w] }]
+
+            # Check if the windowing system is Windows.
+            switch -- [_tk windowingsystem] {
+                win32 {
+                    incr menubutton_height 6
+                    incr menubutton_width  16
+                }
+            }
+
+            # Get the entry index, if any.
+            set entry [::ms::menubutton::Find_Menu_Index $w]
+            switch -- $entry {
+                ""  { set entry 0 }
+            }
+
+            # Get the (x,y) root coordinates of the widget.
+            set x [_winfo rootx $w]
+            set y [_winfo rooty $w]
+
+            # Check the direction provided for the widget menu.
+            switch -- $::ms::current($w,direction) {
+                above {
+                    incr y -$menubutton_height
+
+                    set reqheight [_winfo reqheight $w]
+                    set rooty     [_winfo rooty     $w]
+                    set vrooty    [_winfo vrooty    $w]
+
+                    # If we go offscreen to the top, show as 'below'.
+                    if { $y < $vrooty } {
+                        set y [expr { $vrooty+$rooty+$reqheight }]
+                    }
+
+                    set entry ""
+                }
+                below {
+                    incr y $menu_reqheight
+
+                    set rooty       [_winfo rooty       $w]
+                    set vrooty      [_winfo vrooty      $w]
+                    set vrootheight [_winfo vrootheight $w]
+
+                    # If we go offscreen to the bottom, show as 'above'.
+                    if { ($y+$menubutton_height) > ($rooty+$vrootheight) } {
+                        set y [expr { $vrooty+$rooty-$menubutton_height }]
+                    }
+
+                    set entry ""
+                }
+                left  { incr x -$menubutton_width }
+                right { incr x  $menu_reqwidth }
+                default {
+                    # Flush
+
+                    set width    [_winfo width    $w]
+                    set reqwidth [_winfo reqwidth $::ms::current($w,menu)]
+
+                    incr x [expr { ($width-$reqwidth)/2 }]
+                }
+            }
+        }
+    }
+
+    return [list $x $y $entry]
+}
+
 #*EOF*
