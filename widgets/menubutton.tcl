@@ -2402,4 +2402,45 @@ proc ::ms::menubutton::Find_Menu_Index { w } {
     return ""
 }
 
+## Return
+#
+# Post the popdown window when the **Arrow Down**, **Return**, **KP_Return** or **space** key is pressed.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::Return { w } {
+    # Check if the popdown should not be displayed.
+    if { $::ms::current($w,state) eq "disabled" } {
+        return ""
+    }
+
+    # Check if there is a menu associated with the widget.
+    switch -- $::ms::current($w,menu) {
+        ""  { return "" }
+    }
+
+    # Run the prehook callback, if any.
+    switch -- $::ms::current($w,prehook) {
+        ""      {}
+        default {
+            try {
+                uplevel #0 [list $::ms::current($w,prehook) $w]
+            } on error { errortext errorcode } {
+                ::ms::Error "Invalid prehook command for '$w'." ""
+            }
+        }
+    }
+
+    # Change the widget dynamic state to 'pressed'.
+    interp invokehidden {} $w state [list pressed]
+
+    # Post the menu.
+    ::tk_popup $menu {*}[::ms::menubutton::Post_Position $w]
+
+    return ""
+}
+
 #*EOF*
