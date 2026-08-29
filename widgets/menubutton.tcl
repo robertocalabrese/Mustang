@@ -2244,4 +2244,25 @@ proc ::ms::menubutton::FocusOut { w } {
     return ""
 }
 
+# Leave
+#
+# Manages the **Leave** event on a menubutton.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::Leave { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!active'.
+    interp invokehidden {} $w state [list !active]
+
+    return ""
+}
+
 #*EOF*
