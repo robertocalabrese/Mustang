@@ -182,6 +182,26 @@ namespace eval ::ms::menubutton {
                                                       text \
                                                       textvariable \
                                                       underline];
+
+    # Set the 'styleable' menubutton option list.
+    set ::ms::menubutton(styleable,options) [list arrowcolor \
+                                                  arrowsize \
+                                                  background \
+                                                  bordercolor \
+                                                  charwidth \
+                                                  compound \
+                                                  cursor \
+                                                  darkcolor \
+                                                  fieldbackground \
+                                                  focuscolor \
+                                                  focuswidth \
+                                                  font \
+                                                  foreground \
+                                                  image \
+                                                  justify \
+                                                  lightcolor \
+                                                  padding \
+                                                  relief];
 }
 
 # Rename the original Tk **menubutton** and **ttk::menubutton** commands.
