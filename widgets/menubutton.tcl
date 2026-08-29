@@ -1782,6 +1782,11 @@ proc ::ms::menubutton::Style_Update { stylename caller_info } {
             }
         }
     }
+
+    # Update all the menubutton widgets addresses that have stylename as a style.
+    foreach w $::ms::style($stylename,menubutton,addrs) {}
+
+    return ""
 }
 
 ######################################
