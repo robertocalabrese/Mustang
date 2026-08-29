@@ -64,6 +64,110 @@
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::menubutton 0.1
 
+##################################
+##                              ##
+##     _MENUBUTTON BINDINGS     ##
+##                              ##
+##################################
+
+# Activate/Deactivate
+_bind _Menubutton <Activate>   { interp invokehidden {} %W state !background; break }
+_bind _Menubutton <Deactivate> { interp invokehidden {} %W state  background; break }
+
+# Buttonpress
+switch -- [_tk windowingsystem] {
+    "x11" {
+        _bind _Menubutton <ButtonPress-1>   { ::ms::menubutton::Pulldown      %W; break }
+        _bind _Menubutton <ButtonRelease-1> { ::ms::menubutton::Transfer_Grab %W; break }
+        _bind _Menubutton <B1-Leave>        { ::ms::menubutton::Transfer_Grab %W; break }
+    }
+    default {
+        _bind _Menubutton <ButtonPress-1>   { ::ms::menubutton::ButtonPress   %W; break }
+        _bind _Menubutton <ButtonRelease-1> { ::ms::menubutton::ButtonRelease %W; break }
+    }
+}
+
+# Destroy
+_bind _Menubutton <Destroy> { ::ms::menubutton::Destroy %W; break }
+
+# Enter/Leave
+_bind _Menubutton <Enter> { ::ms::menubutton::Enter %W; break }
+_bind _Menubutton <Leave> { ::ms::menubutton::Leave %W; break }
+
+# FocusIn/FocusOut
+_bind _Menubutton <FocusIn>  { ::ms::menubutton::FocusIn  %W; break }
+_bind _Menubutton <FocusOut> { ::ms::menubutton::FocusOut %W; break }
+
+# Insert cursor movements.
+_bind _Menubutton <<NextLine>> { ::ms::menubutton::Return %W; break }
+
+# Return/KP_Enter/space
+_bind _Menubutton <KeyPress-Return>   { ::ms::menubutton::Return %W; break }
+_bind _Menubutton <KeyPress-KP_Enter> { ::ms::menubutton::Return %W; break }
+_bind _Menubutton <KeyPress-space>    { ::ms::menubutton::Return %W; break }
+
+# Tab/Shift-Tab keys
+_bind _Menubutton <KeyPress-Tab> { # Enable binding }
+switch -- [_tk windowingsystem] {
+    x11 {
+        _bind _Menubutton <KeyPress-ISO_Left_Tab> { # Enable binding }
+
+        # This seems to be correct on *some* HP systems.
+        catch { _bind _Menubutton <KeyPress-hpBackTab> { # Enable binding } }
+    }
+    aqua  { _bind _Menubutton <KeyPress-ISO_Left_Tab> { # Enable binding } }
+    win32 { _bind _Menubutton <Shift-KeyPress-Tab>    { # Enable binding } }
+}
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Menubutton <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (again, depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Menubutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Menubutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Menubutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Menubutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Menubutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 # Create the mustang **menubutton** package.
 namespace eval ::ms::menubutton {}
 
