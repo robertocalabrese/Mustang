@@ -694,6 +694,183 @@ proc ::ms::menubutton::Command { window { args "" } } {
                     set text_variable $::ms::current($w,textvariable)
                 }
             }
+
+            ###############################
+            ##                           ##
+            ##     CREATE THE WIDGET     ##
+            ##                           ##
+            ###############################
+
+            # Note: 'arrowsize', 'charwidth', 'compound', 'cursor', 'focuswidth', 'font', 'justify', 'padding'
+            #        and 'relief' are not allowed to change if the statespec changes.
+
+            ########################
+            ##                    ##
+            ##     MENUBUTTON     ##
+            ##                    ##
+            ########################
+
+            # Agglomerate the padding values.
+            set padding ""
+            foreach pad $::ms::current($w,padding) {
+                append padding "$pad" "-"
+            }
+            set padding [string trimright $padding "-"]
+
+            # Set the widget style name.
+            set ::ms::style($w,widget) [string cat "_ac=" $::ms::current($w,arrowcolor) \
+                                                   "_as=" $::ms::current($w,arrowsize) \
+                                                   "_bg=" $::ms::current($w,background) \
+                                                   "_bc=" $::ms::current($w,bordercolor) \
+                                                   "_dc=" $::ms::current($w,darkcolor) \
+                                                   "_fb=" $::ms::current($w,fieldbackground) \
+                                                   "_fc=" $::ms::current($w,focuscolor) \
+                                                   "_fg=" $::ms::current($w,foreground) \
+                                                   "_fn=" $::ms::current($w,font) \
+                                                   "_fw=" $::ms::current($w,focuswidth) \
+                                                   "_lc=" $::ms::current($w,lightcolor) \
+                                                   "_pd=" $padding \
+                                                   "_rl=" $::ms::current($w,relief) \
+                                                   "." $::ms::current($w,style)];
+
+            # If needed, create the widget style name.
+            if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                _ttk_style configure $::ms::style($w,widget)      -arrowcolor $::ms::current($w,arrowcolor) \
+                                                                   -arrowsize $::ms::current($w,arrowsize) \
+                                                                  -background $::ms::current($w,background) \
+                                                                 -bordercolor $::ms::current($w,bordercolor) \
+                                                                   -darkcolor $::ms::current($w,darkcolor) \
+                                                             -fieldbackground $::ms::current($w,fieldbackground) \
+                                                                  -focuscolor $::ms::current($w,focuscolor) \
+                                                                  -focuswidth $::ms::current($w,focuswidth) \
+                                                                        -font $::ms::current($w,font) \
+                                                                  -foreground $::ms::current($w,foreground) \
+                                                                  -lightcolor $::ms::current($w,lightcolor) \
+                                                                     -padding $::ms::current($w,padding) \
+                                                                      -relief $::ms::current($w,relief);
+
+                # Add the widget style name to the theme styles list created by mustang.
+                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
+            }
+
+            # Initialize the widget mapping.
+            set mapping [list ]
+
+            # arrowcolor
+            switch -- $::ms::managed_by($w,arrowcolor) {
+                developer { lappend mapping -arrowcolor [list pressed $::ms::current($w,arrowcolor)] }
+                Tk  {
+                    # Check if a 'arrowcolor' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),arrowcolor)] {
+                        1   { lappend mapping -arrowcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),arrowcolor) }
+                    }
+                }
+            }
+
+            # background
+            switch -- $::ms::managed_by($w,background) {
+                developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
+                Tk  {
+                    # Check if a 'background' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
+                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
+                    }
+                }
+            }
+
+            # bordercolor
+            switch -- $::ms::managed_by($w,bordercolor) {
+                developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
+                Tk  {
+                    # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
+                        1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
+                    }
+                }
+            }
+
+            # darkcolor
+            switch -- $::ms::managed_by($w,darkcolor) {
+                developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
+                Tk  {
+                    # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
+                        1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
+                    }
+                }
+            }
+
+            # fieldbackground
+            switch -- $::ms::managed_by($w,fieldbackground) {
+                developer { lappend mapping -fieldbackground [list pressed $::ms::current($w,fieldbackground)] }
+                Tk  {
+                    # Check if a 'fieldbackground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),fieldbackground)] {
+                        1   { lappend mapping -fieldbackground $::ms::stylemap($::ms::theme,$::ms::current($w,style),fieldbackground) }
+                    }
+                }
+            }
+
+            # focuscolor
+            switch -- $::ms::managed_by($w,focuscolor) {
+                developer { lappend mapping -focuscolor [list pressed $::ms::current($w,focuscolor)] }
+                Tk  {
+                    # Check if a 'focuscolor' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),focuscolor)] {
+                        1   { lappend mapping -focuscolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),focuscolor) }
+                    }
+                }
+            }
+
+            # foreground
+            switch -- $::ms::managed_by($w,foreground) {
+                developer { lappend mapping -foreground [list pressed $::ms::current($w,foreground)] }
+                Tk  {
+                    # Check if a 'foreground' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground)] {
+                        1   { lappend mapping -foreground $::ms::stylemap($::ms::theme,$::ms::current($w,style),foreground) }
+                    }
+                }
+            }
+
+            # lightcolor
+            switch -- $::ms::managed_by($w,lightcolor) {
+                developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
+                Tk  {
+                    # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
+                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
+                        1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
+                    }
+                }
+            }
+
+            # If needed, create the widget mapping.
+            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                _ttk_style map $::ms::style($w,widget) {*}$mapping
+
+                # Add the widget mapping to the stylemap list containing all the mappings
+                # created by mustang for the current theme.
+                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+            }
+
+            # Create the menubutton widget.
+            _ttk_menubutton $w        -class $::ms::current($w,class) \
+                                   -compound $::ms::current($w,compound) \
+                                     -cursor $cursor \
+                                  -direction $::ms::current($w,direction) \
+                                      -image $::ms::current($w,image) \
+                                    -justify $::ms::current($w,justify) \
+                                       -menu $::ms::current($w,menu) \
+                                      -state $::ms::current($w,state) \
+                                      -style $::ms::style($w,widget) \
+                                  -takefocus $takefocus \
+                                       -text "" \
+                               -textvariable $text_variable \
+                                  -underline $::ms::current($w,underline) \
+                                      -width $::ms::current($w,charwidth);
+
+            # Set the widget toplevel.
+            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
