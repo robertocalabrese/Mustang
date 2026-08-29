@@ -2181,6 +2181,27 @@ proc ::ms::menubutton::Destroy { w } {
     return ""
 }
 
+# Enter
+#
+# Manages the **Enter** event on a menubutton.
+#
+# Where:
+#
+# w   Should be the menubutton real address involved.
+#
+# It doesn't return anything.
+proc ::ms::menubutton::Enter { w } {
+    # Check the widget state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to 'active'.
+    interp invokehidden {} $w state [list active]
+
+    return ""
+}
+
 ## FocusIn
 #
 # Manage the **FocusIn** event.
