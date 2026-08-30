@@ -3273,6 +3273,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
                     _bind $w.canvas <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
+                    _bind $w.x      <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
                     _bind $w.x      <MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
 
                     # If the widget's vertical scrollbar is active, move the canvas object by one page up or down
@@ -3289,6 +3290,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # and move that scrollbar by one page left or right (depending on the mousewheel direction).
                     # If none of the widget's parent meets the required condition, don't do anything.
                     _bind $w.canvas <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
+                    _bind $w.x      <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
                     _bind $w.x      <Control-MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
 
                     # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
