@@ -4107,7 +4107,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                 #       There will be no movement along the 'X' axis.
                             } else {
                                 # Compute the movement along the 'X' axis.
-                                if { [expr { ($width*1.0)/$::ms::data($w,reqwidth) }] < $::ms::data($w,xview_diff) } {
+                                if { (($width*1.0)/$::ms::data($w,reqwidth)) < $::ms::data($w,xview_diff) } {
                                     # Note: The width of the widget can be entirely visible.
                                     #       If possible, we will anchor its 'X' center to the 'X' center of the 'viewport' object.
                                     #       The widget will be completely visible along the 'X' axis.
@@ -4181,7 +4181,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                 #       There will be no movement along the 'Y' axis.
                             } else {
                                 # Compute the movement along the 'Y' axis.
-                                if { [expr { ($height*1.0)/$::ms::data($w,reqheight) }] < $::ms::data($w,yview_diff) } {
+                                if { (($height*1.0)/$::ms::data($w,reqheight)) < $::ms::data($w,yview_diff) } {
                                     # Note: The height of the widget can be entirely visible.
                                     #       If possible, we will anchor its 'Y' center to the 'Y' center of the 'viewport' object.
                                     #       The widget will be completely visible along the 'Y' axis.

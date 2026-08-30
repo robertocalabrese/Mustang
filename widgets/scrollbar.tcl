@@ -2717,7 +2717,8 @@ proc ::ms::scrollbar::Touchpad { w counter amount { what units } } {
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
     # by testing if the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 

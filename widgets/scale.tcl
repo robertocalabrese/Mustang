@@ -2983,7 +2983,8 @@ proc ::ms::scale::Touchpad { w counter delta { what units } { speed 1x } } {
             # during a two-finger gesture.
             # This allow the binding script to respond to every 5th <TouchpadScroll> event
             # by testing is the 'counter' is divisible by 5.
-            if { [expr { $counter%5 }] == 0 } {
+            set counter [expr { $counter%5 }]
+            if { $counter != 0 } {
                 # Set 'increment' based on the direction of the movement.
                 if { $delta > 0 } {
                     set increment [expr { -1.0*$::ms::current($w,increment) }]

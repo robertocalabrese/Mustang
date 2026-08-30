@@ -4254,7 +4254,8 @@ proc ::ms::Touchpad_Parent { w counter amount { what units } } {
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -4320,7 +4321,8 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -4385,7 +4387,8 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -4452,7 +4455,8 @@ proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 

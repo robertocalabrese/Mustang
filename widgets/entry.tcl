@@ -4924,7 +4924,8 @@ proc ::ms::entry::Touchpad { w counter amount } {
     # during a two-finger gestures.
     # This allow the binding script to respond to every 5th <TouchpadScroll> event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 

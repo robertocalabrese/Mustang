@@ -5056,7 +5056,7 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
                 *leftarrow  -
                 *downarrow  { ::ttk::Repeatedly ::ms::spinbox::Repeat_Decrement $w 1 }
                 default     {
-                    if { [expr { $y*2 }] >= [_winfo height $w] } {
+                    if { ($y*2) >= [_winfo height $w] } {
                         set cmd [list ::ms::spinbox::Repeat_Decrement $w 1]
                     } else {
                         set cmd [list ::ms::spinbox::Repeat_Increment $w 1]
@@ -5088,7 +5088,7 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
                 *leftarrow  -
                 *downarrow  { ::ttk::Repeatedly ::ms::spinbox::Repeat_Decrement $w 1 }
                 default     {
-                    if { [expr { $y*2 }] >= [_winfo height $w] } {
+                    if { ($y*2) >= [_winfo height $w] } {
                         set cmd [list ::ms::spinbox::Repeat_Decrement $w 1]
                     } else {
                         set cmd [list ::ms::spinbox::Repeat_Increment $w 1]
@@ -6370,7 +6370,7 @@ proc ::ms::spinbox::Validate_String { w } {
                                                 break
                                             } elseif { $value < $next } {
                                                 # Set 'value' as the closest match between 'previous' and 'next'.
-                                                if { [expr { $next-$value }] < [expr { $value-$previous }] } {
+                                                if { ($next-$value) < ($value-$previous) } {
                                                     set value $next
                                                 } else {
                                                     set value $previous
@@ -6560,7 +6560,8 @@ proc ::ms::spinbox::Touchpad { w counter amount } {
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 

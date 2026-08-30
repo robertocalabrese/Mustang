@@ -5343,7 +5343,7 @@ proc ::ms::combobox::Post { w } {
 
     # Compute if the popdown will show below the combobox element or above it.
     set popdown_height [_winfo reqheight $w.popdown]
-    if { [expr { $combobox_y+$combobox_height+$popdown_height+4 }] > [_winfo screenheight $w.popdown] } {
+    if { ($combobox_y+$combobox_height+$popdown_height+4) > [_winfo screenheight $w.popdown] } {
         # Above the combobox.
         set popdown_y [expr { $combobox_y-$popdown_height-4 }]
     } else {
@@ -6023,7 +6023,7 @@ proc ::ms::combobox::Validate_String { w } {
                                         break
                                     } elseif { $value < $next } {
                                         # Set the index that contains the closest match to 'value' between 'previous' and 'next' as the current index.
-                                        if { [expr { $next-$value }] < [expr { $value-$previous }] } {
+                                        if { ($next-$value) < ($value-$previous) } {
                                             set index [lsearch -exact $::ms::data($w,values) $next]
                                         } else {
                                             set index [lsearch -exact $::ms::data($w,values) $previous]
@@ -6307,7 +6307,8 @@ proc ::ms::combobox::Scrollbar_Touchpad { w counter amount { what units } } {
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -6367,7 +6368,8 @@ proc ::ms::combobox::Touchpad { w counter amount } {
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -6752,7 +6754,7 @@ proc ::ms::combobox::Popdown_Autoselection { w } {
                                 break
                             } elseif { $value < $next } {
                                 # Set the index that contains the closest match to 'value' between 'previous' and 'next' as the current index.
-                                if { [expr { $next-$value }] < [expr { $value-$previous }] } {
+                                if { ($next-$value) < ($value-$previous) } {
                                     set index [lsearch -exact $::ms::data($w,values) $next]
                                 } else {
                                     set index [lsearch -exact $::ms::data($w,values) $previous]
@@ -7209,7 +7211,8 @@ proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 

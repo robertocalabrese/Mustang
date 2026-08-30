@@ -5204,7 +5204,7 @@ proc ::ms::palette::Post { w } {
 
     # Compute if the popdown will show below the palette element or above it.
     set popdown_height [_winfo reqheight $w.popdown]
-    if { [expr { $palette_y+$palette_height+$popdown_height+4 }] > [_winfo screenheight $w.popdown] } {
+    if { ($palette_y+$palette_height+$popdown_height+4) > [_winfo screenheight $w.popdown] } {
         # Above the palette.
         set popdown_y [expr { $palette_y-$popdown_height-4 }]
     } else {
@@ -5935,7 +5935,8 @@ proc ::ms::palette::Touchpad { w counter amount } {
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th <TouchpadScroll> event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -6656,7 +6657,8 @@ proc ::ms::palette::Popdown_Touchpad { w x y counter amount { what units } } {
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
     # by testing is the 'counter' is divisible by 5.
-    if { [expr { $counter%5 }] != 0 } {
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
         return ""
     }
 
@@ -6743,7 +6745,7 @@ proc ::ms::palette::Black_Or_White { hex { depth 8 } } {
     set luma [expr { (0.21264461762001413*$r_linear)+(0.7151663725690272*$g_linear)+(0.07218900981095855*$b_linear) }]
 
     # Confront the contrast value against black with the contrast value against white.
-    if { [expr { ($luma+0.05)*20.0 }] > [expr { 1.05/($luma+0.05) }] } {
+    if { (($luma+0.05)*20.0) > (1.05/($luma+0.05)) } {
         return "#000000"
     } else {
         return "#ffffff"
