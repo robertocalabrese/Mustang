@@ -2355,9 +2355,6 @@ package provide ::ms::canvas 0.1
 _bind _Canvas <Activate>   { ::ms::canvas::Pathname_Cmd %W state !background; break }
 _bind _Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd %W state  background; break }
 
-# ButtonPress-1
-_bind _Canvas <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
-
 # Contextual menu
 _bind _Canvas <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
