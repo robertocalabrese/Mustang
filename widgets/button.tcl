@@ -2417,7 +2417,7 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                             try {
                                 uplevel #0 [list interp invokehidden {} $w invoke]
                             } on error {} {
-                                ::ms::Error "Invalid command, '$w'." ""
+                                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
                             } on ok { result } {
                                 return $result
                             }
@@ -2705,7 +2705,7 @@ proc ::ms::button::ButtonRelease { w } {
             try {
                 uplevel #0 [list interp invokehidden {} $w invoke]
             } on error {} {
-                ::ms::Error "Invalid command, '$w'." ""
+                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
             } on ok {} {
                 return ""
             }
@@ -2930,7 +2930,7 @@ proc ::ms::button::Invoke { w } {
             try {
                 uplevel #0 [list interp invokehidden {} $w invoke]
             } on error {} {
-                ::ms::Error "Invalid command, '$w'." ""
+                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
             } on ok {} {
                 return ""
             }
