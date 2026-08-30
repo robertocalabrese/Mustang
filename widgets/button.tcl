@@ -2907,13 +2907,23 @@ proc ::ms::button::FocusOut { w } {
 proc ::ms::button::Invoke { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal {
-            # Invoke the command associated with the widget.
-            uplevel #0 [list interp invokehidden {} $w invoke]
-        }
+        disabled { return "" }
     }
 
-    return ""
+    # Check if there is a command associated with the widget.
+    switch -- $::ms::current($w,command) {
+        ""      { return "" }
+        default {
+            # Invoke the command associated with the widget.
+            try {
+                uplevel #0 [list interp invokehidden {} $w invoke]
+            } on error {} {
+                ::ms::Error "Invalid command, '$w'." ""
+            } on ok {} {
+                return ""
+            }
+        }
+    }
 }
 
 #*EOF*
