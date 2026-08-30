@@ -5341,6 +5341,11 @@ proc ::ms::canvas::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::canvas::Hover { w X Y } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
     # Get the dimensions of the widget border object.
     set height [_winfo height $::ms::addr($w,border)]
     set width  [_winfo width  $::ms::addr($w,border)]
