@@ -5278,7 +5278,7 @@ proc ::ms::canvas::Destroy { w } {
 # It doesn't return anything.
 proc ::ms::canvas::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
-    ::ms::canvas::Pathname_Cmd $w state focus
+    ::ms::canvas::Pathname_Cmd $w state [list focus]
 
     return ""
 }
@@ -5318,7 +5318,7 @@ proc ::ms::canvas::FocusOut { w } {
     }
 
     # Change the widget dynamic state to '!focus'.
-    ::ms::canvas::Pathname_Cmd $w state !focus
+    ::ms::canvas::Pathname_Cmd $w state [list !focus]
 
     return ""
 }
@@ -5353,12 +5353,12 @@ proc ::ms::canvas::Hover { w X Y } {
         # The mouse cursor is outside the widget border object.
 
         # Change the widget dynamic state to '!hover'.
-        ::ms::canvas::Pathname_Cmd $w state !hover
+        ::ms::canvas::Pathname_Cmd $w state [list !hover]
     } else {
         # The mouse cursor is inside the widget border object.
 
         # Change the widget dynamic state to 'hover'.
-        ::ms::canvas::Pathname_Cmd $w state hover
+        ::ms::canvas::Pathname_Cmd $w state [list hover]
     }
 
     return ""
