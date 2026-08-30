@@ -5277,6 +5277,11 @@ proc ::ms::canvas::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::canvas::FocusIn { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
     # Change the widget dynamic state to 'focus'.
     ::ms::canvas::Pathname_Cmd $w state [list focus]
 
