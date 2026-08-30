@@ -3055,8 +3055,8 @@ proc ::ms::canvas::Command { window { args "" } } {
                     _bind $w <Configure> { ::ms::canvas::Configure %W; break }
 
                     # Enter/Leave
-                    _bind $w <Enter> { ::ms::canvas::Pathname_Cmd %W state  hover; break }
-                    _bind $w <Leave> { ::ms::canvas::Pathname_Cmd %W state !hover; break }
+                    _bind $w <Enter> { interp invokehidden {} %W state [list  hover]; break }
+                    _bind $w <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
                     # Add the simple canvas to the related toplevel keyboard pages navigation bindings.
                     ::ms::Enable_Traversal $w
