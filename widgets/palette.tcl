@@ -6665,18 +6665,25 @@ proc ::ms::palette::Popdown_Touchpad { w x y counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-    set delta_x [expr { $delta_x*30 }]
-    set delta_y [expr { $delta_y*30 }]
+    # Check if 'what' is 'units' or 'pages'.
+    switch -- $what {
+        pages {}
+        units {
+            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+            set delta_x [expr { $delta_x*30 }]
+            set delta_y [expr { $delta_y*30 }]
+        }
+        default { return "" }
+    }
 
     # If there is a movement along the X axis, launch '::ms::palette::Popdown_Shift_MouseWheel'.
     if { $delta_x != 0 } {
         ::ms::palette::Popdown_Shift_MouseWheel $w $x $y $delta_x $what
     }
 
-    # If there is a movement along the Y axis, launch '::ms::palette::Popdown_Mousewheel'.
+    # If there is a movement along the Y axis, launch '::ms::palette::Popdown_MouseWheel'.
     if { $delta_y != 0 } {
-        ::ms::palette::Popdown_Mousewheel $w $x $y $delta_y $what
+        ::ms::palette::Popdown_MouseWheel $w $x $y $delta_y $what
     }
 
     return -code break
