@@ -5373,6 +5373,52 @@ proc ::ms::External_Click { w X Y } {
     return ""
 }
 
+## Hover
+#
+# Manage the **Enter** and **Leave** event on a megawidget.
+#
+# Where:
+#
+# w      Should be the megawidget real address involved.
+#
+# X, Y   Should be the mouse pointer (X,Y) root coordinates.
+#        These value are provided directly by the **Enter** or **Leave** event.
+#
+# It doesn't return anything.
+proc ::ms::Hover { w X Y } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Get the dimensions of the widget border object.
+    set height [_winfo height $::ms::addr($w,border)]
+    set width  [_winfo width  $::ms::addr($w,border)]
+
+    # Get the north-west (nw) root coordinates of the widget border object.
+    set X_nw [_winfo rootx $::ms::addr($w,border)]
+    set Y_nw [_winfo rooty $::ms::addr($w,border)]
+
+    # Get the widget south-east (se) root coordinates of the widget border object.
+    set X_se [expr { $X_nw+$width }]
+    set Y_se [expr { $Y_nw+$height }]
+
+    # Check if the mouse pointer coordinates are inside or outside the widget border object.
+    if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
+        # The mouse cursor is outside the widget border object.
+
+        # Change the widget dynamic state to '!hover'.
+        [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list !pressed !hover]
+    } else {
+        # The mouse cursor is inside the widget border object.
+
+        # Change the widget dynamic state to 'hover'.
+        [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list !pressed hover]
+    }
+
+    return ""
+}
+
 ## Load_Palette
 #
 # Load a palette file.
