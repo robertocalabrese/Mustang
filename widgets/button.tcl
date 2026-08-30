@@ -2407,12 +2407,24 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **invoke**
-            try {
-                uplevel #0 [list interp invokehidden {} $w invoke]
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+            switch -- [llength $args] {
+                0   {
+                    # Check if there is a command associated with the widget.
+                    switch -- $::ms::current($w,command) {
+                        ""      { return "" }
+                        default {
+                            # Invoke the command associated with the widget.
+                            try {
+                                uplevel #0 [list interp invokehidden {} $w invoke]
+                            } on error {} {
+                                ::ms::Error "Invalid command, '$w'." ""
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         state {
