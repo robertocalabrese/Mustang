@@ -4261,9 +4261,16 @@ proc ::ms::Touchpad_Parent { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-    set delta_x [expr { $delta_x*30 }]
-    set delta_y [expr { $delta_y*30 }]
+    # Check if 'what' is 'units' or 'pages'.
+    switch -- $what {
+        pages {}
+        units {
+            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+            set delta_x [expr { $delta_x*30 }]
+            set delta_y [expr { $delta_y*30 }]
+        }
+        default { return "" }
+    }
 
     # If there is a movement along the X axis, launch '::ms::Scroll_Parent_X'.
     if { $delta_x != 0 } {
@@ -4320,9 +4327,16 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-    set delta_x [expr { $delta_x*30 }]
-    set delta_y [expr { $delta_y*30 }]
+    # Check if 'what' is 'units' or 'pages'.
+    switch -- $what {
+        pages {}
+        units {
+            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+            set delta_x [expr { $delta_x*30 }]
+            set delta_y [expr { $delta_y*30 }]
+        }
+        default { return "" }
+    }
 
     # If there is a movement along the X axis, launch '::ms::Scroll_Widget_X'.
     if { $delta_x != 0 } {
@@ -4387,9 +4401,16 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-    set delta_x [expr { $delta_x*30 }]
-    set delta_y [expr { $delta_y*30 }]
+    # Check if 'what' is 'units' or 'pages'.
+    switch -- $what {
+        pages {}
+        units {
+            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+            set delta_x [expr { $delta_x*30 }]
+            set delta_y [expr { $delta_y*30 }]
+        }
+        default { return "" }
+    }
 
     # If there is a movement along the X axis, launch '::ms::Scroll_Widget_X'.
     if { $delta_x != 0 } {
@@ -4456,9 +4477,16 @@ proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-    set delta_x [expr { $delta_x*30 }]
-    set delta_y [expr { $delta_y*30 }]
+    # Check if 'what' is 'units' or 'pages'.
+    switch -- $what {
+        pages {}
+        units {
+            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+            set delta_x [expr { $delta_x*30 }]
+            set delta_y [expr { $delta_y*30 }]
+        }
+        default { return "" }
+    }
 
     # If there is a movement along the X axis, launch '::ms::Scroll_Parent_X'.
     if { $delta_x != 0 } {
