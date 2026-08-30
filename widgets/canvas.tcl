@@ -3243,15 +3243,15 @@ proc ::ms::canvas::Command { window { args "" } } {
                     _bind $w.canvas <Configure> { ::ms::canvas::Configure [_winfo parent [_winfo parent %W]]; break }
 
                     # Enter/Leave
-                    _bind $w        <Enter> { ::ms::canvas::Hover %W %X %Y; break }
-                    _bind $w.canvas <Enter> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.x      <Enter> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.y      <Enter> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w        <Enter> { ::ms::Hover %W %X %Y; break }
+                    _bind $w.canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w.x      <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w.y      <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
-                    _bind $w        <Leave> { ::ms::canvas::Hover %W %X %Y; break }
-                    _bind $w.canvas <Leave> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.x      <Leave> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.y      <Leave> { ::ms::canvas::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w        <Leave> { ::ms::Hover %W %X %Y; break }
+                    _bind $w.canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w.x      <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+                    _bind $w.y      <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
                     _bind $w.canvas <FocusIn>  { ::ms::canvas::FocusIn  [_winfo parent %W]; break }
@@ -5324,52 +5324,6 @@ proc ::ms::canvas::FocusOut { w } {
 
     # Change the widget dynamic state to '!focus'.
     ::ms::canvas::Pathname_Cmd $w state [list !focus]
-
-    return ""
-}
-
-## Hover
-#
-# Manage the **Enter** and **Leave** event on the widget.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# X, Y   Should be the mouse pointer (X,Y) root coordinates.
-#        These value are provided directly by the **Enter** or **Leave** event.
-#
-# It doesn't return anything.
-proc ::ms::canvas::Hover { w X Y } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Get the dimensions of the widget border object.
-    set height [_winfo height $::ms::addr($w,border)]
-    set width  [_winfo width  $::ms::addr($w,border)]
-
-    # Get the north-west (nw) root coordinates of the widget border object.
-    set X_nw [_winfo rootx $::ms::addr($w,border)]
-    set Y_nw [_winfo rooty $::ms::addr($w,border)]
-
-    # Get the widget south-east (se) root coordinates of the widget border object.
-    set X_se [expr { $X_nw+$width }]
-    set Y_se [expr { $Y_nw+$height }]
-
-    # Check if the mouse pointer coordinates are inside or outside the widget border object.
-    if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
-        # The mouse cursor is outside the widget border object.
-
-        # Change the widget dynamic state to '!hover'.
-        ::ms::canvas::Pathname_Cmd $w state [list !hover]
-    } else {
-        # The mouse cursor is inside the widget border object.
-
-        # Change the widget dynamic state to 'hover'.
-        ::ms::canvas::Pathname_Cmd $w state [list hover]
-    }
 
     return ""
 }
