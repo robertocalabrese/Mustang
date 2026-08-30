@@ -972,8 +972,8 @@ _bind _Button <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Button <Destroy> { ::ms::button::Destroy %W; break }
 
 # Enter/Leave
-_bind _Button <Enter> { ::ms::button::Pathname_Cmd %W state  hover; break }
-_bind _Button <Leave> { ::ms::button::Pathname_Cmd %W state !hover; break }
+_bind _Button <Enter> { ::ms::button::Enter %W state  hover; break }
+_bind _Button <Leave> { ::ms::button::Leave %W state !hover; break }
 
 # FocusIn/FocusOut
 _bind _Button <FocusIn>  { ::ms::button::FocusIn  %W; break }
@@ -2864,6 +2864,27 @@ proc ::ms::button::Destroy { w } {
     return ""
 }
 
+## Enter
+#
+# Manage the **Enter** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::button::Enter { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to 'hover'.
+    interp invokehidden {} $w state [list hover]
+
+    return ""
+}
+
 ## FocusIn
 #
 # Manage the **FocusIn** event.
@@ -2941,6 +2962,27 @@ proc ::ms::button::Invoke { w } {
             }
         }
     }
+}
+
+## Leave
+#
+# Manage the **Leave** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::button::Leave { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!hover'.
+    interp invokehidden {} $w state [list !hover]
+
+    return ""
 }
 
 #*EOF*
