@@ -2874,8 +2874,13 @@ proc ::ms::button::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::button::FocusIn { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
     # Change the widget dynamic state to 'focus'.
-    ::ms::button::Pathname_Cmd $w state focus
+    interp invokehidden {} $w state [list focus]
 
     return ""
 }
@@ -2902,7 +2907,7 @@ proc ::ms::button::FocusOut { w } {
     }
 
     # Change the widget dynamic state to '!focus'.
-    ::ms::button::Pathname_Cmd $w state !focus
+    interp invokehidden {} $w state [list !focus]
 
     return ""
 }
