@@ -2415,7 +2415,7 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                         default {
                             # Invoke the command associated with the widget.
                             try {
-                                uplevel #0 [list interp invokehidden {} $w invoke]
+                                uplevel #0 [list {*}$::ms::current($w,command)]
                             } on error {} {
                                 ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
                             } on ok { result } {
@@ -2703,7 +2703,7 @@ proc ::ms::button::ButtonRelease { w } {
         default {
             # Invoke the command associated with the widget.
             try {
-                uplevel #0 [list interp invokehidden {} $w invoke]
+                uplevel #0 [list {*}$::ms::current($w,command)]
             } on error {} {
                 ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
             } on ok {} {
@@ -2933,7 +2933,7 @@ proc ::ms::button::Invoke { w } {
         default {
             # Invoke the command associated with the widget.
             try {
-                uplevel #0 [list interp invokehidden {} $w invoke]
+                uplevel #0 [list {*}$::ms::current($w,command)]
             } on error {} {
                 ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
             } on ok {} {
