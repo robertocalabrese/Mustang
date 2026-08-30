@@ -2177,8 +2177,10 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Set the current option values for each styleable option managed by Tk.
-                            foreach option $::ms::toolbutton(styleable,options) {
+                            # Set the default value for each styleable option and if the option is managed by Tk, set also its current value.
+                            foreach option $::ms::button(styleable,options) {
+                                set ::ms::default($w,$option) $::ms::styleopt($::ms::theme,Toolbutton,$option)
+
                                 switch -- $::ms::managed_by($w,$option) {
                                     Tk  {
                                         switch -- [info exists ::ms::styleopt($::ms::theme,$::ms::current($w,style),$option)] {
