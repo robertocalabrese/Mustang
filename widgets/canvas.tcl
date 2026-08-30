@@ -3223,8 +3223,6 @@ proc ::ms::canvas::Command { window { args "" } } {
                     }
 
                     # ButtonPress-1
-                    _bind $w.canvas <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-
                     _bind $w.x <ButtonPress-1>   { ::ms::canvas::Scrollbar_ButtonPress  [_winfo parent %W] horizontal %x %y; break }
                     _bind $w.x <B1-Motion>       { ::ms::canvas::Scrollbar_Drag         [_winfo parent %W] horizontal %x %y; break }
                     _bind $w.x <ButtonRelease-1> { ::ms::canvas::Scrollbar_ButtonRelease; break }
