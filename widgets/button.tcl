@@ -961,8 +961,9 @@ package provide ::ms::button 0.1
 _bind _Button <Activate>   { ::ms::button::Pathname_Cmd %W state !background; break }
 _bind _Button <Deactivate> { ::ms::button::Pathname_Cmd %W state  background; break }
 
-# ButtonPress-1
-_bind _Button <ButtonPress-1> { ::ms::button::ButtonPress %W; break }
+# ButtonPress
+_bind _Button <ButtonPress-1>   { ::ms::button::ButtonPress   %W; break }
+_bind _Button <ButtonRelease-1> { ::ms::button::ButtonRelease %W; break }
 
 # Contextual menu
 _bind _Button <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
@@ -2654,74 +2655,50 @@ proc ::ms::button::Style_Update { stylename caller_info } {
 proc ::ms::button::ButtonPress { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled {
-            # Check the parent of the widget address provided, if any.
-            set parent [_winfo parent $w]
-            switch -- $parent {
-                ""      {}
-                default {
-                    # Propagate the action to the widget's parents.
-
-                    # ATTENTION!
-                    #
-                    # This is a recursive loop. The only way to exit is:
-                    #   - If there is no more parent to check for.
-                    #   - If 'parent' is a scrollable megawidget.
-                    set i 1
-                    while { $i > 0 } {
-                        # Check if 'parent' belongs to a scrollable megawidget.
-                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                            _focus -force $parent
-                            return ""
-                        }
-
-                        # Check the next parent, if any.
-                        set parent [_winfo parent $parent]
-                        switch -- $parent {
-                            ""  {
-                                # There are no more parents to check for.
-                                # Stop the recursive iteration.
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-
-            # Check if the widget's toplevel was created by mustang.
-            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                0   {
-                    # If possible, focus the widget's toplevel.
-                    try {
-                        _focus -force [_winfo toplevel $w]
-                    } on error {} {
-                        # Do nothing
-                    }
-                }
-                1   {
-                    # Check the widget's toplevel takefocus.
-                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                        0   {
-                            # Momentarily set the toplevel takefocus to '1'.
-                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                        }
-                    }
-
-                    # Focus the widget's toplevel.
-                    _focus -force $::ms::addr($w,toplevel)
-                }
-            }
-        }
-        default {
-            ::ttk::clickToFocus $w
-
-            # Change the widget dynamic state to 'pressed'.
-            interp invokehidden {} $w state pressed
-        }
+        disabled { return "" }
     }
 
+    # Focus the widget.
+    ::ttk::clickToFocus $w
+
+    # Change the widget dynamic state to 'pressed'.
+    interp invokehidden {} $w state [list pressed]
+
     return ""
+}
+
+## ButtonRelease
+#
+# Manage the **ButtonRelease-1** event upon the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::button::ButtonRelease { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!pressed'.
+    interp invokehidden {} $w state [list !pressed]
+
+    # Check if there is a command associated with the widget.
+    switch -- $::ms::current($w,command) {
+        ""      { return "" }
+        default {
+            # Invoke the command associated with the widget.
+            try {
+                uplevel #0 [list interp invokehidden {} $w invoke]
+            } on error {} {
+                ::ms::Error "Invalid command, '$w'." ""
+            } on ok {} {
+                return ""
+            }
+        }
+    }
 }
 
 ## Destroy
