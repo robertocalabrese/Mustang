@@ -1805,7 +1805,7 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                 0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
                     # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
-                    set option [string range $args 1 end]
+                    set option [string tolower [string range $args 1 end]]
                     if { ($option in $::ms::toolbutton(non_styleable,options)) || ($option in $::ms::toolbutton(styleable,options)) } {
                         return $::ms::current($w,$option)
                     } else {
