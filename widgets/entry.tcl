@@ -1884,7 +1884,7 @@ proc ::ms::entry::Command { window { args "" } } {
                     -class { set ::ms::current($w,class) $value }
                     -cmenu {
                         set value [string trim $value]
-                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                        if { ($value eq "") || ($value in $::ms::addr(menu)) } {
                             set ::ms::current($w,cmenu) $value
                         }
                     }
@@ -2854,7 +2854,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     -class {}
                                     -cmenu {
                                         set value [string trim $value]
-                                        if { ($value eq "") || ($value in $::ms::addr(cmenu)) } {
+                                        if { ($value eq "") || ($value in $::ms::addr(menu)) } {
                                             set ::ms::current($w,cmenu) $value
                                         }
                                     }
