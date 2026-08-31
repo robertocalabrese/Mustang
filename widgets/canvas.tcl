@@ -3652,8 +3652,8 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Set the new bindtags for the widget container ('w').
                     switch -- $::ms::current($w,class) {
-                        Canvas  { _bindtags $w [list $w _Scrollable_Canvas Canvas $::ms::addr($w,toplevel) all] }
-                        default { _bindtags $w [list $w $::ms::current($w,class) _Scrollable_Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        Canvas  { _bindtags $w.canvas [list $w.canvas _Scrollable_Canvas Canvas $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w.canvas [list $w.canvas $::ms::current($w,class) _Scrollable_Canvas Canvas $::ms::addr($w,toplevel) all] }
                     }
 
                     # Set the new bindtags for the horizontal and vertical scrollbar objects.
