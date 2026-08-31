@@ -3229,6 +3229,8 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         false { return [interp invokehidden {} $w state $statespec] }
                         true  {
                             interp invokehidden {} $w state $statespec
+                            $w.fake_x state $statespec
+                            $w.fake_y state $statespec
                             return [$w.treeview state $statespec]
                         }
                     }
