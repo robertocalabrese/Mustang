@@ -5104,6 +5104,32 @@ proc ::ms::canvas::Configure { w } {
     return ""
 }
 
+## Deactivate
+#
+# Manage the **Deactivate** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::canvas::Deactivate { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to 'background'.
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { interp invokehidden {} $w        state [list background] }
+        true  { interp invokehidden {} $w.canvas state [list background] }
+    }
+
+    return ""
+}
+
 ## Destroy
 #
 # Manage the **Destroy** event on the widget.
