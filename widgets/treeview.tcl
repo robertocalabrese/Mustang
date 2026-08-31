@@ -493,38 +493,38 @@ _bind _Y_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [
 #################################################
 
 # Activate/Deactivate
-_bind _X_Fake_Scrollbar_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd %W state !background; break }
-_bind _X_Fake_Scrollbar_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd %W state  background; break }
+_bind _X_Fake_Scrollbar_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
+_bind _X_Fake_Scrollbar_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
 
 # ButtonPress-1
-_bind _X_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _X_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
 
 # Contextual menu
-_bind _X_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+_bind _X_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _X_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
-_bind _X_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _X_Fake_Scrollbar_Treeview <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+_bind _X_Fake_Scrollbar_Treeview <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _X_Fake_Scrollbar_Treeview <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+_bind _X_Fake_Scrollbar_Treeview <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _X_Fake_Scrollbar_Treeview <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+_bind _X_Fake_Scrollbar_Treeview <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _X_Fake_Scrollbar_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+_bind _X_Fake_Scrollbar_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -539,7 +539,7 @@ _bind _X_Fake_Scrollbar_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Paren
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _X_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+_bind _X_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -551,7 +551,7 @@ _bind _X_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent %W %# 
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _X_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+_bind _X_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 #################################################
 ##                                             ##
@@ -560,38 +560,38 @@ _bind _X_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Paren
 #################################################
 
 # Activate/Deactivate
-_bind _Y_Fake_Scrollbar_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd %W state !background; break }
-_bind _Y_Fake_Scrollbar_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd %W state  background; break }
+_bind _Y_Fake_Scrollbar_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
+_bind _Y_Fake_Scrollbar_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
 
 # ButtonPress-1
-_bind _Y_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _Y_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
 
 # Contextual menu
-_bind _Y_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+_bind _Y_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _Y_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
-_bind _Y_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Y_Fake_Scrollbar_Treeview <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+_bind _Y_Fake_Scrollbar_Treeview <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Y_Fake_Scrollbar_Treeview <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+_bind _Y_Fake_Scrollbar_Treeview <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Y_Fake_Scrollbar_Treeview <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+_bind _Y_Fake_Scrollbar_Treeview <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Y_Fake_Scrollbar_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+_bind _Y_Fake_Scrollbar_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -606,7 +606,7 @@ _bind _Y_Fake_Scrollbar_Treeview <Control-Shift-MouseWheel> { ::ms::Scroll_Paren
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Y_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+_bind _Y_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -618,7 +618,7 @@ _bind _Y_Fake_Scrollbar_Treeview <TouchpadScroll> { ::ms::Touchpad_Parent %W %# 
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Y_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+_bind _Y_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 # Create the mustang **treeview** package.
 namespace eval ::ms::treeview {
