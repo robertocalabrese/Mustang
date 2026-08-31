@@ -1718,8 +1718,8 @@ proc ::ms::treeview::Command { window { args "" } } {
                     }
 
                     # Set the new bindtags for the horizontal and vertical scrollbar objects.
-                    _bindtags $w.x [list $w.x _H_Scrollbar_Treeview TScrollbar $::ms::addr($w,toplevel) all]
-                    _bindtags $w.y [list $w.y _H_Scrollbar_Treeview TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.x [list $w.x _X_Scrollbar_Treeview TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.y [list $w.y _Y_Scrollbar_Treeview TScrollbar $::ms::addr($w,toplevel) all]
 
                     # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
                     _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Treeview TFrame $::ms::addr($w,toplevel) all]
