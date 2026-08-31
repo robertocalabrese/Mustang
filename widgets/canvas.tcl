@@ -5644,13 +5644,14 @@ proc ::ms::canvas::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::canvas::FocusOut { w } {
-    # Check if a contextual menu was provided, if not use the widget's toplevel contextual menu.
+    # Check if a contextual menu was assigned to the widget.
+    # If not, use the contextual menu of the widget's toplevel.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
         ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
     }
 
-    # If the contextual menu of the widget exists and it's open, do not loose the focus (graphically).
+    # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
     switch -- [_winfo exists $cmenu] {
         0   { ::ms::canvas::Pathname_Cmd $w state [list !focus] }
         1   { ::ms::canvas::Pathname_Cmd $w state [list  focus] }
