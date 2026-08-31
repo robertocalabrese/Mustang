@@ -1543,7 +1543,6 @@ proc ::ms::treeview::Command { window { args "" } } {
                     set ::ms::addr($w,widget) $w
 
                     # Set the structure addresses.
-                    # Is important to note that the scrollbar addresses must not be included.
                     set ::ms::addr($w,structure) [list $w]
                 }
                 true {
