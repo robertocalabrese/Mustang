@@ -958,8 +958,8 @@ package provide ::ms::button 0.1
 ##############################
 
 # Activate/Deactivate
-_bind _Button <Activate>   { ::ms::button::Pathname_Cmd %W state !background; break }
-_bind _Button <Deactivate> { ::ms::button::Pathname_Cmd %W state  background; break }
+_bind _Button <Activate>   { ::ms::button::Activate   %W; break }
+_bind _Button <Deactivate> { ::ms::button::Deactivate %W; break }
 
 # ButtonPress
 _bind _Button <ButtonPress-1>   { ::ms::button::ButtonPress   %W; break }
@@ -2694,6 +2694,27 @@ proc ::ms::button::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Activate
+#
+# Manage the **Activate** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::button::Activate { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!background'.
+    interp invokehidden {} $w state [list !background]
+
+    return ""
+}
+
 ## ButtonPress
 #
 # Manage the **ButtonPress-1** event upon the widget.
@@ -2750,6 +2771,27 @@ proc ::ms::button::ButtonRelease { w } {
             }
         }
     }
+}
+
+## Deactivate
+#
+# Manage the **Deactivate** event.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::button::Deactivate { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to 'background'.
+    interp invokehidden {} $w state [list background]
+
+    return ""
 }
 
 ## Destroy
