@@ -3686,12 +3686,16 @@ proc ::ms::canvas::Command { window { args "" } } {
                     set ::ms::addr($w.canvas,short) $short_addr
                     set ::ms::addr($w.x,short)      $short_addr
                     set ::ms::addr($w.y,short)      $short_addr
+                    set ::ms::addr($w.fake_x,short) $short_addr
+                    set ::ms::addr($w.fake_y,short) $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.canvas \
                                               $w.x \
-                                              $w.y;
+                                              $w.y \
+                                              $w.fake_x \
+                                              $w.fake_y;
 
                     lappend ::ms::addr(shorts) $short_addr
 
@@ -3704,7 +3708,9 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # Set the structure addresses.
                     # Is important to note that the scrollbar addresses must not be included.
                     set ::ms::addr($w,structure) [list $w \
-                                                       $w.canvas];
+                                                       $w.canvas \
+                                                       $w.fake_x \
+                                                       $w.fake_y];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -5507,7 +5513,9 @@ proc ::ms::canvas::Destroy { w } {
             foreach object [list $w \
                                  $w.canvas \
                                  $w.x \
-                                 $w.y] {
+                                 $w.y \
+                                 $w.fake_x \
+                                 $w.fake_y] {
                 set index [lsearch -exact $::ms::addr(reals) $object]
                 switch -- $index {
                     -1      {}
@@ -5546,7 +5554,9 @@ proc ::ms::canvas::Destroy { w } {
                          ::ms::addr($w,short) \
                          ::ms::addr($w.canvas,short) \
                          ::ms::addr($w.x,short) \
-                         ::ms::addr($w.y,short);
+                         ::ms::addr($w.y,short) \
+                         ::ms::addr($w.fake_x,short) \
+                         ::ms::addr($w.fake_y,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
                          ::ms::addr($w,structure) \
