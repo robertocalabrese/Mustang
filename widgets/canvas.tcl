@@ -5052,32 +5052,6 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
-## Activate
-#
-# Manage the **Activate** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::canvas::Activate { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to '!background'.
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { interp invokehidden {} $w        state [list !background] }
-        true  { interp invokehidden {} $w.canvas state [list !background] }
-    }
-
-    return ""
-}
-
 ## Configure
 #
 # Manage the **Configure** event on a widget.
@@ -5099,32 +5073,6 @@ proc ::ms::canvas::Configure { w } {
     # If needed, update the scrollbars.
     switch -- $::ms::current($w,scrollable) {
         true { ::ms::canvas::Scrollbar_Update $w }
-    }
-
-    return ""
-}
-
-## Deactivate
-#
-# Manage the **Deactivate** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::canvas::Deactivate { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'background'.
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { interp invokehidden {} $w        state [list background] }
-        true  { interp invokehidden {} $w.canvas state [list background] }
     }
 
     return ""
@@ -5341,48 +5289,6 @@ proc ::ms::canvas::Destroy { w } {
     return ""
 }
 
-## Enter
-#
-# Manage the **Enter** event on simple canvas.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::canvas::Enter { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'hover'.
-    interp invokehidden {} $w state [list hover]
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::canvas::FocusIn { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'focus'.
-    ::ms::canvas::Pathname_Cmd $w state [list focus]
-
-    return ""
-}
-
 ## FocusOut
 #
 # Manage the **FocusOut** event.
@@ -5393,53 +5299,17 @@ proc ::ms::canvas::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::canvas::FocusOut { w } {
-    # Check the contextual menu associated with this widget, if any.
+    # Check if a contextual menu was provided, if not use the widget's toplevel contextual menu.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
-        ""  {
-            # Check if a contextual menu was associated with the widget's toplevel.
-            set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
-            switch -- $cmenu {
-                ""      {}
-                default {
-                    # If the contextual menu of the widget's toplevel is open do not loose the focus (graphically).
-                    switch -- [_winfo exists $cmenu] {
-                        1   { return "" }
-                    }
-                }
-            }
-        }
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $cmenu] {
-                1   { return "" }
-            }
-        }
+        ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
     }
 
-    # Change the widget dynamic state to '!focus'.
-    ::ms::canvas::Pathname_Cmd $w state [list !focus]
-
-    return ""
-}
-
-## Leave
-#
-# Manage the **Leave** event on simple canvas.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::canvas::Leave { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
+    # If the contextual menu of the widget exists and it's open, do not loose the focus (graphically).
+    switch -- [_winfo exists $cmenu] {
+        0   { ::ms::canvas::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::canvas::Pathname_Cmd $w state [list  focus] }
     }
-
-    # Change the widget dynamic state to '!hover'.
-    interp invokehidden {} $w state [list !hover]
 
     return ""
 }
