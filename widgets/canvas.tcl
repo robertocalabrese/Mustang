@@ -89,7 +89,7 @@
 # Note 2: Depending on the **-scrollable** option value, two kinds of canvas structures are possible.
 #         The mustang simple canvas (**-scrollable** false) is a single canvas widget.
 #         The mustang scrollable canvas (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
-#         a canvas object and two scrollbar objects (displayed only when needed).
+#         a canvas object, two scrollbar objects (displayed only when needed) and two fake scrollbar objects (displayed only when needed).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the canvas.
 #
@@ -103,486 +103,482 @@
 #          - Retrieved with the **configure** or **cget** command with no exceptions.
 #          - Changed with the **configure** command, unless stated otherwise.
 #
-# **-background**             It's a list that specifies the color to use as background.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-background**          It's a list that specifies the color to use as background.
+#                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-background** specified in its style.
-#                                                            If there isn't one, the **-background** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-background** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                                If it's not provided --> The widget will follow the **-background** specified in its style.
+#                                                         If there isn't one, the **-background** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-background** will always abide by its mapping values, if any.
+#                                                         Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-shellbackground**.
+#                          See also **-shellbackground**.
 #
-# **-bordercolor**            It's a list that specifies the color to use as bordercolor.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-bordercolor**         It's a list that specifies the color to use as bordercolor.
+#                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: It's only meaningful for widgets with a **solid** or **flat** relief.
+#                          Note: It's only meaningful for widgets with a **solid** or **flat** relief.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
-#                                                            If there isn't one, the **-bordercolor** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-bordercolor** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                                If it's not provided --> The widget will follow the **-bordercolor** specified in its style.
+#                                                         If there isn't one, the **-bordercolor** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-bordercolor** will always abide by its mapping values, if any.
+#                                                         Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-borderwidth** and **-relief**.
+#                          See also **-borderwidth** and **-relief**.
 #
-# **-borderwidth**            Specifies the width of the three-dimensional border to draw around the outside of the widget,
-#                             if such a border is being drawn.
-#                             The **-relief** option typically determines this.
+# **-borderwidth**         Specifies the width of the three-dimensional border to draw around the outside of the widget,
+#                          if such a border is being drawn.
+#                          The **-relief** option typically determines this.
 #
-#                             The value may also be used when drawing three-dimensional effects in the widget's interior.
-#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters or centimeters).
+#                          The value may also be used when drawing three-dimensional effects in the widget's interior.
+#                          The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                          (pixels, points, inches, millimeters or centimeters).
 #
-#                             Note: A value of **0** means no border.
+#                          Note: A value of **0** means no border.
 #
-#                             Note: Only working with reliefs that are not *flat*.
+#                          Note: Only working with reliefs that are not *flat*.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
-#                                                            If there isn't one, the **-borderwidth** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-borderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                If it's not provided --> The widget will follow the **-borderwidth** specified in its style.
+#                                                         If there isn't one, the **-borderwidth** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-borderwidth** will not abide by its mapping values, if any.
+#                                                         It is not supposed to change when the widget state changes.
 #
-#                             See also **-bordercolor** and **-relief**.
+#                          See also **-bordercolor** and **-relief**.
 #
-# **-class**                  Specifies a class for the widget.
-#                             It is mainly used to make bindings for widgets that have the same class.
+# **-class**               Specifies a class for the widget.
+#                          It is mainly used to make bindings for widgets that have the same class.
 #
-#                             Note: This option may only be provided while creating the widget.
-#                                   Attempts to change this value after the widget is created by using the **configure** command,
-#                                   will be ignored by mustang.
+#                          Note: This option may only be provided while creating the widget.
+#                                Attempts to change this value after the widget is created by using the **configure** command,
+#                                will be ignored by mustang.
 #
-#                             If not provided, defaults to **Canvas**.
+#                          If not provided, defaults to **Canvas**.
 #
-# **-closeenough**            Specifies a floating-point value indicating how close the mouse cursor must be to an item before it is
-#                             considered to be "inside" the item.
+# **-closeenough**         Specifies a floating-point value indicating how close the mouse cursor must be to an item before it is
+#                          considered to be "inside" the item.
 #
-#                             If not provided, defaults to 1.0.
+#                          If not provided, defaults to 1.0.
 #
-# **-cmenu**                  Specifies the contextual menu address that will be assigned to the widget.
+# **-cmenu**               Specifies the contextual menu address that will be assigned to the widget.
 #
-#                             The contextual menu will be assign to the *content* and *border* objects of the megawidget.
-#                             If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                             toplevel (if any) will be used instead. If the widget's toplevel doesn't have a contextual menu,
-#                             nothing will happen.
+#                          The contextual menu will be assign to the *content* object of the megawidget.
+#                          If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                          toplevel (if any) will be used instead. If the widget's toplevel doesn't have a contextual menu,
+#                          nothing will happen.
 #
-#                             The *hull* object will rather use the contextual menu of the widget's toplevel, if any.
-#                             If the developer needs a different contextual menu for it, a variable called
-#                             '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
-#                             order to be used instead of the toplevel one.
+#                          The *hull* and *fake scrollbar* objects will use the contextual menu of the widget's toplevel, if any.
+#                          If the developer needs a different contextual menu for them, a variable called
+#                          '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
+#                          order to be used instead of the toplevel one.
 #
-#                             Note: '$short_addr' must be the short address of the canvas widget.
-#                                   See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
+#                          Note: '$short_addr' must be the short address of the canvas widget.
+#                                See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
-#                             If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid contextual menu
-#                             address, it will be ignored and the contextual menu of the widget's toplevel (if any) will be used.
-#                             If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#                          If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid contextual menu
+#                          address, it will be ignored and the contextual menu of the widget's toplevel (if any) will be used.
+#                          If the widget's toplevel doesn't have a contextual menu, nothing will happen.
 #
-#                             The *scrollbar* objects are not supposed to have a contextual menu and will not be link with any.
+#                          The *scrollbar* objects are not supposed to have a contextual menu and will not be link with any.
 #
-#                             Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple canvas widget, it will be silently ignored.
+#                          Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple canvas widget, it will be silently ignored.
 #
-#                             If not provided, defaults to the empty string.
+#                          If not provided, defaults to the empty string.
 #
-# **-confine**                Specifies a boolean value that indicates whether or not it should be allowable to set the canvas's
-#                             view outside the region defined by the **scrollregion** argument.
+# **-confine**             Specifies a boolean value that indicates whether or not it should be allowable to set the canvas's
+#                          view outside the region defined by the **scrollregion** argument.
 #
-#                             If not provided, defaults to true, which means that the view will be constrained within the scroll region.
+#                          If not provided, defaults to true, which means that the view will be constrained within the scroll region.
 #
-# **-cursor**                 Specifies the mouse cursor to be used inside the canvas area.
-#                             If an empty string is specified, it indicates that the widget should defer to it's parent for
-#                             cursor specification.
+# **-cursor**              Specifies the mouse cursor to be used inside the canvas area.
+#                          If an empty string is specified, it indicates that the widget should defer to it's parent for
+#                          cursor specification.
 #
-#                             See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
+#                          See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-cursor** specified in its style.
-#                                                            If there isn't one, the **-cursor** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-cursor** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                If it's not provided --> The widget will follow the **-cursor** specified in its style.
+#                                                         If there isn't one, the **-cursor** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-cursor** will not abide by its mapping values, if any.
+#                                                         It is not supposed to change when the widget state changes.
 #
-# **-height**                 Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters and centimeters).
+# **-height**              Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                          (pixels, points, inches, millimeters and centimeters).
 #
-#                             If this option is **0** then the widget will assume the minimum height possible that can accomodate
-#                             it's content height. Negative values will be ignored.
+#                          If this option is **0** then the widget will assume the minimum height possible that can accomodate
+#                          it's content height. Negative values will be ignored.
 #
-#                             Note that canvases will ignore height of '0'.
-#                             This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across
-#                             operating systems a height value of '0' will not be accepted for canvases.
+#                          Note that canvases will ignore height of '0'.
+#                          This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across
+#                          operating systems a height value of '0' will not be accepted for canvases.
 #
-#                             Note: "WINDOW MANAGERS"
+#                          Note: "WINDOW MANAGERS"
 #
-#                                 Any toplevel is managed by the *window manager*.
-#                                 Any widget's program-requested height may cause it's toplevel to change it's height as well.
-#                                 If the toplevel program-requested height is ignored (by the window manager),
-#                                 then any widget's program-requested height is ignored too (by Tk that follows the istructions
-#                                 received by the 'window manager').
+#                              Any toplevel is managed by the *window manager*.
+#                              Any widget's program-requested height may cause it's toplevel to change it's height as well.
+#                              If the toplevel program-requested height is ignored (by the window manager),
+#                              then any widget's program-requested height is ignored too (by Tk that follows the istructions
+#                              received by the 'window manager').
 #
-#                                 Some window managers ignores any toplevel program-requested height and demands only to the
-#                                 user to manually change the toplevel's height.
+#                              Some window managers ignores any toplevel program-requested height and demands only to the
+#                              user to manually change the toplevel's height.
 #
-#                                 Some window managers allows any toplevel program-requested height until the user will
-#                                 manually change the toplevel's height.
-#                                 Once the user has manually changed the toplevel's height, any subsequent toplevel
-#                                 program-requested height will be ignored.
+#                              Some window managers allows any toplevel program-requested height until the user will
+#                              manually change the toplevel's height.
+#                              Once the user has manually changed the toplevel's height, any subsequent toplevel
+#                              program-requested height will be ignored.
 #
-#                                 Others window managers allows any toplevel program-requested height in any circumstances.
+#                              Others window managers allows any toplevel program-requested height in any circumstances.
 #
-#                             "Tk"
+#                          "Tk"
 #
-#                                 Tk ignores any widget's program-requested height if the **grid** or **pack** geometry manager
-#                                 is used within the widget, since these geometry managers will override the widget's height in
-#                                 those cases.
+#                              Tk ignores any widget's program-requested height if the **grid** or **pack** geometry manager
+#                              is used within the widget, since these geometry managers will override the widget's height in
+#                              those cases.
 #
-#                             If not provided, defaults to **7** centimeters.
+#                          If not provided, defaults to **7** centimeters.
 #
-#                             See also **-width**.
+#                          See also **-width**.
 #
-# **-insertbackground**       It's a list that specifies color to use as background in the area covered by the insertion cursor.
-#                             This color will normally override either the normal background for the widget (or the selection
-#                             background if the insertion cursor happens to fall in the selection).
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-insertbackground**    It's a list that specifies color to use as background in the area covered by the insertion cursor.
+#                          This color will normally override either the normal background for the widget (or the selection
+#                          background if the insertion cursor happens to fall in the selection).
+#                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-insertbackground** specified in its style.
-#                                                            If there isn't one, the **-insertbackground** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-insertbackground** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                                If it's not provided --> The widget will follow the **-insertbackground** specified in its style.
+#                                                         If there isn't one, the **-insertbackground** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-insertbackground** will always abide by its mapping values, if any.
+#                                                         Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-selectbackground** and **-insertborderwidth**.
+#                          See also **-selectbackground** and **-insertborderwidth**.
 #
-# **-insertborderwidth**      It's a list that specifies a non-negative value indicating the width of the 3-D border to draw around
-#                             the insertion cursor.
-#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+# **-insertborderwidth**   It's a list that specifies a non-negative value indicating the width of the 3-D border to draw around
+#                          the insertion cursor.
+#                          The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
 #
-#                             Note: A value of **0** means no border.
+#                          Note: A value of **0** means no border.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-insertborderwidth** specified in its style.
-#                                                            If there isn't one, the **-insertborderwidth** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-insertborderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                If it's not provided --> The widget will follow the **-insertborderwidth** specified in its style.
+#                                                         If there isn't one, the **-insertborderwidth** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-insertborderwidth** will not abide by its mapping values, if any.
+#                                                         It is not supposed to change when the widget state changes.
 #
-#                             See also **-selectborderwidth**.
+#                          See also **-selectborderwidth**.
 #
-# **-insertofftime**          Specifies a non-negative integer value indicating the number of milliseconds the insertion cursor
-#                             should remain "off" in each blink cycle.
-#                             If this option is zero then the cursor does not blink: it is on all the time.
+# **-insertofftime**       Specifies a non-negative integer value indicating the number of milliseconds the insertion cursor
+#                          should remain "off" in each blink cycle.
+#                          If this option is zero then the cursor does not blink: it is on all the time.
 #
-#                             If not provided, defaults to **300** milliseconds.
+#                          If not provided, defaults to **300** milliseconds.
 #
-#                             See also **-insertontime**.
+#                          See also **-insertontime**.
 #
-# **-insertontime**           Specifies a non-negative integer value indicating the number of milliseconds the insertion cursor
-#                             should remain "on" in each blink cycle.
+# **-insertontime**        Specifies a non-negative integer value indicating the number of milliseconds the insertion cursor
+#                          should remain "on" in each blink cycle.
 #
-#                             If not provided, defaults to **600** milliseconds.
+#                          If not provided, defaults to **600** milliseconds.
 #
-#                             See also **-insertofftime**.
+#                          See also **-insertofftime**.
 #
-# **-insertwidth**            Specifies a non-negative value indicating the total width of the insertion cursor.
-#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
-#                             If a border has been specified for the insertion cursor (using the *-insertborderwidth* option),
-#                             the border will be drawn inside the width specified by the *-insertwidth* option.
+# **-insertwidth**         Specifies a non-negative value indicating the total width of the insertion cursor.
+#                          The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+#                          If a border has been specified for the insertion cursor (using the *-insertborderwidth* option),
+#                          the border will be drawn inside the width specified by the *-insertwidth* option.
 #
-#                             If not provided, defaults to **2**.
+#                          If not provided, defaults to **2**.
 #
-# **-relief**                 Specifies the three-dimensional effect desired for the widget.
-#                             The value indicates how the widget's interior should appear relative to its exterior.
-#                             For example, *raised* means the widget's interior should appear to protrude from the screen,
-#                             relative to the exterior of the widget.
+# **-relief**              Specifies the three-dimensional effect desired for the widget.
+#                          The value indicates how the widget's interior should appear relative to its exterior.
+#                          For example, *raised* means the widget's interior should appear to protrude from the screen,
+#                          relative to the exterior of the widget.
 #
-#                             The widget will accept as relief any of the following values:
-#                                **flat**,
-#                                **groove**,
-#                                **raised**,
-#                                **ridge**,
-#                                **solid**,
-#                                **sunken**.
+#                          The widget will accept as relief any of the following values:
+#                             **flat**,
+#                             **groove**,
+#                             **raised**,
+#                             **ridge**,
+#                             **solid**,
+#                             **sunken**.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-relief** specified in its style.
-#                                                            If there isn't one, the **-relief** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-relief** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                If it's not provided --> The widget will follow the **-relief** specified in its style.
+#                                                         If there isn't one, the **-relief** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-relief** will not abide by its mapping values, if any.
+#                                                         It is not supposed to change when the widget state changes.
 #
-#                             See also **-bordercolor** and **-borderwidth**.
+#                          See also **-bordercolor** and **-borderwidth**.
 #
-# **-scrollable**             Specifies a boolean value indicating wheter or not the widget should be scrollable.
-#                             If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single canvas widget.
+# **-scrollable**          Specifies a boolean value indicating wheter or not the widget should be scrollable.
+#                          If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single canvas widget.
 #
-#                             The scrollbars will be automatically managed by Tk with the following rules:
-#                                The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
-#                                the widget *viewport* width and *not needed* when it's not.
+#                          The scrollbars will be automatically managed by Tk with the following rules:
+#                             The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
+#                             the widget *viewport* width and *not needed* when it's not.
 #
-#                                The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
-#                                the widget *viewport* height and *not needed* when it's not.
+#                             The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
+#                             the widget *viewport* height and *not needed* when it's not.
 #
-#                                If a scrollbar is currently needed, then it will be displayed (if it's not already displayed).
-#                                If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
-#                                already displayed).
+#                             If a scrollbar is currently needed, then it will be displayed (if it's not already displayed) and it's related
+#                             fake scrollbar will be removed.
+#                             If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
+#                             already displayed) and it's related fake scrollbar will be displayed.
 #
-#                             Note: This option may be provided while creating the widget.
-#                                   Attempts to change this value after the widget was created by using the **configure** command,
-#                                   will be ignored by mustang.
+#                          Note: This option may be provided while creating the widget.
+#                                Attempts to change this value after the widget was created by using the **configure** command,
+#                                will be ignored by mustang.
 #
-#                             If not provided, defaults to **false** (meaning no scrollbar).
+#                          If not provided, defaults to **false** (meaning no scrollbar).
 #
-# **-scrollregion**           Specifies a list with four coordinates describing the left, top, right, and bottom coordinates
-#                             of a rectangular region. This region is used for scrolling purposes and is considered to be the
-#                             boundary of the information in the canvas.
-#                             Each of the coordinates may be specified in any of the forms given in the **COORDINATES** section below.
+# **-scrollregion**        Specifies a list with four coordinates describing the left, top, right, and bottom coordinates
+#                          of a rectangular region. This region is used for scrolling purposes and is considered to be the
+#                          boundary of the information in the canvas.
+#                          Each of the coordinates may be specified in any of the forms given in the **COORDINATES** section below.
 #
-#                             If not provided, defaults to the empty string, meaning no scrolling available.
+#                          If not provided, defaults to the empty string, meaning no scrolling available.
 #
-# **-selectbackground**       It's a list that specifies the background color to use when displaying selected items.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-selectbackground**    It's a list that specifies the background color to use when displaying selected items.
+#                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-selectbackground** specified in its style.
-#                                                            If there isn't one, the **-selectbackground** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-selectbackground** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                                If it's not provided --> The widget will follow the **-selectbackground** specified in its style.
+#                                                         If there isn't one, the **-selectbackground** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-selectbackground** will always abide by its mapping values, if any.
+#                                                         Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-selectforeground** and **-insertborderwidth**.
+#                          See also **-selectforeground** and **-insertborderwidth**.
 #
-# **-selectborderwidth**      Specifies a non-negative value indicating the width of the 3-D border to draw around selected items.
-#                             The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
+# **-selectborderwidth**   Specifies a non-negative value indicating the width of the 3-D border to draw around selected items.
+#                          The value may have any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html).
 #
-#                             Note: A value of **0** means no border.
+#                          Note: A value of **0** means no border.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events cannot change its value.
-#                                                            Only the developer can.
+#                                If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                         Only the developer can.
 #
-#                                   If it's not provided --> The widget will follow the **-selectborderwidth** specified in its style.
-#                                                            If there isn't one, the **-selectborderwidth** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                If it's not provided --> The widget will follow the **-selectborderwidth** specified in its style.
+#                                                         If there isn't one, the **-selectborderwidth** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-selectborderwidth** will not abide by its mapping values, if any.
+#                                                         It is not supposed to change when the widget state changes.
 #
-#                             See also **-selectbackground** and **-selectforeground**.
+#                          See also **-selectbackground** and **-selectforeground**.
 #
-# **-selectforeground**       It's a list that specifies the foreground color to use when displaying selected items.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-selectforeground**    It's a list that specifies the foreground color to use when displaying selected items.
+#                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events are not allowed to change its value.
-#                                                            Only the developer is allowed to do it.
+#                                If it's provided     --> Styles, mappings and states events are not allowed to change its value.
+#                                                         Only the developer is allowed to do it.
 #
-#                                   If it's not provided --> The widget will follow the **-selectforeground** specified in its style.
-#                                                            If there isn't one, the **-selectforeground** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-selectforeground** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                                If it's not provided --> The widget will follow the **-selectforeground** specified in its style.
+#                                                         If there isn't one, the **-selectforeground** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-selectforeground** will always abide by its mapping values, if any.
+#                                                         Styles, mappings and states events are allowed to change its value.
 #
-#                             See also **-selectbackground** and **-selectborderwidth**.
+#                          See also **-selectbackground** and **-selectborderwidth**.
 #
-# **-shellbackground**        It's a list that specifies the color to use as background structure.
-#                             This color will be used in the interspaces between the mustang objects that compose the widget and should
-#                             reflects the widget's parent background.
-#                             See the **COLOR OPTION** section to know how this list should be composed.
+# **-shellbackground**     It's a list that specifies the color to use as background structure.
+#                          This color will be used in the interspaces between the mustang objects that compose the widget and should
+#                          reflects the widget's parent background.
+#                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                             Note: The *-shellbackground* is meaningless and will be ignored for canvas that are not scrollable.
+#                          Note: The *-shellbackground* is meaningless and will be ignored for canvas that are not scrollable.
 #
-#                             Note: This is a styleable option.
+#                          Note: This is a styleable option.
 #
-#                                   If it's provided     --> Styles, mappings and states events are not allowed to change its value.
-#                                                            Only the developer is allowed to do it.
+#                                If it's provided     --> Styles, mappings and states events are not allowed to change its value.
+#                                                         Only the developer is allowed to do it.
 #
-#                                   If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
-#                                                            If there isn't one, the **-shellbackground** of the **Canvas** style
-#                                                            will be used instead.
-#                                                            The **-shellbackground** will always abide by its mapping values, if any.
-#                                                            Styles, mappings and states events are allowed to change its value.
+#                                If it's not provided --> The widget will follow the **-shellbackground** specified in its style.
+#                                                         If there isn't one, the **-shellbackground** of the **Canvas** style
+#                                                         will be used instead.
+#                                                         The **-shellbackground** will always abide by its mapping values, if any.
+#                                                         Styles, mappings and states events are allowed to change its value.
 #
-#                                                            Note: The **-shellbackground** should change rarely, for example upon
-#                                                                  an **Activate**/**Deactivate** event.
+#                                                         Note: The **-shellbackground** should change rarely, for example upon
+#                                                               an **Activate**/**Deactivate** event.
 #
-#                             See also **-background**.
+#                          See also **-background**.
 #
-# **-state**                  Specifies the state for the widget.
-#                             The canvas widget state acts differently than the other widgets states, because it's a classic widget
-#                             and do not support natively any dynamic states.
-#                             Changes to the widget 'physical' state affects it's dynamic state.
-#                             Allowed states values are **normal** and **disabled**.
+# **-state**               Specifies the state for the widget.
+#                          The canvas widget state acts differently than the other widgets states, because it's a classic widget
+#                          and do not support natively any dynamic states.
+#                          Changes to the widget 'physical' state affects it's dynamic state.
+#                          Allowed states values are **normal** and **disabled**.
 #
-#                             Individual canvas objects all have their own state option which may override the default state.
-#                             Many options can take separate specifications such that the appearance of the item can be different
-#                             in different situations.
-#                             The options that start with active control the appearance when the mouse pointer is over it, while
-#                             the option starting with disabled controls the appearance when the state is disabled.
-#                             Canvas items which are disabled will not react to canvas bindings.
+#                          Canvas items which are disabled will not react to canvas bindings.
 #
-#                             If not provided, defaults to **normal**.
+#                          If not provided, defaults to **normal**.
 #
-# **-style**                  Specifies a custom widget style.
-#                             If not provided, defaults to **Canvas**.
+# **-style**               Specifies a custom widget style.
+#                          If not provided, defaults to **Canvas**.
 #
-#                             The *style* provided should already exists at the time the widget is created.
+#                          The *style* provided should already exists at the time the widget is created.
 #
-#                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#                          See the [style](/wiki/commands/style.md) wiki page to know more about styles.
 #
-# **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
-#                             and **Shift-Tab**).
+# **-takefocus**           Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
+#                          and **Shift-Tab**).
 #
-#                             Before setting the focus to a widget, the traversal scripts consult the value of the
-#                             *-takefocus* option.
-#                                **0** --> It means that the widget should be skipped entirely during keyboard traversal.
-#                                **1** --> It means that the widget should receive the input focus as long as it is viewable
-#                                          and all of its ancestors are mapped.
+#                          Before setting the focus to a widget, the traversal scripts consult the value of the
+#                          *-takefocus* option.
+#                             **0** --> It means that the widget should be skipped entirely during keyboard traversal.
+#                             **1** --> It means that the widget should receive the input focus as long as it is viewable
+#                                       and all of its ancestors are mapped.
 #
-#                             Differently than Tk, mustang does not allow the empty string as a valid value.
+#                          Differently than Tk, mustang does not allow the empty string as a valid value.
 #
-#                             Note: Widgets will ignore any takefocus values while in the **disabled** state.
-#                                   The moment the widget becomes **normal** the takefocus specified will be taken into consideration.
+#                          Note: Widgets will ignore any takefocus values while in the **disabled** state.
+#                                The moment the widget becomes **normal** the takefocus specified will be taken into consideration.
 #
-#                             If not provided, defaults to **0**.
+#                          If not provided, defaults to **0**.
 #
-# **-width**                  Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
-#                             (pixels, points, inches, millimeters and centimeters).
+# **-width**               Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
+#                          (pixels, points, inches, millimeters and centimeters).
 #
-#                             If this option is **0** then the widget will assume the minimum width possible that can accomodate
-#                             it's content width. Negative values will be ignored.
+#                          If this option is **0** then the widget will assume the minimum width possible that can accomodate
+#                          it's content width. Negative values will be ignored.
 #
-#                             Note that canvases will ignore width of '0'.
-#                             This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across
-#                             operating systems a width value of '0' will not be accepted for canvases.
+#                          Note that canvases will ignore width of '0'.
+#                          This restriction is not necessary on Linux (or BSD), but in order to have the same behavior across
+#                          operating systems a width value of '0' will not be accepted for canvases.
 #
-#                             Note: "WINDOW MANAGERS"
+#                          Note: "WINDOW MANAGERS"
 #
-#                                       Any toplevel is managed by the *window manager*.
-#                                       Any widget's program-requested width may cause it's toplevel to change it's width as well.
-#                                       If the toplevel program-requested width is ignored (by the window manager),
-#                                       then any widget's program-requested width is ignored too (by Tk that follows the istructions
-#                                       received by the window manager).
+#                                    Any toplevel is managed by the *window manager*.
+#                                    Any widget's program-requested width may cause it's toplevel to change it's width as well.
+#                                    If the toplevel program-requested width is ignored (by the window manager),
+#                                    then any widget's program-requested width is ignored too (by Tk that follows the istructions
+#                                    received by the window manager).
 #
-#                                       Some window managers ignores any toplevel program-requested width and demands only to the
-#                                       user to manually change the toplevel's width.
+#                                    Some window managers ignores any toplevel program-requested width and demands only to the
+#                                    user to manually change the toplevel's width.
 #
-#                                       Some window managers allows any toplevel program-requested width until the user will
-#                                       manually change the toplevel's width.
-#                                       Once the user has manually changed the toplevel's width, any subsequent toplevel
-#                                       program-requested width will be ignored.
+#                                    Some window managers allows any toplevel program-requested width until the user will
+#                                    manually change the toplevel's width.
+#                                    Once the user has manually changed the toplevel's width, any subsequent toplevel
+#                                    program-requested width will be ignored.
 #
-#                                       Others window managers allows any toplevel program-requested width in any circumstances.
+#                                    Others window managers allows any toplevel program-requested width in any circumstances.
 #
-#                                   "Tk"
+#                                "Tk"
 #
-#                                       Tk ignores any widget's program-requested width if the **grid** or **pack** geometry manager
-#                                       is used within the widget, since these geometry managers will override the widget's width in
-#                                       those cases.
+#                                    Tk ignores any widget's program-requested width if the **grid** or **pack** geometry manager
+#                                    is used within the widget, since these geometry managers will override the widget's width in
+#                                    those cases.
 #
-#                             If not provided, defaults to **10** centimeters.
+#                          If not provided, defaults to **10** centimeters.
 #
-#                             See also **-height**.
+#                          See also **-height**.
 #
-# **-xscrollcommand**         Specifies the prefix for a command used to communicate with horizontal scrollbars.
-#                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
-#                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
-#                             Tcl command by concatenating the scroll command and two numbers.
-#                             Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
-#                             **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
-#                             one third the way through the document, and so on.
-#                             The first fraction indicates the first information in the document that is visible in the window, and the
-#                             second fraction indicates the information just after the last portion that is visible.
-#                             The command is then passed to the Tcl interpreter for execution.
-#                             Typically the **-xscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
-#                             e.g. **.x_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
-#                             If this option is not specified, then no command will be executed.
+# **-xscrollcommand**      Specifies the prefix for a command used to communicate with horizontal scrollbars.
+#                          When the view in the widget's window changes (or whenever anything else occurs that could change the display
+#                          in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
+#                          Tcl command by concatenating the scroll command and two numbers.
+#                          Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
+#                          **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
+#                          one third the way through the document, and so on.
+#                          The first fraction indicates the first information in the document that is visible in the window, and the
+#                          second fraction indicates the information just after the last portion that is visible.
+#                          The command is then passed to the Tcl interpreter for execution.
+#                          Typically the **-xscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                          e.g. **.x_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                          If this option is not specified, then no command will be executed.
 #
-#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to the empty string.
+#                          Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to the empty string.
 #
-#                             If not specified defaults to the empty string.
+#                          If not specified defaults to the empty string.
 #
-#                             See also **-yscrollcommand**, **-xscrollincrement**, **-yscrollincrement** and **-scrollable**.
+#                          See also **-yscrollcommand**, **-xscrollincrement**, **-yscrollincrement** and **-scrollable**.
 #
-# **-xscrollincrement**       Specifies an integer indicating the increment for horizontal scrolling.
-#                             If the value of this option is greater than zero, the horizontal view in the widget will be constrained
-#                             so that the widget *x* coordinate at the left edge of the widget is always an even multiple of
-#                             **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the left and
-#                             right arrows of a scrollbar are selected) will also be **xScrollIncrement**. If the value of this option
-#                             is zero, then horizontal scrolling is unconstrained.
+# **-xscrollincrement**    Specifies an integer indicating the increment for horizontal scrolling.
+#                          If the value of this option is greater than zero, the horizontal view in the widget will be constrained
+#                          so that the widget *x* coordinate at the left edge of the widget is always an even multiple of
+#                          **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the left and
+#                          right arrows of a scrollbar are selected) will also be **xScrollIncrement**. If the value of this option
+#                          is zero, then horizontal scrolling is unconstrained.
 #
-#                             See also **-xscrollcommand**, **-yscrollcommand**, **-yscrollincrement** and **-scrollable**.
+#                          See also **-xscrollcommand**, **-yscrollcommand**, **-yscrollincrement** and **-scrollable**.
 #
-#                             If not provided, defaults to **0**.
+#                          If not provided, defaults to **0**.
 #
-# **-yscrollcommand**         Specifies the prefix for a command used to communicate with vertical scrollbars.
-#                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
-#                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
-#                             Tcl command by concatenating the scroll command and two numbers.
-#                             Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
-#                             **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
-#                             one third the way through the document, and so on.
-#                             The first fraction indicates the first information in the document that is visible in the window, and the
-#                             second fraction indicates the information just after the last portion that is visible.
-#                             The command is then passed to the Tcl interpreter for execution.
-#                             Typically the **-yscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
-#                             e.g. **.y_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
-#                             If this option is not specified, then no command will be executed.
+# **-yscrollcommand**      Specifies the prefix for a command used to communicate with vertical scrollbars.
+#                          When the view in the widget's window changes (or whenever anything else occurs that could change the display
+#                          in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
+#                          Tcl command by concatenating the scroll command and two numbers.
+#                          Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
+#                          **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
+#                          one third the way through the document, and so on.
+#                          The first fraction indicates the first information in the document that is visible in the window, and the
+#                          second fraction indicates the information just after the last portion that is visible.
+#                          The command is then passed to the Tcl interpreter for execution.
+#                          Typically the **-yscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                          e.g. **.y_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                          If this option is not specified, then no command will be executed.
 #
-#                             Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to the empty string.
+#                          Note: This option is ignored for scrollable canvas (**-scrollable true**) where its value is set to the empty string.
 #
-#                             If not specified defaults to the empty string.
+#                          If not specified defaults to the empty string.
 #
-#                             See also **-xscrollcommand**, **-xscrollincrement**, **-yscrollincrement** and **-scrollable**.
+#                          See also **-xscrollcommand**, **-xscrollincrement**, **-yscrollincrement** and **-scrollable**.
 #
-# **-yscrollincrement**       Specifies an integer indicating the increment for vertical scrolling.
-#                             If the value of this option is greater than zero, the vertical view in the widget will be constrained
-#                             so that the widget *y* coordinate at the left edge of the widget is always an even multiple of
-#                             **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the top and
-#                             bottom arrows of a scrollbar are selected) will also be **yScrollIncrement**. If the value of this option
-#                             is zero, then vertical scrolling is unconstrained.
+# **-yscrollincrement**    Specifies an integer indicating the increment for vertical scrolling.
+#                          If the value of this option is greater than zero, the vertical view in the widget will be constrained
+#                          so that the widget *y* coordinate at the left edge of the widget is always an even multiple of
+#                          **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the top and
+#                          bottom arrows of a scrollbar are selected) will also be **yScrollIncrement**. If the value of this option
+#                          is zero, then vertical scrolling is unconstrained.
 #
-#                             See also **-xscrollcommand**, **-yscrollcommand**, **-xscrollincrement** and **-scrollable**.
+#                          See also **-xscrollcommand**, **-yscrollcommand**, **-xscrollincrement** and **-scrollable**.
 #
-#                             If not provided, defaults to **0**.
+#                          If not provided, defaults to **0**.
 #
 #### WIDGET COMMAND:
 #
@@ -1955,6 +1951,7 @@
 #### STATES:
 #
 # The canvas widget supports only the **normal** and **disabled** states.
+# In the **disabled** state the canvas will not react to any bindings.
 #
 #### STYLING OPTIONS:
 #
