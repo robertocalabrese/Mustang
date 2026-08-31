@@ -5371,6 +5371,27 @@ proc ::ms::canvas::FocusOut { w } {
     return ""
 }
 
+## Leave
+#
+# Manage the **Leave** event on simple canvas.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::canvas::Leave { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!hover'.
+    interp invokehidden {} $w state [list !hover]
+
+    return ""
+}
+
 #######################
 ##                   ##
 ##     SCROLLBAR     ##
