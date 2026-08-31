@@ -5052,6 +5052,32 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
+## Activate
+#
+# Manage the **Activate** event on the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::canvas::Activate { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to '!background'.
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { interp invokehidden {} $w        state [list !background] }
+        true  { interp invokehidden {} $w.canvas state [list !background] }
+    }
+
+    return ""
+}
+
 ## Configure
 #
 # Manage the **Configure** event on a widget.
