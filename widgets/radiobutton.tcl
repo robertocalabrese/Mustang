@@ -1866,6 +1866,9 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             _grid rowconfigure $w [list 0] -weight 1
             _grid rowconfigure $w [list 1] -weight 0
 
+            _grid columnconfigure $w [list 0] -weight 0
+            _grid columnconfigure $w [list 1] -weight 1
+
             # Hide the widget pathcommand.
             interp hide {} $w
 
