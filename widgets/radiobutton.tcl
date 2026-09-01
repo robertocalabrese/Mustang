@@ -3247,19 +3247,20 @@ proc ::ms::radiobutton::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::radiobutton::Return { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal {
-            # Invoke the widget command, if any.
-            switch -- $::ms::current($w,command) {
-                ""      {}
-                default {
-                    try {
-                        uplevel #0 [list $w.indicator invoke]
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" ""
-                    }
-                }
+        disabled { return "" }
+    }
+
+    # Check if there is a command associated with the widget.
+    switch -- $::ms::current($w,command) {
+        ""      {}
+        default {
+            # Invoke the command associated with the widget.
+            try {
+                uplevel #0 [list {*}$::ms::current($w,command)]
+            } on error {} {
+                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
             }
         }
     }
