@@ -1722,6 +1722,21 @@ proc ::ms::radiobutton::Command { window { args "" } } {
                                   -row 1 \
                                -sticky we;
 
+            ######################################
+            ##                                  ##
+            ##     CHECK THE WIDGET'S STATE     ##
+            ##                                  ##
+            ######################################
+
+            switch -- $::ms::current($w,state) {
+                disabled {
+                    $w           state disabled
+                    $w.indicator state disabled
+                    $w.label     state disabled
+                    $w.highlight state disabled
+                }
+            }
+
             ######################
             ##                  ##
             ##     BINDINGS     ##
@@ -2551,6 +2566,22 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
 
                             _grid configure $w.highlight -padx [list $::ms::current($w,spacer) $pad_right] \
                                                          -pady [list 1m $pad_bottom];
+
+                            ######################################
+                            ##                                  ##
+                            ##     CHECK THE WIDGET'S STATE     ##
+                            ##                                  ##
+                            ######################################
+
+                            switch -- $::ms::current($w,state) {
+                                disabled {
+                                    interp invokehidden {} $w state disabled
+
+                                    $w.indicator state disabled
+                                    $w.label     state disabled
+                                    $w.highlight state disabled
+                                }
+                            }
 
                             return ""
                         }
