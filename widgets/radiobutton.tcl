@@ -920,8 +920,8 @@ _bind _Radiobutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; brea
 _bind _Radiobutton <Destroy> { ::ms::radiobutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Radiobutton <Enter> { ::ms::radiobutton::Hover %W %X %Y; break }
-_bind _Radiobutton <Leave> { ::ms::radiobutton::Hover %W %X %Y; break }
+_bind _Radiobutton <Enter> { ::ms::Hover %W %X %Y; break }
+_bind _Radiobutton <Leave> { ::ms::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Radiobutton <FocusIn>  { ::ms::radiobutton::Pathname_Cmd %W state focus; break }
@@ -1745,13 +1745,13 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             _bind $w.label     <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
 
             # Enter/Leave
-            _bind $w.highlight <Enter> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.indicator <Enter> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.label     <Enter> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.highlight <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.indicator <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.label     <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
-            _bind $w.highlight <Leave> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.indicator <Leave> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.label     <Leave> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.highlight <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.indicator <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+            _bind $w.label     <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
             # FocusIn/FocusOut
             _bind $w.highlight <FocusIn>  { ::ms::radiobutton::Pathname_Cmd [_winfo parent %W] state focus; break }
@@ -3235,47 +3235,6 @@ proc ::ms::radiobutton::FocusOut { w } {
         0   { ::ms::radiobutton::Pathname_Cmd $w state [list !focus] }
         1   { ::ms::radiobutton::Pathname_Cmd $w state [list  focus] }
     }
-}
-
-## Hover
-#
-# Manage the **Enter** and **Leave** event on a radiobutton.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# X, Y   Should be the mouse pointer (X,Y) root coordinates.
-#        These value are provided directly by the **Enter** or **Leave** event.
-#
-# It doesn't return anything.
-proc ::ms::radiobutton::Hover { w X Y } {
-    # Get the dimensions of the widget that acts as a border object.# Get the widget dimensions.
-    set height [_winfo height $::ms::addr($w,border)]
-    set width  [_winfo width  $::ms::addr($w,border)]
-
-    # Get the north-west (nw) root coordinates of the widget that acts as a border object.# Get the widget north-west (nw) root coordinates.
-    set X_nw [_winfo rootx $::ms::addr($w,border)]
-    set Y_nw [_winfo rooty $::ms::addr($w,border)]
-
-    # Get the widget south-east (se) root coordinates of the widget that acts as a border object.# Get the widget south-east (se) root coordinates.
-    set X_se [expr { $X_nw+$width }]
-    set Y_se [expr { $Y_nw+$height }]
-
-    # Check if the mouse pointer coordinates are inside or outside the widget acting as a border object.
-    if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
-        # The mouse cursor is outside the widget acting as a border object.# The mouse cursor is outside the widget.
-
-        # Change the widget dynamic state to '!hover'.
-        ::ms::radiobutton::Pathname_Cmd $w state !hover
-    } else {
-        # The mouse cursor is inside the widget acting as a border object.# The mouse cursor is still inside the widget.
-
-        # Change the widget dynamic state to 'hover'.
-        ::ms::radiobutton::Pathname_Cmd $w state hover
-    }
-
-    return ""
 }
 
 ## Return
