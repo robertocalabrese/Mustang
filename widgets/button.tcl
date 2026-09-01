@@ -958,8 +958,8 @@ package provide ::ms::button 0.1
 ##############################
 
 # Activate/Deactivate
-_bind _Button <Activate>   { ::ms::button::Activate   %W; break }
-_bind _Button <Deactivate> { ::ms::button::Deactivate %W; break }
+_bind _Button <Activate>   { interp invokehidden {} $w state [list !background]; break }
+_bind _Button <Deactivate> { interp invokehidden {} $w state [list  background]; break }
 
 # ButtonPress
 _bind _Button <ButtonPress-1>   { ::ms::button::ButtonPress   %W; break }
@@ -972,12 +972,12 @@ _bind _Button <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Button <Destroy> { ::ms::button::Destroy %W; break }
 
 # Enter/Leave
-_bind _Button <Enter> { ::ms::button::Enter %W state  hover; break }
-_bind _Button <Leave> { ::ms::button::Leave %W state !hover; break }
+_bind _Button <Enter> { interp invokehidden {} $w state [list  focus]; break }
+_bind _Button <Leave> { interp invokehidden {} $w state [list !focus]; break }
 
 # FocusIn/FocusOut
-_bind _Button <FocusIn>  { ::ms::button::FocusIn  %W; break }
-_bind _Button <FocusOut> { ::ms::button::FocusOut %W; break }
+_bind _Button <FocusIn>  { interp invokehidden {} %W state [list  focus]; break }
+_bind _Button <FocusOut> { interp invokehidden {} %W state [list !focus]; break }
 
 # Return/KP_Enter/space
 _bind _Button <Return>   { ::ms::button::Invoke %W; break }
@@ -2694,27 +2694,6 @@ proc ::ms::button::Style_Update { stylename caller_info } {
 ##                                  ##
 ######################################
 
-## Activate
-#
-# Manage the **Activate** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::Activate { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to '!background'.
-    interp invokehidden {} $w state [list !background]
-
-    return ""
-}
-
 ## ButtonPress
 #
 # Manage the **ButtonPress-1** event upon the widget.
@@ -2771,27 +2750,6 @@ proc ::ms::button::ButtonRelease { w } {
             }
         }
     }
-}
-
-## Deactivate
-#
-# Manage the **Deactivate** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::Deactivate { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'background'.
-    interp invokehidden {} $w state [list background]
-
-    return ""
 }
 
 ## Destroy
@@ -2945,75 +2903,6 @@ proc ::ms::button::Destroy { w } {
     return ""
 }
 
-## Enter
-#
-# Manage the **Enter** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::Enter { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'hover'.
-    interp invokehidden {} $w state [list hover]
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::FocusIn { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'focus'.
-    interp invokehidden {} $w state [list focus]
-
-    return ""
-}
-
-## FocusOut
-#
-# Manage the **FocusOut** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
-    }
-
-    # Change the widget dynamic state to '!focus'.
-    interp invokehidden {} $w state [list !focus]
-
-    return ""
-}
-
 ## Invoke
 #
 # Invoke the command associated with the widget.
@@ -3043,27 +2932,6 @@ proc ::ms::button::Invoke { w } {
             }
         }
     }
-}
-
-## Leave
-#
-# Manage the **Leave** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::Leave { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to '!hover'.
-    interp invokehidden {} $w state [list !hover]
-
-    return ""
 }
 
 #*EOF*
