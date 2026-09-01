@@ -2871,18 +2871,29 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **invoke**
-            switch -- $::ms::current($w,state) {
-                normal {
-                    # Execute the command.
-                    try {
-                        uplevel #0 [list $w.indicator invoke]
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
+            switch -- [llength $args] {
+                0   {
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
+                    # Check if there is a command associated with the widget.
+                    switch -- $::ms::current($w,command) {
+                        ""      { return "" }
+                        default {
+                            # Invoke the command associated with the widget.
+                            try {
+                                uplevel #0 [list {*}$::ms::current($w,command)]
+                            } on error {} {
+                                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
                     }
                 }
-                disabled { return "" }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         state {
