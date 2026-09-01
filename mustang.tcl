@@ -4351,17 +4351,8 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 
 ## Touchpad_Widget_X
 #
-# Along the X axis:
-#   Scrolls the scrollbar (if any) related to the scrollable widget real address provided.
-#   If the widget is not a scrollable widget or doesn't have an active scrollbar along the X axis,
-#   try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#   and move that scrollbar by one units/page left or right (depending on the touchpad direction).
-#   If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-#
-# Along the Y axis:
-#   Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#   and move that scrollbar by one units/page up or down (depending on the touchpad direction).
-#   If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+# Scrolls the horizontal scrollbar related to the scrollable widget real address provided
+# by one unit or page left or right (depending on the touchpad direction).
 #
 # Where:
 #
@@ -4405,21 +4396,21 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
     switch -- $what {
         pages {}
         units {
-            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
+            # Adjust the 'delta_x' value, or the movement will be too slow.
             set delta_x [expr { $delta_x*30 }]
-            set delta_y [expr { $delta_y*30 }]
         }
         default { return "" }
     }
 
-    # If there is a movement along the X axis, launch '::ms::Scroll_Widget_X'.
+    # If there is a movement along the X axis, scroll the widget.
     if { $delta_x != 0 } {
-        ::ms::Scroll_Widget_X $w $delta_x $what
-    }
+        # Check the scrollmode.
+        switch -- $::ms::scrollmode {
+            natural { set delta_x [expr { -1.0*$delta_x }] }
+        }
 
-    # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
-    if { $delta_y != 0 } {
-        ::ms::Scroll_Parent_Y $w $delta_y $what
+        # Scroll the horizontal scrollbar.
+        $w xview scroll [expr { -$delta_x*0.008333333333333333 }] $what
     }
 
     return ""
@@ -4427,17 +4418,8 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
 
 ## Touchpad_Widget_Y
 #
-# Along the X axis:
-#   Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#   and move that scrollbar by one units/page left or right (depending on the touchpad direction).
-#   If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-#
-# Along the Y axis:
-#   Scrolls the scrollbar (if any) related to the scrollable widget real address provided.
-#   If the widget is not a scrollable widget or doesn't have an active scrollbar along the Y axis,
-#   try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#   and move that scrollbar by one units/page up or down (depending on the touchpad direction).
-#   If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+# Scrolls the vertical scrollbar related to the scrollable widget real address provided
+# by one unit or page up or down (depending on the touchpad direction).
 #
 # Where:
 #
@@ -4481,21 +4463,21 @@ proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     switch -- $what {
         pages {}
         units {
-            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-            set delta_x [expr { $delta_x*30 }]
+            # Adjust the 'delta_y' value, or the movement will be too slow.
             set delta_y [expr { $delta_y*30 }]
         }
         default { return "" }
     }
 
-    # If there is a movement along the X axis, launch '::ms::Scroll_Parent_X'.
-    if { $delta_x != 0 } {
-        ::ms::Scroll_Parent_X $w $delta_x $what
-    }
-
-    # If there is a movement along the Y axis, launch '::ms::Scroll_Widget_Y'.
+    # If there is a movement along the Y axis, scroll the widget.
     if { $delta_y != 0 } {
-        ::ms::Scroll_Widget_Y $w $delta_y $what
+        # Check the scrollmode.
+        switch -- $::ms::scrollmode {
+            natural { set delta_y [expr { -1.0*$delta_y }] }
+        }
+
+        # Scroll the vertical scrollbar.
+        $w yview scroll [expr { -$delta_y*0.008333333333333333 }] $what
     }
 
     return ""
