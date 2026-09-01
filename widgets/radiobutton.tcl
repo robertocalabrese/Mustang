@@ -1892,9 +1892,6 @@ proc ::ms::radiobutton::Command { window { args "" } } {
                                                $w.indicator \
                                                $w.label];
 
-            # Add the widget address to the megawidget addresses list.
-            lappend ::ms::addr(megawidgets) $w
-
             # Set the widget real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
@@ -1915,6 +1912,9 @@ proc ::ms::radiobutton::Command { window { args "" } } {
 
             # Add the widget address to the radiobutton widgets real address list.
             lappend ::ms::addr(radiobutton) $w
+
+            # Add the widget address to the megawidget addresses list.
+            lappend ::ms::addr(megawidgets) $w
 
             # Add the widget address to the radiobutton classtype real address list with class '::ms::current($w,class)'.
             lappend ::ms::class($::ms::current($w,class),radiobutton,addrs) $w
