@@ -969,9 +969,9 @@ _bind _Button <FocusIn>  { interp invokehidden {} %W state [list  focus]; break 
 _bind _Button <FocusOut> { interp invokehidden {} %W state [list !focus]; break }
 
 # Return/KP_Enter/space
-_bind _Button <Return>   { ::ms::button::Invoke %W; break }
-_bind _Button <KP_Enter> { ::ms::button::Invoke %W; break }
-_bind _Button <space>    { ::ms::button::Invoke %W; break }
+_bind _Button <Return>   { ::ms::button::Pathname_Cmd %W invoke; break }
+_bind _Button <KP_Enter> { ::ms::button::Pathname_Cmd %W invoke; break }
+_bind _Button <space>    { ::ms::button::Pathname_Cmd %W invoke; break }
 
 # Mousewheel and Touchpad
 
@@ -2421,6 +2421,11 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
             # *window* **invoke**
             switch -- [llength $args] {
                 0   {
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
                     # Check if there is a command associated with the widget.
                     switch -- $::ms::current($w,command) {
                         ""      { return "" }
@@ -2874,37 +2879,6 @@ proc ::ms::button::Destroy { w } {
     unset -nocomplain -- ::ms::style($w,widget)
 
     return ""
-}
-
-## Invoke
-#
-# Invoke the command associated with the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::button::Invoke { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if there is a command associated with the widget.
-    switch -- $::ms::current($w,command) {
-        ""      { return "" }
-        default {
-            # Invoke the command associated with the widget.
-            try {
-                uplevel #0 [list {*}$::ms::current($w,command)]
-            } on error {} {
-                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
-            } on ok {} {
-                return ""
-            }
-        }
-    }
 }
 
 #*EOF*
