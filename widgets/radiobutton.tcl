@@ -3129,7 +3129,10 @@ proc ::ms::radiobutton::Destroy { w } {
 
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
-                         ::ms::addr($w,short);
+                         ::ms::addr($w,short) \
+                         ::ms::addr($w.indicator,short) \
+                         ::ms::addr($w.label,short) \
+                         ::ms::addr($w.highlight,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
                          ::ms::addr($w,structure) \
