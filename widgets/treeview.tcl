@@ -3177,11 +3177,11 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Check if the widget is scrollable or not.
                     switch -- $::ms::current($w,scrollable) {
@@ -3579,11 +3579,11 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
             normal   { set cursor $::ms::current($w,cursor) }
         }
 
-        ###################################
-        ##                               ##
-        ##     UPDATE THE WIDGET STYLE   ##
-        ##                               ##
-        ###################################
+        #####################################
+        ##                                 ##
+        ##     UPDATE THE WIDGET'S STYLE   ##
+        ##                                 ##
+        #####################################
 
         # Note: 'borderwidth', 'columnseparatorwidth', 'cursor', 'focuswidth', 'font', 'indent', 'justify',
         #       'padding' and 'rowheight' are not allowed to change if the statespec changes.

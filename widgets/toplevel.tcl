@@ -2042,11 +2042,11 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Note: Toplevels don't understands styles natively.
                     #       No internal styles needs to be created.
@@ -2170,11 +2170,11 @@ proc ::ms::toplevel::Style_Update { stylename caller_info } {
             default { set ::ms::data($w,padding) $::ms::current($w,padding) }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: Toplevels don't understands styles natively.
         #       No internal styles needs to be created.

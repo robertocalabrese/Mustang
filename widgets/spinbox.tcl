@@ -4579,11 +4579,11 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     return [interp invokehidden {} $w state $statespec]
                 }
@@ -4702,11 +4702,11 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
             1   { set ::wait_for_user_response "Unpost" }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'arrowsize', 'charwidth', 'cursor', 'focuswidth', 'font', 'insertcolor', 'insertwidth', 'justify',
         #       'padding' and 'selectborderwidth' are not allowed to change if the statespec changes.

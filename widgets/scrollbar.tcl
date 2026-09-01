@@ -2100,11 +2100,11 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     return [interp invokehidden {} $w state $statespec]
                 }
@@ -2194,11 +2194,11 @@ proc ::ms::scrollbar::Style_Update { stylename caller_info } {
             }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'arrowsize', 'borderwidth', 'cursor', 'gripcount', 'relief' and 'troughcolor' are not allowed to change
         #       if the statespec changes.

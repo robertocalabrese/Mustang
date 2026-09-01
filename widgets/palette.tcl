@@ -3954,11 +3954,11 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     APPLY THE NEW STATESPEC     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     return [$w.combobox state $statespec]
                 }
@@ -4072,11 +4072,11 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
             }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'arrowsize', 'charwidth', 'cursor', 'focuswidth', 'font', 'insertcolor', insertwidth', 'justify',
         #       'padding', 'rows' and 'selectborderwidth' are not allowed to change if the statespec changes.

@@ -3061,11 +3061,11 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
                     #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
@@ -3340,11 +3340,11 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
             normal   { set cursor $::ms::current($w,cursor) }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
         #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'

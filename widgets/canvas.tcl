@@ -4860,11 +4860,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Note: 'borderwidth', 'cursor', 'insertwidth', 'relief' and 'selectborderwidth' are not allowed to change if the statespec changes.
 
@@ -5180,11 +5180,11 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
             normal   { set cursor $::ms::current($w,cursor) }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'borderwidth', 'cursor', 'insertwidth', 'relief' and 'selectborderwidth' are not allowed to change if the statespec changes.
 

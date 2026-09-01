@@ -2134,11 +2134,11 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Propagate the new statespec to the hull and panedwindow objects.
                     interp invokehidden {} $w state $statespec
@@ -2195,11 +2195,11 @@ proc ::ms::panedwindow::Style_Update { stylename caller_info } {
             }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'borderwidth', 'cursor' and 'relief' are not allowed to change if the statespec changes.
 

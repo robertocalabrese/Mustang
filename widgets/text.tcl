@@ -5580,11 +5580,11 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                     # Note: 'borderwidth', 'columns', 'cursor', 'font', 'inactiveselectbackground', 'insertborderwidth', 'padding',
                     #       'relief', 'rows' and 'selectborderwidth' are not allowed to change if the statespec changes.
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Note: Tk canvases don't understands styles, at least not natively.
                     #       No internal styles needs to be created.
@@ -6142,11 +6142,11 @@ proc ::ms::text::Style_Update { stylename caller_info } {
             default { set ::ms::data($w,padding) $::ms::current($w,padding) }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'borderwidth', 'columns', 'cursor', 'font', 'inactiveselectbackground', 'insertborderwidth', 'padding',
         #       'relief', 'rows' and 'selectborderwidth' are not allowed to change if the statespec changes.

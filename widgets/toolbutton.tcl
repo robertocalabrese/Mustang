@@ -2517,11 +2517,11 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     return [interp invokehidden {} $w state $statespec]
                 }
@@ -2581,11 +2581,11 @@ proc ::ms::toolbutton::Style_Update { stylename caller_info } {
             normal   { set cursor $::ms::current($w,cursor) }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'anchor', 'borderwidth', 'charwidth', 'compound', 'cursor', 'font', 'justify', padding' and
         #       'shiftrelief' are not allowed to change if the statespec changes.

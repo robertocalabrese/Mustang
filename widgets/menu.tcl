@@ -1986,11 +1986,11 @@ proc ::ms::menu::Style_Update { stylename caller_info } {
             }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'activebackground', 'activeborderwidth', 'activeforeground', 'activerelief', 'activerelief', 'background', 'borderwidth', 'cursor',
         #       'disabledbackground', 'font', 'foreground', 'relief' and 'selectcolor' are not allowed to change if the statespec changes.

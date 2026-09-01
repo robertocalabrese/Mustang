@@ -2281,11 +2281,11 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     return [interp invokehidden {} $w state $statespec]
                 }
@@ -2389,11 +2389,11 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
             }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'anchor', 'borderwidth', 'cursor', 'font', 'justify', 'thickness', 'troughcolor' and 'wraplength' are not allowed
         #       to change if the statespec changes.
