@@ -1949,17 +1949,17 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                   -row 1 \
                                -sticky we;
 
-            ####################################
-            ##                                ##
-            ##     CHECK THE WIDGET STATE     ##
-            ##                                ##
-            ####################################
+            ######################################
+            ##                                  ##
+            ##     CHECK THE WIDGET'S STATE     ##
+            ##                                  ##
+            ######################################
 
             switch -- $::ms::current($w,state) {
                 disabled {
-                    $w state disabled
+                    $w           state disabled
                     $w.indicator state disabled
-                    $w.label state disabled
+                    $w.label     state disabled
                     $w.highlight state disabled
                 }
             }
@@ -2021,9 +2021,6 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                                                $w.indicator \
                                                $w.label];
 
-            # Add the widget address to the megawidget addresses list.
-            lappend ::ms::addr(megawidgets) $w
-
             # Set the widget real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
@@ -2044,6 +2041,9 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # Add the widget address to the checkbutton classtype widgets real address list.
             lappend ::ms::addr(checkbutton) $w
+
+            # Add the widget address to the megawidget addresses list.
+            lappend ::ms::addr(megawidgets) $w
 
             # Add the widget address to the checkbutton classtype real address list with class '::ms::current($w,class)'.
             lappend ::ms::class($::ms::current($w,class),checkbutton,addrs) $w
@@ -2703,17 +2703,18 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                             _grid configure $w.highlight -padx [list $::ms::current($w,spacer) $pad_right] \
                                                          -pady [list 1m $pad_bottom];
 
-                            ####################################
-                            ##                                ##
-                            ##     CHECK THE WIDGET STATE     ##
-                            ##                                ##
-                            ####################################
+                            ######################################
+                            ##                                  ##
+                            ##     CHECK THE WIDGET'S STATE     ##
+                            ##                                  ##
+                            ######################################
 
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     interp invokehidden {} $w state disabled
+
                                     $w.indicator state disabled
-                                    $w.label state disabled
+                                    $w.label     state disabled
                                     $w.highlight state disabled
                                 }
                             }
@@ -2876,11 +2877,11 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #####################################
-                    ##                                 ##
-                    ##     UPDATE THE WIDGET STATE     ##
-                    ##                                 ##
-                    #####################################
+                    #######################################
+                    ##                                   ##
+                    ##     UPDATE THE WIDGET'S STATE     ##
+                    ##                                   ##
+                    #######################################
 
                     # Propagate the new statespec to the hull, label, highlight and indicator objects of
                     # the checkbutton.
@@ -2974,11 +2975,11 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
             }
         }
 
-        #####################################
-        ##                                 ##
-        ##     UPDATE THE WIDGET STYLE     ##
-        ##                                 ##
-        #####################################
+        #######################################
+        ##                                   ##
+        ##     UPDATE THE WIDGET'S STYLE     ##
+        ##                                   ##
+        #######################################
 
         # Note: 'background', 'charwidth', 'cursor', 'font', 'indicatorbackground', 'indicatorrelief', 'justify',
         #       'padding', 'spacer' and 'wraplength' are not allowed to change if the statespec changes.
