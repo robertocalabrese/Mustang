@@ -949,10 +949,6 @@ package provide ::ms::button 0.1
 ##                          ##
 ##############################
 
-# Activate/Deactivate
-_bind _Button <Activate>   { interp invokehidden {} $w state [list !background]; break }
-_bind _Button <Deactivate> { interp invokehidden {} $w state [list  background]; break }
-
 # ButtonPress
 _bind _Button <ButtonPress-1>   { ::ms::button::ButtonPress   %W; break }
 _bind _Button <ButtonRelease-1> { ::ms::button::ButtonRelease %W; break }
