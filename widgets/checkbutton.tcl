@@ -928,8 +928,8 @@ _bind _Checkbutton <Enter> { ::ms::radiobutton::Hover %W %X %Y; break }
 _bind _Checkbutton <Leave> { ::ms::radiobutton::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Checkbutton <FocusIn>  { ::ms::radiobutton::FocusIn  %W; break }
-_bind _Checkbutton <FocusOut> { ::ms::radiobutton::FocusOut %W; break }
+_bind _Checkbutton <FocusIn>  { ::ms::checkbutton::Pathname_Cmd %W state focus; break }
+_bind _Checkbutton <FocusOut> { ::ms::radiobutton::FocusOut     %W; break }
 
 # Mousewheel and Touchpad
 
@@ -3317,22 +3317,6 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::style($w,indicator) \
                          ::ms::style($w,label) \
                          ::ms::style($w,highlight);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::checkbutton::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::checkbutton::Pathname_Cmd $w state focus
 
     return ""
 }
