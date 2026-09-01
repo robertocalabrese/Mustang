@@ -924,8 +924,8 @@ _bind _Radiobutton <Enter> { ::ms::radiobutton::Hover %W %X %Y; break }
 _bind _Radiobutton <Leave> { ::ms::radiobutton::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Radiobutton <FocusIn>  { ::ms::radiobutton::FocusIn  %W; break }
-_bind _Radiobutton <FocusOut> { ::ms::radiobutton::FocusOut %W; break }
+_bind _Radiobutton <FocusIn>  { ::ms::radiobutton::Pathname_Cmd %W state focus; break }
+_bind _Radiobutton <FocusOut> { ::ms::radiobutton::FocusOut     %W; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
@@ -1754,9 +1754,9 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             _bind $w.label     <Leave> { ::ms::radiobutton::Hover [_winfo parent %W] %X %Y; break }
 
             # FocusIn/FocusOut
-            _bind $w.highlight <FocusIn>  { ::ms::radiobutton::FocusIn  [_winfo parent %W]; break }
-            _bind $w.indicator <FocusIn>  { ::ms::radiobutton::FocusIn  [_winfo parent %W]; break }
-            _bind $w.label     <FocusIn>  { ::ms::radiobutton::FocusIn  [_winfo parent %W]; break }
+            _bind $w.highlight <FocusIn>  { ::ms::radiobutton::Pathname_Cmd [_winfo parent %W] state focus; break }
+            _bind $w.indicator <FocusIn>  { ::ms::radiobutton::Pathname_Cmd [_winfo parent %W] state focus; break }
+            _bind $w.label     <FocusIn>  { ::ms::radiobutton::Pathname_Cmd [_winfo parent %W] state focus; break }
 
             _bind $w.highlight <FocusOut> { ::ms::radiobutton::FocusOut [_winfo parent %W]; break }
             _bind $w.indicator <FocusOut> { ::ms::radiobutton::FocusOut [_winfo parent %W]; break }
@@ -2594,7 +2594,7 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                     # Get the widget address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
-                    # Return the name of the object, or an empty string if there are no checkbutton objects at the coordinates provided.
+                    # Return the name of the object, or an empty string if there are no radiobutton objects at the coordinates provided.
                     if { $widget eq $w } {
                         return "Radiobutton.hull"
                     } elseif { $widget eq "$w.indicator" } {
@@ -3264,22 +3264,6 @@ proc ::ms::radiobutton::Destroy { w } {
                          ::ms::style($w,indicator) \
                          ::ms::style($w,label) \
                          ::ms::style($w,highlight);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::radiobutton::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::radiobutton::Pathname_Cmd $w state focus
 
     return ""
 }
