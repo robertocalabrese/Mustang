@@ -200,11 +200,6 @@
 #
 #                     If not provided, defaults to **TButton**.
 #
-# **-cmenu**          Specifies the contextual menu address that will be assigned to the widget.
-#                     If the *cmenu* value is the empty string or invalid, nothing will happen.
-#
-#                     If not provided, defaults to the empty string.
-#
 # **-command**        Specifies a Tcl script (or procedure) to evaluate whenever the widget is invoked or pressed.
 #                     An empty string means 'no Tcl script or procedure will be evaluated when the widget is invoked'.
 #
@@ -689,9 +684,6 @@
 #            of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
-# 8.  **ContextMenu** events will display the contextual menu associated with the widget.
-#     See the **-cmenu** option for more details.
-#
 # The following behavior will happen if the widget has the focus. Mustang will try to find the innermost widget's scrollable parent
 # with an active vertical/horizontal scrollbar and scroll that scrollbar.
 #
@@ -965,9 +957,6 @@ _bind _Button <Deactivate> { interp invokehidden {} $w state [list  background];
 _bind _Button <ButtonPress-1>   { ::ms::button::ButtonPress   %W; break }
 _bind _Button <ButtonRelease-1> { ::ms::button::ButtonRelease %W; break }
 
-# Contextual menu
-_bind _Button <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
-
 # Destroy
 _bind _Button <Destroy> { ::ms::button::Destroy %W; break }
 
@@ -1037,7 +1026,6 @@ _bind _Button <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; b
 namespace eval ::ms::button {
     # Set the 'non styleable' button option list.
     set ::ms::button(non_styleable,options) [list class \
-                                                  cmenu \
                                                   command \
                                                   default \
                                                   state \
@@ -1067,7 +1055,6 @@ namespace eval ::ms::button {
 
     # Set the default 'non-styleable' button options values.
     set ::ms::default(button,class)        TButton
-    set ::ms::default(button,cmenu)        {}
     set ::ms::default(button,command)      {}
     set ::ms::default(button,default)      normal
     set ::ms::default(button,state)        normal
@@ -1132,7 +1119,6 @@ proc ::ms::button::Command { window { args "" } } {
 
             # Set the default widget (not styleable) options.
             set ::ms::default($w,class)        $::ms::default(button,class)
-            set ::ms::default($w,cmenu)        $::ms::default(button,cmenu)
             set ::ms::default($w,command)      $::ms::default(button,command)
             set ::ms::default($w,default)      $::ms::default(button,default)
             set ::ms::default($w,state)        $::ms::default(button,state)
@@ -1144,7 +1130,6 @@ proc ::ms::button::Command { window { args "" } } {
 
             # Set the current widget (not styleable) options.
             set ::ms::current($w,class)        $::ms::default(button,class)
-            set ::ms::current($w,cmenu)        $::ms::default(button,cmenu)
             set ::ms::current($w,command)      $::ms::default(button,command)
             set ::ms::current($w,default)      $::ms::default(button,default)
             set ::ms::current($w,state)        $::ms::default(button,state)
@@ -1255,12 +1240,6 @@ proc ::ms::button::Command { window { args "" } } {
                         set ::ms::managed_by($w,charwidth) developer
                     }
                     -class { set ::ms::current($w,class) $value }
-                    -cmenu {
-                        set value [string trim $value]
-                        if { ($value eq "") || ($value in $::ms::addr(menu)) } {
-                            set ::ms::current($w,cmenu) $value
-                        }
-                    }
                     -command { set ::ms::current($w,command) $value }
                     -compound {
                         set value [string tolower $value]
@@ -1883,12 +1862,6 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                                         set ::ms::managed_by($w,charwidth) developer
                                     }
                                     -class {}
-                                    -cmenu {
-                                        set value [string trim $value]
-                                        if { ($value eq "") || ($value in $::ms::addr(menu)) } {
-                                            set ::ms::current($w,cmenu) $value
-                                        }
-                                    }
                                     -command { set ::ms::current($w,command) $value }
                                     -compound {
                                         set value [string tolower $value]
