@@ -957,8 +957,8 @@ _bind _Button <ButtonRelease-1> { ::ms::button::ButtonRelease %W; break }
 _bind _Button <Destroy> { ::ms::button::Destroy %W; break }
 
 # Enter/Leave
-_bind _Button <Enter> { interp invokehidden {} $w state [list  focus]; break }
-_bind _Button <Leave> { interp invokehidden {} $w state [list !focus]; break }
+_bind _Button <Enter> { interp invokehidden {} $w state [list !pressed  hover]; break }
+_bind _Button <Leave> { interp invokehidden {} $w state [list !pressed !hover]; break }
 
 # FocusIn/FocusOut
 _bind _Button <FocusIn>  { interp invokehidden {} %W state [list  focus]; break }
