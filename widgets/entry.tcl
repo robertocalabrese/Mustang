@@ -4300,83 +4300,35 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
 #
 # It doesn't return anything.
 proc ::ms::entry::ButtonPress { w x } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled -
-        readonly {
-            # Check the parent of the widget address provided, if any.
-            set parent [_winfo parent $w]
-            switch -- $parent {
-                ""      {}
-                default {
-                    # Propagate the action to the widget's parents.
+        disabled { return ""}
+    }
 
-                    # ATTENTION!
-                    #
-                    # This is a recursive loop. The only way to exit is:
-                    #   - If there is no more parent to check for.
-                    #   - If 'parent' is a scrollable megawidget.
-                    set i 1
-                    while { $i > 0 } {
-                        # Check if 'parent' belongs to a scrollable megawidget.
-                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                            _focus -force $parent
-                            return ""
-                        }
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
 
-                        # Check the next parent, if any.
-                        set parent [_winfo parent $parent]
-                        switch -- $parent {
-                            ""  {
-                                # There are no more parents to check for.
-                                # Stop the recursive iteration.
-                                break
-                            }
-                        }
-                    }
-                }
-            }
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list !focus]] {
+        1   {
+            # Focus the widget.
+            _focus -force $w
 
-            # Check if the widget's toplevel was created by mustang.
-            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                0   {
-                    # If possible, focus the widget's toplevel.
-                    try {
-                        _focus -force [_winfo toplevel $w]
-                    } on error {} {
-                        # Do nothing
-                    }
-                }
-                1   {
-                    # Check the widget's toplevel takefocus.
-                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                        0   {
-                            # Momentarily set the toplevel takefocus to '1'.
-                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                        }
-                    }
-
-                    # Focus the widget's toplevel.
-                    _focus -force $::ms::addr($w,toplevel)
-                }
-            }
-        }
-        default {
-            # Focus the entry if its not already focussed.
-            interp invokehidden {} $w instate [list !focus] {
-                _focus -force $w
-            }
-
-            interp invokehidden {} $w icursor   [::ttk::entry::ClosestGap $w $x]
-            interp invokehidden {} $w selection clear
-            interp invokehidden {} $w configure -placeholder ""
-
-            # Set up for future drag, double-click, triple-click or quadruple-click.
-            set ::ttk::entry::State(x)          $x
-            set ::ttk::entry::State(selectMode) char
-            set ::ttk::entry::State(anchor)     [interp invokehidden {} $w index insert]
+            # Change the widget dynamic state to 'focus'.
+            interp invokehidden {} $w state [list focus]
         }
     }
+
+    interp invokehidden {} $w icursor   [::ttk::entry::ClosestGap $w $x]
+    interp invokehidden {} $w selection clear
+    interp invokehidden {} $w configure -placeholder ""
+
+    # Set up for future drag, double-click, triple-click or quadruple-click.
+    set ::ttk::entry::State(x)          $x
+    set ::ttk::entry::State(selectMode) char
+    set ::ttk::entry::State(anchor)     [interp invokehidden {} $w index insert]
 
     return ""
 }
