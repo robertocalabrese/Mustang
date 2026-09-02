@@ -5383,6 +5383,31 @@ proc ::ms::External_Click { w X Y } {
     return ""
 }
 
+## Is_Focussable
+#
+# Check if a widget is focussable or not.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# Returns **1** if it's focussable, **0** otherwise.
+proc ::ms::Is_Focussable { w } {
+    # Check if the widget is viewable or not.
+    switch -- [_winfo viewable $w] {
+        0   { return 0 }
+    }
+
+    # Check if the widget is focussable or not.
+    try {
+        set ::ms::current($w,takefocus)
+    } on error {} {
+        return 0
+    } on ok { result } {
+        return $result
+    }
+}
+
 ## Hover
 #
 # Manage the **Enter** and **Leave** event on a megawidget.
