@@ -5343,13 +5343,15 @@ proc ::ms::Escape { w } {
 #
 # It doesn't return anything.
 proc ::ms::Execute_Widget_Cmd { w } {
+    # Check if a command was associated with the widget.
     switch -- $::ms::current($w,command) {
         ""      {}
         default {
+            # Execute the command.
             try {
                 uplevel #0 [list $::ms::current($w,command) $w $::ms::data($w,current_value)]
             } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
+                ::ms::Error "Invalid command associated with '$w'" ""
             }
         }
     }
