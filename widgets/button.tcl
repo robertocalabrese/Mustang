@@ -2301,10 +2301,6 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
             #
             # *window* **identify** *x* *y*
             # *window* **identify** **element** *x* *y*
-            # Synopsis:
-            #
-            # *window* **identify** *x* *y*
-            # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
                     set x [lindex $args 0]
