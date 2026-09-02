@@ -2683,11 +2683,25 @@ proc ::ms::button::ButtonPress { w } {
         disabled { return "" }
     }
 
-    # Focus the widget.
-    ::ttk::clickToFocus $w
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
 
-    # Change the widget dynamic state to 'pressed'.
-    interp invokehidden {} $w state [list pressed]
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list !focus]] {
+        0   {
+            # Change the widget dynamic state to 'pressed'.
+            interp invokehidden {} $w state [list pressed]
+        }
+        1   {
+            # Focus the widget.
+            _focus -force $w
+
+            # Change the widget dynamic state to 'pressed focus'.
+            interp invokehidden {} $w state [list pressed focus]
+        }
+    }
 
     return ""
 }
