@@ -4855,14 +4855,15 @@ proc ::ms::entry::Touchpad { w counter amount } {
         return ""
     }
 
-    # Translate 'amount' in 'deltaX' and 'deltaY'.
-    lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
-
-    # Adjust 'deltaX' and 'deltaY' values, or the movement will be too slow.
-    set deltaX [expr { $deltaX*30 }]
-    set deltaY [expr { $deltaY*30 }]
-
+    # Check if the widget is currently in focus or not.
     if { [_focus -display $w] eq $w } {
+        # Translate 'amount' in 'deltaX' and 'deltaY'.
+        lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
+
+        # Adjust 'deltaX' and 'deltaY' values, or the movement will be too slow.
+        set deltaX [expr { $deltaX*30 }]
+        set deltaY [expr { $deltaY*30 }]
+
         # If there is a movement along the X axis, move the insert cursor by one
         # character to the left or to the right (depending on the horizontal touchpad direction).
         if { $deltaX != 0 } {
