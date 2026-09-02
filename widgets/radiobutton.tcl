@@ -907,7 +907,8 @@ package provide ::ms::radiobutton 0.1
 #############################################
 
 # ButtonPress
-_bind $w.highlight <ButtonPress-1> { ::ms::radiobutton::ButtonPress [_winfo parent %W]; break }
+_bind $w.highlight <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   [_winfo parent %W]; break }
+_bind $w.highlight <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
 
 # Contextual menu
 _bind $w.highlight <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
@@ -976,7 +977,8 @@ _bind _Hull_Checkbutton <Activate>   { ::ms::radiobutton::Pathname_Cmd %W state 
 _bind _Hull_Checkbutton <Deactivate> { ::ms::radiobutton::Pathname_Cmd %W state  background; break }
 
 # ButtonPress-1
-_bind _Hull_Checkbutton <ButtonPress-1> { ::ms::radiobutton::ButtonPress %W; break }
+_bind _Hull_Checkbutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   %W; break }
+_bind _Hull_Checkbutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease %W; break }
 
 # Contextual menu
 _bind _Hull_Checkbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
@@ -1044,7 +1046,8 @@ _bind _Hull_Checkbutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %
 #############################################
 
 # ButtonPress
-_bind $w.indicator <ButtonPress-1> { ::ms::radiobutton::ButtonPress [_winfo parent %W]; break }
+_bind _Indicator_Radiobutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   [_winfo parent %W]; break }
+_bind _Indicator_Radiobutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
 
 # Contextual menu
 _bind $w.indicator <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
@@ -1131,7 +1134,8 @@ _bind $w.indicator <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo pare
 #########################################
 
 # ButtonPress
-_bind $w.label <ButtonPress-1> { ::ms::radiobutton::ButtonPress [_winfo parent %W]; break }
+_bind _Label_Radiobutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   [_winfo parent %W]; break }
+_bind _Label_Radiobutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
 
 # Contextual menu
 _bind $w.label <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
@@ -3241,6 +3245,40 @@ proc ::ms::radiobutton::ButtonPress { w } {
 
             # Change the widget dynamic state to 'pressed focus'.
             ::ms::radiobutton::Pathname_Cmd $w state [list pressed focus]
+        }
+    }
+
+    return ""
+}
+
+## ButtonRelease
+#
+# Launch the associated command of the widget, if any.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::radiobutton::ButtonRelease { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Change the widget dynamic state to 'pressed'.
+    ::ms::radiobutton::Pathname_Cmd $w state [list !pressed]
+
+    # Check if there is a command associated with the widget.
+    switch -- $::ms::current($w,command) {
+        ""      {}
+        default {
+            # Invoke the command associated with the widget.
+            try {
+                uplevel #0 [list {*}$::ms::current($w,command)]
+            } on error {} {
+                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
+            }
         }
     }
 
