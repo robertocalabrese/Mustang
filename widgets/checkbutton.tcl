@@ -3227,7 +3227,7 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
 
 ## ButtonPress
 #
-# Select the checkbutton where the <ButtonPress-1> event happened and launch the associated command, if any.
+# Select the checkbutton where the <ButtonPress-1> event happened.
 #
 # Where:
 #
@@ -3240,21 +3240,23 @@ proc ::ms::checkbutton::ButtonPress { w } {
         disabled { return "" }
     }
 
-    # Focus the widget indicator if its not already focussed.
-    switch -- [$w.indicator instate [list !focus]] {
-        1   { _focus -force $w.indicator }
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w.indicator] {
+        0   { return "" }
     }
 
-    # Check if there is a command associated with the widget.
-    switch -- $::ms::current($w,command) {
-        ""      {}
-        default {
-            # Invoke the command associated with the widget.
-            try {
-                uplevel #0 [list {*}$::ms::current($w,command)]
-            } on error {} {
-                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
-            }
+    # Check if the widget is already focussed.
+    switch -- [$w.indicator instate [list !focus]] {
+        0   {
+            # Change the widget dynamic state to 'pressed'.
+            ::ms::checkbutton::Pathname_Cmd $w state [list pressed]
+        }
+        1   {
+            # Focus the widget's indicator.
+            _focus -force $w.indicator
+
+            # Change the widget dynamic state to 'pressed focus'.
+            ::ms::checkbutton::Pathname_Cmd $w state [list pressed focus]
         }
     }
 
