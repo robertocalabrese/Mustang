@@ -3224,8 +3224,10 @@ proc ::ms::radiobutton::ButtonPress { w } {
         disabled { return "" }
     }
 
-    # Focus the widget indicator.
-    _focus -force $w.indicator
+    # Focus the widget indicator if its not already focussed.
+    switch -- [$w.indicator instate [list !focus]] {
+        1   { _focus -force $w.indicator }
+    }
 
     # Check if there is a command associated with the widget.
     switch -- $::ms::current($w,command) {
