@@ -4524,23 +4524,14 @@ proc ::ms::entry::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::FocusIn { w } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        normal {
-            # Change the widget dynamic state to 'focus'.
-            ::ms::entry::Pathname_Cmd $w state focus
+    # Change the widget dynamic state to 'focus'.
+    interp invokehidden {} $w state [list focus]
 
-            # Select all the widget textarea characters.
-            interp invokehidden {} $w selection range 0 end
+    # Select all the widget textarea characters.
+    interp invokehidden {} $w selection range 0 end
 
-            # Remove the placeholder, if any.
-            interp invokehidden {} $w configure -placeholder ""
-        }
-        readonly {
-            # Change the widget dynamic state to 'focus'.
-            ::ms::entry::Pathname_Cmd $w state focus
-        }
-    }
+    # Remove the placeholder, if any.
+    interp invokehidden {} $w configure -placeholder ""
 
     return ""
 }
