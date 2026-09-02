@@ -4771,6 +4771,7 @@ proc ::ms::entry::Return { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::Shift_MouseWheel { w amount } {
+    # Check if 'w' is currently in focus or not.
     if { [_focus -displayof $w] eq $w } {
         # Check that 'amount' is an integer or a float.
         switch -- [string is double -strict $amount] {
@@ -4801,6 +4802,7 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
         # Make the index character visible.
         ::ttk::entry::See $w $index
     } else {
+        # Scroll the parent along the X axis.
         ::ms::Scroll_Parent_X $w $amount units
     }
 
