@@ -907,37 +907,37 @@ package provide ::ms::radiobutton 0.1
 #############################################
 
 # ButtonPress
-_bind $w.highlight <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   [_winfo parent %W]; break }
-_bind $w.highlight <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
+_bind _Highlight_Radiobutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   [_winfo parent %W]; break }
+_bind _Highlight_Radiobutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
 
 # Contextual menu
-_bind $w.highlight <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+_bind _Highlight_Radiobutton <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind $w.highlight <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-_bind $w.highlight <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Highlight_Radiobutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Highlight_Radiobutton <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.highlight <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+_bind _Highlight_Radiobutton <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.highlight <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+_bind _Highlight_Radiobutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.highlight <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+_bind _Highlight_Radiobutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.highlight <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+_bind _Highlight_Radiobutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -952,7 +952,7 @@ _bind $w.highlight <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo pa
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind $w.highlight <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+_bind _Highlight_Radiobutton <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -964,7 +964,7 @@ _bind $w.highlight <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind $w.highlight <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+_bind _Highlight_Radiobutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 ########################################
 ##                                    ##
@@ -973,44 +973,44 @@ _bind $w.highlight <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo pare
 ########################################
 
 # Activate/Deactivate
-_bind _Hull_Checkbutton <Activate>   { ::ms::radiobutton::Pathname_Cmd %W state !background; break }
-_bind _Hull_Checkbutton <Deactivate> { ::ms::radiobutton::Pathname_Cmd %W state  background; break }
+_bind _Hull_Radiobutton <Activate>   { ::ms::radiobutton::Pathname_Cmd %W state !background; break }
+_bind _Hull_Radiobutton <Deactivate> { ::ms::radiobutton::Pathname_Cmd %W state  background; break }
 
 # ButtonPress-1
-_bind _Hull_Checkbutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   %W; break }
-_bind _Hull_Checkbutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease %W; break }
+_bind _Hull_Radiobutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   %W; break }
+_bind _Hull_Radiobutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease %W; break }
 
 # Contextual menu
-_bind _Hull_Checkbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+_bind _Hull_Radiobutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
 # Destroy
-_bind _Hull_Checkbutton <Destroy> { ::ms::radiobutton::Destroy %W; break }
+_bind _Hull_Radiobutton <Destroy> { ::ms::radiobutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Hull_Checkbutton <Enter> { ::ms::Hover %W %X %Y; break }
-_bind _Hull_Checkbutton <Leave> { ::ms::Hover %W %X %Y; break }
+_bind _Hull_Radiobutton <Enter> { ::ms::Hover %W %X %Y; break }
+_bind _Hull_Radiobutton <Leave> { ::ms::Hover %W %X %Y; break }
 
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Checkbutton <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+_bind _Hull_Radiobutton <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Checkbutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+_bind _Hull_Radiobutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Checkbutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+_bind _Hull_Radiobutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Checkbutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+_bind _Hull_Radiobutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1025,7 +1025,7 @@ _bind _Hull_Checkbutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Hull_Checkbutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+_bind _Hull_Radiobutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1037,7 +1037,7 @@ _bind _Hull_Checkbutton <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units;
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Hull_Checkbutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+_bind _Hull_Radiobutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
 #############################################
 ##                                         ##
@@ -1050,28 +1050,28 @@ _bind _Indicator_Radiobutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress 
 _bind _Indicator_Radiobutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
 
 # Contextual menu
-_bind $w.indicator <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+_bind _Indicator_Radiobutton <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
 
 # Enter/Leave
-_bind $w.indicator <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-_bind $w.indicator <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Indicator_Radiobutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Indicator_Radiobutton <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
-_bind $w.indicator <FocusIn>  { ::ms::radiobutton::Pathname_Cmd [_winfo parent %W] state focus; break }
-_bind $w.indicator <FocusOut> { ::ms::radiobutton::FocusOut     [_winfo parent %W]; break }
+_bind _Indicator_Radiobutton <FocusIn>  { ::ms::radiobutton::Pathname_Cmd [_winfo parent %W] state focus; break }
+_bind _Indicator_Radiobutton <FocusOut> { ::ms::radiobutton::FocusOut     [_winfo parent %W]; break }
 
 # Return/KP_Enter
-_bind $w.indicator <Return>   { ::ms::radiobutton::Return [_winfo parent %W]; break }
-_bind $w.indicator <KP_Enter> { ::ms::radiobutton::Return [_winfo parent %W]; break }
+_bind _Indicator_Radiobutton <Return>   { ::ms::radiobutton::Return [_winfo parent %W]; break }
+_bind _Indicator_Radiobutton <KP_Enter> { ::ms::radiobutton::Return [_winfo parent %W]; break }
 
 # Shift-Tab
 switch -- [_tk windowingsystem] {
-    win32   { _bind $w.indicator <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+    win32   { _bind _Indicator_Radiobutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
-        _bind $w.indicator <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Indicator_Radiobutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
 
         try {
-            _bind $w.indicator <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+            _bind _Indicator_Radiobutton <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
         } on error {} {
             # Do nothing.
         }
@@ -1083,22 +1083,22 @@ switch -- [_tk windowingsystem] {
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.indicator <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+_bind _Indicator_Radiobutton <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.indicator <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+_bind _Indicator_Radiobutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.indicator <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+_bind _Indicator_Radiobutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.indicator <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+_bind _Indicator_Radiobutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1113,7 +1113,7 @@ _bind $w.indicator <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo pa
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind $w.indicator <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+_bind _Indicator_Radiobutton <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1125,7 +1125,7 @@ _bind $w.indicator <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind $w.indicator <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+_bind _Indicator_Radiobutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 #########################################
 ##                                     ##
@@ -1138,33 +1138,33 @@ _bind _Label_Radiobutton <ButtonPress-1>   { ::ms::radiobutton::ButtonPress   [_
 _bind _Label_Radiobutton <ButtonRelease-1> { ::ms::radiobutton::ButtonRelease [_winfo parent %W]; break }
 
 # Contextual menu
-_bind $w.label <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+_bind _Label_Radiobutton <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
 
 # Enter/Leave
-_bind $w.label <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-_bind $w.label <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Label_Radiobutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Label_Radiobutton <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.label <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+_bind _Label_Radiobutton <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.label <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+_bind _Label_Radiobutton <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.label <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+_bind _Label_Radiobutton <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind $w.label <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+_bind _Label_Radiobutton <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1179,7 +1179,7 @@ _bind $w.label <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind $w.label <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+_bind _Label_Radiobutton <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1191,7 +1191,7 @@ _bind $w.label <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind $w.label <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+_bind _Label_Radiobutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 # Create the mustang **radiobutton** package.
 namespace eval ::ms::radiobutton {
