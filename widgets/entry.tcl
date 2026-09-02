@@ -4966,7 +4966,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                 switch -- [string is alnum $char] {
                                     0   {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::combobox::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -4988,7 +4988,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                 switch -- [string is alpha $char] {
                                     0   {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::combobox::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5006,21 +5006,23 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                     set hash [string index $value 0]
                     switch -- $hash {
                         "#" {
+                            # Check if hash are allowed for the widget.
                             switch -- $::ms::current($w,hash) {
                                 no  {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::entry::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
                             }
                         }
                         default {
+                            # Check if 'value' is a valid hexadecimal color.
                             set result [::ms::Check_Color [list $value $::ms::current($w,datatype)] invalid]
                             switch -- $result {
                                 invalid {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::entry::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5037,7 +5039,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             switch -- [string is integer $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::entry::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5045,7 +5047,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                     # Check that 'value' is not beyond the entry limits.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::entry::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5059,7 +5061,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                     switch -- [string is integer $value] {
                         0   {
                             # Change the widget dynamic state to 'invalid'.
-                            ::ms::entry::Pathname_Cmd $w state invalid
+                            interp invokehidden {} $w state [list invalid]
 
                             return 1
                         }
@@ -5067,7 +5069,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             # Check that 'value' is not beyond the entry limits.
                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                 # Change the widget dynamic state to 'invalid'.
-                                ::ms::entry::Pathname_Cmd $w state invalid
+                                interp invokehidden {} $w state [list invalid]
 
                                 return 1
                             }
@@ -5083,7 +5085,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             switch -- [string is double $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::entry::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5091,7 +5093,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                     # Check that 'value' is not beyond the entry limits.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::entry::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5110,7 +5112,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             switch -- [string is double $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::entry::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5118,7 +5120,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                     # Check that 'value' is not beyond the entry limits.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::entry::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5132,7 +5134,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
     }
 
     # Change the widget dynamic state to '!invalid'.
-    ::ms::entry::Pathname_Cmd $w state !invalid
+    interp invokehidden {} $w state [list !invalid]
 
     return 1
 }
