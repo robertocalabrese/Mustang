@@ -3870,9 +3870,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                 set value $::ms::current($w,to)
                                             }
 
-                                            # Set the widget dynamic state as '!invalid'.
-                                            ::ms::entry::Pathname_Cmd $w state !invalid
-
                                             # If the corrected value is different than the current value,
                                             # clear the widget field, insert the corrected value and position the cursor at the end.
                                             if { $value ne $args } {
@@ -3919,9 +3916,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                 set value [format $::ms::data($w,format) $value]
                                             }
 
-                                            # Set the widget dynamic state as '!invalid'.
-                                            ::ms::entry::Pathname_Cmd $w state !invalid
-
                                             # If the corrected value is different than the current value,
                                             # clear the widget field, insert the corrected value and position the cursor at the end.
                                             if { $value ne $args } {
@@ -3956,6 +3950,9 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             }
                         }
                     }
+
+                    # Set the widget dynamic state as '!invalid'.
+                    interp invokehidden {} $w state [list !invalid]
 
                     # If the current value is different than the previous registered one, register it
                     # and launch the external procedure provided, if any.
