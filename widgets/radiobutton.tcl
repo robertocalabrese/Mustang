@@ -137,7 +137,7 @@
 #
 # **-cmenu**                 Specifies the contextual menu address that will be assigned to the widget.
 #
-#                            The contextual menu will be assign to the *radiobutton* and *label* objects of the megawidget.
+#                            The contextual menu will be assign to the *indicator* and *label* objects of the megawidget.
 #                            If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's toplevel (if any)
 #                            will be used instead. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
 #
