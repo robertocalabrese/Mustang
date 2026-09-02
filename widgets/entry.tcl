@@ -4546,26 +4546,17 @@ proc ::ms::entry::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically),
-            # remove the selection, validate the data or change the placeholder.
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
+    # If the contextual menu of the widget is open do not:
+    #   - loose the focus (graphically),
+    #   - remove the selection,
+    #   - validate the data,
+    #   - or change the placeholder.
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
+        1   { return "" }
     }
 
     # Change the widget dynamic state to '!focus'.
-    ::ms::entry::Pathname_Cmd $w state !focus
-
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled -
-        readonly { return "" }
-    }
+    interp invokehidden {} $w state [list !focus]
 
     # Remove the widget selection, if any.
     interp invokehidden {} $w selection clear
