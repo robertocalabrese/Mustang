@@ -7031,7 +7031,7 @@ proc ::ms::combobox::Popdown_PageUp { w } {
 
 ## Popdown_Select
 #
-# Manage the lisbox selection event.
+# Manage the popdown lisbox selection event.
 #
 # Note: The following procedure is a modified version of the 'ttk::combobox::LBSelect' procedure.
 #       All credits goes to the original author/s.
@@ -7051,7 +7051,7 @@ proc ::ms::combobox::Popdown_Select { w } {
     interp invokehidden {} $w icursor   end
 
     # Change the widget dynamic state to '!invalid'.
-    ::ms::combobox::Pathname_Cmd $w state !invalid
+    interp invokehidden {} $w state [list !invalid]
 
     # Release the grab.
     set ::wait_for_user_response "Selection"
