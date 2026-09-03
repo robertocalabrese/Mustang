@@ -79,14 +79,7 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Nota 2: The panedwindow is one of the few containers that do not support the scrollbar system, at least not directly.
-#         If you need scrollable panes, put two or more scrollable frames (the panes) inside the panedwindow.
-#         See the example at the end.
-#
-# Note 3: Panedwindows are available only on Linux and BSD systems. See the KNOWN ISSUES section at the end to know more.
-#
-# Note 4: The mustang panedwindow widget (either scrollable or not) is a megawidget.
-#         The simple panedwindow is composed by an hull object (the megawidget container) that acts also as a border object and a panedwindow object.
+# Note 2: Panedwindows are available only on Linux and BSD systems. See the KNOWN ISSUES section at the end to know more.
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the panedwindow.
 #
