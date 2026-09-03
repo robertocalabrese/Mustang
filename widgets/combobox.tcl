@@ -6206,7 +6206,7 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
 
 ## Scrollbar_MouseWheel
 #
-# Scroll the listbox vertically by units (**MouseWheel**) or by pages (**Control-MouseWheel**).
+# Scroll the popdown listbox vertically by units (**MouseWheel**) or by pages (**Control-MouseWheel**).
 #
 # Where:
 #
@@ -6249,7 +6249,7 @@ proc ::ms::combobox::Scrollbar_MouseWheel { w amount what } {
         natural { set amount [expr { -1.0*$amount }] }
     }
 
-    # If possible, scroll the listbox vertically.
+    # If possible, scroll the popdown listbox vertically.
     try {
         $w.popdown.f.lb yview scroll [expr { -$amount*0.008333333333333333 }] $what
     } on error {} {
