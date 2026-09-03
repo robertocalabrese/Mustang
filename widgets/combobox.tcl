@@ -6261,7 +6261,7 @@ proc ::ms::combobox::Scrollbar_MouseWheel { w amount what } {
 
 ## Scrollbar_Touchpad
 #
-# Scroll the listbox vertically by units (**TouchpadScroll**) or by pages (**Control-TouchpadScroll**).
+# Scroll the popdown listbox both horizontally and vertically by units (**TouchpadScroll**) or by pages (**Control-TouchpadScroll**).
 #
 # Where:
 #
@@ -6311,11 +6311,6 @@ proc ::ms::combobox::Scrollbar_Touchpad { w counter amount { what units } } {
             set delta_y [expr { $delta_y*30 }]
         }
         default { return "" }
-    }
-
-    # If there is a movement along the X axis, launch '::ms::palette::MouseWheel'.
-    if { $delta_x != 0 } {
-        ::ms::palette::MouseWheel $w $delta_x
     }
 
     # If there is a movement along the X axis, launch '::ms::combobox::MouseWheel'.
