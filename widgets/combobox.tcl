@@ -6023,7 +6023,7 @@ proc ::ms::combobox::Validate_String { w } {
     }
 
     # Set the widget dynamic state to '!invalid'.
-    ::ms::combobox::Pathname_Cmd $w state !invalid
+    interp invoke hidden {} $w state [list !invalid]
 
     return [lindex $::ms::data($w,values) $index]
 }
