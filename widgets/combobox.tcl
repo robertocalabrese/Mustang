@@ -6837,7 +6837,7 @@ proc ::ms::combobox::Popdown_Home { w } {
 
 ## Popdown_Hover
 #
-# Manage the **Motion** event upon the listbox.
+# Manage the **Motion** event upon the popdown listbox.
 #
 # Note: The following procedure is a modified version of the 'ttk::combobox::LBHover' procedure.
 #       All credits goes to the original author/s.
