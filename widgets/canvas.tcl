@@ -2622,8 +2622,8 @@ _bind _X_Scrollbar_Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Widget_X [_w
 ##########################################
 
 # ButtonPress
-_bind _Y_Scrollbar_Canvas <ButtonPress-1>   { ::ms::canvas::Scrollbar_ButtonPress  [_winfo parent %W] horizontal %x %y; break }
-_bind _Y_Scrollbar_Canvas <B1-Motion>       { ::ms::canvas::Scrollbar_Drag         [_winfo parent %W] horizontal %x %y; break }
+_bind _Y_Scrollbar_Canvas <ButtonPress-1>   { ::ms::canvas::Scrollbar_ButtonPress  [_winfo parent %W] vertical %x %y; break }
+_bind _Y_Scrollbar_Canvas <B1-Motion>       { ::ms::canvas::Scrollbar_Drag         [_winfo parent %W] vertical %x %y; break }
 _bind _Y_Scrollbar_Canvas <ButtonRelease-1> { ::ms::canvas::Scrollbar_ButtonRelease; break }
 
 # Enter/Leave
