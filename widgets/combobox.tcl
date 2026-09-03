@@ -6795,7 +6795,7 @@ proc ::ms::combobox::Popdown_Autoselection { w } {
 
 ## Popdown_End
 #
-# Move the listbox view to its bottom and select the very last row.
+# Move the popdown listbox view to its bottom and select the very last row.
 #
 # Where:
 #
