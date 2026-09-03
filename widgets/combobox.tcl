@@ -7061,7 +7061,7 @@ proc ::ms::combobox::Popdown_Select { w } {
 
 ## Popdown_Shift_MouseWheel
 #
-# If the listbox can scroll horizontally, scroll it by units (**Shift-MouseWheel**) or by pages
+# If the popdown listbox can scroll horizontally, scroll it by units (**Shift-MouseWheel**) or by pages
 # (**Control-Shift-MouseWheel**), otherwise don't do anything.
 #
 # Where:
@@ -7109,7 +7109,7 @@ proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
         natural { set amount [expr { -1.0*$amount }] }
     }
 
-    # If possible, scroll the listbox horizontally.
+    # If possible, scroll the popdown listbox horizontally.
     try {
         $w.popdown.f.lb xview scroll [expr { -$amount*0.008333333333333333 }] $what
     } on error {} {
