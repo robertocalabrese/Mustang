@@ -2806,25 +2806,25 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
     #       The procedure have been slighty modified to work with mustang.
     #       All credits goes to the original author/s.
 
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled {}
-        default  {
-            # Set 'increment' based on the direction of the movement.
-            switch -- $direction {
-                -1  { set increment [expr { -1.0*$::ms::current($w,increment) }] }
-                +1  { set increment $::ms::current($w,increment) }
-            }
-
-            # Augment 'increment' by 'speed'.
-            set speed [string range $speed 0 end-1]
-            switch -- [string is integer -strict $speed] {
-                1   { set increment [expr { $increment*$speed }] }
-            }
-
-            # Move the widget's thumb.
-            interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
-        }
+        disabled { return "" }
     }
+
+    # Set 'increment' based on the direction of the movement.
+    switch -- $direction {
+        -1  { set increment [expr { -1.0*$::ms::current($w,increment) }] }
+        +1  { set increment $::ms::current($w,increment) }
+    }
+
+    # Augment 'increment' by 'speed'.
+    set speed [string range $speed 0 end-1]
+    switch -- [string is integer -strict $speed] {
+        1   { set increment [expr { $increment*$speed }] }
+    }
+
+    # Move the widget's thumb.
+    interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
 
     return ""
 }
