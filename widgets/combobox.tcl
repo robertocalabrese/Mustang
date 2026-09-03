@@ -3957,7 +3957,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                 enabled { chan puts stdout "'insert' is a deprecated mustang combobox command. Use 'set' instead." }
             }
 
-            # Check the widget state.
+            # Check the widget's state.
             switch -- $::ms::current($w,state) {
                 normal {
                     # Check the number of arguments provided.
@@ -4741,7 +4741,7 @@ proc ::ms::combobox::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::combobox::Pathname_Cmd $w state focus
 
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal {
             # Select all the widget textarea characters.
@@ -4783,7 +4783,7 @@ proc ::ms::combobox::FocusOut { w } {
     # Change the widget dynamic state to '!focus'.
     ::ms::combobox::Pathname_Cmd $w state !focus
 
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
@@ -5385,7 +5385,7 @@ proc ::ms::combobox::Post { w } {
 #
 # It doesn't return anything.
 proc ::ms::combobox::Return { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
