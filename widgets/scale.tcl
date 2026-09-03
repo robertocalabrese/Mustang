@@ -2909,6 +2909,7 @@ proc ::ms::scale::Touchpad { w counter delta { what units } { speed 1x } } {
     # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
     #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
 
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { ::ms::TouchpadScroll_Parent $w $counter $delta $what }
         default  {
