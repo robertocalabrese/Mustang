@@ -6972,8 +6972,7 @@ proc ::ms::combobox::Popdown_MouseWheel { w x y amount { what units } } {
 
 ## Popdown_PageDown
 #
-# Move the listbox view towards the bottom by one page and
-# select the first visible row.
+# Move the popdown listbox view towards the bottom by one page and select the first visible row.
 #
 # Where:
 #
