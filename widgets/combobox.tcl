@@ -6480,7 +6480,7 @@ proc ::ms::combobox::Popdown_ArrowUp { w } {
 
 ## Popdown_Autoselection
 #
-# Automatic selection of the listbox item.
+# Automatic selection of the popdown listbox item.
 #
 # Where:
 #
