@@ -2361,6 +2361,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                     # Check the datatype.
                     switch -- $::ms::current($w,datatype) {
                         alnum {
+                            # Create a default list of alphanumeric values.
                             set number 1
                             while { $number < 51 } {
                                 lappend ::ms::current($w,values) [string cat "Item-" $number]
@@ -2374,6 +2375,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
                         }
                         integer {
+                            # Create a default list of integer values.
                             set number -25
                             while { $number < 26 } {
                                 lappend ::ms::current($w,values) $number
@@ -2384,6 +2386,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,current_index) 25
                         }
                         posinteger {
+                            # Create a default list of positive integer values.
                             set number 0
                             while { $number < 51 } {
                                 lappend ::ms::current($w,values) $number
@@ -2394,6 +2397,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,current_index) 0
                         }
                         posreal {
+                            # Create a default list of positive real values.
                             set number 0
                             while { $number < 51.0 } {
                                 lappend ::ms::current($w,values) $number
@@ -2404,6 +2408,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,current_index) 0
                         }
                         real {
+                            # Create a default list of real values.
                             set number -25.0
                             while { $number < 26.0 } {
                                 lappend ::ms::current($w,values) $number
@@ -2414,6 +2419,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,current_index) 25
                         }
                         default {
+                            # Create a default list of alphabetic values.
                             lappend ::ms::current($w,values) Amsterdam Beijing        Cairo           Dublin    Freetown      Gibraltar \
                                                              Hanoi     Havana         Helsinki        Islamabad Jerusalem     Kabul \
                                                              Kingston  "Kuala Lumpur" "La Paz"        Lima      Lisbon        London \
@@ -2445,6 +2451,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                     # Check the datatype.
                     switch -- $::ms::current($w,datatype) {
                         alnum {
+                            # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 # Check every character in value.
                                 set i 0
@@ -2473,6 +2480,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
                         }
                         alpha {
+                            # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 # Check every character in value.
                                 set i 0
@@ -2498,6 +2506,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
                         }
                         integer {
+                            # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is integer -strict $value] {
                                     0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
@@ -2508,6 +2517,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
                         }
                         posinteger {
+                            # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is integer -strict $value] {
                                     0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
@@ -2523,6 +2533,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
                         }
                         posreal {
+                            # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is double -strict $value] {
                                     0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
@@ -2538,6 +2549,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
                         }
                         real {
+                            # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is double -strict $value] {
                                     0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
@@ -3473,6 +3485,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                 # Check the list of values against the datatype.
                                 switch -- $::ms::current($w,datatype) {
                                     alnum {
+                                        # Check every value in '::ms::current($w,values)'.
                                         foreach value $::ms::current($w,values) {
                                             # Check every character in value.
                                             set i 0
@@ -3501,6 +3514,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
                                     }
                                     alpha {
+                                        # Check every value in '::ms::current($w,values)'.
                                         foreach value $::ms::current($w,values) {
                                             # Check every character in value.
                                             set i 0
@@ -3526,6 +3540,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
                                     }
                                     integer {
+                                        # Check every value in '::ms::current($w,values)'.
                                         foreach value $::ms::current($w,values) {
                                             switch -- [string is integer -strict $value] {
                                                 0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
@@ -3536,6 +3551,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
                                     }
                                     posinteger {
+                                        # Check every value in '::ms::current($w,values)'.
                                         foreach value $::ms::current($w,values) {
                                             switch -- [string is integer -strict $value] {
                                                 0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
@@ -3551,6 +3567,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
                                     }
                                     posreal {
+                                        # Check every value in '::ms::current($w,values)'.
                                         foreach value $::ms::current($w,values) {
                                             switch -- [string is double -strict $value] {
                                                 0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
@@ -3566,6 +3583,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
                                     }
                                     real {
+                                        # Check every value in '::ms::current($w,values)'.
                                         foreach value $::ms::current($w,values) {
                                             switch -- [string is double -strict $value] {
                                                 0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
