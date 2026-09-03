@@ -817,8 +817,8 @@ package provide ::ms::panedwindow 0.1
 ###################################
 
 # Activate/Deactivate
-_bind _Panedwindow <Activate>   { ::ms::panedwindow::Pathname_Cmd %W state !background; break }
-_bind _Panedwindow <Deactivate> { ::ms::panedwindow::Pathname_Cmd %W state  background; break }
+_bind _Panedwindow <Activate>   { interp invokehidden %W state [list !background]; break }
+_bind _Panedwindow <Deactivate> { interp invokehidden %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Panedwindow <ButtonPress-1>   { ::ms::panedwindow::Sash_ButtonPress   %W %x %y; break }
@@ -834,8 +834,8 @@ _bind _Panedwindow <Enter>  { ::ms::panedwindow::Reset_Cursor %W; break }
 _bind _Panedwindow <Leave>  { ::ms::panedwindow::Reset_Cursor %W; break }
 
 # FocusIn/FocusOut
-_bind _Panedwindow <FocusIn>  { ::ms::panedwindow::Pathname_Cmd %W state  focus; break }
-_bind _Panedwindow <FocusOut> { ::ms::panedwindow::Pathname_Cmd %W state !focus; break }
+_bind _Panedwindow <FocusIn>  { interp invokehidden %W state [list  focus]; break }
+_bind _Panedwindow <FocusOut> { interp invokehidden %W state [list !focus]; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
