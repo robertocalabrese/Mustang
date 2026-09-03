@@ -4181,6 +4181,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                 1   -
                 2   -
                 3   {
+                    # Execute the command.
                     try {
                         interp invokehidden {} $w $cmd {*}$args
                     } on error { errortext errorcode } {
