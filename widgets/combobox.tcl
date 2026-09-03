@@ -4048,6 +4048,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     try {
                         interp invokehidden {} $w instate $statespec
                     } on error { errortext errorcode } {
@@ -4073,6 +4074,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     try {
                         interp invokehidden {} $w instate $statespec $script
                     } on error { errortext errorcode } {
