@@ -429,7 +429,7 @@
 #                          reflects the widget's parent background.
 #                          See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                          Note: The *-shellbackground* is meaningless and will be ignored for canvas that are not scrollable.
+#                          Note: It's only meaningful for scrollable canvas.
 #
 #                          Note: This is a styleable option.
 #
