@@ -1011,8 +1011,8 @@ _bind _Menubutton <Enter> { ::ms::menubutton::Enter %W; break }
 _bind _Menubutton <Leave> { ::ms::menubutton::Leave %W; break }
 
 # FocusIn/FocusOut
-_bind _Menubutton <FocusIn>  { ::ms::menubutton::FocusIn  %W; break }
-_bind _Menubutton <FocusOut> { ::ms::menubutton::FocusOut %W; break }
+_bind _Menubutton <FocusIn>  { interp invokehidden {} %W state [list  focus]; break }
+_bind _Menubutton <FocusOut> { interp invokehidden {} %W state [list !focus]; break }
 
 # Insert cursor movements.
 _bind _Menubutton <<NextLine>> { ::ms::menubutton::Return %W; break }
@@ -3116,48 +3116,6 @@ proc ::ms::menubutton::Enter { w } {
 
     # Change the widget dynamic state to 'active'.
     interp invokehidden {} $w state [list active]
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::menubutton::FocusIn { w } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'focus'.
-    interp invokehidden {} $w state [list focus]
-
-    return ""
-}
-
-## FocusOut
-#
-# Manage the **FocusOut** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::menubutton::FocusOut { w } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to '!focus'.
-    interp invokehidden {} $w state [list !focus]
 
     return ""
 }
