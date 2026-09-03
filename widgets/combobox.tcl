@@ -6816,7 +6816,7 @@ proc ::ms::combobox::Popdown_End { w } {
 
 ## Popdown_Home
 #
-# Move the listbox view to its top and select the very first row.
+# Move the popdown listbox view to its top and select the very first row.
 #
 # Where:
 #
