@@ -2543,9 +2543,6 @@ proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
         disabled { return "" }
     }
 
-    # If needed, focus the widget.
-    ::ms::Focus_The_Widget_Or_Its_Toplevel
-
     # Check if the ButtonPress happened over the widget's sash.
     set sash [interp invokehidden {} $w identify sash $x $y]
     switch -- $sash {
