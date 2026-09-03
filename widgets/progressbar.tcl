@@ -2674,19 +2674,18 @@ proc ::ms::progressbar::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::progressbar::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
+    # Check if a contextual menu was assigned to the widget.
+    # If not, use the contextual menu of the widget's toplevel.
+    set cmenu $::ms::current($w,cmenu)
+    switch -- $cmenu {
+        ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
     }
 
-    # Change the widget dynamic state to '!focus'.
-    ::ms::progressbar::Pathname_Cmd $w state !focus
+    # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $cmenu] {
+        0   { interp invokehidden {} $w state [list !focus] }
+        1   { interp invokehidden {} $w state [list  focus] }
+    }
 
     return ""
 }
