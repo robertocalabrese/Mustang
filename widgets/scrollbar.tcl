@@ -753,12 +753,12 @@ bind _Scrollbar <B3-Motion>       { break }
 _bind _Scrollbar <Destroy> { ::ms::scrollbar::Destroy %W; break }
 
 # Enter/Leave
-_bind _Scrollbar <Enter> { ::ms::frame::Pathname_Cmd %W state  hover; break }
-_bind _Scrollbar <Leave> { ::ms::frame::Pathname_Cmd %W state !hover; break }
+_bind _Scrollbar <Enter> { interp invokehidden %W state [list  hover]; break }
+_bind _Scrollbar <Leave> { interp invokehidden %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Scrollbar <FocusIn>  { ::ms::frame::Pathname_Cmd %W state  focus; break }
-_bind _Scrollbar <FocusOut> { ::ms::frame::Pathname_Cmd %W state !focus; break }
+_bind _Scrollbar <FocusIn>  { interp invokehidden %W state [list  focus]; break }
+_bind _Scrollbar <FocusOut> { interp invokehidden %W state [list !focus]; break }
 
 # Mousewheel and Touchpad
 
