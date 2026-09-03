@@ -2651,7 +2651,6 @@ proc ::ms::menubutton::Pathname_Cmd { w cmd args } {
                     ##                                   ##
                     #######################################
 
-                    # Apply the new statespec.
                     return [interp invokehidden {} $w state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
