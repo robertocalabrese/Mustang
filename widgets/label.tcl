@@ -881,8 +881,8 @@ package provide ::ms::label 0.1
 #############################
 
 # Activate/Deactivate
-_bind _Label <Activate>   { ::ms::label::Pathname_Cmd %W state !background; break }
-_bind _Label <Deactivate> { ::ms::label::Pathname_Cmd %W state  background; break }
+_bind _Label <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Label <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Label <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
@@ -894,8 +894,8 @@ _bind _Label <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Label <Destroy> { ::ms::label::Destroy %W; break }
 
 # Enter/Leave
-_bind _Label <Enter> { ::ms::label::Pathname_Cmd %W state  hover; break }
-_bind _Label <Leave> { ::ms::label::Pathname_Cmd %W state !hover; break }
+_bind _Label <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Label <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
 _bind _Label <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
