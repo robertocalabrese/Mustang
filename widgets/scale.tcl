@@ -2554,108 +2554,64 @@ proc ::ms::scale::ButtonPress { w x y } {
 
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled {
-            # Check the parent of the widget address provided, if any.
-            set parent [_winfo parent $w]
-            switch -- $parent {
-                ""      {}
-                default {
-                    # Propagate the action to the widget's parents.
+        disabled { return "" }
+    }
 
-                    # ATTENTION!
-                    #
-                    # This is a recursive loop. The only way to exit is:
-                    #   - If there is no more parent to check for.
-                    #   - If 'parent' is a scrollable megawidget.
-                    set i 1
-                    while { $i > 0 } {
-                        # Check if 'parent' belongs to a scrollable megawidget.
-                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                            _focus -force $parent
-                            return ""
-                        }
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
 
-                        # Check the next parent, if any.
-                        set parent [_winfo parent $parent]
-                        switch -- $parent {
-                            ""  {
-                                # There are no more parents to check for.
-                                # Stop the recursive iteration.
-                                break
-                            }
-                        }
-                    }
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list !focus]] {
+        0   {
+            # Change the widget dynamic state to 'pressed'.
+            interp invokehidden {} $w state [list pressed]
+        }
+        1   {
+            # Focus the widget.
+            _focus -force $w
+
+            # Change the widget dynamic state to 'pressed focus'.
+            interp invokehidden {} $w state [list pressed focus]
+        }
+    }
+
+    set ::ttk::scale::State(dragging) 0
+
+    # Set the current trough position.
+    set current_pos [interp invokehidden {} $w get]
+
+    # Check the scale element where the buttonpress happened.
+    switch -glob -- [interp invokehidden {} $w identify element $x $y] {
+        *track  -
+        *trough {
+            # Get the trough position indicated by x and y.
+            set new_pos [interp invokehidden {} $w get $x $y]
+
+            # Check the '::ms::clickaction' variable.
+            switch -- $::ms::clickaction {
+                jump {
+                    # Jump to the new coordinates.
+                    interp invokehidden {} $w set $new_pos
+
+                    set ::ttk::scale::State(dragging) 1
+                    set ::ttk::scale::State(initial)  [$w get]
                 }
-            }
-
-            # Check if the widget's toplevel was created by mustang.
-            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                0   {
-                    # If possible, focus the widget's toplevel.
-                    try {
-                        _focus -force [_winfo toplevel $w]
-                    } on error {} {
-                        # Do nothing
+                scroll {
+                    # Scroll the widget's thumb towards the new coordinates.
+                    if { ($new_pos <= $current_pos) || ($::ms::current($w,from) > $::ms::current($w,to)) } {
+                        ::ttk::Repeatedly ::ms::scale::Increment $w -1 1x
+                    } else {
+                        ::ttk::Repeatedly ::ms::scale::Increment $w +1 1x
                     }
-                }
-                1   {
-                    # Check the widget's toplevel takefocus.
-                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                        0   {
-                            # Momentarily set the toplevel takefocus to '1'.
-                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                        }
-                    }
-
-                    # Focus the widget's toplevel.
-                    _focus -force $::ms::addr($w,toplevel)
                 }
             }
         }
-        default {
-            # Focus the scale if its not already focussed.
-            interp invokehidden {} $w instate [list !focus] {
-                _focus -force $w
-            }
-
-            set ::ttk::scale::State(dragging) 0
-
-            # Set the current trough position.
-            set current_pos [interp invokehidden {} $w get]
-
-            # Check the scale element where the buttonpress happened.
-            switch -glob -- [interp invokehidden {} $w identify element $x $y] {
-                *track  -
-                *trough {
-                    # Get the trough position indicated by x and y.
-                    set new_pos [interp invokehidden {} $w get $x $y]
-
-                    # Check the '::ms::clickaction' variable.
-                    switch -- $::ms::clickaction {
-                        jump {
-                            # Jump to the new coordinates.
-                            interp invokehidden {} $w set $new_pos
-
-                            set ::ttk::scale::State(dragging) 1
-                            set ::ttk::scale::State(initial)  [$w get]
-                        }
-                        scroll {
-                            # Scroll the widget's thumb towards the new coordinates.
-                            if { ($new_pos <= $current_pos) || ($::ms::current($w,from) > $::ms::current($w,to)) } {
-                                ::ttk::Repeatedly ::ms::scale::Increment $w -1 1x
-                            } else {
-                                ::ttk::Repeatedly ::ms::scale::Increment $w +1 1x
-                            }
-                        }
-                    }
-                }
-                *slider {
-                    # Register the draging initial position.
-                    set ::ttk::scale::State(dragging) 1
-                    set ::ttk::scale::State(initial)  $current_pos
-                }
-            }
+        *slider {
+            # Register the draging initial position.
+            set ::ttk::scale::State(dragging) 1
+            set ::ttk::scale::State(initial)  $current_pos
         }
     }
 
