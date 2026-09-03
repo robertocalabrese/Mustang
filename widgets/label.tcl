@@ -898,7 +898,7 @@ _bind _Label <Enter> { ::ms::label::Pathname_Cmd %W state  hover; break }
 _bind _Label <Leave> { ::ms::label::Pathname_Cmd %W state !hover; break }
 
 # FocusIn/FocusOut
-_bind _Label <FocusIn>  { ::ms::label::FocusIn  %W; break }
+_bind _Label <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Label <FocusOut> { ::ms::label::FocusOut %W; break }
 
 # Mousewheel and Touchpad
@@ -2615,22 +2615,6 @@ proc ::ms::label::Destroy { w } {
                          ::ms::managed_by($w,wraplength);
 
     unset -nocomplain -- ::ms::style($w,widget)
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::label::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::label::Pathname_Cmd $w state focus
 
     return ""
 }
