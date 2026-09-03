@@ -6065,8 +6065,26 @@ proc ::ms::combobox::MouseWheel { w amount } {
             ::ms::Scroll_Parent_Y $w $amount units
         }
         default {
-            # Set the focus on the combobox entry.
-            _focus -force $w
+            # Check if the widget is focussable or not.
+            switch -- [::ms::Is_Focussable $w] {
+                0   {
+                    # Try to find a widget parent to scroll vertically, if any.
+                    ::ms::Scroll_Parent_Y $w $amount units
+
+                    return ""
+                }
+            }
+
+            # Check if the widget is already focussed.
+            switch -- [interp invokehidden {} $w instate [list !focus]] {
+                1   {
+                    # Focus the widget.
+                    _focus -force $w
+
+                    # Change the widget dynamic state to 'focus'.
+                    interp invokehidden {} $w state [list focus]
+                }
+            }
 
             # Check the scrollmode.
             switch -- $::ms::scrollmode {
