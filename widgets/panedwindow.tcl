@@ -2136,9 +2136,6 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                     ##                                   ##
                     #######################################
 
-                    # Propagate the new statespec to the hull and panedwindow objects.
-                    interp invokehidden {} $w state $statespec
-
                     return [interp invokehidden {} $w state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
