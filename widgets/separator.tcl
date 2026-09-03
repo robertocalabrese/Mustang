@@ -1234,10 +1234,15 @@ proc ::ms::separator::Pathname_Cmd { w cmd args } {
         identify {
             # Synopsis:
             #
+            # *window* **identify** *x* *y*
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
+                2   {
+                    set x [lindex $args 0]
+                    set y [lindex $args 1]
+                }
                 3   {
-                    # Check that the first argument of 'args' is the word 'element' or 'sash'.
+                    # Check that the first argument of 'args' is the word "element".
                     switch -- [lindex $args 0] {
                         element {}
                         default { ::ms::Error "Invalid option, '$args'." $caller_info }
@@ -1245,25 +1250,38 @@ proc ::ms::separator::Pathname_Cmd { w cmd args } {
 
                     set x [lindex $args 1]
                     set y [lindex $args 2]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
-                    # Check that the coordinates provided are valid.
-                    switch -- [string is integer -strict $x] {
-                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
-                    }
-
-                    switch -- [string is integer -strict $y] {
-                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
-                    }
-
-                    # Check if the coordinates provided falls upon the widget.
-                    try {
-                        interp invokehidden {} $w identify $x $y
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return "Separator.line"
+            # Check that the (x,y) relative coordinates provided are valid.
+            switch -- [string is integer -strict $x] {
+                0   { return "" }
+                1   {
+                    # Check that the 'x' coordinate is a positive integer ('0' included).
+                    if { $x < 0 } {
+                        return ""
                     }
                 }
+            }
+
+            switch -- [string is integer -strict $y] {
+                0   { return "" }
+                1   {
+                    # Check that the 'y' coordinate is a positive integer ('0' included).
+                    if { $y < 0 } {
+                        return ""
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                interp invokehidden {} $w identify element $x $y
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return "Separator.line"
             }
         }
         instate {
