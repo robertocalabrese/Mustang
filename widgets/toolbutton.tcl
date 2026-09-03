@@ -2483,13 +2483,24 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
             # *window* **invoke**
             switch -- [llength $args] {
                 0   {
-                    # Execute the command.
-                    try {
-                        uplevel #0 [list interp invokehidden {} $w invoke]
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
+                    # Check if there is a command associated with the widget.
+                    switch -- $::ms::current($w,command) {
+                        ""      { return "" }
+                        default {
+                            # Invoke the command associated with the widget.
+                            try {
+                                uplevel #0 [list {*}$::ms::current($w,command)]
+                            } on error {} {
+                                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
