@@ -2853,6 +2853,7 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
 proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
     switch -- $::ms::current($w,state) {
         disabled {
+            # Check the axis provided.
             switch -nocase -- $axis {
                 X       { ::ms::Scroll_Parent_X $w $delta $what }
                 default { ::ms::Scroll_Parent_Y $w $delta $what }
