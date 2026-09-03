@@ -1371,108 +1371,64 @@ proc ::ms::sizegrip::ButtonPress { w X Y } {
 
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled {
-            # Check the parent of the widget address provided, if any.
-            set parent [_winfo parent $w]
-            switch -- $parent {
-                ""      {}
-                default {
-                    # Propagate the action to the widget's parents.
+        disabled { return "" }
+    }
 
-                    # ATTENTION!
-                    #
-                    # This is a recursive loop. The only way to exit is:
-                    #   - If there is no more parent to check for.
-                    #   - If 'parent' is a scrollable megawidget.
-                    set i 1
-                    while { $i > 0 } {
-                        # Check if 'parent' belongs to a scrollable megawidget.
-                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                            _focus -force $parent
-                            return ""
-                        }
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
 
-                        # Check the next parent, if any.
-                        set parent [_winfo parent $parent]
-                        switch -- $parent {
-                            ""  {
-                                # There are no more parents to check for.
-                                # Stop the recursive iteration.
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-
-            # Check if the widget's toplevel was created by mustang.
-            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                0   {
-                    # If possible, focus the widget's toplevel.
-                    try {
-                        _focus -force [_winfo toplevel $w]
-                    } on error {} {
-                        # Do nothing
-                    }
-                }
-                1   {
-                    # Check the widget's toplevel takefocus.
-                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                        0   {
-                            # Momentarily set the toplevel takefocus to '1'.
-                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                        }
-                    }
-
-                    # Focus the widget's toplevel.
-                    _focus -force $::ms::addr($w,toplevel)
-                }
-            }
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list !focus]] {
+        0   {
+            # Change the widget dynamic state to 'pressed'.
+            interp invokehidden {} $w state [list pressed]
         }
-        default {
-            # Focus the sizegrip if its not already focussed.
-            interp invokehidden {} $w instate [list !focus] {
-                _focus -force $w
-            }
+        1   {
+            # Focus the widget.
+            _focus -force $w
 
-            # Get the toplevel resizable attribute.
-            set resizable                  [wm resizable $::ms::addr($w,toplevel)]
-            set ::ms::temp(state,resize,X) [lindex $resizable 0]
-            set ::ms::temp(state,resize,Y) [lindex $resizable 1]
+            # Change the widget dynamic state to 'pressed focus'.
+            interp invokehidden {} $w state [list pressed focus]
+        }
+    }
 
-            # If the widget's toplevel is not resizable then bail.
-            if { $::ms::temp(state,resize,X) == 0 && $::ms::temp(state,resize,Y) == 0 } {
-                return ""
-            }
+    # Get the toplevel resizable attribute.
+    set resizable                  [wm resizable $::ms::addr($w,toplevel)]
+    set ::ms::temp(state,resize,X) [lindex $resizable 0]
+    set ::ms::temp(state,resize,Y) [lindex $resizable 1]
 
-            # Sanity-checks:
-            #   If a negative X or Y position was specified for [wm geometry],
-            #   just bail out because there is no way to handle this cleanly.
-            switch -- [scan [_wm geometry $::ms::addr($w,toplevel)] "%dx%d+%d+%d" width height x y] {
-                4   {
-                    # Account for gridded geometry.
-                    set geometry [_wm grid $::ms::addr($w,toplevel)]
-                    switch -- [llength $geometry] {
-                        0   {
-                            set ::ms::temp(state,height,increment) 1
-                            set ::ms::temp(state,width,increment)  1
-                        }
-                        default {
-                            set ::ms::temp(state,width,increment)  [lindex $geometry 2]
-                            set ::ms::temp(state,height,increment) [lindex $geometry 3]
-                        }
-                    }
+    # If the widget's toplevel is not resizable then bail.
+    if { $::ms::temp(state,resize,X) == 0 && $::ms::temp(state,resize,Y) == 0 } {
+        return ""
+    }
 
-                    set ::ms::temp(state,height)  $height
-                    set ::ms::temp(state,press,X) $X
-                    set ::ms::temp(state,press,Y) $Y
-                    set ::ms::temp(state,pressed) 1
-                    set ::ms::temp(state,x)       $x
-                    set ::ms::temp(state,y)       $y
-                    set ::ms::temp(state,width)   $width
+    # Sanity-checks:
+    #   If a negative X or Y position was specified for [wm geometry],
+    #   just bail out because there is no way to handle this cleanly.
+    switch -- [scan [_wm geometry $::ms::addr($w,toplevel)] "%dx%d+%d+%d" width height x y] {
+        4   {
+            # Account for gridded geometry.
+            set geometry [_wm grid $::ms::addr($w,toplevel)]
+            switch -- [llength $geometry] {
+                0   {
+                    set ::ms::temp(state,height,increment) 1
+                    set ::ms::temp(state,width,increment)  1
+                }
+                default {
+                    set ::ms::temp(state,width,increment)  [lindex $geometry 2]
+                    set ::ms::temp(state,height,increment) [lindex $geometry 3]
                 }
             }
+
+            set ::ms::temp(state,height)  $height
+            set ::ms::temp(state,press,X) $X
+            set ::ms::temp(state,press,Y) $Y
+            set ::ms::temp(state,pressed) 1
+            set ::ms::temp(state,x)       $x
+            set ::ms::temp(state,y)       $y
+            set ::ms::temp(state,width)   $width
         }
     }
 
