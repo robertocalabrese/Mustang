@@ -913,8 +913,8 @@ package provide ::ms::progressbar 0.1
 ###################################
 
 # Activate/Deactivate
-_bind _Progressbar <Activate>   { ::ms::progressbar::Pathname_Cmd %W state !background; break }
-_bind _Progressbar <Deactivate> { ::ms::progressbar::Pathname_Cmd %W state  background; break }
+_bind _Progressbar <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Progressbar <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Progressbar <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
@@ -926,11 +926,11 @@ _bind _Progressbar <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; brea
 _bind _Progressbar <Destroy> { ::ms::progressbar::Destroy %W; break }
 
 # Enter/Leave
-_bind _Progressbar <Enter> { ::ms::progressbar::Pathname_Cmd %W state  hover; break }
-_bind _Progressbar <Leave> { ::ms::progressbar::Pathname_Cmd %W state !hover; break }
+_bind _Progressbar <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Progressbar <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Progressbar <FocusIn>  { ::ms::progressbar::FocusIn  %W; break }
+_bind _Progressbar <FocusIn>  { interp invokehidden {}      %W state [list focus]; break }
 _bind _Progressbar <FocusOut> { ::ms::progressbar::FocusOut %W; break }
 
 # Mousewheel and Touchpad
@@ -2660,22 +2660,6 @@ proc ::ms::progressbar::Destroy { w } {
                          ::ms::managed_by($w,wraplength);
 
     unset -nocomplain -- ::ms::style($w,widget)
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::progressbar::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::progressbar::Pathname_Cmd $w state focus
 
     return ""
 }
