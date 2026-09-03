@@ -7002,8 +7002,7 @@ proc ::ms::combobox::Popdown_PageDown { w } {
 
 ## Popdown_PageUp
 #
-# Move the listbox view towards the top by one page and
-# select the first visible row.
+# Move the popdown listbox view towards the top by one page and select the first visible row.
 #
 # Where:
 #
