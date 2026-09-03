@@ -5460,7 +5460,7 @@ proc ::ms::combobox::Unpost { w } {
     }
 
     # Change the widget dynamic state to '!pressed'.
-    ::ms::combobox::Pathname_Cmd $w state !pressed
+    interp invokehidden {} $w state [list !pressed]
 
     # Unset the toplevel temporary variables.
     unset -nocomplain -- ::ms::temp(toplevel,height) \
