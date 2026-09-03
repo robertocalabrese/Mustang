@@ -6863,7 +6863,7 @@ proc ::ms::combobox::Popdown_Hover { w x y } {
 
 ## Popdown_Motion
 #
-# Manage the **Motion** event upon the listbox.
+# Manage the **Motion** event upon the popdown listbox.
 #
 # Where:
 #
