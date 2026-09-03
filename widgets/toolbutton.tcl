@@ -962,8 +962,8 @@ package provide ::ms::toolbutton 0.1
 ##################################
 
 # Activate/Deactivate
-_bind _Toolbutton <Activate>   { ::ms::toolbutton::Pathname_Cmd %W state !background; break }
-_bind _Toolbutton <Deactivate> { ::ms::toolbutton::Pathname_Cmd %W state  background; break }
+_bind _Toolbutton <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Toolbutton <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Toolbutton <ButtonPress-1>   { ::ms::toolbutton::ButtonPress %W; break }
@@ -978,11 +978,11 @@ _bind _Toolbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break
 _bind _Toolbutton <Destroy> { ::ms::toolbutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Toolbutton <Enter> { ::ms::toolbutton::Pathname_Cmd %W state  hover; break }
-_bind _Toolbutton <Leave> { ::ms::toolbutton::Pathname_Cmd %W state !hover; break }
+_bind _Toolbutton <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Toolbutton <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Toolbutton <FocusIn>  { ::ms::toolbutton::FocusIn  %W; break }
+_bind _Toolbutton <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Toolbutton <FocusOut> { ::ms::toolbutton::FocusOut %W; break }
 
 # Return/KP_Enter/space
@@ -2957,22 +2957,6 @@ proc ::ms::toolbutton::Destroy { w } {
                          ::ms::managed_by($w,shiftrelief);
 
     unset -nocomplain -- ::ms::style($w,widget)
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::toolbutton::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::toolbutton::Pathname_Cmd $w state focus
 
     return ""
 }
