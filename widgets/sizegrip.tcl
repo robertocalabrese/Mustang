@@ -532,8 +532,8 @@ package provide ::ms::sizegrip 0.1
 ################################
 
 # Activate/Deactivate
-_bind _Sizegrip <Activate>   { ::ms::sizegrip::Pathname_Cmd %W state !background; break }
-_bind _Sizegrip <Deactivate> { ::ms::sizegrip::Pathname_Cmd %W state  background; break }
+_bind _Sizegrip <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Sizegrip <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Buttonpress-1
 _bind _Sizegrip <ButtonPress-1>   { ::ms::sizegrip::ButtonPress %W %X %Y; break }
@@ -547,11 +547,11 @@ _bind _Sizegrip <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Sizegrip <Destroy> { ::ms::sizegrip::Destroy %W; break }
 
 # Enter/Leave
-_bind _Sizegrip <Enter> { ::ms::sizegrip::Pathname_Cmd %W state  hover; break }
-_bind _Sizegrip <Leave> { ::ms::sizegrip::Pathname_Cmd %W state !hover; break }
+_bind _Sizegrip <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Sizegrip <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Sizegrip <FocusIn>  { ::ms::sizegrip::FocusIn  %W; break }
+_bind _Sizegrip <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Sizegrip <FocusOut> { ::ms::sizegrip::FocusOut %W; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
@@ -1626,22 +1626,6 @@ proc ::ms::sizegrip::Drag_Release {} {
                          ::ms::temp(state,x) \
                          ::ms::temp(state,y) \
                          ::ms::temp(state,width);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::sizegrip::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::sizegrip::Pathname_Cmd $w state focus
 
     return ""
 }
