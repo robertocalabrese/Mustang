@@ -848,8 +848,8 @@ package provide ::ms::scale 0.1
 #############################
 
 # Activate/Deactivate
-_bind _Scale <Activate>   { ::ms::scale::Pathname_Cmd %W state !background; break }
-_bind _Scale <Deactivate> { ::ms::scale::Pathname_Cmd %W state  background; break }
+_bind _Scale <Activate>   { interp invokehidden {} %W [list !background]; break }
+_bind _Scale <Deactivate> { interp invokehidden {} %W [list  background]; break }
 
 # Buttonpress-1
 _bind _Scale <ButtonPress-1> { ::ms::scale::ButtonPress %W %x %y; break }
@@ -861,11 +861,11 @@ _bind _Scale <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Scale <Destroy> { ::ms::scale::Destroy %W; break }
 
 # Enter/Leave
-_bind _Scale <Enter> { ::ms::scale::Pathname_Cmd %W state  hover; break }
-_bind _Scale <Leave> { ::ms::scale::Pathname_Cmd %W state !hover; break }
+_bind _Scale <Enter> { interp invokehidden {} %W [list  hover]; break }
+_bind _Scale <Leave> { interp invokehidden {} %W [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Scale <FocusIn>  { ::ms::scale::FocusIn  %W; break }
+_bind _Scale <FocusIn>  { interp invokehidden {} %W [list focus]; break }
 _bind _Scale <FocusOut> { ::ms::scale::FocusOut %W; break }
 
 # PrevChar/NextChar
@@ -2761,22 +2761,6 @@ proc ::ms::scale::Destroy { w } {
                          ::ms::managed_by($w,troughrelief);
 
     unset -nocomplain -- ::ms::style($w,widget)
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::scale::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::scale::Pathname_Cmd $w state focus
 
     return ""
 }
