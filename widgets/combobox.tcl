@@ -4001,6 +4001,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             set index  [lindex $args 0]
                             set string [lindex $args 1]
 
+                            # Execute the command.
                             try {
                                 interp invokehidden {} $w insert $index $string
                             } on error { errortext errorcode } {
