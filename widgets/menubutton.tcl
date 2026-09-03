@@ -1007,8 +1007,8 @@ switch -- [_tk windowingsystem] {
 _bind _Menubutton <Destroy> { ::ms::menubutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Menubutton <Enter> { ::ms::menubutton::Enter %W; break }
-_bind _Menubutton <Leave> { ::ms::menubutton::Leave %W; break }
+_bind _Menubutton <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Menubutton <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
 _bind _Menubutton <FocusIn>  { interp invokehidden {} %W state [list  focus]; break }
@@ -3096,48 +3096,6 @@ proc ::ms::menubutton::Destroy { w } {
                          ::ms::managed_by($w,relief);
 
     unset -nocomplain -- ::ms::style($w,widget)
-
-    return ""
-}
-
-# Enter
-#
-# Manages the **Enter** event on a menubutton.
-#
-# Where:
-#
-# w   Should be the menubutton real address involved.
-#
-# It doesn't return anything.
-proc ::ms::menubutton::Enter { w } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to 'active'.
-    interp invokehidden {} $w state [list active]
-
-    return ""
-}
-
-# Leave
-#
-# Manages the **Leave** event on a menubutton.
-#
-# Where:
-#
-# w   Should be the menubutton real address involved.
-#
-# It doesn't return anything.
-proc ::ms::menubutton::Leave { w } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Change the widget dynamic state to '!active'.
-    interp invokehidden {} $w state [list !active]
 
     return ""
 }
