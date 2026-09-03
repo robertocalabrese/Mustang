@@ -6177,6 +6177,7 @@ proc ::ms::combobox::MouseWheel { w amount } {
 proc ::ms::combobox::Shift_MouseWheel { w amount } {
     switch -- $::ms::current($w,state) {
         normal {
+            # Check if the widget is currently in focus or not.
             if { [_focus -displayof $w] eq $w } {
                 # Get the current cursor position
                 set index [interp invokehidden {} $w index insert]
