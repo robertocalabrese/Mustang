@@ -2775,19 +2775,11 @@ proc ::ms::scale::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::scale::FocusOut { w } {
-    # Check the contextual menu associated with this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
+    # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
+        0   { interp invokehidden {} $w state [list !focus] }
+        1   { interp invokehidden {} $w state [list  focus] }
     }
-
-    # Change the widget dynamic state to '!focus'.
-    ::ms::scale::Pathname_Cmd $w state !focus
 
     return ""
 }
