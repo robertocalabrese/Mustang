@@ -4928,9 +4928,9 @@ proc ::ms::combobox::Post { w } {
     # Note: This procedure have been highly influenced by many 'ttk::combobox' procedures.
     #       All credits goes to the original author/s.
 
-    # Check if the popdown should not be displayed.
-    if { $::ms::current($w,state) eq "disabled" } {
-        return ""
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
     }
 
     # Safeguard.
@@ -4970,7 +4970,7 @@ proc ::ms::combobox::Post { w } {
     set selectforeground  $::ms::styleopt($::ms::theme,Popdown,selectforeground)
 
     # Change the widget dynamic state to 'pressed'.
-    ::ms::combobox::Pathname_Cmd $w state pressed
+    interp invokehidden {} $w state [list pressed]
 
     ######################
     ##                  ##
@@ -5000,7 +5000,7 @@ proc ::ms::combobox::Post { w } {
                                       -visual {} \
                                        -width 0;
 
-    # OS specific attributes.
+    # Set the OS specific attributes.
     switch -- [_tk windowingsystem] {
         aqua    { _wm attributes $w.popdown -alpha 1.0 }
         win32   { _wm attributes $w.popdown -toolwindow 1 }
@@ -5008,7 +5008,7 @@ proc ::ms::combobox::Post { w } {
 
     }
 
-    # Common attributes.
+    # Set the common attributes.
     _wm group            $w.popdown $::ms::addr($w,toplevel)
     _wm overrideredirect $w.popdown true
     _wm resizable        $w.popdown 0 0
