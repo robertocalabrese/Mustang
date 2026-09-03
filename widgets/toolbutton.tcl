@@ -969,7 +969,7 @@ _bind _Toolbutton <Deactivate> { ::ms::toolbutton::Pathname_Cmd %W state  backgr
 _bind _Toolbutton <ButtonPress-1>   { ::ms::toolbutton::ButtonPress %W; break }
 _bind _Toolbutton <Button1-Leave>   { break }
 _bind _Toolbutton <Button1-Enter>   { break }
-_bind _Toolbutton <ButtonRelease-1> { ::ms::toolbutton::Invoke %W; break }
+_bind _Toolbutton <ButtonRelease-1> { ::ms::toolbutton::ButtonRelease %W; break }
 
 # Contextual menu
 _bind _Toolbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
@@ -986,9 +986,9 @@ _bind _Toolbutton <FocusIn>  { ::ms::toolbutton::FocusIn  %W; break }
 _bind _Toolbutton <FocusOut> { ::ms::toolbutton::FocusOut %W; break }
 
 # Return/KP_Enter/space
-_bind _Toolbutton <Return>   { ::ms::toolbutton::Invoke %W; break }
-_bind _Toolbutton <KP_Enter> { ::ms::toolbutton::Invoke %W; break }
-_bind _Toolbutton <space>    { ::ms::toolbutton::Invoke %W; break }
+_bind _Toolbutton <Return>   { ::ms::toolbutton::ButtonRelease %W; break }
+_bind _Toolbutton <KP_Enter> { ::ms::toolbutton::ButtonRelease %W; break }
+_bind _Toolbutton <space>    { ::ms::toolbutton::ButtonRelease %W; break }
 
 # Mousewheel and Touchpad
 
@@ -2800,6 +2800,55 @@ proc ::ms::toolbutton::ButtonPress { w } {
     return ""
 }
 
+## ButtonRelease
+#
+# Manage the **ButtonRelease** (and **Return** key) event upon the widget.
+#
+# Where:
+#
+# w   Should be the widget real address involved.
+#
+# It doesn't return anything.
+proc ::ms::toolbutton::ButtonRelease { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check the widget's dynamyc state.
+    switch -- [interp invokehidden {} $w instate pressed] {
+        0   {
+            set $::ms::current($w,variable) $::ms::current($w,onvalue)
+
+            # Change the widget dynamic state to 'pressed'.
+            interp invokehidden {} $w state pressed
+        }
+        1   {
+            set $::ms::current($w,variable) $::ms::current($w,offvalue)
+
+            # Change the widget dynamic state to '!pressed'.
+            interp invokehidden {} $w state !pressed
+        }
+    }
+
+    # Check if there is a command associated with the widget.
+    switch -- $::ms::current($w,command) {
+        ""      { return "" }
+        default {
+            # Invoke the command associated with the widget.
+            try {
+                uplevel #0 [list {*}$::ms::current($w,command)]
+            } on error {} {
+                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
+            } on ok {} {
+                return ""
+            }
+        }
+    }
+
+    return ""
+}
+
 ## Destroy
 #
 # Manage the **Destroy** event on the widget.
@@ -2994,40 +3043,6 @@ proc ::ms::toolbutton::FocusOut { w } {
 
     # Change the widget dynamic state to '!focus'.
     ::ms::toolbutton::Pathname_Cmd $w state !focus
-
-    return ""
-}
-
-## Invoke
-#
-# Invoke the command associated with the widget and set the correct state of the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::toolbutton::Invoke { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        normal {
-            # Check the current widget state.
-            if { [interp invokehidden {} $w instate pressed] } {
-                set $::ms::current($w,variable) $::ms::current($w,offvalue)
-
-                # Change the widget dynamic state to '!pressed'.
-                interp invokehidden {} $w state !pressed
-            } else {
-                set $::ms::current($w,variable) $::ms::current($w,onvalue)
-
-                # Change the widget dynamic state to 'pressed'.
-                interp invokehidden {} $w state pressed
-            }
-
-            # Invoke the command associated with the widget.
-            uplevel #0 [list interp invokehidden {} $w invoke]
-        }
-    }
 
     return ""
 }
