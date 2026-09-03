@@ -7129,7 +7129,7 @@ proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
 
 ## Popdown_Tab
 #
-# Manage the **Tab** and **Shift-Tab** events on the combobox listbox.
+# Manage the **Tab** and **Shift-Tab** events on the popdown listbox.
 # Set the selection, and navigate to next/prev widget.
 #
 # Where:
