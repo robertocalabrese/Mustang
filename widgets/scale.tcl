@@ -2144,22 +2144,42 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        coords -
-        get    -
-        set    {
+        coords {
             # Synopsis:
             #
             # *window* **coords** ?*value*?
+            switch -- [llength $args] {
+                0   -
+                1   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w coords $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        get {
+            # Synopsis:
+            #
             # *window* **get** ?*x* *y*?
-            # *window* **set** *value*
-
-            # Execute the command.
-            try {
-                interp invokehidden {} $w $cmd {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+            switch -- [llength $args] {
+                0   -
+                2   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w get {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         identify {
@@ -2269,6 +2289,24 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
                     # Execute the command.
                     try {
                         interp invokehidden {} $w instate $statespec $script
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        set {
+            # Synopsis:
+            #
+            # *window* **set** *value*
+            switch -- [llength $args] {
+                1   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w set $args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
