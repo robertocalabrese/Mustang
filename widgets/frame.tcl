@@ -2948,8 +2948,13 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
         identify {
             # Synopsis:
             #
+            # *window* **identify** *x* *y*
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
+                2   {
+                    set x [lindex $args 0]
+                    set y [lindex $args 1]
+                }
                 3   {
                     # Check that the first argument of 'args' is the word "element".
                     switch -- [lindex $args 0] {
@@ -2959,54 +2964,72 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 
                     set x [lindex $args 1]
                     set y [lindex $args 2]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
-                    # Check that the coordinates provided are valid.
-                    switch -- [string is integer -strict $x] {
-                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+            # Check that the (x,y) relative coordinates provided are valid.
+            switch -- [string is integer -strict $x] {
+                0   { return "" }
+                1   {
+                    # Check that the 'x' coordinate is a positive integer ('0' included).
+                    if { $x < 0 } {
+                        return ""
                     }
+                }
+            }
 
-                    switch -- [string is integer -strict $y] {
-                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+            switch -- [string is integer -strict $y] {
+                0   { return "" }
+                1   {
+                    # Check that the 'y' coordinate is a positive integer ('0' included).
+                    if { $y < 0 } {
+                        return ""
                     }
+                }
+            }
 
-                    # Get the root coordinates of the north-west corner of the container ('$w').
-                    set rootx [_winfo rootx $w]
-                    set rooty [_winfo rooty $w]
+            update idletasks
 
-                    # Transform the relative coordinates provided into root coordinates.
-                    set X [expr { $rootx+$x }]
-                    set Y [expr { $rooty+$y }]
+            # Get the height and width of the container ('$w').
+            set height [_winfo height $w]
+            set width  [_winfo width  $w]
 
+            # Get the root coordinates of the north-west corner of the container ('$w').
+            set X1 [_winfo rootx $w]
+            set Y1 [_winfo rooty $w]
+
+            # Compute the root coordinate of the south-east corner of the container ('$w').
+            set X2 [expr { $X1+$width}]
+            set Y2 [expr { $Y1+$height}]
+
+            # Transform the relative coordinates provided into root coordinates.
+            set X [expr { $X1+$x }]
+            set Y [expr { $Y1+$y }]
+
+            # Check if the root coordinates (X,Y) are outside the (X1,Y1)-(X2,Y2) root coordinates.
+            if { ($X < $X1) || ($X > $X2) || ($Y < $Y1) || ($Y > $Y2) } {
+                return ""
+            }
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { return "Frame.area" }
+                true  {
                     # Get the widget address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
-                    # Return the name of the object, or an empty string if there are no frame objects at the coordinates provided.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
-                            if { $widget eq $w } {
-                                return "Frame.frame"
-                            } else {
-                                return ""
-                            }
-                        }
-                        true {
-                            if { $widget eq $w } {
-                                return "Frame.hull"
-                            } elseif { $widget eq "$w.border" } {
-                                return "Frame.border"
-                            } elseif { $widget eq "$w.border.viewport.content" } {
-                                return "Frame.frame"
-                            } elseif { $widget eq "$w.x" } {
-                                return "Frame.hscrollbar"
-                            } elseif { $widget eq "$w.y" } {
-                                return "Frame.vscrollbar"
-                            } else {
-                                return ""
-                            }
-                        }
+                    # Execute the command.
+                    if { $widget eq $w } {
+                        return "Frame.hull"
+                    } elseif { $widget eq "$w.x" } {
+                        return "Frame.x"
+                    } elseif { $widget eq "$w.y" } {
+                        return "Frame.y"
+                    } else {
+                        return "Frame.area"
                     }
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         instate {
