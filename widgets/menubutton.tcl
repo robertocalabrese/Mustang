@@ -1018,9 +1018,9 @@ _bind _Menubutton <FocusOut> { interp invokehidden {} %W state [list !focus]; br
 _bind _Menubutton <<NextLine>> { ::ms::menubutton::Return %W; break }
 
 # Return/KP_Enter/space
-_bind _Menubutton <KeyPress-Return>   { ::ms::menubutton::Return %W; break }
-_bind _Menubutton <KeyPress-KP_Enter> { ::ms::menubutton::Return %W; break }
-_bind _Menubutton <KeyPress-space>    { ::ms::menubutton::Return %W; break }
+_bind _Menubutton <KeyPress-Return>   { ::ms::menubutton::ButtonPress %W; break }
+_bind _Menubutton <KeyPress-KP_Enter> { ::ms::menubutton::ButtonPress %W; break }
+_bind _Menubutton <KeyPress-space>    { ::ms::menubutton::ButtonPress %W; break }
 
 # Tab/Shift-Tab keys
 _bind _Menubutton <KeyPress-Tab> { # Enable binding }
@@ -3153,7 +3153,7 @@ proc ::ms::menubutton::Leave { w } {
 
 ## ButtonPress
 #
-# Manage the **ButtonPress-1** event on the widget.
+# Manage the **ButtonPress-1** (and **Return** key) event on the widget.
 #
 # Where:
 #
@@ -3163,90 +3163,31 @@ proc ::ms::menubutton::Leave { w } {
 proc ::ms::menubutton::ButtonPress { w } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
-        disabled {
-            # Check the parent of the widget address provided, if any.
-            set parent [_winfo parent $w]
-            switch -- $parent {
-                ""      {}
-                default {
-                    # Propagate the action to the widget's parents.
+        disabled { return "" }
+    }
 
-                    # ATTENTION!
-                    #
-                    # This is a recursive loop. The only way to exit is:
-                    #   - If there is no more parent to check for.
-                    #   - If 'parent' is a scrollable megawidget.
-                    set i 1
-                    while { $i > 0 } {
-                        # Check if 'parent' belongs to a scrollable megawidget.
-                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                            _focus -force $parent
-                            return ""
-                        }
+    # Check if there is a menu associated with the widget.
+    switch -- $::ms::current($w,menu) {
+        ""  { return "" }
+    }
 
-                        # Check the next parent, if any.
-                        set parent [_winfo parent $parent]
-                        switch -- $parent {
-                            ""  {
-                                # There are no more parents to check for.
-                                # Stop the recursive iteration.
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-
-            # Check if the widget's toplevel was created by mustang.
-            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                0   {
-                    # If possible, focus the widget's toplevel.
-                    try {
-                        _focus -force [_winfo toplevel $w]
-                    } on error {} {
-                        # Do nothing
-                    }
-                }
-                1   {
-                    # Check the widget's toplevel takefocus.
-                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                        0   {
-                            # Momentarily set the toplevel takefocus to '1'.
-                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                        }
-                    }
-
-                    # Focus the widget's toplevel.
-                    _focus -force $::ms::addr($w,toplevel)
-                }
-            }
-        }
+    # Run the prehook callback, if any.
+    switch -- $::ms::current($w,prehook) {
+        ""      {}
         default {
-            # Check if there is a menu associated with the widget.
-            switch -- $::ms::current($w,menu) {
-                ""  { return "" }
+            try {
+                uplevel #0 [list $::ms::current($w,prehook) $w]
+            } on error { errortext errorcode } {
+                ::ms::Error "Invalid prehook command for '$w'." ""
             }
-
-            # Run the prehook callback, if any.
-            switch -- $::ms::current($w,prehook) {
-                ""      {}
-                default {
-                    try {
-                        uplevel #0 [list $::ms::current($w,prehook) $w]
-                    } on error { errortext errorcode } {
-                        ::ms::Error "Invalid prehook command for '$w'." ""
-                    }
-                }
-            }
-
-            # Change the widget dynamic state to 'pressed'.
-            interp invokehidden {} $w state [list pressed]
-
-            # Post the menu.
-            ::tk_popup $menu {*}[::ms::menubutton::Post_Position $w]
         }
     }
+
+    # Change the widget dynamic state to 'pressed'.
+    interp invokehidden {} $w state [list pressed]
+
+    # Post the menu.
+    ::tk_popup $menu {*}[::ms::menubutton::Post_Position $w]
 
     return ""
 }
@@ -3274,47 +3215,6 @@ proc ::ms::menubutton::Find_Menu_Index { w } {
 
         incr index
     }
-
-    return ""
-}
-
-## Return
-#
-# Post the popdown window when the **Arrow Down**, **Return**, **KP_Return** or **space** key is pressed.
-#
-# Where:
-#
-# w   Should be the menubutton real address involved.
-#
-# It doesn't return anything.
-proc ::ms::menubutton::Return { w } {
-    # Check if the popdown should not be displayed.
-    if { $::ms::current($w,state) eq "disabled" } {
-        return ""
-    }
-
-    # Check if there is a menu associated with the widget.
-    switch -- $::ms::current($w,menu) {
-        ""  { return "" }
-    }
-
-    # Run the prehook callback, if any.
-    switch -- $::ms::current($w,prehook) {
-        ""      {}
-        default {
-            try {
-                uplevel #0 [list $::ms::current($w,prehook) $w]
-            } on error { errortext errorcode } {
-                ::ms::Error "Invalid prehook command for '$w'." ""
-            }
-        }
-    }
-
-    # Change the widget dynamic state to 'pressed'.
-    interp invokehidden {} $w state [list pressed]
-
-    # Post the menu.
-    ::tk_popup $menu {*}[::ms::menubutton::Post_Position $w]
 
     return ""
 }
