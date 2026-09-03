@@ -197,6 +197,34 @@
 #
 #                         If not provided, defaults to the empty string.
 #
+# **-colormap**           Specifies a colormap to use for the window. The value may be either **new**, in which case a new colormap is
+#                         created for the window and its children, or the name of another window (which must be on the same screen and
+#                         have the same visual as *window*), in which case the new window will use the colormap from the specified window.
+#                         If the **-colormap** option is not specified, the new window uses the default colormap of its screen.
+#
+#                         Note: This option may only be provided while creating the widget.
+#                               Attempts to change this value after the widget is created by using the **configure** command,
+#                               will be ignored by mustang.
+#
+#                         Note: It's only meaningful for simple frames.
+#
+#                         If not provided, defaults to the empty string.
+#
+#                         See also **-visual** in this section.
+#
+# **-container**          The value must be a boolean. If true, it means that this window will be used as a container in which some
+#                         other application will be embedded (for example, a Tk toplevel can be embedded using the **-use** option).
+#                         The window will support the appropriate window manager protocols for things like geometry requests.
+#                         The window should not have any children of its own in this application.
+#
+#                         Note: This option may only be provided while creating the widget.
+#                               Attempts to change this value after the widget is created by using the **configure** command,
+#                               will be ignored by mustang.
+#
+#                         Note: It's only meaningful for simple frames.
+#
+#                         If not provided, defaults to **0**.
+#
 # **-cursor**             Specifies the mouse cursor to be used inside the widget.
 #                         If an empty string is specified, it indicates that the widget should defer to it's parent for
 #                         cursor specification.
@@ -217,7 +245,9 @@
 # **-darkcolor**          It's a list that specifies the color to use as darkcolor.
 #                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                         Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#                         Note: It's only meaningful for scrollable frames.
+#
+#                         Note: It's only meaningful for scrollable frames with a relief that is not **flat** or **solid**.
 #
 #                         Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
 #
@@ -274,7 +304,9 @@
 # **-lightcolor**         It's a list that specifies the color to use as lightcolor.
 #                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                         Note: It's only meaningful for widgets with a relief that is not **flat** or **solid**.
+#                         Note: It's only meaningful for scrollable frames.
+#
+#                         Note: It's only meaningful for scrollable frames with a relief that is not **flat** or **solid**.
 #
 #                         Note: It's only meaningful for themes that use the 'clam' engine (like the 'Halo' theme).
 #
@@ -305,6 +337,9 @@
 #                         normally need (as determined by the width of the things displayed in the widget).
 #                         If the geometry manager can satisfy this request, the widget will end up with extra internal space
 #                         to the left and/or right of what it displays inside.
+#
+#                         Note: Simple frames accepts a maximum of two values (horizontal and vertical padding).
+#                               If more are provided, they will be ignored.
 #
 #                         Note: This is a styleable option.
 #
@@ -368,7 +403,7 @@
 #                         should reflects the widget's parent background.
 #                         See the **COLOR OPTION** section to know how this list should be composed.
 #
-#                         Note: The *-shellbackground* is meaningless and will be ignored for frames that are not scrollable.
+#                         Note: It's only meaningful for scrollable frames.
 #
 #                         Note: This is a styleable option.
 #
@@ -416,6 +451,35 @@
 #                         Differently than Tk, mustang does not allow the empty string as a valid value.
 #
 #                         If not provided, defaults to **0**.
+#
+# **-visual**             Specifies visual information for the new window in any of the following forms:
+#
+#                            string   --> The string consists of a *class* name followed by an integer *depth*, with any amount of white
+#                                         space in between.
+#
+#                                         *Class* selects what sort of visual is desired and must be one of **directcolor**, **grayscale**,
+#                                         **greyscale**, **pseudocolor**, **staticcolor**, **staticgray**, **staticgrey**, or **truecolor**.
+#
+#                                         *Depth* specifies how many bits per pixel are needed for the visual.
+#
+#                            default  --> Use the default visual for *tkwin*'s screen.
+#
+#                            pathName --> Use the visual for the window given by *pathName*.
+#                                         *pathName* must be the name of a window on the same screen as *tkwin*.
+#
+#                            number   --> Use the visual whose X identifier is number.
+#
+#                         If this option is not specified, the new window will use the default visual for its screen.
+#
+#                         Note: This option may only be provided while creating the widget.
+#                               Attempts to change this value after the widget is created by using the **configure** command,
+#                               will be ignored by mustang.
+#
+#                         Note: It's only meaningful for simple frames.
+#
+#                         If not provided, defaults to the empty string.
+#
+#                         See also **-colormap** in this section.
 #
 # **-width**              Specifies the desired width for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
 #                         (pixels, points, inches, millimeters and centimeters).
@@ -1607,11 +1671,14 @@ namespace eval ::ms::frame {
     set ::ms::frame(non_styleable,options) [list class \
                                                  height \
                                                  cmenu \
+                                                 colormap \
+                                                 container \
                                                  scrollable \
                                                  state \
                                                  style \
                                                  takefocus \
                                                  width \
+                                                 visual \
                                                  xscrollincrement \
                                                  yscrollincrement];
 
@@ -1630,10 +1697,13 @@ namespace eval ::ms::frame {
     set ::ms::default(frame,class)            TFrame
     set ::ms::default(frame,height)           0
     set ::ms::default(frame,cmenu)            {}
+    set ::ms::default(frame,colormap)         {}
+    set ::ms::default(frame,container)        0
     set ::ms::default(frame,scrollable)       false
     set ::ms::default(frame,state)            normal
     set ::ms::default(frame,style)            TFrame
     set ::ms::default(frame,takefocus)        0
+    set ::ms::default(frame,visual)           {}
     set ::ms::default(frame,width)            0
     set ::ms::default(frame,xscrollincrement) 0
     set ::ms::default(frame,yscrollincrement) 0
@@ -1694,23 +1764,29 @@ proc ::ms::frame::Command { window { args "" } } {
             # Set the default widget (not styleable) options.
             set ::ms::default($w,class)            $::ms::default(frame,class)
             set ::ms::default($w,cmenu)            $::ms::default(frame,cmenu)
+            set ::ms::default($w,colomap)          $::ms::default(frame,colomap)
+            set ::ms::default($w,container)        $::ms::default(frame,container)
             set ::ms::default($w,height)           $::ms::default(frame,height)
             set ::ms::default($w,scrollable)       $::ms::default(frame,scrollable)
             set ::ms::default($w,state)            $::ms::default(frame,state)
             set ::ms::default($w,style)            $::ms::default(frame,style)
             set ::ms::default($w,takefocus)        $::ms::default(frame,takefocus)
             set ::ms::default($w,width)            $::ms::default(frame,width)
+            set ::ms::default($w,visual)           $::ms::default(frame,visual)
             set ::ms::default($w,xscrollincrement) $::ms::default(frame,xscrollincrement)
             set ::ms::default($w,yscrollincrement) $::ms::default(frame,yscrollincrement)
 
             # Set the current widget (not styleable) options.
             set ::ms::current($w,class)            $::ms::default(frame,class)
             set ::ms::current($w,cmenu)            $::ms::default(frame,cmenu)
+            set ::ms::current($w,colormap)         $::ms::default(frame,colormap)
+            set ::ms::current($w,container)        $::ms::default(frame,container)
             set ::ms::current($w,height)           $::ms::default(frame,height)
             set ::ms::current($w,scrollable)       $::ms::default(frame,scrollable)
             set ::ms::current($w,state)            $::ms::default(frame,state)
             set ::ms::current($w,style)            $::ms::default(frame,style)
             set ::ms::current($w,takefocus)        $::ms::default(frame,takefocus)
+            set ::ms::current($w,visual)           $::ms::default(frame,visual)
             set ::ms::current($w,width)            $::ms::default(frame,width)
             set ::ms::current($w,xscrollincrement) $::ms::default(frame,xscrollincrement)
             set ::ms::current($w,yscrollincrement) $::ms::default(frame,yscrollincrement)
@@ -1719,6 +1795,7 @@ proc ::ms::frame::Command { window { args "" } } {
             set ::ms::data($w,classtype)  frame
             set ::ms::data($w,scrollx)    off
             set ::ms::data($w,scrolly)    off
+            set ::ms::data($w,statespec)  $::ms::data(statespec,normal)
             set ::ms::data($w,xview1)     0
             set ::ms::data($w,xview2)     1.0
             set ::ms::data($w,xview_diff) 1.0
@@ -1796,6 +1873,33 @@ proc ::ms::frame::Command { window { args "" } } {
                         set value [string trim $value]
                         if { ($value eq "") || ($value in $::ms::addr(menu)) } {
                             set ::ms::current($w,cmenu) $value
+                        }
+                    }
+                    -colormap {
+                        switch -nocase -- $value {
+                            ""      -
+                            "new"   {}
+                            default {
+                                switch -- [winfo exists $value] {
+                                    0   { continue }
+                                }
+                            }
+                        }
+
+                        set ::ms::current($w,colormap) $value
+                    }
+                    -container {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,container) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,container) 1 }
                         }
                     }
                     -cursor {
@@ -1963,6 +2067,62 @@ proc ::ms::frame::Command { window { args "" } } {
                             enabled  { set ::ms::current($w,takefocus) 1 }
                         }
                     }
+                    -visual {
+                        set value [string tolower $value]
+
+                        # Check if it's the empty string.
+                        switch -- $value {
+                            ""  {
+                                set ::ms::current($w,visual) ""
+                                continue
+                            }
+                        }
+
+                        # Check if it's the word 'default'.
+                        if { $value eq "default" } {
+                            set ::ms::current($w,visual) default
+                            continue
+                        }
+
+                        # Check if it's an integer.
+                        switch -- [string is integer -strict $value] {
+                            1   {
+                                set ::ms::current($w,visual) $value
+                                continue
+                            }
+                        }
+
+                        # Check if it's a class name with depth.
+                        switch -- [llength $value] {
+                            2   {
+                                # Check the class name.
+                                switch -- [lindex $value 0] {
+                                    directcolor -
+                                    grayscale   -
+                                    greyscale   -
+                                    pseudocolor -
+                                    staticcolor -
+                                    staticgray  -
+                                    staticgrey  -
+                                    truecolor   {
+                                        # Check the depth.
+                                        switch -- [lindex $value 1] {
+                                            1   -
+                                            2   -
+                                            4   -
+                                            8   -
+                                            16  -
+                                            32  -
+                                            64  {
+                                                set ::ms::current($w,visual) $value
+                                                continue
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     -width {
                         set value [::ms::Check_Measure $value invalid]
                         switch -- $value {
@@ -1998,6 +2158,12 @@ proc ::ms::frame::Command { window { args "" } } {
                 }
             }
 
+            # Set the internal '-padding' option to always show the horizontal and vertical padding.
+            switch -- [llength $::ms::current($w,padding)] {
+                1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
+                default { set ::ms::data($w,padding) $::ms::current($w,padding) }
+            }
+
             ###############################
             ##                           ##
             ##     CREATE THE WIDGET     ##
@@ -2026,90 +2192,60 @@ proc ::ms::frame::Command { window { args "" } } {
                     ##               ##
                     ###################
 
-                    # Set the widget style name.
-                    set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
-                                                           "_bc=" $::ms::current($w,bordercolor) \
-                                                           "_dc=" $::ms::current($w,darkcolor) \
-                                                           "_lc=" $::ms::current($w,lightcolor) \
-                                                           "." $::ms::current($w,style)];
-
-                    # If needed, create the widget style name.
-                    if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                        _ttk_style configure $::ms::style($w,widget)  -background $::ms::current($w,background) \
-                                                                     -bordercolor $::ms::current($w,bordercolor) \
-                                                                       -darkcolor $::ms::current($w,darkcolor) \
-                                                                      -lightcolor $::ms::current($w,lightcolor);
-
-                        # Add the widget style name to the theme styles list created by mustang.
-                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
-                    }
-
-                    # Initialize the widget mapping.
-                    set mapping [list ]
-
                     # background
                     switch -- $::ms::managed_by($w,background) {
-                        developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
-                        Tk  {
-                            # Check if a 'background' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
-                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
-                            }
-                        }
+                        developer { set background $::ms::current($w,background) }
+                        Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
                     }
 
                     # bordercolor
                     switch -- $::ms::managed_by($w,bordercolor) {
-                        developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
-                        Tk  {
-                            # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
-                                1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
-                            }
-                        }
+                        developer { set bordercolor $::ms::current($w,bordercolor) }
+                        Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
                     }
 
-                    # darkcolor
-                    switch -- $::ms::managed_by($w,darkcolor) {
-                        developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
-                        Tk  {
-                            # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
-                                1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
-                            }
+
+                    # Set the frame options.
+                    set frame_options [list  -background $background \
+                                            -borderwidth $::ms::current($w,borderwidth) \
+                                                  -class $::ms::current($w,class) \
+                                               -colormap $::ms::current($w,colormap) \
+                                              -container $::ms::current($w,container) \
+                                                 -cursor $::ms::current($w,cursor) \
+                                                 -height $::ms::current($w,height) \
+                                                   -padx [lindex $::ms::data($w,padding) 0] \
+                                                   -pady [lindex $::ms::data($w,padding) 1] \
+                                                 -relief $::ms::current($w,relief) \
+                                              -takefocus $::ms::current($w,takefocus) \
+                                                 -visual $::ms::current($w,visual) \
+                                                  -width $::ms::current($w,width)];
+
+                    # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
+                    #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                    #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                    #       like it behaves in other widgets that understands the bordercolor.
+
+                    # Check the 'relief' type.
+                    switch -- $::ms::current($w,relief) {
+                        flat  -
+                        solid {
+                            lappend frame_options         -borderwidth 0 \
+                                                  -highlightbackground $bordercolor \
+                                                       -highlightcolor $bordercolor \
+                                                   -highlightthickness $::ms::current($w,borderwidth) \
+                                                               -relief flat;
                         }
-                    }
-
-                    # lightcolor
-                    switch -- $::ms::managed_by($w,lightcolor) {
-                        developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
-                        Tk  {
-                            # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
-                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
-                                1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
-                            }
+                        default {
+                            lappend frame_options         -borderwidth $::ms::current($w,borderwidth) \
+                                                  -highlightbackground $background \
+                                                       -highlightcolor $background \
+                                                   -highlightthickness 0 \
+                                                               -relief $::ms::current($w,relief);
                         }
-                    }
-
-                    # If needed, create the widget mapping.
-                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                        _ttk_style map $::ms::style($w,widget) {*}$mapping
-
-                        # Add the widget mapping to the stylemap list containing all the mappings
-                        # created by mustang for the current theme.
-                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                     }
 
                     # Create the widget.
-                    _ttk_frame $w -borderwidth $::ms::current($w,borderwidth) \
-                                        -class $::ms::current($w,class) \
-                                       -cursor $::ms::current($w,cursor) \
-                                       -height $::ms::current($w,height) \
-                                      -padding $::ms::current($w,padding) \
-                                       -relief $::ms::current($w,relief) \
-                                        -style $::ms::style($w,widget) \
-                                    -takefocus $::ms::current($w,takefocus) \
-                                        -width $::ms::current($w,width);
+                    _frame $w {*}$frame_options
 
                     # Set the widget toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
@@ -2183,6 +2319,11 @@ proc ::ms::frame::Command { window { args "" } } {
                     set ::ms::data($w,reqheight) $height
                     set ::ms::data($w,width)     $width
                     set ::ms::data($w,reqwidth)  $width
+
+                    # Reset the colormap, container and visual option
+                    set ::ms::current($w,colormap)  {}
+                    set ::ms::current($w,container) 0
+                    set ::ms::current($w,visual)    {}
 
                     ##################
                     ##              ##
@@ -2746,6 +2887,8 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                             set ::ms::current($w,cmenu) $value
                                         }
                                     }
+                                    -colormap  -
+                                    -container {}
                                     -cursor {
                                         set value [string tolower $value]
                                         if { ($value eq "") || ($value in $::ms::machine(os,cursors)) } {
@@ -2938,6 +3081,7 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                             enabled  { set ::ms::current($w,takefocus) 1 }
                                         }
                                     }
+                                    -visual {}
                                     -width {
                                         set value [::ms::Check_Measure $value invalid]
                                         switch -- $value {
@@ -2993,6 +3137,12 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
+                            # Set the internal '-padding' option to always show the horizontal and vertical padding.
+                            switch -- [llength $::ms::current($w,padding)] {
+                                1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
+                                default { set ::ms::data($w,padding) $::ms::current($w,padding) }
+                            }
+
                             ##################################
                             ##                              ##
                             ##     CONFIGURE THE WIDGET     ##
@@ -3017,89 +3167,56 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                     ##               ##
                                     ###################
 
-                                    # Set the widget style name.
-                                    set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
-                                                                           "_bc=" $::ms::current($w,bordercolor) \
-                                                                           "_dc=" $::ms::current($w,darkcolor) \
-                                                                           "_lc=" $::ms::current($w,lightcolor) \
-                                                                           "." $::ms::current($w,style)];
-
-                                    # If needed, create the widget style name.
-                                    if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                        _ttk_style configure $::ms::style($w,widget)  -background $::ms::current($w,background) \
-                                                                                     -bordercolor $::ms::current($w,bordercolor) \
-                                                                                       -darkcolor $::ms::current($w,darkcolor) \
-                                                                                      -lightcolor $::ms::current($w,lightcolor);
-
-                                        # Add the widget style name to the theme styles list created by mustang.
-                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
-                                    }
-
-                                    # Initialize the widget mapping.
-                                    set mapping [list ]
-
                                     # background
                                     switch -- $::ms::managed_by($w,background) {
-                                        developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
-                                        Tk  {
-                                            # Check if a 'background' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),background)] {
-                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),background) }
-                                            }
-                                        }
+                                        developer { set background $::ms::current($w,background) }
+                                        Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
                                     }
 
                                     # bordercolor
                                     switch -- $::ms::managed_by($w,bordercolor) {
-                                        developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
-                                        Tk  {
-                                            # Check if a 'bordercolor' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor)] {
-                                                1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),bordercolor) }
-                                            }
-                                        }
+                                        developer { set bordercolor $::ms::current($w,bordercolor) }
+                                        Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
                                     }
 
-                                    # darkcolor
-                                    switch -- $::ms::managed_by($w,darkcolor) {
-                                        developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
-                                        Tk  {
-                                            # Check if a 'darkcolor' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor)] {
-                                                1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),darkcolor) }
-                                            }
+
+                                    # Set the frame options.
+                                    set frame_options [list  -background $background \
+                                                            -borderwidth $::ms::current($w,borderwidth) \
+                                                                 -cursor $::ms::current($w,cursor) \
+                                                                 -height $::ms::current($w,height) \
+                                                                   -padx [lindex $::ms::data($w,padding) 0] \
+                                                                   -pady [lindex $::ms::data($w,padding) 1] \
+                                                                 -relief $::ms::current($w,relief) \
+                                                              -takefocus $::ms::current($w,takefocus) \
+                                                                  -width $::ms::current($w,width)];
+
+                                    # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
+                                    #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                                    #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                                    #       like it behaves in other widgets that understands the bordercolor.
+
+                                    # Check the 'relief' type.
+                                    switch -- $::ms::current($w,relief) {
+                                        flat  -
+                                        solid {
+                                            lappend frame_options         -borderwidth 0 \
+                                                                  -highlightbackground $bordercolor \
+                                                                       -highlightcolor $bordercolor \
+                                                                   -highlightthickness $::ms::current($w,borderwidth) \
+                                                                               -relief flat;
                                         }
-                                    }
-
-                                    # lightcolor
-                                    switch -- $::ms::managed_by($w,lightcolor) {
-                                        developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
-                                        Tk  {
-                                            # Check if a 'lightcolor' mapping exists for '::ms::current($w,style)'.
-                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor)] {
-                                                1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$::ms::current($w,style),lightcolor) }
-                                            }
+                                        default {
+                                            lappend frame_options         -borderwidth $::ms::current($w,borderwidth) \
+                                                                  -highlightbackground $background \
+                                                                       -highlightcolor $background \
+                                                                   -highlightthickness 0 \
+                                                                               -relief $::ms::current($w,relief);
                                         }
-                                    }
-
-                                    # If needed, create the widget mapping.
-                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                        _ttk_style map $::ms::style($w,widget) {*}$mapping
-
-                                        # Add the widget mapping to the stylemap list containing all the mappings
-                                        # created by mustang for the current theme.
-                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                                     }
 
                                     # Apply the changes.
-                                    interp invokehidden {} $w configure -borderwidth $::ms::current($w,borderwidth) \
-                                                                             -cursor $::ms::current($w,cursor) \
-                                                                             -height $::ms::temp($w,height) \
-                                                                            -padding $::ms::current($w,padding) \
-                                                                             -relief $::ms::current($w,relief) \
-                                                                              -style $::ms::style($w,widget) \
-                                                                          -takefocus $::ms::current($w,takefocus) \
-                                                                              -width $::ms::temp($w,width);
+                                    interp invokehidden {} $w configure {*}$frame_options
                                 }
                                 true {
                                     ##############################
@@ -3434,7 +3551,18 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 
                     # Check if the widget is scrollable or not.
                     switch -- $::ms::current($w,scrollable) {
-                        false { return [interp invokehidden {} $w instate $statespec] }
+                        false {
+                            # Compare the statespec provided with the current statespec of the widget.
+                            set boolean 1
+                            foreach state $statespec {
+                                if { $state ni $::ms::data($w,statespec) } {
+                                    set boolean 0
+                                    break
+                                }
+                            }
+
+                            return $boolean
+                        }
                         true  { return [$w.border.viewport.content instate $statespec] }
                     }
                 }
@@ -3458,9 +3586,16 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                     # Check if the widget is scrollable or not.
                     switch -- $::ms::current($w,scrollable) {
                         false {
-                            # Execute the command.
+                            # Compare the statespec provided with the current statespec of the widget.
+                            foreach state $statespec {
+                                if { $state ni $::ms::data($w,statespec) } {
+                                    return ""
+                                }
+                            }
+
+                            # Execute the script.
                             try {
-                                interp invokehidden {} $w instate $statespec $script
+                                eval {*}$script
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
@@ -3470,7 +3605,7 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                         true {
                             # Execute the command.
                             try {
-                                $w.border.viewport.content instate $statespec $script
+                                $w.border.viewport.content instate $statespec {*}$script
                             } on error {} {
                                 ::ms::Error "Invalid script." $caller_info
                             } on ok { result } {
@@ -3718,14 +3853,91 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 
                     # Check if the widget is scrollable or not.
                     switch -- $::ms::current($w,scrollable) {
-                        false { return [interp invokehidden {} $w state $statespec] }
-                        true  {
+                        false {
+                            ##########################
+                            ##                      ##
+                            ##     SIMPLE FRAME     ##
+                            ##                      ##
+                            ##########################
+
+                            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change if the statespec changes.
+
+                            # Change the statespec and register the states that have changed.
+                            set states_that_have_changed [list ]
+                            foreach state $statespec {
+                                if { $state ni $::ms::data($w,statespec) } {
+                                    # Note: The state analized is different than its equivalent currently active (old state).
+                                    #       For example 'disabled' (state) and '!disabled' (old state).
+
+                                    # Get the old state as the inverse of the new state.
+                                    switch -glob -- $state {
+                                        "!*"    { set old_state [string trimleft $state "!"] }
+                                        default { set old_state [string cat      "!" $state] }
+                                    }
+
+                                    # Update the current statespec old state with the new state.
+                                    set index [lsearch -exact $::ms::data($w,statespec) $old_state]
+
+                                    # No need to check if 'index' is '-1'.
+                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) $index $index $state]
+
+                                    # Add the old state to the list containing the states that have changed.
+                                    lappend states_that_have_changed $old_state
+                                }
+                            }
+
+                            # background
+                            switch -- $::ms::managed_by($w,background) {
+                                developer { set background $::ms::current($w,background) }
+                                Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+                            }
+
+                            # bordercolor
+                            switch -- $::ms::managed_by($w,bordercolor) {
+                                developer { set bordercolor $::ms::current($w,bordercolor) }
+                                Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+                            }
+
+
+                            # Set the frame options.
+                            set frame_options [list -background $background];
+
+                            # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
+                            #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                            #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                            #       like it behaves in other widgets that understands the bordercolor.
+
+                            # Check the 'relief' type.
+                            switch -- $::ms::current($w,relief) {
+                                flat  -
+                                solid {
+                                    lappend frame_options -highlightbackground $bordercolor \
+                                                               -highlightcolor $bordercolor;
+                                }
+                                default {
+                                    lappend frame_options -highlightbackground $background \
+                                                               -highlightcolor $background;
+                                }
+                            }
+
+                            # Apply the changes.
+                            interp invokehidden {} $w configure {*}$frame_options
+
+                            return $states_that_have_changed
+                        }
+                        true {
+                            ##############################
+                            ##                          ##
+                            ##     SCROLLABLE FRAME     ##
+                            ##                          ##
+                            ##############################
+
                             # Propagate the new statespec to the hull, border and content objects of
                             # the scrollable frame.
                             interp invokehidden {} $w state $statespec
                             $w.border state $statespec
-                            $w.fake_x state $::ms::data($w,statespec)
-                            $w.fake_y state $::ms::data($w,statespec)
+                            $w.fake_x state $statespec
+                            $w.fake_y state $statespec
 
                             return [$w.border.viewport.content state $statespec]
                         }
@@ -4099,6 +4311,12 @@ proc ::ms::frame::Style_Update { stylename caller_info } {
             }
         }
 
+        # Set the internal '-padding' option to always show the horizontal and vertical padding.
+        switch -- [llength $::ms::current($w,padding)] {
+            1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
+            default { set ::ms::data($w,padding) $::ms::current($w,padding) }
+        }
+
         #######################################
         ##                                   ##
         ##     UPDATE THE WIDGET'S STYLE     ##
@@ -4123,87 +4341,53 @@ proc ::ms::frame::Style_Update { stylename caller_info } {
                 ##               ##
                 ###################
 
-                # Set the widget style name.
-                set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
-                                                       "_bc=" $::ms::current($w,bordercolor) \
-                                                       "_dc=" $::ms::current($w,darkcolor) \
-                                                       "_lc=" $::ms::current($w,lightcolor) \
-                                                       "." $stylename];
-
-                # If needed, create the widget style name.
-                if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                    # Create the child style.
-                    _ttk_style configure $::ms::style($w,widget)  -background $::ms::current($w,background) \
-                                                                 -bordercolor $::ms::current($w,bordercolor) \
-                                                                   -darkcolor $::ms::current($w,darkcolor) \
-                                                                  -lightcolor $::ms::current($w,lightcolor);
-
-                    # Add the widget style name to the theme styles list created by mustang.
-                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
-                }
-
-                # Initialize the widget mapping.
-                set mapping [list ]
-
                 # background
                 switch -- $::ms::managed_by($w,background) {
-                    developer { lappend mapping -background [list pressed $::ms::current($w,background)] }
-                    Tk  {
-                        # Check if a 'background' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,background)] {
-                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$stylename,background) }
-                        }
-                    }
+                    developer { set background $::ms::current($w,background) }
+                    Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
                 }
 
                 # bordercolor
                 switch -- $::ms::managed_by($w,bordercolor) {
-                    developer { lappend mapping -bordercolor [list pressed $::ms::current($w,bordercolor)] }
-                    Tk  {
-                        # Check if a 'bordercolor' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,bordercolor)] {
-                            1   { lappend mapping -bordercolor $::ms::stylemap($::ms::theme,$stylename,bordercolor) }
-                        }
-                    }
+                    developer { set bordercolor $::ms::current($w,bordercolor) }
+                    Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
                 }
 
-                # darkcolor
-                switch -- $::ms::managed_by($w,darkcolor) {
-                    developer { lappend mapping -darkcolor [list pressed $::ms::current($w,darkcolor)] }
-                    Tk  {
-                        # Check if a 'darkcolor' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,darkcolor)] {
-                            1   { lappend mapping -darkcolor $::ms::stylemap($::ms::theme,$stylename,darkcolor) }
-                        }
+
+                # Set the frame options.
+                set frame_options [list  -background $background \
+                                        -borderwidth $::ms::current($w,borderwidth) \
+                                             -cursor $::ms::current($w,cursor) \
+                                               -padx [lindex $::ms::data($w,padding) 0] \
+                                               -pady [lindex $::ms::data($w,padding) 1] \
+                                             -relief $::ms::current($w,relief)];
+
+                # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
+                #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
+                #       '-highlightthickness' and '-relief' options in a way that make the bordercolor option behave
+                #       like it behaves in other widgets that understands the bordercolor.
+
+                # Check the 'relief' type.
+                switch -- $::ms::current($w,relief) {
+                    flat  -
+                    solid {
+                        lappend frame_options         -borderwidth 0 \
+                                              -highlightbackground $bordercolor \
+                                                   -highlightcolor $bordercolor \
+                                               -highlightthickness $::ms::current($w,borderwidth) \
+                                                           -relief flat;
                     }
-                }
-
-                # lightcolor
-                switch -- $::ms::managed_by($w,lightcolor) {
-                    developer { lappend mapping -lightcolor [list pressed $::ms::current($w,lightcolor)] }
-                    Tk  {
-                        # Check if a 'lightcolor' mapping exists for 'stylename'.
-                        switch -- [info exists ::ms::stylemap($::ms::theme,$stylename,lightcolor)] {
-                            1   { lappend mapping -lightcolor $::ms::stylemap($::ms::theme,$stylename,lightcolor) }
-                        }
+                    default {
+                        lappend frame_options         -borderwidth $::ms::current($w,borderwidth) \
+                                              -highlightbackground $background \
+                                                   -highlightcolor $background \
+                                               -highlightthickness 0 \
+                                                           -relief $::ms::current($w,relief);
                     }
-                }
-
-                # If needed, create the widget mapping.
-                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                    _ttk_style map $::ms::style($w,widget) {*}$mapping
-
-                    # Add the widget mapping to the stylemap list containing all the mappings
-                    # created by mustang for the current theme.
-                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                 }
 
                 # Apply the changes.
-                interp invokehidden {} $w configure -borderwidth $::ms::current($w,borderwidth) \
-                                                         -cursor $::ms::current($w,cursor) \
-                                                        -padding $::ms::current($w,padding) \
-                                                         -relief $::ms::current($w,relief) \
-                                                          -style $::ms::style($w,widget);
+                interp invokehidden {} $w configure {*}$frame_options
             }
             true {
                 ##############################
@@ -4610,6 +4794,7 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::data($w,reqwidth) \
                          ::ms::data($w,scrollx) \
                          ::ms::data($w,scrolly) \
+                         ::ms::data($w,statespec) \
                          ::ms::data($w,token) \
                          ::ms::data($w,width) \
                          ::ms::data($w,xview1) \
