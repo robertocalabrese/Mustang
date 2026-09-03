@@ -2453,7 +2453,7 @@ proc ::ms::panedwindow::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::panedwindow::Reset_Cursor { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -2484,7 +2484,7 @@ proc ::ms::panedwindow::Reset_Cursor { w } {
 #
 # It doesn't return anything.
 proc ::ms::panedwindow::Set_Cursor { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -2538,7 +2538,7 @@ proc ::ms::panedwindow::Set_Cursor { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -2576,7 +2576,7 @@ proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::panedwindow::Sash_ButtonRelease { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -2602,7 +2602,7 @@ proc ::ms::panedwindow::Sash_ButtonRelease { w } {
 #
 # It doesn't return anything.
 proc ::ms::panedwindow::Sash_Drag { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
