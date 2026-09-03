@@ -1551,6 +1551,7 @@ proc ::ms::sizegrip::Drag { w X Y } {
     #       The procedure have been slighty modified to work with mustang.
     #       All credits goes to the original author/s.
 
+    # Check if drag operations are allowed or not.
     switch -- [info exists ::ms::temp(state,pressed)] {
         0   { return "" }
     }
@@ -1578,7 +1579,7 @@ proc ::ms::sizegrip::Drag { w X Y } {
     }
 
     # Update the toplevel geometry.
-    wm geometry $::ms::addr($w,toplevel) [string cat $::ms::temp(state,width) "x" $::ms::temp(state,height) "+" $::ms::temp(state,x) "+" $::ms::temp(state,y)]
+    _wm geometry $::ms::addr($w,toplevel) [string cat $::ms::temp(state,width) "x" $::ms::temp(state,height) "+" $::ms::temp(state,x) "+" $::ms::temp(state,y)]
 
     return ""
 }
