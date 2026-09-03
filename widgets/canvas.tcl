@@ -2349,8 +2349,8 @@ package provide ::ms::canvas 0.1
 #####################################
 
 # Activate/Deactivate
-_bind _Simple_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd %W state !background; break }
-_bind _Simple_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd %W state  background; break }
+_bind _Simple_Canvas <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Simple_Canvas <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Configure
 _bind _Simple_Canvas <Configure> { ::ms::canvas::Configure %W; break }
@@ -2362,12 +2362,12 @@ _bind _Simple_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; br
 _bind _Simple_Canvas <Destroy> { ::ms::canvas::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Canvas <Enter> { ::ms::canvas::Pathname_Cmd %W state  hover; break }
-_bind _Simple_Canvas <Leave> { ::ms::canvas::Pathname_Cmd %W state !hover; break }
+_bind _Simple_Canvas <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Simple_Canvas <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Simple_Canvas <FocusIn>  { ::ms::canvas::Pathname_Cmd %W state %W focus; break }
-_bind _Simple_Canvas <FocusOut> { ::ms::canvas::FocusOut     %W; break }
+_bind _Simple_Canvas <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
+_bind _Simple_Canvas <FocusOut> { ::ms::canvas::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
