@@ -537,11 +537,8 @@ package provide ::ms::separator 0.1
 #################################
 
 # Activate/Deactivate
-_bind _Separator <Activate>   { ::ms::separator::Pathname_Cmd %W state !background; break }
-_bind _Separator <Deactivate> { ::ms::separator::Pathname_Cmd %W state  background; break }
-
-# Buttonpress-1
-_bind _Separator <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _Separator <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Separator <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Contextual menu
 _bind _Separator <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
@@ -550,11 +547,11 @@ _bind _Separator <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break 
 _bind _Separator <Destroy> { ::ms::separator::Destroy %W; break }
 
 # Enter/Leave
-_bind _Separator <Enter> { ::ms::separator::Pathname_Cmd %W state  hover; break }
-_bind _Separator <Leave> { ::ms::separator::Pathname_Cmd %W state !hover; break }
+_bind _Separator <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Separator <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Separator <FocusIn>  { ::ms::separator::FocusIn  %W; break }
+_bind _Separator <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Separator <FocusOut> { ::ms::separator::FocusOut %W; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
@@ -1604,22 +1601,6 @@ proc ::ms::separator::Destroy { w } {
                          ::ms::managed_by($w,cursor);
 
     unset -nocomplain -- ::ms::style($w,widget)
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::separator::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::separator::Pathname_Cmd $w state focus
 
     return ""
 }
