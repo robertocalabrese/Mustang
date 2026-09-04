@@ -2196,6 +2196,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **insert** *pos* *subwindow* ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                0   -
+                1   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
             set pos       [lindex  $args 0]
             set subwindow [lindex  $args 1]
             set args      [lremove $args 0 1]
