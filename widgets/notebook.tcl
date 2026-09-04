@@ -3370,10 +3370,7 @@ proc ::ms::notebook::Mnemonic_Tab { w key } {
 #
 # It doesn't return anything.
 proc ::ms::notebook::Traverse_Clean_Up { w } {
-    # Check if the real address provided is a toplevel.
-    if { $w eq [_winfo toplevel $w] } {
-        unset -nocomplain -- ::ms::notebook(traversal,$w)
-    }
+    unset -nocomplain -- ::ms::notebook(traversal,$w)
 
     return ""
 }
