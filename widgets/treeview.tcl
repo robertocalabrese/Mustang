@@ -4249,15 +4249,15 @@ proc ::ms::treeview::Map { w } {
 proc ::ms::treeview::Pages { w direction } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal {
-            # Check the direction.
-            switch -- $direction {
-                down  { ::ms::Scroll_Widget_Y $w -1 pages }
-                left  { ::ms::Scroll_Widget_X $w  1 pages }
-                right { ::ms::Scroll_Widget_X $w -1 pages }
-                up    { ::ms::Scroll_Widget_Y $w  1 pages }
-            }
-        }
+        disabled { return "" }
+    }
+
+    # Check the direction provided.
+    switch -- $direction {
+        down  { ::ms::Scroll_Widget_Y $w -1 pages }
+        left  { ::ms::Scroll_Widget_X $w  1 pages }
+        right { ::ms::Scroll_Widget_X $w -1 pages }
+        up    { ::ms::Scroll_Widget_Y $w  1 pages }
     }
 
     return ""
