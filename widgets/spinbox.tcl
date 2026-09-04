@@ -5823,7 +5823,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                 switch -- [string is alnum $char] {
                                     0   {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5845,7 +5845,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                 switch -- [string is alpha $char] {
                                     0   {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5863,7 +5863,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                             switch -- [string is integer $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::spinbox::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5873,7 +5873,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                             # Check if 'value' is between the 'from' and the 'to' values.
                                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                                 # Change the widget dynamic state to 'invalid'.
-                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+                                                interp invokehidden {} $w state [list invalid]
 
                                                 return 1
                                             }
@@ -5882,7 +5882,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                             # Check if 'value' is between the first element and the last element values.
                                             if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
                                                 # Change the widget dynamic state to 'invalid'.
-                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+                                                interp invokehidden {} $w state [list invalid]
 
                                                 return 1
                                             }
@@ -5897,7 +5897,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                     switch -- [string is integer $value] {
                         0   {
                             # Change the widget dynamic state to 'invalid'.
-                            ::ms::spinbox::Pathname_Cmd $w state invalid
+                            interp invokehidden {} $w state [list invalid]
 
                             return 1
                         }
@@ -5907,7 +5907,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                     # Check if 'value' is between the 'from' and the 'to' values.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5916,7 +5916,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                     # Check if 'value' is between the first element and the last element values.
                                     if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
                                         # Change the widget dynamic state to 'invalid'.
-                                        ::ms::spinbox::Pathname_Cmd $w state invalid
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5932,7 +5932,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                             switch -- [string is double $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::spinbox::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5942,7 +5942,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                             # Check if 'value' is between the 'from' and the 'to' values.
                                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                                 # Change the widget dynamic state to 'invalid'.
-                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+                                                interp invokehidden {} $w state [list invalid]
 
                                                 return 1
                                             }
@@ -5951,7 +5951,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                             # Check if 'value' is between the first element and the last element values.
                                             if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
                                                 # Change the widget dynamic state to 'invalid'.
-                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+                                                interp invokehidden {} $w state [list invalid]
 
                                                 return 1
                                             }
@@ -5970,7 +5970,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                             switch -- [string is double $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    ::ms::spinbox::Pathname_Cmd $w state invalid
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5980,7 +5980,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                             # Check if 'value' is between the 'from' and the 'to' values.
                                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
                                                 # Change the widget dynamic state to 'invalid'.
-                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+                                                interp invokehidden {} $w state [list invalid]
 
                                                 return 1
                                             }
@@ -5989,7 +5989,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                             # Check if 'value' is between the first element and the last element values.
                                             if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
                                                 # Change the widget dynamic state to 'invalid'.
-                                                ::ms::spinbox::Pathname_Cmd $w state invalid
+                                                interp invokehidden {} $w state [list invalid]
 
                                                 return 1
                                             }
@@ -6005,7 +6005,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
     }
 
     # Change the widget dynamic state to '!invalid'.
-    ::ms::spinbox::Pathname_Cmd $w state !invalid
+    interp invokehidden {} $w state [list !invalid]
 
     return 1
 }
