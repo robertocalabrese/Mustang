@@ -4913,11 +4913,7 @@ proc ::ms::treeview::ButtonRelease { w x y } {
 proc ::ms::treeview::DoubleClick { w x y } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled {
-            ::ms::Focus_The_Widget_Or_Its_Toplevel $w
-
-            return ""
-        }
+        disabled { return "" }
     }
 
     # Check if the widget is scrollable or not.
