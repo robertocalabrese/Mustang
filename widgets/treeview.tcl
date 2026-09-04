@@ -1975,6 +1975,9 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             # *window* **item** *item* ?*option*? ?*value*? ?*option value* ... *option value*?
             # *window* **see** *item*
             # *window* **set** *item* ?*column*? ?*value*?
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
