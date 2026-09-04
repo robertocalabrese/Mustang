@@ -3106,39 +3106,34 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
         selection {
             # Synopsis:
             #
-            # *window* **selection** ?*selop* *itemList*?
-            #    *window* **selection** **set** *itemList*
-            #    *window* **selection** **add** *itemList*
-            #    *window* **selection** **remove** *itemList*
-            #    *window* **selection** **toggle** *itemList*
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
+            # *window* **selection** **set** *itemList*
+            # *window* **selection** **add** *itemList*
+            # *window* **selection** **remove** *itemList*
+            # *window* **selection** **toggle** *itemList*
             switch -- [llength $args] {
                 2   {
-                    set subcommand [lindex $args 0]
-                    set itemList   [lindex $args 1]
-
                     # Check the subcommand.
-                    switch -- $subcommand {
-                        add    -
-                        remove -
-                        set    -
-                        toggle {
-                            # Execute the command.
-                            try {
-                                {*}$address selection $subcommand $itemList
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                return $result
-                            }
-                        }
+                    switch -- [lindex $args 0] {
+                        add     -
+                        remove  -
+                        set     -
+                        toggle  {}
                         default { ::ms::Error "Invalid cellselection command, '$subcommand'." $caller_info }
+                    }
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.treeview] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address selection {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
