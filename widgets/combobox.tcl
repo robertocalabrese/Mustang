@@ -2921,6 +2921,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             # *window* **index** *index*
             switch -- [llength $args] {
                 1   {
+                    # Execute the command.
                     try {
                         interp invokehidden {} $w $cmd $args
                     } on error { errortext errorcode } {
@@ -3914,6 +3915,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
+                    # Execute the command.
                     try {
                         interp invokehidden {} $w $cmd {*}$args
                     } on error { errortext errorcode } {
