@@ -4403,25 +4403,23 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
 
             # Check the widget's state.
             switch -- $::ms::current($w,state) {
-                normal {
-                    # Check the number of arguments provided.
-                    switch -- [llength $args] {
-                        2   {
-                            set index  [lindex $args 0]
-                            set string [lindex $args 1]
-
-                            try {
-                                interp invokehidden {} $w insert $index $string
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            }
-                        }
-                        default { ::ms::Error "Invalid number of arguments." $caller_info }
-                    }
-                }
+                disabled { return "" }
             }
 
-            return ""
+            # Check the number of arguments provided.
+            switch -- [llength $args] {
+                2   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w insert {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
         }
         get      -
         validate {
