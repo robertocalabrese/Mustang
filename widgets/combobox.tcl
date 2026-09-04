@@ -4793,7 +4793,7 @@ proc ::ms::combobox::FocusIn { w } {
 
 ## FocusOut
 #
-# Manage the **FocusOut** event.
+# Manage the **FocusOut** event on the widget.
 #
 # Where:
 #
@@ -4807,15 +4807,8 @@ proc ::ms::combobox::FocusOut { w } {
         1   { return "" }
     }
 
-    # Check if a contextual menu was assigned to the widget.
-    # If not, use the contextual menu of the widget's toplevel.
-    set cmenu $::ms::current($w,cmenu)
-    switch -- $cmenu {
-        ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
-    }
-
-    # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
-    switch -- [_winfo exists $cmenu] {
+    # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
         0   { interp invokehidden {} $w state [list !focus] }
         1   { interp invokehidden {} $w state [list  focus] }
     }
@@ -4823,19 +4816,19 @@ proc ::ms::combobox::FocusOut { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
         readonly { set value [interp invokehidden {} $w get] }
-        normal {
+        normal   {
             # Validate the widget string.
             set value [::ms::combobox::Validate_String $w]
 
             # Clear the widget field, insert the validated value and put the cursor at the end.
-            interp invokehidden {} $w delete 0 end
-            interp invokehidden {} $w set $value
+            interp invokehidden {} $w delete  0 end
+            interp invokehidden {} $w set     $value
             interp invokehidden {} $w icursor end
+
+            # Remove the widget selection, if any.
+            interp invokehidden {} $w selection clear
         }
     }
-
-    # Remove the widget selection, if any.
-    interp invokehidden {} $w selection clear
 
     # If 'value' is different than the previous registered one, register it
     # and launch the external procedure provided, if any.
