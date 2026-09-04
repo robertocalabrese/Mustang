@@ -1498,8 +1498,8 @@ package provide ::ms::spinbox 0.1
 ###############################
 
 # Activate/Deactivate
-_bind _Spinbox <Activate>   { ::ms::spinbox::Pathname_Cmd %W state !background; break }
-_bind _Spinbox <Deactivate> { ::ms::spinbox::Pathname_Cmd %W state  background; break }
+_bind _Spinbox <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Spinbox <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Allowing some modifiers combination.
 switch -- [_tk windowingsystem] {
@@ -1560,8 +1560,8 @@ _bind _Spinbox <Motion> { ::ms::Set_Cursor %W %x %y; break }
 _bind _Spinbox <Destroy> { ::ms::spinbox::Destroy %W; break }
 
 # Enter/Leave
-_bind _Spinbox <Enter> { ::ms::spinbox::Pathname_Cmd %W state  hover; break }
-_bind _Spinbox <Leave> { ::ms::spinbox::Pathname_Cmd %W state !hover; break }
+_bind _Spinbox <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Spinbox <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # Escape key
 _bind _Spinbox <KeyPress-Escape> { ::ms::Escape %W; break }
