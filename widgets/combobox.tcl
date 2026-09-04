@@ -6209,25 +6209,28 @@ proc ::ms::combobox::MouseWheel { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::combobox::Shift_MouseWheel { w amount } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal {
-            # Check if the widget is currently in focus or not.
-            if { [_focus -displayof $w] eq $w } {
-                # Get the current cursor position
-                set index [interp invokehidden {} $w index insert]
+            # Check if the widget is on focus.
+            switch -- [interp invokehidden {} $w instate [list focus]] {
+                1   {
+                    # Get the current cursor position
+                    set index [interp invokehidden {} $w index insert]
 
-                # Move the cursor by one character to the left or to the right (depending
-                # on the mousewheel direction).
-                if { $amount > 0 } {
-                    interp invokehidden {} $w icursor $index+1
-                } else {
-                    interp invokehidden {} $w icursor $index-1
+                    # Move the cursor by one character to the left or to the right (depending
+                    # on the mousewheel direction).
+                    if { $amount > 0 } {
+                        interp invokehidden {} $w icursor $index+1
+                    } else {
+                        interp invokehidden {} $w icursor $index-1
+                    }
+
+                    # Make the index character visible.
+                    ::ttk::entry::See $w $index
+
+                    return ""
                 }
-
-                # Make the index character visible.
-                ::ttk::entry::See $w $index
-
-                return ""
             }
         }
     }
