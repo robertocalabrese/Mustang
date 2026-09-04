@@ -5424,6 +5424,7 @@ proc ::ms::treeview::Scan_Between { w item1 item2 item } {
         lappend ::ttk::treeview::between $item
     }
 
+    # Recursive cycle.
     foreach child [{*}$address children $item] {
         ::ms::treeview::Scan_Between $w $item1 $item2 $child
     }
