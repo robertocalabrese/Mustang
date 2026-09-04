@@ -4155,7 +4155,7 @@ proc ::ms::treeview::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Hover { w X Y { type "" } } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4247,7 +4247,7 @@ proc ::ms::treeview::Map { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Pages { w direction } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal {
             # Check the direction.
@@ -4273,7 +4273,7 @@ proc ::ms::treeview::Pages { w direction } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Return { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::treeview::Toggle_Focus $w }
     }
@@ -4639,7 +4639,7 @@ proc ::ms::treeview::Scrollbar_Update { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Arrow_Keys { w key } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4822,7 +4822,7 @@ proc ::ms::treeview::Arrow_Keys { w key } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::ButtonPress { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { ::ms::Focus_The_Widget_Or_Its_Toplevel $w }
         default  {
@@ -4893,7 +4893,7 @@ proc ::ms::treeview::ButtonPress { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::ButtonRelease { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4943,7 +4943,7 @@ proc ::ms::treeview::ButtonRelease { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::DoubleClick { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled {
             ::ms::Focus_The_Widget_Or_Its_Toplevel $w
@@ -4983,7 +4983,7 @@ proc ::ms::treeview::DoubleClick { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Drag { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5025,7 +5025,7 @@ proc ::ms::treeview::Drag { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Motion { w x y } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5098,7 +5098,7 @@ proc ::ms::treeview::Motion { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Open_Item { w item } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5130,7 +5130,7 @@ proc ::ms::treeview::Open_Item { w item } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Close_Item { w item } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5162,7 +5162,7 @@ proc ::ms::treeview::Close_Item { w item } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Toggle { w item } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5198,7 +5198,7 @@ proc ::ms::treeview::Toggle { w item } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Toggle_Focus { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5244,7 +5244,7 @@ proc ::ms::treeview::Toggle_Focus { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Select { w x y op } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5282,7 +5282,7 @@ proc ::ms::treeview::Select { w x y op } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Select_Op { w item cell op } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
