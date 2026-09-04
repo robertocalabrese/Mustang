@@ -2122,16 +2122,59 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
         identify {
             # Synopsis:
             #
-            # *window* **identify** *component* *x* *y*
-            #    *window* **identify** **element** *x* *y*
-            #    *window* **identify** **tab** *x* *y*
+            # *window* **identify** *x* *y*
+            # *window* **identify** **element** *x* *y*
+            # *window* **identify** **tab** *x* *y*
+            switch -- [llength $args] {
+                2   {
+                    set subcommand element
+                    set x          [lindex $args 0]
+                    set y          [lindex $args 1]
+                }
+                3   {
+                    # Check that the first argument of 'args' is the word "element" or 'sash'.
+                    set subcommand [lindex $args 0]
+                    switch -- $subcommand {
+                        element -
+                        sash    {}
+                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                    }
+
+                    set x [lindex $args 1]
+                    set y [lindex $args 2]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check that the (x,y) relative coordinates provided are valid.
+            switch -- [string is integer -strict $x] {
+                0   { return "" }
+                1   {
+                    # Check that the 'x' coordinate is a positive integer ('0' included).
+                    if { $x < 0 } {
+                        return ""
+                    }
+                }
+            }
+
+            switch -- [string is integer -strict $y] {
+                0   { return "" }
+                1   {
+                    # Check that the 'y' coordinate is a positive integer ('0' included).
+                    if { $y < 0 } {
+                        return ""
+                    }
+                }
+            }
+
+            # Check if the coordinates provided falls upon the widget's sash.
             try {
-                interp invokehidden {} $w identify {*}$args
+                interp invokehidden {} $w identify $subcommand $x $y
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
                 # Check the subcommand provided.
-                switch -- [lindex $args 0] {
+                switch -- $subcommand {
                     element {
                         switch -- $result {
                             label   { set result "Notebook.tab" }
