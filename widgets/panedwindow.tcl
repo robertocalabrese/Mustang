@@ -1879,8 +1879,9 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             # *window* **identify** **sash** *x* *y*
             switch -- [llength $args] {
                 2   {
-                    set x [lindex $args 0]
-                    set y [lindex $args 1]
+                    set subcommand element
+                    set x          [lindex $args 0]
+                    set y          [lindex $args 1]
                 }
                 3   {
                     # Check that the first argument of 'args' is the word "element" or 'sash'.
