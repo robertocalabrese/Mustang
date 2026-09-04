@@ -2905,22 +2905,21 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
         identify {
             # Synopsis:
             #
+            # *window* **identify**             *x* *y*
             # *window* **identify** **cell**    *x* *y*
             # *window* **identify** **column**  *x* *y*
             # *window* **identify** **element** *x* *y*
             # *window* **identify** **item**    *x* *y*
             # *window* **identify** **region**  *x* *y*
             # *window* **identify** **row**     *x* *y*
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
             switch -- [llength $args] {
+                2   {
+                    set subcommand region
+                    set x          [lindex $args 0]
+                    set y          [lindex $args 1]
+                }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
+                    # Check that the first argument of 'args' is the word "element" or 'sash'.
                     set subcommand [lindex $args 0]
                     switch -- $subcommand {
                         cell    -
@@ -2934,112 +2933,143 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
 
                     set x [lindex $args 1]
                     set y [lindex $args 2]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
-                    # Check that the coordinates provided are valid.
-                    switch -- [string is integer -strict $x] {
-                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
+            # Check that the (x,y) relative coordinates provided are valid.
+            switch -- [string is integer -strict $x] {
+                0   { return "" }
+                1   {
+                    # Check that the 'x' coordinate is a positive integer ('0' included).
+                    if { $x < 0 } {
+                        return ""
                     }
+                }
+            }
 
-                    switch -- [string is integer -strict $y] {
-                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
+            switch -- [string is integer -strict $y] {
+                0   { return "" }
+                1   {
+                    # Check that the 'y' coordinate is a positive integer ('0' included).
+                    if { $y < 0 } {
+                        return ""
                     }
+                }
+            }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false {
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.treeview] }
+            }
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    # Execute the command.
+                    try {
+                        {*}$address identify $subcommand $x $y
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        switch -- $subcommand {
+                            region {
+                                switch -- $result {
+                                    heading   { return "Treeview.heading" }
+                                    separator { return "Treeview.separator" }
+                                    tree      { return "Treeview.tree" }
+                                    default   { return "Treeview.cell" }
+                                }
+                            }
+                            element {
+                                switch -glob -- $result {
+                                    *indicator  { return "Treeview.indicator" }
+                                    *disclosure { return "Treeview.disclosure" }
+                                    *text       { return "Treeview.text" }
+                                    default     { return "Treeview.area" }
+                                }
+                            }
+                            default { return $result }
+                        }
+                    }
+                }
+                true {
+                    # Get the root coordinates of the north-west corner of the container ('$w').
+                    set rootx [_winfo rootx $w]
+                    set rooty [_winfo rooty $w]
+
+                    # Transform the relative coordinates provided into root coordinates.
+                    set X [expr { $rootx+$x }]
+                    set Y [expr { $rooty+$y }]
+
+                    # Get the widget address containing the point given by the root coordinates calculated.
+                    set widget [_winfo containing -display $w $X $Y]
+
+                    # Check the 'subcommand'.
+                    switch -- $subcommand {
+                        element {
                             # Execute the command.
-                            try {
-                                {*}$address identify $subcommand $x $y
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                switch -- $subcommand {
-                                    region  { return [string cat "Treeview." $result] }
-                                    element {
-                                        switch -glob -- $result {
-                                            *indicator  { return "Treeview.indicator" }
-                                            *disclosure { return "Treeview.disclosure" }
-                                            *text       { return "Treeview.text" }
-                                            *padding    { return "Treeview.padding" }
-                                            default     { return "" }
-                                        }
+                            if { $widget eq $w } {
+                                return "Treeview.hull"
+                            } elseif { $widget eq "$w.x" } {
+                                return "Treeview.x"
+                            } elseif { $widget eq "$w.y" } {
+                                return "Treeview.y"
+                            } else {
+                                try {
+                                    {*}$address identify element $x $y
+                                } on error { errortext errorcode } {
+                                    ::ms::Error "$errortext" $caller_info
+                                } on ok { result } {
+                                    switch -glob -- $result {
+                                        *indicator  { return "Treeview.indicator" }
+                                        *disclosure { return "Treeview.disclosure" }
+                                        *text       { return "Treeview.text" }
+                                        default     { return "Treeview.area" }
                                     }
-                                    default { return $result }
                                 }
                             }
                         }
-                        true {
-                            # Get the root coordinates of the north-west corner of the container ('$w').
-                            set rootx [_winfo rootx $w]
-                            set rooty [_winfo rooty $w]
-
-                            # Transform the relative coordinates provided into root coordinates.
-                            set X [expr { $rootx+$x }]
-                            set Y [expr { $rooty+$y }]
-
-                            # Get the widget address containing the point given by the root coordinates calculated.
-                            set widget [_winfo containing -display $w $X $Y]
-
-                            # Check the 'subcommand'.
-                            switch -- $subcommand {
-                                element {
-                                    if { $widget eq $w } {
-                                        return "Treeview.hull"
-                                    } elseif { $widget eq "$w.treeview" } {
-                                        try {
-                                            {*}$address identify element $x $y
-                                        } on error { errortext errorcode } {
-                                            ::ms::Error "$errortext" $caller_info
-                                        } on ok { result } {
-                                            switch -glob -- $result {
-                                                *indicator  { return "Treeview.indicator" }
-                                                *disclosure { return "Treeview.disclosure" }
-                                                *text       { return "Treeview.text" }
-                                                *padding    { return "Treeview.padding" }
-                                                default     { return "" }
-                                            }
-                                        }
-                                    } elseif { $widget eq "$w.x" } {
-                                        return "Treeview.hscrollbar"
-                                    } elseif { $widget eq "$w.y" } {
-                                        return "Treeview.vscrollbar"
-                                    } else {
-                                        return ""
+                        region {
+                            # Execute the command.
+                            if { $widget eq $w } {
+                                return "Treeview.hull"
+                            } elseif { $widget eq "$w.x" } {
+                                return "Treeview.x"
+                            } elseif { $widget eq "$w.y" } {
+                                return "Treeview.y"
+                            } else {
+                                try {
+                                    {*}$address identify region $x $y
+                                } on error { errortext errorcode } {
+                                    ::ms::Error "$errortext" $caller_info
+                                } on ok { result } {
+                                    switch -- $result {
+                                        heading   { return "Treeview.heading" }
+                                        separator { return "Treeview.separator" }
+                                        tree      { return "Treeview.tree" }
+                                        default   { return "Treeview.cell" }
                                     }
                                 }
-                                region {
-                                    if { $widget eq "$w.treeview" } {
-                                        # Execute the command.
-                                        try {
-                                            {*}$address identify region $x $y
-                                        } on error { errortext errorcode } {
-                                            ::ms::Error "$errortext" $caller_info
-                                        } on ok { result } {
-                                            return [string cat "Treeview." $result]
-                                        }
-                                    } else {
-                                        return ""
-                                    }
+                            }
+                        }
+                        default {
+                            # Execute the command.
+                            if { $widget eq "$w.treeview" } {
+                                try {
+                                    {*}$address identify $subcommand $x $y
+                                } on error { errortext errorcode } {
+                                    ::ms::Error "$errortext" $caller_info
+                                } on ok { result } {
+                                    return $result
                                 }
-                                default {
-                                    if { $widget eq "$w.treeview" } {
-                                        # Execute the command.
-                                        try {
-                                            {*}$address identify $subcommand $x $y
-                                        } on error { errortext errorcode } {
-                                            ::ms::Error "$errortext" $caller_info
-                                        } on ok { result } {
-                                            return $result
-                                        }
-                                    } else {
-                                        return ""
-                                    }
-                                }
+                            } else {
+                                return ""
                             }
                         }
                     }
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         instate {
