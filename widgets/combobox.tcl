@@ -3976,7 +3976,13 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             } on ok { result } {
                 switch -nocase -- $result {
                     downarrow { return "Combobox.downarrow" }
-                    default   { return "Combobox.textarea"}
+                    default   {
+                        # Check the widget's state.
+                        switch -- $::ms::current($w,state) {
+                            normal  { return "Combobox.textarea" }
+                            default { return "Combobox.label" }
+                        }
+                    }
                 }
             }
         }
