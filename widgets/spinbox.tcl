@@ -5442,15 +5442,11 @@ proc ::ms::spinbox::Home_End { w event } {
     set ::ms::data($w,current_value) $value
 
     # Clear the widget field and insert the 'value'.
-    interp invokehidden {} $w delete  0 end
-    interp invokehidden {} $w set     $value
+    interp invokehidden {} $w delete 0 end
+    interp invokehidden {} $w set    $value
 
-    # If the widget is not in readonly state, select the value.
+    # If the widget is in its normal state, select the value.
     switch -- $::ms::current($w,state) {
-        readonly {
-            # Remove the widget selection, if any.
-            interp invokehidden {} $w selection clear
-        }
         normal {
             interp invokehidden {} $w selection range 0 end
             interp invokehidden {} $w icursor end
