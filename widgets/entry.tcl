@@ -4543,11 +4543,17 @@ proc ::ms::entry::FocusOut { w } {
     #   - validate the data,
     #   - or change the placeholder.
     switch -- [_winfo exists $::ms::current($w,cmenu)] {
-        1   { return "" }
-    }
+        0   {
+            # Change the widget dynamic state to '!focus'.
+            interp invokehidden {} $w state [list !focus]
+        }
+        1   {
+            # Change the widget dynamic state to 'focus'.
+            interp invokehidden {} $w state [list  focus]
 
-    # Change the widget dynamic state to '!focus'.
-    interp invokehidden {} $w state [list !focus]
+            return ""
+        }
+    }
 
     # Remove the widget selection, if any.
     interp invokehidden {} $w selection clear
