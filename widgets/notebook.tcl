@@ -2952,111 +2952,55 @@ proc ::ms::notebook::Select_Tab { w x y } {
     set index     [interp invokehidden {} $w index @$x,$y]
     set tabs_addr [interp invokehidden {} $w tabs]
 
-    if { $index ne "" } {
-        # Get the current tab index and address.
-        set current_index    [interp invokehidden {} $w index current]
-        set current_tab_addr [lindex $tabs_addr $current_index]
+    # Check if the index is the empty string.
+    switch -- $index {
+        ""  { return "" }
+    }
 
-        # Check the tab state (the one that was selected).
-        switch -- [$w tab $index -state] {
-            disabled {
-                # Check the parent of the widget address provided, if any.
-                set parent [_winfo parent $w]
-                switch -- $parent {
-                    ""      {}
-                    default {
-                        # Propagate the action to the widget's parents.
+    # Get the current tab index and address.
+    set current_index    [interp invokehidden {} $w index current]
+    set current_tab_addr [lindex $tabs_addr $current_index]
 
-                        # ATTENTION!
-                        #
-                        # This is a recursive loop. The only way to exit is:
-                        #   - If there is no more parent to check for.
-                        #   - If 'parent' is a scrollable megawidget.
-                        set i 1
-                        while { $i > 0 } {
-                            # Check if 'parent' belongs to a scrollable megawidget.
-                            if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                                _focus -force $parent
-                                return ""
-                            }
+    # Check the tab state (the one that was selected).
+    switch -- [interp invokehidden {} $w tab $index -state] {
+        disabled { return "" }
+    }
 
-                            # Check the next parent, if any.
-                            set parent [_winfo parent $parent]
-                            switch -- $parent {
-                                ""  {
-                                    # There are no more parents to check for.
-                                    # Stop the recursive iteration.
-                                    break
-                                }
-                            }
-                        }
-                    }
-                }
-
-                # Check if the widget's toplevel was created by mustang.
-                switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                    0   {
-                        # If possible, focus the widget's toplevel.
-                        try {
-                            _focus -force [_winfo toplevel $w]
-                        } on error {} {
-                            # Do nothing
-                        }
-                    }
-                    1   {
-                        # Check the widget's toplevel takefocus.
-                        switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                            0   {
-                                # Momentarily set the toplevel takefocus to '1'.
-                                # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                                interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                            }
-                        }
-
-                        # Focus the widget's toplevel.
-                        _focus -force $::ms::addr($w,toplevel)
-                    }
-                }
-            }
-            normal {
-                # Check if 'index' is different than 'current_index'.
-                if { $current_index != $index } {
-                    # Launch the current tab address 'posthook', if any.
-                    switch -- $::ms::data($current_tab_addr,posthook) {
-                        ""      {}
-                        default {
-                            try {
-                                {*}$::ms::data($current_tab_addr,posthook) $current_tab_addr
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" ""
-                            }
-                        }
-                    }
-
-                    # Get the index tab address.
-                    set index_addr [lindex $tabs_addr $index]
-
-                    # Launch the soon to be selected tab address 'prehook', if any.
-                    switch -- $::ms::data($index_addr,prehook) {
-                        ""      {}
-                        default {
-                            try {
-                                {*}$::ms::data($index_addr,prehook) $index_addr
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" ""
-                            }
-                        }
-                    }
-
-                    # Register the focussed widget for the current tab.
-                    set current_tab [interp invokehidden {} $w select]
-                    set ::ms::temp($w,$current_tab,focussed_widget) [_focus]
-
-                    # Select the 'index' tab.
-                    ::ms::notebook::Activate_Tab $w $index
+    # Check if 'index' is different than 'current_index'.
+    if { $current_index != $index } {
+        # Launch the current tab address 'posthook', if any.
+        switch -- $::ms::data($current_tab_addr,posthook) {
+            ""      {}
+            default {
+                try {
+                    {*}$::ms::data($current_tab_addr,posthook) $current_tab_addr
+                } on error { errortext errorcode } {
+                    ::ms::Error "$errortext" ""
                 }
             }
         }
+
+        # Get the index tab address.
+        set index_addr [lindex $tabs_addr $index]
+
+        # Launch the soon to be selected tab address 'prehook', if any.
+        switch -- $::ms::data($index_addr,prehook) {
+            ""      {}
+            default {
+                try {
+                    {*}$::ms::data($index_addr,prehook) $index_addr
+                } on error { errortext errorcode } {
+                    ::ms::Error "$errortext" ""
+                }
+            }
+        }
+
+        # Register the focussed widget for the current tab.
+        set current_tab [interp invokehidden {} $w select]
+        set ::ms::temp($w,$current_tab,focussed_widget) [_focus]
+
+        # Select the 'index' tab.
+        ::ms::notebook::Activate_Tab $w $index
     }
 
     return ""
