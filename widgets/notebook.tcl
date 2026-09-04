@@ -2533,12 +2533,18 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **tabs**
-            try {
-                interp invokehidden {} $w tabs {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w tabs {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
