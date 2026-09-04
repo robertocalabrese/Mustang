@@ -5333,7 +5333,7 @@ proc ::ms::spinbox::Destroy { w } {
 # It doesn't return anything.
 proc ::ms::spinbox::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
-    ::ms::spinbox::Pathname_Cmd $w state focus
+    interp invokehidden {} $w state [list focus]
 
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
