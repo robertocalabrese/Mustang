@@ -808,8 +808,8 @@ package provide ::ms::toplevel 0.1
 ################################
 
 # Activate/Deactivate
-_bind _Toplevel <Activate>   { ::ms::toplevel::Pathname_Cmd %W state !background; break }
-_bind _Toplevel <Deactivate> { ::ms::toplevel::Pathname_Cmd %W state  background; break }
+_bind _Toplevel <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Toplevel <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Toplevel <ButtonPress-1> { ::ms::toplevel::Focus_Toplevel %W; break }
@@ -828,7 +828,7 @@ _bind _Toplevel <Enter> { ::ms::toplevel::Hover %W %X %Y; break }
 _bind _Toplevel <Leave> { ::ms::toplevel::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Toplevel <FocusIn>  { ::ms::toplevel::FocusIn  %W; break }
+_bind _Toplevel <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Toplevel <FocusOut> { ::ms::toplevel::FocusOut %W; break }
 
 # Create the mustang **toplevel** package.
@@ -2399,25 +2399,6 @@ proc ::ms::toplevel::Destroy { w } {
                                  ::ms::managed_by($w,tile);
         }
     }
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::toplevel::FocusIn { w } {
-    # Check if the toplevel takefocus value is still the original one.
-    if { ($::ms::current($w,takefocus) == 1) && ([interp invokehidden {} $w cget -takefocus] == 1) } {
-        # Change the widget dynamic state to 'focus'.
-        ::ms::toplevel::Pathname_Cmd $w state focus
-    }
-
-    return ""
 }
 
 ## FocusOut
