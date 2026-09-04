@@ -2330,8 +2330,8 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             #
             # *window* **select** ?*tabid*?
             switch -- [llength $args] {
-                0       { return [interp invokehidden {} $w select] }
-                default {
+                0   { return [interp invokehidden {} $w select] }
+                1   {
                     # Check if the 'tabid' provided is a tab index.
                     switch -- [string is integer -strict $args] {
                         0   {
@@ -2375,6 +2375,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                         return ""
                     }
                 }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         state {
