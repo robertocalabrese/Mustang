@@ -6332,7 +6332,7 @@ proc ::ms::spinbox::Validate_String { w } {
     }
 
     # Set the widget dynamic state to '!invalid'.
-    ::ms::spinbox::Pathname_Cmd $w state !invalid
+    interp invokehidden {} $w state [list !invalid]
 
     return $value
 }
