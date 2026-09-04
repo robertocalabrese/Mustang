@@ -5713,7 +5713,7 @@ proc ::ms::spinbox::Return { w } {
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
-        normal {
+        default  {
             # Validate the widget string.
             set value [::ms::spinbox::Validate_String $w]
 
@@ -5721,11 +5721,11 @@ proc ::ms::spinbox::Return { w } {
             interp invokehidden {} $w delete  0 end
             interp invokehidden {} $w set     $value
             interp invokehidden {} $w icursor end
+
+            # Remove the widget selection, if any.
+            interp invokehidden {} $w selection clear
         }
     }
-
-    # Remove the widget selection, if any.
-    interp invokehidden {} $w selection clear
 
     # If 'value' is different than the previous registered one, register it
     # and launch the external procedure provided, if any.
