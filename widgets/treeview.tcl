@@ -4793,56 +4793,55 @@ proc ::ms::treeview::Arrow_Keys { w key } {
 proc ::ms::treeview::ButtonPress { w x y } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled { ::ms::Focus_The_Widget_Or_Its_Toplevel $w }
-        default  {
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
+        disabled { return "" }
+    }
 
-            # Focus the treeview.
-            _focus -force $::ms::addr($w,widget)
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
 
-            # Change the widget dynamic state to 'focus'
-            ::ms::treeview::Pathname_Cmd $w state focus
+    # Focus the treeview.
+    _focus -force $::ms::addr($w,widget)
 
-            # Identify the widget's region under the mouse pointer.
-            switch -- [{*}$address identify region $x $y] {
-                heading {
-                    # Heading.Press
-                    set column [{*}$address identify column $x $y]
+    # Change the widget dynamic state to 'focus'
+    ::ms::treeview::Pathname_Cmd $w state [list focus]
 
-                    set ::ms::data($w,press,mode)   heading
-                    set ::ms::data($w,press,column) $column
+    # Identify the widget's region under the mouse pointer.
+    switch -- [{*}$address identify region $x $y] {
+        heading {
+            # Heading.Press
+            set column [{*}$address identify column $x $y]
 
-                    # Execute the command.
-                    {*}$address heading $column state pressed
-                }
-                separator {
-                    # Resize.Press
-                    set ::ms::data($w,press,mode)    resize
-                    set ::ms::data($w,resize,column) [{*}$address identify column $x $y]
-                }
-                tree -
-                cell {
-                    # Identify the widget's item under the mouse pointer.
-                    set item [{*}$address identify item $x $y]
+            set ::ms::data($w,press,mode)   heading
+            set ::ms::data($w,press,column) $column
 
-                    # Identify the widget's cell under the mouse pointer.
-                    set cell [::ms::treeview::Identify_Cell $w $x $y]
+            # Execute the command.
+            {*}$address heading $column state pressed
+        }
+        separator {
+            # Resize.Press
+            set ::ms::data($w,press,mode)    resize
+            set ::ms::data($w,resize,column) [{*}$address identify column $x $y]
+        }
+        tree -
+        cell {
+            # Identify the widget's item under the mouse pointer.
+            set item [{*}$address identify item $x $y]
 
-                    # Dispatch to the appropriate select operation depending on current value of '-selectmode'.
-                    ::ms::treeview::Select_Op $w $item $cell choose
+            # Identify the widget's cell under the mouse pointer.
+            set cell [::ms::treeview::Identify_Cell $w $x $y]
 
-                    # Identify the widget's element under the mouse pointer.
-                    switch -glob -- [{*}$address identify element $x $y] {
-                        *indicator  -
-                        *disclosure -
-                        *text       -
-                        *padding    { ::ms::treeview::Toggle $w $item }
-                    }
-                }
+            # Dispatch to the appropriate select operation depending on current value of '-selectmode'.
+            ::ms::treeview::Select_Op $w $item $cell choose
+
+            # Identify the widget's element under the mouse pointer.
+            switch -glob -- [{*}$address identify element $x $y] {
+                *indicator  -
+                *disclosure -
+                *text       -
+                *padding    { ::ms::treeview::Toggle $w $item }
             }
         }
     }
