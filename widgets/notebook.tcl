@@ -3000,8 +3000,8 @@ proc ::ms::notebook::FocusOut { w } {
 
     # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
     switch -- [_winfo exists $cmenu] {
-        0   { ::ms::canvas::Pathname_Cmd $w state [list !focus] }
-        1   { ::ms::canvas::Pathname_Cmd $w state [list  focus] }
+        0   { ::ms::notebook::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::notebook::Pathname_Cmd $w state [list  focus] }
     }
 
     return ""
