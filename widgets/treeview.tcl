@@ -4167,14 +4167,14 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
             switch -- $type {
                 Leave {
                     # Change the widget dynamic state to '!hover'
-                    ::ms::treeview::Pathname_Cmd $w state !hover
+                    interp invokehidden {} $w state [list !hover]
 
                     # Reset the widget's active column.
                     set ::ms::data($w,active,column) {}
                 }
                 default {
                     # Change the widget dynamic state to 'hover'
-                    ::ms::treeview::Pathname_Cmd $w state hover
+                    interp invokehidden {} $w state [list hover]
                 }
             }
         }
@@ -4196,7 +4196,7 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
                 # The mouse cursor is outside the widget acting as a border object.
 
                 # Change the widget dynamic state to '!hover'
-                ::ms::treeview::Pathname_Cmd $w state !hover
+                ::ms::treeview::Pathname_Cmd $w state [list !hover]
 
                 # Check if a **Leave** event has just happened upon a treeview object.
                 switch -- $type {
@@ -4206,7 +4206,7 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
                 # The mouse cursor is inside the widget acting as a border object.
 
                 # Change the widget dynamic state to 'hover'
-                ::ms::treeview::Pathname_Cmd $w state hover
+                ::ms::treeview::Pathname_Cmd $w state [list hover]
             }
         }
     }
