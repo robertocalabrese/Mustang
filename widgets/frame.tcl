@@ -112,6 +112,29 @@
 #
 #                         See also **-shellbackground**.
 #
+# **-backgroundimage**    This specifies an image to display on the toplevel's background within the border of the simple frame
+#                         (i.e., the image will be clipped by the simple frame's highlight ring and border, if either are present)
+#                         on top of the background; subwidgets of the simple frame will be drawn on top.
+#                         The image must have been created with the image create command.
+#                         If specified as the empty string, no image will be displayed.
+#
+#                         Note: It's only meaningful for simple frames.
+#
+#                         Note: This is a stylable option.
+#
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
+#
+#                               If it's not provided --> The widget will follow the **-backgroundimage** specified in its style.
+#                                                        If there isn't one, the **-backgroundimage** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-backgroundimage** will not abide by its mapping values, if any.
+#                                                        It is not supposed to change when the widget 'dynamic' state changes.
+#
+#                         If not provided, defaults to the empty string.
+#
+#                         See also **-tile** in this section.
+#
 # **-bordercolor**        It's a list that specifies the color to use as bordercolor.
 #                         See the **COLOR OPTION** section to know how this list should be composed.
 #
@@ -451,6 +474,28 @@
 #                         Differently than Tk, mustang does not allow the empty string as a valid value.
 #
 #                         If not provided, defaults to **0**.
+#
+# **-tile**               It's a boolean value that specifies how to draw the background image on the simple frame.
+#                         If true, the image will be tiled to fill the whole simple frame, with the origin of the first copy of the
+#                         image being the top left of the interior of the simple frame.
+#                         If false, the image will be centered within the simple frame.
+#
+#                         Note: It's only meaningful for simple frames.
+#
+#                         Note: This is a stylable option.
+#
+#                               If it's provided     --> Styles, mappings and states events cannot change its value.
+#                                                        Only the developer can.
+#
+#                               If it's not provided --> The widget will follow the **-tile** specified in its style.
+#                                                        If there isn't one, the **-tile** of the **TFrame** style
+#                                                        will be used instead.
+#                                                        The **-tile** will not abide by its mapping values, if any.
+#                                                        It is not supposed to change when the widget 'dynamic' state changes.
+#
+#                         If not provided, defaults to **0** (false).
+#
+#                         See also **-backgroundimage** in this section.
 #
 # **-visual**             Specifies visual information for the new window in any of the following forms:
 #
@@ -1684,6 +1729,7 @@ namespace eval ::ms::frame {
 
     # Set the 'styleable' frame option list.
     set ::ms::frame(styleable,options) [list background \
+                                             backgroundimage \
                                              bordercolor \
                                              borderwidth \
                                              cursor \
@@ -1691,7 +1737,8 @@ namespace eval ::ms::frame {
                                              lightcolor \
                                              padding \
                                              relief \
-                                             shellbackground];
+                                             shellbackground \
+                                             tile];
 
     # Set the default 'non-styleable' frame options values.
     set ::ms::default(frame,class)            TFrame
@@ -1823,6 +1870,7 @@ proc ::ms::frame::Command { window { args "" } } {
             #       or
             #           *window* **configure** **-background** red
             set ::ms::managed_by($w,background)      Tk
+            set ::ms::managed_by($w,backgroundimage) Tk
             set ::ms::managed_by($w,bordercolor)     Tk
             set ::ms::managed_by($w,borderwidth)     Tk
             set ::ms::managed_by($w,cursor)          Tk
@@ -1831,6 +1879,7 @@ proc ::ms::frame::Command { window { args "" } } {
             set ::ms::managed_by($w,padding)         Tk
             set ::ms::managed_by($w,relief)          Tk
             set ::ms::managed_by($w,shellbackground) Tk
+            set ::ms::managed_by($w,tile)            Tk
 
             #################################################
             ##                                             ##
@@ -1849,6 +1898,12 @@ proc ::ms::frame::Command { window { args "" } } {
 
                         set ::ms::current($w,background)    $value
                         set ::ms::managed_by($w,background) developer
+                    }
+                    -backgroundimage {
+                        if { ($value eq "") || ($value in [image names]) } {
+                            set ::ms::current($w,backgroundimage)    $value
+                            set ::ms::managed_by($w,backgroundimage) developer
+                        }
                     }
                     -bordercolor {
                         set value [::ms::Check_Color $value invalid]
@@ -2067,6 +2122,20 @@ proc ::ms::frame::Command { window { args "" } } {
                             enabled  { set ::ms::current($w,takefocus) 1 }
                         }
                     }
+                    -tile {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,tile) 0 }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,tile) 1 }
+                        }
+                    }
                     -visual {
                         set value [string tolower $value]
 
@@ -2170,7 +2239,7 @@ proc ::ms::frame::Command { window { args "" } } {
             ##                           ##
             ###############################
 
-            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change
+            # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
             #       if the statespec changes.
 
             # Check if the widget to create needs to be scrollable or not.
@@ -2206,19 +2275,21 @@ proc ::ms::frame::Command { window { args "" } } {
 
 
                     # Set the frame options.
-                    set frame_options [list  -background $background \
-                                            -borderwidth $::ms::current($w,borderwidth) \
-                                                  -class $::ms::current($w,class) \
-                                               -colormap $::ms::current($w,colormap) \
-                                              -container $::ms::current($w,container) \
-                                                 -cursor $::ms::current($w,cursor) \
-                                                 -height $::ms::current($w,height) \
-                                                   -padx [lindex $::ms::data($w,padding) 0] \
-                                                   -pady [lindex $::ms::data($w,padding) 1] \
-                                                 -relief $::ms::current($w,relief) \
-                                              -takefocus $::ms::current($w,takefocus) \
-                                                 -visual $::ms::current($w,visual) \
-                                                  -width $::ms::current($w,width)];
+                    set frame_options [list      -background $background \
+                                            -backgroundimage $::ms::current($w,backgroundimage) \
+                                                -borderwidth $::ms::current($w,borderwidth) \
+                                                      -class $::ms::current($w,class) \
+                                                   -colormap $::ms::current($w,colormap) \
+                                                  -container $::ms::current($w,container) \
+                                                     -cursor $::ms::current($w,cursor) \
+                                                     -height $::ms::current($w,height) \
+                                                       -padx [lindex $::ms::data($w,padding) 0] \
+                                                       -pady [lindex $::ms::data($w,padding) 1] \
+                                                     -relief $::ms::current($w,relief) \
+                                                  -takefocus $::ms::current($w,takefocus) \
+                                                       -tile $::ms::current($w,tile) \
+                                                     -visual $::ms::current($w,visual) \
+                                                      -width $::ms::current($w,width)];
 
                     # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
                     #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
@@ -2320,10 +2391,12 @@ proc ::ms::frame::Command { window { args "" } } {
                     set ::ms::data($w,width)     $width
                     set ::ms::data($w,reqwidth)  $width
 
-                    # Reset the colormap, container and visual option
-                    set ::ms::current($w,colormap)  {}
-                    set ::ms::current($w,container) 0
-                    set ::ms::current($w,visual)    {}
+                    # Reset the backgroundimage, colormap, container, tile and visual option to their default values.
+                    set ::ms::current($w,backgroundimage) $::ms::default($w,backgroundimage)
+                    set ::ms::current($w,colormap)        $::ms::default($w,colormap)
+                    set ::ms::current($w,container)       $::ms::default($w,container)
+                    set ::ms::current($w,visual)          $::ms::default($w,visual)
+                    set ::ms::current($w,tile)            $::ms::default($w,tile)
 
                     ##################
                     ##              ##
@@ -2862,6 +2935,12 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                         set ::ms::current($w,background)    $value
                                         set ::ms::managed_by($w,background) developer
                                     }
+                                    -backgroundimage {
+                                        if { ($value eq "") || ($value in [image names]) } {
+                                            set ::ms::current($w,backgroundimage)    $value
+                                            set ::ms::managed_by($w,backgroundimage) developer
+                                        }
+                                    }
                                     -bordercolor {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -3081,6 +3160,20 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                             enabled  { set ::ms::current($w,takefocus) 1 }
                                         }
                                     }
+                                    -tile {
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,tile) 0 }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,tile) 1 }
+                                        }
+                                    }
                                     -visual {}
                                     -width {
                                         set value [::ms::Check_Measure $value invalid]
@@ -3149,7 +3242,7 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                             ##                              ##
                             ##################################
 
-                            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change
+                            # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
                             #       if the statespec changes.
 
                             # Check if the widget is scrollable or not.
@@ -3181,15 +3274,17 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
 
 
                                     # Set the frame options.
-                                    set frame_options [list  -background $background \
-                                                            -borderwidth $::ms::current($w,borderwidth) \
-                                                                 -cursor $::ms::current($w,cursor) \
-                                                                 -height $::ms::current($w,height) \
-                                                                   -padx [lindex $::ms::data($w,padding) 0] \
-                                                                   -pady [lindex $::ms::data($w,padding) 1] \
-                                                                 -relief $::ms::current($w,relief) \
-                                                              -takefocus $::ms::current($w,takefocus) \
-                                                                  -width $::ms::current($w,width)];
+                                    set frame_options [list      -background $background \
+                                                            -backgroundimage $::ms::current($w,backgroundimage) \
+                                                                -borderwidth $::ms::current($w,borderwidth) \
+                                                                     -cursor $::ms::current($w,cursor) \
+                                                                     -height $::ms::current($w,height) \
+                                                                       -padx [lindex $::ms::data($w,padding) 0] \
+                                                                       -pady [lindex $::ms::data($w,padding) 1] \
+                                                                     -relief $::ms::current($w,relief) \
+                                                                  -takefocus $::ms::current($w,takefocus) \
+                                                                       -tile $::ms::current($w,tile) \
+                                                                      -width $::ms::current($w,width)];
 
                                     # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
                                     #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
@@ -3860,7 +3955,8 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                             ##                      ##
                             ##########################
 
-                            # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change if the statespec changes.
+                            # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
+                            #       if the statespec changes.
 
                             # Change the statespec and register the states that have changed.
                             set states_that_have_changed [list ]
@@ -4323,7 +4419,7 @@ proc ::ms::frame::Style_Update { stylename caller_info } {
         ##                                   ##
         #######################################
 
-        # Note: 'borderwidth', 'cursor', 'padding' and 'relief' are not allowed to change
+        # Note: 'backgroundimage', 'borderwidth', 'cursor', 'padding', 'relief' and 'tile' are not allowed to change
         #       if the statespec changes.
 
         # Check if the widget is scrollable or not.
@@ -4355,12 +4451,14 @@ proc ::ms::frame::Style_Update { stylename caller_info } {
 
 
                 # Set the frame options.
-                set frame_options [list  -background $background \
-                                        -borderwidth $::ms::current($w,borderwidth) \
-                                             -cursor $::ms::current($w,cursor) \
-                                               -padx [lindex $::ms::data($w,padding) 0] \
-                                               -pady [lindex $::ms::data($w,padding) 1] \
-                                             -relief $::ms::current($w,relief)];
+                set frame_options [list      -background $background \
+                                        -backgroundimage $::ms::current($w,backgroundimage) \
+                                            -borderwidth $::ms::current($w,borderwidth) \
+                                                 -cursor $::ms::current($w,cursor) \
+                                                   -padx [lindex $::ms::data($w,padding) 0] \
+                                                   -pady [lindex $::ms::data($w,padding) 1] \
+                                                 -relief $::ms::current($w,relief) \
+                                                   -tile $::ms::current($w,tile)];
 
                 # Note: The '-bordercolor' option is not understanded by Tk canvases, but is made available trough
                 #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
@@ -4769,6 +4867,7 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::addr($w,widget);
 
     unset -nocomplain -- ::ms::current($w,background) \
+                         ::ms::current($w,backgroundimage) \
                          ::ms::current($w,bordercolor) \
                          ::ms::current($w,borderwidth) \
                          ::ms::current($w,class) \
@@ -4784,6 +4883,7 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::current($w,state) \
                          ::ms::current($w,style) \
                          ::ms::current($w,takefocus) \
+                         ::ms::current($w,tile) \
                          ::ms::current($w,width) \
                          ::ms::current($w,xscrollincrement) \
                          ::ms::current($w,yscrollincrement);
@@ -4805,6 +4905,7 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::data($w,yview_diff);
 
     unset -nocomplain -- ::ms::default($w,background) \
+                         ::ms::default($w,backgroundimage) \
                          ::ms::default($w,bordercolor) \
                          ::ms::default($w,borderwidth) \
                          ::ms::default($w,class) \
@@ -4820,11 +4921,13 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::default($w,state) \
                          ::ms::default($w,style) \
                          ::ms::default($w,takefocus) \
+                         ::ms::default($w,tile) \
                          ::ms::default($w,width) \
                          ::ms::default($w,xscrollincrement) \
                          ::ms::default($w,yscrollincrement);
 
     unset -nocomplain -- ::ms::managed_by($w,background) \
+                         ::ms::managed_by($w,backgroundimage) \
                          ::ms::managed_by($w,bordercolor) \
                          ::ms::managed_by($w,borderwidth) \
                          ::ms::managed_by($w,cursor) \
@@ -4832,6 +4935,7 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::managed_by($w,lightcolor) \
                          ::ms::managed_by($w,padding) \
                          ::ms::managed_by($w,relief) \
+                         ::ms::managed_by($w,tile) \
                          ::ms::managed_by($w,shellbackground);
 
     unset -nocomplain -- ::ms::style($w,border) \

@@ -567,6 +567,7 @@ namespace eval ttk::theme::Halo {
 
         # Normal state
         style configure TFrame      -background Background \
+                               -backgroundimage {} \
                                    -bordercolor Bordercolor \
                                    -borderwidth 0 \
                                         -cursor arrow \
@@ -574,7 +575,8 @@ namespace eval ttk::theme::Halo {
                                     -lightcolor Lightcolor \
                                        -padding [list 0] \
                                         -relief flat \
-                               -shellbackground Background;
+                               -shellbackground Background \
+                                          -tile 0;
 
         # Mapping
         style map TFrame -bordercolor [list background BordercolorBackground \
