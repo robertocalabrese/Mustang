@@ -92,7 +92,7 @@ _bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y ""; break }
 _bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y ""; break }
 
 # FocusIn/FocusOut
-_bind _Simple_Treeview <FocusIn>  { ::ms::treeview::FocusIn  %W; break }
+_bind _Simple_Treeview <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Simple_Treeview <FocusOut> { ::ms::treeview::FocusOut %W; break }
 
 # Keyboard navigation
@@ -208,8 +208,8 @@ _bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X
 _bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y Leave; break }
 
 # FocusIn/FocusOut
-_bind _Scrollable_Treeview <FocusIn>  { ::ms::treeview::FocusIn  [_winfo parent %W]; break }
-_bind _Scrollable_Treeview <FocusOut> { ::ms::treeview::FocusOut [_winfo parent %W]; break }
+_bind _Scrollable_Treeview <FocusIn>  { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list focus]; break }
+_bind _Scrollable_Treeview <FocusOut> { ::ms::treeview::FocusOut     [_winfo parent %W]; break }
 
 # Keyboard navigation
 _bind _Scrollable_Treeview <<PrevLine>> { ::ms::treeview::Arrow_Keys [_winfo parent %W] up; break }
@@ -320,8 +320,8 @@ _bind _Hull_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
 _bind _Hull_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
 
 # FocusIn/FocusOut
-_bind _Hull_Treeview <FocusIn>  { ::ms::treeview::FocusIn  %W; break }
-_bind _Hull_Treeview <FocusOut> { ::ms::treeview::FocusOut %W; break }
+_bind _Hull_Treeview <FocusIn>  { ::ms::treeview::Pathname_Cmd %W state [list focus]; break }
+_bind _Hull_Treeview <FocusOut> { ::ms::treeview::FocusOut     %W; break }
 
 # Mousewheel and Touchpad
 
@@ -4077,22 +4077,6 @@ proc ::ms::treeview::Destroy { w } {
                          ::ms::style($w,separator) \
                          ::ms::style($w,treeview) \
                          ::ms::style($w,widget);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::treeview::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::treeview::Pathname_Cmd $w state focus
 
     return ""
 }
