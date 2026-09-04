@@ -3123,18 +3123,18 @@ proc ::ms::notebook::Activate_Tab { w tab } {
     }
 
     if { $new_tab eq $old_tab } {
-        _focus $w
+        _focus -force $w
 
         return ""
     }
 
-    # Needed so focus logic sees correct mapped states.
+    # Needed so that the focus logic sees the correct mapped states.
     update idletasks
 
     set focus_widget [::ttk::focusFirst $new_tab]
     switch -- $focus_widget {
-        ""      { _focus $w }
-        default { ttk::traverseTo $focus_widget }
+        ""      { _focus -force $w }
+        default { ::ttk::traverseTo $focus_widget }
     }
 
     return ""
