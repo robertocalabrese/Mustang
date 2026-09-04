@@ -4275,8 +4275,11 @@ proc ::ms::treeview::Pages { w direction } {
 proc ::ms::treeview::Return { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal { ::ms::treeview::Toggle_Focus $w }
+        disabled { return "" }
     }
+
+    # Toggle the focus.
+    ::ms::treeview::Toggle_Focus $w
 
     return ""
 }
