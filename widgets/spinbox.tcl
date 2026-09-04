@@ -4401,7 +4401,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 enabled { chan puts stdout "'insert' is a deprecated mustang spinbox command. Use 'set' instead." }
             }
 
-            # Check the widget state.
+            # Check the widget's state.
             switch -- $::ms::current($w,state) {
                 normal {
                     # Check the number of arguments provided.
@@ -4931,7 +4931,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Arrows { w event { speed 1x } } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4943,7 +4943,7 @@ proc ::ms::spinbox::Arrows { w event { speed 1x } } {
         1   { set amount [expr { $amount*$speed }] }
     }
 
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         readonly { set value [interp invokehidden {} $w get] }
         normal   { set value [::ms::spinbox::Validate_String $w] }
@@ -4981,7 +4981,7 @@ proc ::ms::spinbox::Arrows { w event { speed 1x } } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::ButtonPress { w x y mode } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled {
             # Check the parent of the widget address provided, if any.
@@ -5411,7 +5411,7 @@ proc ::ms::spinbox::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::spinbox::Pathname_Cmd $w state focus
 
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal {
             # Select all the widget textarea characters.
@@ -5453,7 +5453,7 @@ proc ::ms::spinbox::FocusOut { w } {
     # Change the widget dynamic state to '!focus'.
     ::ms::spinbox::Pathname_Cmd $w state !focus
 
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
@@ -5498,7 +5498,7 @@ proc ::ms::spinbox::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Home_End { w event } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5779,7 +5779,7 @@ proc ::ms::spinbox::Repeat_Increment { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Return { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
