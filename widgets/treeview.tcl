@@ -1808,15 +1808,27 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
         tag      {
             # Synopsis:
             #
-            # *window* **cellselection** ?*selop* *arg* ...?
-            #    *window* **cellselection** **set* *cellList*
-            #    *window* **cellselection** **set* *firstCell* *lastCell*
-            #    *window* **cellselection** **add* *cellList*
-            #    *window* **cellselection** **add* *firstCell* *lastCell*
-            #    *window* **cellselection** **remove* *cellList*
-            #    *window* **cellselection** **remove* *firstCell* *lastCell*
-            #    *window* **cellselection** **toggle* *cellList*
-            #    *window* **cellselection** **toggle* *firstCell* *lastCell*
+            # *window* **bbox** *item* ?*column*?
+            # *window* **detached** ?*item*?
+            # *window* **exists** *item*
+            # *window* **focus** ?*item*?
+            # *window* **index** *item*
+            # *window* **move** *item* *parent* *index*
+            # *window* **next** *item*
+            # *window* **parent** *item*
+            # *window* **prev** *item*
+            # *window* **tag** *args* ...
+            #    *window* **tag** **add** *tag* *items*
+            #    *window* **tag** **bind** *tagName* ?*sequence*? ?*script*?
+            #    *window* **tag** **cell** *subcommand* ...
+            #       *window* **tag** **cell** **add** *tag* *cellList*
+            #       *window* **tag** **cell** **has** *tagName* ?*cell*?
+            #       *window* **tag** **cell** **remove** *tag* ?*cellList*?
+            #    *window* **tag** **configure** *tagName* ?*option*? ?*value*? ?*option value* ... *option value*?
+            #    *window* **tag** **delete** *tagName*
+            #    *window* **tag** **has** *tagName* ?*item*?
+            #    *window* **tag** **names**
+            #    *window* **tag** **remove** *tag* ?*items*?
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
@@ -1824,51 +1836,13 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 true  { set address [list $w.treeview] }
             }
 
-            switch -- [llength $args] {
-                2   {
-                    set subcommand [lindex $args 0]
-                    set cellList   [lindex $args 1]
-
-                    # Check the subcommand.
-                    switch -- $subcommand {
-                        add    -
-                        remove -
-                        set    -
-                        toggle {
-                            try {
-                                {*}$address cellselection $subcommand $cellList
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                return $result
-                            }
-                        }
-                        default { ::ms::Error "Invalid cellselection command, '$subcommand'." $caller_info }
-                    }
-                }
-                3   {
-                    set subcommand [lindex $args 0]
-                    set firstCell  [lindex $args 1]
-                    set lastCell   [lindex $args 2]
-
-                    # Check the subcommand.
-                    switch -- $subcommand {
-                        add    -
-                        remove -
-                        set    -
-                        toggle {
-                            try {
-                                {*}$address cellselection $subcommand $firstCell $lastCell
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                return $result
-                            }
-                        }
-                        default { ::ms::Error "Invalid cellselection command, '$subcommand'." $caller_info }
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            # Execute the command.
+            try {
+                {*}$address $cmd {*}$args
+            } on error {} {
+                ::ms::Error "Invalid command." $caller_info
+            } on ok { result } {
+                return $result
             }
         }
         cellselection {
