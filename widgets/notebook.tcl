@@ -920,8 +920,8 @@ package provide ::ms::notebook 0.1
 ################################
 
 # Activate/Deactivate
-_bind _Notebook <Activate>   { ::ms::notebook::Pathname_Cmd %W state !background; break  }
-_bind _Notebook <Deactivate> { ::ms::notebook::Pathname_Cmd %W state  background; break  }
+_bind _Notebook <Activate>   { interp invokehidden {} %W state [list !background]; break  }
+_bind _Notebook <Deactivate> { interp invokehidden {} %W state [list  background]; break  }
 
 # ButtonPress-1
 _bind _Notebook <ButtonPress-1> { ::ms::notebook::Select_Tab %W %x %y; break  }
@@ -945,7 +945,7 @@ _bind _Notebook <Enter> [list +::ms::notebook::Hover %W %X %Y]
 _bind _Notebook <Leave> [list +::ms::notebook::Hover %W %X %Y]
 
 # FocusIn/FocusOut
-_bind _Notebook <FocusIn>  { ::ms::notebook::FocusIn  %W; break }
+_bind _Notebook <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Notebook <FocusOut> { ::ms::notebook::FocusOut %W; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
@@ -2906,22 +2906,6 @@ proc ::ms::notebook::Destroy { w } {
 
     unset -nocomplain -- ::ms::style($w,tabs) \
                          ::ms::style($w,widget);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::notebook::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::notebook::Pathname_Cmd $w state focus
 
     return ""
 }
