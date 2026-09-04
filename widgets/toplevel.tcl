@@ -811,9 +811,6 @@ package provide ::ms::toplevel 0.1
 _bind _Toplevel <Activate>   { interp invokehidden {} %W state [list !background]; break }
 _bind _Toplevel <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
-# ButtonPress-1
-_bind _Toplevel <ButtonPress-1> { ::ms::toplevel::Focus_Toplevel %W; break }
-
 # Configure
 _bind _Toplevel <Configure> { ::ms::toplevel::Configure %W; break }
 
@@ -2416,31 +2413,6 @@ proc ::ms::toplevel::FocusOut { w } {
         0   { interp invokehidden {} $w state [list !focus] }
         1   { interp invokehidden {} $w state [list  focus] }
     }
-
-    return ""
-}
-
-## Focus_Toplevel
-#
-# Focus the toplevel after a **ButtonPress-1** event on the widget.
-#
-# Where:
-#
-# w   Should be the real address on the widget involved.
-#
-# It doesn't return anything.
-proc ::ms::toplevel::Focus_Toplevel { w } {
-    # Check the widget takefocus.
-    switch -- $::ms::current($w,takefocus) {
-        0   {
-            # Momentarily set the takefocus to '1'.
-            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-        }
-    }
-
-    # Focus the toplevel.
-    _focus -force $::ms::addr($w,toplevel)
 
     return ""
 }
