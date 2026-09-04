@@ -1474,8 +1474,8 @@ package provide ::ms::entry 0.1
 #############################
 
 # Activate/Deactivate
-_bind _Entry <Activate>   { ::ms::entry::Pathname_Cmd %W state !background; break }
-_bind _Entry <Deactivate> { ::ms::entry::Pathname_Cmd %W state  background; break }
+_bind _Entry <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Entry <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Allowing some modifiers combination.
 switch -- [_tk windowingsystem] {
@@ -1535,8 +1535,8 @@ _bind _Entry <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Entry <Destroy> { ::ms::entry::Destroy %W; break }
 
 # Enter/Leave
-_bind _Entry <Enter> { ::ms::entry::Pathname_Cmd %W state  hover; break }
-_bind _Entry <Leave> { ::ms::entry::Pathname_Cmd %W state !hover; break }
+_bind _Entry <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Entry <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # Escape key
 _bind _Entry <KeyPress-Escape> { ::ms::Escape %W; break }
