@@ -3281,15 +3281,13 @@ proc ::ms::notebook::Enable_Traversal { w } {
 #
 # Returns the nearest traversal enabled notebook address or an empty string is none is found.
 proc ::ms::notebook::Enclosing_Notebook { w } {
-    # Get the toplevel related to 'w'.
-    set toplevel [_winfo toplevel $w]
-
-    switch -- [info exists ::ms::notebook(traversal,$toplevel)] {
+    # Check if exists the notebook traversal variable for the toplevel of 'w'.
+    switch -- [info exists ::ms::notebook(traversal,$::ms::addr($w,toplevel))] {
         0   { return "" }
     }
 
-    while { $w ne $toplevel && $w ne "" } {
-        switch -- [lsearch -exact $::ms::notebook(traversal,$toplevel) $w] {
+    while { $w ne $::ms::addr($w,toplevel) && $w ne "" } {
+        switch -- [lsearch -exact $::ms::notebook(traversal,$::ms::addr($w,toplevel)) $w] {
             -1      {}
             default { return $w }
         }
