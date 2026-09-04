@@ -3332,6 +3332,8 @@ proc ::ms::notebook::Mnemonic_Activation { toplevel key } {
             }
         }
     }
+
+    return ""
 }
 
 ## Mnemonic_Tab
