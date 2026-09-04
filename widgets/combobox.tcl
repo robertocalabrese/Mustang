@@ -4801,6 +4801,12 @@ proc ::ms::combobox::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::combobox::FocusOut { w } {
+    # If the popdown window of the combobox is currently displayed do not loose the focus (graphically),
+    # remove the selection or validate the data.
+    switch -- [_winfo exists $w.popdown] {
+        1   { return "" }
+    }
+
     # Check if a contextual menu was assigned to the widget.
     # If not, use the contextual menu of the widget's toplevel.
     set cmenu $::ms::current($w,cmenu)
@@ -4808,18 +4814,14 @@ proc ::ms::combobox::FocusOut { w } {
         ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
     }
 
-    # If the popdown window of the combobox is currently displayed do not loose the focus (graphically),
-    # remove the selection or validate the data.
-    switch -- [_winfo exists $w.popdown] {
-        1   { return "" }
+    # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $cmenu] {
+        0   { interp invokehidden {} $w state [list !focus] }
+        1   { interp invokehidden {} $w state [list  focus] }
     }
-
-    # Change the widget dynamic state to '!focus'.
-    interp invokehidden {} $w state [list !focus]
 
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
         normal {
             # Validate the widget string.
