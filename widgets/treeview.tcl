@@ -319,10 +319,6 @@ _bind _Hull_Treeview <Destroy> { ::ms::treeview::Destroy %W; break }
 _bind _Hull_Treeview <Enter> { ::ms::treeview::Hover %W %X %Y ""; break }
 _bind _Hull_Treeview <Leave> { ::ms::treeview::Hover %W %X %Y ""; break }
 
-# FocusIn/FocusOut
-_bind _Hull_Treeview <FocusIn>  { ::ms::treeview::Pathname_Cmd %W state [list focus]; break }
-_bind _Hull_Treeview <FocusOut> { ::ms::treeview::FocusOut     %W; break }
-
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
@@ -4091,32 +4087,18 @@ proc ::ms::treeview::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::FocusOut { w } {
-    # Check the contextual menu associated with this widget, if any.
+    # Check if a contextual menu was assigned to the widget.
+    # If not, use the contextual menu of the widget's toplevel.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
-        ""  {
-            # Check if a contextual menu was associated with the widget's toplevel.
-            set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
-            switch -- $cmenu {
-                ""      {}
-                default {
-                    # If the contextual menu of the widget's toplevel is open do not loose the focus (graphically).
-                    switch -- [_winfo exists $cmenu] {
-                        1   { return "" }
-                    }
-                }
-            }
-        }
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $cmenu] {
-                1   { return "" }
-            }
-        }
+        ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
     }
 
-    # Change the widget dynamic state to '!focus'.
-    ::ms::treeview::Pathname_Cmd $w state !focus
+    # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $cmenu] {
+        0   { ::ms::treeview::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::treeview::Pathname_Cmd $w state [list  focus] }
+    }
 
     return ""
 }
