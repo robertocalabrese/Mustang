@@ -2920,32 +2920,18 @@ proc ::ms::notebook::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::notebook::FocusOut { w } {
-    # Check the contextual menu associated with this widget, if any.
+    # Check if a contextual menu was assigned to the widget.
+    # If not, use the contextual menu of the widget's toplevel.
     set cmenu $::ms::current($w,cmenu)
     switch -- $cmenu {
-        ""  {
-            # Check if a contextual menu was associated with the widget's toplevel.
-            set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu)
-            switch -- $cmenu {
-                ""      {}
-                default {
-                    # If the contextual menu of the widget's toplevel is open do not loose the focus (graphically).
-                    switch -- [_winfo exists $cmenu] {
-                        1   { return "" }
-                    }
-                }
-            }
-        }
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $cmenu] {
-                1   { return "" }
-            }
-        }
+        ""  { set cmenu $::ms::current($::ms::addr($w,toplevel),cmenu) }
     }
 
-    # Change the widget dynamic state to '!focus'.
-    ::ms::notebook::Pathname_Cmd $w state !focus
+    # If 'cmenu' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $cmenu] {
+        0   { ::ms::canvas::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::canvas::Pathname_Cmd $w state [list  focus] }
+    }
 
     return ""
 }
