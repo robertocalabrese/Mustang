@@ -5567,6 +5567,8 @@ proc ::ms::spinbox::Increment { w value amount } {
 # Manage the **Keypress** event.
 # Some keys may be disabled depending on the datatype specified for the widget.
 #
+# Note: See the **WIDGET OPTIONS** for more info upon valid keys for each datatypes.
+#
 # Where:
 #
 # w     Should be the widget real address involved.
@@ -5579,58 +5581,75 @@ proc ::ms::spinbox::KeyPress { w key } {
     # disable everything else.
     switch -- $::ms::current($w,datatype) {
         alnum {
+            # Check if 'key' is a special key.
             switch -- $key {
                 Caps_Lock   -
                 KP_Decimal  -
                 KP_Subtract {}
                 default     {
+                    # Check if 'key' is not an alphanumer valid key.
                     if { ![regexp "\[0-9a-zA-Z .,\-\]" $key] } {
+                        # 😕 Do not insert the key.
                         return -code break
                     }
                 }
             }
         }
         alpha {
+            # Check if 'key' is a special key.
             switch -- $key {
                 Caps_Lock {}
                 default   {
+                    # Check if 'key' is not an alphabetic valid key.
                     if { ![regexp "\[a-zA-Z \]" $key] } {
+                        # 😕 Do not insert the key.
                         return -code break
                     }
                 }
             }
         }
         integer {
+            # Check if 'key' is a special key.
             switch -- $key {
                 KP_Subtract {}
                 default     {
+                    # Check if 'key' is not an integer valid key.
                     if { ![regexp "\[0-9\-\]" $key] } {
+                        # 😕 Do not insert the key.
                         return -code break
                     }
                 }
             }
         }
         posinteger {
+            # Check if 'key' is not a positive integer valid key.
             if { ![regexp "\[0-9\]" $key] } {
+                # 😕 Do not insert the key.
                 return -code break
             }
         }
         posreal {
+            # Check if 'key' is a special key.
             switch -- $key {
                 KP_Decimal {}
                 default    {
+                    # Check if 'key' is not a positive real valid key.
                     if { ![regexp "\[0-9.\]" $key] } {
+                        # 😕 Do not insert the key.
                         return -code break
                     }
                 }
             }
         }
         real {
+            # Check if 'key' is a special key.
             switch -- $key {
                 KP_Decimal  -
                 KP_Subtract {}
                 default     {
+                    # Check if 'key' is not a real valid key.
                     if { ![regexp "\[0-9.\-\]" $key] } {
+                        # 😕 Do not insert the key.
                         return -code break
                     }
                 }
@@ -5638,6 +5657,7 @@ proc ::ms::spinbox::KeyPress { w key } {
         }
     }
 
+    # 😀 Insert the key.
     ::ttk::entry::Insert $w $key
 
     return ""
