@@ -1557,8 +1557,8 @@ package provide ::ms::combobox 0.1
 ################################
 
 # Activate/Deactivate
-_bind _Combobox <Activate>   { ::ms::combobox::Pathname_Cmd %W state !background; break }
-_bind _Combobox <Deactivate> { ::ms::combobox::Pathname_Cmd %W state  background; break }
+_bind _Combobox <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Combobox <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Allowing some modifiers combination.
 switch -- [_tk windowingsystem] {
@@ -1618,8 +1618,8 @@ _bind _Combobox <Motion> { ::ms::Set_Cursor %W %x %y; break }
 _bind _Combobox <Destroy> { ::ms::combobox::Destroy %W; break }
 
 # Enter/Leave
-_bind _Combobox <Enter> { ::ms::combobox::Pathname_Cmd %W state  hover; break }
-_bind _Combobox <Leave> { ::ms::combobox::Pathname_Cmd %W state !hover; break }
+_bind _Combobox <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Combobox <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # Escape key
 _bind _Combobox <KeyPress-Escape> { ::ms::Escape %W; break }
