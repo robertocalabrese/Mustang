@@ -5356,32 +5356,22 @@ proc ::ms::spinbox::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically),
-            # remove the selection or validate the data.
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
-    }
-
     # If the popdown window of the spinbox is currently displayed do not loose the focus (graphically),
     # remove the selection or validate the data.
     switch -- [_winfo exists $w.popdown] {
         1   { return "" }
     }
 
-    # Change the widget dynamic state to '!focus'.
-    ::ms::spinbox::Pathname_Cmd $w state !focus
+    # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
+        0   { interp invokehidden {} $w state [list !focus] }
+        1   { interp invokehidden {} $w state [list  focus] }
+    }
 
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
-        normal {
+        normal   {
             # Validate the widget string.
             set value [::ms::spinbox::Validate_String $w]
 
@@ -5389,11 +5379,11 @@ proc ::ms::spinbox::FocusOut { w } {
             interp invokehidden {} $w delete  0 end
             interp invokehidden {} $w set     $value
             interp invokehidden {} $w icursor end
+
+            # Remove the widget selection, if any.
+            interp invokehidden {} $w selection clear
         }
     }
-
-    # Remove the widget selection, if any.
-    interp invokehidden {} $w selection clear
 
     # If 'value' is different than the previous registered one, register it
     # and launch the external procedure provided, if any.
