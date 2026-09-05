@@ -1392,53 +1392,47 @@
 #   }
 package provide ::ms::palette 0.1
 
-###############################
-##                           ##
-##     _PALETTE BINDINGS     ##
-##                           ##
-###############################
+####################################
+##                                ##
+##     _HULL_PALETTE BINDINGS     ##
+##                                ##
+####################################
 
 # Activate/Deactivate
-_bind _Palette <Activate>   { ::ms::palette::Pathname_Cmd %W state !background; break }
-_bind _Palette <Deactivate> { ::ms::palette::Pathname_Cmd %W state  background; break }
-
-# ButtonPress-1
-_bind _Palette <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _Hull_Palette <Activate>   { ::ms::palette::Pathname_Cmd %W state !background; break }
+_bind _Hull_Palette <Deactivate> { ::ms::palette::Pathname_Cmd %W state  background; break }
 
 # Contextual menu
-_bind _Palette <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+_bind _Hull_Palette <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
 # Destroy
-_bind _Palette <Destroy> { ::ms::palette::Destroy %W; break }
+_bind _Hull_Palette <Destroy> { ::ms::palette::Destroy %W; break }
 
-# Enter
-_bind _Palette <Enter> { ::ms::palette::Pathname_Cmd %W state !hover; break }
-
-# FocusIn/FocusOut
-_bind _Palette <FocusIn>  { ::ms::palette::FocusIn  %W; break }
-_bind _Palette <FocusOut> { ::ms::palette::FocusOut %W; break }
+# Enter/Leave
+_bind _Hull_Palette <Enter> { ::ms::palette::Pathname_Cmd %W state !hover; break }
+_bind _Hull_Palette <Leave> { ::ms::palette::Pathname_Cmd %W state !hover; break }
 
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parents meets the required condition, don't do anything.
-_bind _Palette <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+_bind _Hull_Palette <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parents meets the required condition, don't do anything.
-_bind _Palette <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+_bind _Hull_Palette <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Palette <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+_bind _Hull_Palette <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Palette <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+_bind _Hull_Palette <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1447,13 +1441,13 @@ _bind _Palette <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; b
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
 # touchpad direction.
 #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
 #
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Palette <TouchpadScroll> { ::ms::palette::Touchpad %W %# %D; break }
+_bind _Hull_Palette <TouchpadScroll> { ::ms::palette::Touchpad %W %# %D; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1465,7 +1459,223 @@ _bind _Palette <TouchpadScroll> { ::ms::palette::Touchpad %W %# %D; break }
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Palette <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+_bind _Hull_Palette <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
+#######################################
+##                                   ##
+##     _PREVIEW_PALETTE BINDINGS     ##
+##                                   ##
+#######################################
+
+# Contextual menu
+_bind _Preview_Palette <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, don't do anything.
+_bind _Preview_Palette <MouseWheel> [list ::ms::Scroll_Parent_Y [_winfo parent %W] %D units]
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, don't do anything.
+_bind _Preview_Palette <Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo parent %W] %D units]
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Preview_Palette <Control-MouseWheel> [list ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages]
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Preview_Palette <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo parent %W] %D pages]
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Preview_Palette <TouchpadScroll> [list ::ms::palette::Touchpad [_winfo parent %W] %# %D]
+
+# This binding movement will happen on two different planes, horizontal and vertical.
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Preview_Palette <Control-TouchpadScroll> [list ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages]
+
+##############################
+##                          ##
+##     PALETTE BINDINGS     ##
+##                          ##
+##############################
+
+# Buttonpress-1
+_bind _Palette <ButtonPress-1>        { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "" ; break }
+_bind _Palette <Shift-ButtonPress-1>  { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "s"; break }
+_bind _Palette <Double-ButtonPress-1> { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "2"; break }
+_bind _Palette <Triple-ButtonPress-1> { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "3"; break }
+_bind _Palette <B1-Motion>            { ::ms::Drag [_winfo parent %W] %x %y; break }
+
+_bind _Palette <Button-2>         { ::ms::Scan_Or_Paste [_winfo parent %W] %x "Button-2"; break }
+_bind _Palette <B2-Motion>        { ::ms::Scan_Or_Paste [_winfo parent %W] %x "B2-Motion"; break }
+_bind _Palette <ButtonRelease-2>  { ::ms::Scan_Or_Paste [_winfo parent %W] %x "ButtonRelease-2"; break }
+
+_bind _Palette <Button-3>         { ::ms::Scan_Or_Paste [_winfo parent %W] %x "Button-3"; break }
+_bind _Palette <B3-Motion>        { ::ms::Scan_Or_Paste [_winfo parent %W] %x "B3-Motion"; break }
+_bind _Palette <ButtonRelease-3>  { ::ms::Scan_Or_Paste [_winfo parent %W] %x "ButtonRelease-3"; break }
+
+# Contextual menu
+_bind _Palette <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+
+# ClearCopy/Cut/Paste
+_bind _Palette <<Clear>> { ::ms::Clear [winfo parent %W]; break }
+_bind _Palette <<Copy>>  { ::ms::Copy  [winfo parent %W]; break }
+_bind _Palette <<Cut>>   { ::ms::Cut   [winfo parent %W]; break }
+_bind _Palette <<Paste>> { ::ms::Paste [winfo parent %W] CLIPBOARD; break }
+
+# Cursor management.
+_bind _Palette <Motion> { ::ms::Set_Cursor [_winfo parent %W] %x %y; break }
+
+# Enter/Leave
+_bind _Palette <Enter> { ::ms::palette::Pathname_Cmd [_winfo parent %W] state  hover; break }
+_bind _Palette <Leave> { ::ms::palette::Pathname_Cmd [_winfo parent %W] state !hover; break }
+
+# FocusIn/FocusOut
+_bind _Palette <FocusIn>  { ::ms::palette::FocusIn  [_winfo parent %W]; break }
+_bind _Palette <FocusOut> { ::ms::palette::FocusOut [_winfo parent %W]; break }
+
+# Enable only the keypress bindings that are needed and disable everything else.
+_bind _Palette <KeyPress> { ::ms::palette::KeyPress [_winfo parent %W] %A; break }
+
+# Re-enable some keys.
+_bind _Palette <KeyPress-space>       { ::ttk::entry::Insert [_winfo parent %W] " "; break }
+_bind _Palette <KeyPress-Caps_Lock>   { # Enable binding }
+_bind _Palette <KeyPress-KP_Subtract> { ::ttk::entry::Insert [_winfo parent %W] "-"; break }
+
+# Insert cursor movements.
+_bind _Palette <<LineEnd>>   { ::ttk::entry::Move  [_winfo parent %W] end; break }
+_bind _Palette <<LineStart>> { ::ttk::entry::Move  [_winfo parent %W] home; break }
+_bind _Palette <<NextChar>>  { ::ttk::entry::Move  [_winfo parent %W] nextchar; break }
+_bind _Palette <<NextLine>>  { ::ms::palette::Post [_winfo parent %W]; break }
+_bind _Palette <<NextWord>>  { ::ttk::entry::Move  [_winfo parent %W] nextword; break }
+_bind _Palette <<PrevChar>>  { ::ttk::entry::Move  [_winfo parent %W] prevchar; break }
+_bind _Palette <<PrevWord>>  { ::ttk::entry::Move  [_winfo parent %W] prevword; break }
+
+_bind _Palette <<SelectLineEnd>>   { ::ttk::entry::Extend [_winfo parent %W] end; break }
+_bind _Palette <<SelectLineStart>> { ::ttk::entry::Extend [_winfo parent %W] home; break }
+_bind _Palette <<SelectNextChar>>  { ::ttk::entry::Extend [_winfo parent %W] nextchar; break }
+_bind _Palette <<SelectNextWord>>  { ::ttk::entry::Extend [_winfo parent %W] selectnextword; break }
+_bind _Palette <<SelectPrevChar>>  { ::ttk::entry::Extend [_winfo parent %W] prevchar; break }
+_bind _Palette <<SelectPrevWord>>  { ::ttk::entry::Extend [_winfo parent %W] prevword; break }
+
+_bind _Palette <<SelectAll>>  { [_winfo parent %W] selection range 0 end; break }
+_bind _Palette <<SelectNone>> { [_winfo parent %W] selection clear; break }
+
+# Backspace/Delete keys
+_bind _Palette <KeyPress-BackSpace> { ::ttk::entry::Backspace [_winfo parent %W]; break }
+_bind _Palette <KeyPress-Delete>    { ::ttk::entry::Delete    [_winfo parent %W]; break }
+_bind _Palette <KeyPress-KP_Delete> { ::ttk::entry::Delete    [_winfo parent %W]; break }
+
+# Escape
+_bind _Palette <KeyPress-Escape> { ::ms::Escape [_winfo parent %W]; break }
+
+# F keys
+_bind _Palette <Fn-KeyPress> { # Enable binding }
+
+# Return
+_bind _Palette <KeyPress-Return>   { ::ms::palette::Return [_winfo parent %W]; break }
+_bind _Palette <KeyPress-KP_Enter> { ::ms::palette::Return [_winfo parent %W]; break }
+
+# Tab/Shift-Tab keys
+_bind _Palette <KeyPress-Tab> { # Enable binding }
+switch -- [_tk windowingsystem] {
+    x11 {
+        _bind _Palette <KeyPress-ISO_Left_Tab> { # Enable binding }
+
+        # This seems to be correct on *some* HP systems.
+        catch { _bind _Palette <KeyPress-hpBackTab> { # Enable binding } }
+    }
+    aqua  { _bind _Palette <KeyPress-ISO_Left_Tab> { # Enable binding } }
+    win32 { _bind _Palette <Shift-KeyPress-Tab>    { # Enable binding } }
+}
+
+# Enabling window traversal navigation.
+_bind _Palette <<PageLeft>>  { # Enable binding }
+_bind _Palette <<PageRight>> { # Enable binding }
+_bind _Palette <<PageUp>>    { # Enable binding }
+_bind _Palette <<PageDown>>  { # Enable binding }
+
+# Allowing some modifiers combination.
+_bind _Palette <Alt-KeyPress>           { # Enable binding }
+_bind _Palette <Alt-Shift-KeyPress>     { # Enable binding }
+_bind _Palette <Control-KeyPress>       { # Enable binding }
+_bind _Palette <Control-Alt-KeyPress>   { # Enable binding }
+_bind _Palette <Control-Shift-KeyPress> { # Enable binding }
+_bind _Palette <Meta-KeyPress>          { # Enable binding }
+_bind _Palette <Meta-Shift-KeyPress>    { # Enable binding }
+
+# Note: At this point we have every keypress disabled except the ones allowed and the ones that were re-enabled.
+
+# Mousewheel and Touchpad
+
+# If the widget is in its **normal** or **readonly** state and the items list is not empty, scroll the items
+# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable parent
+# with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the
+# mousewheel direction). If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Palette <MouseWheel> [list ::ms::palette::MouseWheel [_winfo parent %W] %D]
+
+# If the widget is in its **normal** state and has the focus, move the insert cursor by one character
+# towards the left or the right (depending on the direction of the mousewheel event), otherwise try to
+# find the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
+# by one unit left or right (again, depending on the mousewheel direction).
+# If none of the widget's parents meets the required condition, nothing will happen.
+_bind _Palette <Shift-MouseWheel> [list ::ms::palette::Shift_MouseWheel [_winfo parent %W] %D]
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Palette <Control-MouseWheel> [list ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages]
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Palette <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo parent %W] %D pages]
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal and vertical.
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - View the '_Palette' **Mousewheel** event.
+#   2 - View the '_Palette' **Shift-Mousewheel** event.
+_bind _Palette <TouchpadScroll> [list ::ms::palette::Touchpad [_winfo parent %W] %# %D]
+
+# This binding movement will happen on two different planes, horizontal and vertical.
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Palette <Control-TouchpadScroll> [list ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages]
+
 
 # Create the mustang **palette** package.
 namespace eval ::ms::palette {
@@ -2475,191 +2685,17 @@ proc ::ms::palette::Command { window { args "" } } {
             ##                  ##
             ######################
 
-            # Set the new bindtags for the widget.
+            # Set the new bindtags for the hull object.
+            _bindtags $w [list $w _Hull_Palette TFrame $::ms::addr($w,toplevel) all]
+
+            # Set the new bindtags for the preview object.
+            _bindtags $w.preview [list $w.preview _Preview_Palette TFrame $::ms::addr($w,toplevel) all]
+
+            # Set the new bindtags for the combobox object.
             switch -- $::ms::current($w,class) {
-                TPalette { _bindtags $w [list $w _Palette TPalette $::ms::addr($w,toplevel) all] }
-                default  { _bindtags $w [list $w $::ms::current($w,class) _Palette TPalette $::ms::addr($w,toplevel) all] }
+                TPalette { _bindtags $w.combobox [list $w.combobox _Palette TPalette $::ms::addr($w,toplevel) all] }
+                default  { _bindtags $w.combobox [list $w.combobox $::ms::current($w,class) _Palette TPalette $::ms::addr($w,toplevel) all] }
             }
-
-            # Buttonpress-1
-            _bind $w.combobox <ButtonPress-1>        { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "" ; break }
-            _bind $w.combobox <Shift-ButtonPress-1>  { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "s"; break }
-            _bind $w.combobox <Double-ButtonPress-1> { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "2"; break }
-            _bind $w.combobox <Triple-ButtonPress-1> { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "3"; break }
-            _bind $w.combobox <B1-Motion>            { ::ms::Drag %W %x %y; break }
-
-            _bind $w.combobox <Button-2>         { ::ms::Scan_Or_Paste %W %x "Button-2"; break }
-            _bind $w.combobox <B2-Motion>        { ::ms::Scan_Or_Paste %W %x "B2-Motion"; break }
-            _bind $w.combobox <ButtonRelease-2>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-2"; break }
-
-            _bind $w.combobox <Button-3>         { ::ms::Scan_Or_Paste %W %x "Button-3"; break }
-            _bind $w.combobox <B3-Motion>        { ::ms::Scan_Or_Paste %W %x "B3-Motion"; break }
-            _bind $w.combobox <ButtonRelease-3>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-3"; break }
-
-            # Contextual menu
-            _bind $w.combobox <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
-            _bind $w.preview  <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
-
-            # ClearCopy/Cut/Paste
-            _bind $w.combobox <<Clear>> { ::ms::Clear [winfo parent %W]; break }
-            _bind $w.combobox <<Copy>>  { ::ms::Copy  [winfo parent %W]; break }
-            _bind $w.combobox <<Cut>>   { ::ms::Cut   [winfo parent %W]; break }
-            _bind $w.combobox <<Paste>> { ::ms::Paste [winfo parent %W] CLIPBOARD; break }
-
-            # Cursor management.
-            _bind $w.combobox <Motion> { ::ms::Set_Cursor %W %x %y; break }
-
-            # Enter/Leave
-            _bind $w.combobox <Enter> { ::ms::palette::Pathname_Cmd [_winfo parent %W] state  hover; break }
-            _bind $w.combobox <Leave> { ::ms::palette::Pathname_Cmd [_winfo parent %W] state !hover; break }
-
-            # FocusIn/FocusOut
-            _bind $w.combobox <FocusIn>  { ::ms::palette::FocusIn  [_winfo parent %W]; break }
-            _bind $w.combobox <FocusOut> { ::ms::palette::FocusOut [_winfo parent %W]; break }
-
-            # Enable only the keypress bindings that are needed and disable everything else.
-            _bind $w.combobox <KeyPress> { ::ms::palette::KeyPress %W %A; break }
-
-            # Re-enable some keys.
-            _bind $w.combobox <KeyPress-space>       { ::ttk::entry::Insert %W " "; break }
-            _bind $w.combobox <KeyPress-Caps_Lock>   { # Enable binding }
-            _bind $w.combobox <KeyPress-KP_Subtract> { ::ttk::entry::Insert %W "-"; break }
-
-            # Insert cursor movements.
-            _bind $w.combobox <<LineEnd>>   { ::ttk::entry::Move %W end; break }
-            _bind $w.combobox <<LineStart>> { ::ttk::entry::Move %W home; break }
-            _bind $w.combobox <<NextChar>>  { ::ttk::entry::Move %W nextchar; break }
-            _bind $w.combobox <<NextLine>>  { ::ms::palette::Post [_winfo parent %W]; break }
-            _bind $w.combobox <<NextWord>>  { ::ttk::entry::Move %W nextword; break }
-            _bind $w.combobox <<PrevChar>>  { ::ttk::entry::Move %W prevchar; break }
-            _bind $w.combobox <<PrevWord>>  { ::ttk::entry::Move %W prevword; break }
-
-            _bind $w.combobox <<SelectLineEnd>>   { ::ttk::entry::Extend %W end; break }
-            _bind $w.combobox <<SelectLineStart>> { ::ttk::entry::Extend %W home; break }
-            _bind $w.combobox <<SelectNextChar>>  { ::ttk::entry::Extend %W nextchar; break }
-            _bind $w.combobox <<SelectNextWord>>  { ::ttk::entry::Extend %W selectnextword; break }
-            _bind $w.combobox <<SelectPrevChar>>  { ::ttk::entry::Extend %W prevchar; break }
-            _bind $w.combobox <<SelectPrevWord>>  { ::ttk::entry::Extend %W prevword; break }
-
-            _bind $w.combobox <<SelectAll>>  { %W selection range 0 end; break }
-            _bind $w.combobox <<SelectNone>> { %W selection clear; break }
-
-            # Backspace/Delete keys
-            _bind $w.combobox <KeyPress-BackSpace> { ::ttk::entry::Backspace %W; break }
-            _bind $w.combobox <KeyPress-Delete>    { ::ttk::entry::Delete %W; break }
-            _bind $w.combobox <KeyPress-KP_Delete> { ::ttk::entry::Delete %W; break }
-
-            # Escape
-            _bind $w.combobox <KeyPress-Escape> { ::ms::Escape %W; break }
-
-            # F keys
-            _bind $w.combobox <Fn-KeyPress> { # Enable binding }
-
-            # Return
-            _bind $w.combobox <KeyPress-Return>   { ::ms::palette::Return [_winfo parent %W]; break }
-            _bind $w.combobox <KeyPress-KP_Enter> { ::ms::palette::Return [_winfo parent %W]; break }
-
-            # Tab/Shift-Tab keys
-            _bind $w.combobox <KeyPress-Tab> { # Enable binding }
-            switch -- [_tk windowingsystem] {
-                x11 {
-                    _bind $w.combobox <KeyPress-ISO_Left_Tab> { # Enable binding }
-
-                    # This seems to be correct on *some* HP systems.
-                    catch { _bind $w.combobox <KeyPress-hpBackTab> { # Enable binding } }
-                }
-                aqua  { _bind $w.combobox <KeyPress-ISO_Left_Tab> { # Enable binding } }
-                win32 { _bind $w.combobox <Shift-KeyPress-Tab>    { # Enable binding } }
-            }
-
-            # Enabling window traversal navigation.
-            _bind $w.combobox <<PageLeft>>  { # Enable binding }
-            _bind $w.combobox <<PageRight>> { # Enable binding }
-            _bind $w.combobox <<PageUp>>    { # Enable binding }
-            _bind $w.combobox <<PageDown>>  { # Enable binding }
-
-            # Allowing some modifiers combination.
-            _bind $w.combobox <Alt-KeyPress>           { # Enable binding }
-            _bind $w.combobox <Alt-Shift-KeyPress>     { # Enable binding }
-            _bind $w.combobox <Control-KeyPress>       { # Enable binding }
-            _bind $w.combobox <Control-Alt-KeyPress>   { # Enable binding }
-            _bind $w.combobox <Control-Shift-KeyPress> { # Enable binding }
-            _bind $w.combobox <Meta-KeyPress>          { # Enable binding }
-            _bind $w.combobox <Meta-Shift-KeyPress>    { # Enable binding }
-
-            # Note: At this point we have every keypress disabled except the ones allowed and the ones that were re-enabled.
-
-            # Mousewheel and Touchpad
-
-            # If the widget is in its **normal** or **readonly** state and the items list is not empty, scroll the items
-            # list without displaying the popdown window, otherwise try to find the innermost widget's scrollable parent
-            # with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the
-            # mousewheel direction). If none of the widget's parents meets the required condition, nothing will happen.
-            _bind $w.combobox <MouseWheel> [list ::ms::palette::MouseWheel $w %D]
-
-            # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
-            # If none of the widget's parents meets the required condition, don't do anything.
-            _bind $w.preview <MouseWheel> [list ::ms::Scroll_Parent_Y $w %D units]
-
-            # If the widget is in its **normal** state and has the focus, move the insert cursor by one character
-            # towards the left or the right (depending on the direction of the mousewheel event), otherwise try to
-            # find the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
-            # by one unit left or right (again, depending on the mousewheel direction).
-            # If none of the widget's parents meets the required condition, nothing will happen.
-            _bind $w.combobox <Shift-MouseWheel> [list ::ms::palette::Shift_MouseWheel $w %D]
-
-            # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
-            # If none of the widget's parents meets the required condition, don't do anything.
-            _bind $w.preview <Shift-MouseWheel> [list ::ms::Scroll_Parent_X $w %D units]
-
-            # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one page up or down (depending on the mousewheel direction).
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.combobox <Control-MouseWheel> [list ::ms::Scroll_Parent_Y $w %D pages]
-            _bind $w.preview  <Control-MouseWheel> [list ::ms::Scroll_Parent_Y $w %D pages]
-
-            # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one page left or right (depending on the mousewheel direction).
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.combobox <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X $w %D pages]
-            _bind $w.preview  <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X $w %D pages]
-
-            # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
-            #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
-
-            # This binding movement will happen on two different planes, horizontal and vertical.
-            # These two planes may involve different widgets depending on the active scrollbars on them and on the
-            # touchpad direction.
-            #   1 - View the '$w.combobox' **Mousewheel** event.
-            #   2 - View the '$w.combobox' **Shift-Mousewheel** event.
-            _bind $w.combobox <TouchpadScroll> [list ::ms::palette::Touchpad $w %# %D]
-
-            # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-            # These two planes may involve different widgets depending on the active scrollbars on them and on the
-            # touchpad direction.
-            #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            #       and move that scrollbar by one page left or right (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-            #
-            #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            #       and move that scrollbar by one page up or down (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-            _bind $w.preview <TouchpadScroll> [list ::ms::palette::Touchpad $w %# %D]
-
-            # This binding movement will happen on two different planes, horizontal and vertical.
-            # These two planes may involve different widgets depending on the active scrollbars on them and on the
-            # touchpad direction.
-            #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            #       and move that scrollbar by one page left or right (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-            #
-            #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            #       and move that scrollbar by one page up or down (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-            _bind $w.combobox <Control-TouchpadScroll> [list ::ms::Touchpad_Parent $w %# %D pages]
-            _bind $w.preview  <Control-TouchpadScroll> [list ::ms::Touchpad_Parent $w %# %D pages]
 
             #####################
             ##                 ##
