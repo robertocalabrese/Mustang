@@ -5677,7 +5677,7 @@ proc ::ms::palette::Validate_String { w } {
     }
 
     # Set the widget dynamic state to '!invalid'.
-    ::ms::palette::Pathname_Cmd $w state !invalid
+    ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
     return [lindex $::ms::data($w,colornames) $index]
 }
