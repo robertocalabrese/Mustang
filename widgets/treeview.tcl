@@ -2992,6 +2992,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                             } elseif { $widget eq "$w.y" } {
                                 return "Treeview.y"
                             } else {
+                                # Go deeper...
                                 try {
                                     {*}$address identify region $x $y
                                 } on error { errortext errorcode } {
@@ -3009,6 +3010,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         default {
                             # Execute the command.
                             if { $widget eq "$w.treeview" } {
+                                # Go deeper...
                                 try {
                                     {*}$address identify $subcommand $x $y
                                 } on error { errortext errorcode } {
