@@ -3814,24 +3814,25 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                 enabled { chan puts stdout "'insert' is a deprecated mustang palette command. Use 'set' instead." }
             }
 
-            # Check the widget state.
+            # Check the widget's state.
             switch -- $::ms::current($w,state) {
-                normal {
-                    # Check the number of arguments provided.
-                    switch -- [llength $args] {
-                        2   {
-                            set index  [lindex $args 0]
-                            set string [lindex $args 1]
+                disabled { return "" }
+            }
 
-                            try {
-                                interp invokehidden {} $w.combobox insert $index $string
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            }
-                        }
-                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+            # Check the number of arguments provided.
+            switch -- [llength $args] {
+                2   {
+                    set index  [lindex $args 0]
+                    set string [lindex $args 1]
+
+                    # Execute the command.
+                    try {
+                        $w.combobox insert $index $string
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
                     }
                 }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
             return ""
