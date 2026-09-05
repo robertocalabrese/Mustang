@@ -1817,18 +1817,16 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             # *window* **next** *item*
             # *window* **parent** *item*
             # *window* **prev** *item*
-            # *window* **tag** *args* ...
-            #    *window* **tag** **add** *tag* *items*
-            #    *window* **tag** **bind** *tagName* ?*sequence*? ?*script*?
-            #    *window* **tag** **cell** *subcommand* ...
-            #       *window* **tag** **cell** **add** *tag* *cellList*
-            #       *window* **tag** **cell** **has** *tagName* ?*cell*?
-            #       *window* **tag** **cell** **remove** *tag* ?*cellList*?
-            #    *window* **tag** **configure** *tagName* ?*option*? ?*value*? ?*option value* ... *option value*?
-            #    *window* **tag** **delete** *tagName*
-            #    *window* **tag** **has** *tagName* ?*item*?
-            #    *window* **tag** **names**
-            #    *window* **tag** **remove** *tag* ?*items*?
+            # *window* **tag** **add** *tag* *items*
+            # *window* **tag** **bind** *tagName* ?*sequence*? ?*script*?
+            # *window* **tag** **cell** **add** *tag* *cellList*
+            # *window* **tag** **cell** **has** *tagName* ?*cell*?
+            # *window* **tag** **cell** **remove** *tag* ?*cellList*?
+            # *window* **tag** **configure** *tagName* ?*option*? ?*value*? ?*option value* ... *option value*?
+            # *window* **tag** **delete** *tagName*
+            # *window* **tag** **has** *tagName* ?*item*?
+            # *window* **tag** **names**
+            # *window* **tag** **remove** *tag* ?*items*?
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
