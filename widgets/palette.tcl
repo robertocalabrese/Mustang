@@ -3977,11 +3977,10 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
         xview {
             # Synopsis:
             #
-            # *window* **xview** *option* *args*
-            #    *window* **xview**
-            #    *window* **xview** *index*
-            #    *window* **xview** **moveto** *fraction*
-            #    *window* **xview** **scroll** *number* *what*
+            # *window* **xview**
+            # *window* **xview** *index*
+            # *window* **xview** **moveto** *fraction*
+            # *window* **xview** **scroll** *number* *what*
             switch -- [llength $args] {
                 0   { return [$w.combobox xview] }
                 1   -
