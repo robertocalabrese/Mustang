@@ -5342,7 +5342,7 @@ proc ::ms::palette::Unpost { w } {
     }
 
     # Change the widget dynamic state to '!pressed'.
-    ::ms::palette::Pathname_Cmd $w state !pressed
+    ::ms::palette::Pathname_Cmd $w state [list !pressed]
 
     # Unset the toplevel temporary variables.
     unset -nocomplain -- ::ms::temp(toplevel_Xnw) \
