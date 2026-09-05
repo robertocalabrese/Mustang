@@ -3742,7 +3742,10 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
             #
             # *window* **get**
             # *window* **validate**
-            return [$w.combobox $cmd]
+            switch -- [llength $args] {
+                0       { return [$w.combobox $cmd] }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
         }
         identify {
             # Synopsis:
