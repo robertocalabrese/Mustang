@@ -5150,11 +5150,11 @@ proc ::ms::palette::Post { w } {
 
         $w.popdown.f.lb configure -yscrollcommand [list $w.popdown.f.vsb set]
 
-        _bind $w.popdown.f.vsb <MouseWheel>         [list ::ms::combobox::Scrollbar_Mousewheel $w %D units]
-        _bind $w.popdown.f.vsb <Control-MouseWheel> [list ::ms::combobox::Scrollbar_Mousewheel $w %D pages]
+        _bind $w.popdown.f.vsb <MouseWheel>         [list ::ms::palette::Popdown_Scrollbar_Mousewheel $w %D units]
+        _bind $w.popdown.f.vsb <Control-MouseWheel> [list ::ms::palette::Popdown_Scrollbar_Mousewheel $w %D pages]
 
-        _bind $w.popdown.f.vsb <TouchpadScroll>         [list ::ms::combobox::Scrollbar_TouchpadScroll $w %# %D units]
-        _bind $w.popdown.f.vsb <Control-TouchpadScroll> [list ::ms::combobox::Scrollbar_TouchpadScroll $w %# %D pages]
+        _bind $w.popdown.f.vsb <TouchpadScroll>         [list ::ms::palette::Popdown_Scrollbar_TouchpadScroll $w %# %D units]
+        _bind $w.popdown.f.vsb <Control-TouchpadScroll> [list ::ms::palette::Popdown_Scrollbar_TouchpadScroll $w %# %D pages]
 
         _grid $w.popdown.f.vsb -column 1 \
                                  -padx [list 0  3p] \
@@ -6522,6 +6522,121 @@ proc ::ms::palette::Popdown_PageUp { w } {
     }
 
     return -code break
+}
+
+
+## Popdown_Scrollbar_MouseWheel
+#
+# Scroll the popdown scrollbar vertically by units (**MouseWheel**) or by pages (**Control-MouseWheel**).
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#          *Amount* is normally delivered by the **MouseWheel**/**Control-MouseWheel**
+#          event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#          If the value provided as *amount* is not an integer or a float,
+#          defaults to **+120.0**.
+#
+#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#
+#          If not provided, defaults to **units**.
+#
+# Note: 1.0/120.0 = 0.008333333333333333
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Scrollbar_MouseWheel { w amount what } {
+    # Check that 'amount' is an integer or a float.
+    switch -- [string is double -strict $amount] {
+        0   { set amount 120.0 }
+        1   {
+            if { $amount == 0 } {
+                set amount 120
+            } else {
+                set amount [expr { $amount*1.0 }]
+            }
+        }
+    }
+
+    # Check the scrollmode.
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1.0*$amount }] }
+    }
+
+    # If possible, scroll the popdown listbox vertically.
+    try {
+        $w.popdown.f.lb yview scroll [expr { -$amount*0.008333333333333333 }] $what
+    } on error {} {
+        # The popdown listbox cannot scroll vertically.
+    }
+
+    return ""
+}
+
+## Popdown_Scrollbar_Touchpad
+#
+# Scroll the popdown scrollbar both horizontally and vertically by units (**TouchpadScroll**) or by pages (**Control-TouchpadScroll**).
+#
+# Where:
+#
+# w         Should be the scrollable widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#           *Amount* is normally delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
+#           event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
+#
+#           If the value provided as *amount* is not an integer or a float,
+#           defaults to **+120.0**.
+#
+#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#
+#           If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Scrollbar_Touchpad { w counter amount { what units } } {
+    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
+    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
+
+    # **TouchpadScroll** events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This allow the binding script to respond to every 5th **TouchpadScroll** event
+    # by testing is the 'counter' is divisible by 5.
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Check if 'what' is 'units' or 'pages'.
+    switch -- $what {
+        pages {}
+        units {
+            # Adjust 'delta_x' value, or the movement will be too slow.
+            set delta_x [expr { $delta_x*30 }]
+        }
+        default { return "" }
+    }
+
+    # If there is a movement along the X axis, launch '::ms::palette::MouseWheel'.
+    if { $delta_x != 0 } {
+        ::ms::palette::MouseWheel $w $delta_x
+    }
 }
 
 ## Popdown_Select
