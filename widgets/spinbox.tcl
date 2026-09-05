@@ -5036,10 +5036,36 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
                 normal {
                     # Check the press type.
                     switch -- $mode {
-                        s       { ::ttk::entry::Shift-Press $w $x }
-                        2       { ::ttk::entry::Select      $w $x word }
-                        3       { ::ttk::entry::Select      $w $x line }
-                        default { ::ttk::entry::Press       $w $x }
+                        s   {
+                            set ::ttk::entry::State(x)          $x
+                            set ::ttk::entry::State(selectMode) char
+                            set ::ttk::entry::State(anchor)     [::ttk::entry::ExtendTo $w @$x]
+                        }
+                        2   {
+                            set cursor_index [::ttk::entry::ClosestGap $w $x]
+
+                            ::ttk::entry::WordSelect $w $cursor_index $cursor_index
+
+                            set ::ttk::entry::State(anchor)     $cursor_index
+                            set ::ttk::entry::State(selectMode) $mode
+                        }
+                        3   {
+                            set cursor_index [::ttk::entry::ClosestGap $w $x]
+
+                            ::ttk::entry::LineSelect $w $cursor_index $cursor_index
+
+                            set ::ttk::entry::State(anchor)     $cursor_index
+                            set ::ttk::entry::State(selectMode) $mode
+                        }
+                        default {
+                            interp invokehidden $w icursor   [::ttk::entry::ClosestGap $w $x]
+                            interp invokehidden $w selection clear
+
+                            # Set up for future drag, double-click, triple-click or quadruple-click.
+                            set ::ttk::entry::State(x)          $x
+                            set ::ttk::entry::State(selectMode) char
+                            set ::ttk::entry::State(anchor)     [interp invokehidden $w index insert]
+                        }
                     }
                 }
             }
