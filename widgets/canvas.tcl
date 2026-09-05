@@ -4624,27 +4624,19 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
 
+                    # Check if the widget is scrollable or not.
                     switch -- $::ms::current($w,scrollable) {
-                        false {
-                            # Execute the command.
-                            try {
-                                interp invokehidden {} $w $cmd $type $coords {*}$new_args
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                return $result
-                            }
-                        }
-                        true {
-                            # Execute the command.
-                            try {
-                                $w.canvas $cmd $type $coords {*}$new_args
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                return $result
-                            }
-                        }
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.canvas] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd $type $coords {*}$new_args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
                     }
                 }
             }
