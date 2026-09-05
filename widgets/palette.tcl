@@ -4513,7 +4513,9 @@ proc ::ms::palette::Destroy { w } {
 
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
-                         ::ms::addr($w,short);
+                         ::ms::addr($w,short) \
+                         ::ms::addr($w.combobox,short) \
+                         ::ms::addr($w.preview,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
                          ::ms::addr($w,structure) \
