@@ -6580,8 +6580,8 @@ proc ::ms::palette::Popdown_Tab { popdown dir } {
 
     # Check if there is another widget to focus to.
     switch -- $dir {
-        next     { set newFocus [tk_focusNext $w] }
-        previous { set newFocus [tk_focusPrev $w] }
+        next     { set newFocus [tk_focusNext $w.combobox] }
+        previous { set newFocus [tk_focusPrev $w.combobox] }
     }
 
     # Chek the next/previous focussable widget found, if any.
