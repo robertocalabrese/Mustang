@@ -2740,15 +2740,13 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             # *window* **get**
             # *window* **icursor** *index*
             # *window* **index** *index*
-            # *window* **selection** *option* *arg*
-            #    *window* **selection** **clear**
-            #    *window* **selection** **present**
-            #    *window* **selection** **range** *start* *end*
+            # *window* **selection** **clear**
+            # *window* **selection** **present**
+            # *window* **selection** **range** *start* *end*
             # *window* **validate**
-            # *window* **xview** *option* *args*
-            #    *window* **xview**
-            #    *window* **xview** **moveto** *fraction*
-            #    *window* **xview** **scroll** *number* *what*
+            # *window* **xview**
+            # *window* **xview** **moveto** *fraction*
+            # *window* **xview** **scroll** *number* *what*
             try {
                 interp invokehidden {} $w $cmd {*}$args
             } on error { errortext errorcode } {
