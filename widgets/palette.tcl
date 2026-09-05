@@ -4639,7 +4639,7 @@ proc ::ms::palette::Destroy { w } {
 # It doesn't return anything.
 proc ::ms::palette::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
-    ::ms::palette::Pathname_Cmd $w state focus
+    ::ms::palette::Pathname_Cmd $w state [list focus]
 
     # Check the widget stateis in its normal state, s
     switch -- $::ms::current($w,state) {
