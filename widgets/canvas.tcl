@@ -4477,7 +4477,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **create** *type* *x* *y* ?*x* *y* ... *x* *y*? ?*option* *value* ... *option* *value*?
             switch -- [llength $args] {
                 0       -
-                1       { ::ms::Error "Invalid number of arguments." $caller_info }
+                1       -
+                2       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     set type   [lindex  $args 0]
                     set x      [lindex  $args 1]
