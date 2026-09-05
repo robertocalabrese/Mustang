@@ -5848,27 +5848,31 @@ proc ::ms::palette::MouseWheel { w amount } {
 proc ::ms::palette::Shift_MouseWheel { w amount } {
     switch -- $::ms::current($w,state) {
         normal {
-            if { [_focus -displayof $w] eq "$w.combobox" } {
-                # Get the current cursor position
-                set index [$w.combobox index insert]
+            # Check if the widget is on focus.
+            switch -- [$w.combobox instate [list focus]] {
+                1   {
+                    # Get the current cursor position
+                    set index [$w.combobox index insert]
 
-                # Move the cursor by one character to the left or to the right (depending
-                # on the mousewheel direction).
-                if { $amount > 0 } {
-                    $w.combobox icursor $index+1
-                } else {
-                    $w.combobox icursor $index-1
+                    # Move the cursor by one character to the left or to the right (depending
+                    # on the mousewheel direction).
+                    if { $amount > 0 } {
+                        $w.combobox icursor $index+1
+                    } else {
+                        $w.combobox icursor $index-1
+                    }
+
+                    # Make the index character visible.
+                    ::ttk::entry::See $w.combobox $index
+
+                    return ""
                 }
-
-                # Make the index character visible.
-                ::ttk::entry::See $w.combobox $index
             }
         }
-        default {
-            # Try to find a widget parent to scroll horizontally, if any.
-            ::ms::Scroll_Parent_X $w $amount units
-        }
     }
+
+    # Try to find a widget parent to scroll horizontally, if any.
+    ::ms::Scroll_Parent_X $w $amount units
 
     return ""
 }
