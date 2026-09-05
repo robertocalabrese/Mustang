@@ -5451,7 +5451,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
     switch -- $value {
         ""  {
             # Change the widget dynamic state to '!invalid'.
-            ::ms::palette::Pathname_Cmd $w state !invalid
+            ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
             # Hide the preview object.
             $w.preview configure          -background $::ms::current($w,shellbackground) \
@@ -5478,7 +5478,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
                         switch -- [string is alnum $char] {
                             0   {
                                 # Change the widget dynamic state to 'invalid'.
-                                ::ms::palette::Pathname_Cmd $w state invalid
+                                ::ms::palette::Pathname_Cmd $w state [list invalid]
 
                                 # Hide the preview object.
                                 $w.preview configure          -background $::ms::current($w,shellbackground) \
@@ -5533,7 +5533,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
     switch -- $longest {
         ""  {
             # Change the widget dynamic state to 'invalid'.
-            ::ms::palette::Pathname_Cmd $w state invalid
+            ::ms::palette::Pathname_Cmd $w state [list invalid]
 
             # Hide the preview object.
             set preview_color $::ms::current($w,shellbackground)
@@ -5552,7 +5552,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
             # Compare the longest common characters found in 'values' that contains consecutive characters of
             # 'value' with 'value' itself and change the widget dynamic invalid state accordingly.
             if { [string range $longest 0 $limit-1] eq $value } {
-                ::ms::palette::Pathname_Cmd $w state !invalid
+                ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
                 # Set the preview color and its bordercolor (black or white).
                 set preview_color [lindex $::ms::data($w,hexadecimals) $index]
@@ -5562,7 +5562,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
                     default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
                 }
             } else {
-                ::ms::palette::Pathname_Cmd $w state invalid
+                ::ms::palette::Pathname_Cmd $w state [list invalid]
 
                 # Hide the preview object.
                 set preview_color $::ms::current($w,shellbackground)
