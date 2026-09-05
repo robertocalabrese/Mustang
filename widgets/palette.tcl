@@ -2488,8 +2488,6 @@ proc ::ms::palette::Command { window { args "" } } {
             _bind $w.combobox <Triple-ButtonPress-1> { ::ms::palette::ButtonPress [_winfo parent %W] %x %y "3"; break }
             _bind $w.combobox <B1-Motion>            { ::ms::Drag %W %x %y; break }
 
-            _bind $w.preview  <ButtonPress-1>        { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-
             _bind $w.combobox <Button-2>         { ::ms::Scan_Or_Paste %W %x "Button-2"; break }
             _bind $w.combobox <B2-Motion>        { ::ms::Scan_Or_Paste %W %x "B2-Motion"; break }
             _bind $w.combobox <ButtonRelease-2>  { ::ms::Scan_Or_Paste %W %x "ButtonRelease-2"; break }
@@ -2520,21 +2518,7 @@ proc ::ms::palette::Command { window { args "" } } {
             _bind $w.combobox <FocusOut> { ::ms::palette::FocusOut [_winfo parent %W]; break }
 
             # Enable only the keypress bindings that are needed and disable everything else.
-            _bind $w.combobox <KeyPress> {
-                switch -- %A {
-                    Caps_Lock   -
-                    KP_Subtract {}
-                    default     {
-                        if { ![regexp "\[0-9a-zA-Z \-\]" %A] } {
-                            break
-                        }
-                    }
-                }
-
-                ::ttk::entry::Insert %W %A
-
-                break
-            }
+            _bind $w.combobox <KeyPress> { ::ms::palette::KeyPress %W %A; break }
 
             # Re-enable some keys.
             _bind $w.combobox <KeyPress-space>       { ::ttk::entry::Insert %W " "; break }
@@ -4744,6 +4728,37 @@ proc ::ms::palette::FocusOut { w } {
 
     # Cleaning.
     unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+
+    return ""
+}
+
+## KeyPress
+#
+# Manage the **Keypress** event on the widget.
+#
+# Where:
+#
+# w     Should be the widget real address involved.
+#
+# key   Should be the key pressed.
+#
+# It doesn't return anything.
+proc ::ms::palette::KeyPress { w key } {
+    # Check if 'key' is a special key.
+    switch -- $key {
+        Caps_Lock   -
+        KP_Subtract {}
+        default     {
+            # Check if 'key' is not valid
+            if { ![regexp "\[0-9a-zA-Z \-\]" $key] } {
+                # 😕 Do not insert the key.
+                return -code break
+            }
+        }
+    }
+
+    # 😀 Insert the key.
+    ::ttk::entry::Insert $w.combobox $key
 
     return ""
 }
