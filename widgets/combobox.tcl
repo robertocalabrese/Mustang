@@ -3926,6 +3926,17 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        get      -
+        validate {
+            # Synopsis:
+            #
+            # *window* **get**
+            # *window* **validate**
+            switch -- [llength $args] {
+                0       { return [interp invokehidden {} $w $cmd] }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         identify {
             # Synopsis:
             #
@@ -4017,17 +4028,6 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                         return ""
                     }
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-        }
-        get      -
-        validate {
-            # Synopsis:
-            #
-            # *window* **get**
-            # *window* **validate**
-            switch -- [llength $args] {
-                0       { return [interp invokehidden {} $w $cmd] }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
