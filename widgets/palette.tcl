@@ -4732,46 +4732,6 @@ proc ::ms::palette::FocusOut { w } {
     return ""
 }
 
-## Motion
-#
-# Manage the **Motion** event.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# X, Y   Should be the (x,y) mouse pointer absolute coordinates at the time of the event.
-#        These values should be provided by the **Motion** event.
-#
-# It doesn't return anything.
-proc ::ms::palette::Motion { w X Y } {
-    switch -- [info exists ::ms::temp(toplevel_height)] {
-        0   {
-            update idletasks
-
-            # Get the toplevel north-west (nw) root coordinates.
-            set ::ms::temp(toplevel,X,nw) [_winfo rootx $::ms::addr($w,toplevel)]
-            set ::ms::temp(toplevel,Y,nw) [_winfo rooty $::ms::addr($w,toplevel)]
-
-            # Get the toplevel dimensions.
-            set ::ms::temp(toplevel,height) [_winfo height $::ms::addr($w,toplevel)]
-            set ::ms::temp(toplevel,width)  [_winfo width  $::ms::addr($w,toplevel)]
-
-            # Get the toplevel south-east (se) root coordinates.
-            set ::ms::temp(toplevel,X,se) [expr { $::ms::temp(toplevel,X,nw)+$::ms::temp(toplevel,width) }]
-            set ::ms::temp(toplevel,Y,se) [expr { $::ms::temp(toplevel,Y,nw)+$::ms::temp(toplevel,height) }]
-        }
-    }
-
-    if { ($X <= $::ms::temp(toplevel,X,nw)) || ($X >= $::ms::temp(toplevel,X,se)) || ($Y <= $::ms::temp(toplevel,Y,nw)) || ($Y >= $::ms::temp(toplevel,Y,se)) } {
-        # The mouse cursor is outside the address.
-
-        set ::wait_for_user_response "Unpost"
-    }
-
-    return ""
-}
-
 ## Post
 #
 # Post the popdown window.
@@ -4988,7 +4948,7 @@ proc ::ms::palette::Post { w } {
     _bind $w.popdown <Unmap> { break }
 
     # Motion
-    _bind $w.popdown <Motion> [list ::ms::palette::Motion $w %X %Y]
+    _bind $w.popdown <Motion> [list ::ms::palette::Popdown_Motion $w %X %Y]
 
     # Scan
     _bind $w.popdown <<ScanMark>>    [list ::ms::Scan_Mark $w.popdown.f.lb %x %y]
@@ -6253,7 +6213,7 @@ proc ::ms::palette::Popdown_Home { w } {
 
 ## Popdown_Hover
 #
-# Manage the **Motion** event on the widget.
+# Manage the **Motion** event on the popdown listbox.
 #
 # Note: The following procedure is a modified version of the 'ttk::combobox::LBHover' procedure.
 #       All credits goes to the original author/s.
@@ -6288,6 +6248,46 @@ proc ::ms::palette::Popdown_Hover { w x y } {
                               -highlightcolor $bordercolor;
 
     return -code break
+}
+
+## Popdown_Motion
+#
+# Manage the **Motion** event on the widget popdown.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# X, Y   Should be the (x,y) mouse pointer absolute coordinates at the time of the event.
+#        These values should be provided by the **Motion** event.
+#
+# It doesn't return anything.
+proc ::ms::palette::Popdown_Motion { w X Y } {
+    switch -- [info exists ::ms::temp(toplevel_height)] {
+        0   {
+            update idletasks
+
+            # Get the toplevel north-west (nw) root coordinates.
+            set ::ms::temp(toplevel,X,nw) [_winfo rootx $::ms::addr($w,toplevel)]
+            set ::ms::temp(toplevel,Y,nw) [_winfo rooty $::ms::addr($w,toplevel)]
+
+            # Get the toplevel dimensions.
+            set ::ms::temp(toplevel,height) [_winfo height $::ms::addr($w,toplevel)]
+            set ::ms::temp(toplevel,width)  [_winfo width  $::ms::addr($w,toplevel)]
+
+            # Get the toplevel south-east (se) root coordinates.
+            set ::ms::temp(toplevel,X,se) [expr { $::ms::temp(toplevel,X,nw)+$::ms::temp(toplevel,width) }]
+            set ::ms::temp(toplevel,Y,se) [expr { $::ms::temp(toplevel,Y,nw)+$::ms::temp(toplevel,height) }]
+        }
+    }
+
+    if { ($X <= $::ms::temp(toplevel,X,nw)) || ($X >= $::ms::temp(toplevel,X,se)) || ($Y <= $::ms::temp(toplevel,Y,nw)) || ($Y >= $::ms::temp(toplevel,Y,se)) } {
+        # The mouse cursor is outside the address.
+
+        set ::wait_for_user_response "Unpost"
+    }
+
+    return ""
 }
 
 ## Popdown_MouseWheel
