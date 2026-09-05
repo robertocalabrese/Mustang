@@ -4960,6 +4960,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **xview**
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
+
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
                 false { set address [list interp invokehidden {} $w] }
@@ -5045,6 +5046,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **yview**
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
+
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
                 false { set address [list interp invokehidden {} $w] }
