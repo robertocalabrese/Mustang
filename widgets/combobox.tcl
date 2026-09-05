@@ -3908,10 +3908,9 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **delete** *first* ?*last*?
-            # *window* **selection** *option* *arg*
-            #    *window* **selection** **clear**
-            #    *window* **selection** **present**
-            #    *window* **selection** **range** *start* *end*
+            # *window* **selection** **clear**
+            # *window* **selection** **present**
+            # *window* **selection** **range** *start* *end*
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
