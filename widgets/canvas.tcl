@@ -3809,37 +3809,28 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **rchars** *tagOrId* *first* *last* *string*
             # *window* **rotate** *tagOrId* *xOrigin* *yOrigin* *angle*
             # *window* **scale** *tagOrId* *xOrigin* *yOrigin* *xScale* *yScale*
-            # *window* **scan** *option* *args*
-            #    *window* **scan** **mark** *x* *y*
-            #    *window* **scan** **dragto** *x* *y* ?*gain*?
-            # *window* **select** *option* ?*tagOrId* *arg*?
-            #    *window* **select** **adjust** *tagOrId* *index*
-            #    *window* **select** **clear**
-            #    *window* **select** **from** *tagOrId* *index*
-            #    *window* **select** **item**
-            #    *window* **select** **to** *tagOrId* *index*
+            # *window* **scan** **mark** *x* *y*
+            # *window* **scan** **dragto** *x* *y* ?*gain*?
+            # *window* **select** **adjust** *tagOrId* *index*
+            # *window* **select** **clear**
+            # *window* **select** **from** *tagOrId* *index*
+            # *window* **select** **item**
+            # *window* **select** **to** *tagOrId* *index*
             # *window* **type** *tagOrId*
+
+            # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
-                false {
-                    # Execute the command.
-                    try {
-                        interp invokehidden {} $w $cmd {*}$args
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                true {
-                    # Execute the command.
-                    try {
-                        $w.canvas $cmd {*}$args
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
-                }
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.canvas] }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address $cmd {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
             }
         }
         cget {
