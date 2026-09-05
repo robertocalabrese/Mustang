@@ -4481,13 +4481,17 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             }
         }
         create {
+            # Synopsis:
+            #
+            # *window* **create** *type* *x* *y* ?*x* *y* ... *x* *y*? ?*option* *value* ... *option* *value*?
             switch -- [llength $args] {
                 0       -
                 1       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     set type   [lindex  $args 0]
-                    set coords [lindex  $args 1]
-                    set args   [lremove $args 0 1]
+                    set x      [lindex  $args 1]
+                    set y      [lindex  $args 2]
+                    set args   [lremove $args 0 2]
 
                     # Check 'type'.
                     switch -- $type {
@@ -4504,6 +4508,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     }
 
                     # Check 'coords'.
+                    set coords [list $x $y]
                     switch -- [expr { [llength $coords]%2 }] {
                         0   {
                             foreach coord $coords {
@@ -4519,7 +4524,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     8   -
                                     9   {
                                         # The coordinate have no unit, its value is assumed to be in pixels.
-                                        if { ![string is double -strict $coord] || ( $coord < 0 ) } {
+                                        if { ![string is double -strict $coords] || ( $coords < 0 ) } {
                                             ::ms::Error "Invalid coordinate, '$coords'." $caller_info
                                         }
                                     }
@@ -4527,9 +4532,9 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                     c   -
                                     m   -
                                     p   {
-                                        set coord [string range $coord 0 end-1]
+                                        set coord [string range $coords 0 end-1]
 
-                                        if { ![string is double -strict $coord] || ( $coord < 0 ) } {
+                                        if { ![string is double -strict $coords] || ( $coords < 0 ) } {
                                             ::ms::Error "Invalid coordinate, '$coords'." $caller_info
                                         }
                                     }
