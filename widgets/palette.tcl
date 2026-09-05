@@ -4788,9 +4788,9 @@ proc ::ms::palette::Post { w } {
     # Note: This procedure have been highly influenced by many 'ttk::palette' procedures.
     #       All credits goes to the original author/s.
 
-    # Check if the popdown should not be displayed.
-    if { $::ms::current($w,state) eq "disabled" } {
-        return ""
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
     }
 
     # Safeguard.
@@ -4830,7 +4830,7 @@ proc ::ms::palette::Post { w } {
     set selectforeground  $::ms::styleopt($::ms::theme,Popdown,selectforeground)
 
     # Change the widget dynamic state to 'pressed'.
-    ::ms::palette::Pathname_Cmd $w state pressed
+    ::ms::palette::Pathname_Cmd $w state [list pressed]
 
     ######################
     ##                  ##
