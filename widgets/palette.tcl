@@ -5260,20 +5260,20 @@ proc ::ms::palette::Return { w } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
-        readonly { set value [interp invokehidden {} $w get] }
+        readonly { set value [$w.combobox get] }
         normal {
             # Validate the widget string.
             set value [::ms::palette::Validate_String $w]
 
             # Clear the widget field, insert the validated value and put the cursor at the end.
-            $w.combobox delete 0 end
-            $w.combobox set $value
+            $w.combobox delete  0 end
+            $w.combobox set     $value
             $w.combobox icursor end
+
+            # Remove the widget selection, if any.
+            $w.combobox selection clear
         }
     }
-
-    # Remove the widget selection, if any.
-    $w.combobox selection clear
 
     # Check the widget value.
     if { $value ne $::ms::data($w,current_value) } {
