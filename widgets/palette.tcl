@@ -3858,6 +3858,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     try {
                         $w.combobox instate $statespec
                     } on error { errortext errorcode } {
@@ -3883,6 +3884,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     try {
                         $w.combobox instate $statespec $script
                     } on error { errortext errorcode } {
