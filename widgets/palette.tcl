@@ -4372,80 +4372,51 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
 proc ::ms::palette::ButtonPress { w x y mode } {
     # Check the widget state.
     switch -- $::ms::current($w,state) {
-        disabled {
-            # Check the parent of the widget address provided, if any.
-            set parent [_winfo parent $w]
-            switch -- $parent {
-                ""      {}
-                default {
-                    # Propagate the action to the widget's parents.
-
-                    # ATTENTION!
-                    #
-                    # This is a recursive loop. The only way to exit is:
-                    #   - If there is no more parent to check for.
-                    #   - If 'parent' is a scrollable megawidget.
-                    set i 1
-                    while { $i > 0 } {
-                        # Check if 'parent' belongs to a scrollable megawidget.
-                        if { $parent in $::ms::addr(megawidgets,scrollable) } {
-                            _focus -force $parent
-                            return ""
-                        }
-
-                        # Check the next parent, if any.
-                        set parent [_winfo parent $parent]
-                        switch -- $parent {
-                            ""  {
-                                # There are no more parents to check for.
-                                # Stop the recursive iteration.
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-
-            # Check if the widget's toplevel was created by mustang.
-            switch -- [info exists ::ms::data($::ms::addr($w,toplevel),classtype)] {
-                0   {
-                    # If possible, focus the widget's toplevel.
-                    try {
-                        _focus -force [_winfo toplevel $w]
-                    } on error {} {
-                        # Do nothing
-                    }
-                }
-                1   {
-                    # Check the widget's toplevel takefocus.
-                    switch -- $::ms::current($::ms::addr($w,toplevel),takefocus) {
-                        0   {
-                            # Momentarily set the toplevel takefocus to '1'.
-                            # We will re-establish its original takefocus value later, during its 'FocusOut' event.
-                            interp invokehidden {} $::ms::addr($w,toplevel) configure -takefocus 1
-                        }
-                    }
-
-                    # Focus the widget's toplevel.
-                    _focus -force $::ms::addr($w,toplevel)
-                }
-            }
-        }
+        disabled { return "" }
         readonly { ::ms::palette::Post $w }
         normal   {
             # Check the cursor location.
             switch -- [$w.combobox identify element $x $y] {
                 "textarea" {
-                    # Focus the palette if its not already focussed.
-                    $w.combobox instate [list !focus] {
-                        _focus -force $w.combobox
+                    # Check if the widget is focussable or not.
+                    switch -- [::ms::Is_Focussable $w.combobox] {
+                        0   { return "" }
+                    }
+
+                    # Check if the widget is already focussed.
+                    switch -- [$w.combobox instate [list !focus]] {
+                        1   {
+                            # Focus the widget.
+                            _focus -force $w.combobox
+
+                            # Change the widget dynamic state to 'focus'.
+                            $w.combobox state [list focus]
+                        }
                     }
 
                     # Check the press type.
                     switch -- $mode {
-                        s       { ::ttk::entry::Shift-Press $w.combobox $x }
-                        2       { ::ttk::entry::Select $w.combobox $x word }
-                        3       { ::ttk::entry::Select $w.combobox $x line }
+                        s   {
+                            set ::ttk::entry::State(x)          $x
+                            set ::ttk::entry::State(selectMode) char
+                            set ::ttk::entry::State(anchor)     [::ttk::entry::ExtendTo $w.combobox @$x]
+                        }
+                        2   {
+                            set cursor_index [::ttk::entry::ClosestGap $w.combobox $x]
+
+                            ::ttk::entry::WordSelect $w.combobox $cursor_index $cursor_index
+
+                            set ::ttk::entry::State(anchor)     $cursor_index
+                            set ::ttk::entry::State(selectMode) $mode
+                        }
+                        3   {
+                            set cursor_index [::ttk::entry::ClosestGap $w.combobox $x]
+
+                            ::ttk::entry::LineSelect $w.combobox $cursor_index $cursor_index
+
+                            set ::ttk::entry::State(anchor)     $cursor_index
+                            set ::ttk::entry::State(selectMode) $mode
+                        }
                         default {
                             $w.combobox icursor [::ttk::entry::ClosestGap $w.combobox $x]
                             $w.combobox selection clear
