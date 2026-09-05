@@ -4662,44 +4662,35 @@ proc ::ms::palette::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::palette::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically),
-            # remove the selection or validate the data.
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
-    }
-
-    # If the popdown window of the palette is currently displayed do not remove the selection
-    # or validate the data.
+    # If the popdown window of the palette is currently displayed do not loose the focus (graphically),
+    # remove the selection or validate the data.
     switch -- [_winfo exists $w.popdown] {
         1   { return "" }
     }
 
-    # Change the widget dynamic state to '!focus'.
-    ::ms::palette::Pathname_Cmd $w state !focus
+    # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
+        0   { $w.combobox state [list !focus] }
+        1   { $w.combobox state [list  focus] }
+    }
 
     # Check the widget state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
-        readonly { set value [interp invokehidden {} $w get] }
+        readonly { set value [$w.combobox get] }
         normal {
             # Validate the widget string.
             set value [::ms::palette::Validate_String $w]
 
             # Clear the widget field, insert the validated value and put the cursor at the end.
-            $w.combobox delete 0 end
-            $w.combobox set $value
+            $w.combobox delete  0 end
+            $w.combobox set     $value
             $w.combobox icursor end
+
+            # Remove the widget selection, if any.
+            $w.combobox selection clear
         }
     }
-
-    # Remove the widget selection, if any.
-    $w.combobox selection clear
 
     # Check the widget value.
     if { $value ne $::ms::data($w,current_value) } {
