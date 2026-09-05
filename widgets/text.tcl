@@ -4511,6 +4511,44 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
         search      -
         see         -
         sync        {
+            # Synopsis:
+            #
+            # *window* **bbox** *index*
+            # *window* **compare** *index1* *op* *index2*
+            # *window* **count** ?*options*? *index1* *index2*
+            # *window* **debug** ?*boolean*?
+            # *window* **delete** *index1* ?*index2* ... *indexn*?
+            # *window* **dlineinfo** *index*
+            # *window* **dump** ?*switches*? *index1* ?*index2*?
+            # *window* **edit** **canredo**
+            # *window* **edit** **canundo**
+            # *window* **edit** **modified** ?*boolean*?
+            # *window* **edit** **redo**
+            # *window* **edit** **reset**
+            # *window* **edit** **separator**
+            # *window* **edit** **undo**
+            # *window* **get** ?**-displaychars**? ?**--**? *index1* ?*index2* ... *indexn*?
+            # *window* **image** **cget** *index* *option*
+            # *window* **image** **configure** *index* ?*option* *value* ... *option* *value*?
+            # *window* **image** **create** *index* ?*option* *value* ... *option* *value*?
+            # *window* **image** **names**
+            # *window* **index** *index*
+            # *window* **mark** **gravity** *markName* ?*direction*?
+            # *window* **mark** **names**
+            # *window* **mark** **next** *index*
+            # *window* **mark** **previous** *index*
+            # *window* **mark** **set** *markName* *index*
+            # *window* **mark** **unset** *markName* ?*markName* ... *markName*?
+            # *window* **peer** **create** *window* ?*options*?
+            # *window* **peer** **names** *window* *pendingsync*
+            # *window* **scan** **mark** *x* *y*
+            # *window* **scan** **dragto** *x* *y*
+            # *window* **search** ?switches? *pattern* *index* ?*stopIndex*?
+            # *window* **see** *index*
+            # *window* **sync**
+            # *window* **sync** **-command** *command*
+
+            # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
                 false { set address [list interp invokehidden {} $w] }
                 true  { set address [list $w.text] }
