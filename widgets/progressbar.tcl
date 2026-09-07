@@ -916,9 +916,6 @@ package provide ::ms::progressbar 0.1
 _bind _Progressbar <Activate>   { interp invokehidden {} %W state [list !background]; break }
 _bind _Progressbar <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
-# ButtonPress-1
-_bind _Progressbar <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
-
 # Contextual menu
 _bind _Progressbar <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 
