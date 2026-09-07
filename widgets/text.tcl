@@ -2678,11 +2678,8 @@ _bind _Simple_Text <Meta-KeyPress-greater> { break }
 _bind _Simple_Text <Escape> { break }
 
 # Activate/Deactivate
-_bind _Simple_Text <Activate>   { ::ms::text::Pathname_Cmd %W state !background; break }
-_bind _Simple_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state  background; break }
-
-# ButtonPress-1
-_bind _Simple_Text <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _Simple_Text <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Simple_Text <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Contextual menu
 _bind _Simple_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
@@ -2691,11 +2688,11 @@ _bind _Simple_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; brea
 _bind _Simple_Text <Destroy> { ::ms::text::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Text <Enter> { ::ms::text::Pathname_Cmd %W state  hover; break }
-_bind _Simple_Text <Leave> { ::ms::text::Pathname_Cmd %W state !hover; break }
+_bind _Simple_Text <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Simple_Text <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Simple_Text <FocusIn>  { ::ms::text::FocusIn  %W; break }
+_bind _Simple_Text <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Simple_Text <FocusOut> { ::ms::text::FocusOut %W; break }
 
 # Insert
@@ -3128,18 +3125,11 @@ _bind _Scrollable_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo 
 _bind _Hull_Text <Activate>   { ::ms::text::Pathname_Cmd %W state !background; break }
 _bind _Hull_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state  background; break }
 
-# ButtonPress-1
-_bind _Hull_Text <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
-
 # Contextual menu
 _bind _Hull_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
 # Destroy
 _bind _Hull_Text <Destroy> { ::ms::text::Destroy %W; break }
-
-# FocusIn/FocusOut
-_bind _Hull_Text <FocusIn>  { ::ms::text::FocusIn  %W; break }
-_bind _Hull_Text <FocusOut> { ::ms::text::FocusOut %W; break }
 
 # Mousewheel and Touchpad
 
@@ -6772,22 +6762,6 @@ proc ::ms::text::Destroy { w } {
 
     unset -nocomplain -- ::ms::style($w,border) \
                          ::ms::style($w,hull);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event on the widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::text::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::text::Pathname_Cmd $w state focus
 
     return ""
 }
