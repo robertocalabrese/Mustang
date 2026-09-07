@@ -3075,17 +3075,17 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Set the widget short addresses relative to its real address, 'w'.
                     # They will all point to the widget hull object short address.
                     set ::ms::addr($w,short)          $short_addr
-                    set ::ms::addr($w.treeview,short) $short_addr
                     set ::ms::addr($w.fake_x,short)   $short_addr
                     set ::ms::addr($w.fake_y,short)   $short_addr
+                    set ::ms::addr($w.treeview,short) $short_addr
                     set ::ms::addr($w.x,short)        $short_addr
                     set ::ms::addr($w.y,short)        $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
-                                              $w.treeview \
                                               $w.fake_x \
                                               $w.fake_y \
+                                              $w.treeview \
                                               $w.x \
                                               $w.y;
 
@@ -5307,9 +5307,9 @@ proc ::ms::treeview::Destroy { w } {
 
             # Remove all the widget's objects real addresses from the list of all available real addresses.
             foreach object [list $w \
-                                 $w.treeview \
                                  $w.fake_x \
                                  $w.fake_y \
+                                 $w.treeview \
                                  $w.x \
                                  $w.y] {
                 set index [lsearch -exact $::ms::addr(reals) $object]
@@ -5338,9 +5338,9 @@ proc ::ms::treeview::Destroy { w } {
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short) \
-                         ::ms::addr($w.treeview,short) \
                          ::ms::addr($w.fake_x,short) \
                          ::ms::addr($w.fake_y,short) \
+                         ::ms::addr($w.treeview,short) \
                          ::ms::addr($w.x,short) \
                          ::ms::addr($w.y,short);
 
