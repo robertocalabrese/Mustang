@@ -7771,6 +7771,12 @@ proc ::ms::text::End_IME_Marked_Text { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Insert { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
     # Execute the command.
     try {
         ::tk::GetSelection $w PRIMARY
