@@ -4257,46 +4257,53 @@ proc ::ms::listbox::Destroy { w } {
 #
 # Select the last item of the list.
 #
+# Note: This procedure was inspired by the listbox binding <Control-End>.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
 # Where:
 #
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::End { w } {
-    # Note: This procedure was inspired by the listbox binding <Control-End>.
-    #       The procedure have been slighty modified to work with mustang.
-    #       All credits goes to the original author/s.
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
 
     # Check if there are items associated to the listbox.
     switch -- $::ms::current($w,values) {
         ""  { return "" }
     }
 
-    switch -- $::ms::current($w,state) {
-        normal {
-            # Select the last index of the listbox.
-            $w.listbox selection clear 0 end
-            $w.listbox selection set end
-
-            # Set the selection anchor to the last index.
-            $w.listbox selection anchor end
-
-            # Activate the preselected index.
-            $w.listbox activate end
-
-            # Adjust the listbox viewport.
-            $w.listbox see end
-
-            # Register the new preselected index.
-            set ::ms::data($w,preselected_index) [$w.listbox index active]
-
-            # Be sure that the active style is the one chosen by the developer.
-            $w.listbox configure -activestyle $::ms::current($w,activestyle)
-
-            # Fire up the selection event.
-            ::tk::FireListboxSelectEvent $w.listbox
-        }
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
     }
+
+    # Select the last index of the listbox.
+    {*}$address selection clear 0 end
+    {*}$address selection set end
+
+    # Set the selection anchor to the last index.
+    {*}$address selection anchor end
+
+    # Activate the preselected index.
+    {*}$address activate end
+
+    # Adjust the listbox viewport.
+    {*}$address see end
+
+    # Register the new preselected index.
+    set ::ms::data($w,preselected_index) [{*}$address index active]
+
+    # Be sure that the active style is the one chosen by the developer.
+    {*}$address configure -activestyle $::ms::current($w,activestyle)
+
+    # Fire up the selection event.
+    ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
 
     return ""
 }
