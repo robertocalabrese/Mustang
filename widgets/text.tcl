@@ -6840,14 +6840,30 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                     # Disable paste selection on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
                     switch -- $event {
                         "PasteSelection"  -
-                        "ButtonRelease-3" { ::ms::text::Paste $w $x $y PRIMARY }
+                        "ButtonRelease-3" {
+                            # Check the widget's state.
+                            switch -- $::ms::current($w,state) {
+                                disabled -
+                                readonly { return "" }
+                            }
+
+                            ::ms::text::Paste $w $x $y PRIMARY
+                        }
                     }
                 }
                 default {
                     # Disable paste selection on ButtonPress-3 and enable it on ButtonPress-2 (Linux and Windows).
                     switch -- $event {
                         "PasteSelection"  -
-                        "ButtonRelease-2" { ::ms::text::Paste $w $x $y PRIMARY }
+                        "ButtonRelease-2" {
+                            # Check the widget's state.
+                            switch -- $::ms::current($w,state) {
+                                disabled -
+                                readonly { return "" }
+                            }
+
+                            ::ms::text::Paste $w $x $y PRIMARY
+                        }
                     }
                 }
             }
@@ -7193,7 +7209,7 @@ proc ::ms::text::Scrollbar_Update { w } {
 # It doesn't return anything.
 proc ::ms::text::Clear { w } {
     # Check the widget's state.
-    switch -- $::ms::current($ww,state) {
+    switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
     }
@@ -7243,7 +7259,7 @@ proc ::ms::text::Clear { w } {
 # It doesn't return anything.
 proc ::ms::text::Copy { w } {
     # Check the widget's state.
-    switch -- $::ms::current($ww,state) {
+    switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
     }
@@ -7287,7 +7303,7 @@ proc ::ms::text::Copy { w } {
 # It doesn't return anything.
 proc ::ms::text::Cut { w } {
     # Check the widget's state.
-    switch -- $::ms::current($ww,state) {
+    switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
     }
@@ -7352,7 +7368,7 @@ proc ::ms::text::Cut { w } {
 # It doesn't return anything.
 proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
     # Check the widget's state.
-    switch -- $::ms::current($ww,state) {
+    switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
     }
