@@ -8139,8 +8139,6 @@ proc ::ms::text::PageRight { w } {
 #
 # Returns the resulting index.
 proc ::ms::text::Line_Index { w n } {
-    variable ::tk::Priv
-
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false { set address [list interp invokehidden {} $w] }
@@ -8150,17 +8148,17 @@ proc ::ms::text::Line_Index { w n } {
     # Execute the command.
     set i [{*}$address index insert]
 
-    if { $Priv(prevPos) ne $i } {
-        set Priv(textPosOrig) $i
+    if { $::tk::Priv(prevPos) ne $i } {
+        set ::tk::Priv(textPosOrig) $i
     }
 
-    set lines [{*}$address count -displaylines $Priv(textPosOrig) $i]
-    set new   [{*}$address index "$Priv(textPosOrig) + [expr { $lines + $n }] displaylines"]
+    set lines [{*}$address count -displaylines $::tk::Priv(textPosOrig) $i]
+    set new   [{*}$address index "$::tk::Priv(textPosOrig) + [expr { $lines + $n }] displaylines"]
 
-    set Priv(prevPos) $new
+    set ::tk::Priv(prevPos) $new
 
     if { [{*}$address compare $new == "end display lineend"] || [{*}$address compare $new == "insert display linestart"] } {
-        set Priv(textPosOrig) $new
+        set ::tk::Priv(textPosOrig) $new
     }
 
     return $new
