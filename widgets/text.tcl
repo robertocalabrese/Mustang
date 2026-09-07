@@ -9484,6 +9484,12 @@ proc ::ms::text::Undo { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Redo { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false { set address [list interp invokehidden {} $w] }
