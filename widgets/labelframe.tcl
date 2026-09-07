@@ -1221,54 +1221,47 @@
 #   }
 package provide ::ms::labelframe 0.1
 
-##################################
-##                              ##
-##     _LABELFRAME BINDINGS     ##
-##                              ##
-##################################
+#######################################
+##                                   ##
+##     _HULL_LABELFRAME BINDINGS     ##
+##                                   ##
+#######################################
 
 # Activate/Deactivate
-_bind _Labelframe <Activate>   { ::ms::labelframe::Pathname_Cmd %W state [list !background]; break }
-_bind _Labelframe <Deactivate> { ::ms::labelframe::Pathname_Cmd %W state [list  background]; break }
-
-# ButtonPress-1
-_bind _Labelframe <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _Hull_Labelframe <Activate>   { ::ms::labelframe::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Labelframe <Deactivate> { ::ms::labelframe::Pathname_Cmd %W state [list  background]; break }
 
 # Contextual menu
-_bind _Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+_bind _Hull_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
 # Delete
-_bind _Labelframe <Destroy> { ::ms::labelframe::Destroy %W; break }
+_bind _Hull_Labelframe <Destroy> { ::ms::labelframe::Destroy %W; break }
 
 # Enter/Leave
-_bind _Labelframe <Enter> { ::ms::Hover %W %X %Y; break }
-_bind _Labelframe <Leave> { ::ms::Hover %W %X %Y; break }
-
-# FocusIn/FocusOut
-_bind _Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd %W state [list focus]; break }
-_bind _Labelframe <FocusOut> { ::ms::labelframe::FocusOut %W; break }
+_bind _Hull_Labelframe <Enter> { ::ms::Hover %W %X %Y; break }
+_bind _Hull_Labelframe <Leave> { ::ms::Hover %W %X %Y; break }
 
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+_bind _Hull_Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+_bind _Hull_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+_bind _Hull_Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+_bind _Hull_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1283,7 +1276,7 @@ _bind _Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+_bind _Hull_Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1295,7 +1288,560 @@ _bind _Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+_bind _Hull_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
+########################################
+##                                    ##
+##     _TITLE_LABELFRAME BINDINGS     ##
+##                                    ##
+########################################
+
+# Contextual menu
+_bind _Title_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Enter/Leave
+_bind _Title_Labelframe <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Title_Labelframe <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Title_Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Title_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Title_Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Title_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Title_Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Title_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+
+#########################################
+##                                     ##
+##     _SIMPLE_LABELFRAME BINDINGS     ##
+##                                     ##
+#########################################
+
+# Contextual menu
+_bind _Simple_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+
+# Configure
+_bind _Simple_Labelframe <Configure> { ::ms::labelframe::Configure [_winfo parent %W] %w %h; break }
+
+# Enter/Leave
+_bind _Simple_Labelframe <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Simple_Labelframe <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+
+# FocusIn/FocusOut
+_bind _Simple_Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent %W] state [list focus]; break }
+_bind _Simple_Labelframe <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent %W]; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Simple_Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Simple_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+
+############################################
+##                                        ##
+##     _CONTAINER_LABELFRAME BINDINGS     ##
+##                                        ##
+############################################
+
+# Contextual menu
+_bind _Container_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Container_Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Container_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Container_Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Container_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Container_Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Container_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+
+#########################################
+##                                     ##
+##     _BORDER_LABELFRAME BINDINGS     ##
+##                                     ##
+#########################################
+
+# Contextual menu
+_bind _Border_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent %W]] %X %Y cmenu; break }
+
+# Enter/Leave
+_bind _Border_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+_bind _Border_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+
+# Mousewheel and Touchpad
+
+# If the widget's vertical scrollbar is active, move the widget's content zone by one unit
+# up or down (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Border_Labelframe <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
+
+# If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
+# left or right (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Border_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
+# If the widget's vertical scrollbar is active, move the widget's content zone by one page
+# up or down (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Border_Labelframe <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# If the widget's horizontal scrollbar is active, move the widget's content zone by one page
+# left or right (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Border_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
+#       left or right (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the widget's content zone by one unit
+#       up or down (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Border_Labelframe <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the widget's content zone by one page
+#       left or right (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the widget's content zone by one page
+#       up or down (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Border_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
+
+###########################################
+##                                       ##
+##     _VIEWPORT_LABELFRAME BINDINGS     ##
+##                                       ##
+###########################################
+
+# Configure
+_bind _Viewport_Labelframe <Configure> { ::ms::labelframe::Configure [_winfo parent [_winfo parent [_winfo parent %W]]] %w %h; break }
+
+#############################################
+##                                         ##
+##     _SCROLLABLE_LABELFRAME BINDINGS     ##
+##                                         ##
+#############################################
+
+# Contextual menu
+_bind _Scrollable_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y cmenu; break }
+
+# Configure
+_bind _Scrollable_Labelframe <Configure> { update; break }
+
+# Enter/Leave
+_bind _Scrollable_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
+_bind _Scrollable_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
+
+# FocusIn/FocusOut
+_bind _Scrollable_Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] state [list focus]; break }
+_bind _Scrollable_Labelframe <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+
+# Mousewheel and Touchpad
+
+# If the widget's vertical scrollbar is active, move the widget's content zone by one unit
+# up or down (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Labelframe <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D units; break }
+
+# If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
+# left or right (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D units; break }
+
+# If the widget's vertical scrollbar is active, move the widget's content zone by one page
+# up or down (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Labelframe <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D pages; break }
+
+# If the widget's horizontal scrollbar is active, move the widget's content zone by one page
+# left or right (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
+#       left or right (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the widget's content zone by one unit
+#       up or down (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scrollable_Labelframe <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the widget's content zone by one page
+#       left or right (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the widget's content zone by one page
+#       up or down (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scrollable_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %# %D pages; break }
+
+##############################################
+##                                          ##
+##     _X_SCROLLBAR_LABELFRAME BINDINGS     ##
+##                                          ##
+##############################################
+
+# ButtonPress
+_bind _X_Scrollbar_Labelframe <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress  [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
+_bind _X_Scrollbar_Labelframe <B1-Motion>       { ::ms::labelframe::Scrollbar_Drag         [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
+_bind _X_Scrollbar_Labelframe <ButtonRelease-1> { ::ms::labelframe::Scrollbar_ButtonRelease; break }
+
+# Enter/Leave
+_bind _X_Scrollbar_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+_bind _X_Scrollbar_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+
+# Mousewheel and Touchpad
+
+# Move the widget's content zone by one unit left or right (depending on the mousewheel direction).
+_bind _X_Scrollbar_Labelframe <MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
+
+# Move the widget's content zone by one page left or right (depending on the mousewheel direction).
+_bind _X_Scrollbar_Labelframe <Control-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# Move the widget's content zone by one unit left or right (depending on the touchpad direction).
+_bind _X_Scrollbar_Labelframe <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
+
+# Move the widget's content zone by one page left or right (depending on the touchpad direction).
+_bind _X_Scrollbar_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
+
+##############################################
+##                                          ##
+##     _Y_SCROLLBAR_LABELFRAME BINDINGS     ##
+##                                          ##
+##############################################
+
+# ButtonPress
+_bind _Y_Scrollbar_Labelframe <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress  [_winfo parent [_winfo parent %W]] vertical %x %y; break }
+_bind _Y_Scrollbar_Labelframe <B1-Motion>       { ::ms::labelframe::Scrollbar_Drag         [_winfo parent [_winfo parent %W]] vertical %x %y; break }
+_bind _Y_Scrollbar_Labelframe <ButtonRelease-1> { ::ms::labelframe::Scrollbar_ButtonRelease; break }
+
+# Enter/Leave
+_bind _Y_Scrollbar_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+_bind _Y_Scrollbar_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
+
+# Mousewheel and Touchpad
+
+# Move the widget's content zone by one unit up or down (depending on the mousewheel direction).
+_bind _Y_Scrollbar_Labelframe <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
+
+# Move the widget's content zone by one page up or down (depending on the mousewheel direction).
+_bind _Y_Scrollbar_Labelframe <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# Move the widget's content zone by one unit up or down (depending on the touchpad direction).
+_bind _Y_Scrollbar_Labelframe <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
+
+# Move the widget's content zone by one page up or down (depending on the touchpad direction).
+_bind _Y_Scrollbar_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
+
+###################################################
+##                                               ##
+##     _X_FAKE_SCROLLBAR_LABELFRAME BINDINGS     ##
+##                                               ##
+###################################################
+
+# Activate/Deactivate
+_bind _X_Fake_Scrollbar_Labelframe <Activate>   { ::ms::frame::Pathname_Cmd [_winfo parent [_winfo parent %W]] state !background; break }
+_bind _X_Fake_Scrollbar_Labelframe <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo parent [_winfo parent %W]] state  background; break }
+
+# Contextual menu
+_bind _X_Fake_Scrollbar_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent %W]] %X %Y shell; break }
+
+# Enter/Leave
+_bind _X_Fake_Scrollbar_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y ""; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent %W]] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent %W]] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _X_Fake_Scrollbar_Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent %W]] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _X_Fake_Scrollbar_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent %W]] %# %D pages; break }
+
+###################################################
+##                                               ##
+##     _Y_FAKE_SCROLLBAR_LABELFRAME BINDINGS     ##
+##                                               ##
+###################################################
+
+# Activate/Deactivate
+_bind _Y_Fake_Scrollbar_Labelframe <Activate>   { ::ms::frame::Pathname_Cmd [_winfo parent [_winfo parent %W]] state !background; break }
+_bind _Y_Fake_Scrollbar_Labelframe <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo parent [_winfo parent %W]] state  background; break }
+
+# Contextual menu
+_bind _Y_Fake_Scrollbar_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent %W]] %X %Y shell; break }
+
+# Enter/Leave
+_bind _Y_Fake_Scrollbar_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y ""; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Labelframe <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent %W]] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Labelframe <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent %W]] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Labelframe <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Labelframe <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent [_winfo parent %W]] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Y_Fake_Scrollbar_Labelframe <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent %W]] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Y_Fake_Scrollbar_Labelframe <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent [_winfo parent %W]] %# %D pages; break }
 
 # Create the mustang **labelframe** package.
 namespace eval ::ms::labelframe {
@@ -2138,88 +2684,17 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     ##                  ##
                     ######################
 
-                    # Set the new bindtags for the widget.
+                    # Set the new bindtags for the hull object.
+                    _bindtags $w [list $w _Hull_LabelFrame TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the title object.
+                    _bindtags $w.title [list $w.title _Title_LabelFrame TLabel $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the content object.
                     switch -- $::ms::current($w,class) {
-                        TLabelFrame { _bindtags $w [list $w _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
-                        default     { _bindtags $w [list $w $::ms::current($w,class) _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        TLabelFrame { _bindtags $w.content [list $w.content _Simple_LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        default     { _bindtags $w.content [list $w.content $::ms::current($w,class) _Simple_LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
                     }
-
-                    # ButtonPress-1
-                    _bind $w.content <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-                    _bind $w.title   <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-
-                    # Contextual menu
-                    _bind $w.content <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
-                    _bind $w.title   <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
-
-                    # Configure
-                    _bind $w.content <Configure> { ::ms::labelframe::Configure [_winfo parent %W] %w %h; break }
-
-                    # Enter/Leave
-                    _bind $w.content <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.title   <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-
-                    _bind $w.content <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-                    _bind $w.title   <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-
-                    # FocusIn/FocusOut
-                    _bind $w.content <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent %W] state [list focus]; break }
-                    _bind $w.content <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent %W]; break }
-
-                    # Mousewheel and Touchpad
-
-                    # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.content <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
-                    _bind $w.title   <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
-
-                    # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.content <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
-                    _bind $w.title   <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
-
-                    # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    # and move that scrollbar by one page up or down (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.content <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
-                    _bind $w.title   <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
-
-                    # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    # and move that scrollbar by one page left or right (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.content <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
-                    _bind $w.title   <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
-
-                    # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
-                    #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
-
-                    # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-                    # These two planes may involve different widgets depending on the active scrollbars on them and on the
-                    # touchpad direction.
-                    #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    #       and move that scrollbar by one unit left or right (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-                    #
-                    #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.content <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
-                    _bind $w.title   <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
-
-                    # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-                    # These two planes may involve different widgets depending on the active scrollbars on them and on the
-                    # touchpad direction.
-                    #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    #       and move that scrollbar by one page left or right (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-                    #
-                    #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    #       and move that scrollbar by one page up or down (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.content <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
-                    _bind $w.title   <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
                     # Add the labelframe to the related toplevel keyboard pages navigation bindings.
                     ::ms::Enable_Traversal $w
@@ -2700,187 +3175,75 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                                       -style TScrollbar \
                                                   -takefocus 0;
 
+                    # Create the fake horizontal scrollbar.
+                    _ttk_frame $w.container.fake_x -borderwidth 0 \
+                                                         -class TFrame \
+                                                        -cursor arrow \
+                                                        -height $::ms::size($::ms::theme,scrollbar) \
+                                                       -padding 0 \
+                                                        -relief flat \
+                                                         -style $::ms::style($w,hull) \
+                                                     -takefocus 0 \
+                                                         -width 0;
+
+                    # Create the fake vertical scrollbar.
+                    _ttk_frame $w.container.fake_y -borderwidth 0 \
+                                                         -class TFrame \
+                                                        -cursor arrow \
+                                                        -height 0 \
+                                                       -padding 0 \
+                                                        -relief flat \
+                                                         -style $::ms::style($w,hull) \
+                                                     -takefocus 0 \
+                                                         -width $::ms::size($::ms::theme,scrollbar);
+
+                    # Grid the fake scrollbars.
+                    _grid $w.container.fake_x -column 0 \
+                                                -padx [list 0  0] \
+                                                -pady [list 8p 0] \
+                                                 -row 1 \
+                                              -sticky we;
+
+                    _grid $w.container.fake_y -column 1 \
+                                                -padx [list 8p 0] \
+                                                -pady [list 0  0] \
+                                                 -row 0 \
+                                              -sticky ns;
+
                     ######################
                     ##                  ##
                     ##     BINDINGS     ##
                     ##                  ##
                     ######################
 
-                    # Set the new bindtags for the widget.
+                    # Set the new bindtags for the hull object.
+                    _bindtags $w [list $w _Hull_LabelFrame TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the title object.
+                    _bindtags $w.title [list $w.title _Title_LabelFrame TLabel $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the container object.
+                    _bindtags $w.container [list $w.container _Container_LabelFrame TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the border object.
+                    _bindtags $w.container.border [list $w.container.border _Border_LabelFrame TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the viewport object.
+                    _bindtags $w.container.border.viewport [list $w.container.border.viewport _Viewport_LabelFrame TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the content object.
                     switch -- $::ms::current($w,class) {
-                        TLabelFrame { _bindtags $w [list $w _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
-                        default     { _bindtags $w [list $w $::ms::current($w,class) _LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        TLabelFrame { _bindtags $w.container.border.viewport.content [list $w.container.border.viewport.content _Scrollable_LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
+                        default     { _bindtags $w.container.border.viewport.content [list $w.container.border.viewport.content $::ms::current($w,class) _Scrollable_LabelFrame TLabelFrame $::ms::addr($w,toplevel) all] }
                     }
 
-                    # ButtonPress-1
-                    _bind $w.container                         <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-                    _bind $w.container.border                  <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent [_winfo parent %W]]; break }
-                    _bind $w.container.border.viewport.content <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
-                    _bind $w.title                             <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
+                    # Set the new bindtags for the horizontal and vertical scrollbar objects.
+                    _bindtags $w.container.x [list $w.container.x _X_Scrollbar_LAbelframe TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.container.y [list $w.container.y _Y_Scrollbar_LAbelframe TScrollbar $::ms::addr($w,toplevel) all]
 
-                    _bind $w.container.x <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress  [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
-                    _bind $w.container.x <B1-Motion>       { ::ms::labelframe::Scrollbar_Drag         [_winfo parent [_winfo parent %W]] horizontal %x %y; break }
-                    _bind $w.container.x <ButtonRelease-1> { ::ms::labelframe::Scrollbar_ButtonRelease; break }
-
-                    _bind $w.container.y <ButtonPress-1>   { ::ms::labelframe::Scrollbar_ButtonPress  [_winfo parent [_winfo parent %W]] vertical %x %y; break }
-                    _bind $w.container.y <B1-Motion>       { ::ms::labelframe::Scrollbar_Drag         [_winfo parent [_winfo parent %W]] vertical %x %y; break }
-                    _bind $w.container.y <ButtonRelease-1> { ::ms::labelframe::Scrollbar_ButtonRelease; break }
-
-                    # Contextual menu
-                    _bind $w.container                         <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
-                    _bind $w.container.border                  <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent %W]] %X %Y cmenu; break }
-                    _bind $w.container.border.viewport.content <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y cmenu; break }
-                    _bind $w.title                             <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
-
-                    # Configure
-                    _bind $w.container.border.viewport         <Configure> { ::ms::labelframe::Configure [_winfo parent [_winfo parent [_winfo parent %W]]] %w %h; break }
-                    _bind $w.container.border.viewport.content <Configure> { update; break }
-
-                    # Enter/Leave
-                    _bind $w.container.border                  <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.border.viewport.content <Enter> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
-                    _bind $w.container.x                       <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.y                       <Enter> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.title                             <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-
-                    _bind $w.container.border                  <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.border.viewport.content <Leave> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
-                    _bind $w.container.x                       <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.container.y                       <Leave> { ::ms::Hover [_winfo parent [_winfo parent %W]] %X %Y; break }
-                    _bind $w.title                             <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
-
-                    # FocusIn/FocusOut
-                    _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] state [list focus]; break }
-                    _bind $w.container.border.viewport.content <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
-
-                    # Mousewheel and Touchpad
-
-                    # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
-                    _bind $w.title     <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
-
-                    # If the widget's vertical scrollbar is active, move the widget's content zone by one unit
-                    # up or down (depending on the mousewheel direction).
-                    # Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.border                  <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
-                    _bind $w.container.border.viewport.content <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D units; break }
-                    _bind $w.container.y                       <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D units; break }
-
-                    # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
-                    _bind $w.title     <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
-
-                    # If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
-                    # left or right (depending on the mousewheel direction).
-                    # Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.border                  <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
-                    _bind $w.container.border.viewport.content <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D units; break }
-                    _bind $w.container.x                       <MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D units; break }
-
-                    # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    # and move that scrollbar by one page up or down (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
-                    _bind $w.title     <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
-
-                    # If the widget's vertical scrollbar is active, move the widget's content zone by one page
-                    # up or down (depending on the mousewheel direction).
-                    # Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    # and move that scrollbar by one page up or down (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.border                  <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
-                    _bind $w.container.border.viewport.content <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D pages; break }
-                    _bind $w.container.y                       <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent [_winfo parent %W]] %D pages; break }
-
-                    # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    # and move that scrollbar by one page left or right (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
-                    _bind $w.title     <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
-
-                    # If the widget's horizontal scrollbar is active, move the widget's content zone by one page
-                    # left or right (depending on the mousewheel direction).
-                    # Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    # and move that scrollbar by one page left or right (depending on the mousewheel direction).
-                    # If none of the widget's parent meets the required condition, don't do anything.
-                    _bind $w.container.border                  <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
-                    _bind $w.container.border.viewport.content <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %D pages; break }
-                    _bind $w.container.x                       <Control-MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent [_winfo parent %W]] %D pages; break }
-
-                    # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
-                    #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
-
-                    # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-                    # These two planes may involve different widgets depending on the active scrollbars on them and on the
-                    # touchpad direction.
-                    #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    #       and move that scrollbar by one unit left or right (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-                    #
-                    #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
-                    _bind $w.title     <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
-
-                    # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-                    # These two planes may involve different widgets depending on the active scrollbars on them and on the
-                    # touchpad direction.
-                    #   1 - If the widget's horizontal scrollbar is active, move the widget's content zone by one unit
-                    #       left or right (depending on the touchpad direction).
-                    #       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    #       and move that scrollbar by one unit left or right (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-                    #
-                    #   2 - If the widget's vertical scrollbar is active, move the widget's content zone by one unit
-                    #       up or down (depending on the touchpad direction).
-                    #       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container.border                  <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
-                    _bind $w.container.border.viewport.content <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %# %D units; break }
-                    _bind $w.container.x                       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
-                    _bind $w.container.y                       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D units; break }
-
-                    # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-                    # These two planes may involve different widgets depending on the active scrollbars on them and on the
-                    # touchpad direction.
-                    #   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    #       and move that scrollbar by one page left or right (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-                    #
-                    #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    #       and move that scrollbar by one page up or down (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
-                    _bind $w.title     <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
-
-                    # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-                    # These two planes may involve different widgets depending on the active scrollbars on them and on the
-                    # touchpad direction.
-                    #   1 - If the widget's horizontal scrollbar is active, move the widget's content zone by one page
-                    #       left or right (depending on the touchpad direction).
-                    #       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-                    #       and move that scrollbar by one page left or right (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-                    #
-                    #   2 - If the widget's vertical scrollbar is active, move the widget's content zone by one page
-                    #       up or down (depending on the touchpad direction).
-                    #       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-                    #       and move that scrollbar by one page up or down (depending on the touchpad direction).
-                    #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-                    _bind $w.container.border                  <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
-                    _bind $w.container.border.viewport.content <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %# %D pages; break }
-                    _bind $w.container.x                       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
-                    _bind $w.container.y                       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent [_winfo parent %W]] %# %D pages; break }
+                    # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
+                    _bindtags $w.container.fake_x [list $w.container.fake_x _X_Fake_Scrollbar_LAbelframe TFrame $::ms::addr($w,toplevel) all]
+                    _bindtags $w.container.fake_y [list $w.container.fake_y _Y_Fake_Scrollbar_LAbelframe TFrame $::ms::addr($w,toplevel) all]
 
                     # Add the labelframe to the related toplevel keyboard pages navigation bindings.
                     ::ms::Enable_Traversal $w
@@ -2906,6 +3269,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     set ::ms::addr($w.container.border,short)                  $short_addr
                     set ::ms::addr($w.container.border.viewport,short)         $short_addr
                     set ::ms::addr($w.container.border.viewport.content,short) $short_addr
+                    set ::ms::addr($w.container.fake_x,short)                  $short_addr
+                    set ::ms::addr($w.container.fake_y,short)                  $short_addr
                     set ::ms::addr($w.container.x,short)                       $short_addr
                     set ::ms::addr($w.container.y,short)                       $short_addr
 
@@ -2916,6 +3281,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                               $w.container.border \
                                               $w.container.border.viewport \
                                               $w.container.border.viewport.content \
+                                              $w.container.fake_x \
+                                              $w.container.fake_y \
                                               $w.container.x \
                                               $w.container.y;
 
@@ -2934,7 +3301,9 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                                        $w.container \
                                                        $w.container.border \
                                                        $w.container.border.viewport \
-                                                       $w.container.border.viewport.content];
+                                                       $w.container.border.viewport.content \
+                                                       $w.container.fake_x \
+                                                       $w.container.fake_y];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -3909,6 +4278,10 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                     ##                    ##
                                     ########################
 
+                                    # Configure the fake scrollbars.
+                                    $w.container.fake_x configure -style $::ms::style($w,hull)
+                                    $w.container.fake_y configure -style $::ms::style($w,hull)
+
                                     # Update the scrollbars.
                                     ::ms::labelframe::Scrollbar_Update $w
                                 }
@@ -4321,6 +4694,8 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             $w.title state $statespec
                             $w.container state $statespec
                             $w.container.border state $statespec
+                            $w.container.fake_x state $statespec
+                            $w.container.fake_y state $statespec
 
                             return [$w.container.border.content state $statespec]
                         }
@@ -5176,6 +5551,13 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
                 ##                    ##
                 ########################
 
+                # Update the fake scrollbars.
+                $w.container.fake_x configure -height $::ms::size($::ms::theme,scrollbar) \
+                                               -style $::ms::style($w,hull);
+
+                $w.container.fake_y configure  -style $::ms::style($w,hull) \
+                                               -width $::ms::size($::ms::theme,scrollbar);
+
                 # Update the scrollbars.
                 ::ms::labelframe::Scrollbar_Update $w
             }
@@ -5294,6 +5676,8 @@ proc ::ms::labelframe::Destroy { w } {
                          $w.container.border.content \
                          $w.container.border.viewport \
                          $w.container.border.viewport.content \
+                         $w.container.fake_x \
+                         $w.container.fake_y \
                          $w.container.x \
                          $w.container.y \
                          $w.content \
@@ -5344,6 +5728,8 @@ proc ::ms::labelframe::Destroy { w } {
                          ::ms::addr($w.container.border.content,short) \
                          ::ms::addr($w.container.border.viewport,short) \
                          ::ms::addr($w.container.border.viewport.content,short) \
+                         ::ms::addr($w.container.fake_x,short) \
+                         ::ms::addr($w.container.fake_y,short) \
                          ::ms::addr($w.container.x,short) \
                          ::ms::addr($w.container.y,short) \
                          ::ms::addr($w.content,short) \
@@ -5733,6 +6119,9 @@ proc ::ms::labelframe::Scrollbar_Update { w } {
         # Check if the horizontal scrollbar is not currently displayed.
         switch -- $::ms::data($w,scrollx) {
             off {
+                # Hide the fake horizontal scrollbar.
+                _grid remove $w.container.fake_x
+
                 # Display the horizontal scrollbar.
                 _grid $w.container.x -column 0 \
                                        -padx [list 0  0] \
@@ -5755,6 +6144,13 @@ proc ::ms::labelframe::Scrollbar_Update { w } {
             on  {
                 # Hide the horizontal scrollbar.
                 _grid remove $w.container.x
+
+                # Display the fake horizontal scrollbar.
+                _grid $w.container.fake_x -column 0 \
+                                            -padx [list 0  0] \
+                                            -pady [list 8p 0] \
+                                             -row 1 \
+                                          -sticky we;
 
                 # Set the horizontal scrollbar status to 'off'.
                 set ::ms::data($w,scrollx) off
@@ -5798,6 +6194,9 @@ proc ::ms::labelframe::Scrollbar_Update { w } {
         # Check if the vertical scrollbar is not currently displayed.
         switch -- $::ms::data($w,scrolly) {
             off {
+                # Hide the fake vertical scrollbar.
+                _grid remove $w.container.fake_y
+
                 # Display the vertical scrollbar.
                 _grid $w.container.y -column 1 \
                                        -padx [list 8p 0] \
@@ -5820,6 +6219,13 @@ proc ::ms::labelframe::Scrollbar_Update { w } {
             on  {
                 # Hide the vertical scrollbar.
                 _grid remove $w.container.y
+
+                # Display the fake vertical scrollbar.
+                _grid $w.container.fake_y -column 1 \
+                                            -padx [list 8p 0] \
+                                            -pady [list 0  0] \
+                                             -row 0 \
+                                          -sticky ns;
 
                 # Set the vertical scrollbar status to 'off'.
                 set ::ms::data($w,scrolly) off
