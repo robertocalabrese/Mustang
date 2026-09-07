@@ -8855,14 +8855,14 @@ proc ::ms::text::Previous_Word { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
@@ -8874,14 +8874,14 @@ proc ::ms::text::Previous_Word { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
