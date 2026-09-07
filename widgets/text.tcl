@@ -7725,7 +7725,11 @@ proc ::ms::text::Start_IME_Marked_Text { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::End_IME_Marked_Text { w } {
-    variable Priv
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
 
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
@@ -7735,7 +7739,7 @@ proc ::ms::text::End_IME_Marked_Text { w } {
 
     # Execute the command.
     try {
-        dict get $Priv(IMETextMark) $::ms::addr($w,widget)
+        dict get $::tk::Priv(IMETextMark) $::ms::addr($w,widget)
     } on error {} {
         bell
         return ""
