@@ -5478,6 +5478,13 @@ proc ::ms::listbox::Scrollbar_Update { w } {
                 # Hide the horizontal scrollbar.
                 _grid remove $w.x
 
+                # Display the fake horizontal scrollbar.
+                _grid $w.fake_x -column 0 \
+                                  -padx [list 0  0] \
+                                  -pady [list 8p 0] \
+                                   -row 1 \
+                                -sticky we;
+
                 # Set the horizontal scrollbar status to 'off'.
                 set ::ms::data($w,scrollx) off
             }
@@ -5486,6 +5493,9 @@ proc ::ms::listbox::Scrollbar_Update { w } {
         # Check if the horizontal scrollbar is not currently displayed.
         switch -- $::ms::data($w,scrollx) {
             off {
+                # Hide the fake horizontal scrollbar.
+                _grid remove $w.fake_x
+
                 # Display the horizontal scrollbar.
                 _grid $w.x -column 0 \
                              -padx [list 0  0] \
@@ -5517,6 +5527,13 @@ proc ::ms::listbox::Scrollbar_Update { w } {
                 # Hide the vertical scrollbar.
                 _grid remove $w.y
 
+                # Display the fake vertical scrollbar.
+                _grid $w.fake_y -column 1 \
+                                  -padx [list 8p 0] \
+                                  -pady [list 0  0] \
+                                   -row 0 \
+                                -sticky ns;
+
                 # Set the vertical scrollbar status to 'off'.
                 set ::ms::data($w,scrolly) off
             }
@@ -5525,6 +5542,9 @@ proc ::ms::listbox::Scrollbar_Update { w } {
         # Check if the vertical scrollbar is not currently displayed.
         switch -- $::ms::data($w,scrolly) {
             off {
+                # Hide the fake vertical scrollbar.
+                _grid remove $w.fake_y
+
                 # Display the vertical scrollbar.
                 _grid $w.y -column 1 \
                              -padx [list 8p 0] \
