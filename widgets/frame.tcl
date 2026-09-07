@@ -2745,20 +2745,19 @@ proc ::ms::frame::Command { window { args "" } } {
                     set ::ms::addr($w.border,short)                  $short_addr
                     set ::ms::addr($w.border.viewport,short)         $short_addr
                     set ::ms::addr($w.border.viewport.content,short) $short_addr
-                    set ::ms::addr($w.x,short)                       $short_addr
-                    set ::ms::addr($w.y,short)                       $short_addr
                     set ::ms::addr($w.fake_x,short)                  $short_addr
                     set ::ms::addr($w.fake_y,short)                  $short_addr
+                    set ::ms::addr($w.x,short)                       $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.border \
                                               $w.border.viewport \
                                               $w.border.viewport.content \
-                                              $w.x \
-                                              $w.y \
                                               $w.fake_x \
-                                              $w.fake_y;
+                                              $w.fake_y \
+                                              $w.x \
+                                              $w.y;
 
                     lappend ::ms::addr(shorts) $short_addr
 
@@ -4813,10 +4812,10 @@ proc ::ms::frame::Destroy { w } {
                                  $w.border \
                                  $w.border.viewport \
                                  $w.border.viewport.content \
-                                 $w.x \
-                                 $w.y \
                                  $w.fake_x \
-                                 $w.fake_y] {
+                                 $w.fake_y \
+                                 $w.x \
+                                 $w.y] {
                 set index [lsearch -exact $::ms::addr(reals) $object]
                 switch -- $index {
                     -1      {}
@@ -4856,10 +4855,10 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::addr($w.border,short) \
                          ::ms::addr($w.border.viewport,short) \
                          ::ms::addr($w.border.viewport.content,short) \
-                         ::ms::addr($w.x,short) \
-                         ::ms::addr($w.y,short) \
                          ::ms::addr($w.fake_x,short) \
-                         ::ms::addr($w.fake_y,short);
+                         ::ms::addr($w.fake_y,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
                          ::ms::addr($w,structure) \
