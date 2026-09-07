@@ -105,7 +105,7 @@
 # Note 2: Depending on the **-scrollable** option value, two kinds of text structures are possible.
 #         The mustang simple text (**-scrollable** false) is a single text widget.
 #         The mustang scrollable text (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
-#         a text object and two scrollbar objects (displayed only when needed).
+#         a text object, two scrollbar objects (displayed only when needed) and two fake scrollbar objects (displayed only when needed).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the text.
 #
