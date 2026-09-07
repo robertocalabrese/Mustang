@@ -4690,40 +4690,58 @@ proc ::ms::listbox::Hover { w X Y } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::Motion { w x y } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
     # Check if there are items associated to the listbox.
     switch -- $::ms::current($w,values) {
         ""  { return "" }
     }
 
-    # If needed, deselect the current preselected index.
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
+
+    # Check if there is a preselected index.
     switch -- $::ms::data($w,preselected_index) {
         ""      {}
         default {
-            $w.border.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,background) \
-                                                                              -foreground $::ms::current($w,foreground);
+            # Deselect the current preselected index.
+            {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,background) \
+                                                                        -foreground $::ms::current($w,foreground);
         }
     }
 
     # Set the new preselect index.
-    set ::ms::data($w,preselected_index) [$w.listbox index @$x,$y]
+    set ::ms::data($w,preselected_index) [{*}$address index @$x,$y]
 
-    # If the preselect index is not a selected index, preselect it.
-    if { $::ms::data($w,preselected_index) ni [$w.listbox curselection] } {
-        $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                                   -foreground $::ms::current($w,preselectforeground);
+    # Check if the preselect index is not among the selected indexes.
+    if { $::ms::data($w,preselected_index) ni [{*}$address curselection] } {
+        # Preselect the current preselected index.
+        {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                    -foreground $::ms::current($w,preselectforeground);
 
         # Remove the activestyle.
-        $w.listbox configure -activestyle none
+        {*}$address configure -activestyle none
     } else {
         # Be sure that the active style is the one chosen by the developer.
-        $w.listbox configure -activestyle $::ms::current($w,activestyle)
+        {*}$address configure -activestyle $::ms::current($w,activestyle)
 
         # Activate the preselected index.
-        $w.listbox activate $::ms::data($w,preselected_index)
+        {*}$address activate $::ms::data($w,preselected_index)
     }
 
     # Adjust the listbox viewport.
-    $w.listbox see $::ms::data($w,preselected_index)
+    {*}$address see $::ms::data($w,preselected_index)
 
     return ""
 }
