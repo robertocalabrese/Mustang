@@ -884,9 +884,6 @@ package provide ::ms::label 0.1
 _bind _Label <Activate>   { interp invokehidden {} %W state [list !background]; break }
 _bind _Label <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
-# ButtonPress-1
-_bind _Label <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
-
 # Contextual menu
 _bind _Label <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 
