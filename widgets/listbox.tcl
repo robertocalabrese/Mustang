@@ -2139,21 +2139,25 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **activate** *index*
+            switch -- [llength $args] {
+                1   {
+                    # Check if there are items associated to the listbox.
+                    switch -- $::ms::current($w,values) {
+                        ""   { return "" }
+                    }
 
-            # Check if there are items associated to the listbox.
-            switch -- $::ms::current($w,values) {
-                ""   { return "" }
-            }
+                    try {
+                        $w.listbox activate $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Register the new preselected index.
+                        set ::ms::data($w,preselected_index) $args
 
-            try {
-                $w.listbox activate $args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                # Register the new preselected index.
-                set ::ms::data($w,preselected_index) $args
-
-                return $result
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         bbox         -
