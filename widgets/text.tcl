@@ -8800,14 +8800,14 @@ proc ::ms::text::Previous_Char { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
@@ -8819,14 +8819,14 @@ proc ::ms::text::Previous_Char { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
