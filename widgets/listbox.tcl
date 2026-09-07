@@ -4424,6 +4424,10 @@ proc ::ms::listbox::Extend { w amount } {
 #
 # Moves the location cursor to the begin or end of the elements, and extends the selection to that point.
 #
+# Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
 # Where:
 #
 # w     Should be the widget real address involved.
@@ -4432,52 +4436,55 @@ proc ::ms::listbox::Extend { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::Extend_Home_End { w key } {
-    # Note: This procedure was inspired by the listbox procedure 'ListboxExtendUpDown'.
-    #       The procedure have been slighty modified to work with mustang.
-    #       All credits goes to the original author/s.
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
 
     # Check if there are items associated to the listbox.
     switch -- $::ms::current($w,values) {
         ""  { return "" }
     }
 
-    switch -- $::ms::current($w,state) {
-        normal {
-            # Check the listbox selectmode.
-            switch -- $::ms::current($w,selectmode) {
-                extended {
-                    # Check if there is a preselected index.
-                    switch -- $::ms::data($w,preselected_index) {
-                        ""  { set ::ms::data($w,preselected_index) 0 }
-                    }
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
 
-                    # Check if there is a selection already.
-                    switch -- [$w.listbox curselection] {
-                        ""  { return "" }
-                    }
+    # Check the listbox selectmode.
+    switch -- $::ms::current($w,selectmode) {
+        extended {
+            # Check if there is a preselected index.
+            switch -- $::ms::data($w,preselected_index) {
+                ""  { set ::ms::data($w,preselected_index) 0 }
+            }
 
-                    # Clear the selection.
-                    $w.listbox selection clear 0 end
+            # Check if there is a selection already.
+            switch -- [{*}$address curselection] {
+                ""  { return "" }
+            }
 
-                    # Do the selection.
-                    switch -nocase -- $key {
-                        home {
-                            # Select from the first index till the preselected index.
-                            $w.listbox selection set 0 $::ms::data($w,preselected_index)
-                        }
-                        default {
-                            # Select from the preselected index till the last index.
-                            $w.listbox selection set $::ms::data($w,preselected_index) [$w.listbox index end]
-                        }
-                    }
+            # Clear the selection.
+            {*}$address selection clear 0 end
 
-                    # Be sure that the active style is the one chosen by the developer.
-                    $w.listbox configure -activestyle $::ms::current($w,activestyle)
-
-                    # Adjust the listbox viewport.
-                    $w.listbox see $::ms::data($w,preselected_index)
+            # Do the selection.
+            switch -nocase -- $key {
+                home {
+                    # Select from the first index till the preselected index.
+                    {*}$address selection set 0 $::ms::data($w,preselected_index)
+                }
+                default {
+                    # Select from the preselected index till the last index.
+                    {*}$address selection set $::ms::data($w,preselected_index) [{*}$address index end]
                 }
             }
+
+            # Be sure that the active style is the one chosen by the developer.
+            {*}$address configure -activestyle $::ms::current($w,activestyle)
+
+            # Adjust the listbox viewport.
+            {*}$address see $::ms::data($w,preselected_index)
         }
     }
 
