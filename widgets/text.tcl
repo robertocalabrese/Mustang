@@ -5493,12 +5493,16 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        insert  -
-        replace {
+        insert {
             # Synopsis:
             #
             # *window* **insert** *index* *chars* ?*tagList* *chars* *tagList* ...?
-            # *window* **replace** *index1* *index2* *chars* ?*tagList* *chars* *tagList* ...?
+            switch -- [llength $args] {
+                0   -
+                1   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
                 false { set address [list interp invokehidden {} $w] }
                 true  { set address [list $w.text] }
@@ -5506,7 +5510,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 
             # Execute the command.
             try {
-                {*}$address $cmd {*}$args
+                {*}$address insert {*}$args
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok {} {
@@ -5587,6 +5591,38 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        replace {
+            # Synopsis:
+            #
+            # *window* **replace** *index1* *index2* *chars* ?*tagList* *chars* *tagList* ...?
+            switch -- [llength $args] {
+                0   -
+                1   -
+                2   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.text] }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address replace {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                switch -- $::ms::current($w,scrollable) {
+                    true {
+                        # Update the scrollbars.
+                        ::ms::text::Scrollbar_Update $w
+                    }
+                }
+
+                return ""
             }
         }
         state {
