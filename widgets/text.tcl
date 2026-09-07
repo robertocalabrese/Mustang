@@ -586,10 +586,12 @@
 #                                 The text widget 'physical' state acts differently than in the other widgets due to it's a classic widget nature that
 #                                 do not support natively any 'dynamic' states.
 #                                 Changes to the widget's 'physical' state affects the widget's 'dynamic' state.
-#                                 Allowed 'physical' states values are **normal** and **disabled**.
+#                                 Allowed 'physical' states values are **normal**, **readonly** and **disabled**.
 #
-#                                 If the text is disabled then characters may not be inserted or deleted and no insertion cursor will be displayed,
+#                                 If the text is *disabled* or *readonly* then characters may not be inserted or deleted and no insertion cursor will be displayed,
 #                                 even if the input focus is in the widget.
+#
+#                                 If the text is *disabled* then any movement bindings (PageUp, PageDown,...) will not work.
 #
 #                                 If not provided, defaults to **normal**.
 #
@@ -2043,8 +2045,9 @@
 #### STATES:
 #
 # The text widget supports only the **normal** and **disabled** 'physical' states.
-# In the **disabled** state characters may not be inserted or deleted and no insertion cursor will be displayed, even if the input focus
-# is in the widget.
+# In the **disabled** and **readonly** states characters may not be inserted or deleted and no insertion cursor will be displayed,
+# even if the input focus is in the widget.
+# In the *disabled* state also any movement bindings (PageUp, PageDown,...) will not work.
 #
 #### STYLING OPTIONS:
 #
