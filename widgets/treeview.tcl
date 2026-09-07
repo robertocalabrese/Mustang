@@ -5168,8 +5168,8 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
                 $w.fake_x configure -height $::ms::size($::ms::theme,scrollbar) \
                                      -style $::ms::style($w,hull);
 
-                $w.fake_y configure -style $::ms::style($w,hull) \
-                                    -width $::ms::size($::ms::theme,scrollbar);
+                $w.fake_y configure  -style $::ms::style($w,hull) \
+                                     -width $::ms::size($::ms::theme,scrollbar);
 
                 # Update the scrollbars.
                 ::ms::treeview::Scrollbar_Update $w
