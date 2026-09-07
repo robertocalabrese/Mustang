@@ -4838,9 +4838,29 @@ proc ::ms::listbox::PageDown { w } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::PageLeft { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal {
+        disabled { return "" }
+    }
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            # Check if the simple listbox is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""      { ::ms::Scroll_Parent_X $w 120.0 pages }
+                default { interp invokehidden {} $w xview scroll -1 pages }
+            }
+        }
+        true  {
+            # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
+                off { ::ms::Scroll_Parent_X $w 120.0 pages }
                 on  { $w.listbox xview scroll -1 pages }
             }
         }
