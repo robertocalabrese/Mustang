@@ -4025,6 +4025,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                         }
                     }
 
+                    # Execute the command.
                     return [$::ms::addr($w,widget) instate $statespec]
                 }
                 2   {
