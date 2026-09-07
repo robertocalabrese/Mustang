@@ -2146,8 +2146,14 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                         ""   { return "" }
                     }
 
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.listbox] }
+                    }
+
                     try {
-                        $w.listbox activate $args
+                        {*}$address activate $args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -2185,8 +2191,15 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             # *window* **scan** **dragto** *x* *y*
             # *window* **see** *index*
             # *window* **size**
+
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.listbox] }
+            }
+
             try {
-                $w.listbox $cmd {*}$args
+                {*}$address $cmd {*}$args
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
@@ -2941,13 +2954,19 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.listbox] }
+            }
+
             set index [lindex  $args 0]
             set args  [lremove $args 0]
             switch -- [llength $args] {
                 0   {
                     # Execute the command.
                     try {
-                        $w.listbox itemconfigure $index
+                        {*}$address itemconfigure $index
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -2957,7 +2976,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 1   {
                     # Execute the command.
                     try {
-                        $w.listbox itemconfigure $index $args
+                        {*}$address itemconfigure $index $args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -2997,7 +3016,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                             # Execute the command.
                             try {
-                                $w.listbox itemconfigure $index {*}$new_args
+                                {*}$address itemconfigure $index {*}$new_args
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
@@ -3025,8 +3044,14 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                         ""  { return "" }
                     }
 
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.listbox] }
+                    }
+
                     try {
-                        $w.listbox selection {*}$args
+                        {*}$address selection {*}$args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -3046,14 +3071,14 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                 # Deselect the preselection of the indexes provided.
                                 switch -- [llength $args] {
                                     1   {
-                                        $w.listbox itemconfigure [lindex $args 0] -background $::ms::current($w,background) \
-                                                                                  -foreground $::ms::current($w,foreground);
+                                        {*}$address itemconfigure [lindex $args 0] -background $::ms::current($w,background) \
+                                                                                   -foreground $::ms::current($w,foreground);
                                     }
                                     2   {
                                         set index [lindex $args 0]
                                         while { $index < [expr { [lindex $args 1]+1 }] } {
-                                            $w.listbox itemconfigure $index -background $::ms::current($w,background) \
-                                                                            -foreground $::ms::current($w,foreground);
+                                            {*}$address itemconfigure $index -background $::ms::current($w,background) \
+                                                                             -foreground $::ms::current($w,foreground);
 
                                             incr index
                                         }
@@ -3074,6 +3099,12 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.listbox] }
+                    }
+
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
@@ -3157,7 +3188,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                     # Check the widget state and propagate the new statespec to the widget's hull and listbox objects.
                     interp invokehidden {} $w state $::ms::data($w,statespec)
-                    $w.listbox configure {*}$listbox_options
+                    {*}$address configure {*}$listbox_options
 
                     return $states_that_have_changed
                 }
@@ -3181,6 +3212,12 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
 
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.listbox] }
+            }
+
             # Check if the widget has an active horizontal scrollbar.
             switch -- $::ms::data($w,scrollx) {
                 on  {
@@ -3188,7 +3225,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     set args       [lremove $args 0]
 
                     switch -nocase -- $subcommand {
-                        ""     { return [$w.listbox xview] }
+                        ""     { return [{*}$address xview] }
                         moveto {
                             # Check the number of arguments provided (after the 'moveto' word).
                             switch -- [llength $args] {
@@ -3210,7 +3247,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Move the content object horizontally.
-                            $w.listbox xview moveto $fraction
+                            {*}$address xview moveto $fraction
 
                             return ""
                         }
@@ -3242,7 +3279,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Move the content object horizontally.
-                            $w.listbox xview scroll $number $what
+                            {*}$address xview scroll $number $what
 
                             return ""
                         }
@@ -3251,7 +3288,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                             # Move the content object horizontally.
                             try {
-                                $w.listbox xview $index
+                                {*}$address xview $index
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
@@ -3270,6 +3307,12 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
 
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false { set address [list interp invokehidden {} $w] }
+                true  { set address [list $w.listbox] }
+            }
+
             # Check if the widget has an active vertical scrollbar.
             switch -- $::ms::data($w,scrolly) {
                 on  {
@@ -3277,7 +3320,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     set args       [lremove $args 0]
 
                     switch -nocase -- $subcommand {
-                        ""     { return [$w.listbox yview] }
+                        ""     { return [{*}$address yview] }
                         moveto {
                             # Check the number of arguments provided (after the 'moveto' word).
                             switch -- [llength $args] {
@@ -3299,7 +3342,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Move the content object vertically.
-                            $w.listbox yview moveto $fraction
+                            {*}$address yview moveto $fraction
 
                             return ""
                         }
@@ -3331,7 +3374,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Move the content object vertically.
-                            $w.listbox yview scroll $number $what
+                            {*}$address yview scroll $number $what
 
                             return ""
                         }
@@ -3340,7 +3383,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                             # Move the content object vertically.
                             try {
-                                $w.listbox yview $index
+                                {*}$address yview $index
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
