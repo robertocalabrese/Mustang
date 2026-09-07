@@ -82,7 +82,8 @@
 # Note 2: Depending on the **-scrollable** option value, two kinds of frame structures are possible.
 #         The mustang simple frame (**-scrollable** false) is a single frame widget.
 #         The mustang scrollable frame (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
-#         a border object, a viewport object, a frame object (the content) and two scrollbar objects (displayed only when needed).
+#         a border object, a viewport object, a frame object (the content), two scrollbar objects (displayed only when needed)
+#         and two fake scrollbar objects (displayed only when needed).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the frame.
 #
