@@ -5625,7 +5625,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
                         normal {
@@ -7985,7 +7985,7 @@ proc ::ms::text::PageUp { w } {
             switch -- $::current($w,yscrollcommand) {
                 ""      { ::ms::Scroll_Parent_Y $w 120.0 pages }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { interp invokehidden {}  $w yview scroll -1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
@@ -7998,7 +7998,7 @@ proc ::ms::text::PageUp { w } {
             switch -- $::ms::data($w,scrolly) {
                 off { ::ms::Scroll_Parent_Y $w 120.0 pages }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w 120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
@@ -8028,7 +8028,7 @@ proc ::ms::text::PageDown { w } {
             switch -- $::current($w,yscrollcommand) {
                 ""      { ::ms::Scroll_Parent_Y $w -120.0 pages }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { interp invokehidden {}  $w yview scroll 1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w 1] }
@@ -8041,7 +8041,7 @@ proc ::ms::text::PageDown { w } {
             switch -- $::ms::data($w,scrolly) {
                 off { ::ms::Scroll_Parent_Y $w -120.0 pages }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w -120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w 1] }
@@ -8184,7 +8184,7 @@ proc ::ms::text::Line_Start { w } {
             switch -- $::current($w,xscrollcommand) {
                 ""      { ::ms::Scroll_Parent_X $w -120.0 pages }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w xview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display linestart} }
@@ -8196,14 +8196,14 @@ proc ::ms::text::Line_Start { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display linestart} }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w xview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display linestart} }
@@ -8233,7 +8233,7 @@ proc ::ms::text::Line_End { w } {
             switch -- $::current($w,xscrollcommand) {
                 ""      { ::ms::Scroll_Parent_X $w 120.0 pages }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
@@ -8245,14 +8245,14 @@ proc ::ms::text::Line_End { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
@@ -8282,7 +8282,7 @@ proc ::ms::text::Line_Top { w } {
             switch -- $::current($w,xscrollcommand) {
                 ""      { ::ms::Scroll_Parent_Y $w -120.0 pages }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w yview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w 1.0 }
@@ -8294,14 +8294,14 @@ proc ::ms::text::Line_Top { w } {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w 1.0 }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w yview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w 1.0 }
@@ -8331,7 +8331,7 @@ proc ::ms::text::Line_Bottom { w } {
             switch -- $::current($w,xscrollcommand) {
                 ""      { ::ms::Scroll_Parent_Y $w 120.0 pages }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w yview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {end - 1 indices} }
@@ -8343,14 +8343,14 @@ proc ::ms::text::Line_Bottom { w } {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w {end - 1 indices} }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::text::Pathname_Cmd $w yview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {end - 1 indices} }
@@ -8470,14 +8470,14 @@ proc ::ms::text::Next_Char { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
@@ -8489,14 +8489,14 @@ proc ::ms::text::Next_Char { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
@@ -8525,14 +8525,14 @@ proc ::ms::text::Next_Word { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
@@ -8544,14 +8544,14 @@ proc ::ms::text::Next_Word { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
@@ -8580,14 +8580,14 @@ proc ::ms::text::Next_Line { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
@@ -8599,14 +8599,14 @@ proc ::ms::text::Next_Line { w } {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
@@ -8635,14 +8635,14 @@ proc ::ms::text::Next_Paragraph { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
@@ -8654,14 +8654,14 @@ proc ::ms::text::Next_Paragraph { w } {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
@@ -8774,14 +8774,14 @@ proc ::ms::text::Previous_Char { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
@@ -8793,14 +8793,14 @@ proc ::ms::text::Previous_Char { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
@@ -8829,14 +8829,14 @@ proc ::ms::text::Previous_Word { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
@@ -8848,14 +8848,14 @@ proc ::ms::text::Previous_Word { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_X   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
@@ -8884,14 +8884,14 @@ proc ::ms::text::Previous_Line { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
@@ -8903,14 +8903,14 @@ proc ::ms::text::Previous_Line { w } {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
@@ -8939,14 +8939,14 @@ proc ::ms::text::Previous_Paragraph { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
                 default {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
@@ -8958,14 +8958,14 @@ proc ::ms::text::Previous_Paragraph { w } {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Parent_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { ::ms::Scroll_Widget_Y   $w 120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
@@ -9112,7 +9112,7 @@ proc ::ms::text::Select_None { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_PageUp { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w -1] }
     }
@@ -9130,7 +9130,7 @@ proc ::ms::text::Select_PageUp { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_PageDown { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w 1] }
     }
