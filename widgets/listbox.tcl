@@ -4501,16 +4501,22 @@ proc ::ms::listbox::Extend_Home_End { w key } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::listbox::Pathname_Cmd $w state focus
-
     # Check if there are items associated to the listbox.
     switch -- $::ms::current($w,values) {
         ""  { return "" }
     }
 
+    # Change the widget dynamic state to 'focus'.
+    ::ms::listbox::Pathname_Cmd $w state [list focus]
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
+
     # Register the current rows selected.
-    set ::ms::temp($w,selected_rows) [$w.listbox curselection]
+    set ::ms::temp($w,selected_rows) [{*}$address curselection]
     switch -- [llength $::ms::temp($w,selected_rows)] {
         0   { set ::ms::temp($w,selected_rows) [list 0] }
     }
