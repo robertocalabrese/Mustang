@@ -4645,17 +4645,23 @@ proc ::ms::listbox::Hover { w X Y } {
         # The mouse cursor is outside the widget acting as a border object.
 
         # Change the widget dynamic state to '!hover'.
-        ::ms::listbox::Pathname_Cmd $w state !hover
+        ::ms::listbox::Pathname_Cmd $w state [list !hover]
 
         # Check if there are items associated to the listbox.
         switch -- $::ms::current($w,values) {
             ""      {}
             default {
+                # Check if the widget is scrollable or not.
+                switch -- $::ms::current($w,scrollable) {
+                    false { set address [list interp invokehidden {} $w] }
+                    true  { set address [list $w.listbox] }
+                }
+
                 # Recolor any index with the default colors (background and foreground).
                 set index 0
-                while { $index < [$w.listbox size] } {
-                    $w.listbox itemconfigure $index -background $::ms::current($w,background) \
-                                                    -foreground $::ms::current($w,foreground);
+                while { $index < [{*}$address size] } {
+                    {*}$address itemconfigure $index -background $::ms::current($w,background) \
+                                                     -foreground $::ms::current($w,foreground);
 
                     incr index
                 }
@@ -4665,7 +4671,7 @@ proc ::ms::listbox::Hover { w X Y } {
         # The mouse cursor is inside the widget acting as a border object.
 
         # Change the widget dynamic state to 'hover'.
-        ::ms::listbox::Pathname_Cmd $w state hover
+        ::ms::listbox::Pathname_Cmd $w state [list hover]
     }
 
     return ""
