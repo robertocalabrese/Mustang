@@ -82,8 +82,8 @@
 #         The mustang simple labelframe (**-scrollable** false) is a megawidget composed by an hull object (the megawidget container),
 #         a title object and a frame object (the content).
 #         The mustang scrollable labelframe (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
-#         a title object, a container object (an internal container) a border object, a viewport object, a frame object (the content)
-#         and two scrollbar objects (displayed only when needed).
+#         a title object, a container object (an internal container) a border object, a viewport object, a frame object (the content),
+#         two scrollbar objects (displayed only when needed) and two fake scrollbar objects (displayed only when needed).
 #
 # Note 3: The mustang labelframe widget is a complete rewrite of its Tk counterpart (with no Tk labelframes involved).
 #
