@@ -8551,14 +8551,14 @@ proc ::ms::text::Next_Word { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
@@ -8570,14 +8570,14 @@ proc ::ms::text::Next_Word { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
