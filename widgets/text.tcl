@@ -7987,7 +7987,7 @@ proc ::ms::text::PageUp { w } {
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { interp invokehidden {}  $w yview scroll -1 pages }
+                        readonly { interp invokehidden {} $w yview scroll -1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
                     }
                 }
@@ -7996,11 +7996,11 @@ proc ::ms::text::PageUp { w } {
         true {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
-                off { ::ms::Scroll_Parent_Y $w 120.0 pages }
-                on  {
+                off     { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_Y   $w 120.0 pages }
+                        readonly { ::ms::Scroll_Widget_Y $w 120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
                     }
                 }
