@@ -4039,8 +4039,13 @@ proc ::ms::listbox::Begin_Select { w x y } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::Configure { w } {
-    # Update the scrollbars.
-    ::ms::listbox::Scrollbar_Update $w
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        true {
+            # Update the scrollbars.
+            ::ms::listbox::Scrollbar_Update $w
+        }
+    }
 
     return ""
 }
