@@ -3802,85 +3802,96 @@ proc ::ms::listbox::ArrowUp { w } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::B1_Motion { w x y } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
     # Check if there are items associated to the listbox.
     switch -- $::ms::current($w,values) {
         ""  { return "" }
     }
 
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        normal {
-            # Set the closest index near the mouse pointer coordinates where the 'ButtonPress' happened.
-            set index [$w.listbox index @$x,$y]
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+    }
 
-            if { $index == $::tk::Priv(listboxPrev) } {
-                return ""
-            } else {
-                # Set the preselected index as 'index'.
-                set ::ms::data($w,preselected_index) $index
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
+
+    # Set the closest index near the mouse pointer coordinates where the 'ButtonPress' happened.
+    set index [{*}$address index @$x,$y]
+
+    if { $index == $::tk::Priv(listboxPrev) } {
+        return ""
+    } else {
+        # Set the preselected index as 'index'.
+        set ::ms::data($w,preselected_index) $index
+    }
+
+    # Check the selection mode.
+    switch -- $::ms::current($w,selectmode) {
+        browse {
+            # Select the preselected index.
+            {*}$address selection clear 0 end
+            {*}$address selection set $::ms::data($w,preselected_index)
+
+            # Activate the preselected index.
+            {*}$address activate $::ms::data($w,preselected_index)
+
+            set ::tk::Priv(listboxPrev) $::ms::data($w,preselected_index)
+
+            # Fire up the selection event.
+            ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
+        }
+        extended {
+            set index $::tk::Priv(listboxPrev)
+            if { $index < 0 } {
+                set index $::ms::data($w,preselected_index)
+                {*}$address selection set $::ms::data($w,preselected_index)
             }
 
-            # Check the selection mode.
-            switch -- $::ms::current($w,selectmode) {
-                browse {
-                    # Select the preselected index.
-                    $w.listbox selection clear 0 end
-                    $w.listbox selection set $::ms::data($w,preselected_index)
+            # Get the current anchor index.
+            set anchor [{*}$address index anchor]
 
-                    # Activate the preselected index.
-                    $w.listbox activate $::ms::data($w,preselected_index)
-
-                    set ::tk::Priv(listboxPrev) $::ms::data($w,preselected_index)
-
-                    # Fire up the selection event.
-                    ::tk::FireListboxSelectEvent $w.listbox
+            # Check if the current selection includes the anchor index.
+            switch -- [{*}$address selection includes anchor] {
+                0   {
+                    {*}$address selection clear $index $::ms::data($w,preselected_index)
+                    {*}$address selection clear anchor $::ms::data($w,preselected_index)
                 }
-                extended {
-                    set index $::tk::Priv(listboxPrev)
-                    if { $index < 0 } {
-                        set index $::ms::data($w,preselected_index)
-                        $w.listbox selection set $::ms::data($w,preselected_index)
-                    }
-
-                    # Get the current anchor index.
-                    set anchor [$w.listbox index anchor]
-
-                    # Check if the current selection includes the anchor index.
-                    switch -- [$w.listbox selection includes anchor] {
-                        0   {
-                            $w.listbox selection clear $index $::ms::data($w,preselected_index)
-                            $w.listbox selection clear anchor $::ms::data($w,preselected_index)
-                        }
-                        1   {
-                            $w.listbox selection clear $index $::ms::data($w,preselected_index)
-                            $w.listbox selection set anchor $::ms::data($w,preselected_index)
-                        }
-                    }
-
-                    switch -- [info exists ::tk::Priv(listboxSelection)] {
-                        0   { set ::tk::Priv(listboxSelection) [$w.listbox curselection] }
-                    }
-
-                    while { ($index < $::ms::data($w,preselected_index)) && ($index < $anchor) } {
-                        if { $index in $::tk::Priv(listboxSelection) } {
-                            $w.listbox selection set $index
-                        }
-                        incr index
-                    }
-
-                    while { ($index > $::ms::data($w,preselected_index)) && ($index > $anchor) } {
-                        if { $index in $::tk::Priv(listboxSelection) } {
-                            $w.listbox selection set $index
-                        }
-                        incr index -1
-                    }
-
-                    set ::tk::Priv(listboxPrev) $::ms::data($w,preselected_index)
-
-                    # Fire up the selection event.
-                    ::tk::FireListboxSelectEvent $w.listbox
+                1   {
+                    {*}$address selection clear $index $::ms::data($w,preselected_index)
+                    {*}$address selection set anchor $::ms::data($w,preselected_index)
                 }
             }
+
+            switch -- [info exists ::tk::Priv(listboxSelection)] {
+                0   { set ::tk::Priv(listboxSelection) [{*}$address curselection] }
+            }
+
+            while { ($index < $::ms::data($w,preselected_index)) && ($index < $anchor) } {
+                if { $index in $::tk::Priv(listboxSelection) } {
+                    {*}$address selection set $index
+                }
+                incr index
+            }
+
+            while { ($index > $::ms::data($w,preselected_index)) && ($index > $anchor) } {
+                if { $index in $::tk::Priv(listboxSelection) } {
+                    {*}$address selection set $index
+                }
+                incr index -1
+            }
+
+            set ::tk::Priv(listboxPrev) $::ms::data($w,preselected_index)
+
+            # Fire up the selection event.
+            ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
         }
     }
 
