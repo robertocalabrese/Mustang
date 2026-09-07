@@ -8661,14 +8661,14 @@ proc ::ms::text::Next_Paragraph { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
@@ -8680,14 +8680,14 @@ proc ::ms::text::Next_Paragraph { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
