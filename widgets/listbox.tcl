@@ -1916,8 +1916,8 @@ proc ::ms::listbox::Command { window { args "" } } {
             # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
             # and move that scrollbar by one unit towards the right or left.
             # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextChar>> { ::ms::listbox::NextChar [_winfo parent %W]; break }
-            _bind $w.listbox <<PrevChar>> { ::ms::listbox::PrevChar [_winfo parent %W]; break }
+            _bind $w.listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
+            _bind $w.listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
 
             # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
             # left, right, top or bottom.
@@ -4746,7 +4746,7 @@ proc ::ms::listbox::Motion { w x y } {
     return ""
 }
 
-## NextChar
+## Next_Char
 #
 # Scroll the listbox horizontally by one unit towards the right.
 #
@@ -4755,10 +4755,30 @@ proc ::ms::listbox::Motion { w x y } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::listbox::NextChar { w } {
+proc ::ms::listbox::Next_Char { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal {
+        disabled { return "" }
+    }
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            # Check if the simple listbox is linked to an horizontal scrollbar.
+            switch -- $::current($w,xscrollcommand) {
+                ""      { ::ms::Scroll_Parent_X $w -120.0 units }
+                default { interp invokehidden {} $w xview scroll 1 units }
+            }
+        }
+        true  {
+            # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
+                off { ::ms::Scroll_Parent_X $w -120.0 units }
                 on  { $w.listbox xview scroll 1 units }
             }
         }
