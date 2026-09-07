@@ -8237,11 +8237,17 @@ proc ::ms::text::Line_End { w } {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X $w 120.0 pages }
+                ""  {
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        readonly { ::ms::Scroll_Parent_X   $w 120.0 pages }
+                        normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
+                    }
+                }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
+                        readonly { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
                     }
                 }
@@ -8253,14 +8259,14 @@ proc ::ms::text::Line_End { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_X   $w 120.0 pages }
+                        readonly { ::ms::Scroll_Parent_X   $w 120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
+                        readonly { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
                     }
                 }
