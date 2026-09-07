@@ -3931,13 +3931,9 @@ proc ::ms::text::Command { window { args "" } } {
                     -state {
                         set value [string tolower $value]
                         switch -- $value {
-                            disabled {
-                                set ::ms::current($w,state) disabled
-
-                                # Set the widget dynamic state to 'disabled'
-                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
-                            }
-                            normal { set ::ms::current($w,state) normal }
+                            disabled -
+                            readonly -
+                            normal   { set ::ms::current($w,state) $value }
                         }
                     }
                     -style {
@@ -4039,14 +4035,27 @@ proc ::ms::text::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget state and set the state, takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
+                    set state     disabled
                     set takefocus 0
+
+                    # Set the widget dynamic state to 'disabled'
+                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
+                }
+                readonly {
+                    set cursor    arrow
+                    set state     disabled
+                    set takefocus $::ms::current($w,takefocus)
+
+                    # Set the widget dynamic state to 'readonly'
+                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 8 8 "readonly"]
                 }
                 normal {
                     set cursor    $::ms::current($w,cursor)
+                    set state     normal
                     set takefocus $::ms::current($w,takefocus)
                 }
             }
@@ -4130,7 +4139,7 @@ proc ::ms::text::Command { window { args "" } } {
                                                    -spacing2 $::ms::current($w,spacing2) \
                                                    -spacing3 $::ms::current($w,spacing3) \
                                                   -startline $::ms::current($w,startline) \
-                                                      -state $::ms::current($w,state) \
+                                                      -state $state \
                                                        -tabs $::ms::current($w,tabs) \
                                                    -tabstyle $::ms::current($w,tabstyle) \
                                                   -takefocus $takefocus \
@@ -5003,18 +5012,9 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     -state {
                                         set value [string tolower $value]
                                         switch -- $value {
-                                            disabled {
-                                                set ::ms::current($w,state) disabled
-
-                                                # Set the widget dynamic state to 'disabled'
-                                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
-                                            }
-                                            normal {
-                                                set ::ms::current($w,state) normal
-
-                                                # Set the widget dynamic state to '!disabled'
-                                                set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
-                                            }
+                                            disabled -
+                                            readonly -
+                                            normal   { set ::ms::current($w,state) $value }
                                         }
                                     }
                                     -style {
@@ -5156,15 +5156,31 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the cursor and takefocus accordingly.
+                            # Check the widget state and set the state, takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
+                                    set state     disabled
                                     set takefocus 0
+
+                                    # Set the widget dynamic state to 'disabled'
+                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
+                                }
+                                readonly {
+                                    set cursor    arrow
+                                    set state     disabled
+                                    set takefocus $::ms::current($w,takefocus)
+
+                                    # Set the widget dynamic state to 'readonly'
+                                    set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 8 8 "readonly"]
                                 }
                                 normal {
                                     set cursor    $::ms::current($w,cursor)
+                                    set state     normal
                                     set takefocus $::ms::current($w,takefocus)
+
+                                     # Set the widget dynamic state to 'normal'
+                                    set ::ms::data($w,statespec) $::ms::data(statespec,normal)
                                 }
                             }
 
@@ -5247,7 +5263,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                                                    -spacing2 $::ms::current($w,spacing2) \
                                                                    -spacing3 $::ms::current($w,spacing3) \
                                                                   -startline $::ms::current($w,startline) \
-                                                                      -state $::ms::current($w,state) \
+                                                                      -state $state \
                                                                        -tabs $::ms::current($w,tabs) \
                                                                    -tabstyle $::ms::current($w,tabstyle) \
                                                                   -takefocus $takefocus \
@@ -9527,6 +9543,12 @@ proc ::ms::text::Redo { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Transpose { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false { set address [list interp invokehidden {} $w] }
