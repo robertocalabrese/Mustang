@@ -2658,8 +2658,8 @@ _bind _Simple_Text <<DeleteChar>>       { ::ms::text::Delete %W; break }
 
 # Delete from the insertion cursor till the end of the line.
 switch -- [_tk windowingsystem] {
-    aqua    { _bind _Simple_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_Line_End %W; break } }
-    default { _bind _Simple_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_Line_End %W; break } }
+    aqua    { _bind _Simple_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_LineEnd %W; break } }
+    default { _bind _Simple_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_LineEnd %W; break } }
 }
 
 # If a selection is present, delete the selected text, otherwise delete all the characters positioned
@@ -2914,8 +2914,8 @@ _bind _Scrollable_Text <<DeleteChar>>       { ::ms::text::Delete [_winfo parent 
 
 # Delete from the insertion cursor till the end of the line.
 switch -- [_tk windowingsystem] {
-    aqua    { _bind _Scrollable_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_Line_End [_winfo parent %W]; break } }
-    default { _bind _Scrollable_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_Line_End [_winfo parent %W]; break } }
+    aqua    { _bind _Scrollable_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_LineEnd [_winfo parent %W]; break } }
+    default { _bind _Scrollable_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_LineEnd [_winfo parent %W]; break } }
 }
 
 # If a selection is present, delete the selected text, otherwise delete all the characters positioned
@@ -7585,7 +7585,7 @@ proc ::ms::text::Delete_Word { w } {
     return ""
 }
 
-## Delete_Till_Line_End
+## Delete_Till_LineEnd
 #
 # Deletes from the insertion cursor to the end of its line.
 # If the insertion cursor is already at the end of a line, then deletes the newline character.
@@ -7595,7 +7595,13 @@ proc ::ms::text::Delete_Word { w } {
 # w   Should be the widget real address involved.
 #
 # It doesn't return anything.
-proc ::ms::text::Delete_Till_Line_End { w } {
+proc ::ms::text::Delete_Till_LineEnd { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false { set address [list interp invokehidden {} $w] }
