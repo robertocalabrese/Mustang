@@ -7894,6 +7894,12 @@ proc ::ms::text::Control_Tab { w dir } {
 #
 # It doesn't return anything.
 proc ::ms::text::KeyPress { w key } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
     # Execute the command.
     ::ms::text::Insert_String $w $key
 
