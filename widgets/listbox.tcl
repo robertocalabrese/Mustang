@@ -2937,14 +2937,27 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **itemconfigure** *index* ?*option*? ?*value*? ?*option value* ... *option value*?
-            set index  [lindex  $args 0]
-            set args   [lremove $args 0]
-
             switch -- [llength $args] {
-                0   -
-                1   {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            set index [lindex  $args 0]
+            set args  [lremove $args 0]
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
                     try {
-                        $w.listbox itemconfigure $index {*}$args
+                        $w.listbox itemconfigure $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                1   {
+                    # Execute the command.
+                    try {
+                        $w.listbox itemconfigure $index $args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -2981,17 +2994,17 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                     default { ::ms::Error "Invalid itemconfigure option, '$option'." $caller_info }
                                 }
                             }
+
+                            # Execute the command.
+                            try {
+                                $w.listbox itemconfigure $index {*}$new_args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return ""
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
-                    }
-
-                    # Execute the command.
-                    try {
-                        $w.listbox itemconfigure $index {*}$new_args
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return ""
                     }
                 }
             }
