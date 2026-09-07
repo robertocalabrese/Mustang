@@ -306,9 +306,6 @@ _bind _Scrollable_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_wi
 _bind _Hull_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd %W state !background; break }
 _bind _Hull_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd %W state  background; break }
 
-# ButtonPress-1
-_bind _Hull_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
-
 # Contextual menu
 _bind _Hull_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
 
@@ -446,9 +443,6 @@ _bind _Y_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [
 _bind _X_Fake_Scrollbar_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
 _bind _X_Fake_Scrollbar_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
 
-# ButtonPress-1
-_bind _X_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
-
 # Contextual menu
 _bind _X_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
@@ -512,9 +506,6 @@ _bind _X_Fake_Scrollbar_Treeview <Control-TouchpadScroll> { ::ms::Touchpad_Paren
 # Activate/Deactivate
 _bind _Y_Fake_Scrollbar_Treeview <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
 _bind _Y_Fake_Scrollbar_Treeview <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
-
-# ButtonPress-1
-_bind _Y_Fake_Scrollbar_Treeview <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel [_winfo parent %W]; break }
 
 # Contextual menu
 _bind _Y_Fake_Scrollbar_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
