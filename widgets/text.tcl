@@ -7351,9 +7351,10 @@ proc ::ms::text::Cut { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
-    # Check the widget state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
+    # Check the widget's state.
+    switch -- $::ms::current($ww,state) {
+        disabled -
+        readonly { return "" }
     }
 
     # Check if the widget is scrollable or not.
