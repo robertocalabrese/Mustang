@@ -1581,7 +1581,7 @@ namespace eval ttk::theme::Halo {
         # No layout
 
         # Normal state
-        style configure Text               -background Background \
+        style configure Text               -background White \
                                           -bordercolor Background \
                                           -borderwidth 0 \
                                               -columns 80 \
@@ -1600,9 +1600,13 @@ namespace eval ttk::theme::Halo {
                                       -shellbackground Background;
 
         # Mapping
-        style map Text -bordercolor [list background BordercolorBackground \
+        style map Text  -background [list   disabled Background \
+                                            readonly Background] \
+                       -bordercolor [list background BordercolorBackground \
                                             disabled BordercolorDisabled \
-                                               hover Accent];
+                                               hover Accent] \
+                        -foreground [list   disabled TextDisabled \
+                                            readonly Text];
 
         ########################
         ##                    ##
