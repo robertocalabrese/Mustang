@@ -5139,6 +5139,22 @@ proc ::ms::listbox::Select { w } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::Select_All { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
+
     # Check the 'selectmode'.
     switch -- $::ms::current($w,selectmode) {
         extended -
@@ -5154,19 +5170,19 @@ proc ::ms::listbox::Select_All { w } {
             }
 
             # Deselect any previously selected index.
-            $w.listbox selection clear 0 end
+            {*}$address selection clear 0 end
 
             # Select all indexes.
-            $w.listbox selection set 0 end
+            {*}$address selection set 0 end
 
             # Be sure that the active style is the one chosen by the developer.
-            $w.listbox configure -activestyle $::ms::current($w,activestyle)
+            {*}$address configure -activestyle $::ms::current($w,activestyle)
 
             # Activate the preselected index.
-            $w.listbox activate $::ms::data($w,preselected_index)
+            {*}$address activate $::ms::data($w,preselected_index)
 
             # Fire up the selection event.
-            ::tk::FireListboxSelectEvent $w.listbox
+            ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
         }
     }
 
