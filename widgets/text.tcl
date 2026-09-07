@@ -8717,7 +8717,7 @@ proc ::ms::text::Next_Char { w } {
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false {
-            # Check if the simple text is linked to an vertical scrollbar.
+            # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
@@ -9021,7 +9021,7 @@ proc ::ms::text::Previous_Char { w } {
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false {
-            # Check if the simple text is linked to an vertical scrollbar.
+            # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
