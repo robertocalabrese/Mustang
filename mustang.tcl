@@ -5427,11 +5427,6 @@ proc ::ms::Is_Focussable { w } {
 #
 # It doesn't return anything.
 proc ::ms::Hover { w X Y } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
     # Get the dimensions of the widget border object.
     set height [_winfo height $::ms::addr($w,border)]
     set width  [_winfo width  $::ms::addr($w,border)]
@@ -5449,12 +5444,12 @@ proc ::ms::Hover { w X Y } {
         # The mouse cursor is outside the widget border object.
 
         # Change the widget dynamic state to '!hover'.
-        [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list !pressed !hover]
+        [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list !hover]
     } else {
         # The mouse cursor is inside the widget border object.
 
         # Change the widget dynamic state to 'hover'.
-        [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list !pressed hover]
+        [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list  hover]
     }
 
     return ""
