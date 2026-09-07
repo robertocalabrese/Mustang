@@ -7242,6 +7242,12 @@ proc ::ms::text::Clear { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Copy { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($ww,state) {
+        disabled -
+        readonly { return "" }
+    }
+
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollbar) {
         false { set address [list interp invokehidden {} $w] }
