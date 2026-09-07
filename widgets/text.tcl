@@ -2934,8 +2934,8 @@ _bind _Scrollable_Text <Meta-KeyPress-greater> { break }
 _bind _Scrollable_Text <Escape> { break }
 
 # Enter/Leave
-_bind _Scrollable_Text <Enter> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
-_bind _Scrollable_Text <Leave> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Scrollable_Text <FocusIn>  { ::ms::text::FocusIn  [_winfo parent %W]; break }
@@ -3192,8 +3192,8 @@ _bind _X_Scrollbar_Text <B1-Motion>       { ::ms::text::Scrollbar_Drag        [_
 _bind _X_Scrollbar_Text <ButtonRelease-1> { ::ms::text::Scrollbar_ButtonRelease; break }
 
 # Enter/Leave
-_bind _X_Scrollbar_Text <Enter> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
-_bind _X_Scrollbar_Text <Leave> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Scrollbar_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Scrollbar_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Mousewheel and Touchpad
 
@@ -3250,8 +3250,8 @@ _bind _Y_Scrollbar_Text <B1-Motion>       { ::ms::text::Scrollbar_Drag        [_
 _bind _Y_Scrollbar_Text <ButtonRelease-1> { ::ms::text::Scrollbar_ButtonRelease; break }
 
 # Enter/Leave
-_bind _Y_Scrollbar_Text <Enter> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
-_bind _Y_Scrollbar_Text <Leave> { ::ms::text::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Scrollbar_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Scrollbar_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Mousewheel and Touchpad
 
@@ -6780,47 +6780,6 @@ proc ::ms::text::FocusOut { w } {
     switch -- [_winfo exists $::ms::current($w,cmenu)] {
         0   { ::ms::text::Pathname_Cmd $w state [list !focus] }
         1   { ::ms::text::Pathname_Cmd $w state [list  focus] }
-    }
-
-    return ""
-}
-
-## Hover
-#
-# Manage the **Enter** and **Leave** event on the widget.
-#
-# Where:
-#
-# w      Should be the widget real address involved.
-#
-# X, Y   Should be the mouse pointer (X,Y) root coordinates at the time of the event.
-#        These value are provided directly by the **Enter** or **Leave** event.
-#
-# It doesn't return anything.
-proc ::ms::text::Hover { w X Y } {
-    # Get the dimensions of the widget that acts as a border object.
-    set height [_winfo height $::ms::addr($w,border)]
-    set width  [_winfo width  $::ms::addr($w,border)]
-
-    # Get the north-west (nw) root coordinates of the widget that acts as a border object.
-    set X_nw [_winfo rootx $::ms::addr($w,border)]
-    set Y_nw [_winfo rooty $::ms::addr($w,border)]
-
-    # Get the widget south-east (se) root coordinates of the widget that acts as a border object.
-    set X_se [expr { $X_nw+$width }]
-    set Y_se [expr { $Y_nw+$height }]
-
-    # Check if the mouse pointer coordinates are inside or outside the widget acting as a border object.
-    if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
-        # The mouse cursor is outside the widget acting as a border object.
-
-        # Change the widget dynamic state to '!hover'.
-        ::ms::text::Pathname_Cmd $w state !hover
-    } else {
-        # The mouse cursor is inside the widget acting as a border object.
-
-        # Change the widget dynamic state to 'hover'.
-        ::ms::text::Pathname_Cmd $w state hover
     }
 
     return ""
