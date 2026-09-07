@@ -8292,11 +8292,17 @@ proc ::ms::text::Line_Top { w } {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_Y $w -120.0 pages }
+                ""  {
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 pages }
+                        normal   { ::ms::text::Move_Cursor $w 1.0 }
+                    }
+                }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::text::Pathname_Cmd $w yview moveto 0 }
+                        readonly { ::ms::text::Pathname_Cmd $w yview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w 1.0 }
                     }
                 }
@@ -8308,14 +8314,14 @@ proc ::ms::text::Line_Top { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::Scroll_Parent_Y   $w -120.0 pages }
+                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 pages }
                         normal   { ::ms::text::Move_Cursor $w 1.0 }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { ::ms::text::Pathname_Cmd $w yview moveto 0 }
+                        readonly { ::ms::text::Pathname_Cmd $w yview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w 1.0 }
                     }
                 }
