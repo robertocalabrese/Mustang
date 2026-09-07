@@ -1691,18 +1691,18 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # They will all point to the widget hull object short address.
                     set ::ms::addr($w,short)          $short_addr
                     set ::ms::addr($w.treeview,short) $short_addr
-                    set ::ms::addr($w.x,short)        $short_addr
-                    set ::ms::addr($w.y,short)        $short_addr
                     set ::ms::addr($w.fake_x,short)   $short_addr
                     set ::ms::addr($w.fake_y,short)   $short_addr
+                    set ::ms::addr($w.x,short)        $short_addr
+                    set ::ms::addr($w.y,short)        $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.treeview \
-                                              $w.x \
-                                              $w.y \
                                               $w.fake_x \
-                                              $w.fake_y;
+                                              $w.fake_y \
+                                              $w.x \
+                                              $w.y;
 
                     lappend ::ms::addr(shorts) $short_addr
 
@@ -1715,9 +1715,9 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Set the structure addresses.
                     # Is important to note that the scrollbar addresses must not be included.
                     set ::ms::addr($w,structure) [list $w \
-                                                       $w.treeview \
                                                        $w.fake_x \
-                                                       $w.fake_y];
+                                                       $w.fake_y \
+                                                       $w.treeview];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -3923,10 +3923,10 @@ proc ::ms::treeview::Destroy { w } {
             # Remove all the widget's objects real addresses from the list of all available real addresses.
             foreach object [list $w \
                                  $w.treeview \
-                                 $w.x \
-                                 $w.y \
                                  $w.fake_x \
-                                 $w.fake_y] {
+                                 $w.fake_y \
+                                 $w.x \
+                                 $w.y] {
                 set index [lsearch -exact $::ms::addr(reals) $object]
                 switch -- $index {
                     -1      {}
@@ -3954,10 +3954,10 @@ proc ::ms::treeview::Destroy { w } {
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short) \
                          ::ms::addr($w.treeview,short) \
-                         ::ms::addr($w.x,short) \
-                         ::ms::addr($w.y,short) \
                          ::ms::addr($w.fake_x,short) \
-                         ::ms::addr($w.fake_y,short);
+                         ::ms::addr($w.fake_y,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
                          ::ms::addr($w,structure) \
