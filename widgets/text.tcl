@@ -6776,19 +6776,11 @@ proc ::ms::text::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
+    # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
+        0   { ::ms::text::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::text::Pathname_Cmd $w state [list  focus] }
     }
-
-    # Change the widget dynamic state to '!focus'.
-    ::ms::text::Pathname_Cmd $w state !focus
 
     return ""
 }
