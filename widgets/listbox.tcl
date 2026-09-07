@@ -80,8 +80,10 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Note 2: The mustang listbox widget is a megawidget composed by an hull object (the megawidget container), a listbox object and
-#         two scrollbar objects (displayed only when needed).
+# Note 2: Depending on the **-scrollable** option value, two kinds of listbox structures are possible.
+#         The mustang simple listbox (**-scrollable** false) is a single listbox widget.
+#         The mustang scrollable listbox (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
+#         a listbox object, two scrollbar objects (displayed only when needed) and two fake scrollbar objects (displayed only when needed).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the listbox.
 #
