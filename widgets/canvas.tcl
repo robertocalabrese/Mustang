@@ -3642,18 +3642,18 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # They will all point to the widget hull object short address.
                     set ::ms::addr($w,short)        $short_addr
                     set ::ms::addr($w.canvas,short) $short_addr
-                    set ::ms::addr($w.x,short)      $short_addr
-                    set ::ms::addr($w.y,short)      $short_addr
                     set ::ms::addr($w.fake_x,short) $short_addr
                     set ::ms::addr($w.fake_y,short) $short_addr
+                    set ::ms::addr($w.x,short)      $short_addr
+                    set ::ms::addr($w.y,short)      $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.canvas \
-                                              $w.x \
-                                              $w.y \
                                               $w.fake_x \
-                                              $w.fake_y;
+                                              $w.fake_y \
+                                              $w.x \
+                                              $w.y;
 
                     lappend ::ms::addr(shorts) $short_addr
 
@@ -5463,10 +5463,10 @@ proc ::ms::canvas::Destroy { w } {
             # Remove every widget's objects addresses from the list of all available real addresses.
             foreach object [list $w \
                                  $w.canvas \
-                                 $w.x \
-                                 $w.y \
                                  $w.fake_x \
-                                 $w.fake_y] {
+                                 $w.fake_y \
+                                 $w.x \
+                                 $w.y] {
                 set index [lsearch -exact $::ms::addr(reals) $object]
                 switch -- $index {
                     -1      {}
@@ -5504,10 +5504,10 @@ proc ::ms::canvas::Destroy { w } {
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short) \
                          ::ms::addr($w.canvas,short) \
-                         ::ms::addr($w.x,short) \
-                         ::ms::addr($w.y,short) \
                          ::ms::addr($w.fake_x,short) \
-                         ::ms::addr($w.fake_y,short);
+                         ::ms::addr($w.fake_y,short) \
+                         ::ms::addr($w.x,short) \
+                         ::ms::addr($w.y,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
                          ::ms::addr($w,structure) \
