@@ -4082,18 +4082,6 @@ proc ::ms::listbox::Destroy { w } {
         default { set ::ms::addr(listbox) [lremove $::ms::addr(listbox) $index] }
     }
 
-    # Remove all the objects real addresses from the list of all available real addresses.
-    foreach object [list $w \
-                         $w.listbox \
-                         $w.x \
-                         $w.y] {
-        set index [lsearch -exact $::ms::addr(reals) $object]
-        switch -- $index {
-            -1      {}
-            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-        }
-    }
-
     # Remove the widget address from the listbox classtype real address list with class '::ms::current($w,class)'.
     set index [lsearch -exact $::ms::class($::ms::current($w,class),listbox,addrs) $w]
     switch -- $index {
@@ -4119,23 +4107,64 @@ proc ::ms::listbox::Destroy { w } {
         }
     }
 
-    # Remove the widget address from the megawidget real address list.
-    set index [lsearch -exact $::ms::addr(megawidgets) $w]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
-    }
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false {
+            ############################
+            ##                        ##
+            ##     SIMPLE LISTBOX     ##
+            ##                        ##
+            ############################
 
-    # Remove the widget address from the megawidget scrollable real address list.
-    set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::addr(megawidgets,scrollable) [lremove $::ms::addr(megawidgets,scrollable) $index] }
+            # Remove the widget address from the list of all available real addresses.
+            set index [lsearch -exact $::ms::addr(reals) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+            }
+        }
+        true {
+            ################################
+            ##                            ##
+            ##     SCROLLABLE LISTBOX     ##
+            ##                            ##
+            ################################
+
+            # Remove every widget's objects addresses from the list of all available real addresses.
+            foreach object [list $w \
+                                 $w.fake_x \
+                                 $w.fake_y \
+                                 $w.listbox \
+                                 $w.x \
+                                 $w.y] {
+                set index [lsearch -exact $::ms::addr(reals) $object]
+                switch -- $index {
+                    -1      {}
+                    default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+                }
+            }
+
+            # Remove the widget address from the megawidget real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
+            }
+
+            # Remove the widget address from the megawidget scrollable real address list.
+            set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::addr(megawidgets,scrollable) [lremove $::ms::addr(megawidgets,scrollable) $index] }
+            }
+        }
     }
 
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short) \
+                         ::ms::addr($w.fake_x,short) \
+                         ::ms::addr($w.fake_y,short) \
                          ::ms::addr($w.listbox,short) \
                          ::ms::addr($w.x,short) \
                          ::ms::addr($w.y,short);
