@@ -7811,8 +7811,8 @@ proc ::ms::text::Insert { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Insert_String { w data } {
-    if { $data eq "" || $::ms::current($w,state) eq "disabled" } {
-        return ""
+    switch -- $data {
+        ""  { return "" }
     }
 
     # Check if the widget is scrollable or not.
