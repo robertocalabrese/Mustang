@@ -400,7 +400,7 @@ namespace eval ttk::theme::Halo {
                                                  -cursor xterm \
                                               -darkcolor Background \
                                         -fieldbackground Fieldbackground \
-                                             -focuscolor LightcolorAlternate \
+                                             -focuscolor White \
                                               -focusfill FieldbackgroundFocus \
                                              -focuswidth 2 \
                                                    -font NormalFont \
@@ -408,7 +408,7 @@ namespace eval ttk::theme::Halo {
                                             -insertcolor TextAlternate \
                                             -insertwidth 2 \
                                                 -justify left \
-                                             -lightcolor LightcolorAlternate \
+                                             -lightcolor White \
                                                 -padding [list 4p 5p 4p 5p] \
                                   -placeholderforeground PlaceholderText \
                                              -postoffset [list 1 0 0 0] \
@@ -417,7 +417,7 @@ namespace eval ttk::theme::Halo {
                                       -selectborderwidth 0 \
                                        -selectforeground TextAlternate;
 
-        style configure Popdown         -background PopdownBackground \
+        style configure Popdown         -background White \
                                        -bordercolor PopdownBordercolor \
                                        -borderwidth 1 \
                                             -cursor arrow \
@@ -501,14 +501,14 @@ namespace eval ttk::theme::Halo {
                                               -cursor xterm \
                                            -darkcolor Background \
                                      -fieldbackground Fieldbackground \
-                                          -focuscolor LightcolorAlternate \
+                                          -focuscolor White \
                                           -focuswidth 2 \
                                                 -font NormalFont \
                                           -foreground TextAlternate \
                                          -insertcolor TextAlternate \
                                          -insertwidth 2 \
                                              -justify left \
-                                          -lightcolor LightcolorAlternate \
+                                          -lightcolor White \
                                              -padding [list 4p 5p 4p 5p] \
                                -placeholderforeground PlaceholderText \
                                     -selectbackground White \
@@ -832,7 +832,7 @@ namespace eval ttk::theme::Halo {
                                                    -cursor arrow \
                                                 -darkcolor Background \
                                           -fieldbackground Fieldbackground \
-                                               -focuscolor LightcolorAlternate \
+                                               -focuscolor White \
                                                 -focusfill FieldbackgroundFocus \
                                                -focuswidth 2 \
                                                      -font NormalFont \
@@ -840,7 +840,7 @@ namespace eval ttk::theme::Halo {
                                               -insertcolor TextAlternate \
                                               -insertwidth 2 \
                                                   -justify left \
-                                               -lightcolor LightcolorAlternate \
+                                               -lightcolor White \
                                                   -padding [list 4p 5p 4p 5p] \
                                     -placeholderforeground PlaceholderText \
                                                -postoffset [list 1 0 0 0] \
@@ -993,7 +993,7 @@ namespace eval ttk::theme::Halo {
                                                  -cursor arrow \
                                               -darkcolor Background \
                                         -fieldbackground Fieldbackground \
-                                             -focuscolor LightcolorAlternate \
+                                             -focuscolor White \
                                               -focusfill FieldbackgroundFocus \
                                              -focuswidth 2 \
                                                    -font NormalFont \
@@ -1001,7 +1001,7 @@ namespace eval ttk::theme::Halo {
                                             -insertcolor TextAlternate \
                                             -insertwidth 2 \
                                                 -justify left \
-                                             -lightcolor LightcolorAlternate \
+                                             -lightcolor White \
                                                 -padding [list 4p 5p 4p 5p] \
                                   -placeholderforeground PlaceholderText \
                                              -postoffset [list 1 0 0 0] \
@@ -1513,7 +1513,7 @@ namespace eval ttk::theme::Halo {
                                                 -cursor arrow \
                                              -darkcolor Background \
                                        -fieldbackground Fieldbackground \
-                                            -focuscolor LightcolorAlternate \
+                                            -focuscolor White \
                                              -focusfill FieldbackgroundFocus \
                                             -focuswidth 2 \
                                                   -font NormalFont \
@@ -1521,7 +1521,7 @@ namespace eval ttk::theme::Halo {
                                            -insertcolor TextAlternate \
                                            -insertwidth 2 \
                                                -justify left \
-                                            -lightcolor LightcolorAlternate \
+                                            -lightcolor White \
                                                -padding [list 4p 5p 4p 5p] \
                                  -placeholderforeground PlaceholderText \
                                       -selectbackground White \
@@ -1745,12 +1745,12 @@ namespace eval ttk::theme::Halo {
                                                -cursor arrow \
                                             -darkcolor Background \
                                       -fieldbackground Fieldbackground \
-                                           -focuscolor LightcolorAlternate \
+                                           -focuscolor White \
                                            -focuswidth 2 \
                                                  -font NormalFont \
                                            -foreground TextAlternate \
                                                -indent 20p \
-                                           -lightcolor LightcolorAlternate \
+                                           -lightcolor White \
                                               -padding [list 2] \
                                             -rowheight [expr { [font metrics NormalFont -linespace]+10 }] \
                                                  -rows 5 \
