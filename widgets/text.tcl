@@ -2856,6 +2856,71 @@ _bind _Simple_Text <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; brea
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Simple_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
 
+#################################
+##                             ##
+##     _HULL_TEXT BINDINGS     ##
+##                             ##
+#################################
+
+# Activate/Deactivate
+_bind _Hull_Text <Activate>   { ::ms::text::Pathname_Cmd %W state !background; break }
+_bind _Hull_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state  background; break }
+
+# Contextual menu
+_bind _Hull_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+
+# Destroy
+_bind _Hull_Text <Destroy> { ::ms::text::Destroy %W; break }
+
+# Mousewheel and Touchpad
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Hull_Text <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Hull_Text <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Hull_Text <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Hull_Text <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Hull_Text <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Hull_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
 #######################################
 ##                                   ##
 ##     _SCROLLABLE_TEXT BINDINGS     ##
@@ -3118,71 +3183,6 @@ _bind _Scrollable_Text <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Scrollable_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
 
-#################################
-##                             ##
-##     _HULL_TEXT BINDINGS     ##
-##                             ##
-#################################
-
-# Activate/Deactivate
-_bind _Hull_Text <Activate>   { ::ms::text::Pathname_Cmd %W state !background; break }
-_bind _Hull_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state  background; break }
-
-# Contextual menu
-_bind _Hull_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
-
-# Destroy
-_bind _Hull_Text <Destroy> { ::ms::text::Destroy %W; break }
-
-# Mousewheel and Touchpad
-
-# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
-# If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Text <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
-
-# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
-# If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Text <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
-
-# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-# and move that scrollbar by one page up or down (depending on the mousewheel direction).
-# If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Text <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
-
-# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-# and move that scrollbar by one page left or right (depending on the mousewheel direction).
-# If none of the widget's parent meets the required condition, don't do anything.
-_bind _Hull_Text <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
-
-# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
-#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
-
-# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-# These two planes may involve different widgets depending on the active scrollbars on them and on the
-# touchpad direction.
-#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-#
-#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Hull_Text <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
-
-# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-# These two planes may involve different widgets depending on the active scrollbars on them and on the
-# touchpad direction.
-#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-#       and move that scrollbar by one page left or right (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-#
-#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#       and move that scrollbar by one page up or down (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Hull_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
-
 ########################################
 ##                                    ##
 ##     _X_SCROLLBAR_TEXT BINDINGS     ##
@@ -3296,6 +3296,134 @@ _bind _Y_Scrollbar_Text <TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo paren
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Y_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo parent %W] %# %D pages; break }
+
+#############################################
+##                                         ##
+##     _X_FAKE_SCROLLBAR_TEXT BINDINGS     ##
+##                                         ##
+#############################################
+
+# Activate/Deactivate
+_bind _X_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
+_bind _X_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
+
+# Contextual menu
+_bind _X_Fake_Scrollbar_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Enter/Leave
+_bind _X_Fake_Scrollbar_Text <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Text <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Text <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Text <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Text <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Text <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _X_Fake_Scrollbar_Text <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _X_Fake_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+
+#############################################
+##                                         ##
+##     _Y_FAKE_SCROLLBAR_TEXT BINDINGS     ##
+##                                         ##
+#############################################
+
+# Activate/Deactivate
+_bind _Y_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
+_bind _Y_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
+
+# Contextual menu
+_bind _Y_Fake_Scrollbar_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Enter/Leave
+_bind _Y_Fake_Scrollbar_Text <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Text <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Text <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Text <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Text <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Text <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Y_Fake_Scrollbar_Text <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Y_Fake_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 # Create the mustang **text** package.
 namespace eval ::ms::text {
@@ -4355,6 +4483,41 @@ proc ::ms::text::Command { window { args "" } } {
                                             -style TScrollbar \
                                         -takefocus 0;
 
+                    # Create the fake horizontal scrollbar.
+                    _ttk_frame $w.fake_x -borderwidth 0 \
+                                               -class TFrame \
+                                              -cursor arrow \
+                                              -height $::ms::size($::ms::theme,scrollbar) \
+                                             -padding 0 \
+                                              -relief flat \
+                                               -style $::ms::style($w,hull) \
+                                           -takefocus 0 \
+                                               -width 0;
+
+                    # Create the fake vertical scrollbar.
+                    _ttk_frame $w.fake_y -borderwidth 0 \
+                                               -class TFrame \
+                                              -cursor arrow \
+                                              -height 0 \
+                                             -padding 0 \
+                                              -relief flat \
+                                               -style $::ms::style($w,hull) \
+                                           -takefocus 0 \
+                                               -width $::ms::size($::ms::theme,scrollbar);
+
+                    # Grid the fake scrollbars.
+                    _grid $w.fake_x -column 0 \
+                                      -padx [list 0  0] \
+                                      -pady [list 8p 0] \
+                                       -row 1 \
+                                    -sticky we;
+
+                    _grid $w.fake_y -column 1 \
+                                      -padx [list 8p 0] \
+                                      -pady [list 0  0] \
+                                       -row 0 \
+                                    -sticky ns;
+
                     ######################
                     ##                  ##
                     ##     BINDINGS     ##
@@ -4376,6 +4539,10 @@ proc ::ms::text::Command { window { args "" } } {
                     _bindtags $w.x [list $w.x _X_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
                     _bindtags $w.y [list $w.y _Y_Scrollbar_Text TScrollbar $::ms::addr($w,toplevel) all]
 
+                    # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
+                    _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Text TFrame $::ms::addr($w,toplevel) all]
+                    _bindtags $w.fake_y [list $w.fake_y _Y_Fake_Scrollbar_Text TFrame $::ms::addr($w,toplevel) all]
+
                     #####################
                     ##                 ##
                     ##     CLOSING     ##
@@ -4391,14 +4558,18 @@ proc ::ms::text::Command { window { args "" } } {
 
                     # Set the widget short addresses relative to its real address, 'w'.
                     # They will all point to the widget hull object short address.
-                    set ::ms::addr($w,short)      $short_addr
-                    set ::ms::addr($w.text,short) $short_addr
-                    set ::ms::addr($w.x,short)    $short_addr
-                    set ::ms::addr($w.y,short)    $short_addr
+                    set ::ms::addr($w,short)        $short_addr
+                    set ::ms::addr($w.fake_x,short) $short_addr
+                    set ::ms::addr($w.fake_y,short) $short_addr
+                    set ::ms::addr($w.text,short)   $short_addr
+                    set ::ms::addr($w.x,short)      $short_addr
+                    set ::ms::addr($w.y,short)      $short_addr
 
                     # Add the widget real and short address into the list of all available real
                     # and short addresses.
                     lappend ::ms::addr(reals) $w \
+                                              $w.fake_x \
+                                              $w.fake_y \
                                               $w.text \
                                               $w.x \
                                               $w.y;
@@ -4414,6 +4585,8 @@ proc ::ms::text::Command { window { args "" } } {
                     # Set the structure addresses.
                     # Is important to note that the scrollbar addresses must not be included.
                     set ::ms::addr($w,structure) [list $w \
+                                                       $w.fake_x \
+                                                       $w.fake_y \
                                                        $w.text];
 
                     # Add the widget address to the megawidget addresses list.
@@ -5393,6 +5566,10 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     ##                    ##
                                     ########################
 
+                                    # Configure the fake scrollbars.
+                                    $w.fake_x configure -style $::ms::style($w,hull)
+                                    $w.fake_y configure -style $::ms::style($w,hull)
+
                                     # Update the scrollbars.
                                     ::ms::text::Scrollbar_Update $w
                                 }
@@ -5779,6 +5956,8 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 
                             # Apply the changes.
                             interp invokehidden {} $w state $::ms::data($w,statespec)
+                            $w.fake_x state $statespec
+                            $w.fake_y state $statespec
                             $w.text configure {*}$text_options
                         }
                     }
@@ -6418,6 +6597,13 @@ proc ::ms::text::Style_Update { stylename caller_info } {
                 ##                    ##
                 ########################
 
+                # Update the fake scrollbars.
+                $w.fake_x configure -height $::ms::size($::ms::theme,scrollbar) \
+                                     -style $::ms::style($w,hull);
+
+                $w.fake_y configure  -style $::ms::style($w,hull) \
+                                     -width $::ms::size($::ms::theme,scrollbar);
+
                 # Update the scrollbars.
                 ::ms::text::Scrollbar_Update $w
             }
@@ -6624,6 +6810,8 @@ proc ::ms::text::Destroy { w } {
 
             # Remove every widget's objects addresses from the list of all available real addresses.
             foreach object [list $w \
+                                 $w.fake_x \
+                                 $w.fake_y \
                                  $w.text \
                                  $w.x \
                                  $w.y] {
@@ -6660,6 +6848,8 @@ proc ::ms::text::Destroy { w } {
     # Destroy every widget's variables previously created.
     unset -nocomplain -- ::ms::addr($short_addr,real) \
                          ::ms::addr($w,short) \
+                         ::ms::addr($w.fake_x,short) \
+                         ::ms::addr($w.fake_y,short) \
                          ::ms::addr($w.text,short) \
                          ::ms::addr($w.x,short) \
                          ::ms::addr($w.y,short);
@@ -7136,6 +7326,13 @@ proc ::ms::text::Scrollbar_Update { w } {
                 # Hide the horizontal scrollbar.
                 _grid remove $w.x
 
+                # Display the fake horizontal scrollbar.
+                _grid $w.fake_x -column 0 \
+                                  -padx [list 0  0] \
+                                  -pady [list 8p 0] \
+                                   -row 1 \
+                                -sticky we;
+
                 # Set the horizontal scrollbar status to 'off'.
                 set ::ms::data($w,scrollx) off
             }
@@ -7144,6 +7341,9 @@ proc ::ms::text::Scrollbar_Update { w } {
         # Check if the horizontal scrollbar is not currently displayed.
         switch -- $::ms::data($w,scrollx) {
             off {
+                # Hide the fake horizontal scrollbar.
+                _grid remove $w.fake_x
+
                 # Display the horizontal scrollbar.
                 _grid $w.x -column 0 \
                              -padx [list 0  0] \
@@ -7175,6 +7375,13 @@ proc ::ms::text::Scrollbar_Update { w } {
                 # Hide the vertical scrollbar.
                 _grid remove $w.y
 
+                # Display the fake vertical scrollbar.
+                _grid $w.fake_y -column 1 \
+                                  -padx [list 8p 0] \
+                                  -pady [list 0  0] \
+                                   -row 0 \
+                                -sticky ns;
+
                 # Set the vertical scrollbar status to 'off'.
                 set ::ms::data($w,scrolly) off
             }
@@ -7183,6 +7390,9 @@ proc ::ms::text::Scrollbar_Update { w } {
         # Check if the vertical scrollbar is not currently displayed.
         switch -- $::ms::data($w,scrolly) {
             off {
+                # Hide the fake vertical scrollbar.
+                _grid remove $w.fake_y
+
                 # Display the vertical scrollbar.
                 _grid $w.y -column 1 \
                              -padx [list 8p 0] \
