@@ -5018,6 +5018,27 @@ proc ::ms::listbox::Prev_Char { w } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::Select { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if there are items associated to the listbox.
+    switch -- $::ms::current($w,values) {
+        ""  { return "" }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
+
     # Check if there is a preselected index.
     switch -- $::ms::data($w,preselected_index) {
         ""  { set ::ms::data($w,preselected_index) 0 }
@@ -5027,14 +5048,14 @@ proc ::ms::listbox::Select { w } {
     switch -- $::ms::current($w,selectmode) {
         browse -
         single {
-            switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+            switch -- [{*}$address selection includes $::ms::data($w,preselected_index)] {
                 0   {
                     # Select the preselected index.
-                    $w.listbox selection clear 0 end
-                    $w.listbox selection set $::ms::data($w,preselected_index)
+                    {*}$address selection clear 0 end
+                    {*}$address selection set $::ms::data($w,preselected_index)
 
                     # Activate the preselected index.
-                    $w.listbox activate $::ms::data($w,preselected_index)
+                    {*}$address activate $::ms::data($w,preselected_index)
 
                     set ::tk::Priv(listboxPrev)      $::ms::data($w,preselected_index)
                     set ::tk::Priv(listboxSelection) {}
@@ -5042,59 +5063,65 @@ proc ::ms::listbox::Select { w } {
             }
         }
         extended {
-            switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+            switch -- [{*}$address selection includes $::ms::data($w,preselected_index)] {
                 0   {
                     # Select the preselected index.
-                    $w.listbox selection set $::ms::data($w,preselected_index)
-                    $w.listbox selection anchor $::ms::data($w,preselected_index)
+                    {*}$address selection set $::ms::data($w,preselected_index)
+                    {*}$address selection anchor $::ms::data($w,preselected_index)
 
                     # Activate the preselected index.
-                    $w.listbox activate $::ms::data($w,preselected_index)
+                    {*}$address activate $::ms::data($w,preselected_index)
 
                     set ::tk::Priv(listboxPrev)      $::ms::data($w,preselected_index)
                     set ::tk::Priv(listboxSelection) {}
                 }
                 1   {
                     # Unselect the preselected index.
-                    $w.listbox selection clear $::ms::data($w,preselected_index)
+                    {*}$address selection clear $::ms::data($w,preselected_index)
 
                     # Preselect the preselected index.
-                    $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                                               -foreground $::ms::current($w,preselectforeground);
+                    {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                -foreground $::ms::current($w,preselectforeground);
                 }
             }
         }
         default {
             # multiple
-            switch -- [$w.listbox selection includes $::ms::data($w,preselected_index)] {
+            switch -- [{*}$address selection includes $::ms::data($w,preselected_index)] {
                 0   {
                     # Select the preselected index.
-                    $w.listbox selection set $::ms::data($w,preselected_index)
+                    {*}$address selection set $::ms::data($w,preselected_index)
 
                     # Activate the preselected index.
-                    $w.listbox activate $::ms::data($w,preselected_index)
+                    {*}$address activate $::ms::data($w,preselected_index)
                 }
                 1   {
                     # Unselect the preselected index.
-                    $w.listbox selection clear $::ms::data($w,preselected_index)
+                    {*}$address selection clear $::ms::data($w,preselected_index)
 
                     # Preselect the preselected index.
-                    $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                                               -foreground $::ms::current($w,preselectforeground);
+                    {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                -foreground $::ms::current($w,preselectforeground);
                 }
             }
         }
     }
 
     # Adjust the listbox viewport.
-    $w.listbox see $::ms::data($w,preselected_index)
+    {*}$address see $::ms::data($w,preselected_index)
 
     # Fire up the selection event.
-    ::tk::FireListboxSelectEvent $w.listbox
+    ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
 
-    # If needed, focus the listbox (for buttonpress events).
-    if { ([_winfo exists $w.listbox] == 1) && ($::ms::current($w,state) eq "normal") && ([_focus] ne "$w.listbox)") } {
-        _focus $w.listbox
+    # Check if the widget is already focussed.
+    switch -- [{*}$address instate [list focus]] {
+        0   {
+            # Focus the widget.
+            _focus -force $::ms::addr($w,widget)
+
+            # Change the widget dynamic state to 'focus'.
+            ::ms::listbox::Pathname_Cmd $w state [list focus]
+        }
     }
 
     return ""
