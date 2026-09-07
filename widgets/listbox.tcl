@@ -4534,30 +4534,28 @@ proc ::ms::listbox::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::FocusOut { w } {
-    # Check the contextual menu relative to this widget, if any.
-    switch -- $::ms::current($w,cmenu) {
-        ""      {}
-        default {
-            # If the contextual menu of the widget is open do not loose the focus (graphically).
-            switch -- [_winfo exists $::ms::current($w,cmenu)] {
-                1   { return "" }
-            }
-        }
+    # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
+    switch -- [_winfo exists $::ms::current($w,cmenu)] {
+        0   { ::ms::listbox::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::listbox::Pathname_Cmd $w state [list  focus] }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
     }
 
     # Check if there is at least one selected row.
-    switch -- [$w.listbox curselection] {
+    switch -- [{*}$address curselection] {
         ""  {
             foreach index $::ms::temp($w,selected_rows) {
-                $w.listbox selection set $index
+                {*}$address selection set $index
             }
         }
     }
 
     unset -nocomplain -- ::ms::temp($w,selected_rows)
-
-    # Change the widget dynamic state to '!focus'.
-    ::ms::listbox::Pathname_Cmd $w state !focus
 
     return ""
 }
