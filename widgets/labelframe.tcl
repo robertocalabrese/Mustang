@@ -1228,8 +1228,8 @@ package provide ::ms::labelframe 0.1
 ##################################
 
 # Activate/Deactivate
-_bind _Labelframe <Activate>   { ::ms::labelframe::Pathname_Cmd %W state !background; break }
-_bind _Labelframe <Deactivate> { ::ms::labelframe::Pathname_Cmd %W state  background; break }
+_bind _Labelframe <Activate>   { ::ms::labelframe::Pathname_Cmd %W state [list !background]; break }
+_bind _Labelframe <Deactivate> { ::ms::labelframe::Pathname_Cmd %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Labelframe <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
@@ -1245,7 +1245,7 @@ _bind _Labelframe <Enter> { ::ms::Hover %W %X %Y; break }
 _bind _Labelframe <Leave> { ::ms::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Labelframe <FocusIn>  { ::ms::labelframe::FocusIn  %W; break }
+_bind _Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd %W state [list focus]; break }
 _bind _Labelframe <FocusOut> { ::ms::labelframe::FocusOut %W; break }
 
 # Mousewheel and Touchpad
@@ -2163,8 +2163,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     _bind $w.title   <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.content <FocusIn>  { ::ms::labelframe::FocusIn  [_winfo parent %W]; break }
-                    _bind $w.content <FocusOut> { ::ms::labelframe::FocusOut [_winfo parent %W]; break }
+                    _bind $w.content <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent %W] state [list focus]; break }
+                    _bind $w.content <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent %W]; break }
 
                     # Mousewheel and Touchpad
 
@@ -2750,8 +2750,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     _bind $w.title                             <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
                     # FocusIn/FocusOut
-                    _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::FocusIn  [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
-                    _bind $w.container.border.viewport.content <FocusOut> { ::ms::labelframe::FocusOut [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+                    _bind $w.container.border.viewport.content <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] state [list focus]; break }
+                    _bind $w.container.border.viewport.content <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
 
                     # Mousewheel and Touchpad
 
@@ -5415,22 +5415,6 @@ proc ::ms::labelframe::Destroy { w } {
                          ::ms::style($w,content) \
                          ::ms::style($w,hull) \
                          ::ms::style($w,title);
-
-    return ""
-}
-
-## FocusIn
-#
-# Manage the **FocusIn** event.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::labelframe::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
-    ::ms::labelframe::Pathname_Cmd $w state focus
 
     return ""
 }
