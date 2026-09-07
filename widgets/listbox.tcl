@@ -5199,26 +5199,37 @@ proc ::ms::listbox::Select_All { w } {
 #
 # It doesn't return anything.
 proc ::ms::listbox::Unselect_All { w } {
-    set ::tk::Priv(listboxPrev)      {}
-    set ::tk::Priv(listboxSelection) {}
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
 
     # Check if there are items associated to the listbox.
     switch -- $::ms::current($w,values) {
         ""  { return "" }
     }
 
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.listbox] }
+    }
+
+    set ::tk::Priv(listboxPrev)      {}
+    set ::tk::Priv(listboxSelection) {}
+
     # Deselect any previously selected index.
-    $w.listbox selection clear 0 end
+    {*}$address selection clear 0 end
 
     # Preselect the current active row.
-    $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                               -foreground $::ms::current($w,preselectforeground);
+    {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                -foreground $::ms::current($w,preselectforeground);
 
     # Remove the activestyle.
-    $w.listbox configure -activestyle none
+    {*}$address configure -activestyle none
 
     # Fire up the selection event.
-    ::tk::FireListboxSelectEvent $w.listbox
+    ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
 
     return ""
 }
