@@ -2425,8 +2425,8 @@ _bind _Simple_Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D p
 #########################################
 
 # Activate/Deactivate
-_bind _Simple_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _Simple_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _Simple_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _Simple_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _Scrollable_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
@@ -2439,7 +2439,7 @@ _bind _Scrollable_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 _bind _Scrollable_Canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Scrollable_Canvas <FocusIn>  { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state hover; break }
+_bind _Scrollable_Canvas <FocusIn>  { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list hover]; break }
 _bind _Scrollable_Canvas <FocusOut> { ::ms::canvas::FocusOut     [_winfo parent %W]; break }
 
 # Scan
@@ -2519,8 +2519,8 @@ _bind _Scrollable_Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winf
 ###################################
 
 # Activate/Deactivate
-_bind _Hull_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd %W state !background; break }
-_bind _Hull_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd %W state  background; break }
+_bind _Hull_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd %W state [list  background]; break }
 
 # Contextual menu
 _bind _Hull_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
@@ -2654,15 +2654,15 @@ _bind _Y_Scrollbar_Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_w
 ###############################################
 
 # Activate/Deactivate
-_bind _X_Fake_Scrollbar_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _X_Fake_Scrollbar_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _X_Fake_Scrollbar_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _X_Fake_Scrollbar_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _X_Fake_Scrollbar_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _X_Fake_Scrollbar_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
-_bind _X_Fake_Scrollbar_Canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Fake_Scrollbar_Canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
@@ -2718,15 +2718,15 @@ _bind _X_Fake_Scrollbar_Canvas <Control-TouchpadScroll> { ::ms::Touchpad_Parent 
 ###############################################
 
 # Activate/Deactivate
-_bind _Y_Fake_Scrollbar_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _Y_Fake_Scrollbar_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _Y_Fake_Scrollbar_Canvas <Activate>   { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _Y_Fake_Scrollbar_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _Y_Fake_Scrollbar_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _Y_Fake_Scrollbar_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
-_bind _Y_Fake_Scrollbar_Canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Fake_Scrollbar_Canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
