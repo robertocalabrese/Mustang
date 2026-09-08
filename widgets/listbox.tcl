@@ -354,6 +354,27 @@
 #
 #                             See also **-columns**.
 #
+# **-scrollable**             Specifies a boolean value indicating wheter or not the widget should be scrollable.
+#                             If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single listbox widget.
+#
+#                             The scrollbars will be automatically managed by Tk with the following rules:
+#                                The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
+#                                the widget *viewport* width and *not needed* when it's not.
+#
+#                                The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
+#                                the widget *viewport* height and *not needed* when it's not.
+#
+#                                If a scrollbar is currently needed, then it will be displayed (if it's not already displayed) and it's related
+#                                fake scrollbar will be removed.
+#                                If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
+#                                already displayed) and it's related fake scrollbar will be displayed.
+#
+#                             Note: This option may be provided while creating the widget.
+#                                   Attempts to change this value after the widget was created by using the **configure** command,
+#                                   will be ignored by mustang.
+#
+#                             If not provided, defaults to **false** (meaning no scrollbar).
+#
 # **-selectbackground**       It's a list that specifies the background color to use when displaying selected items.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
 #
@@ -1739,6 +1760,7 @@ namespace eval ::ms::listbox {
                                                    class \
                                                    cmenu \
                                                    exportselection \
+                                                   scrollable \
                                                    selectmode \
                                                    setgrid \
                                                    state \
@@ -1770,6 +1792,7 @@ namespace eval ::ms::listbox {
     set ::ms::default(listbox,class)           Listbox
     set ::ms::default(listbox,cmenu)           {}
     set ::ms::default(listbox,exportselection) 0
+    set ::ms::default(listbox,scrollable)      false
     set ::ms::default(listbox,selectmode)      browse
     set ::ms::default(listbox,setgrid)         0
     set ::ms::default(listbox,state)           normal
@@ -1833,6 +1856,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             set ::ms::default($w,class)           $::ms::default(listbox,class)
             set ::ms::default($w,cmenu)           $::ms::default(listbox,cmenu)
             set ::ms::default($w,exportselection) $::ms::default(listbox,exportselection)
+            set ::ms::default($w,scrollable)      $::ms::default(canvas,scrollable)
             set ::ms::default($w,selectmode)      $::ms::default(listbox,selectmode)
             set ::ms::default($w,setgrid)         $::ms::default(listbox,setgrid)
             set ::ms::default($w,state)           $::ms::default(listbox,state)
@@ -1845,6 +1869,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             set ::ms::current($w,class)           $::ms::default(listbox,class)
             set ::ms::current($w,cmenu)           $::ms::default(listbox,cmenu)
             set ::ms::current($w,exportselection) $::ms::default(listbox,exportselection)
+            set ::ms::current($w,scrollable)      $::ms::default(canvas,scrollable)
             set ::ms::current($w,selectmode)      $::ms::default(listbox,selectmode)
             set ::ms::current($w,setgrid)         $::ms::default(listbox,setgrid)
             set ::ms::current($w,state)           $::ms::default(listbox,state)
@@ -2050,6 +2075,20 @@ proc ::ms::listbox::Command { window { args "" } } {
                                 set ::ms::current($w,rows)    $value
                                 set ::ms::managed_by($w,rows) developer
                             }
+                        }
+                    }
+                    -scrollable {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,scrollable) false }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,scrollable) true }
                         }
                     }
                     -selectbackground {
@@ -2807,6 +2846,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                             }
                                         }
                                     }
+                                    -scrollable {}
                                     -selectbackground {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -4569,6 +4609,7 @@ proc ::ms::listbox::Destroy { w } {
                          ::ms::current($w,justify) \
                          ::ms::current($w,relief) \
                          ::ms::current($w,rows) \
+                         ::ms::current($w,scrollable) \
                          ::ms::current($w,selectbackground) \
                          ::ms::current($w,selectborderwidth) \
                          ::ms::current($w,selectforeground) \
@@ -4602,6 +4643,7 @@ proc ::ms::listbox::Destroy { w } {
                          ::ms::default($w,justify) \
                          ::ms::default($w,relief) \
                          ::ms::default($w,rows) \
+                         ::ms::default($w,scrollable) \
                          ::ms::default($w,selectbackground) \
                          ::ms::default($w,selectborderwidth) \
                          ::ms::default($w,selectforeground) \
