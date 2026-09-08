@@ -1888,7 +1888,6 @@ proc ::ms::listbox::Command { window { args "" } } {
 
             # Set some widget variables needed for internal mechanisms.
             set ::ms::data($w,classtype)         listbox
-            set ::ms::data($w,listvariable)      {}
             set ::ms::data($w,preselected_index) ""
             set ::ms::data($w,statespec)         $::ms::data(statespec,normal)
             set ::ms::data($w,scrollx)           off
@@ -2190,12 +2189,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                             enabled  { set ::ms::current($w,takefocus) 1 }
                         }
                     }
-                    -values {
-                        set value [string trim $value]
-
-                        set ::ms::current($w,values)    $value
-                        set ::ms::data($w,listvariable) $value
-                    }
+                    -values { set ::ms::current($w,values) $value }
                 }
             }
 
@@ -2235,70 +2229,6 @@ proc ::ms::listbox::Command { window { args "" } } {
             #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
             #       and 'selectforeground' are not allowed to change if the statespec changes.
 
-            ##################
-            ##              ##
-            ##     HULL     ##
-            ##              ##
-            ##################
-
-            # Set the hull object style name.
-            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                 ".TFrame"];
-
-            # If needed, create the hull object style name.
-            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
-
-                # Add the hull object style name to the theme styles list created by mustang.
-                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
-            }
-
-            # Initialize the hull object mapping.
-            set mapping [list ]
-
-            # shellbackground
-            switch -- $::ms::managed_by($w,shellbackground) {
-                developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                Tk  {
-                    # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                    }
-                }
-            }
-
-            # If needed, create the hull object mapping.
-            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                # Add the hull object mapping to the stylemap list containing all the mappings
-                # created by mustang for the current theme.
-                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-            }
-
-            # Create the hull object.
-            _ttk_frame $w -borderwidth 0 \
-                                -class TFrame \
-                               -cursor arrow \
-                               -height 0 \
-                              -padding 0 \
-                               -relief flat \
-                                -style $::ms::style($w,hull) \
-                            -takefocus 0 \
-                                -width 0;
-
-            # Set the widget toplevel.
-            set ::ms::addr($w,toplevel) [_winfo toplevel $w]
-
-            #####################
-            ##                 ##
-            ##     LISTBOX     ##
-            ##                 ##
-            #####################
-
-            # Note: Tk listboxes don't understands styles, at least not natively.
-            #       No internal styles needs to be created.
-
             # bordercolor
             switch -- $::ms::managed_by($w,bordercolor) {
                 developer { set bordercolor $::ms::current($w,bordercolor) }
@@ -2315,7 +2245,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                                                -foreground $::ms::current($w,foreground) \
                                                    -height $::ms::current($w,rows) \
                                                   -justify $::ms::current($w,justify) \
-                                             -listvariable ::ms::data($w,listvariable) \
+                                             -listvariable ::ms::current($w,values) \
                                          -selectbackground $::ms::current($w,selectbackground) \
                                         -selectborderwidth $::ms::current($w,selectborderwidth) \
                                          -selectforeground $::ms::current($w,selectforeground) \
@@ -2323,9 +2253,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                                                   -setgrid $::ms::current($w,setgrid) \
                                                     -state $::ms::current($w,state) \
                                                 -takefocus $takefocus \
-                                                    -width $::ms::current($w,columns) \
-                                           -xscrollcommand [list $w.x set] \
-                                           -yscrollcommand [list $w.y set]];
+                                                    -width $::ms::current($w,columns)];
 
             # Note: The '-bordercolor' option is not understanded by Tk listboxes, but is made available trough
             #       a carefull use of the '-borderwidth', '-highlightbackground', '-highlightcolor',
@@ -2351,123 +2279,331 @@ proc ::ms::listbox::Command { window { args "" } } {
                 }
             }
 
-            # Create the widget.
-            _listbox $w.listbox {*}$listbox_options
+            # Check if the widget is scrollable or not.
+            switch -- $::ms::current($w,scrollable) {
+                false {
+                    ############################
+                    ##                        ##
+                    ##     SIMPLE LISTBOX     ##
+                    ##                        ##
+                    ############################
 
-            # Grid the listbox object.
-            _grid $w.listbox -column 0 \
-                               -padx 0 \
-                               -pady 0 \
-                                -row 0 \
-                             -sticky nesw;
+                    #####################
+                    ##                 ##
+                    ##     LISTBOX     ##
+                    ##                 ##
+                    #####################
 
-            # Check if the widget has values.
-            switch -- $::ms::current($w,values) {
-                ""      {}
-                default {
-                    # Select the first index of the listbox.
-                    $w.listbox selection set 0
+                    # Note: Tk listboxes don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
 
-                    # Set the selection anchor to the first index.
-                    $w.listbox selection anchor 0
+                    # Add the provided 'xscrollcommand' and 'yscrollcommand' data.
+                    lappend listbox_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                            -yscrollcommand $::ms::current($w,yscrollcommand);
 
-                    # Activate the selected index.
-                    $w.listbox activate 0
+                    # Create the widget.
+                    _listbox $w {*}$listbox_options
+
+                    # Check if the widget has values.
+                    switch -- $::ms::current($w,values) {
+                        ""      {}
+                        default {
+                            # Select the first index of the listbox.
+                            $w selection set 0
+
+                            # Set the selection anchor to the first index.
+                            $w selection anchor 0
+
+                            # Activate the selected index.
+                            $w activate 0
+                        }
+                    }
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Note: Differently than most other widgets, the listbox widget doesn't have a '-class' option in Tk.
+                    #       If a different class than 'Listbox' is provided, we need to adapt the bindtags.
+
+                    # Set the new bindtags for the listbox object.
+                    switch -- $::ms::current($w,class) {
+                        Listbox { _bindtags $w [list $w _Simple_Listbox Listbox $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Simple_Listbox Listbox $::ms::addr($w,toplevel) all] }
+                    }
+
+                    #####################
+                    ##                 ##
+                    ##     CLOSING     ##
+                    ##                 ##
+                    #####################
+
+                    # Set the widget real address relative to its short address, 'short_addr'.
+                    set ::ms::addr($short_addr,real) $w
+
+                    # Set the widget short addresses relative to its real address, 'w'.
+                    set ::ms::addr($w,short) $short_addr
+
+                    # Add the widget real and short address into the list of all available real and short addresses.
+                    lappend ::ms::addr(reals)  $w
+                    lappend ::ms::addr(shorts) $short_addr
+
+                    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+                    set ::ms::addr($w,border) $w
+
+                    # Set the actual widget address (the widget that the developer was intended to build).
+                    set ::ms::addr($w,widget) $w
+
+                    # Set the structure addresses.
+                    set ::ms::addr($w,structure) [list $w]
+                }
+                true {
+                    ################################
+                    ##                            ##
+                    ##     SCROLLABLE LISTBOX     ##
+                    ##                            ##
+                    ################################
+
+                    # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with the empty string.
+                    set ::ms::current($w,xscrollcommand) ""
+                    set ::ms::current($w,yscrollcommand) ""
+
+                    ##################
+                    ##              ##
+                    ##     HULL     ##
+                    ##              ##
+                    ##################
+
+                    # Set the hull object style name.
+                    set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                         ".TFrame"];
+
+                    # If needed, create the hull object style name.
+                    if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                        _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                        # Add the hull object style name to the theme styles list created by mustang.
+                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
+                    }
+
+                    # Initialize the hull object mapping.
+                    set mapping [list ]
+
+                    # shellbackground
+                    switch -- $::ms::managed_by($w,shellbackground) {
+                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                        Tk  {
+                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
+                            }
+                        }
+                    }
+
+                    # If needed, create the hull object mapping.
+                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                        _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                        # Add the hull object mapping to the stylemap list containing all the mappings
+                        # created by mustang for the current theme.
+                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                    }
+
+                    # Create the hull object.
+                    _ttk_frame $w -borderwidth 0 \
+                                        -class TFrame \
+                                       -cursor arrow \
+                                       -height 0 \
+                                      -padding 0 \
+                                       -relief flat \
+                                        -style $::ms::style($w,hull) \
+                                    -takefocus 0 \
+                                        -width 0;
+
+                    # Set the widget toplevel.
+                    set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
+                    #####################
+                    ##                 ##
+                    ##     LISTBOX     ##
+                    ##                 ##
+                    #####################
+
+                    # Note: Tk listboxes don't understands styles, at least not natively.
+                    #       No internal styles needs to be created.
+
+                    # Add the internal 'xscrollcommand' and 'yscrollcommand' data.
+                    lappend listbox_options -xscrollcommand [list $w.x set] \
+                                            -yscrollcommand [list $w.y set];
+
+                    # Create the widget.
+                    _listbox $w.listbox {*}$listbox_options
+
+                    # Grid the listbox object.
+                    _grid $w.listbox -column 0 \
+                                       -padx 0 \
+                                       -pady 0 \
+                                        -row 0 \
+                                     -sticky nesw;
+
+                    # Check if the widget has values.
+                    switch -- $::ms::current($w,values) {
+                        ""      {}
+                        default {
+                            # Select the first index of the listbox.
+                            $w.listbox selection set 0
+
+                            # Set the selection anchor to the first index.
+                            $w.listbox selection anchor 0
+
+                            # Activate the selected index.
+                            $w.listbox activate 0
+                        }
+                    }
+
+                    #######################
+                    ##                   ##
+                    ##     SCROLLBAR     ##
+                    ##                   ##
+                    #######################
+
+                    # Create the horizontal scrollbar address.
+                    _ttk_scrollbar $w.x     -class TScrollbar \
+                                          -command [list $w.listbox xview] \
+                                           -cursor arrow \
+                                           -orient horizontal \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+                    # Create the vertical scrollbar address.
+                    _ttk_scrollbar $w.y     -class TScrollbar \
+                                          -command [list $w.listbox yview] \
+                                           -cursor arrow \
+                                           -orient vertical \
+                                            -style TScrollbar \
+                                        -takefocus 0;
+
+                    # Create the fake horizontal scrollbar.
+                    _ttk_frame $w.fake_x -borderwidth 0 \
+                                               -class TFrame \
+                                              -cursor arrow \
+                                              -height $::ms::size($::ms::theme,scrollbar) \
+                                             -padding 0 \
+                                              -relief flat \
+                                               -style $::ms::style($w,hull) \
+                                           -takefocus 0 \
+                                               -width 0;
+
+                    # Create the fake vertical scrollbar.
+                    _ttk_frame $w.fake_y -borderwidth 0 \
+                                               -class TFrame \
+                                              -cursor arrow \
+                                              -height 0 \
+                                             -padding 0 \
+                                              -relief flat \
+                                               -style $::ms::style($w,hull) \
+                                           -takefocus 0 \
+                                               -width $::ms::size($::ms::theme,scrollbar);
+
+                    # Grid the fake scrollbars.
+                    _grid $w.fake_x -column 0 \
+                                      -padx [list 0  0] \
+                                      -pady [list 8p 0] \
+                                       -row 1 \
+                                    -sticky we;
+
+                    _grid $w.fake_y -column 1 \
+                                      -padx [list 8p 0] \
+                                      -pady [list 0  0] \
+                                       -row 0 \
+                                    -sticky ns;
+
+                    ######################
+                    ##                  ##
+                    ##     BINDINGS     ##
+                    ##                  ##
+                    ######################
+
+                    # Note: Differently than most other widgets, the listbox widget doesn't have a '-class' option in Tk.
+                    #       If a different class than 'Listbox' is provided, we need to adapt the bindtags.
+
+                    # Set the new bindtags for the hull object.
+                    _bindtags $w [list $w _Hull_Listbox TFrame $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the listbox object.
+                    switch -- $::ms::current($w,class) {
+                        Listbox { _bindtags $w.listbox [list $w.listbox _Scrollable_Listbox Listbox $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w.listbox [list $w.listbox $::ms::current($w,class) _Scrollable_Listbox Listbox $::ms::addr($w,toplevel) all] }
+                    }
+
+                    # Set the new bindtags for the horizontal and vertical scrollbar objects.
+                    _bindtags $w.x [list $w.x _X_Scrollbar_Listbox TScrollbar $::ms::addr($w,toplevel) all]
+                    _bindtags $w.y [list $w.y _Y_Scrollbar_Listbox TScrollbar $::ms::addr($w,toplevel) all]
+
+                    # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
+                    _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Listbox TFrame $::ms::addr($w,toplevel) all]
+                    _bindtags $w.fake_y [list $w.fake_y _Y_Fake_Scrollbar_Listbox TFrame $::ms::addr($w,toplevel) all]
+
+                    #####################
+                    ##                 ##
+                    ##     CLOSING     ##
+                    ##                 ##
+                    #####################
+
+                    # Configure the internal widget rows and columns.
+                    _grid rowconfigure    $w [list 0] -weight 1
+                    _grid columnconfigure $w [list 0] -weight 1
+
+                    # Set the widget real address relative to its short address, 'short_addr'.
+                    set ::ms::addr($short_addr,real) $w
+
+                    # Set the widget short addresses relative to their real address, 'w'.
+                    # They will all point to the widget hull object short address.
+                    set ::ms::addr($w,short)         $short_addr
+                    set ::ms::addr($w.fake_x,short)  $short_addr
+                    set ::ms::addr($w.fake_y,short)  $short_addr
+                    set ::ms::addr($w.listbox,short) $short_addr
+                    set ::ms::addr($w.x,short)       $short_addr
+                    set ::ms::addr($w.y,short)       $short_addr
+
+                    # Add the widget real and short address into the list of all available real and short addresses.
+                    lappend ::ms::addr(reals) $w \
+                                              $w.fake_x \
+                                              $w.fake_y \
+                                              $w.listbox \
+                                              $w.x \
+                                              $w.y;
+
+                    lappend ::ms::addr(shorts) $short_addr
+
+                    # Set the border object (where the 'Enter' and 'Leave' event will happen).
+                    set ::ms::addr($w,border) $w.listbox
+
+                    # Set the actual widget address (the widget that the developer was intended to build).
+                    set ::ms::addr($w,widget) $w.listbox
+
+                    # Set the structure addresses.
+                    # Is important to note that the scrollbar addresses must not be included.
+                    set ::ms::addr($w,structure) [list $w \
+                                                       $w.fake_x \
+                                                       $w.fake_y \
+                                                       $w.listbox];
+
+                    # Add the widget address to the megawidget addresses list.
+                    lappend ::ms::addr(megawidgets) $w
+
+                    # Add the widget address to the scrollable megawidget addresses list.
+                    lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
-
-            #######################
-            ##                   ##
-            ##     SCROLLBAR     ##
-            ##                   ##
-            #######################
-
-            # Create the horizontal scrollbar address.
-            _ttk_scrollbar $w.x     -class TScrollbar \
-                                  -command [list $w.listbox xview] \
-                                   -cursor arrow \
-                                   -orient horizontal \
-                                    -style TScrollbar \
-                                -takefocus 0;
-
-            # Create the vertical scrollbar address.
-            _ttk_scrollbar $w.y     -class TScrollbar \
-                                  -command [list $w.listbox yview] \
-                                   -cursor arrow \
-                                   -orient vertical \
-                                    -style TScrollbar \
-                                -takefocus 0;
-
-            # Create the fake horizontal scrollbar.
-            _ttk_frame $w.fake_x -borderwidth 0 \
-                                       -class TFrame \
-                                      -cursor arrow \
-                                      -height $::ms::size($::ms::theme,scrollbar) \
-                                     -padding 0 \
-                                      -relief flat \
-                                       -style $::ms::style($w,hull) \
-                                   -takefocus 0 \
-                                       -width 0;
-
-            # Create the fake vertical scrollbar.
-            _ttk_frame $w.fake_y -borderwidth 0 \
-                                       -class TFrame \
-                                      -cursor arrow \
-                                      -height 0 \
-                                     -padding 0 \
-                                      -relief flat \
-                                       -style $::ms::style($w,hull) \
-                                   -takefocus 0 \
-                                       -width $::ms::size($::ms::theme,scrollbar);
-
-            # Grid the fake scrollbars.
-            _grid $w.fake_x -column 0 \
-                              -padx [list 0  0] \
-                              -pady [list 8p 0] \
-                               -row 1 \
-                            -sticky we;
-
-            _grid $w.fake_y -column 1 \
-                              -padx [list 8p 0] \
-                              -pady [list 0  0] \
-                               -row 0 \
-                            -sticky ns;
-
-            ######################
-            ##                  ##
-            ##     BINDINGS     ##
-            ##                  ##
-            ######################
-
-            # Note: Differently than most other widgets, the listbox widget doesn't have a '-class' option in Tk.
-            #       If a different class than 'Listbox' is provided, we need to adapt the bindtags.
-
-            # Set the new bindtags for the hull object.
-            _bindtags $w [list $w _Hull_Listbox TFrame $::ms::addr($w,toplevel) all]
-
-            # Set the new bindtags for the listbox object.
-            switch -- $::ms::current($w,class) {
-                Listbox { _bindtags $w.listbox [list $w.listbox _Scrollable_Listbox Listbox $::ms::addr($w,toplevel) all] }
-                default { _bindtags $w.listbox [list $w.listbox $::ms::current($w,class) _Scrollable_Listbox Listbox $::ms::addr($w,toplevel) all] }
-            }
-
-            # Set the new bindtags for the horizontal and vertical scrollbar objects.
-            _bindtags $w.x [list $w.x _X_Scrollbar_Listbox TScrollbar $::ms::addr($w,toplevel) all]
-            _bindtags $w.y [list $w.y _Y_Scrollbar_Listbox TScrollbar $::ms::addr($w,toplevel) all]
-
-            # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
-            _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Listbox TFrame $::ms::addr($w,toplevel) all]
-            _bindtags $w.fake_y [list $w.fake_y _Y_Fake_Scrollbar_Listbox TFrame $::ms::addr($w,toplevel) all]
 
             #####################
             ##                 ##
             ##     CLOSING     ##
             ##                 ##
             #####################
-
-            # Configure the internal widget rows and columns.
-            _grid rowconfigure    $w [list 0] -weight 1
-            _grid columnconfigure $w [list 0] -weight 1
 
             # Hide the widget pathcommand.
             interp hide {} $w
@@ -2480,43 +2616,8 @@ proc ::ms::listbox::Command { window { args "" } } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::listbox::Pathname_Cmd $w]
             }
 
-            # Set the widget real address relative to its short address, 'short_addr'.
-            set ::ms::addr($short_addr,real) $w
-
-            # Set the widget short addresses relative to its real address, 'w'.
-            # They will all point to the widget hull object short address.
-            set ::ms::addr($w,short)         $short_addr
-            set ::ms::addr($w.fake_x,short)  $short_addr
-            set ::ms::addr($w.fake_y,short)  $short_addr
-            set ::ms::addr($w.listbox,short) $short_addr
-            set ::ms::addr($w.x,short)       $short_addr
-            set ::ms::addr($w.y,short)       $short_addr
-
-            # Add the widget real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals) $w \
-                                      $w.fake_x \
-                                      $w.fake_y \
-                                      $w.listbox \
-                                      $w.x \
-                                      $w.y;
-
-            lappend ::ms::addr(shorts) $short_addr
-
             # Add the widget address to the listbox widgets real address list.
             lappend ::ms::addr(listbox) $w
-
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w.listbox
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w.listbox
-
-            # Set the structure addresses.
-            # Is important to note that the scrollbar addresses must not be included.
-            set ::ms::addr($w,structure) [list $w \
-                                               $w.fake_x \
-                                               $w.fake_y \
-                                               $w.listbox];
 
             # Add the widget address to the listbox classtype real address list with class '::ms::current($w,class)'.
             lappend ::ms::class($::ms::current($w,class),listbox,addrs) $w
@@ -2528,12 +2629,6 @@ proc ::ms::listbox::Command { window { args "" } } {
             if { $::ms::current($w,style) ni $::ms::style(listbox,classtype) } {
                 lappend ::ms::style(listbox,classtype) $::ms::current($w,style)
             }
-
-            # Add the widget address to the megawidget addresses list.
-            lappend ::ms::addr(megawidgets) $w
-
-            # Add the widget address to the scrollable megawidget addresses list.
-            lappend ::ms::addr(megawidgets,scrollable) $w
 
             # Depending on the address type provided, return the widget real or short address.
             switch -- $type {
@@ -2697,8 +2792,9 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
 
-                            # Set a variable indicating if a new set of values have been provided.
+                            # Set a variable indicating if a new set of values or a new style have been provided.
                             set new_values false
+                            set new_style  false
 
                             ##################################################
                             ##                                              ##
@@ -2965,6 +3061,9 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                                             # Update the current style associated with the widget with 'value'.
                                             set ::ms::current($w,style) $value
+
+                                            # Update the new_style value
+                                            set new_style true
                                         }
                                     }
                                     -takefocus {
@@ -2982,10 +3081,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                         }
                                     }
                                     -values {
-                                        set value [string trim $value]
-
-                                        set ::ms::current($w,values)    $value
-                                        set ::ms::data($w,listvariable) $value
+                                        set ::ms::current($w,values) $value
 
                                         set new_values true
                                     }
@@ -3018,6 +3114,85 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
+                            # Check if the widget is scrollable or not.
+                            switch -- $::ms::current($w,scrollable) {
+                                false { set address [list interp invokehidden {} $w] }
+                                true  { set address [list $w.listbox] }
+                            }
+
+                            # Check if a new set of values was provided.
+                            switch -- $new_values {
+                                true {
+                                    # Clear the selection, if any.
+                                    {*}$address selection clear 0 end
+
+                                    # Check if there are any items associated to the listbox.
+                                    switch -- $::ms::current($w,values) {
+                                        ""      {}
+                                        default {
+                                            # Select the first index of the listbox.
+                                            {*}$address selection set 0
+
+                                            # Set the selection anchor to the first index.
+                                            {*}$address selection anchor 0
+
+                                            # Activate the selected index.
+                                            {*}$address activate 0
+
+                                            # Adjust the listbox viewport.
+                                            {*}$address see 0
+                                        }
+                                    }
+
+                                    # Remove any preselected index previously present.
+                                    set ::ms::data($w,preselected_index) ""
+                                }
+                            }
+
+                            # Check if a new style has been provided.
+                            switch -- $new_style {
+                                true {
+                                    # Recolor any index with the new default colors (background and foreground).
+                                    set index 0
+                                    while { $index < [{*}$address size] } {
+                                        {*}$address itemconfigure $index -background $::ms::current($w,background) \
+                                                                         -foreground $::ms::current($w,foreground);
+
+                                        incr index
+                                    }
+
+                                    # Recolor any previously selected indexes with the new selected colors (selectedbackground and selectedforeground).
+                                    set selected_indexes [{*}$address curselection]
+                                    foreach index $selected_indexes {
+                                        {*}$address selection set $index
+                                    }
+
+                                    # Check if there is a preselected index.
+                                    switch -- $::ms::data($w,preselected_index) {
+                                        ""      {}
+                                        default {
+                                            # Check if the preselected index is also a selected index.
+                                            if { $::ms::data($w,preselected_index) in $selected_indexes } {
+                                                # Underline it.
+
+                                                # Be sure that the active style is the one chosen by the developer.
+                                                {*}$address configure -activestyle $::ms::current($w,activestyle)
+
+                                                # Activate the preselected index.
+                                                {*}$address activate $::ms::data($w,preselected_index)
+                                            } else {
+                                                # Recolor it with the new preselected colors (preselectedbackground and preselectedforeground).
+                                                {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                                            -foreground $::ms::current($w,preselectforeground);
+
+                                                # Remove the active style.
+                                                {*}$address configure -activestyle none
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             ##################################
                             ##                              ##
                             ##     CONFIGURE THE WIDGET     ##
@@ -3027,59 +3202,6 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
                             #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
                             #       and 'selectforeground' are not allowed to change if the statespec changes.
-
-                            ##################
-                            ##              ##
-                            ##     HULL     ##
-                            ##              ##
-                            ##################
-
-                            # Set the hull object style name.
-                            set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                                                 ".TFrame"];
-
-                            # If needed, create the hull object style name.
-                            if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-                                _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
-
-                                # Add the hull object style name to the theme styles list created by mustang.
-                                lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
-                            }
-
-                            # Initialize the hull object mapping.
-                            set mapping [list ]
-
-                            # shellbackground
-                            switch -- $::ms::managed_by($w,shellbackground) {
-                                developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-                                Tk  {
-                                    # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                                    switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                                        1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                                    }
-                                }
-                            }
-
-                            # If needed, create the hull object mapping.
-                            if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-                                # Add the hull object mapping to the stylemap list containing all the mappings
-                                # created by mustang for the current theme.
-                                lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-                            }
-
-                            # Apply the changes.
-                            interp invokehidden {} $w configure -style $::ms::style($w,hull)
-
-                            #####################
-                            ##                 ##
-                            ##     LISTBOX     ##
-                            ##                 ##
-                            #####################
-
-                            # Note: Tk listboxes don't understands styles, at least not natively.
-                            #       No internal styles needs to be created.
 
                             # bordercolor
                             switch -- $::ms::managed_by($w,bordercolor) {
@@ -3130,99 +3252,111 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Apply the changes.
-                            $w.listbox configure {*}$listbox_options
+                            # Check if the widget is scrollable or not.
+                            switch -- $::ma::current($w,scrollable) {
+                                false {
+                                    ############################
+                                    ##                        ##
+                                    ##     SIMPLE LISTBOX     ##
+                                    ##                        ##
+                                    ############################
 
-                            # Check if there are any items associated to the listbox.
-                            switch -- $::ms::current($w,values) {
-                                ""  {
-                                    # Clear the selection, if any.
-                                    $w.listbox selection clear 0 end
+                                    #####################
+                                    ##                 ##
+                                    ##     LISTBOX     ##
+                                    ##                 ##
+                                    #####################
+
+                                    # Note: Tk listboxes don't understands styles, at least not natively.
+                                    #       No internal styles needs to be created.
+
+                                    # Add the provided 'xscrollcommand' and 'yscrollcommand' data.
+                                    lappend listbox_options -xscrollcommand $::ms::current($w,xscrollcommand) \
+                                                            -yscrollcommand $::ms::current($w,yscrollcommand);
+
+                                    # Configure the widget.
+                                    interp invokehidden {} $w configure {*}$listbox_options
                                 }
-                                default {
-                                    # Recolor any index with the new default colors (background and foreground).
-                                    set index 0
-                                    while { $index < [$w.listbox size] } {
-                                        $w.listbox itemconfigure $index -background $::ms::current($w,background) \
-                                                                        -foreground $::ms::current($w,foreground);
+                                true {
+                                    ################################
+                                    ##                            ##
+                                    ##     SCROLLABLE LISTBOX     ##
+                                    ##                            ##
+                                    ################################
 
-                                        incr index
+                                    # Remove any provided or default 'xscrollcommand' or 'yscrollcommand' values and substitute them with the empty string.
+                                    set ::ms::current($w,xscrollcommand) ""
+                                    set ::ms::current($w,yscrollcommand) ""
+
+                                    ##################
+                                    ##              ##
+                                    ##     HULL     ##
+                                    ##              ##
+                                    ##################
+
+                                    # Set the hull object style name.
+                                    set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                                         ".TFrame"];
+
+                                    # If needed, create the hull object style name.
+                                    if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                                        _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                                        # Add the hull object style name to the theme styles list created by mustang.
+                                        lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
                                     }
 
-                                    # Check if a new set of values was provided.
-                                    switch -- $new_values {
-                                        false {
-                                            # Recolor any previously selected indexes with the new selected colors (selectedbackground and selectedforeground).
-                                            set selected_indexes [$w.listbox curselection]
-                                            foreach index $selected_indexes {
-                                                $w.listbox selection set $index
+                                    # Initialize the hull object mapping.
+                                    set mapping [list ]
+
+                                    # shellbackground
+                                    switch -- $::ms::managed_by($w,shellbackground) {
+                                        developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                                        Tk  {
+                                            # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                                            switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                                                1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
                                             }
-
-                                            # Check if there is a preselected index.
-                                            switch -- $::ms::data($w,preselected_index) {
-                                                ""      {}
-                                                default {
-                                                    # If the preselected index is not also a selected index, recolor it with the new preselected colors
-                                                    # (preselectedbackground and preselectedforeground).
-                                                    if { $::ms::data($w,preselected_index) ni $selected_indexes } {
-                                                        $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                                                                                   -foreground $::ms::current($w,preselectforeground);
-
-                                                        # Remove the active style.
-                                                        $w.listbox configure -activestyle none
-                                                    } else {
-                                                        # Be sure that the active style is the one chosen by the developer.
-                                                        $w.listbox configure -activestyle $::ms::current($w,activestyle)
-
-                                                        # Activate the preselected index.
-                                                        $w.listbox activate $::ms::data($w,preselected_index)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        true {
-                                            # Select the first index of the listbox.
-                                            $w.listbox selection clear 0 end
-                                            $w.listbox selection set 0
-
-                                            # Set the selection anchor to the first index.
-                                            $w.listbox selection anchor 0
-
-                                            # Activate the selected index.
-                                            $w.listbox activate 0
-
-                                            # Adjust the listbox viewport.
-                                            $w.listbox see 0
                                         }
                                     }
+
+                                    # If needed, create the hull object mapping.
+                                    if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                                        _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                                        # Add the hull object mapping to the stylemap list containing all the mappings
+                                        # created by mustang for the current theme.
+                                        lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                                    }
+
+                                    # Apply the changes.
+                                    interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                                    #####################
+                                    ##                 ##
+                                    ##     LISTBOX     ##
+                                    ##                 ##
+                                    #####################
+
+                                    # Note: Tk listboxes don't understands styles, at least not natively.
+                                    #       No internal styles needs to be created.
+
+                                    # Apply the changes.
+                                    $w.listbox configure {*}$listbox_options
+
+                                    ########################
+                                    ##                    ##
+                                    ##     SCROLLBARS     ##
+                                    ##                    ##
+                                    ########################
+
+                                    # Configure the fake scrollbars.
+                                    $w.fake_x configure -style $::ms::style($w,hull)
+                                    $w.fake_y configure -style $::ms::style($w,hull)
+
+                                    # Update the scrollbars.
+                                    ::ms::listbox::Scrollbar_Update $w
                                 }
-                            }
-
-                            ########################
-                            ##                    ##
-                            ##     SCROLLBARS     ##
-                            ##                    ##
-                            ########################
-
-                            # Configure the fake scrollbars.
-                            $w.fake_x configure -style $::ms::style($w,hull)
-                            $w.fake_y configure -style $::ms::style($w,hull)
-
-                            # Update the scrollbars.
-                            ::ms::listbox::Scrollbar_Update $w
-
-                            ##################################################
-                            ##                                              ##
-                            ##     IF NEEDED, UPDATE THE WIDGET'S STATE     ##
-                            ##                                              ##
-                            ##################################################
-
-                            # Note: There is no need to update the listbox object, it's a classic widget and
-                            #       it was already been taking care of.
-
-                            switch -- $::ms::current($w,state) {
-                                disabled { interp invokehidden {} $w state [list disabled]  }
-                                normal   { interp invokehidden {} $w state [list !disabled] }
                             }
 
                             return ""
@@ -3541,12 +3675,6 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false { set address [list interp invokehidden {} $w] }
-                        true  { set address [list $w.listbox] }
-                    }
-
                     # Check the widget state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
@@ -3628,11 +3756,16 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    # Check the widget state and propagate the new statespec to the widget's hull and listbox objects.
-                    interp invokehidden {} $w state $::ms::data($w,statespec)
-                    $w.fake_x state $::ms::data($w,statespec)
-                    $w.fake_y state $::ms::data($w,statespec)
-                    {*}$address configure {*}$listbox_options
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { interp invokehidden {} $w configure {*}$listbox_options }
+                        true  {
+                            interp invokehidden {} $w state $::ms::data($w,statespec)
+                            $w.fake_x state $::ms::data($w,statespec)
+                            $w.fake_y state $::ms::data($w,statespec)
+                            $w.listbox configure {*}$listbox_options
+                        }
+                    }
 
                     return $states_that_have_changed
                 }
@@ -3882,6 +4015,51 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
             normal   { set cursor $::ms::current($w,cursor) }
         }
 
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false { set address [list interp invokehidden {} $w] }
+            true  { set address [list $w.listbox] }
+        }
+
+        # Recolor any index with the new default colors (background and foreground).
+        set index 0
+        while { $index < [{*}$address size] } {
+            {*}$address itemconfigure $index -background $::ms::current($w,background) \
+                                             -foreground $::ms::current($w,foreground);
+
+            incr index
+        }
+
+        # Recolor any previously selected indexes with the new selected colors (selectedbackground and selectedforeground).
+        set selected_indexes [{*}$address curselection]
+        foreach index $selected_indexes {
+            {*}$address selection set $index
+        }
+
+        # Check if there is a preselected index.
+        switch -- $::ms::data($w,preselected_index) {
+            ""      {}
+            default {
+                # Check if the preselected index is also a selected index.
+                if { $::ms::data($w,preselected_index) in $selected_indexes } {
+                    # Underline it.
+
+                    # Be sure that the active style is the one chosen by the developer.
+                    {*}$address configure -activestyle $::ms::current($w,activestyle)
+
+                    # Activate the preselected index.
+                    {*}$address activate $::ms::data($w,preselected_index)
+                } else {
+                    # Recolor it with the new preselected colors (preselectedbackground and preselectedforeground).
+                    {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                                -foreground $::ms::current($w,preselectforeground);
+
+                    # Remove the active style.
+                    {*}$address configure -activestyle none
+                }
+            }
+        }
+
         #######################################
         ##                                   ##
         ##     UPDATE THE WIDGET'S STYLE     ##
@@ -3891,59 +4069,6 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
         # Note: 'background', 'borderwidth', 'columns', 'cursor', 'disabledforeground', 'font', 'foreground',
         #       'justify', 'preselectbackground', 'preselectforeground', 'relief', 'rows', 'selectbackground'
         #       and 'selectforeground' are not allowed to change if the statespec changes.
-
-        ##################
-        ##              ##
-        ##     HULL     ##
-        ##              ##
-        ##################
-
-        # Set the hull object style name.
-        set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
-                                             ".TFrame"];
-
-        # If needed, create the hull object style name.
-        if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
-            _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
-
-            # Add the hull object style name to the theme styles list created by mustang.
-            lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
-        }
-
-        # Initialize the hull object mapping.
-        set mapping [list ]
-
-        # shellbackground
-        switch -- $::ms::managed_by($w,shellbackground) {
-            developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
-            Tk  {
-                # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
-                switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
-                    1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
-                }
-            }
-        }
-
-        # If needed, create the hull object mapping.
-        if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-            _ttk_style map $::ms::style($w,hull) {*}$mapping
-
-            # Add the hull object mapping to the stylemap list containing all the mappings
-            # created by mustang for the current theme.
-            lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
-        }
-
-        # Apply the changes.
-        interp invokehidden {} $w configure -style $::ms::style($w,hull)
-
-        #####################
-        ##                 ##
-        ##     LISTBOX     ##
-        ##                 ##
-        #####################
-
-        # Note: Tk listboxes don't understands styles, at least not natively.
-        #       No internal styles needs to be created.
 
         # bordercolor
         switch -- $::ms::managed_by($w,bordercolor) {
@@ -3988,67 +4113,107 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
             }
         }
 
-        # Apply the changes.
-        $w.listbox configure {*}$listbox_options
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            false {
+                ############################
+                ##                        ##
+                ##     SIMPLE LISTBOX     ##
+                ##                        ##
+                ############################
 
-        # Check if there are any items associated to the listbox.
-        switch -- $::ms::current($w,values) {
-            ""      {}
-            default {
-                # Recolor any index with the new default colors (background and foreground).
-                set index 0
-                while { $index < [$w.listbox size] } {
-                    $w.listbox itemconfigure $index -background $::ms::current($w,background) \
-                                                    -foreground $::ms::current($w,foreground);
+                #####################
+                ##                 ##
+                ##     LISTBOX     ##
+                ##                 ##
+                #####################
 
-                    incr index
+                # Note: Tk listboxes don't understands styles, at least not natively.
+                #       No internal styles needs to be created.
+
+                # Apply the changes.
+                interp invokehidden {} $w configure {*}$listbox_options
+            }
+            true {
+                ################################
+                ##                            ##
+                ##     SCROLLABLE LISTBOX     ##
+                ##                            ##
+                ################################
+
+                ##################
+                ##              ##
+                ##     HULL     ##
+                ##              ##
+                ##################
+
+                # Set the hull object style name.
+                set ::ms::style($w,hull) [string cat "_sb=" $::ms::current($w,shellbackground) \
+                                                     ".TFrame"];
+
+                # If needed, create the hull object style name.
+                if { $::ms::style($w,hull) ni $::ms::style($::ms::theme,created_by_mustang) } {
+                    _ttk_style configure $::ms::style($w,hull) -background $::ms::current($w,shellbackground)
+
+                    # Add the hull object style name to the theme styles list created by mustang.
+                    lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,hull)
                 }
 
-                # Recolor any previously selected indexes with the new selected colors (selectedbackground and selectedforeground).
-                set selected_indexes [$w.listbox curselection]
-                foreach index $selected_indexes {
-                    $w.listbox selection set $index
-                }
+                # Initialize the hull object mapping.
+                set mapping [list ]
 
-                # Check if there is a preselected index.
-                switch -- $::ms::data($w,preselected_index) {
-                    ""      {}
-                    default {
-                        # If the preselected index is not also a selected row, recolor it with the new preselected colors
-                        # (preselectedbackground and preselectedforeground).
-                        if { $::ms::data($w,preselected_index) ni $selected_indexes } {
-                            $w.listbox itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                                                       -foreground $::ms::current($w,preselectforeground);
-
-                            # Remove the active style.
-                            $w.listbox configure -activestyle none
-                        } else {
-                            # Be sure that the active style is the one chosen by the developer.
-                            $w.listbox configure -activestyle $::ms::current($w,activestyle)
-
-                            # Activate the preselected index.
-                            $w.listbox activate $::ms::data($w,preselected_index)
+                # shellbackground
+                switch -- $::ms::managed_by($w,shellbackground) {
+                    developer { lappend mapping -background [list pressed $::ms::current($w,shellbackground)] }
+                    Tk  {
+                        # Check if a 'shellbackground' mapping exists for '::ms::current($w,style)'.
+                        switch -- [info exists ::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground)] {
+                            1   { lappend mapping -background $::ms::stylemap($::ms::theme,$::ms::current($w,style),shellbackground) }
                         }
                     }
                 }
+
+                # If needed, create the hull object mapping.
+                if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
+                    _ttk_style map $::ms::style($w,hull) {*}$mapping
+
+                    # Add the hull object mapping to the stylemap list containing all the mappings
+                    # created by mustang for the current theme.
+                    lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
+                }
+
+                # Apply the changes.
+                interp invokehidden {} $w configure -style $::ms::style($w,hull)
+
+                #####################
+                ##                 ##
+                ##     LISTBOX     ##
+                ##                 ##
+                #####################
+
+                # Note: Tk listboxes don't understands styles, at least not natively.
+                #       No internal styles needs to be created.
+
+                # Apply the changes.
+                $w.listbox configure {*}$listbox_options
+
+                ########################
+                ##                    ##
+                ##     SCROLLBARS     ##
+                ##                    ##
+                ########################
+
+                # Update the fake scrollbars.
+                $w.fake_x configure -height $::ms::size($::ms::theme,scrollbar) \
+                                     -style $::ms::style($w,hull);
+
+                $w.fake_y configure -style $::ms::style($w,hull) \
+                                    -width $::ms::size($::ms::theme,scrollbar);
+
+                # Update the scrollbars.
+                ::ms::listbox::Scrollbar_Update $w
             }
         }
-
-        ########################
-        ##                    ##
-        ##     SCROLLBARS     ##
-        ##                    ##
-        ########################
-
-        # Update the fake scrollbars.
-        $w.fake_x configure -height $::ms::size($::ms::theme,scrollbar) \
-                             -style $::ms::style($w,hull);
-
-        $w.fake_y configure -style $::ms::style($w,hull) \
-                            -width $::ms::size($::ms::theme,scrollbar);
-
-        # Update the scrollbars.
-        ::ms::listbox::Scrollbar_Update $w
     }
 
     return ""
@@ -4631,7 +4796,6 @@ proc ::ms::listbox::Destroy { w } {
                          ::ms::current($w,values);
 
     unset -nocomplain -- ::ms::data($w,classtype) \
-                         ::ms::data($w,listvariable) \
                          ::ms::data($w,preselected_index) \
                          ::ms::data($w,scrollx) \
                          ::ms::data($w,scrolly) \
