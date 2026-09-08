@@ -191,7 +191,7 @@
 #                             contextual menu, nothing will happen.
 #
 #                             The *hull* and *fake scrollbars* objects will use the contextual menu of the widget's toplevel, if any.
-#                             If the developer needs a different contextual menu for it, a variable called
+#                             If the developer needs a different contextual menu for them, a variable called
 #                             '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
 #                             order to be used instead of the toplevel one.
 #
@@ -207,6 +207,8 @@
 #                          Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple canvas widget, it will be silently ignored.
 #
 #                          If not provided, defaults to the empty string.
+#
+#                          See also **-scrollable**.
 #
 # **-confine**             Specifies a boolean value that indicates whether or not it should be allowable to set the canvas's
 #                          view outside the region defined by the **scrollregion** argument.

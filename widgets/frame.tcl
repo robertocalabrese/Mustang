@@ -205,11 +205,11 @@
 #                            contextual menu, nothing will happen.
 #
 #                            The *hull* and *fake scrollbars* objects will use the contextual menu of the widget's toplevel, if any.
-#                            If the developer needs a different contextual menu for it, a variable called
+#                            If the developer needs a different contextual menu for them, a variable called
 #                            '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
 #                            order to be used instead of the toplevel one.
 #
-#                            Note: '$short_addr' must be the short address of the text widget.
+#                            Note: '$short_addr' must be the short address of the frame widget.
 #                                  See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
 #                            If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
@@ -222,6 +222,8 @@
 #                         Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple frame widget, it will be silently ignored.
 #
 #                         If not provided, defaults to the empty string.
+#
+#                         See also **-scrollable**.
 #
 # **-colormap**           Specifies a colormap to use for the window. The value may be either **new**, in which case a new colormap is
 #                         created for the window and its children, or the name of another window (which must be on the same screen and

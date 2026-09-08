@@ -201,7 +201,7 @@
 #                                '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
 #                                order to be used instead of the toplevel one.
 #
-#                                Note: '$short_addr' must be the short address of the text widget.
+#                                Note: '$short_addr' must be the short address of the labelframe widget.
 #                                      See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
 #                                If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
@@ -218,11 +218,11 @@
 #
 #                                The *hull*, *container*, *title* and *fake scrollbars* objects will use the contextual menu
 #                                of the widget's toplevel, if any.
-#                                If the developer needs a different contextual menu for it, a variable called
+#                                If the developer needs a different contextual menu for them, a variable called
 #                                '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
 #                                order to be used instead of the toplevel one.
 #
-#                                Note: '$short_addr' must be the short address of the text widget.
+#                                Note: '$short_addr' must be the short address of the labelframe widget.
 #                                      See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
 #                                If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
@@ -233,6 +233,8 @@
 #                                be link with any.
 #
 #                             If not provided, defaults to the empty string.
+#
+#                             See also **-scrollable**.
 #
 # **-compound**               Specifies if the labelframe title should display text and images at the same time, and if so, where the image
 #                             should be placed relative to the text.

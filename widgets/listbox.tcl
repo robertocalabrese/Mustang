@@ -185,11 +185,11 @@
 #                                If the *cmenu* value is the empty string or invalid, nothing will happen.
 #
 #                             Scrollable listbox (**-scrollable true**):
-#                                The contextual menu will be assign to the *content* object of the megawidget.
+#                                The contextual menu will be assign to the *content* object of the megawidget (the *listbox*).
 #                                If the *cmenu* value is the empty string or invalid, nothing will happen.
 #
 #                                The *hull* and *fake scrollbars* objects will use the contextual menu of the widget's toplevel, if any.
-#                                If the developer needs a different contextual menu for it, a variable called
+#                                If the developer needs a different contextual menu for them, a variable called
 #                                '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
 #                                order to be used instead of the toplevel one.
 #
@@ -205,6 +205,8 @@
 #                             Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple listbox widget, it will be silently ignored.
 #
 #                             If not provided, defaults to the empty string.
+#
+#                             See also **-scrollable**.
 #
 # **-columns**                Specifies the desired columns for the window in units of characters in the font given by the **-font** option.
 #                             If the font does not have a uniform width then the width of the character **0** is used in translating from
@@ -449,6 +451,8 @@
 #                             This color will be used in the interspaces between the mustang objects that compose the listbox and should reflects
 #                             the widget's parent background.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
+#
+#                             Note: It's only meaningful for scrollable listbox.
 #
 #                             Note: This is a styleable option.
 #
