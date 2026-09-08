@@ -204,7 +204,8 @@
 # **-cmenu**                      Specifies the contextual menu address that will be assigned to the widget.
 #
 #                                 Simple text (**-scrollable false**):
-#                                    The contextual menu will be assigned to the entire widget.
+#                                    The contextual menu will be assigned to the widget.
+#                                    If the *cmenu* value is the empty string or invalid, nothing will happen.
 #
 #                                 Scrollable text (**-scrollable true**):
 #                                    The contextual menu will be assign to the *content* object of the megawidget (the *textarea*).
