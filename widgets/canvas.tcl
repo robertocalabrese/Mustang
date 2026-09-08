@@ -178,24 +178,31 @@
 #
 # **-cmenu**               Specifies the contextual menu address that will be assigned to the widget.
 #
-#                          The contextual menu will be assign to the *content* object of the megawidget.
-#                          If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                          toplevel (if any) will be used instead. If the widget's toplevel doesn't have a contextual menu,
-#                          nothing will happen.
+#                          Simple canvas (**-scrollable false**):
+#                             The contextual menu will be assign to the widget.
+#                              If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                              toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                              contextual menu, nothing will happen.
 #
-#                          The *hull* and *fake scrollbar* objects will use the contextual menu of the widget's toplevel, if any.
-#                          If the developer needs a different contextual menu for them, a variable called
-#                          '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
-#                          order to be used instead of the toplevel one.
+#                          Scrollable canvas (**-scrollable true**):
+#                             The contextual menu will be assign to the *content* object of the megawidget (the *canvas area*).
+#                             If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                             toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                             contextual menu, nothing will happen.
 #
-#                          Note: '$short_addr' must be the short address of the canvas widget.
-#                                See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
+#                             The *hull* and *fake scrollbars* objects will use the contextual menu of the widget's toplevel, if any.
+#                             If the developer needs a different contextual menu for it, a variable called
+#                             '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
+#                             order to be used instead of the toplevel one.
 #
-#                          If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid contextual menu
-#                          address, it will be ignored and the contextual menu of the widget's toplevel (if any) will be used.
-#                          If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#                             Note: '$short_addr' must be the short address of the canvas widget.
+#                                   See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
-#                          The *scrollbar* objects are not supposed to have a contextual menu and will not be link with any.
+#                             If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
+#                             contextual menu address, it will be ignored and the contextual menu of the widget's toplevel
+#                             (if any) will be used. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#
+#                             The *scrollbar* objects are not supposed to have a contextual menu and will not be link with any.
 #
 #                          Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple canvas widget, it will be silently ignored.
 #
