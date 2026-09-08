@@ -1153,54 +1153,208 @@
 #   }
 package provide ::ms::listbox 0.1
 
-###############################
-##                           ##
-##     _LISTBOX BINDINGS     ##
-##                           ##
-###############################
+######################################
+##                                  ##
+##     _SIMPLE_LISTBOX BINDINGS     ##
+##                                  ##
+######################################
 
 # Activate/Deactivate
-_bind _Listbox <Activate>   { ::ms::listbox::Pathname_Cmd %W state !background; break }
-_bind _Listbox <Deactivate> { ::ms::listbox::Pathname_Cmd %W state  background; break }
+_bind _Simple_Listbox <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Simple_Listbox <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # ButtonPress-1
-_bind _Listbox <ButtonPress-1> { ::ms::Focus_The_Widget_Or_Its_Toplevel %W; break }
+_bind _Simple_Listbox <B1-Motion>     { ::ms::listbox::B1_Motion    %W %x %y; break }
+_bind _Simple_Listbox <ButtonPress-1> { ::ms::listbox::Begin_Select %W %x %y; break }
 
 # Contextual menu
-_bind _Listbox <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+_bind _Simple_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 
 # Destroy
-_bind _Listbox <Destroy> { ::ms::listbox::Destroy %W; break }
+_bind _Simple_Listbox <Destroy> { ::ms::listbox::Destroy %W; break }
 
 # Enter/Leave
-_bind _Listbox <Enter> { ::ms::listbox::Hover %W %X %Y; break }
-_bind _Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
+_bind _Simple_Listbox <Enter> { ::ms::listbox::Hover %W %X %Y; break }
+_bind _Simple_Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Listbox <FocusIn>  { ::ms::listbox::FocusIn  %W; break }
-_bind _Listbox <FocusOut> { ::ms::listbox::FocusOut %W; break }
+_bind _Simple_Listbox <FocusIn>  { ::ms::listbox::FocusIn  %W; break }
+_bind _Simple_Listbox <FocusOut> { ::ms::listbox::FocusOut %W; break }
+
+# If the widget state is normal, move the active row item to the very first item, otherwise don't do anything.
+_bind _Simple_Listbox <<LineTop>>   { ::ms::listbox::Home %W; break }
+_bind _Simple_Listbox <<LineStart>> { ::ms::listbox::Home %W; break }
+
+# If the widget state is normal, move the active row item to the very last item, otherwise don't do anything.
+_bind _Simple_Listbox <<LineBottom>> { ::ms::listbox::End %W; break }
+_bind _Simple_Listbox <<LineEnd>>    { ::ms::listbox::End %W; break }
+
+# Motion
+_bind _Simple_Listbox <Motion> { ::ms::listbox::Motion %W %x %y; break }
+
+# If the widget state is normal, move back or forward the active row item by one row (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit towards the top or bottom.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <<NextLine>> { ::ms::listbox::ArrowDown %W; break }
+_bind _Simple_Listbox <<PrevLine>> { ::ms::listbox::ArrowUp   %W; break }
+
+# If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
+# right or left (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit towards the right or left.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <<NextChar>> { ::ms::listbox::Next_Char %W; break }
+_bind _Simple_Listbox <<PrevChar>> { ::ms::listbox::Prev_Char %W; break }
+
+# If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
+# left or right (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page towards the left, right, top or bottom.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <<PageLeft>>  { ::ms::listbox::PageLeft  %W; break }
+_bind _Simple_Listbox <<PageRight>> { ::ms::listbox::PageRight %W; break }
+
+# If the widget state is normal and the widget has an active vertical scrollbar, move one page towards the
+# top or bottom (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page towards the left, right, top or bottom.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <<PageUp>>    { ::ms::listbox::PageUp    %W; break }
+_bind _Simple_Listbox <<PageDown>>  { ::ms::listbox::PageDown  %W; break }
+
+# Scan
+_bind _Simple_Listbox <<ScanMark>>    { ::ms::Scan_Mark %W %x %y; break }
+_bind _Simple_Listbox <<ScanDrag>>    { ::ms::Scan_Drag %W %x %y; break }
+_bind _Simple_Listbox <<ScanRelease>> { ::ms::Scan_Release; break }
+
+# Select/Unselect all items.
+_bind _Simple_Listbox <<SelectAll>>   { ::ms::listbox::Select_All   %W; break }
+_bind _Simple_Listbox <<SelectNone>>  { ::ms::listbox::Unselect_All %W; break }
+
+# If the widget state is normal, start selecting from the active item row towards the top or bottom.
+_bind _Simple_Listbox <<SelectNextLine>> { ::ms::listbox::Extend %W  1; break }
+_bind _Simple_Listbox <<SelectPrevLine>> { ::ms::listbox::Extend %W -1; break }
+
+# If the widget state is normal, start selecting from the active item row to the very first or last item.
+_bind _Simple_Listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End %W end; break }
+_bind _Simple_Listbox <<SelectLineTop>>    { ::ms::listbox::Extend_Home_End %W home; break }
+
+# Select/Unselect one item.
+_bind _Simple_Listbox <<ToggleSelection>> { ::ms::listbox::Select %W; break }
+
+# Disable the following bindings to prevent Tk to fire them up:
+_bind _Simple_Listbox <<Copy>>                 { break }
+_bind _Simple_Listbox <Control-KeyPress-space> { break }
+_bind _Simple_Listbox <<NextWord>>             { break }
+_bind _Simple_Listbox <<PrevWord>>             { break }
+
+# Mousewheel and Touchpad
+
+# If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <MouseWheel> { ::ms::Scroll_Widget_Y %W %D units; break }
+
+# If the widget's horizontal scrollbar is active, move the listbox object by one unit left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <Shift-MouseWheel> { ::ms::Scroll_Widget_X %W %D units; break }
+
+# If the widget's vertical scrollbar is active, move the listbox object by one page up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <Control-MouseWheel> { ::ms::Scroll_Widget_Y %W %D pages; break }
+
+# If the widget's horizontal scrollbar is active, move the listbox object by one page left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Simple_Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X %W %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the listbox object by one unit left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Simple_Listbox <TouchpadScroll> { ::ms::Touchpad_Widget %W %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the listbox object by one page left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the listbox object by one page up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Simple_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Widget %W %# %D pages; break }
+
+####################################
+##                                ##
+##     _HULL_LISTBOX BINDINGS     ##
+##                                ##
+####################################
+
+# Activate/Deactivate
+_bind _Hull_Listbox <Activate>   { ::ms::listbox::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Listbox <Deactivate> { ::ms::listbox::Pathname_Cmd %W state [list  background]; break }
+
+# Contextual menu
+_bind _Hull_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
+
+# Destroy
+_bind _Hull_Listbox <Destroy> { ::ms::listbox::Destroy %W; break }
+
+# Enter/Leave
+_bind _Hull_Listbox <Enter> { ::ms::listbox::Hover %W %X %Y; break }
+_bind _Hull_Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
 
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Listbox <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
+_bind _Hull_Listbox <MouseWheel> { ::ms::Scroll_Parent_Y %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Listbox <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
+_bind _Hull_Listbox <Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Listbox <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
+_bind _Hull_Listbox <Control-MouseWheel> { ::ms::Scroll_Parent_Y %W %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
+_bind _Hull_Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1215,7 +1369,7 @@ _bind _Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X %W %D pages; b
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Listbox <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
+_bind _Hull_Listbox <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1227,7 +1381,356 @@ _bind _Listbox <TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D units; break }
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+_bind _Hull_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages; break }
+
+##########################################
+##                                      ##
+##     _SCROLLABLE_LISTBOX BINDINGS     ##
+##                                      ##
+##########################################
+
+# ButtonPress-1
+_bind _Scrollable_Listbox <B1-Motion>     { ::ms::listbox::B1_Motion    [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Listbox <ButtonPress-1> { ::ms::listbox::Begin_Select [_winfo parent %W] %x %y; break }
+
+# Contextual menu
+_bind _Scrollable_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
+
+# Configure
+_bind _Scrollable_Listbox <Configure> { ::ms::listbox::Scrollbar_Update [_winfo parent %W]; break }
+
+# Enter/Leave
+_bind _Scrollable_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+
+# FocusIn/FocusOut
+_bind _Scrollable_Listbox <FocusIn>  { ::ms::listbox::FocusIn  [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <FocusOut> { ::ms::listbox::FocusOut [_winfo parent %W]; break }
+
+# If the widget state is normal, move the active row item to the very first item, otherwise don't do anything.
+_bind _Scrollable_Listbox <<LineTop>>   { ::ms::listbox::Home [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<LineStart>> { ::ms::listbox::Home [_winfo parent %W]; break }
+
+# If the widget state is normal, move the active row item to the very last item, otherwise don't do anything.
+_bind _Scrollable_Listbox <<LineBottom>> { ::ms::listbox::End [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<LineEnd>>    { ::ms::listbox::End [_winfo parent %W]; break }
+
+# Motion
+_bind _Scrollable_Listbox <Motion> { ::ms::listbox::Motion [_winfo parent %W] %x %y; break }
+
+# If the widget state is normal, move back or forward the active row item by one row (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit towards the top or bottom.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <<NextLine>> { ::ms::listbox::ArrowDown [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<PrevLine>> { ::ms::listbox::ArrowUp   [_winfo parent %W]; break }
+
+# If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
+# right or left (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit towards the right or left.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
+
+# If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
+# left or right (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page towards the left, right, top or bottom.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <<PageLeft>>  { ::ms::listbox::PageLeft  [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<PageRight>> { ::ms::listbox::PageRight [_winfo parent %W]; break }
+
+# If the widget state is normal and the widget has an active vertical scrollbar, move one page towards the
+# top or bottom (depending on the key pressed).
+# In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page towards the left, right, top or bottom.
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <<PageUp>>    { ::ms::listbox::PageUp    [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<PageDown>>  { ::ms::listbox::PageDown  [_winfo parent %W]; break }
+
+# Scan
+_bind _Scrollable_Listbox <<ScanMark>>    { ::ms::Scan_Mark [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Listbox <<ScanDrag>>    { ::ms::Scan_Drag [_winfo parent %W] %x %y; break }
+_bind _Scrollable_Listbox <<ScanRelease>> { ::ms::Scan_Release; break }
+
+# Select/Unselect all items.
+_bind _Scrollable_Listbox <<SelectAll>>   { ::ms::listbox::Select_All   [_winfo parent %W]; break }
+_bind _Scrollable_Listbox <<SelectNone>>  { ::ms::listbox::Unselect_All [_winfo parent %W]; break }
+
+# If the widget state is normal, start selecting from the active item row towards the top or bottom.
+_bind _Scrollable_Listbox <<SelectNextLine>> { ::ms::listbox::Extend [_winfo parent %W]  1; break }
+_bind _Scrollable_Listbox <<SelectPrevLine>> { ::ms::listbox::Extend [_winfo parent %W] -1; break }
+
+# If the widget state is normal, start selecting from the active item row to the very first or last item.
+_bind _Scrollable_Listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End [_winfo parent %W] end; break }
+_bind _Scrollable_Listbox <<SelectLineTop>>    { ::ms::listbox::Extend_Home_End [_winfo parent %W] home; break }
+
+# Select/Unselect one item.
+_bind _Scrollable_Listbox <<ToggleSelection>> { ::ms::listbox::Select [_winfo parent %W]; break }
+
+# Disable the following bindings to prevent Tk to fire them up:
+_bind _Scrollable_Listbox <<Copy>>                 { break }
+_bind _Scrollable_Listbox <Control-KeyPress-space> { break }
+_bind _Scrollable_Listbox <<NextWord>>             { break }
+_bind _Scrollable_Listbox <<PrevWord>>             { break }
+
+# Mousewheel and Touchpad
+
+# If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D units; break }
+
+# If the widget's horizontal scrollbar is active, move the listbox object by one unit left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
+
+# If the widget's vertical scrollbar is active, move the listbox object by one page up or down
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D pages; break }
+
+# If the widget's horizontal scrollbar is active, move the listbox object by one page left or right
+# (depending on the mousewheel direction).
+# Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Scrollable_Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the listbox object by one unit left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scrollable_Listbox <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - If the widget's horizontal scrollbar is active, move the listbox object by one page left or right
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - If the widget's vertical scrollbar is active, move the listbox object by one page up or down
+#       (depending on the touchpad direction).
+#       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Scrollable_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
+
+###########################################
+##                                       ##
+##     _X_SCROLLBAR_LISTBOX BINDINGS     ##
+##                                       ##
+###########################################
+
+# ButtonPress-1
+_bind _X_Scrollbar_Listbox <B1-Motion>       { ::ms::listbox::Scrollbar_Drag        [_winfo parent %W] horizontal %x %y; break }
+_bind _X_Scrollbar_Listbox <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] horizontal %x %y; break }
+_bind _X_Scrollbar_Listbox <ButtonRelease-1> { ::ms::listbox::Scrollbar_ButtonRelease; break }
+
+# Enter/Leave
+_bind _X_Scrollbar_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Scrollbar_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+
+# Mousewheel and Touchpad
+
+# Move the listbox object by one unit left or right (depending on the mousewheel direction).
+_bind _X_Scrollbar_Listbox <MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
+
+# Move the listbox object by one page left or right (depending on the mousewheel direction).
+_bind _X_Scrollbar_Listbox <Control-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# Move the listbox object by one unit left or right (depending on the touchpad direction).
+_bind _X_Scrollbar_Listbox <TouchpadScroll> { ::ms::Touchpad_Widget_X [_winfo parent %W] %# %D units; break }
+
+# Move the listbox object by one page left or right (depending on the touchpad direction).
+_bind _X_Scrollbar_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Widget_X [_winfo parent %W] %# %D pages; break }
+
+###########################################
+##                                       ##
+##     _Y_SCROLLBAR_LISTBOX BINDINGS     ##
+##                                       ##
+###########################################
+
+# ButtonPress-1
+_bind _Y_Scrollbar_Listbox <B1-Motion>       { ::ms::listbox::Scrollbar_Drag        [_winfo parent %W] vertical %x %y; break }
+_bind _Y_Scrollbar_Listbox <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] vertical %x %y; break }
+_bind _Y_Scrollbar_Listbox <ButtonRelease-1> { ::ms::listbox::Scrollbar_ButtonRelease; break }
+
+# Enter/Leave
+_bind _Y_Scrollbar_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Scrollbar_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+
+# Mousewheel and Touchpad
+
+# Move the listbox object by one unit up or down (depending on the mousewheel direction).
+_bind _Y_Scrollbar_Listbox <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D units; break }
+
+# Move the listbox object by one page up or down (depending on the mousewheel direction).
+_bind _Y_Scrollbar_Listbox <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# Move the listbox object by one unit up or down (depending on the touchpad direction).
+_bind _Y_Scrollbar_Listbox <TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo parent %W] %# %D units; break }
+
+# Move the listbox object by one page up or down (depending on the touchpad direction).
+_bind _Y_Scrollbar_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_winfo parent %W] %# %D pages; break }
+
+################################################
+##                                            ##
+##     _X_FAKE_SCROLLBAR_LISTBOX BINDINGS     ##
+##                                            ##
+################################################
+
+# Activate/Deactivate
+_bind _X_Fake_Scrollbar_Listbox <Activate>   { ::ms::listbox::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _X_Fake_Scrollbar_Listbox <Deactivate> { ::ms::listbox::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
+
+# Contextual menu
+_bind _X_Fake_Scrollbar_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Enter/Leave
+_bind _X_Fake_Scrollbar_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Fake_Scrollbar_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Listbox <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Listbox <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Listbox <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _X_Fake_Scrollbar_Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _X_Fake_Scrollbar_Listbox <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _X_Fake_Scrollbar_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
+
+################################################
+##                                            ##
+##     _Y_FAKE_SCROLLBAR_LISTBOX BINDINGS     ##
+##                                            ##
+################################################
+
+# Activate/Deactivate
+_bind _Y_Fake_Scrollbar_Listbox <Activate>   { ::ms::listbox::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _Y_Fake_Scrollbar_Listbox <Deactivate> { ::ms::listbox::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
+
+# Contextual menu
+_bind _Y_Fake_Scrollbar_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
+
+# Enter/Leave
+_bind _Y_Fake_Scrollbar_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Fake_Scrollbar_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one unit up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Listbox <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one unit left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Listbox <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
+
+# Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+# and move that scrollbar by one page up or down (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Listbox <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
+
+# Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+# and move that scrollbar by one page left or right (depending on the mousewheel direction).
+# If none of the widget's parent meets the required condition, don't do anything.
+_bind _Y_Fake_Scrollbar_Listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
+
+# Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
+#       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one unit left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Y_Fake_Scrollbar_Listbox <TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D units; break }
+
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+# These two planes may involve different widgets depending on the active scrollbars on them and on the
+# touchpad direction.
+#   1 - Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
+#       and move that scrollbar by one page left or right (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one page up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
+_bind _Y_Fake_Scrollbar_Listbox <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 # Create the mustang **listbox** package.
 namespace eval ::ms::listbox {
@@ -1847,6 +2350,41 @@ proc ::ms::listbox::Command { window { args "" } } {
                                     -style TScrollbar \
                                 -takefocus 0;
 
+            # Create the fake horizontal scrollbar.
+            _ttk_frame $w.fake_x -borderwidth 0 \
+                                       -class TFrame \
+                                      -cursor arrow \
+                                      -height $::ms::size($::ms::theme,scrollbar) \
+                                     -padding 0 \
+                                      -relief flat \
+                                       -style $::ms::style($w,hull) \
+                                   -takefocus 0 \
+                                       -width 0;
+
+            # Create the fake vertical scrollbar.
+            _ttk_frame $w.fake_y -borderwidth 0 \
+                                       -class TFrame \
+                                      -cursor arrow \
+                                      -height 0 \
+                                     -padding 0 \
+                                      -relief flat \
+                                       -style $::ms::style($w,hull) \
+                                   -takefocus 0 \
+                                       -width $::ms::size($::ms::theme,scrollbar);
+
+            # Grid the fake scrollbars.
+            _grid $w.fake_x -column 0 \
+                              -padx [list 0  0] \
+                              -pady [list 8p 0] \
+                               -row 1 \
+                            -sticky we;
+
+            _grid $w.fake_y -column 1 \
+                              -padx [list 8p 0] \
+                              -pady [list 0  0] \
+                               -row 0 \
+                            -sticky ns;
+
             ######################
             ##                  ##
             ##     BINDINGS     ##
@@ -1856,179 +2394,22 @@ proc ::ms::listbox::Command { window { args "" } } {
             # Note: Differently than most other widgets, the listbox widget doesn't have a '-class' option in Tk.
             #       If a different class than 'Listbox' is provided, we need to adapt the bindtags.
 
-            # Set the new bindtags for the widget.
+            # Set the new bindtags for the hull object.
+            _bindtags $w [list $w _Hull_Listbox TFrame $::ms::addr($w,toplevel) all]
+
+            # Set the new bindtags for the listbox object.
             switch -- $::ms::current($w,class) {
-                Listbox { _bindtags $w [list $w _Listbox Listbox $::ms::addr($w,toplevel) all] }
-                default { _bindtags $w [list $w $::ms::current($w,class) _Listbox Listbox $::ms::addr($w,toplevel) all] }
+                Listbox { _bindtags $w.listbox [list $w.listbox _Scrollable_Listbox Listbox $::ms::addr($w,toplevel) all] }
+                default { _bindtags $w.listbox [list $w.listbox $::ms::current($w,class) _Scrollable_Listbox Listbox $::ms::addr($w,toplevel) all] }
             }
 
-            # ButtonPress-1
-            _bind $w.listbox <B1-Motion>     { ::ms::listbox::B1_Motion    [_winfo parent %W] %x %y; break }
-            _bind $w.listbox <ButtonPress-1> { ::ms::listbox::Begin_Select [_winfo parent %W] %x %y; break }
+            # Set the new bindtags for the horizontal and vertical scrollbar objects.
+            _bindtags $w.x [list $w.x _X_Scrollbar_Listbox TScrollbar $::ms::addr($w,toplevel) all]
+            _bindtags $w.y [list $w.y _Y_Scrollbar_Listbox TScrollbar $::ms::addr($w,toplevel) all]
 
-            _bind $w.x <B1-Motion>       { ::ms::listbox::Scrollbar_Drag        [_winfo parent %W] horizontal %x %y; break }
-            _bind $w.x <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] horizontal %x %y; break }
-            _bind $w.x <ButtonRelease-1> { ::ms::listbox::Scrollbar_ButtonRelease; break }
-
-            _bind $w.y <B1-Motion>       { ::ms::listbox::Scrollbar_Drag        [_winfo parent %W] vertical %x %y; break }
-            _bind $w.y <ButtonPress-1>   { ::ms::listbox::Scrollbar_ButtonPress [_winfo parent %W] vertical %x %y; break }
-            _bind $w.y <ButtonRelease-1> { ::ms::listbox::Scrollbar_ButtonRelease; break }
-
-            # Contextual menu
-            _bind $w.listbox <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
-
-            # Configure
-            _bind $w.listbox <Configure> { ::ms::listbox::Configure [_winfo parent %W]; break }
-
-            # Enter/Leave
-            _bind $w.listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.x       <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.y       <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
-
-            _bind $w.listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.x       <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
-            _bind $w.y       <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
-
-            # FocusIn/FocusOut
-            _bind $w.listbox <FocusIn>  { ::ms::listbox::FocusIn  [_winfo parent %W]; break }
-            _bind $w.listbox <FocusOut> { ::ms::listbox::FocusOut [_winfo parent %W]; break }
-
-            # If the widget state is normal or the listbox has no values, move the active row item to the very
-            # first item, otherwise don't do anything.
-            _bind $w.listbox <<LineTop>>   { ::ms::listbox::Home [_winfo parent %W]; break }
-            _bind $w.listbox <<LineStart>> { ::ms::listbox::Home [_winfo parent %W]; break }
-
-            # If the widget state is normal or the listbox has no values, move the active row item to the very
-            # last item, otherwise don't do anything.
-            _bind $w.listbox <<LineBottom>> { ::ms::listbox::End [_winfo parent %W]; break }
-            _bind $w.listbox <<LineEnd>>    { ::ms::listbox::End [_winfo parent %W]; break }
-
-            # Motion
-            _bind $w.listbox <Motion> { ::ms::listbox::Motion [_winfo parent %W] %x %y; break }
-
-            # If the widget state is normal, move back or forward the active row item by one row (note that row cycling is active).
-            # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one unit towards the top or bottom.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextLine>> { ::ms::listbox::ArrowDown [_winfo parent %W]; break }
-            _bind $w.listbox <<PrevLine>> { ::ms::listbox::ArrowUp   [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
-            # right or left.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one unit towards the right or left.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
-            _bind $w.listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
-
-            # If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
-            # left, right, top or bottom.
-            # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one page towards the left, right, top or bottom.
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <<PageLeft>>  { ::ms::listbox::PageLeft  [_winfo parent %W]; break }
-            _bind $w.listbox <<PageRight>> { ::ms::listbox::PageRight [_winfo parent %W]; break }
-            _bind $w.listbox <<PageUp>>    { ::ms::listbox::PageUp    [_winfo parent %W]; break }
-            _bind $w.listbox <<PageDown>>  { ::ms::listbox::PageDown  [_winfo parent %W]; break }
-
-            # Scan
-            _bind $w.listbox <<ScanMark>>    { ::ms::Scan_Mark [_winfo parent %W] %x %y; break }
-            _bind $w.listbox <<ScanDrag>>    { ::ms::Scan_Drag [_winfo parent %W] %x %y; break }
-            _bind $w.listbox <<ScanRelease>> { ::ms::Scan_Release; break }
-
-            # Select/Unselect all items.
-            _bind $w.listbox <<SelectAll>>   { ::ms::listbox::Select_All   [_winfo parent %W]; break }
-            _bind $w.listbox <<SelectNone>>  { ::ms::listbox::Unselect_All [_winfo parent %W]; break }
-
-            # If the widget state is normal, start selecting from the active item row towards the top or bottom.
-            _bind $w.listbox <<SelectNextLine>> { ::ms::listbox::Extend [_winfo parent %W]  1; break }
-            _bind $w.listbox <<SelectPrevLine>> { ::ms::listbox::Extend [_winfo parent %W] -1; break }
-
-            # If the widget state is normal, start selecting from the active item row to the very first or last item.
-            _bind $w.listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End [_winfo parent %W] end; break }
-            _bind $w.listbox <<SelectLineTop>>    { ::ms::listbox::Extend_Home_End [_winfo parent %W] home; break }
-
-            # Select/Unselect one item.
-            _bind $w.listbox <<ToggleSelection>> { ::ms::listbox::Select [_winfo parent %W]; break }
-
-            # Disable the following bindings to prevent Tk to fire them up:
-            _bind $w.listbox <<Copy>>                 { break }
-            _bind $w.listbox <Control-KeyPress-space> { break }
-            _bind $w.listbox <<NextWord>>             { break }
-            _bind $w.listbox <<PrevWord>>             { break }
-
-            # Mousewheel and Touchpad
-
-            # If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
-            # (depending on the mousewheel direction).
-            # Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D units; break }
-            _bind $w.y       <MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D units; break }
-
-            # If the widget's horizontal scrollbar is active, move the listbox object by one unit left or right
-            # (depending on the mousewheel direction).
-            # Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
-            _bind $w.x       <MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent %W] %D units; break }
-
-            # If the widget's vertical scrollbar is active, move the listbox object by one page up or down
-            # (depending on the mousewheel direction).
-            # Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            # and move that scrollbar by one page up or down (depending on the mousewheel direction).
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D pages; break }
-            _bind $w.y       <Control-MouseWheel> { ::ms::Scroll_Widget_Y [_winfo parent %W] %D pages; break }
-
-            # If the widget's horizontal scrollbar is active, move the listbox object by one page left or right
-            # (depending on the mousewheel direction).
-            # Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            # and move that scrollbar by one page left or right (depending on the mousewheel direction).
-            # If none of the widget's parent meets the required condition, don't do anything.
-            _bind $w.listbox <Control-Shift-MouseWheel> { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
-            _bind $w.x       <Control-MouseWheel>       { ::ms::Scroll_Widget_X [_winfo parent %W] %D pages; break }
-
-            # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
-            #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
-
-            # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-            # These two planes may involve different widgets depending on the active scrollbars on them and on the
-            # touchpad direction.
-            #   1 - If the widget's horizontal scrollbar is active, move the listbox object by one unit left or right
-            #       (depending on the touchpad direction).
-            #       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            #       and move that scrollbar by one unit left or right (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-            #
-            #   2 - If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
-            #       (depending on the touchpad direction).
-            #       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-            _bind $w.listbox <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D units; break }
-            _bind $w.x       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D units; break }
-            _bind $w.y       <TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D units; break }
-
-            # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-            # These two planes may involve different widgets depending on the active scrollbars on them and on the
-            # touchpad direction.
-            #   1 - If the widget's horizontal scrollbar is active, move the listbox object by one page left or right
-            #       (depending on the touchpad direction).
-            #       Otherwise, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
-            #       and move that scrollbar by one page left or right (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the horizontal axis.
-            #
-            #   2 - If the widget's vertical scrollbar is active, move the listbox object by one page up or down
-            #       (depending on the touchpad direction).
-            #       Otherwise, try to find the innermost widget's scrollable parent with an active vertical scrollbar
-            #       and move that scrollbar by one page up or down (depending on the touchpad direction).
-            #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-            _bind $w.listbox <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
-            _bind $w.x       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
-            _bind $w.y       <Control-TouchpadScroll> { ::ms::Touchpad_Widget [_winfo parent %W] %# %D pages; break }
+            # Set the new bindtags for the fake horizontal and vertical scrollbar objects.
+            _bindtags $w.fake_x [list $w.fake_x _X_Fake_Scrollbar_Listbox TFrame $::ms::addr($w,toplevel) all]
+            _bindtags $w.fake_y [list $w.fake_y _Y_Fake_Scrollbar_Listbox TFrame $::ms::addr($w,toplevel) all]
 
             #####################
             ##                 ##
@@ -2057,12 +2438,16 @@ proc ::ms::listbox::Command { window { args "" } } {
             # Set the widget short addresses relative to its real address, 'w'.
             # They will all point to the widget hull object short address.
             set ::ms::addr($w,short)         $short_addr
+            set ::ms::addr($w.fake_x,short)  $short_addr
+            set ::ms::addr($w.fake_y,short)  $short_addr
             set ::ms::addr($w.listbox,short) $short_addr
             set ::ms::addr($w.x,short)       $short_addr
             set ::ms::addr($w.y,short)       $short_addr
 
             # Add the widget real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals) $w \
+                                      $w.fake_x \
+                                      $w.fake_y \
                                       $w.listbox \
                                       $w.x \
                                       $w.y;
@@ -2081,6 +2466,8 @@ proc ::ms::listbox::Command { window { args "" } } {
             # Set the structure addresses.
             # Is important to note that the scrollbar addresses must not be included.
             set ::ms::addr($w,structure) [list $w \
+                                               $w.fake_x \
+                                               $w.fake_y \
                                                $w.listbox];
 
             # Add the widget address to the listbox classtype real address list with class '::ms::current($w,class)'.
@@ -2768,6 +3155,10 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                             ##                    ##
                             ########################
 
+                            # Configure the fake scrollbars.
+                            $w.fake_x configure -style $::ms::style($w,hull)
+                            $w.fake_y configure -style $::ms::style($w,hull)
+
                             # Update the scrollbars.
                             ::ms::listbox::Scrollbar_Update $w
 
@@ -3190,6 +3581,8 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
 
                     # Check the widget state and propagate the new statespec to the widget's hull and listbox objects.
                     interp invokehidden {} $w state $::ms::data($w,statespec)
+                    $w.fake_x state $::ms::data($w,statespec)
+                    $w.fake_y state $::ms::data($w,statespec)
                     {*}$address configure {*}$listbox_options
 
                     return $states_that_have_changed
@@ -3597,6 +3990,13 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
         ##     SCROLLBARS     ##
         ##                    ##
         ########################
+
+        # Update the fake scrollbars.
+        $w.fake_x configure -height $::ms::size($::ms::theme,scrollbar) \
+                             -style $::ms::style($w,hull);
+
+        $w.fake_y configure -style $::ms::style($w,hull) \
+                            -width $::ms::size($::ms::theme,scrollbar);
 
         # Update the scrollbars.
         ::ms::listbox::Scrollbar_Update $w
@@ -4025,27 +4425,6 @@ proc ::ms::listbox::Begin_Select { w x y } {
         1   {
             # Change the widget dynamic state to 'pressed'.
             ::ms::listbox::Pathname_Cmd $w state [list pressed]
-        }
-    }
-
-    return ""
-}
-
-## Configure
-#
-# Manage the **Configure** event on a widget.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::listbox::Configure { w } {
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        true {
-            # Update the scrollbars.
-            ::ms::listbox::Scrollbar_Update $w
         }
     }
 
