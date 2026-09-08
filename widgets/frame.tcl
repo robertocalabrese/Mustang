@@ -192,30 +192,32 @@
 #
 # **-cmenu**              Specifies the contextual menu address that will be assigned to the widget.
 #
-#                         Simple text:     The contextual menu will be assign to the entire megawidget.
-#                                          If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                                          toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
-#                                          contextual menu, nothing will happen.
+#                         Simple frame (**-scrollable false**):
+#                            The contextual menu will be assign to the widget.
+#                            If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                            toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                            contextual menu, nothing will happen.
 #
-#                         Scrollable text: The contextual menu will be assign to the *content* and *border* objects of the megawidget.
-#                                          If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                                          toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
-#                                          contextual menu, nothing will happen.
+#                         Scrollable frame (**-scrollable true**):
+#                            The contextual menu will be assign to the *content* and *border* objects of the megawidget.
+#                            If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                            toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                            contextual menu, nothing will happen.
 #
-#                                          The *hull* object will rather use the contextual menu of the widget's toplevel, if any.
-#                                          If the developer needs a different contextual menu for it, a variable called
-#                                          '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
-#                                          order to be used instead of the toplevel one.
+#                            The *hull* and *fake scrollbars* objects will use the contextual menu of the widget's toplevel, if any.
+#                            If the developer needs a different contextual menu for it, a variable called
+#                            '::ms::data($short_addr,cmenu,shell)' can be set with a valid contextual menu address in
+#                            order to be used instead of the toplevel one.
 #
-#                                          Note: '$short_addr' must be the short address of the text widget.
-#                                                See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
+#                            Note: '$short_addr' must be the short address of the text widget.
+#                                  See the [tk](/wiki/commands/tk.md) command to know more about short and real address.
 #
-#                                          If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
-#                                          contextual menu address, it will be ignored and the contextual menu of the widget's toplevel
-#                                          (if any) will be used. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
+#                            If '::ms::data($short_addr,cmenu,shell)' is set with an empty string or with an invalid
+#                            contextual menu address, it will be ignored and the contextual menu of the widget's toplevel
+#                            (if any) will be used. If the widget's toplevel doesn't have a contextual menu, nothing will happen.
 #
-#                                          The *viewport* and the *scrollbar* objects are not supposed to have a contextual menu and
-#                                          will not be link with any.
+#                            The *viewport* and the *scrollbar* objects are not supposed to have a contextual menu and
+#                            will not be link with any.
 #
 #                         Note: If '::ms::data($short_addr,cmenu,shell)' is set for a simple frame widget, it will be silently ignored.
 #
