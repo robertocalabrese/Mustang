@@ -509,6 +509,46 @@
 #
 #                             If not provided, defaults to the empty string (meaning no items will be displayed inside the widget).
 #
+# **-xscrollcommand**         Specifies the prefix for a command used to communicate with horizontal scrollbars.
+#                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
+#                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
+#                             Tcl command by concatenating the scroll command and two numbers.
+#                             Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
+#                             **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
+#                             one third the way through the document, and so on.
+#                             The first fraction indicates the first information in the document that is visible in the window, and the
+#                             second fraction indicates the information just after the last portion that is visible.
+#                             The command is then passed to the Tcl interpreter for execution.
+#                             Typically the **-xscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                             e.g. **.x_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                             If this option is not specified, then no command will be executed.
+#
+#                             Note: This option is ignored for scrollable listbox (**-scrollable true**) where its value is set to the empty string.
+#
+#                             If not specified defaults to the empty string.
+#
+#                             See also **-yscrollcommand** and **-scrollable**.
+#
+# **-yscrollcommand**         Specifies the prefix for a command used to communicate with vertical scrollbars.
+#                             When the view in the widget's window changes (or whenever anything else occurs that could change the display
+#                             in a scrollbar, such as a change in the total size of the widget's contents), the widget will generate a
+#                             Tcl command by concatenating the scroll command and two numbers.
+#                             Each of the numbers is a fraction between **0** and **1.0**, which indicates a position in the document.
+#                             **0** indicates the beginning of the document, **1.0** indicates the end, **0.333** indicates a position
+#                             one third the way through the document, and so on.
+#                             The first fraction indicates the first information in the document that is visible in the window, and the
+#                             second fraction indicates the information just after the last portion that is visible.
+#                             The command is then passed to the Tcl interpreter for execution.
+#                             Typically the **-yscrollcommand** option consists of the path name of a scrollbar widget followed by **set**,
+#                             e.g. **.y_scrollbar set**: this will cause the scrollbar to be updated whenever the view in the window changes.
+#                             If this option is not specified, then no command will be executed.
+#
+#                             Note: This option is ignored for scrollable listbox (**-scrollable true**) where its value is set to the empty string.
+#
+#                             If not specified defaults to the empty string.
+#
+#                             See also **-xscrollcommand** and **-scrollable**.
+#
 #### WIDGET COMMAND:
 #
 # The listbox command creates a new command whose name is the same as the pathname of the listbox's window.
@@ -1775,7 +1815,9 @@ namespace eval ::ms::listbox {
                                                    state \
                                                    style \
                                                    takefocus \
-                                                   values];
+                                                   values \
+                                                   xscrollcommand \
+                                                   yscrollcommand];
 
     # Set the 'styleable' listbox option list.
     set ::ms::listbox(styleable,options) [list background \
@@ -1808,6 +1850,8 @@ namespace eval ::ms::listbox {
     set ::ms::default(listbox,style)           Listbox
     set ::ms::default(listbox,takefocus)       1
     set ::ms::default(listbox,values)          {}
+    set ::ms::default(listbox,xscrollcommand)  {}
+    set ::ms::default(listbox,yscrollcommand)  {}
 
     # Note: The default 'styleable' listbox options values are always defined inside the current theme.
 }
@@ -1872,6 +1916,8 @@ proc ::ms::listbox::Command { window { args "" } } {
             set ::ms::default($w,style)           $::ms::default(listbox,style)
             set ::ms::default($w,takefocus)       $::ms::default(listbox,takefocus)
             set ::ms::default($w,values)          $::ms::default(listbox,values)
+            set ::ms::default($w,xscrollcommand)  $::ms::default(listbox,xscrollcommand)
+            set ::ms::default($w,yscrollcommand)  $::ms::default(listbox,yscrollcommand)
 
             # Set the current widget (not styleable) options.
             set ::ms::current($w,activestyle)     $::ms::default(listbox,activestyle)
@@ -1885,6 +1931,8 @@ proc ::ms::listbox::Command { window { args "" } } {
             set ::ms::current($w,style)           $::ms::default(listbox,style)
             set ::ms::current($w,takefocus)       $::ms::default(listbox,takefocus)
             set ::ms::current($w,values)          $::ms::default(listbox,values)
+            set ::ms::current($w,xscrollcommand)  $::ms::default(listbox,xscrollcommand)
+            set ::ms::current($w,yscrollcommand)  $::ms::default(listbox,yscrollcommand)
 
             # Set some widget variables needed for internal mechanisms.
             set ::ms::data($w,classtype)         listbox
@@ -2190,6 +2238,16 @@ proc ::ms::listbox::Command { window { args "" } } {
                         }
                     }
                     -values { set ::ms::current($w,values) $value }
+                    -xscrollcommand {
+                        switch -- [llength $value] {
+                            2   { set ::ms::current($w,xscrollcommand) $value }
+                        }
+                    }
+                    -yscrollcommand {
+                        switch -- [llength $value] {
+                            2   { set ::ms::current($w,yscrollcommand) $value }
+                        }
+                    }
                 }
             }
 
@@ -3084,6 +3142,26 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                         set ::ms::current($w,values) $value
 
                                         set new_values true
+                                    }
+                                    -xscrollcommand {
+                                        switch -- $::ms::current($w,scrollable) {
+                                            true { continue }
+                                        }
+
+                                        switch -- [llength $value] {
+                                            0   { set ::ms::current($w,xscrollcommand) "" }
+                                            2   { set ::ms::current($w,xscrollcommand) $value  }
+                                        }
+                                    }
+                                    -yscrollcommand {
+                                        switch -- $::ms::current($w,scrollable) {
+                                            true { continue }
+                                        }
+
+                                        switch -- [llength $value] {
+                                            0   { set ::ms::current($w,yscrollcommand) "" }
+                                            2   { set ::ms::current($w,yscrollcommand) $value  }
+                                        }
                                     }
                                 }
                             }
@@ -4793,7 +4871,9 @@ proc ::ms::listbox::Destroy { w } {
                          ::ms::current($w,state) \
                          ::ms::current($w,style) \
                          ::ms::current($w,takefocus) \
-                         ::ms::current($w,values);
+                         ::ms::current($w,values) \
+                         ::ms::current($w,xscrollcommand) \
+                         ::ms::current($w,yscrollcommand);
 
     unset -nocomplain -- ::ms::data($w,classtype) \
                          ::ms::data($w,preselected_index) \
@@ -4826,7 +4906,9 @@ proc ::ms::listbox::Destroy { w } {
                          ::ms::default($w,state) \
                          ::ms::default($w,style) \
                          ::ms::default($w,takefocus) \
-                         ::ms::default($w,values);
+                         ::ms::default($w,values) \
+                         ::ms::default($w,xscrollcommand) \
+                         ::ms::default($w,yscrollcommand);
 
     unset -nocomplain -- ::ms::managed_by($w,background) \
                          ::ms::managed_by($w,bordercolor) \
