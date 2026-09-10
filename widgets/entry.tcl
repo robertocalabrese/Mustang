@@ -4300,8 +4300,8 @@ proc ::ms::entry::ButtonPress { w x } {
     }
 
     # Check if the widget is already focussed.
-    switch -- [interp invokehidden {} $w instate [list !focus]] {
-        1   {
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
             # Focus the widget.
             _focus -force $w
 
