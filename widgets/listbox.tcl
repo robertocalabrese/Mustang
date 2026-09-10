@@ -3614,8 +3614,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 true  { set address [list $w.listbox] }
             }
 
-            set index [lindex  $args 0]
-            set args  [lremove $args 0]
+            set index [lindex $args 0]
             switch -- [llength $args] {
                 0   {
                     # Execute the command.
@@ -3628,6 +3627,8 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     }
                 }
                 1   {
+                    set args [lremove $args 0]
+
                     # Execute the command.
                     try {
                         {*}$address itemconfigure $index $args
@@ -3639,6 +3640,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                 }
                 default {
                     # Check that the remaining 'args' forms a valid 'option/value' list.
+                    set args [lremove $args 0]
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
                             # Remove any duplicated options (retain only the last ones).
