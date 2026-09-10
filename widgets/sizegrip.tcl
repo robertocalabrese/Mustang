@@ -1369,11 +1369,6 @@ proc ::ms::sizegrip::ButtonPress { w X Y } {
     #       The procedure have been slighty modified to work with mustang.
     #       All credits goes to the original author/s.
 
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   { return "" }

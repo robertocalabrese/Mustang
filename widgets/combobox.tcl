@@ -2312,7 +2312,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -3428,7 +3428,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4247,7 +4247,7 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             readonly {
@@ -6232,7 +6232,7 @@ proc ::ms::combobox::MouseWheel { w amount } {
     interp invokehidden {} $w selection clear
     interp invokehidden {} $w set $::ms::data($w,current_value)
 
-    # If the widget is not in readonly state, select the combobox value.
+    # If the widget is not in the readonly state, select the combobox value.
     switch -- $::ms::current($w,state) {
         normal {
             interp invokehidden {} $w selection range 0 end

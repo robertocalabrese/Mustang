@@ -1341,7 +1341,7 @@ proc ::ms::scale::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -1949,7 +1949,7 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -2432,7 +2432,7 @@ proc ::ms::scale::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the relative cursor.
+        # Check the widget's state and set the relative cursor.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -2901,6 +2901,7 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
 #
 # It doesn't return anything.
 proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled {
             # Check the axis provided.

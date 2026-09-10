@@ -2285,7 +2285,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -3610,7 +3610,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4700,7 +4700,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             readonly {
@@ -5182,7 +5182,7 @@ proc ::ms::spinbox::Decrement { w value amount } {
     # Display the decremented value.
     interp invokehidden {} $w set $::ms::data($w,current_value)
 
-    # If the widget is not in readonly state, select the decremented value.
+    # If the widget is not in the readonly state, select the decremented value.
     switch -- $::ms::current($w,state) {
         normal {
             interp invokehidden {} $w selection range 0 end
@@ -5617,7 +5617,7 @@ proc ::ms::spinbox::Increment { w value amount } {
     # Display the incremented value.
     interp invokehidden {} $w set $::ms::data($w,current_value)
 
-    # If the widget is not in readonly state, select the incremented value.
+    # If the widget is not in the readonly state, select the incremented value.
     switch -- $::ms::current($w,state) {
         normal {
             interp invokehidden {} $w selection range 0 end

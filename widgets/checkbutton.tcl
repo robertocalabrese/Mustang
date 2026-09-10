@@ -1638,7 +1638,7 @@ proc ::ms::checkbutton::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2435,7 +2435,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -2986,7 +2986,7 @@ proc ::ms::checkbutton::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }

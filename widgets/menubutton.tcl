@@ -1578,7 +1578,7 @@ proc ::ms::menubutton::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2298,7 +2298,7 @@ proc ::ms::menubutton::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -2718,7 +2718,7 @@ proc ::ms::menubutton::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             active {
@@ -3120,7 +3120,7 @@ proc ::ms::menubutton::Destroy { w } {
 #
 # It doesn't return anything.
 proc ::ms::menubutton::ButtonPress { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }

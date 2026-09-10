@@ -4164,7 +4164,7 @@ proc ::ms::text::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the state, takefocus and cursor accordingly.
+            # Check the widget's state and set the state, takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -5330,7 +5330,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the state, takefocus and cursor accordingly.
+                            # Check the widget's state and set the state, takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -6418,7 +6418,7 @@ proc ::ms::text::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the relative cursor.
+        # Check the widget's state and set the relative cursor.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -9427,6 +9427,7 @@ proc ::ms::text::Select_PageDown { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_Start { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w {insert display linestart} }
     }
@@ -9444,6 +9445,7 @@ proc ::ms::text::Select_Line_Start { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_End { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w {insert display lineend} }
     }
@@ -9461,6 +9463,7 @@ proc ::ms::text::Select_Line_End { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_Top { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w 1.0 }
     }
@@ -9478,6 +9481,7 @@ proc ::ms::text::Select_Line_Top { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_Bottom { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w {end - 1 indices} }
     }
@@ -9505,6 +9509,7 @@ proc ::ms::text::Select_Line_Bottom { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Char { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
     }
@@ -9522,6 +9527,7 @@ proc ::ms::text::Select_Next_Char { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Word { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Next_Index $w insert tk::endOfWord] }
     }
@@ -9539,6 +9545,7 @@ proc ::ms::text::Select_Next_Word { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Line { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Line_Index 1] }
     }
@@ -9556,6 +9563,7 @@ proc ::ms::text::Select_Next_Line { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Paragraph { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Next_Paragraph_Index $w insert] }
     }
@@ -9583,6 +9591,7 @@ proc ::ms::text::Select_Next_Paragraph { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Char { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
     }
@@ -9600,6 +9609,7 @@ proc ::ms::text::Select_Previous_Char { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Word { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
     }
@@ -9617,6 +9627,7 @@ proc ::ms::text::Select_Previous_Word { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Line { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Line_Index -1] }
     }
@@ -9634,6 +9645,7 @@ proc ::ms::text::Select_Previous_Line { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Paragraph { w } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Previous_Paragraph $w insert] }
     }

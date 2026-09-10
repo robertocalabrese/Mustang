@@ -2265,7 +2265,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -3180,7 +3180,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the cursor, statespec and takefocus accordingly.
+                            # Check the widget's state and set the cursor, statespec and takefocus accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -3755,7 +3755,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
-                    # Check the widget state.
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
                         normal {
@@ -4089,7 +4089,7 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }

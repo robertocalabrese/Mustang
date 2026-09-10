@@ -2246,7 +2246,7 @@ proc ::ms::palette::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -3360,7 +3360,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4084,7 +4084,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             readonly {
@@ -4405,7 +4405,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
 #
 # It doesn't return anything.
 proc ::ms::palette::ButtonPress { w x y mode } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { ::ms::palette::Post $w }
@@ -4676,7 +4676,7 @@ proc ::ms::palette::FocusIn { w } {
     # Change the widget dynamic state to 'focus'.
     ::ms::palette::Pathname_Cmd $w state [list focus]
 
-    # Check the widget stateis in its normal state, s
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         normal {
             # Select all the widget textarea characters.
@@ -4709,7 +4709,7 @@ proc ::ms::palette::FocusOut { w } {
         1   { $w.combobox state [list  focus] }
     }
 
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [$w.combobox get] }
@@ -5283,7 +5283,7 @@ proc ::ms::palette::Post { w } {
 #
 # It doesn't return anything.
 proc ::ms::palette::Return { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [$w.combobox get] }
@@ -5847,7 +5847,7 @@ proc ::ms::palette::MouseWheel { w amount } {
     $w.combobox selection clear
     $w.combobox set       $::ms::data($w,current_value)
 
-    # If the widget is not in readonly state, select the palette entry.
+    # If the widget is not in the readonly state, select the palette entry.
     switch -- $::ms::current($w,state) {
         normal {
             $w.combobox selection range 0 end

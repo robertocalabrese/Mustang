@@ -2512,7 +2512,7 @@ proc ::ms::treeview::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2837,6 +2837,8 @@ proc ::ms::treeview::Command { window { args "" } } {
 
                     # Note: The Tk treeview widget don't have a '-state' option.
                     #       We need to simulate it graphically.
+
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled {
                             # Change the widget dynamic state to 'disabled'.
@@ -2977,6 +2979,8 @@ proc ::ms::treeview::Command { window { args "" } } {
 
                     # Note: The Tk treeview widget don't have a '-state' option.
                     #       We need to simulate it graphically.
+
+                    # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         disabled {
                             # Change the widget dynamic state to 'disabled'.
@@ -3783,7 +3787,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4185,6 +4189,8 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                 true {
                                     # Note: The Tk treeview widget don't have a '-state' option.
                                     #       We need to simulate it graphically.
+
+                                    # Check the widget's state.
                                     switch -- $::ms::current($w,state) {
                                         disabled {
                                             # Change the widget dynamic state to 'disabled'.
@@ -4940,7 +4946,7 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -5185,8 +5191,10 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
             }
         }
 
-        # The Tk treeview widget don't have a '-state' option.
-        # We need to simulate it graphically.
+        # Note: The Tk treeview widget don't have a '-state' option.
+        #       We need to simulate it graphically.
+
+        # Check the widget's state.
         switch -- $::ms::current($w,state) {
             disabled {
                 # Change the widget dynamic state to 'disabled'.

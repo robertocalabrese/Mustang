@@ -2235,7 +2235,7 @@ proc ::ms::entry::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget state and set the takefocus and cursor accordingly.
+            # Check the widget's state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -3226,7 +3226,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget state and set the takefocus and cursor accordingly.
+                            # Check the widget's state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4052,7 +4052,7 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget state and set the cursor accordingly.
+        # Check the widget's state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled -
             readonly { set cursor arrow }
@@ -4714,7 +4714,7 @@ proc ::ms::entry::KeyPress { w key } {
 #
 # It doesn't return anything.
 proc ::ms::entry::Return { w } {
-    # Check the widget state.
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
