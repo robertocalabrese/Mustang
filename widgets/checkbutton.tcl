@@ -3278,8 +3278,10 @@ proc ::ms::checkbutton::ButtonRelease { w } {
         disabled { return "" }
     }
 
-    # Change the widget dynamic state to 'pressed'.
-    ::ms::checkbutton::Pathname_Cmd $w state [list !pressed]
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w.indicator] {
+        0   { return "" }
+    }
 
     # Check if there is a command associated with the widget.
     switch -- $::ms::current($w,command) {
