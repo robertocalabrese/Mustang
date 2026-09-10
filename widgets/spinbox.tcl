@@ -6420,25 +6420,38 @@ proc ::ms::spinbox::Validate_String { w } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::MouseWheel { w amount } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled {
             # Try to find a widget parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
+
+            return ""
         }
-        default {
-            # Check if the widget is focussable or not.
-            switch -- [::ms::Is_Focussable $w] {
-                0   {
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            # Try to find a widget parent to scroll vertically, if any.
+            ::ms::Scroll_Parent_Y $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Check the 'scrollbox' value.
+            switch -- $::ms::scrollbox {
+                disabled {
                     # Try to find a widget parent to scroll vertically, if any.
                     ::ms::Scroll_Parent_Y $w $amount units
 
                     return ""
                 }
-            }
-
-            # Check if the widget is already focussed.
-            switch -- [interp invokehidden {} $w instate [list !focus]] {
-                1   {
+                enabled {
                     # Focus the widget.
                     _focus -force $w
 
@@ -6446,20 +6459,20 @@ proc ::ms::spinbox::MouseWheel { w amount } {
                     interp invokehidden {} $w state [list focus]
                 }
             }
-
-            # Check the scrollmode.
-            switch -- $::ms::scrollmode {
-                natural { set amount [expr { -1.0*$amount }] }
-            }
-
-            # Change the widget textarea value by scrolling the items list provided up or down
-            # (depending on the scroll direction).
-            if { $amount > 0 } {
-                ::ms::spinbox::Decrement $w [::ms::spinbox::Validate_String $w] 1
-            } else {
-                ::ms::spinbox::Increment $w [::ms::spinbox::Validate_String $w] 1
-            }
         }
+    }
+
+    # Check the 'scrollmode' value.
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1.0*$amount }] }
+    }
+
+    # Change the widget textarea value by scrolling the items list provided up or down
+    # (depending on the scroll direction).
+    if { $amount > 0 } {
+        ::ms::spinbox::Decrement $w [::ms::spinbox::Validate_String $w] 1
+    } else {
+        ::ms::spinbox::Increment $w [::ms::spinbox::Validate_String $w] 1
     }
 
     return ""
