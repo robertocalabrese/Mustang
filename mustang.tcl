@@ -346,6 +346,14 @@ proc ::ms::Init {} {
     # It must be in the range [100.0,1000.0].
     set ::ms::scale 100.0
 
+    # Set how the mousewheel events iteracts with the combobox and spinbox widget.
+    #
+    # If enabled, any mousewheel event upon the widget will cycle its value, either the widget is in focus or not.
+    # If disabled, the widget must have the focus in order for any mousewheel event to cycle its values.
+    #
+    # ['disabled', 'enabled']
+    set ::ms::scrollbox disabled
+
     # Set how the mouse scrolling should work.
     #    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom
     #                and scrolling the mousewheel down will move the page towards the top.
@@ -1534,6 +1542,8 @@ proc ::ms::Init {} {
             chan puts $channel "Language: $::ms::language"
             chan puts $channel ""
 
+            chan puts $channel "# Middle click"
+            chan puts $channel "#"
             chan puts $channel "# Set the default action for the middle click buttonpress."
             chan puts $channel "#"
             chan puts $channel "# On Linux, the default action is 'paste', on the other"
@@ -1556,6 +1566,16 @@ proc ::ms::Init {} {
                 }
             }
 
+            chan puts $channel "# Scroll box"
+            chan puts $channel "#"
+            chan puts $channel "# Set how the mousewheel events iteracts with the combobox and spinbox widget."
+            chan puts $channel "#"
+            chan puts $channel "# If enabled, any mousewheel event upon the widget will cycle its value, either the widget is in focus or not."
+            chan puts $channel "# If disabled, the widget must have the focus in order for any mousewheel event to cycle its values."
+            chan puts $channel "#"
+            chan puts $channel "# \['disabled', 'enabled'\]"
+            chan puts $channel "ScrollBox: $::ms::scrollbox"
+
             chan puts $channel "# Scroll mode"
             chan puts $channel "#"
             chan puts $channel "# It's the mousewheel scroll mode."
@@ -1576,6 +1596,8 @@ proc ::ms::Init {} {
             chan puts $channel "ScrollMode: $::ms::scrollmode"
             chan puts $channel ""
 
+            chan puts $channel "# Scroll stopper"
+            chan puts $channel "#"
             chan puts $channel "# Enable/Disable the scroll stopper for combobox, spinbox and listboxes."
             chan puts $channel "#    enabled  --> When the pressing of the arrow up or of the arrow down key (or by scrolling the mousewheel)"
             chan puts $channel "#                 cause the relative content to reach the start (or the end), the movement will stop."
@@ -1816,6 +1838,20 @@ proc ::ms::Init {} {
 
                                     set ::ms::scale $value
                                 }
+                            }
+                        }
+                        "ScrollBox:" {
+                            switch -nocase -- $value {
+                                0        -
+                                no       -
+                                off      -
+                                false    -
+                                disabled { set ::ms::scrollbox disabled }
+                                1        -
+                                yes      -
+                                on       -
+                                true     -
+                                enabled  { set ::ms::scrollbox enabled }
                             }
                         }
                         "ScrollMode:" {
@@ -2264,6 +2300,7 @@ proc ::ms::Init {} {
     set ::ms::temp(focusmodel,last)    $::ms::focusmodel
     set ::ms::temp(language,last)      $::ms::language
     set ::ms::temp(middleclick,last)   $::ms::middleclick
+    set ::ms::temp(scrollbox,last)     $::ms::scrollbox
     set ::ms::temp(scrollmode,last)    $::ms::scrollmode
     set ::ms::temp(scrollstopper,last) $::ms::scrollstopper
     set ::ms::temp(theme,last)         $::ms::theme
@@ -2295,6 +2332,9 @@ proc ::ms::Init {} {
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::scale \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::scrollbox \
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::scrollmode \
@@ -2362,6 +2402,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         default { set ::ms::scale $::ms::temp(scale,last) }
                     }
                 }
+                "::ms::scrollbox"     { set ::ms::scrollbox     $::ms::temp(scrollbox,last) }
                 "::ms::scrollmode"    { set ::ms::scrollmode    $::ms::temp(scrollmode,last) }
                 "::ms::scrollstopper" { set ::ms::scrollstopper $::ms::temp(scrollstopper,last) }
                 "::ms::theme"         { set ::ms::theme         $::ms::temp(theme,last) }
@@ -2543,6 +2584,38 @@ proc ::ms::Check_And_React { name1 name2 op } {
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+                ::ms::scrollbox {
+                    # Check that the new 'scrollbox' provided is a valid value.
+                    set ::ms::scrollbox [string tolower $::ms::scrollbox]
+                    switch -- $::ms::scrollbox {
+                        0        -
+                        no       -
+                        off      -
+                        false    -
+                        disabled {
+                            # Set the 'scrollbox' value to 'disabled'.
+                            set ::ms::scrollbox disabled
+
+                            # Register the last valid 'scrollbox' value.
+                            set ::ms::temp(scrollbox,last) disabled
+                        }
+                        1        -
+                        yes      -
+                        on       -
+                        true     -
+                        enabled  {
+                            # Set the 'scrollbox' value to 'enabled'.
+                            set ::ms::scrollbox enable
+
+                            # Register the last valid 'scrollbox' value.
+                            set ::ms::temp(scrollbox,last) enabled
+                        }
+                        default {
+                            # Restore the last valid 'scrollbox' value.
+                            set ::ms::scrollbox $::ms::temp(scrollbox,last)
                         }
                     }
                 }
