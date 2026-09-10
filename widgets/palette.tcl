@@ -5739,110 +5739,142 @@ proc ::ms::palette::Validate_String { w } {
 #
 # It doesn't return anything.
 proc ::ms::palette::MouseWheel { w amount } {
+    # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled {
             # Try to find a widget parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
+
+            return ""
         }
-        default {
-            switch -- [winfo exists $w.popdown] {
-                0   {
-                    # Check if the widget is focussable or not.
-                    switch -- [::ms::Is_Focussable $w] {
-                        0   {
-                            # Try to find a widget parent to scroll vertically, if any.
-                            ::ms::Scroll_Parent_Y $w $amount units
+    }
 
-                            return ""
-                        }
-                    }
+    # Check if the widget popdown is on the screen.
+    switch -- [_winfo exists $w.popdown] {
+        1   { return "" }
+    }
 
-                    # Check if the widget is in focus.
-                    switch -- [interp invokehidden {} $w instate [list focus]] {
-                        0   {
-                            # Try to find a widget parent to scroll vertically, if any.
-                            ::ms::Scroll_Parent_Y $w $amount units
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w.combobox] {
+        0   {
+            # Try to find a widget parent to scroll vertically, if any.
+            ::ms::Scroll_Parent_Y $w $amount units
 
-                            return ""
-                        }
-                        1   {
-                            # Check the scrollmode.
-                            switch -- $::ms::scrollmode {
-                                natural { set amount [expr { -1.0*$amount }] }
-                            }
+            return ""
+        }
+    }
 
-                            # Change the widget textarea value by scrolling the items list provided up or down
-                            # (depending on the scroll direction).
-                            if { $amount > 0 } {
-                                set index [expr { $::ms::data($w,current_index)-1 }]
-                            } else {
-                                set index [expr { $::ms::data($w,current_index)+1 }]
-                            }
+    # Get the mouse pointer (x,y) root coordinates.
+    set X [_winfo pointerx $w]
+    set Y [_winfo pointery $w]
 
-                            # Check the scrollstopper ('disabled' or 'enabled').
-                            switch -- $::ms::scrollstopper {
-                                disabled {
-                                    # If index is lesser than zero or bigger than the last available index, cycle trough.
-                                    if { $index < 0 } {
-                                        set index $::ms::data($w,last_available_index)
-                                    } elseif { $index > $::ms::data($w,last_available_index) } {
-                                        set index 0
-                                    }
-                                }
-                                enabled {
-                                    # If index is lesser than zero or bigger than the last available index, stop the scrolling.
-                                    if { $index < 0 } {
-                                        return ""
-                                    } elseif { $index > $::ms::data($w,last_available_index) } {
-                                        return ""
-                                    }
-                                }
-                            }
+    # Get the (x,y) root coordinates of the widget NW corner.
+    set rootx [_winfo rootx $w]
+    set rooty [_winfo rooty $w]
 
-                            # Update the current index and value.
-                            set ::ms::data($w,current_index) $index
-                            set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames)   $index]
-                            set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $index]
+    # Compute the mouse pointer (x,y) relative coordinates.
+    set x [expr { $X-$rootx }]
+    set y [expr { $Y-$rooty }]
 
-                            # Clear the widget textarea, remove any previous selection and display the new widget value.
-                            $w.combobox delete 0 end
-                            $w.combobox selection clear
-                            $w.combobox set $::ms::data($w,current_value)
+    # Check the mouse pointer location.
+    switch -- [$w.combobox identify element $x $y] {
+        textarea {}
+        default  { return "" }
+    }
 
-                            # If the widget is not in readonly state, select the palette entry.
-                            switch -- $::ms::current($w,state) {
-                                normal {
-                                    $w.combobox selection range 0 end
-                                    $w.combobox icursor end
-                                }
-                            }
+    # Check if the widget is in focus.
+    switch -- [$w.combobox instate [list focus]] {
+        0   {
+            # Check the 'scrollbox' value ('disabled' or 'enabled').
+            switch -- $::ms::scrollbox {
+                disabled {
+                    # Try to find a widget parent to scroll vertically, if any.
+                    ::ms::Scroll_Parent_Y $w $amount units
 
-                            # Set the bordercolor of the preview object.
-                            switch -- [string length $::ms::data($w,current_hex)] {
-                                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-                                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-                                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
-                            }
+                    return ""
+                }
+                enabled {
+                    # Focus the widget.
+                    _focus -force $w.combobox
 
-                            # Apply the changes to the preview object.
-                            $w.preview configure          -background $::ms::data($w,current_hex) \
-                                                 -highlightbackground $bordercolor \
-                                                      -highlightcolor $bordercolor;
-
-                            # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
-                            #       executing the command. This timer will be resetted if, while active, another mousewheel action on the widget
-                            #       asks to launch again the command.
-                            if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
-                                after cancel $::ms::temp($w,pending_execute_cmd)
-                                unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
-                            }
-                            set ::ms::temp($w,pending_execute_cmd) [after 50 [list ::ms::Execute_Widget_Cmd $w]]
-                        }
-                    }
+                    # Change the widget dynamic state to 'focus'.
+                    $w.combobox state [list focus]
                 }
             }
         }
     }
+
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1.0*$amount }] }
+    }
+
+    # Change the widget textarea value by scrolling the items list provided up or down
+    # (depending on the scroll direction).
+    if { $amount > 0 } {
+        set index [expr { $::ms::data($w,current_index)-1 }]
+    } else {
+        set index [expr { $::ms::data($w,current_index)+1 }]
+    }
+
+    # Check the 'scrollstopper' value ('disabled' or 'enabled').
+    switch -- $::ms::scrollstopper {
+        disabled {
+            # If index is lesser than zero or bigger than the last available index, cycle trough.
+            if { $index < 0 } {
+                set index $::ms::data($w,last_available_index)
+            } elseif { $index > $::ms::data($w,last_available_index) } {
+                set index 0
+            }
+        }
+        enabled {
+            # If index is lesser than zero or bigger than the last available index, stop the scrolling.
+            if { $index < 0 } {
+                return ""
+            } elseif { $index > $::ms::data($w,last_available_index) } {
+                return ""
+            }
+        }
+    }
+
+    # Update the current index and value.
+    set ::ms::data($w,current_index) $index
+    set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames)   $index]
+    set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $index]
+
+    # Clear the widget textarea, remove any previous selection and display the new widget value.
+    $w.combobox delete    0 end
+    $w.combobox selection clear
+    $w.combobox set       $::ms::data($w,current_value)
+
+    # If the widget is not in readonly state, select the palette entry.
+    switch -- $::ms::current($w,state) {
+        normal {
+            $w.combobox selection range 0 end
+            $w.combobox icursor end
+        }
+    }
+
+    # Set the bordercolor of the preview object.
+    switch -- [string length $::ms::data($w,current_hex)] {
+        10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
+        13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
+        default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+    }
+
+    # Apply the changes to the preview object.
+    $w.preview configure          -background $::ms::data($w,current_hex) \
+                         -highlightbackground $bordercolor \
+                              -highlightcolor $bordercolor;
+
+    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+    #       executing the command. This timer will be resetted if, while active, another mousewheel action on the widget
+    #       asks to launch again the command.
+    if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
+        after cancel $::ms::temp($w,pending_execute_cmd)
+        unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+    }
+    set ::ms::temp($w,pending_execute_cmd) [after 50 [list ::ms::Execute_Widget_Cmd $w]]
 
     return ""
 }
@@ -5990,7 +6022,7 @@ proc ::ms::palette::Popdown_ArrowDown { w } {
     # Compute the new index.
     set index [expr { [$w.popdown.f.lb index active]+1 }]
 
-    # Check the scrollstopper ('disabled' or 'enabled').
+    # Check the 'scrollstopper' value ('disabled' or 'enabled').
     switch -- $::ms::scrollstopper {
         disabled {
             # If index is bigger than the last available index, cycle trough.
@@ -6043,7 +6075,7 @@ proc ::ms::palette::Popdown_ArrowUp { w } {
     # Compute the new index.
     set index [expr { [$w.popdown.f.lb index active]-1 }]
 
-    # Check the scrollstopper ('disabled' or 'enabled').
+    # Check the 'scrollstopper' value ('disabled' or 'enabled').
     switch -- $::ms::scrollstopper {
         disabled {
             # If index is lesser than zero, cycle trough.
