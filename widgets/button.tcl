@@ -2719,6 +2719,11 @@ proc ::ms::button::ButtonRelease { w } {
         disabled { return "" }
     }
 
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+    }
+
     # Change the widget dynamic state to '!pressed'.
     interp invokehidden {} $w state [list !pressed]
 
