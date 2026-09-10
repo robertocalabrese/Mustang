@@ -2715,7 +2715,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
 
                             switch -- $::ms::current($w,state) {
                                 disabled {
-                                    interp invokehidden {} $w state disabled
+                                    interp invokehidden {} $w state [list disabled]
 
                                     $w.indicator state disabled
                                     $w.label     state disabled

@@ -6722,7 +6722,7 @@ proc ::ms::palette::Popdown_Select { w } {
     $w.combobox icursor end
 
     # Change the widget dynamic state to '!invalid'.
-    ::ms::palette::Pathname_Cmd $w state !invalid
+    ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]

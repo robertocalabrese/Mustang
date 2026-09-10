@@ -2842,11 +2842,11 @@ proc ::ms::treeview::Command { window { args "" } } {
                     switch -- $::ms::current($w,state) {
                         disabled {
                             # Change the widget dynamic state to 'disabled'.
-                            $w state disabled
+                            $w state [list disabled]
                         }
                         normal {
                             # Change the widget dynamic state to '!disabled'.
-                            $w state !disabled
+                            $w state [list !disabled]
                         }
                     }
 
@@ -4194,11 +4194,11 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     switch -- $::ms::current($w,state) {
                                         disabled {
                                             # Change the widget dynamic state to 'disabled'.
-                                            ::ms::treeview::Pathname_Cmd $w state disabled
+                                            ::ms::treeview::Pathname_Cmd $w state [list disabled]
                                         }
                                         normal {
                                             # Change the widget dynamic state to '!disabled'.
-                                            ::ms::treeview::Pathname_Cmd $w state !disabled
+                                            ::ms::treeview::Pathname_Cmd $w state [list !disabled]
                                         }
                                     }
                                 }
@@ -5198,11 +5198,11 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
         switch -- $::ms::current($w,state) {
             disabled {
                 # Change the widget dynamic state to 'disabled'.
-                ::ms::treeview::Pathname_Cmd $w state disabled
+                ::ms::treeview::Pathname_Cmd $w state [list disabled]
             }
             normal {
                 # Change the widget dynamic state to '!disabled'.
-                ::ms::treeview::Pathname_Cmd $w state !disabled
+                ::ms::treeview::Pathname_Cmd $w state [list !disabled]
             }
         }
     }

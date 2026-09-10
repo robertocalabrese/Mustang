@@ -3522,7 +3522,7 @@ proc ::ms::canvas::Command { window { args "" } } {
 
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        disabled { $w state disabled }
+                        disabled { $w state [list disabled] }
                     }
 
                     # Set the widget toplevel.
@@ -4430,7 +4430,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                                     # Check the widget's state.
                                     switch -- $::ms::current($w,state) {
-                                        disabled { interp invokehidden {} $w state disabled }
+                                        disabled { interp invokehidden {} $w state [list disabled] }
                                     }
 
                                     # Apply the changes.

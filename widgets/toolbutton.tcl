@@ -2368,10 +2368,10 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                             # Check the variable current value.
                             if { [set $::ms::current($w,variable)] eq $::ms::current($w,offvalue) } {
                                 # Change the widget dynamic state to '!pressed'.
-                                interp invokehidden {} $w state !pressed
+                                interp invokehidden {} $w state [list !pressed]
                             } else {
                                 # Change the widget dynamic state to 'pressed'.
-                                interp invokehidden {} $w state pressed
+                                interp invokehidden {} $w state [list pressed]
                             }
 
                             return ""
@@ -2801,18 +2801,18 @@ proc ::ms::toolbutton::ButtonRelease { w } {
     }
 
     # Check the widget's dynamyc state.
-    switch -- [interp invokehidden {} $w instate pressed] {
+    switch -- [interp invokehidden {} $w instate [list pressed]] {
         0   {
             set $::ms::current($w,variable) $::ms::current($w,onvalue)
 
             # Change the widget dynamic state to 'pressed'.
-            interp invokehidden {} $w state pressed
+            interp invokehidden {} $w state [list pressed]
         }
         1   {
             set $::ms::current($w,variable) $::ms::current($w,offvalue)
 
             # Change the widget dynamic state to '!pressed'.
-            interp invokehidden {} $w state !pressed
+            interp invokehidden {} $w state [list !pressed]
         }
     }
 
