@@ -3234,17 +3234,13 @@ proc ::ms::radiobutton::ButtonPress { w } {
     }
 
     # Check if the widget is already focussed.
-    switch -- [$w.indicator instate [list !focus]] {
+    switch -- [$w.indicator instate [list focus]] {
         0   {
-            # Change the widget dynamic state to 'pressed'.
-            ::ms::radiobutton::Pathname_Cmd $w state [list pressed]
-        }
-        1   {
             # Focus the widget's indicator.
             _focus -force $w.indicator
 
-            # Change the widget dynamic state to 'pressed focus'.
-            ::ms::radiobutton::Pathname_Cmd $w state [list pressed focus]
+            # Change the widget dynamic state to 'focus'.
+            ::ms::radiobutton::Pathname_Cmd $w state [list focus]
         }
     }
 
