@@ -2720,9 +2720,6 @@ proc ::ms::button::ButtonRelease { w } {
         0   { return "" }
     }
 
-    # Change the widget dynamic state to '!pressed'.
-    interp invokehidden {} $w state [list !pressed]
-
     # Check if there is a command associated with the widget.
     switch -- $::ms::current($w,command) {
         ""      { return "" }
