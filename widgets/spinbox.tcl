@@ -5126,7 +5126,7 @@ proc ::ms::spinbox::Decrement { w value amount } {
             # Get the decremented value.
             set value [expr { $value-$increment }]
 
-            # Check the scrollstopper ('disabled' or 'enabled').
+            # Check the scrollstopper value ('disabled' or 'enabled').
             switch -- $::ms::scrollstopper {
                 disabled {
                     # If value is less than the 'from' value, cycle trough.
@@ -5155,7 +5155,7 @@ proc ::ms::spinbox::Decrement { w value amount } {
             # Get the decremented value index.
             set index [expr { $index-$amount }]
 
-            # Check the scrollstopper ('disabled' or 'enabled').
+            # Check the scrollstopper value ('disabled' or 'enabled').
             switch -- $::ms::scrollstopper {
                 disabled {
                     # If index is less than zero, cycle trough.
@@ -5558,7 +5558,7 @@ proc ::ms::spinbox::Increment { w value amount } {
             # Get the incremented value.
             set value [expr { $value+$increment }]
 
-            # Check the scrollstopper ('disabled' or 'enabled').
+            # Check the scrollstopper value ('disabled' or 'enabled').
             switch -- $::ms::scrollstopper {
                 disabled {
                     # If value is greater than the 'to' value, cycle trough.
@@ -5590,7 +5590,7 @@ proc ::ms::spinbox::Increment { w value amount } {
             # Get the last available index.
             set last_available_index [expr { [llength $::ms::data($w,values)]-1 }]
 
-            # Check the scrollstopper ('disabled' or 'enabled').
+            # Check the scrollstopper value ('disabled' or 'enabled').
             switch -- $::ms::scrollstopper {
                 disabled {
                     # If index is greater than the last available index, cycle trough.
@@ -6443,7 +6443,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
     # Check if the widget is already focussed.
     switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
-            # Check the 'scrollbox' value.
+            # Check the 'scrollbox' value ('disabled' or 'enabled').
             switch -- $::ms::scrollbox {
                 disabled {
                     # Try to find a widget parent to scroll vertically, if any.
@@ -6462,7 +6462,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
         }
     }
 
-    # Check the 'scrollmode' value.
+    # Check the 'scrollmode' value ('classic' or 'natural').
     switch -- $::ms::scrollmode {
         natural { set amount [expr { -1.0*$amount }] }
     }
@@ -6527,7 +6527,7 @@ proc ::ms::spinbox::Shift_MouseWheel { w amount } {
     # Check if the widget is already focussed.
     switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
-            # Check the 'scrollbox' value.
+            # Check the 'scrollbox' value ('disabled' or 'enabled').
             switch -- $::ms::scrollbox {
                 disabled {
                     # Try to find a widget parent to scroll horizontally, if any.
