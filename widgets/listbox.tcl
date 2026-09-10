@@ -4465,19 +4465,22 @@ proc ::ms::listbox::ArrowUp { w } {
         incr index
     }
 
-    # If the preselect index is not a selected index, preselect it.
-    if { $::ms::data($w,preselected_index) ni [{*}$address curselection] } {
-        {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
-                                                                    -foreground $::ms::current($w,preselectforeground);
+    # Check if the preselect index is also a selected index.
+    if { $::ms::data($w,preselected_index) in [{*}$address curselection] } {
+        # Underline it.
 
-        # Remove the activestyle.
-        {*}$address configure -activestyle none
-    } else {
         # Be sure that the active style is the one chosen by the developer.
         {*}$address configure -activestyle $::ms::current($w,activestyle)
 
         # Activate the preselected index.
         {*}$address activate $::ms::data($w,preselected_index)
+    } else {
+        # Recolor it with the new preselected colors (preselectedbackground and preselectedforeground).
+        {*}$address itemconfigure $::ms::data($w,preselected_index) -background $::ms::current($w,preselectbackground) \
+                                                                    -foreground $::ms::current($w,preselectforeground);
+
+        # Remove the activestyle.
+        {*}$address configure -activestyle none
     }
 
     # Adjust the listbox viewport.
