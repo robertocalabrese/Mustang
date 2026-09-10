@@ -4515,28 +4515,31 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
 proc ::ms::combobox::ButtonPress { w x y mode } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled { return "" }
-        readonly { ::ms::combobox::Post $w }
-        normal   {
-            # Check the cursor location.
-            switch -- [interp invokehidden {} $w identify element $x $y] {
-                "textarea" {
-                    # Check if the widget is focussable or not.
-                    switch -- [::ms::Is_Focussable $w] {
-                        0   { return "" }
-                    }
+        disable { return "" }
+    }
 
-                    # Check if the widget is already focussed.
-                    switch -- [interp invokehidden {} $w instate [list !focus]] {
-                        1   {
-                            # Focus the widget.
-                            _focus -force $w
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
 
-                            # Change the widget dynamic state to 'focus'.
-                            interp invokehidden {} $w state [list focus]
-                        }
-                    }
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Focus the widget.
+            _focus -force $w
 
+            # Change the widget dynamic state to 'focus'.
+            interp invokehidden {} $w state [list focus]
+        }
+    }
+
+    # Check the cursor location.
+    switch -- [interp invokehidden {} $w identify element $x $y] {
+        "textarea" {
+            # Check the widget's state.
+            switch -- $::ms::current($w,state) {
+                normal {
                     # Check the press type.
                     switch -- $mode {
                         s   {
@@ -4571,9 +4574,9 @@ proc ::ms::combobox::ButtonPress { w x y mode } {
                         }
                     }
                 }
-                default { ::ms::combobox::Post $w }
             }
         }
+        default { ::ms::combobox::Post $w }
     }
 
     return ""

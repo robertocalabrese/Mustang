@@ -5018,8 +5018,8 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
     }
 
     # Check if the widget is already focussed.
-    switch -- [interp invokehidden {} $w instate [list !focus]] {
-        1   {
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
             # Focus the widget.
             _focus -force $w
 
