@@ -6279,32 +6279,60 @@ proc ::ms::combobox::MouseWheel { w amount } {
 proc ::ms::combobox::Shift_MouseWheel { w amount } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal {
-            # Check if the widget is on focus.
-            switch -- [interp invokehidden {} $w instate [list focus]] {
-                1   {
-                    # Get the current cursor position
-                    set index [interp invokehidden {} $w index insert]
+        disabled -
+        readonly {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
 
-                    # Move the cursor by one character to the left or to the right (depending
-                    # on the mousewheel direction).
-                    if { $amount > 0 } {
-                        interp invokehidden {} $w icursor $index+1
-                    } else {
-                        interp invokehidden {} $w icursor $index-1
-                    }
+            return ""
+        }
+    }
 
-                    # Make the index character visible.
-                    ::ttk::entry::See $w $index
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget is on focus.
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Check the 'scrollbox' value ('disabled' or 'enabled').
+            switch -- $::ms::scrollbox {
+                disabled {
+                    # Try to find a widget parent to scroll horizontally, if any.
+                    ::ms::Scroll_Parent_X $w $amount units
 
                     return ""
+                }
+                enabled {
+                    # Focus the widget.
+                    _focus -force $w
+
+                    # Change the widget dynamic state to 'focus'.
+                    interp invokehidden {} $w state [list focus]
                 }
             }
         }
     }
 
-    # Try to find a widget parent to scroll horizontally, if any.
-    ::ms::Scroll_Parent_X $w $amount units
+    # Get the current cursor position
+    set index [interp invokehidden {} $w index insert]
+
+    # Move the cursor by one character to the left or to the right (depending
+    # on the mousewheel direction).
+    if { $amount > 0 } {
+        interp invokehidden {} $w icursor $index+1
+    } else {
+        interp invokehidden {} $w icursor $index-1
+    }
+
+    # Make the index character visible.
+    ::ttk::entry::See $w $index
 
     return ""
 }
