@@ -1380,17 +1380,13 @@ proc ::ms::sizegrip::ButtonPress { w X Y } {
     }
 
     # Check if the widget is already focussed.
-    switch -- [interp invokehidden {} $w instate [list !focus]] {
+    switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
-            # Change the widget dynamic state to 'pressed'.
-            interp invokehidden {} $w state [list pressed]
-        }
-        1   {
             # Focus the widget.
             _focus -force $w
 
-            # Change the widget dynamic state to 'pressed focus'.
-            interp invokehidden {} $w state [list pressed focus]
+            # Change the widget dynamic state to 'focus'.
+            interp invokehidden {} $w state [list focus]
         }
     }
 
