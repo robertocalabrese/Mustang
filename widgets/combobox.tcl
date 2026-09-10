@@ -6136,7 +6136,7 @@ proc ::ms::combobox::MouseWheel { w amount } {
     }
 
     # Check if the widget popdown is on the screen.
-    switch -- [_winfo exists $.popdown] {
+    switch -- [_winfo exists $w.popdown] {
         1   { return "" }
     }
 
