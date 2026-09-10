@@ -4207,7 +4207,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         }
 
                                         switch -- [llength $value] {
-                                            0   { set ::ms::current($w,xscrollcommand) [list ] }
+                                            0   { set ::ms::current($w,xscrollcommand) "" }
                                             2   { set ::ms::current($w,xscrollcommand) $value  }
                                         }
                                     }
@@ -4222,7 +4222,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         }
 
                                         switch -- [llength $value] {
-                                            0   { set ::ms::current($w,yscrollcommand) [list ] }
+                                            0   { set ::ms::current($w,yscrollcommand) "" }
                                             2   { set ::ms::current($w,yscrollcommand) $value  }
                                         }
                                     }
