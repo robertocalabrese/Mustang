@@ -2593,6 +2593,10 @@ proc ::ms::scale::Style_Update { stylename caller_info } {
 #
 # Manage the **ButtonPress** event upon the widget.
 #
+# Note: This procedure was inspired by the ttk::scale procedure 'Press'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
 # Where:
 #
 # w      Should be the widget real address involved.
@@ -2602,10 +2606,6 @@ proc ::ms::scale::Style_Update { stylename caller_info } {
 #
 # It doesn't return anything.
 proc ::ms::scale::ButtonPress { w x y } {
-    # Note: This procedure was inspired by the ttk::scale procedure 'Press'.
-    #       The procedure have been slighty modified to work with mustang.
-    #       All credits goes to the original author/s.
-
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
