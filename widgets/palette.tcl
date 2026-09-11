@@ -6029,14 +6029,14 @@ proc ::ms::palette::Touchpad { w counter amount } {
     set delta_x [expr { $delta_x*30 }]
     set delta_y [expr { $delta_y*30 }]
 
-    # If there is a movement along the X axis, launch '::ms::palette::MouseWheel'.
+    # If there is a movement along the X axis, launch '::ms::palette::Shift_MouseWheel'.
     if { $delta_x != 0 } {
-        ::ms::palette::MouseWheel $w $delta_x
+        ::ms::palette::Shift_MouseWheel $w $delta_x
     }
 
-    # If there is a movement along the Y axis, launch '::ms::palette::Shift_MouseWheel'.
+    # If there is a movement along the Y axis, launch '::ms::palette::MouseWheel'.
     if { $delta_y != 0 } {
-        ::ms::palette::Shift_MouseWheel $w $delta_y
+        ::ms::palette::MouseWheel $w $delta_y
     }
 
     return ""
