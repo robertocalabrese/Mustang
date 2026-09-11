@@ -6403,14 +6403,14 @@ proc ::ms::combobox::Touchpad { w counter amount } {
     set delta_x [expr { $delta_x*30 }]
     set delta_y [expr { $delta_y*30 }]
 
-    # If there is a movement along the X axis, launch '::ms::combobox::MouseWheel'.
+    # If there is a movement along the X axis, launch '::ms::combobox::Shift_MouseWheel'.
     if { $delta_x != 0 } {
-        ::ms::combobox::MouseWheel $w $delta_x
+        ::ms::combobox::Shift_MouseWheel $w $delta_x
     }
 
-    # If there is a movement along the Y axis, launch '::ms::combobox::Shift_MouseWheel'.
+    # If there is a movement along the Y axis, launch '::ms::combobox::MouseWheel'.
     if { $delta_y != 0 } {
-        ::ms::combobox::Shift_MouseWheel $w $delta_y
+        ::ms::combobox::MouseWheel $w $delta_y
     }
 
     return ""
