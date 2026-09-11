@@ -4431,6 +4431,10 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 # Scrolls the horizontal scrollbar related to the scrollable widget real address provided
 # by one unit or page left or right (depending on the touchpad direction).
 #
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
 # Where:
 #
 # w         Should be the scrollable widget real address involved.
@@ -4455,9 +4459,6 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 #
 # It doesn't return anything.
 proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
-    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
-    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
-
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
