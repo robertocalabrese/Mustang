@@ -4766,39 +4766,63 @@ proc ::ms::entry::Return { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::Shift_MouseWheel { w amount } {
-    # Check if 'w' is currently in focus or not.
-    if { [_focus -displayof $w] eq $w } {
-        # Check that 'amount' is an integer or a float.
-        switch -- [string is double -strict $amount] {
-            0   { set amount 120.0 }
-            1   {
-                if { $amount == 0 } {
-                    set amount 120
-                } else {
-                    set amount [expr { $amount*1.0 }]
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+        }
+        1   {
+            # Check that 'amount' is an integer or a float.
+            switch -- [string is double -strict $amount] {
+                0   { set amount 120.0 }
+                1   {
+                    if { $amount == 0 } {
+                        set amount 120
+                    } else {
+                        set amount [expr { $amount*1.0 }]
+                    }
                 }
             }
+
+            # Get the current cursor position
+            set index [interp invokehidden {} $w index insert]
+
+            # Move the cursor by one character to the left or to the right (depending
+            # on the mousewheel direction).
+            if { $amount > 0 } {
+                interp invokehidden {} $w icursor $index+1
+            } else {
+                interp invokehidden {} $w icursor $index-1
+            }
+
+            # Remove any previous selection on the widget.
+            interp invokehidden {} $w selection clear
+
+            # Make the index character visible.
+            ::ttk::entry::See $w $index
         }
-
-        # Get the current cursor position
-        set index [interp invokehidden {} $w index insert]
-
-        # Move the cursor by one character to the left or to the right (depending
-        # on the mousewheel direction).
-        if { $amount > 0 } {
-            interp invokehidden {} $w icursor $index+1
-        } else {
-            interp invokehidden {} $w icursor $index-1
-        }
-
-        # Remove any previous selection on the widget.
-        interp invokehidden {} $w selection clear
-
-        # Make the index character visible.
-        ::ttk::entry::See $w $index
-    } else {
-        # Scroll the parent along the X axis.
-        ::ms::Scroll_Parent_X $w $amount units
     }
 
     return ""
@@ -4850,7 +4874,7 @@ proc ::ms::entry::Touchpad { w counter amount } {
         return ""
     }
 
-    # Check if the widget is currently in focus or not.
+    # Check if the widget is already focussed.
     if { [_focus -display $w] eq $w } {
         # Translate 'amount' in 'deltaX' and 'deltaY'.
         lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
