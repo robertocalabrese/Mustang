@@ -2555,20 +2555,21 @@ proc ::ms::panedwindow::Sash_ButtonPress { w x y } {
         disabled { return "" }
     }
 
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
+
     # Check if the ButtonPress happened over the widget's sash.
     set sash [interp invokehidden {} $w identify sash $x $y]
     switch -- $sash {
         ""      {}
         default {
-            switch -- $::ms::current($w,takefocus) {
-                1   {
-                    set ::ms::temp(sash,state) enabled
-                    set ::ms::data(sash,index) $sash
-                    set ::ms::data(sash,pos)   [interp invokehidden {} $w sashpos $sash]
-                    set ::ms::data(sash,x)     $x
-                    set ::ms::data(sash,y)     $y
-                }
-            }
+            set ::ms::temp(sash,state) enabled
+            set ::ms::data(sash,index) $sash
+            set ::ms::data(sash,pos)   [interp invokehidden {} $w sashpos $sash]
+            set ::ms::data(sash,x)     $x
+            set ::ms::data(sash,y)     $y
         }
     }
 
