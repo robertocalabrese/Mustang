@@ -2838,6 +2838,10 @@ proc ::ms::scale::FocusOut { w } {
 #
 # Move the widget's thumb by the increment specified for the widget.
 #
+# Note: This procedure was inspired by the ttk::scale procedure 'Increment'.
+#       The procedure have been slighty modified to work with mustang.
+#       All credits goes to the original author/s.
+#
 # Where:
 #
 # w           Should be the widget real address involved.
@@ -2852,10 +2856,6 @@ proc ::ms::scale::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::scale::Increment { w direction { speed 1x } } {
-    # Note: This procedure was inspired by the ttk::scale procedure 'Increment'.
-    #       The procedure have been slighty modified to work with mustang.
-    #       All credits goes to the original author/s.
-
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
