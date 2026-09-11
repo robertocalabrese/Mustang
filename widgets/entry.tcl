@@ -4875,52 +4875,29 @@ proc ::ms::entry::Touchpad { w counter amount } {
     }
 
     # Check if the widget is already focussed.
-    if { [_focus -display $w] eq $w } {
-        # Translate 'amount' in 'deltaX' and 'deltaY'.
-        lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Try to find a widget parent to scroll horizontally and/or vertically, if any.
+            ::ms::Touchpad_Parent $w $counter $amount units
+        }
+        1   {
+            # Translate 'amount' in 'deltaX' and 'deltaY'.
+            lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
 
-        # Adjust 'deltaX' and 'deltaY' values, or the movement will be too slow.
-        set deltaX [expr { $deltaX*30 }]
-        set deltaY [expr { $deltaY*30 }]
+            # Adjust 'deltaX' and 'deltaY' values, or the movement will be too slow.
+            set deltaX [expr { $deltaX*30 }]
+            set deltaY [expr { $deltaY*30 }]
 
-        # If there is a movement along the X axis, move the insert cursor by one
-        # character to the left or to the right (depending on the horizontal touchpad direction).
-        if { $deltaX != 0 } {
-            # Check that 'amount' is an integer or a float.
-            switch -- [string is double -strict $amount] {
-                0   { set amount 120.0 }
-                1   {
-                    if { $amount == 0 } {
-                        set amount 120
-                    } else {
-                        set amount [expr { $amount*1.0 }]
-                    }
-                }
+            # If there is a movement along the X axis, launch '::ms::entry::Shift_MouseWheel'.
+            if { $deltaX != 0 } {
+                ::ms::entry::Shift_MouseWheel $w $amount
             }
 
-            # Get the current cursor position.
-            set index [interp invokehidden {} $w index insert]
-
-            # Move the cursor.
-            if { $amount > 0 } {
-                interp invokehidden {} $w icursor $index+1
-            } else {
-                interp invokehidden {} $w icursor $index-1
+            # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
+            if { $deltaY != 0 } {
+                ::ms::Scroll_Parent_Y $w $deltaY units
             }
-
-            # Remove any previous selection on the widget.
-            interp invokehidden {} $w selection clear
-
-            # Make the index character visible.
-            ::ttk::entry::See $w $index
         }
-
-        # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
-        if { $deltaY != 0 } {
-            ::ms::Scroll_Parent_Y $w $deltaY units
-        }
-    } else {
-        ::ms::Touchpad_Parent $w $counter $amount units
     }
 
     return ""
