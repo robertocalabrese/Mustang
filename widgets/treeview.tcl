@@ -6175,17 +6175,23 @@ proc ::ms::treeview::ButtonPress { w x y } {
         disabled { return "" }
     }
 
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+        1   {
+            # Focus the treeview.
+            _focus -force $::ms::addr($w,widget)
+
+            # Change the widget dynamic state to 'focus'
+            ::ms::treeview::Pathname_Cmd $w state [list focus]
+        }
+    }
+
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.treeview] }
     }
-
-    # Focus the treeview.
-    _focus -force $::ms::addr($w,widget)
-
-    # Change the widget dynamic state to 'focus'
-    ::ms::treeview::Pathname_Cmd $w state [list focus]
 
     # Identify the widget's region under the mouse pointer.
     switch -- [{*}$address identify region $x $y] {
