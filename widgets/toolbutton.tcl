@@ -2800,6 +2800,11 @@ proc ::ms::toolbutton::ButtonRelease { w } {
         disabled { return "" }
     }
 
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
+
     # Check the widget's dynamyc state.
     switch -- [interp invokehidden {} $w instate [list pressed]] {
         0   {
