@@ -7020,7 +7020,17 @@ proc ::ms::text::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Scan_Or_Paste { w x y event } {
-    # Check the middleclick variable.
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+    }
+
+    # Check the 'middleclick' value ('drag' or 'paste').
     switch -- $::ms::middleclick {
         drag {
             # Check the windowing system.
@@ -7053,11 +7063,8 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                         "ButtonRelease-3" {
                             # Check the widget's state.
                             switch -- $::ms::current($w,state) {
-                                disabled -
-                                readonly { return "" }
+                                normal { ::ms::text::Paste $w $x $y PRIMARY }
                             }
-
-                            ::ms::text::Paste $w $x $y PRIMARY
                         }
                     }
                 }
@@ -7068,11 +7075,8 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                         "ButtonRelease-2" {
                             # Check the widget's state.
                             switch -- $::ms::current($w,state) {
-                                disabled -
-                                readonly { return "" }
+                                normal { ::ms::text::Paste $w $x $y PRIMARY }
                             }
-
-                            ::ms::text::Paste $w $x $y PRIMARY
                         }
                     }
                 }
