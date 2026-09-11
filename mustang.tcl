@@ -3622,10 +3622,23 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
 #
 # It doesn't return anything.
 proc ::ms::Scan_Or_Paste { w x event } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   { return "" }
+    }
+
+    # Check the 'middleclick' value ('drag' or 'paste').
     switch -- $::ms::middleclick {
         drag {
+            # Check the windowing system.
             switch -- [_tk windowingsystem] {
                 aqua {
+                    # Disable dragging on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
                     switch -- $event {
                         "Button-3"        { ::ttk::entry::ScanMark    $w $x }
                         "B3-Motion"       { ::ttk::entry::ScanDrag    $w $x }
@@ -3633,6 +3646,7 @@ proc ::ms::Scan_Or_Paste { w x event } {
                     }
                 }
                 default {
+                    # Disable dragging on ButtonPress-3 and enable it on ButtonPress-2 (Linux and Windows).
                     switch -- $event {
                         "Button-2"        { ::ttk::entry::ScanMark    $w $x }
                         "B2-Motion"       { ::ttk::entry::ScanDrag    $w $x }
@@ -3642,15 +3656,29 @@ proc ::ms::Scan_Or_Paste { w x event } {
             }
         }
         paste {
+            # Check the windowing system.
             switch -- [_tk windowingsystem] {
                 aqua {
+                    # Disable paste selection on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
                     switch -- $event {
-                        "ButtonRelease-3" { ::ms::Paste $w PRIMARY }
-                    }
+                        "PasteSelection"  -
+                        "ButtonRelease-3" {
+                            # Check the widget's state.
+                            switch -- $::ms::current($w,state) {
+                                normal { ::ms::Paste $w PRIMARY }
+                            }
+                        }
                 }
                 default {
+                    # Disable paste selection on ButtonPress-3 and enable it on ButtonPress-2 (Linux and Windows).
                     switch -- $event {
-                        "ButtonRelease-2" { ::ms::Paste $w PRIMARY }
+                        "PasteSelection"  -
+                        "ButtonRelease-2" {
+                            # Check the widget's state.
+                            switch -- $::ms::current($w,state) {
+                                normal { ::ms::Paste $w PRIMARY }
+                            }
+                        }
                     }
                 }
             }
