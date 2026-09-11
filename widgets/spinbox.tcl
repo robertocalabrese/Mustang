@@ -6629,14 +6629,14 @@ proc ::ms::spinbox::Touchpad { w counter amount } {
         default { return "" }
     }
 
-    # If there is a movement along the X axis, launch '::ms::spinbox::MouseWheel'.
+    # If there is a movement along the X axis, launch '::ms::spinbox::Shift_MouseWheel'.
     if { $delta_x != 0 } {
-        ::ms::spinbox::MouseWheel $w $delta_x
+        ::ms::spinbox::Shift_MouseWheel $w $delta_x
     }
 
-    # If there is a movement along the Y axis, launch '::ms::spinbox::Shift_MouseWheel'.
+    # If there is a movement along the Y axis, launch '::ms::spinbox::MouseWheel'.
     if { $delta_y != 0 } {
-        ::ms::spinbox::Shift_MouseWheel $w $delta_y
+        ::ms::spinbox::MouseWheel $w $delta_y
     }
 
     return ""
