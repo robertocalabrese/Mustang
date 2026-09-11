@@ -2911,26 +2911,38 @@ proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
             }
         }
         default {
-            # Set 'increment' based on the direction of the movement.
-            if { $delta > 0 } {
-                set increment [expr { -1.0*$::ms::current($w,increment) }]
-            } else {
-                set increment $::ms::current($w,increment)
-            }
+            # Check if the widget is focussable or not.
+            switch -- [::ms::Is_Focussable $w] {
+                0   {
+                    # Check the axis provided.
+                    switch -nocase -- $axis {
+                        X       { ::ms::Scroll_Parent_X $w $delta $what }
+                        default { ::ms::Scroll_Parent_Y $w $delta $what }
+                    }
+                }
+                1   {
+                    # Set 'increment' based on the direction of the movement.
+                    if { $delta > 0 } {
+                        set increment [expr { -1.0*$::ms::current($w,increment) }]
+                    } else {
+                        set increment $::ms::current($w,increment)
+                    }
 
-            # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
-            switch -- $::ms::scrollmode {
-                natural { set increment [expr { -1.0*$increment }] }
-            }
+                    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
+                    switch -- $::ms::scrollmode {
+                        natural { set increment [expr { -1.0*$increment }] }
+                    }
 
-            # Augment 'increment' by 'speed'.
-            set speed [string range $speed 0 end-1]
-            switch -- [string is integer -strict $speed] {
-                1   { set increment [expr { $increment*$speed }] }
-            }
+                    # Augment 'increment' by 'speed'.
+                    set speed [string range $speed 0 end-1]
+                    switch -- [string is integer -strict $speed] {
+                        1   { set increment [expr { $increment*$speed }] }
+                    }
 
-            # Move the widget's thumb.
-            interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
+                    # Move the widget's thumb.
+                    interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
+                }
+            }
         }
     }
 
