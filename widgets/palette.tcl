@@ -5792,7 +5792,7 @@ proc ::ms::palette::MouseWheel { w amount } {
         default  { return "" }
     }
 
-    # Check if the widget is in focus.
+    # Check if the widget is already focussed.
     switch -- [$w.combobox instate [list focus]] {
         0   {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
@@ -5935,7 +5935,7 @@ proc ::ms::palette::Shift_MouseWheel { w amount } {
         }
     }
 
-    # Check if the widget is on focus.
+    # Check if the widget is already focussed.
     switch -- [$w.combobox instate [list focus]] {
         0   {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
