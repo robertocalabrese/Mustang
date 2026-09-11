@@ -6347,6 +6347,11 @@ proc ::ms::treeview::Drag { w x y } {
         disabled { return "" }
     }
 
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+        0   { return "" }
+    }
+
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
