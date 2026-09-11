@@ -4843,6 +4843,10 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
 #       and move that scrollbar by one unit up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, it doesn't do anything on the vertical axis.
 #
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
 # Where:
 #
 # w         Should be the widget real address involved.
@@ -4862,9 +4866,6 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::entry::Touchpad { w counter amount } {
-    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
-    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
-
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gestures.
     # This allow the binding script to respond to every 5th <TouchpadScroll> event
