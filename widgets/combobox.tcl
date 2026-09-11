@@ -6358,6 +6358,10 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
 #   2 - If the listbox can scroll vertically, scroll it by units (**TouchpadScroll**) or by pages
 #       (**Control-TouchpadScroll**), otherwise don't do any movement on the vertical axis.
 #
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
 # Where:
 #
 # w         Should be the scrollable widget real address involved.
@@ -6384,9 +6388,6 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::combobox::Touchpad { w counter amount } {
-    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
-    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
-
     # **TouchpadScroll** events can be generated about 60 times per second
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
