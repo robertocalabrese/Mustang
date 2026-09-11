@@ -7311,6 +7311,10 @@ proc ::ms::combobox::Popdown_Tab { popdown dir } {
 #
 # Manage the **TouchpadScroll** and **Control-TouchpadScroll** events on the popdown window.
 #
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
 # Where:
 #
 # w         Should be the scrollable widget real address involved.
@@ -7341,9 +7345,6 @@ proc ::ms::combobox::Popdown_Tab { popdown dir } {
 #
 # It doesn't return anything.
 proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
-    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
-    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
-
     # **TouchpadScroll** events can be generated about 60 times per second
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** event
