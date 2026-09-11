@@ -2516,6 +2516,11 @@ proc ::ms::panedwindow::Set_Cursor { w x y } {
                 default {
                     # The cursor is over a panedwindow sash.
 
+                    # Check if the widget is focussable or not.
+                    switch -- [::ms::Is_Focussable $w] {
+                        0   { return "" }
+                    }
+
                     # Check if the cursor is the '::ms::current($w,cursor)' provided.
                     if { [interp invokehidden {} $w cget -cursor] eq $::ms::current($w,cursor) } {
                         switch -- $::ms::current($w,orient) {
