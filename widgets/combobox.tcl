@@ -6179,7 +6179,7 @@ proc ::ms::combobox::MouseWheel { w amount } {
         default  { return "" }
     }
 
-    # Check if the widget is in focus.
+    # Check if the widget is already focussed.
     switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
@@ -6309,7 +6309,7 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
         }
     }
 
-    # Check if the widget is on focus.
+    # Check if the widget is already focussed.
     switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
