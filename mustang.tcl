@@ -4296,6 +4296,10 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
 # Search the widget parents for a scrollable widget with an active scrollbar along the X and/or Y axis.
 # If we found one, scroll it and exit, otherwise examine the next parent until we reach out of parents.
 #
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
 # Where:
 #
 # w         Should be the widget real address involved.
@@ -4320,9 +4324,6 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
 #
 # It doesn't return anything.
 proc ::ms::Touchpad_Parent { w counter amount { what units } } {
-    # Acknowledgment: This code is taken (and adapted) from the 'Recent improvements
-    #                 on Tk 9' pdf paper by 'Csaba Nemethi'.
-
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
     # This code allows the binding script to respond to every 5th <TouchpadScroll> event
