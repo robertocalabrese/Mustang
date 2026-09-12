@@ -355,18 +355,22 @@ proc ::ms::Init {} {
     set ::ms::scrollbox disabled
 
     # Set how the mouse scrolling should work.
-    #    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom
-    #                and scrolling the mousewheel down will move the page towards the top.
-    #                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page
-    #                towards the right and scrolling the mousewheel down (with the SHIFT key pressed)
-    #                will move the page towards the left.
-    #
     #    classic --> Scrolling the mousewheel up will move the page towards the top and scrolling
     #                the mousewheel down will move the page towards the bottom.
     #                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page
     #                towards the left and scrolling the mousewheel down (with the SHIFT key pressed)
     #                will move the page towards the right.
     #                This is the default on Windows and Linux operating systems.
+    #
+    #    natural --> Scrolling the mousewheel up will move the page towards the bottom and scrolling
+    #                the mousewheel down will move the page towards the top.
+    #                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page
+    #                towards the right and scrolling the mousewheel down (with the SHIFT key pressed)
+    #                will move the page towards the left.
+    #                This is normally the default in MacOS operating systems.
+    #
+    # Note: We will later check (in case of MacOS operating systems) the current value of the related
+    #       macos option and eventually overwrite the '::ms::scrollmode' value.
     set ::ms::scrollmode "classic"
 
     # Enable/Disable the scroll stopper for combobox, spinbox and listboxes.
@@ -1579,18 +1583,19 @@ proc ::ms::Init {} {
             chan puts $channel "# Scroll mode"
             chan puts $channel "#"
             chan puts $channel "# It's the mousewheel scroll mode."
-            chan puts $channel "#    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom "
-            chan puts $channel "#                and scrolling the mousewheel down will move the page towards the top."
-            chan puts $channel "#                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page"
-            chan puts $channel "#                towards the right and scrolling the mousewheel down (with the SHIFT key pressed)"
-            chan puts $channel "#                will move the page towards the left."
-            chan puts $channel "#"
             chan puts $channel "#    classic --> Scrolling the mousewheel up will move the page towards the top and scrolling "
             chan puts $channel "#                the mousewheel down will move the page towards the bottom."
             chan puts $channel "#                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page"
             chan puts $channel "#                towards the left and scrolling the mousewheel down (with the SHIFT key pressed)"
             chan puts $channel "#                will move the page towards the right."
             chan puts $channel "#                This is the default scroll mode on Windows and Linux operating systems."
+            chan puts $channel "#"
+            chan puts $channel "#    natural --> (Apple style) Scrolling the mousewheel up will move the page towards the bottom "
+            chan puts $channel "#                and scrolling the mousewheel down will move the page towards the top."
+            chan puts $channel "#                Scrolling the mousewheel up (with the SHIFT key pressed) will move the page"
+            chan puts $channel "#                towards the right and scrolling the mousewheel down (with the SHIFT key pressed)"
+            chan puts $channel "#                will move the page towards the left."
+            chan puts $channel "#                This is normally the default scroll mode in MacOS operating system"
             chan puts $channel "#"
             chan puts $channel "# \['classic' or 'natural'\]"
             chan puts $channel "ScrollMode: $::ms::scrollmode"
@@ -4311,9 +4316,9 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
                 return ""
             }
         }
-    } else {
-        # Check the 'parent' classtype.
-        switch -- $::ms::data($parent,classtype) {
+    } elseif { [info exists ::ms::data($w,classtype)] } {
+        # Check the 'w' classtype.
+        switch -- $::ms::data($w,classtype) {
             canvas   -
             listbox  -
             text     -
