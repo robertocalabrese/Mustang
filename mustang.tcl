@@ -3200,26 +3200,19 @@ proc ::ms::Check_Pathname { window { fallback invalid } } {
 
         set type      short
         set real_addr $::ms::addr($window,real)
+
+        return [list $real_addr $type]
     } elseif { $window in $::ms::addr(reals) } {
         # 'window' is a real address created by mustang.
 
         set type       real
         set short_addr $::ms::addr($window,short)
         set real_addr  $::ms::addr($short_addr,real)
-    } else {
-        # 'window' could still be a real address, but not created by mustang.
-        switch -- [_winfo exists $window] {
-            0   { return $fallback }
-            1   {
-                # 'window' is a real address not created by mustang.
 
-                set type      real
-                set real_addr $window
-            }
-        }
+        return [list $real_addr $type]
     }
 
-    return [list $real_addr $type]
+    return $fallback
 }
 
 ## Check_State
