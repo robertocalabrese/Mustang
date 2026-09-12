@@ -4044,93 +4044,103 @@ proc ::ms::Scroll_Parent_X { w amount { what units } } {
 
 ## Scroll_Parent_Y
 #
-# Search the widget parents for a scrollable widget with an active scrollbar along the Y axis.
-# If we found one, scroll it and exit, otherwise examine the next parent until we reach out of parents.
+# Search the widget parents for one that has a vertical scrollbar linked to it.
+# If one is found, scroll it and exit, otherwise examine the next parent until we reach out of parents.
 #
 # Where:
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **MouseWheel** event.
+# amount   Should be the delta value of a **MouseWheel** or **Control-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
-#          *Amount* is normally delivered by the **MouseWheel** event with a value of
-#          **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#          If the value provided as *amount* is not an integer or a float,
-#          defaults to **+120.0**.
+#          If *amount* was provided by a **MouseWheel** or **Control-MouseWheel** event,
+#          its value will be **+120.0** (towards top) or **-120.0** (towards bottom).
 #
-#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
+#          or **+1** (towards bottom).
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
 #
 #          If not provided, defaults to **units**.
 #
-# Note: 1.0/120.0 = 0.008333333333333333
-#
 # It doesn't return anything.
 proc ::ms::Scroll_Parent_Y { w amount { what units } } {
+    # Safeguard.
     # Check the parent of the widget address provided, if any.
-    set parent [_winfo parent $w]
-    switch -- $parent {
-        ""  {
-            # There are no parents to check for.
-            return ""
-        }
-    }
-
-    # Check that 'amount' is an integer or a float.
-    switch -- [string is double -strict $amount] {
-        0   { set amount 120.0 }
-        1   {
-            if { $amount == 0 } {
-                set amount 120
-            } else {
-                set amount [expr { $amount*1.0 }]
+    try {
+        _winfo parent $w
+    } on error {} {
+        return ""
+    } on ok { parent } {
+        # Check the resulting parent.
+        switch -- $parent {
+            ""  {
+                # There are no parents to check for.
+                return ""
             }
         }
     }
 
-    # Check the scrollmode.
-    switch -- $::ms::scrollmode {
-        natural { set amount [expr { -1.0*$amount }] }
+    # If 'amount' has been provided by a **MouseWheel** or **Control-MouseWheel** event,
+    # trasform it into **-1** (towards top) or **+1** (towards bottom).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
     }
 
-    # Propagate the action to the widget's parents.
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            # Invert the scroll direction.
+            set amount [expr { -1*$amount }]
+        }
+    }
+
+    ##########################################################
+    ##                                                      ##
+    ##     PROPAGATE THE ACTION TO THE WIDGET'S PARENTS     ##
+    ##                                                      ##
+    ##########################################################
 
     # ATTENTION!
     #
     # This is a recursive loop. The only way to exit is:
+    #   - If 'parent' is the real address of a scrollable megawidget with an active vertical scrollbar.
+    #   - If 'parent' is the real address of a canvas, listbox, text or treeview widget with a vertical
+    #     scrollbar linked to it by the developer.
     #   - If there is no more parent to check for.
-    #   - If 'parent' is a scrollable megawidget with an active vertical scrollbar.
-    #   - If 'parent' is a widget created outside of mustang that is linked
-    #     to a vertical scrollbar.
     set i 1
     while { $i > 0 } {
-        # Check if 'parent' belongs to a scrollable megawidget.
         if { $parent in $::ms::addr(megawidgets,scrollable) } {
             # Check if 'parent' has an active vertical scrollbar linked to it.
             switch -- $::ms::data($parent,scrolly) {
                 on  {
-                    # Scroll the vertical scrollbar.
-                    $parent yview scroll [expr { -$amount*0.008333333333333333 }] $what
+                    # Scroll the active vertical scrollbar linked to 'parent'.
+                    $parent yview scroll $amount $what
 
                     # Stop the recursive iteration.
                     break
                 }
             }
-        } elseif { $parent ni $::ms::addr(reals) } {
-            # The widget was created outside of mustang.
-            try {
-                $parent yview scroll [expr { -$amount*0.008333333333333333 }] $what
-            } on error {} {
-                # 'parent' has no vertical scrollbar linked to it or
-                # doesn't have the 'yview' command.
-                # Continue the recursive iteration.
-            } on ok {} {
-                # Stop the recursive iteration.
-                break
+        } elseif { [info exists ::ms::data($parent,classtype)] } {
+            # Check the 'parent' classtype.
+            switch -- $::ms::data($parent,classtype) {
+                canvas   -
+                listbox  -
+                text     -
+                treeview {
+                    # Try to scroll the vertical scrollbar that was linked to 'parent' by the developer.
+                    try {
+                        interp invokehidden {} $parent yview scroll $amount $what
+                    } on error {} {
+                        # Continue the recursive iteration.
+                    } on ok {} {
+                        # Stop the recursive iteration.
+                        break
+                    }
+                }
             }
         }
 
