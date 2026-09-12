@@ -4251,72 +4251,82 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
 
 ## Scroll_Widget_Y
 #
-# Scrolls the scrollbar (if any) related to the widget address provided, along the Y axis.
-# If the widget is not a scrollable widget or doesn't have an active scrollbar along the Y axis,
-# check it's parents until an active one is found or we reach out of parents.
+# Scrolls the vertical scrollbar linked to the widget (if any).
+# If the widget have no vertical scrollbar linked to it, check its parents for one that has it.
 #
 # Where:
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **MouseWheel** event.
+# amount   Should be the delta value of a **Shift-MouseWheel** or **Control-Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
-#          *Amount* is normally delivered by the **MouseWheel** event with a value of
-#          **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#          If the value provided as *amount* is not an integer or a float,
-#          defaults to **+120.0**.
+#          If *amount* was provided by a **MouseWheel** or **Control-MouseWheel** event,
+#          its value will be **+120.0** (towards top) or **-120.0** (towards bottom).
 #
-#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
+#          or **+1** (towards bottom).
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
 #
 #          If not provided, defaults to **units**.
 #
-# Note: 1.0/120.0 = 0.008333333333333333
-#
 # It doesn't return anything.
 proc ::ms::Scroll_Widget_Y { w amount { what units } } {
-    # Check that 'amount' is an integer or a float.
-    switch -- [string is double -strict $amount] {
-        0   { set amount 120.0 }
-        1   {
-            if { $amount == 0 } {
-                set amount 120
-            } else {
-                set amount [expr { $amount*1.0 }]
-            }
+    # Safeguard.
+    # Check that the widget address provided exists.
+    switch -- [_winfo exists $w] {
+        0   { return "" }
+    }
+
+    # If 'amount' has been provided by a **MouseWheel** or **Control-MouseWheel** event,
+    # trasform it into **-1** (towards top) or **+1** (towards bottom).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            # Invert the scroll direction.
+            set amount [expr { -1*$amount }]
         }
     }
 
-    # Check the scrollmode.
-    switch -- $::ms::scrollmode {
-        natural { set amount [expr { -1.0*$amount }] }
-    }
+    ############################################
+    ##                                        ##
+    ##     IF POSSIBLE, SCROLL THE WIDGET     ##
+    ##                                        ##
+    ############################################
 
-    # Check if the widget address provided belongs to a scrollable megawidget.
     if { $w in $::ms::addr(megawidgets,scrollable) } {
-        # Check if there is an active vertical scrollbar linked to the widget address provided.
+        # Check if 'w' has an active vertical scrollbar linked to it.
         switch -- $::ms::data($w,scrolly) {
             on  {
-                # Scroll the vertical scrollbar.
-                $w yview scroll [expr { -$amount*0.008333333333333333 }] $what
+                # Scroll the active vertical scrollbar linked to 'w'.
+                $w yview scroll $amount $what
 
                 return ""
             }
         }
-    } elseif { $w ni $::ms::addr(reals) } {
-        # The widget was created outside of mustang.
-
-        try {
-            $w yview scroll [expr { -$amount*0.008333333333333333 }] $what
-        } on error {} {
-            # The widget address provided has no vertical scrollbar linked to it
-            # or doesn't have the 'yview' command.
-        } on ok {} {
-            return ""
+    } else {
+        # Check the 'parent' classtype.
+        switch -- $::ms::data($parent,classtype) {
+            canvas   -
+            listbox  -
+            text     -
+            treeview {
+                # Try to scroll the vertical scrollbar that was linked to 'w' by the developer.
+                try {
+                    interp invokehidden {} $w yview scroll $amount $what
+                } on error {} {
+                    # Do nothing
+                } on ok {} {
+                    return ""
+                }
+            }
         }
     }
 
