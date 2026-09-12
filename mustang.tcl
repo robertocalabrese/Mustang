@@ -5475,7 +5475,7 @@ proc ::ms::External_Click { w X Y } {
 # Returns **1** if it's focussable, **0** otherwise.
 proc ::ms::Is_Focussable { w } {
     # Check if the widget is viewable or not.
-    switch -- [_winfo viewable $w] {
+    switch -- [_winfo viewable $::ms::addr($w,widget)] {
         0   { return 0 }
     }
 
