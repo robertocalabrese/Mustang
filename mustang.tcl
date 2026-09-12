@@ -3283,25 +3283,11 @@ proc ::ms::Check_Widget_Address { window caller_info } {
         -1  -
         1   { ::ms::Error "Invalid address, '$window'." $caller_info }
         0   {
-            # Safeguard.
-            try {
-                _winfo toplevel $window
-            } on error {} {
-                # Do Nothing.
-            } on ok { result } {
-                if { $result eq $window } {
-                    ::ms::Error "Invalid address, '$window'." $caller_info
-                }
-            }
-
             # 'window' is a short address or equal to one.
             set type short
 
             # Set the widget real and short addresses.
-            switch -- $::ms::addr(.,widget) {
-                ".content" { set real_addr [string cat ".content" $window] }
-                default    { set real_addr $window }
-            }
+            set real_addr  $window
             set short_addr $window
         }
         default {
@@ -3349,15 +3335,6 @@ proc ::ms::Check_Widget_Address { window caller_info } {
 
                 set parent_real_addr  $::ms::addr($real_addr,widget)
                 set parent_short_addr $::ms::addr($real_addr,short)
-            } elseif { [_winfo exists $parent_addr] } {
-                # 'parent_addr' is the real address of a widget not created by mustang.
-                set type real
-
-                # Note: Widgets created outside of mustang do not have short addresses,
-                #       we will set their short address as their real address.
-
-                set parent_real_addr  $parent_addr
-                set parent_short_addr $parent_addr
             } else {
                 ::ms::Error "Invalid address, '$window'." $caller_info
             }
