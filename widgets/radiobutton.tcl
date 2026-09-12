@@ -3229,7 +3229,7 @@ proc ::ms::radiobutton::ButtonPress { w } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w.indicator] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -3263,7 +3263,7 @@ proc ::ms::radiobutton::ButtonRelease { w } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w.indicator] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 

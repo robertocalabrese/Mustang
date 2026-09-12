@@ -4515,7 +4515,7 @@ proc ::ms::listbox::B1_Motion { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -4626,7 +4626,7 @@ proc ::ms::listbox::Begin_Select { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -5022,7 +5022,7 @@ proc ::ms::listbox::Extend { w amount } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -5387,7 +5387,7 @@ proc ::ms::listbox::Motion { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -5715,7 +5715,7 @@ proc ::ms::listbox::Select { w } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 

@@ -2716,7 +2716,7 @@ proc ::ms::button::ButtonRelease { w } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 

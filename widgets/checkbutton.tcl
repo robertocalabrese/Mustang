@@ -3245,7 +3245,7 @@ proc ::ms::checkbutton::ButtonPress { w } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w.indicator] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -3279,7 +3279,7 @@ proc ::ms::checkbutton::ButtonRelease { w } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w.indicator] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 

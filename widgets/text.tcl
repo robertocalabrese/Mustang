@@ -6644,7 +6644,7 @@ proc ::ms::text::ButtonPress { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -7026,7 +7026,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 

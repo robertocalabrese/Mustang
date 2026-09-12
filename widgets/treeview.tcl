@@ -6176,7 +6176,7 @@ proc ::ms::treeview::ButtonPress { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
         1   {
             # Focus the treeview.
@@ -6252,7 +6252,7 @@ proc ::ms::treeview::ButtonRelease { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -6307,7 +6307,7 @@ proc ::ms::treeview::DoubleClick { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -6348,7 +6348,7 @@ proc ::ms::treeview::Drag { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -6395,7 +6395,7 @@ proc ::ms::treeview::Motion { w x y } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 
@@ -6619,7 +6619,7 @@ proc ::ms::treeview::Select { w x y op } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $::ms::addr($w,widget)] {
+    switch -- [::ms::Is_Focussable $w] {
         0   { return "" }
     }
 

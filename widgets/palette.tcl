@@ -4414,7 +4414,7 @@ proc ::ms::palette::ButtonPress { w x y mode } {
             switch -- [$w.combobox identify element $x $y] {
                 "textarea" {
                     # Check if the widget is focussable or not.
-                    switch -- [::ms::Is_Focussable $w.combobox] {
+                    switch -- [::ms::Is_Focussable $w] {
                         0   { return "" }
                     }
 
@@ -5765,7 +5765,7 @@ proc ::ms::palette::MouseWheel { w amount } {
     }
 
     # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w.combobox] {
+    switch -- [::ms::Is_Focussable $w] {
         0   {
             # Try to find a widget parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
