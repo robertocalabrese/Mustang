@@ -4450,13 +4450,9 @@ proc ::ms::Touchpad_Parent { w counter amount { what units } } {
 # amount    Should be the delta value of a **TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
-#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
-#           **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#           If the value provided as *amount* is not an integer or a float,
-#           defaults to **+120.0**.
-#
-#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
@@ -4477,26 +4473,29 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Check if 'what' is 'units' or 'pages'.
-    switch -- $what {
-        pages {}
-        units {
-            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-            set delta_x [expr { $delta_x*30 }]
-            set delta_y [expr { $delta_y*30 }]
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            set delta_x [expr { -1*$delta_x }]
+            set delta_y [expr { -1*$delta_y }]
         }
-        default { return "" }
     }
 
     # If there is a movement along the X axis, launch '::ms::Scroll_Widget_X'.
-    if { $delta_x != 0 } {
-        ::ms::Scroll_Widget_X $w $delta_x $what
+    if { $delta_x > 0 } {
+        ::ms::Scroll_Widget_X $w +1 $what
+    } elseif { $delta_x < 0 } {
+        ::ms::Scroll_Widget_X $w -1 $what
     }
 
     # If there is a movement along the Y axis, launch '::ms::Scroll_Widget_Y'.
-    if { $delta_y != 0 } {
-        ::ms::Scroll_Widget_Y $w $delta_y $what
+    if { $delta_y > 0 } {
+        ::ms::Scroll_Widget_Y $w +1 $what
+    } elseif { $delta_y < 0 } {
+        ::ms::Scroll_Widget_Y $w -1 $what
     }
+
+    return ""
 }
 
 ## Touchpad_Widget_X
