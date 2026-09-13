@@ -6414,13 +6414,12 @@ proc ::ms::spinbox::Validate_String { w } {
 # amount   Should be the delta value of a **MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
-#          *Amount* is normally delivered by the **MouseWheel** event with a value of
-#          **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#          If the value provided as *amount* is not an integer or a float,
-#          defaults to **+120.0**.
+#          If *amount* was provided by a **MouseWheel** event, its value will be **+120.0**
+#          (towards top) or **-120.0** (towards bottom).
 #
-#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
+#          or **+1** (towards bottom).
 #
 # It doesn't return anything.
 proc ::ms::spinbox::MouseWheel { w amount } {
