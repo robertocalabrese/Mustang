@@ -4676,12 +4676,12 @@ proc ::ms::Enable_Traversal { w } {
             _bind $toplevel <Destroy> [list +::ms::Traverse_CleanUp %W]
 
             # Scroll one page left or right with the keyboard.
-            _bind $toplevel <<PageLeft>>  [list ::ms::Traverse_Scroll %W xview  120.0 pages]
-            _bind $toplevel <<PageRight>> [list ::ms::Traverse_Scroll %W xview -120.0 pages]
+            _bind $toplevel <<PageLeft>>  [list ::ms::Traverse_Scroll %W xview  1 pages]
+            _bind $toplevel <<PageRight>> [list ::ms::Traverse_Scroll %W xview -1 pages]
 
             # Scroll one page up or down with the keyboard.
-            _bind $toplevel <<PageUp>>    [list ::ms::Traverse_Scroll %W yview  120.0 pages]
-            _bind $toplevel <<PageDown>>  [list ::ms::Traverse_Scroll %W yview -120.0 pages]
+            _bind $toplevel <<PageUp>>    [list ::ms::Traverse_Scroll %W yview  1 pages]
+            _bind $toplevel <<PageDown>>  [list ::ms::Traverse_Scroll %W yview -1 pages]
         }
     }
 
