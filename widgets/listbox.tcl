@@ -5457,15 +5457,15 @@ proc ::ms::listbox::Next_Char { w } {
         false {
             # Check if the simple listbox is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X $w -120.0 units }
-                default { interp invokehidden {} $w xview scroll 1 units }
+                ""      { ::ms::Scroll_Parent_X $w +1 units }
+                default { interp invokehidden {} $w xview scroll +1 units }
             }
         }
         true  {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
-                off { ::ms::Scroll_Parent_X $w -120.0 units }
-                on  { $w.listbox xview scroll 1 units }
+                off { ::ms::Scroll_Parent_X $w +1 units }
+                on  { $w.listbox xview scroll +1 units }
             }
         }
     }
@@ -5498,15 +5498,15 @@ proc ::ms::listbox::PageDown { w } {
         false {
             # Check if the simple listbox is linked to a vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
-                ""      { ::ms::Scroll_Parent_Y $w -120.0 pages }
-                default { interp invokehidden {} $w yview scroll 1 pages }
+                ""      { ::ms::Scroll_Parent_Y $w +1 pages }
+                default { interp invokehidden {} $w yview scroll +1 pages }
             }
         }
         true  {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
-                off { ::ms::Scroll_Parent_Y $w -120.0 pages }
-                on  { $w.listbox yview scroll 1 pages }
+                off { ::ms::Scroll_Parent_Y $w +1 pages }
+                on  { $w.listbox yview scroll +1 pages }
             }
         }
     }
@@ -5539,14 +5539,14 @@ proc ::ms::listbox::PageLeft { w } {
         false {
             # Check if the simple listbox is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X $w 120.0 pages }
+                ""      { ::ms::Scroll_Parent_X $w -1 pages }
                 default { interp invokehidden {} $w xview scroll -1 pages }
             }
         }
         true  {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
-                off { ::ms::Scroll_Parent_X $w 120.0 pages }
+                off { ::ms::Scroll_Parent_X $w -1 pages }
                 on  { $w.listbox xview scroll -1 pages }
             }
         }
@@ -5580,15 +5580,15 @@ proc ::ms::listbox::PageRight { w } {
         false {
             # Check if the simple listbox is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X $w -120.0 pages }
-                default { interp invokehidden {} $w xview scroll 1 pages }
+                ""      { ::ms::Scroll_Parent_X $w +1 pages }
+                default { interp invokehidden {} $w xview scroll +1 pages }
             }
         }
         true  {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
-                off { ::ms::Scroll_Parent_X $w -120.0 pages }
-                on  { $w.listbox xview scroll 1 pages }
+                off { ::ms::Scroll_Parent_X $w +1 pages }
+                on  { $w.listbox xview scroll +1 pages }
             }
         }
     }
@@ -5621,14 +5621,14 @@ proc ::ms::listbox::PageUp { w } {
         false {
             # Check if the simple listbox is linked to a vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
-                ""      { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                ""      { ::ms::Scroll_Parent_Y $w -1 pages }
                 default { interp invokehidden {} $w yview scroll -1 pages }
             }
         }
         true  {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
-                off { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                off { ::ms::Scroll_Parent_Y $w -1 pages }
                 on  { $w.listbox yview scroll -1 pages }
             }
         }
@@ -5662,14 +5662,14 @@ proc ::ms::listbox::Prev_Char { w } {
         false {
             # Check if the simple listbox is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X $w 120.0 units }
+                ""      { ::ms::Scroll_Parent_X $w -1 units }
                 default { interp invokehidden {} $w xview scroll -1 units }
             }
         }
         true  {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
-                off { ::ms::Scroll_Parent_X $w 120.0 units }
+                off { ::ms::Scroll_Parent_X $w -1 units }
                 on  { $w.listbox xview scroll -1 units }
             }
         }
@@ -5948,8 +5948,8 @@ proc ::ms::listbox::Scrollbar_ButtonPress { w orient x y }  {
     switch -nocase -- $orient {
         horizontal {
             switch -nocase -glob -- [$w.x identify $x $y] {
-                "*leftarrow"  { ::ms::Scroll_Widget_X $w +120 units }
-                "*rightarrow" { ::ms::Scroll_Widget_X $w -120 units }
+                "*leftarrow"  { ::ms::Scroll_Widget_X $w -1 units }
+                "*rightarrow" { ::ms::Scroll_Widget_X $w +1 units }
                 "*grip"  -
                 "*thumb" {
                     set ::ms::temp(drag_allowed) yes
@@ -6006,8 +6006,8 @@ proc ::ms::listbox::Scrollbar_ButtonPress { w orient x y }  {
         }
         vertical {
             switch -nocase -glob -- [$w.y identify $x $y] {
-                "*uparrow"   { ::ms::Scroll_Widget_Y $w +120 units }
-                "*downarrow" { ::ms::Scroll_Widget_Y $w -120 units }
+                "*uparrow"   { ::ms::Scroll_Widget_Y $w -1 units }
+                "*downarrow" { ::ms::Scroll_Widget_Y $w +1 units }
                 "*grip"  -
                 "*thumb" {
                     set ::ms::temp(drag_allowed) yes
