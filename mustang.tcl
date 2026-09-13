@@ -5325,7 +5325,7 @@ proc ::ms::Compute_Maximum { digits { sign no } } {
 #                m --> millimeters
 #                p --> points
 #            If there is no unit, the measure will be assumed to be in **pixels**.
-#            The measure (intended as without its unit) should always be a positive integer value.
+#            The measure (intended as without its unit) should always be a positive integer value (**0** included).
 #
 # to         Optional. Should be a string that specifies the new unit in which the result
 #            needs to be expressed.
