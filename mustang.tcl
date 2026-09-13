@@ -4572,13 +4572,9 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
 # amount    Should be the delta value of a **TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
-#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
-#           **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#           If the value provided as *amount* is not an integer or a float,
-#           defaults to **+120.0**.
-#
-#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
@@ -4599,25 +4595,16 @@ proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Check if 'what' is 'units' or 'pages'.
-    switch -- $what {
-        pages {}
-        units {
-            # Adjust the 'delta_y' value, or the movement will be too slow.
-            set delta_y [expr { $delta_y*30 }]
-        }
-        default { return "" }
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural { set delta_y [expr { -1*$delta_y }] }
     }
 
     # If there is a movement along the Y axis, scroll the widget.
-    if { $delta_y != 0 } {
-        # Check the scrollmode.
-        switch -- $::ms::scrollmode {
-            natural { set delta_y [expr { -1.0*$delta_y }] }
-        }
-
-        # Scroll the vertical scrollbar.
-        $w yview scroll [expr { -$delta_y*0.008333333333333333 }] $what
+    if { $delta_y > 0 } {
+        $w yview scroll +1 $what
+    } elseif { $delta_y < 0 } {
+        $w yview scroll -1 $what
     }
 
     return ""
