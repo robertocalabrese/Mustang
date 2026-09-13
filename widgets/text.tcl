@@ -8214,7 +8214,7 @@ proc ::ms::text::PageUp { w } {
         false {
             # Check if the simple text is linked to a vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
-                ""      { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                ""      { ::ms::Scroll_Parent_Y $w -1 pages }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -8227,11 +8227,11 @@ proc ::ms::text::PageUp { w } {
         true {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
-                off     { ::ms::Scroll_Parent_Y $w 120.0 pages }
+                off     { ::ms::Scroll_Parent_Y $w -1 pages }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y $w 120.0 pages }
+                        readonly { ::ms::Scroll_Widget_Y $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
                     }
                 }
@@ -8257,11 +8257,11 @@ proc ::ms::text::PageDown { w } {
         false {
             # Check if the simple text is linked to a vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
-                ""      { ::ms::Scroll_Parent_Y $w -120.0 pages }
+                ""      { ::ms::Scroll_Parent_Y $w +1 pages }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { interp invokehidden {}  $w yview scroll 1 pages }
+                        readonly { interp invokehidden {}  $w yview scroll +1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w 1] }
                     }
                 }
@@ -8270,11 +8270,11 @@ proc ::ms::text::PageDown { w } {
         true {
             # Check if the widget vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
-                off { ::ms::Scroll_Parent_Y $w -120.0 pages }
+                off { ::ms::Scroll_Parent_Y $w +1 pages }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 pages }
+                        readonly { ::ms::Scroll_Widget_Y   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w 1] }
                     }
                 }
@@ -8300,15 +8300,15 @@ proc ::ms::text::PageLeft { w } {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X  $w 120.0 pages }
+                ""      { ::ms::Scroll_Parent_X  $w -1 pages }
                 default { interp invokehidden {} $w xview scroll -1 pages}
             }
         }
         true {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
-                off { ::ms::Scroll_Parent_X $w 120.0 pages }
-                on  { ::ms::Scroll_Widget_X $w 120.0 pages }
+                off { ::ms::Scroll_Parent_X $w -1 pages }
+                on  { ::ms::Scroll_Widget_X $w -1 pages }
             }
         }
     }
@@ -8331,15 +8331,15 @@ proc ::ms::text::PageRight { w } {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
-                ""      { ::ms::Scroll_Parent_X $w -120.0 pages }
-                default { interp invokehidden {} $w xview scroll 1 pages }
+                ""      { ::ms::Scroll_Parent_X $w +1 pages }
+                default { interp invokehidden {} $w xview scroll +1 pages }
             }
         }
         true {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
-                off { ::ms::Scroll_Parent_X $w -120.0 pages }
-                on  { ::ms::Scroll_Widget_X $w -120.0 pages }
+                off { ::ms::Scroll_Parent_X $w +1 pages }
+                on  { ::ms::Scroll_Widget_X $w +1 pages }
             }
         }
     }
@@ -8416,7 +8416,7 @@ proc ::ms::text::Line_Start { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w -120.0 pages }
+                        readonly { ::ms::Scroll_Parent_X   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display linestart} }
                     }
                 }
@@ -8435,7 +8435,7 @@ proc ::ms::text::Line_Start { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w -120.0 pages }
+                        readonly { ::ms::Scroll_Parent_X   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display linestart} }
                     }
                 }
@@ -8471,7 +8471,7 @@ proc ::ms::text::Line_End { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w 120.0 pages }
+                        readonly { ::ms::Scroll_Parent_X   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
                     }
                 }
@@ -8490,7 +8490,7 @@ proc ::ms::text::Line_End { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w 120.0 pages }
+                        readonly { ::ms::Scroll_Parent_X   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
                     }
                 }
@@ -8526,7 +8526,7 @@ proc ::ms::text::Line_Top { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 pages }
+                        readonly { ::ms::Scroll_Parent_Y   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w 1.0 }
                     }
                 }
@@ -8545,7 +8545,7 @@ proc ::ms::text::Line_Top { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 pages }
+                        readonly { ::ms::Scroll_Parent_Y   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w 1.0 }
                     }
                 }
@@ -8581,7 +8581,7 @@ proc ::ms::text::Line_Bottom { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w 120.0 pages }
+                        readonly { ::ms::Scroll_Parent_Y   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {end - 1 indices} }
                     }
                 }
@@ -8600,7 +8600,7 @@ proc ::ms::text::Line_Bottom { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w 120.0 pages }
+                        readonly { ::ms::Scroll_Parent_Y   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {end - 1 indices} }
                     }
                 }
@@ -8727,14 +8727,14 @@ proc ::ms::text::Next_Char { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
@@ -8746,14 +8746,14 @@ proc ::ms::text::Next_Char { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
@@ -8782,14 +8782,14 @@ proc ::ms::text::Next_Word { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
@@ -8801,14 +8801,14 @@ proc ::ms::text::Next_Word { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w $start tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
@@ -8837,14 +8837,14 @@ proc ::ms::text::Next_Line { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
                 }
@@ -8856,14 +8856,14 @@ proc ::ms::text::Next_Line { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
                     }
                 }
@@ -8892,14 +8892,14 @@ proc ::ms::text::Next_Paragraph { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
@@ -8911,14 +8911,14 @@ proc ::ms::text::Next_Paragraph { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w -120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
@@ -9031,14 +9031,14 @@ proc ::ms::text::Previous_Char { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
@@ -9050,14 +9050,14 @@ proc ::ms::text::Previous_Char { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
@@ -9086,14 +9086,14 @@ proc ::ms::text::Previous_Word { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
@@ -9105,14 +9105,14 @@ proc ::ms::text::Previous_Word { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_X   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
@@ -9141,14 +9141,14 @@ proc ::ms::text::Previous_Line { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
                 }
@@ -9160,14 +9160,14 @@ proc ::ms::text::Previous_Line { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
                     }
                 }
@@ -9196,14 +9196,14 @@ proc ::ms::text::Previous_Paragraph { w } {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
@@ -9215,14 +9215,14 @@ proc ::ms::text::Previous_Paragraph { w } {
                 off {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Parent_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
-                        readonly { ::ms::Scroll_Widget_Y   $w 120.0 units }
+                        readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
@@ -9405,7 +9405,7 @@ proc ::ms::text::Select_PageUp { w } {
 proc ::ms::text::Select_PageDown { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w 1] }
+        normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w +1] }
     }
 
     return ""
