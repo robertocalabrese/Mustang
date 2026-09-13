@@ -4676,12 +4676,12 @@ proc ::ms::Enable_Traversal { w } {
             _bind $toplevel <Destroy> [list +::ms::Traverse_CleanUp %W]
 
             # Scroll one page left or right with the keyboard.
-            _bind $toplevel <<PageLeft>>  [list ::ms::Traverse_Scroll %W xview  1 pages]
-            _bind $toplevel <<PageRight>> [list ::ms::Traverse_Scroll %W xview -1 pages]
+            _bind $toplevel <<PageLeft>>  [list ::ms::Traverse_Scroll %W xview -1 pages]
+            _bind $toplevel <<PageRight>> [list ::ms::Traverse_Scroll %W xview  1 pages]
 
             # Scroll one page up or down with the keyboard.
-            _bind $toplevel <<PageUp>>    [list ::ms::Traverse_Scroll %W yview  1 pages]
-            _bind $toplevel <<PageDown>>  [list ::ms::Traverse_Scroll %W yview -1 pages]
+            _bind $toplevel <<PageUp>>    [list ::ms::Traverse_Scroll %W yview -1 pages]
+            _bind $toplevel <<PageDown>>  [list ::ms::Traverse_Scroll %W yview  1 pages]
         }
     }
 
@@ -4756,89 +4756,157 @@ proc ::ms::Traverse_CleanUp { w } {
 #           Allowed values are **xview** or **yview**.
 #
 # amount    Optional. Should be the amount of the movement.
-#           Its sign determines the direction to take (left/right or up/down).
-#           It's normally delivered by the event (**+120.0** or **-120.0).
+#           Its sign determines the direction to take (left/right or top/bottom).
 #
-#           If not provided, defaults to **-120.0**.
+#           Valid amount values are:
+#              **-1** --> meaning left or top.
+#              **+1** --> meaning right or bottom.
+#
+#           If not provided, defaults to **+1**.
 #
 # what      Optional. Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
 #
 #           If not provided, defaults to **units**.
 #
-# Note: 1.0/120.0 = 0.008333333333333333
-#
 # If a suitable widget is found, it will scroll it and return a TCL_BREAK, otherwise return an empty string.
-proc ::ms::Traverse_Scroll { w command { amount -120.0 } { what units } } {
-    # Get the enclosing container.
-    set container_addr [::ms::Enclosing_Container $w]
-    switch -- $container_addr {
+proc ::ms::Traverse_Scroll { w command { amount +1 } { what units } } {
+    # Check the enclosing container.
+    set address [::ms::Enclosing_Container $w]
+    switch -- $address {
         ""      { return "" }
-        default {
-            # Check the scrollmode.
-            switch -- $::ms::scrollmode {
-                natural { set amount [expr { -1.0*$amount }] }
-            }
-            set amount [expr { -$amount*0.008333333333333333 }]
+    }
 
-            # Check the command provided.
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1*$amount }] }
+    }
+
+    # ATTENTION!
+    #
+    # This is a recursive loop. The only way to exit is:
+    #   - If 'address' is a scrollable megawidget with an active horizontal or
+    #     vertical scrollbar (depending on the 'command' provided).
+    #   - If 'address' is a canvas, combobox, entry, listbox, palette, spinbox,
+    #     text or treeview widget that is linked to an horizontal or vertical scrollbar
+    #     (depending on the 'command' provided).
+    #   - If there is no more 'address' parents to check for.
+    set i 1
+    while { $i > 0 } {
+        # Check if 'address' belongs to a scrollable megawidget.
+        if { $address in $::ms::addr(megawidgets,scrollable) } {
+            # Check the 'command' provided.
             switch -- $command {
-                xview { set scroll scrollx }
-                yview { set scroll scrolly }
-            }
-
-            # ATTENTION!
-            #
-            # This is a recursive loop. The only way to exit is:
-            #   - If there is no more container address to check for.
-            #   - If the container address is a scrollable megawidget with an active horizontal or
-            #     vertical scrollbar (depending on the 'axis' provided).
-            #   - If the container address is a widget created outside of mustang that is linked
-            #     to an horizontal or vertical scrollbar (depending on the 'axis' provided).
-            set i 1
-            while { $i > 0 } {
-                # Check if the container address belongs to a scrollable megawidget.
-                if { $container_addr in $::ms::addr(megawidgets,scrollable) } {
-                    # Check if the container address has an active horizontal/vertical scrollbar linked to it.
-                    switch -- $::ms::data($container_addr,$scroll) {
+                xview {
+                    # Check if 'address' has an active horizontal scrollbar linked to it.
+                    switch -- $::ms::data($address,scrollx) {
                         on  {
                             # Execute the movement.
-                            $container_addr $command scroll $amount $what
+                            $address xview scroll $amount $what
 
                             # Stop the recursive iteration.
                             break
                         }
                     }
-                } elseif { $container_addr ni $::ms::addr(reals) } {
-                    # The widget was created outside of mustang.
-
-                    # If possible, execute the movement.
-                    try {
-                        $container_addr $command scroll $amount $what
-                    } on error {} {
-                        # The container address has no horizontal/vertical scrollbar linked to it or
-                        # doesn't have the 'xview' or 'yview' commands.
-                        # Continue the recursive iteration.
-                    } on ok {} {
-                        # Stop the recursive iteration.
-                        break
-                    }
                 }
+                yview {
+                    # Check if 'address' has an active vertical scrollbar linked to it.
+                    switch -- $::ms::data($address,scrolly) {
+                        on  {
+                            # Execute the movement.
+                            $address yview scroll $amount $what
 
-                # Check the next container address, if any.
-                set container_addr [_winfo parent $container_addr]
-                switch -- $container_addr {
-                    ""  {
-                        # There are no more container address to check for.
-                        # Stop the recursive iteration.
-                        return ""
+                            # Stop the recursive iteration.
+                            break
+                        }
                     }
                 }
             }
+        } elseif { [info exists ::ms::data($address,classtype)] } {
+            # Check 'address' classtype.
+            switch -- $::ms::data($address,classtype) {
+                combobox -
+                entry    -
+                palette  -
+                spinbox  {
+                    # Check the 'command' provided.
+                    switch -- $command {
+                        xview {
+                            # Check if the developer have linked an horizontal scrollbar to 'address'.
+                            switch -- $::ms::current($address,xscrollcommand) {
+                                ""      {}
+                                default {
+                                    # Try to scroll the horizontal scrollbar that was linked to 'address' by the developer.
+                                    try {
+                                        interp invokehidden {} $address $command scroll $amount $what
+                                    } on error {} {
+                                        # Continue the recursive iteration.
+                                    } on ok {} {
+                                        # Stop the recursive iteration.
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                canvas   -
+                listbox  -
+                text     -
+                treeview {
+                    # Check the 'command' provided.
+                    switch -- $command {
+                        xview {
+                            # Check if the developer have linked an horizontal scrollbar to 'address'.
+                            switch -- $::ms::current($address,xscrollcommand) {
+                                ""      {}
+                                default {
+                                    # Try to scroll the horizontal that was linked to 'address' by the developer.
+                                    try {
+                                        interp invokehidden {} $address xview scroll $amount $what
+                                    } on error {} {
+                                        # Continue the recursive iteration.
+                                    } on ok {} {
+                                        # Stop the recursive iteration.
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                        yview {
+                            # Check if the developer have linked a vertical scrollbar to 'address'.
+                            switch -- $::ms::current($address,yscrollcommand) {
+                                ""      {}
+                                default {
+                                    # Try to scroll the vertical that was linked to 'address' by the developer.
+                                    try {
+                                        interp invokehidden {} $address yview scroll $amount $what
+                                    } on error {} {
+                                        # Continue the recursive iteration.
+                                    } on ok {} {
+                                        # Stop the recursive iteration.
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-            return -code break
+        # Check the next container address, if any.
+        set address [_winfo parent $address]
+        switch -- $address {
+            ""  {
+                # There are no more container address to check for.
+                # Stop the recursive iteration.
+                return ""
+            }
         }
     }
+
+    return -code break
 }
 
 #################################
