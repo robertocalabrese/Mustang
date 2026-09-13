@@ -5913,8 +5913,8 @@ proc ::ms::labelframe::Scrollbar_ButtonPress { w orient x y }  {
     switch -nocase -- $orient {
         horizontal {
             switch -nocase -glob -- [$w.container.x identify $x $y] {
-                "*leftarrow"  { ::ms::Scroll_Widget_X $w +120 units }
-                "*rightarrow" { ::ms::Scroll_Widget_X $w -120 units }
+                "*leftarrow"  { ::ms::Scroll_Widget_X $w -1 units }
+                "*rightarrow" { ::ms::Scroll_Widget_X $w +1 units }
                 "*grip"  -
                 "*thumb" {
                     set ::ms::temp(drag_allowed) yes
@@ -5971,8 +5971,8 @@ proc ::ms::labelframe::Scrollbar_ButtonPress { w orient x y }  {
         }
         vertical {
             switch -nocase -glob -- [$w.container.y identify $x $y] {
-                "*uparrow"   { ::ms::Scroll_Widget_Y $w +120 units }
-                "*downarrow" { ::ms::Scroll_Widget_Y $w -120 units }
+                "*uparrow"   { ::ms::Scroll_Widget_Y $w -1 units }
+                "*downarrow" { ::ms::Scroll_Widget_Y $w +1 units }
                 "*grip"  -
                 "*thumb" {
                     set ::ms::temp(drag_allowed) yes
