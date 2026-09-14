@@ -2879,6 +2879,12 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
     return ""
 }
 
+#####################################
+##                                 ##
+##     MOUSEWHEEL AND TOUCHPAD     ##
+##                                 ##
+#####################################
+
 ## MouseWheel
 #
 # Scroll the widget's thumb vertically with the mousewheel.
