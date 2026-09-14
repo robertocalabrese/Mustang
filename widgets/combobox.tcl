@@ -6882,9 +6882,9 @@ proc ::ms::combobox::MouseWheel { w amount } {
     set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index]
 
     # Clear the widget textarea, remove any previous selection and display the new widget value.
-    interp invokehidden {} $w delete 0 end
+    interp invokehidden {} $w delete    0 end
     interp invokehidden {} $w selection clear
-    interp invokehidden {} $w set $::ms::data($w,current_value)
+    interp invokehidden {} $w set       $::ms::data($w,current_value)
 
     # If the widget is not in the readonly state, select the combobox value.
     switch -- $::ms::current($w,state) {
@@ -7173,7 +7173,7 @@ proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
     set index [$w.popdown.f.lb index @$x,$y]
 
     # Select and activate the new index.
-    $w.popdown.f.lb activate $index
+    $w.popdown.f.lb activate  $index
     $w.popdown.f.lb selection clear 0 end
     $w.popdown.f.lb selection set $index
 
