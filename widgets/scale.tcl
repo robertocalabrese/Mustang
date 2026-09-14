@@ -3142,6 +3142,14 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            set delta_x [expr { -1*$delta_x }]
+            set delta_y [expr { -1*$delta_y }]
+        }
+    }
+
     # Check the widget orientation axis.
     switch -- $::ms::current($w,orient) {
         horizontal {
@@ -3168,11 +3176,6 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
                 return ""
             }
         }
-    }
-
-    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
-    switch -- $::ms::scrollmode {
-        natural { set increment [expr { -1*$increment }] }
     }
 
     # Increase 'increment' by the 'speed' factor.
