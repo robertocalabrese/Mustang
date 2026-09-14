@@ -938,6 +938,32 @@ _bind _Scale <TouchpadScroll> { ::ms::scale::Touchpad %W %# %D units 1x; break }
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Scale <Control-TouchpadScroll> { ::ms::scale::Touchpad %W %# %D pages 2x; break }
 
+###############################
+##                           ##
+##     _X_SCALE BINDINGS     ##
+##                           ##
+###############################
+
+# Increment the widget's value by the its increment, left or right (depending on the mousewheel direction).
+_bind _X_Scale <MouseWheel>       { ::ms::scale::Shift_MouseWheel %W %D units 1x; break }
+_bind _X_Scale <Shift-MouseWheel> { ::ms::scale::Shift_MouseWheel %W %D units 1x; break }
+
+# Increment the widget's value by 2 times its increment, left or right (depending on the mousewheel direction).
+_bind _X_Scale <Control-MouseWheel>       { ::ms::scale::Shift_MouseWheel %W %D pages 2x; break }
+_bind _X_Scale <Control-Shift-MouseWheel> { ::ms::scale::Shift_MouseWheel %W %D pages 2x; break }
+
+###############################
+##                           ##
+##     _Y_SCALE BINDINGS     ##
+##                           ##
+###############################
+
+# Increment the widget's value by the its increment, up or down (depending on the mousewheel direction).
+_bind _Y_Scale <MouseWheel> { ::ms::scale::MouseWheel %W %D units 1x; break }
+
+# Increment the widget's value by 2 times its increment, up or down (depending on the mousewheel direction).
+_bind _Y_Scale <Control-MouseWheel> { ::ms::scale::MouseWheel %W %D pages 2x; break }
+
 # Create the mustang **scale** package.
 namespace eval ::ms::scale {
     # Set the 'non styleable' scale option list.
@@ -1541,10 +1567,22 @@ proc ::ms::scale::Command { window { args "" } } {
             ##                  ##
             ######################
 
-            # Set the new bindtags for the widget.
-            switch -- $::ms::current($w,class) {
-                TScale  { _bindtags $w [list $w _Scale TScale $::ms::addr($w,toplevel) all] }
-                default { _bindtags $w [list $w $::ms::current($w,class) _Scale TScale $::ms::addr($w,toplevel) all] }
+            # Check the widget's orientation.
+            switch -- $::ms::current($w,orient) {
+                horizontal {
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        TScale  { _bindtags $w [list $w _X_Scale _Scale TScale $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _X_Scale _Scale TScale $::ms::addr($w,toplevel) all] }
+                    }
+                }
+                vertical {
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        TScale  { _bindtags $w [list $w _Y_Scale _Scale TScale $::ms::addr($w,toplevel) all] }
+                        default { _bindtags $w [list $w $::ms::current($w,class) _Y_Scale _Scale TScale $::ms::addr($w,toplevel) all] }
+                    }
+                }
             }
 
             #####################
@@ -2933,8 +2971,86 @@ proc ::ms::scale::MouseWheel { w amount { what units } { speed 1x } } {
         }
     }
 
-    # If 'amount' has been provided by a **Shift-MouseWheel** event,
+    # If 'amount' has been provided by a **MouseWheel**/**Control-MouseWheel** event,
     # trasform it into **-1** (towards top) or **+1** (towards bottom).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
+    # Set 'increment' based on the direction of the movement.
+    if { $amount > 0 } {
+        set increment $::ms::current($w,increment)
+    } else {
+        set increment [expr { -1*$::ms::current($w,increment) }]
+    }
+
+    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
+    switch -- $::ms::scrollmode {
+        natural { set increment [expr { -1*$increment }] }
+    }
+
+    # Increase 'increment' by the 'speed' factor.
+    set speed [string range $speed 0 end-1]
+    switch -- [string is integer -strict $speed] {
+        1   { set increment [expr { $increment*$speed }] }
+    }
+
+    # Move the widget's thumb.
+    interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
+
+    return ""
+}
+
+## Shift_MouseWheel
+#
+# Scroll the widget's thumb horizontally with the mousewheel.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#          If *amount* was provided by a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event,
+#          its value will be **+120** (towards left) or **-120** (towards right).
+#
+#          If *amount* was provided by a procedure, its value will be **-1** (towards left)
+#          or **+1** (towards right).
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **Shift-MouseWheel** event while *pages* are used
+#          by the **Control-Shift-MouseWheel** event.
+#
+#          If not provided, defaults to **units**.
+#
+# speed    Should be the scroll speed (1x, 2x, 3x ...).
+#          If not provided, defaults to **1x**.
+#
+# It doesn't return anything.
+proc ::ms::scale::Shift_MouseWheel { w amount { what units } { speed 1x } } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled {
+            ::ms::Scroll_Parent_X $w $amount $what
+
+            return ""
+        }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            ::ms::Scroll_Parent_X $w $amount $what
+
+            return ""
+        }
+    }
+
+    # If 'amount' has been provided by a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event,
+    # trasform it into **-1** (towards left) or **+1** (towards right).
     if { ($amount == 120) || ($amount == -120) } {
          set amount [expr { -$amount/120 }]
     }
@@ -2975,7 +3091,7 @@ proc ::ms::scale::MouseWheel { w amount { what units } { speed 1x } } {
 #
 # w         Should be the widget real address involved.
 #
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+# counter   Should be the *serial* field of a **TouchpadScroll**/**Control-TouchpadScroll** event (**%#**).
 #
 # amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
@@ -2991,7 +3107,8 @@ proc ::ms::scale::MouseWheel { w amount { what units } { speed 1x } } {
 #
 #           If not provided, defaults to **units**.
 #
-# speed     Should be the scroll speed (1x, 2x, 3x ...)
+# speed     Should be the scroll speed (1x, 2x, 3x ...).
+#           If not provided, defaults to **1x**.
 #
 # It doesn't return anything.
 proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
