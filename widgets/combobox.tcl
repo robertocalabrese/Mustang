@@ -7314,13 +7314,9 @@ proc ::ms::combobox::Popdown_Tab { popdown dir } {
 # amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
-#           *Amount* is normally delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
-#           event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#           If the value provided as *amount* is not an integer or a float,
-#           defaults to **+120.0**.
-#
-#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll** event
+#           trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
@@ -7333,7 +7329,7 @@ proc ::ms::combobox::Popdown_Tab { popdown dir } {
 proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
     # **TouchpadScroll** events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This allow the binding script to respond to every 5th **TouchpadScroll** event
+    # This allow the binding script to respond to every 5th **TouchpadScroll** events
     # by testing is the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {
@@ -7343,25 +7339,18 @@ proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Check if 'what' is 'units' or 'pages'.
-    switch -- $what {
-        pages {}
-        units {
-            # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-            set delta_x [expr { $delta_x*30 }]
-            set delta_y [expr { $delta_y*30 }]
-        }
-        default { return "" }
+    # Launch '::ms::combobox::Popdown_Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
+    if { $delta_x > 0 } {
+        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y +1 $what
+    } elseif { $delta_x < 0 } {
+        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y -1 $what
     }
 
-    # If there is a movement along the X axis, launch '::ms::combobox::Popdown_Shift_MouseWheel'.
-    if { $delta_x != 0 } {
-        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y $delta_x $what
-    }
-
-    # If there is a movement along the Y axis, launch '::ms::combobox::Popdown_MouseWheel'.
-    if { $delta_y != 0 } {
-        ::ms::combobox::Popdown_MouseWheel $w $x $y $delta_y $what
+    # Launch '::ms::combobox::Popdown_MouseWheel' if there is a movement along the Y axis, otherwise do nothing.
+    if { $delta_y > 0 } {
+        ::ms::combobox::Popdown_MouseWheel $w $x $y +1 $what
+    } elseif { $delta_y < 0 } {
+        ::ms::combobox::Popdown_MouseWheel $w $x $y -1 $what
     }
 
     return ""
