@@ -3936,11 +3936,11 @@ proc ::ms::Scrollable_Widgets_Propagation_Mechanism { w } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **Shift-MouseWheel** or **Control-Shift-MouseWheel** event.
+# amount   Should be the delta value of a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#          If *amount* was provided by a **Shift-MouseWheel** or **Control-Shift-MouseWheel**
+#          If *amount* was provided by a **Shift-MouseWheel**/**Control-Shift-MouseWheel**
 #          event, its value will be **+120** (towards left) or **-120** (towards right).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards left)
@@ -3948,6 +3948,8 @@ proc ::ms::Scrollable_Widgets_Propagation_Mechanism { w } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **Shift-MouseWheel** event while *pages* are used
+#          by the **Control-Shift-MouseWheel** event.
 #
 #          If not provided, defaults to **units**.
 #
@@ -3969,7 +3971,7 @@ proc ::ms::Scroll_Parent_X { w amount { what units } } {
         }
     }
 
-    # If 'amount' has been provided by a **Shift-MouseWheel** or **Control-Shift-MouseWheel** event,
+    # If 'amount' has been provided by a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event,
     # trasform it into **-1** (towards left) or **+1** (towards right).
     if { ($amount == 120) || ($amount == -120) } {
          set amount [expr { -$amount/120 }]
@@ -4062,11 +4064,11 @@ proc ::ms::Scroll_Parent_X { w amount { what units } } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **MouseWheel** or **Control-MouseWheel** event.
+# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#          If *amount* was provided by a **MouseWheel** or **Control-MouseWheel** event,
+#          If *amount* was provided by a **MouseWheel**/**Control-MouseWheel** event,
 #          its value will be **+120** (towards top) or **-120** (towards bottom).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards top)
@@ -4074,6 +4076,8 @@ proc ::ms::Scroll_Parent_X { w amount { what units } } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **MouseWheel** event while *pages* are used
+#          by the **Control-MouseWheel** event.
 #
 #          If not provided, defaults to **units**.
 #
@@ -4095,7 +4099,7 @@ proc ::ms::Scroll_Parent_Y { w amount { what units } } {
         }
     }
 
-    # If 'amount' has been provided by a **MouseWheel** or **Control-MouseWheel** event,
+    # If 'amount' has been provided by a **MouseWheel**/**Control-MouseWheel** event,
     # trasform it into **-1** (towards top) or **+1** (towards bottom).
     if { ($amount == 120) || ($amount == -120) } {
          set amount [expr { -$amount/120 }]
@@ -4184,11 +4188,11 @@ proc ::ms::Scroll_Parent_Y { w amount { what units } } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **Shift-MouseWheel** or **Control-Shift-MouseWheel** event.
+# amount   Should be the delta value of a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#          If *amount* was provided by a **Shift-MouseWheel** or **Control-Shift-MouseWheel**
+#          If *amount* was provided by a **Shift-MouseWheel**/**Control-Shift-MouseWheel**
 #          event, its value will be **+120** (towards left) or **-120** (towards right).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards left)
@@ -4196,6 +4200,8 @@ proc ::ms::Scroll_Parent_Y { w amount { what units } } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **Shift-MouseWheel** event while *pages* are used
+#          by the **Control-Shift-MouseWheel** event.
 #
 #          If not provided, defaults to **units**.
 #
@@ -4207,7 +4213,7 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
         0   { return "" }
     }
 
-    # If 'amount' has been provided by a **Shift-MouseWheel** or **Control-Shift-MouseWheel** event,
+    # If 'amount' has been provided by a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event,
     # trasform it into **-1** (towards left) or **+1** (towards right).
     if { ($amount == 120) || ($amount == -120) } {
          set amount [expr { -$amount/120 }]
@@ -4281,7 +4287,7 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **Shift-MouseWheel** or **Control-Shift-MouseWheel** event.
+# amount   Should be the delta value of a **MouseWheel** or **Control-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
@@ -4293,6 +4299,8 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **MouseWheel** event while *pages* are used
+#          by the **Control-MouseWheel** event.
 #
 #          If not provided, defaults to **units**.
 #
@@ -4304,7 +4312,7 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
         0   { return "" }
     }
 
-    # If 'amount' has been provided by a **MouseWheel** or **Control-MouseWheel** event,
+    # If 'amount' has been provided by a **MouseWheel**/**Control-MouseWheel** event,
     # trasform it into **-1** (towards top) or **+1** (towards bottom).
     if { ($amount == 120) || ($amount == -120) } {
          set amount [expr { -$amount/120 }]
@@ -4378,17 +4386,19 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
 #
 # w         Should be the widget real address involved.
 #
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+# counter   Should be the *serial* field of a **TouchpadScroll**/**Control-TouchpadScroll** event (**%#**).
 #
-# amount    Should be the delta value of a **TouchpadScroll** event.
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
 #           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
 #
 #           If not provided, defaults to **units**.
 #
@@ -4445,17 +4455,19 @@ proc ::ms::Touchpad_Parent { w counter amount { what units } } {
 #
 # w         Should be the scrollable widget real address involved.
 #
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+# counter   Should be the *serial* field of a **TouchpadScroll**/**Control-TouchpadScroll** event (**%#**).
 #
-# amount    Should be the delta value of a **TouchpadScroll** event.
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
 #           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
 #
 #           If not provided, defaults to **units**.
 #
@@ -4511,17 +4523,19 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 #
 # w         Should be the scrollable widget real address involved.
 #
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+# counter   Should be the *serial* field of a **TouchpadScroll**/**Control-TouchpadScroll** event (**%#**).
 #
-# amount    Should be the delta value of a **TouchpadScroll** event.
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
 #           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
 #
 #           If not provided, defaults to **units**.
 #
@@ -4567,17 +4581,19 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
 #
 # w         Should be the scrollable widget real address involved.
 #
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+# counter   Should be the *serial* field of a **TouchpadScroll**/**Control-TouchpadScroll** event (**%#**).
 #
-# amount    Should be the delta value of a **TouchpadScroll** event.
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
 #           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
 #
 #           If not provided, defaults to **units**.
 #
