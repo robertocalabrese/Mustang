@@ -4396,7 +4396,7 @@ proc ::ms::Scroll_Widget_Y { w amount { what units } } {
 proc ::ms::Touchpad_Parent { w counter amount { what units } } {
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # This code allows the binding script to respond to every 5th **TouchpadScroll** events
     # by testing is the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {
@@ -4463,7 +4463,7 @@ proc ::ms::Touchpad_Parent { w counter amount { what units } } {
 proc ::ms::Touchpad_Widget { w counter amount { what units } } {
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # This code allows the binding script to respond to every 5th **TouchpadScroll** events
     # by testing is the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {
@@ -4529,7 +4529,7 @@ proc ::ms::Touchpad_Widget { w counter amount { what units } } {
 proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # This code allows the binding script to respond to every 5th **TouchpadScroll** events
     # by testing is the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {
@@ -4585,7 +4585,7 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
 proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # This code allows the binding script to respond to every 5th **TouchpadScroll** events
     # by testing is the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {

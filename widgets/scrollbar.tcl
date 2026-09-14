@@ -2703,7 +2703,7 @@ proc ::ms::scrollbar::Drag { w x y } {
 proc ::ms::scrollbar::Touchpad { w counter amount { what units } } {
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This code allows the binding script to respond to every 5th <TouchpadScroll> event
+    # This code allows the binding script to respond to every 5th **TouchpadScroll** events
     # by testing if the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {

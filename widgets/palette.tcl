@@ -6576,7 +6576,7 @@ proc ::ms::palette::Shift_MouseWheel { w amount } {
 proc ::ms::palette::Touchpad { w counter amount } {
     # <TouchpadScroll> events can be generated about 60 times per second
     # during a two-finger gesture.
-    # This allow the binding script to respond to every 5th <TouchpadScroll> events
+    # This allow the binding script to respond to every 5th **TouchpadScroll** events
     # by testing is the 'counter' is divisible by 5.
     set counter [expr { $counter%5 }]
     if { $counter != 0 } {
