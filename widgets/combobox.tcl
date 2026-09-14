@@ -6105,329 +6105,6 @@ proc ::ms::combobox::Validate_String { w } {
     return [lindex $::ms::data($w,values) $index]
 }
 
-#####################################
-##                                 ##
-##     MOUSEWHEEL AND TOUCHPAD     ##
-##                                 ##
-#####################################
-
-## MouseWheel
-#
-# If the widget is not in its disabled state and the list provided is not empty, scroll the items
-# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable
-# parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending
-# on the mousewheel direction). If none of the widget's parent meets the required condition,
-# don't do anything.
-#
-# Where:
-#
-# w        Should be the widget real address involved.
-#
-# amount   Should be the delta value of a **MouseWheel** event.
-#          The delta value represents the rotation units the mouse wheel has been moved.
-#          The sign of the value represents the direction the mouse wheel was scrolled.
-#
-#          If *amount* was provided by a **MouseWheel** event, its value will be **+120**
-#          (towards top) or **-120** (towards bottom).
-#
-#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
-#          or **+1** (towards bottom).
-#
-# It doesn't return anything.
-proc ::ms::combobox::MouseWheel { w amount } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled {
-            # Try to find a widget parent to scroll vertically, if any.
-            ::ms::Scroll_Parent_Y $w $amount units
-
-            return ""
-        }
-    }
-
-    # Check if the widget popdown is on the screen.
-    switch -- [_winfo exists $w.popdown] {
-        1   { return "" }
-    }
-
-    # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w] {
-        0   {
-            # Try to find a widget parent to scroll vertically, if any.
-            ::ms::Scroll_Parent_Y $w $amount units
-
-            return ""
-        }
-    }
-
-    # Get the mouse pointer (x,y) root coordinates.
-    set X [_winfo pointerx $w]
-    set Y [_winfo pointery $w]
-
-    # Get the (x,y) root coordinates of the widget NW corner.
-    set rootx [_winfo rootx $w]
-    set rooty [_winfo rooty $w]
-
-    # Compute the mouse pointer (x,y) relative coordinates.
-    set x [expr { $X-$rootx }]
-    set y [expr { $Y-$rooty }]
-
-    # Check the mouse pointer location.
-    switch -- [interp invokehidden {} $w identify element $x $y] {
-        textarea {}
-        default  { return "" }
-    }
-
-    # Check if the widget is already focussed.
-    switch -- [interp invokehidden {} $w instate [list focus]] {
-        0   {
-            # Check the 'scrollbox' value ('disabled' or 'enabled').
-            switch -- $::ms::scrollbox {
-                disabled {
-                    # Try to find a widget parent to scroll vertically, if any.
-                    ::ms::Scroll_Parent_Y $w $amount units
-
-                    return ""
-                }
-                enabled {
-                    # Focus the widget.
-                    _focus -force $w
-
-                    # Change the widget dynamic state to 'focus'.
-                    interp invokehidden {} $w state [list focus]
-                }
-            }
-        }
-    }
-
-    # If 'amount' has been provided by a **MouseWheel** event,
-    # trasform it into **-1** (towards left) or **+1** (towards right).
-    if { ($amount == 120) || ($amount == -120) } {
-         set amount [expr { -$amount/120 }]
-    }
-
-    # Check the 'scrollmode' value ('classic' or 'natural').
-    switch -- $::ms::scrollmode {
-        natural { set amount [expr { -1.0*$amount }] }
-    }
-
-    # Change the widget textarea value by scrolling the items list provided up or down
-    # (depending on the scroll direction).
-    if { $amount > 0 } {
-        set index [expr { $::ms::data($w,current_index)+1 }]
-    } else {
-        set index [expr { $::ms::data($w,current_index)-1 }]
-    }
-
-    # Check the 'scrollstopper' value ('disabled' or 'enabled').
-    switch -- $::ms::scrollstopper {
-        disabled {
-            # If index is lesser than zero or bigger than the last available index, cycle trough.
-            if { $index < 0 } {
-                set index $::ms::data($w,last_available_index)
-            } elseif { $index > $::ms::data($w,last_available_index) } {
-                set index 0
-            }
-        }
-        enabled {
-            # If index is lesser than zero or bigger than the last available index, stop the scrolling.
-            if { $index < 0 } {
-                return ""
-            } elseif { $index > $::ms::data($w,last_available_index) } {
-                return ""
-            }
-        }
-    }
-
-    # Update the current index and value.
-    set ::ms::data($w,current_index) $index
-    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index]
-
-    # Clear the widget textarea, remove any previous selection and display the new widget value.
-    interp invokehidden {} $w delete 0 end
-    interp invokehidden {} $w selection clear
-    interp invokehidden {} $w set $::ms::data($w,current_value)
-
-    # If the widget is not in the readonly state, select the combobox value.
-    switch -- $::ms::current($w,state) {
-        normal {
-            interp invokehidden {} $w selection range 0 end
-            interp invokehidden {} $w icursor end
-        }
-    }
-
-    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
-    #       executing the command. This timer will be resetted if, while active, another mousewheel action on the widget
-    #       asks to launch again the command.
-    if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
-        after cancel $::ms::temp($w,pending_execute_cmd)
-        unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
-    }
-    set ::ms::temp($w,pending_execute_cmd) [after 50 [list ::ms::Execute_Widget_Cmd $w]]
-
-    return ""
-}
-
-## Shift_MouseWheel
-#
-# If the widget is in its **normal** state and has the focus, move the insert cursor by one character
-# to the left or to the right (depending on the mousewheel direction), otherwise try to find the
-# innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
-# by one unit left or right (again, depending on the mousewheel direction). If none of the widget's
-# parent meets the required condition, don't do anything.
-#
-# Where:
-#
-# w        Should be the widget real address involved.
-#
-# amount   Should be the delta value of a **MouseWheel** event.
-#          The delta value represents the rotation units the mousewheel has been moved.
-#          The sign of the value represents the direction the mousewheel was scrolled.
-#
-#          If *amount* was provided by a **Shift-MouseWheel** event, its value will be
-#          **+120** (towards left) or **-120** (towards right).
-#
-#          If *amount* was provided by a procedure, its value will be **-1** (towards left)
-#          or **+1** (towards right).
-#
-# It doesn't return anything.
-proc ::ms::combobox::Shift_MouseWheel { w amount } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled -
-        readonly {
-            # Try to find a widget parent to scroll horizontally, if any.
-            ::ms::Scroll_Parent_X $w $amount units
-
-            return ""
-        }
-    }
-
-    # Check if the widget is focussable or not.
-    switch -- [::ms::Is_Focussable $w] {
-        0   {
-            # Try to find a widget parent to scroll horizontally, if any.
-            ::ms::Scroll_Parent_X $w $amount units
-
-            return ""
-        }
-    }
-
-    # Check if the widget is already focussed.
-    switch -- [interp invokehidden {} $w instate [list focus]] {
-        0   {
-            # Check the 'scrollbox' value ('disabled' or 'enabled').
-            switch -- $::ms::scrollbox {
-                disabled {
-                    # Try to find a widget parent to scroll horizontally, if any.
-                    ::ms::Scroll_Parent_X $w $amount units
-
-                    return ""
-                }
-                enabled {
-                    # Focus the widget.
-                    _focus -force $w
-
-                    # Change the widget dynamic state to 'focus'.
-                    interp invokehidden {} $w state [list focus]
-                }
-            }
-        }
-        1   {
-            # If 'amount' has been provided by a **Shift-MouseWheel** event,
-            # trasform it into **-1** (towards left) or **+1** (towards right).
-            if { ($amount == 120) || ($amount == -120) } {
-                 set amount [expr { -$amount/120 }]
-            }
-
-            # Check the 'scrollmode' value ('classic' or 'natural').
-            switch -- $::ms::scrollmode {
-                natural {
-                    # Invert the scroll direction.
-                    set amount [expr { -1*$amount }]
-                }
-            }
-
-            # Get the current cursor position
-            set index [interp invokehidden {} $w index insert]
-
-            # Move the cursor by one character to the left or to the right (depending
-            # on the mousewheel direction).
-            if { $amount > 0 } {
-                interp invokehidden {} $w icursor $index+1
-            } else {
-                interp invokehidden {} $w icursor $index-1
-            }
-
-            # Make the index character visible.
-            ::ttk::entry::See $w $index
-        }
-    }
-
-    return ""
-}
-
-## Touchpad
-#
-# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-#
-#   1 - If the widget has the focus, any movement along the X axis will move the insert cursor by one
-#       character to the left or to the right (depending on the mousewheel direction), otherwise any movement
-#       along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
-#       scrollbar and move that scrollbar by one unit left or right (again, depending on the mousewheel direction).
-#       If none of the widget's parent meets the required condition, it doesn't do anything on the horizontal axis.
-#
-#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
-#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
-#       If none of the widget's parent meets the required condition, it doesn't do anything on the vertical axis.
-#
-# Note: This code is taken (and adapted) from the 'Recent improvements
-#       on Tk 9' pdf paper by 'Csaba Nemethi'.
-#       All credits goes to him.
-#
-# Where:
-#
-# w         Should be the scrollable widget real address involved.
-#
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
-#
-# amount    Should be the delta value of a **TouchpadScroll** event.
-#           The delta value represents the rotation units the mouse wheel has been moved.
-#           The sign of the value represents the direction the mouse wheel was scrolled.
-#
-#           *Amount* is delivered by the **TouchpadScroll** event trough the **%D** parameter.
-#
-# It doesn't return anything.
-proc ::ms::combobox::Touchpad { w counter amount } {
-    # **TouchpadScroll** events can be generated about 60 times per second
-    # during a two-finger gesture.
-    # This allow the binding script to respond to every 5th **TouchpadScroll** event
-    # by testing is the 'counter' is divisible by 5.
-    set counter [expr { $counter%5 }]
-    if { $counter != 0 } {
-        return ""
-    }
-
-    # Translate 'amount' in 'delta_x' and 'delta_y'.
-    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
-
-    # Launch '::ms::combobox::Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
-    if { $delta_x > 0 } {
-        ::ms::combobox::Shift_MouseWheel $w +1
-    } elseif { $delta_x < 0 } {
-        ::ms::combobox::Shift_MouseWheel $w -1
-    }
-
-    # Launch '::ms::combobox::MouseWheel' if there is a movement along the Y axis, otherwise do nothing.
-    if { $delta_y > 0 } {
-        ::ms::combobox::MouseWheel $w +1
-    } elseif { $delta_y < 0 } {
-        ::ms::combobox::MouseWheel $w -1
-    }
-
-    return ""
-}
-
 #######################################
 ##                                   ##
 ##     POPDOWN WINDOW PROCEDURES     ##
@@ -6937,64 +6614,6 @@ proc ::ms::combobox::Popdown_Motion { w X Y } {
     return ""
 }
 
-## Popdown_MouseWheel
-#
-# If the popdown listbox can scroll vertically, scroll it by units (**MouseWheel**) or by pages
-# (**Control-MouseWheel**), otherwise don't do anything.
-#
-# Where:
-#
-# w        Should be the widget real address involved.
-#
-# x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
-#          These values should be provided by the **MouseWheel**/**Control-MouseWheel** event.
-#
-# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
-#          The delta value represents the rotation units the mouse wheel has been moved.
-#          The sign of the value represents the direction the mouse wheel was scrolled.
-#
-#          *Amount* will be **+120** (towards top) or **-120** (towards bottom).
-#
-# what     Should be a string that specifies the unit type.
-#          Allowed values are the word **units** or **pages**.
-#          *Units* are used by the **MouseWheel** event while *pages* are used
-#          by the **Control-MouseWheel** event.
-#
-#          If not provided, defaults to **units**.
-#
-# It doesn't return anything.
-proc ::ms::combobox::Popdown_MouseWheel { w x y amount { what units } } {
-    # Trasform 'amount' into **-1** (towards top) or **+1** (towards bottom).
-    if { ($amount == 120) || ($amount == -120) } {
-         set amount [expr { -$amount/120 }]
-    }
-
-    # Check the 'scrollmode' value ('classic' or 'natural').
-    switch -- $::ms::scrollmode {
-        natural {
-            # Invert the scroll direction.
-            set amount [expr { -1*$amount }]
-        }
-    }
-
-    # If possible, scroll the popdown listbox vertically.
-    try {
-        $w.popdown.f.lb yview scroll $amount $what
-    } on error {} {
-        # The popdown listbox cannot scroll vertically.
-    }
-
-    # Get the index of the current hovered row.
-    set index [$w.popdown.f.lb index @$x,$y]
-
-    # Select and activate the new index.
-    $w.popdown.f.lb activate  $index
-    $w.popdown.f.lb selection clear 0 end
-    $w.popdown.f.lb selection set $index
-
-    return -code break
-}
-
 ## Popdown_PageDown
 #
 # Move the popdown listbox view towards the bottom by one page and select the first visible row.
@@ -7054,6 +6673,520 @@ proc ::ms::combobox::Popdown_PageUp { w } {
     return -code break
 }
 
+## Popdown_Select
+#
+# Manage the popdown lisbox selection event.
+#
+# Note: The following procedure is a modified version of the 'ttk::combobox::LBSelect' procedure.
+#       All credits goes to the original author/s.
+#
+# Where:
+#
+# w   Should be the combobox real address involved.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Select { w } {
+    # Clear the widget textarea.
+    interp invokehidden {} $w delete 0 end
+
+    # Set the widget selection in response to an user action.
+    interp invokehidden {} $w current   [$w.popdown.f.lb index active]
+    interp invokehidden {} $w selection range 0 end
+    interp invokehidden {} $w icursor   end
+
+    # Change the widget dynamic state to '!invalid'.
+    interp invokehidden {} $w state [list !invalid]
+
+    # Release the grab.
+    set ::wait_for_user_response "Selection"
+
+    return ""
+}
+
+## Popdown_Tab
+#
+# Manage the **Tab** and **Shift-Tab** events on the popdown listbox.
+# Set the selection, and navigate to next/prev widget.
+#
+# Where:
+#
+# popdown   Should be the popdown window real address involved.
+#
+# dir       The direction of the tab movement.
+#           Allowed values are 'previos' or 'next'.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Tab { popdown dir } {
+    # Get the combobox real address.
+    set w [_winfo parent [_winfo parent [_winfo parent $popdown]]]
+
+    # Check if there is another widget to focus to.
+    switch -- $dir {
+        next     { set newFocus [tk_focusNext $w] }
+        previous { set newFocus [tk_focusPrev $w] }
+    }
+
+    # Chek the next/previous focussable widget found, if any.
+    switch -- $newFocus {
+        ""      {}
+        default {
+            # Release the grab.
+            set ::wait_for_user_response "Unpost"
+
+            # The [grab release] call in [Unpost] queues events that later
+            # re-set the focus (@@@ NOTE: this might not be true anymore).
+            # Set new focus later:
+            after 0 [list ::ttk::traverseTo $newFocus]
+        }
+    }
+
+    return ""
+}
+
+#####################################
+##                                 ##
+##     MOUSEWHEEL AND TOUCHPAD     ##
+##                                 ##
+#####################################
+
+## MouseWheel
+#
+# If the widget is not in its disabled state and the list provided is not empty, scroll the items
+# list without displaying the popdown window, otherwise try to find the innermost widget's scrollable
+# parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending
+# on the mousewheel direction). If none of the widget's parent meets the required condition,
+# don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#          If *amount* was provided by a **MouseWheel** event, its value will be **+120**
+#          (towards top) or **-120** (towards bottom).
+#
+#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
+#          or **+1** (towards bottom).
+#
+# It doesn't return anything.
+proc ::ms::combobox::MouseWheel { w amount } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled {
+            # Try to find a widget parent to scroll vertically, if any.
+            ::ms::Scroll_Parent_Y $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget popdown is on the screen.
+    switch -- [_winfo exists $w.popdown] {
+        1   { return "" }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            # Try to find a widget parent to scroll vertically, if any.
+            ::ms::Scroll_Parent_Y $w $amount units
+
+            return ""
+        }
+    }
+
+    # Get the mouse pointer (x,y) root coordinates.
+    set X [_winfo pointerx $w]
+    set Y [_winfo pointery $w]
+
+    # Get the (x,y) root coordinates of the widget NW corner.
+    set rootx [_winfo rootx $w]
+    set rooty [_winfo rooty $w]
+
+    # Compute the mouse pointer (x,y) relative coordinates.
+    set x [expr { $X-$rootx }]
+    set y [expr { $Y-$rooty }]
+
+    # Check the mouse pointer location.
+    switch -- [interp invokehidden {} $w identify element $x $y] {
+        textarea {}
+        default  { return "" }
+    }
+
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Check the 'scrollbox' value ('disabled' or 'enabled').
+            switch -- $::ms::scrollbox {
+                disabled {
+                    # Try to find a widget parent to scroll vertically, if any.
+                    ::ms::Scroll_Parent_Y $w $amount units
+
+                    return ""
+                }
+                enabled {
+                    # Focus the widget.
+                    _focus -force $w
+
+                    # Change the widget dynamic state to 'focus'.
+                    interp invokehidden {} $w state [list focus]
+                }
+            }
+        }
+    }
+
+    # If 'amount' has been provided by a **MouseWheel** event,
+    # trasform it into **-1** (towards left) or **+1** (towards right).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural { set amount [expr { -1.0*$amount }] }
+    }
+
+    # Change the widget textarea value by scrolling the items list provided up or down
+    # (depending on the scroll direction).
+    if { $amount > 0 } {
+        set index [expr { $::ms::data($w,current_index)+1 }]
+    } else {
+        set index [expr { $::ms::data($w,current_index)-1 }]
+    }
+
+    # Check the 'scrollstopper' value ('disabled' or 'enabled').
+    switch -- $::ms::scrollstopper {
+        disabled {
+            # If index is lesser than zero or bigger than the last available index, cycle trough.
+            if { $index < 0 } {
+                set index $::ms::data($w,last_available_index)
+            } elseif { $index > $::ms::data($w,last_available_index) } {
+                set index 0
+            }
+        }
+        enabled {
+            # If index is lesser than zero or bigger than the last available index, stop the scrolling.
+            if { $index < 0 } {
+                return ""
+            } elseif { $index > $::ms::data($w,last_available_index) } {
+                return ""
+            }
+        }
+    }
+
+    # Update the current index and value.
+    set ::ms::data($w,current_index) $index
+    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index]
+
+    # Clear the widget textarea, remove any previous selection and display the new widget value.
+    interp invokehidden {} $w delete 0 end
+    interp invokehidden {} $w selection clear
+    interp invokehidden {} $w set $::ms::data($w,current_value)
+
+    # If the widget is not in the readonly state, select the combobox value.
+    switch -- $::ms::current($w,state) {
+        normal {
+            interp invokehidden {} $w selection range 0 end
+            interp invokehidden {} $w icursor end
+        }
+    }
+
+    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+    #       executing the command. This timer will be resetted if, while active, another mousewheel action on the widget
+    #       asks to launch again the command.
+    if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
+        after cancel $::ms::temp($w,pending_execute_cmd)
+        unset -nocomplain -- ::ms::temp($w,pending_execute_cmd)
+    }
+    set ::ms::temp($w,pending_execute_cmd) [after 50 [list ::ms::Execute_Widget_Cmd $w]]
+
+    return ""
+}
+
+## Shift_MouseWheel
+#
+# If the widget is in its **normal** state and has the focus, move the insert cursor by one character
+# to the left or to the right (depending on the mousewheel direction), otherwise try to find the
+# innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
+# by one unit left or right (again, depending on the mousewheel direction). If none of the widget's
+# parent meets the required condition, don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# amount   Should be the delta value of a **MouseWheel** event.
+#          The delta value represents the rotation units the mousewheel has been moved.
+#          The sign of the value represents the direction the mousewheel was scrolled.
+#
+#          If *amount* was provided by a **Shift-MouseWheel** event, its value will be
+#          **+120** (towards left) or **-120** (towards right).
+#
+#          If *amount* was provided by a procedure, its value will be **-1** (towards left)
+#          or **+1** (towards right).
+#
+# It doesn't return anything.
+proc ::ms::combobox::Shift_MouseWheel { w amount } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            # Try to find a widget parent to scroll horizontally, if any.
+            ::ms::Scroll_Parent_X $w $amount units
+
+            return ""
+        }
+    }
+
+    # Check if the widget is already focussed.
+    switch -- [interp invokehidden {} $w instate [list focus]] {
+        0   {
+            # Check the 'scrollbox' value ('disabled' or 'enabled').
+            switch -- $::ms::scrollbox {
+                disabled {
+                    # Try to find a widget parent to scroll horizontally, if any.
+                    ::ms::Scroll_Parent_X $w $amount units
+
+                    return ""
+                }
+                enabled {
+                    # Focus the widget.
+                    _focus -force $w
+
+                    # Change the widget dynamic state to 'focus'.
+                    interp invokehidden {} $w state [list focus]
+                }
+            }
+        }
+        1   {
+            # If 'amount' has been provided by a **Shift-MouseWheel** event,
+            # trasform it into **-1** (towards left) or **+1** (towards right).
+            if { ($amount == 120) || ($amount == -120) } {
+                 set amount [expr { -$amount/120 }]
+            }
+
+            # Check the 'scrollmode' value ('classic' or 'natural').
+            switch -- $::ms::scrollmode {
+                natural {
+                    # Invert the scroll direction.
+                    set amount [expr { -1*$amount }]
+                }
+            }
+
+            # Get the current cursor position
+            set index [interp invokehidden {} $w index insert]
+
+            # Move the cursor by one character to the left or to the right (depending
+            # on the mousewheel direction).
+            if { $amount > 0 } {
+                interp invokehidden {} $w icursor $index+1
+            } else {
+                interp invokehidden {} $w icursor $index-1
+            }
+
+            # Make the index character visible.
+            ::ttk::entry::See $w $index
+        }
+    }
+
+    return ""
+}
+
+## Touchpad
+#
+# This binding movement will happen on two different planes, horizontal (1) and vertical (2).
+#
+#   1 - If the widget has the focus, any movement along the X axis will move the insert cursor by one
+#       character to the left or to the right (depending on the mousewheel direction), otherwise any movement
+#       along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
+#       scrollbar and move that scrollbar by one unit left or right (again, depending on the mousewheel direction).
+#       If none of the widget's parent meets the required condition, it doesn't do anything on the horizontal axis.
+#
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, it doesn't do anything on the vertical axis.
+#
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
+# Where:
+#
+# w         Should be the scrollable widget real address involved.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#           *Amount* is delivered by the **TouchpadScroll** event trough the **%D** parameter.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Touchpad { w counter amount } {
+    # **TouchpadScroll** events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This allow the binding script to respond to every 5th **TouchpadScroll** event
+    # by testing is the 'counter' is divisible by 5.
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Launch '::ms::combobox::Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
+    if { $delta_x > 0 } {
+        ::ms::combobox::Shift_MouseWheel $w +1
+    } elseif { $delta_x < 0 } {
+        ::ms::combobox::Shift_MouseWheel $w -1
+    }
+
+    # Launch '::ms::combobox::MouseWheel' if there is a movement along the Y axis, otherwise do nothing.
+    if { $delta_y > 0 } {
+        ::ms::combobox::MouseWheel $w +1
+    } elseif { $delta_y < 0 } {
+        ::ms::combobox::MouseWheel $w -1
+    }
+
+    return ""
+}
+
+## Popdown_MouseWheel
+#
+# If the popdown listbox can scroll vertically, scroll it by units (**MouseWheel**) or by pages
+# (**Control-MouseWheel**), otherwise don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#          These values should be provided by the **MouseWheel**/**Control-MouseWheel** event.
+#
+# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#          *Amount* will be **+120** (towards top) or **-120** (towards bottom).
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **MouseWheel** event while *pages* are used
+#          by the **Control-MouseWheel** event.
+#
+#          If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_MouseWheel { w x y amount { what units } } {
+    # Trasform 'amount' into **-1** (towards top) or **+1** (towards bottom).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            # Invert the scroll direction.
+            set amount [expr { -1*$amount }]
+        }
+    }
+
+    # If possible, scroll the popdown listbox vertically.
+    try {
+        $w.popdown.f.lb yview scroll $amount $what
+    } on error {} {
+        # The popdown listbox cannot scroll vertically.
+    }
+
+    # Get the index of the current hovered row.
+    set index [$w.popdown.f.lb index @$x,$y]
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate  $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    return -code break
+}
+
+## Popdown_Touchpad
+#
+# Manage the **TouchpadScroll** and **Control-TouchpadScroll** events on the popdown window.
+#
+# Note: This code is taken (and adapted) from the 'Recent improvements
+#       on Tk 9' pdf paper by 'Csaba Nemethi'.
+#       All credits goes to him.
+#
+# Where:
+#
+# w         Should be the scrollable widget real address involved.
+#
+# x, y      Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#           These values should be provided by the **TouchpadScroll**/**Control-TouchpadScroll**
+#           event.
+#
+# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+#
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll** event
+#           trough the **%D** parameter.
+#
+# what      Should be a string that specifies the unit type.
+#           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
+#
+#           If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
+    # **TouchpadScroll** events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This allow the binding script to respond to every 5th **TouchpadScroll** events
+    # by testing is the 'counter' is divisible by 5.
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Launch '::ms::combobox::Popdown_Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
+    if { $delta_x > 0 } {
+        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y +1 $what
+    } elseif { $delta_x < 0 } {
+        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y -1 $what
+    }
+
+    # Launch '::ms::combobox::Popdown_MouseWheel' if there is a movement along the Y axis, otherwise do nothing.
+    if { $delta_y > 0 } {
+        ::ms::combobox::Popdown_MouseWheel $w $x $y +1 $what
+    } elseif { $delta_y < 0 } {
+        ::ms::combobox::Popdown_MouseWheel $w $x $y -1 $what
+    }
+
+    return ""
+}
+
 ## Popdown_Scrollbar_MouseWheel
 #
 # Scroll the popdown scrollbar vertically by units (**MouseWheel**) or by pages (**Control-MouseWheel**).
@@ -7092,103 +7225,6 @@ proc ::ms::combobox::Popdown_Scrollbar_MouseWheel { w amount what } {
 
     # Scroll the popdown listbox vertically.
     $w.popdown.f.lb yview scroll $amount $what
-
-    return ""
-}
-
-## Popdown_Scrollbar_Touchpad
-#
-# Scroll the popdown scrollbar both horizontally and vertically by units (**TouchpadScroll**) or by pages (**Control-TouchpadScroll**).
-#
-# Note: This code is taken (and adapted) from the 'Recent improvements
-#       on Tk 9' pdf paper by 'Csaba Nemethi'.
-#       All credits goes to him.
-#
-# Where:
-#
-# w         Should be the scrollable widget real address involved.
-#
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
-#
-# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
-#           The delta value represents the rotation units the mouse wheel has been moved.
-#           The sign of the value represents the direction the mouse wheel was scrolled.
-#
-#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll** event
-#           trough the **%D** parameter.
-#
-# what      Should be a string that specifies the unit type.
-#           Allowed values are the word **units** or **pages**.
-#           *Units* are used by the **TouchpadScroll** event while *pages* are used
-#           by the **Control-TouchpadScroll** event.
-#
-#           If not provided, defaults to **units**.
-#
-# It doesn't return anything.
-proc ::ms::combobox::Popdown_Scrollbar_Touchpad { w counter amount { what units } } {
-    # **TouchpadScroll** events can be generated about 60 times per second
-    # during a two-finger gesture.
-    # This allow the binding script to respond to every 5th **TouchpadScroll** events
-    # by testing is the 'counter' is divisible by 5.
-    set counter [expr { $counter%5 }]
-    if { $counter != 0 } {
-        return ""
-    }
-
-    # Translate 'amount' in 'delta_x' and 'delta_y'.
-    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
-
-    # Check the 'scrollmode' value ('classic' or 'natural').
-    switch -- $::ms::scrollmode {
-        natural {
-            set delta_x [expr { -1*$delta_x }]
-            set delta_y [expr { -1*$delta_y }]
-        }
-    }
-
-    # Scroll the popdown listbox horizontally if there is a movement along the X axis, otherwise do nothing.
-    if { $delta_x > 0 } {
-        $w.popdown.f.lb xview scroll +1 $what
-    } elseif { $delta_x < 0 } {
-        $w.popdown.f.lb xview scroll -1 $what
-    }
-
-    # Scroll the popdown listbox vertically if there is a movement along the Y axis, otherwise do nothing.
-    if { $delta_y > 0 } {
-        $w.popdown.f.lb yview scroll +1 $what
-    } elseif { $delta_y < 0 } {
-        $w.popdown.f.lb yview scroll -1 $what
-    }
-
-    return ""
-}
-
-## Popdown_Select
-#
-# Manage the popdown lisbox selection event.
-#
-# Note: The following procedure is a modified version of the 'ttk::combobox::LBSelect' procedure.
-#       All credits goes to the original author/s.
-#
-# Where:
-#
-# w   Should be the combobox real address involved.
-#
-# It doesn't return anything.
-proc ::ms::combobox::Popdown_Select { w } {
-    # Clear the widget textarea.
-    interp invokehidden {} $w delete 0 end
-
-    # Set the widget selection in response to an user action.
-    interp invokehidden {} $w current   [$w.popdown.f.lb index active]
-    interp invokehidden {} $w selection range 0 end
-    interp invokehidden {} $w icursor   end
-
-    # Change the widget dynamic state to '!invalid'.
-    interp invokehidden {} $w state [list !invalid]
-
-    # Release the grab.
-    set ::wait_for_user_response "Selection"
 
     return ""
 }
@@ -7253,49 +7289,9 @@ proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
     return -code break
 }
 
-## Popdown_Tab
+## Popdown_Scrollbar_Touchpad
 #
-# Manage the **Tab** and **Shift-Tab** events on the popdown listbox.
-# Set the selection, and navigate to next/prev widget.
-#
-# Where:
-#
-# popdown   Should be the popdown window real address involved.
-#
-# dir       The direction of the tab movement.
-#           Allowed values are 'previos' or 'next'.
-#
-# It doesn't return anything.
-proc ::ms::combobox::Popdown_Tab { popdown dir } {
-    # Get the combobox real address.
-    set w [_winfo parent [_winfo parent [_winfo parent $popdown]]]
-
-    # Check if there is another widget to focus to.
-    switch -- $dir {
-        next     { set newFocus [tk_focusNext $w] }
-        previous { set newFocus [tk_focusPrev $w] }
-    }
-
-    # Chek the next/previous focussable widget found, if any.
-    switch -- $newFocus {
-        ""      {}
-        default {
-            # Release the grab.
-            set ::wait_for_user_response "Unpost"
-
-            # The [grab release] call in [Unpost] queues events that later
-            # re-set the focus (@@@ NOTE: this might not be true anymore).
-            # Set new focus later:
-            after 0 [list ::ttk::traverseTo $newFocus]
-        }
-    }
-
-    return ""
-}
-
-## Popdown_Touchpad
-#
-# Manage the **TouchpadScroll** and **Control-TouchpadScroll** events on the popdown window.
+# Scroll the popdown scrollbar both horizontally and vertically by units (**TouchpadScroll**) or by pages (**Control-TouchpadScroll**).
 #
 # Note: This code is taken (and adapted) from the 'Recent improvements
 #       on Tk 9' pdf paper by 'Csaba Nemethi'.
@@ -7304,10 +7300,6 @@ proc ::ms::combobox::Popdown_Tab { popdown dir } {
 # Where:
 #
 # w         Should be the scrollable widget real address involved.
-#
-# x, y      Should be the (x,y) mouse pointer relative coordinates at the time of the event.
-#           These values should be provided by the **TouchpadScroll**/**Control-TouchpadScroll**
-#           event.
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
@@ -7326,7 +7318,7 @@ proc ::ms::combobox::Popdown_Tab { popdown dir } {
 #           If not provided, defaults to **units**.
 #
 # It doesn't return anything.
-proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
+proc ::ms::combobox::Popdown_Scrollbar_Touchpad { w counter amount { what units } } {
     # **TouchpadScroll** events can be generated about 60 times per second
     # during a two-finger gesture.
     # This allow the binding script to respond to every 5th **TouchpadScroll** events
@@ -7339,18 +7331,26 @@ proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Launch '::ms::combobox::Popdown_Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
-    if { $delta_x > 0 } {
-        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y +1 $what
-    } elseif { $delta_x < 0 } {
-        ::ms::combobox::Popdown_Shift_MouseWheel $w $x $y -1 $what
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            set delta_x [expr { -1*$delta_x }]
+            set delta_y [expr { -1*$delta_y }]
+        }
     }
 
-    # Launch '::ms::combobox::Popdown_MouseWheel' if there is a movement along the Y axis, otherwise do nothing.
+    # Scroll the popdown listbox horizontally if there is a movement along the X axis, otherwise do nothing.
+    if { $delta_x > 0 } {
+        $w.popdown.f.lb xview scroll +1 $what
+    } elseif { $delta_x < 0 } {
+        $w.popdown.f.lb xview scroll -1 $what
+    }
+
+    # Scroll the popdown listbox vertically if there is a movement along the Y axis, otherwise do nothing.
     if { $delta_y > 0 } {
-        ::ms::combobox::Popdown_MouseWheel $w $x $y +1 $what
+        $w.popdown.f.lb yview scroll +1 $what
     } elseif { $delta_y < 0 } {
-        ::ms::combobox::Popdown_MouseWheel $w $x $y -1 $what
+        $w.popdown.f.lb yview scroll -1 $what
     }
 
     return ""
