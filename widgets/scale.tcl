@@ -2921,7 +2921,7 @@ proc ::ms::scale::MouseWheel { w amount { what units } { speed 1x } } {
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   {
-            ::ms::Scroll_Parent_Y $w $delta $what
+            ::ms::Scroll_Parent_Y $w $amount $what
 
             return ""
         }
@@ -2945,7 +2945,7 @@ proc ::ms::scale::MouseWheel { w amount { what units } { speed 1x } } {
         natural { set increment [expr { -1*$increment }] }
     }
 
-    # Augment 'increment' by 'speed'.
+    # Increase 'increment' by the 'speed' factor.
     set speed [string range $speed 0 end-1]
     switch -- [string is integer -strict $speed] {
         1   { set increment [expr { $increment*$speed }] }
@@ -3022,7 +3022,7 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
     # Check the widget orientation axis.
     switch -- $::ms::current($w,orient) {
         horizontal {
-            # Scroll the widget if there was a movement along the X axis, otherwise do nothing.
+            # Set the increment value if there is a movement along the X axis, otherwise do nothing.
             if { $delta_x > 0 } {
                 set increment $::ms::current($w,increment)
             } elseif { $delta_x < 0 } {
@@ -3036,7 +3036,7 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
         vertical {
             # Do nothing if there is a movement along the X axis.
 
-            # Scroll the widget if there was a movement along the Y axis, otherwise do nothing.
+            # Set the increment value if there is a movement along the Y axis, otherwise do nothing.
             if { $delta_y > 0 } {
                 set increment $::ms::current($w,increment)
             } elseif { $delta_y < 0 } {
@@ -3052,7 +3052,7 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
         natural { set increment [expr { -1*$increment }] }
     }
 
-    # Augment 'increment' by 'speed'.
+    # Increase 'increment' by the 'speed' factor.
     set speed [string range $speed 0 end-1]
     switch -- [string is integer -strict $speed] {
         1   { set increment [expr { $increment*$speed }] }
