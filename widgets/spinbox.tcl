@@ -6415,8 +6415,8 @@ proc ::ms::spinbox::Validate_String { w } {
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#          If *amount* was provided by a **MouseWheel** event, its value will be **+120.0**
-#          (towards top) or **-120.0** (towards bottom).
+#          If *amount* was provided by a **MouseWheel** event, its value will be **+120**
+#          (towards top) or **-120** (towards bottom).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards top)
 #          or **+1** (towards bottom).
@@ -6498,7 +6498,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
 #          The sign of the value represents the direction the mousewheel was scrolled.
 #
 #          If *amount* was provided by a **Shift-MouseWheel** event, its value will be
-#          **+120.0** (towards left) or **-120.0** (towards right).
+#          **+120** (towards left) or **-120** (towards right).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards left)
 #          or **+1** (towards right).
