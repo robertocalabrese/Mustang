@@ -6299,8 +6299,6 @@ proc ::ms::palette::Popdown_Tab { popdown dir } {
 #          If the value provided as *amount* is not an integer or a float,
 #          defaults to **+120.0**.
 #
-#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
-#
 # It doesn't return anything.
 proc ::ms::palette::MouseWheel { w amount } {
     # Check the widget's state.
@@ -6368,17 +6366,23 @@ proc ::ms::palette::MouseWheel { w amount } {
         }
     }
 
+    # If 'amount' has been provided by a **MouseWheel** event,
+    # trasform it into **-1** (towards left) or **+1** (towards right).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
     # Check the 'scrollmode' value ('classic' or 'natural').
     switch -- $::ms::scrollmode {
-        natural { set amount [expr { -1.0*$amount }] }
+        natural { set amount [expr { -1*$amount }] }
     }
 
     # Change the widget textarea value by scrolling the items list provided up or down
     # (depending on the scroll direction).
     if { $amount > 0 } {
-        set index [expr { $::ms::data($w,current_index)-1 }]
-    } else {
         set index [expr { $::ms::data($w,current_index)+1 }]
+    } else {
+        set index [expr { $::ms::data($w,current_index)-1 }]
     }
 
     # Check the 'scrollstopper' value ('disabled' or 'enabled').
