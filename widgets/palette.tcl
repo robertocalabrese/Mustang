@@ -6652,7 +6652,7 @@ proc ::ms::palette::Popdown_MouseWheel { w x y amount { what units } } {
     set index [$w.popdown.f.lb index @$x,$y]
 
     # Select and activate the new index.
-    $w.popdown.f.lb activate $index
+    $w.popdown.f.lb activate  $index
     $w.popdown.f.lb selection clear 0 end
     $w.popdown.f.lb selection set $index
 
