@@ -4741,6 +4741,12 @@ proc ::ms::entry::Return { w } {
     return ""
 }
 
+#####################################
+##                                 ##
+##     MOUSEWHEEL AND TOUCHPAD     ##
+##                                 ##
+#####################################
+
 ## Shift_MouseWheel
 #
 # If the widget has the focus, move the insert cursor by one character to the left or to the right
