@@ -2060,13 +2060,27 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         default { ::ms::Error "Invalid option, '$args'." $caller_info }
                     }
 
+                    # If 'number' has been provided by a binding event, trasform it into
+                    # **-1** (towards left or top) or **+1** (towards right or bottom).
+                    if { ($number == 120) || ($number == -120) } {
+                         set number [expr { -$number/120 }]
+                    }
+
+                    # Check the 'scrollmode' value ('classic' or 'natural').
+                    switch -- $::ms::scrollmode {
+                        natural {
+                            # Invert the scroll direction.
+                            set number [expr { -1*$number }]
+                        }
+                    }
+
                     # Check the command associated with the widget.
                     switch -- $::ms::current($w,command) {
                         ""      { return "" }
                         default {
                             # Execute the command.
                             try {
-                                {*}$::ms::current($w,command) scroll $number $what
+                                interp invokehidden {} {*}$::ms::current($w,command) scroll $number $what
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok {} {
