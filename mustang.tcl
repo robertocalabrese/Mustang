@@ -4565,6 +4565,8 @@ proc ::ms::Touchpad_Widget_X { w counter amount { what units } } {
         $w xview scroll -1 $what
     }
 
+    # Do nothing if there is a movement along the Y axis.
+
     return ""
 }
 
@@ -4622,6 +4624,8 @@ proc ::ms::Touchpad_Widget_Y { w counter amount { what units } } {
     } elseif { $delta_y < 0 } {
         $w yview scroll -1 $what
     }
+
+    # Do nothing if there is a movement along the X axis.
 
     return ""
 }
