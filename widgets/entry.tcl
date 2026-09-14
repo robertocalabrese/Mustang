@@ -4832,8 +4832,7 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
 ## Touchpad
 #
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
-# These two planes may involve different widgets depending on the active scrollbars on them and on the
-# touchpad direction.
+#
 #   1 - If the widget has the focus, any movement along the X axis will move the insert cursor by one
 #       character to the left or to the right (depending on the mousewheel direction), otherwise any movement
 #       along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
@@ -4857,13 +4856,8 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
 # amount    Should be the delta value of a **TouchpadScroll** event.
 #           The delta value represents the rotation units the mousewheel has been moved.
 #           The sign of the value represents the direction the mousewheel was scrolled.
-#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
-#           **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#           If the value provided as *amount* is not an integer or a float,
-#           defaults to **+120.0**.
-#
-#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#           *Amount* is delivered by the **TouchpadScroll** event trough the **%D** parameter.
 #
 # It doesn't return anything.
 proc ::ms::entry::Touchpad { w counter amount } {
@@ -4884,20 +4878,20 @@ proc ::ms::entry::Touchpad { w counter amount } {
         }
         1   {
             # Translate 'amount' in 'deltaX' and 'deltaY'.
-            lassign [::tk::PreciseScrollDeltas $amount] deltaX deltaY
+            lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-            # Adjust 'deltaX' and 'deltaY' values, or the movement will be too slow.
-            set deltaX [expr { $deltaX*30 }]
-            set deltaY [expr { $deltaY*30 }]
-
-            # If there is a movement along the X axis, launch '::ms::entry::Shift_MouseWheel'.
-            if { $deltaX != 0 } {
-                ::ms::entry::Shift_MouseWheel $w $amount
+            # Launch '::ms::entry::Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
+            if { $delta_x > 0 } {
+                ::ms::entry::Shift_MouseWheel $w +1
+            } elseif { $delta_x < 0 } {
+                ::ms::entry::Shift_MouseWheel $w -1
             }
 
-            # If there is a movement along the Y axis, launch '::ms::Scroll_Parent_Y'.
-            if { $deltaY != 0 } {
-                ::ms::Scroll_Parent_Y $w $deltaY units
+            # Launch '::ms::Scroll_Parent_Y' if there is a movement along the Y axis, otherwise do nothing.
+            if { $delta_y > 0 } {
+                ::ms::Scroll_Parent_Y $w +1 units
+            } elseif { $delta_y < 0 } {
+                ::ms::Scroll_Parent_Y $w -1 units
             }
         }
     }
