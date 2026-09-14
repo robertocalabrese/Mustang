@@ -3055,16 +3055,19 @@ proc ::ms::scale::Shift_MouseWheel { w amount { what units } { speed 1x } } {
          set amount [expr { -$amount/120 }]
     }
 
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            # Invert the scroll direction.
+            set amount [expr { -1*$amount }]
+        }
+    }
+
     # Set 'increment' based on the direction of the movement.
     if { $amount > 0 } {
         set increment $::ms::current($w,increment)
     } else {
         set increment [expr { -1*$::ms::current($w,increment) }]
-    }
-
-    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
-    switch -- $::ms::scrollmode {
-        natural { set increment [expr { -1*$increment }] }
     }
 
     # Increase 'increment' by the 'speed' factor.
