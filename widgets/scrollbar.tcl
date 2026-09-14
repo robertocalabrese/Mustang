@@ -2389,10 +2389,12 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
     set ::ms::temp(xpress) $x
     set ::ms::temp(ypress) $y
 
+    # Get the thumb coordinates 'view1' and 'view2'.
     set views [interp invokehidden {} $w get]
     set view1 [lindex $views 0]
     set view2 [lindex $views 1]
 
+    # Check the element under the mouse pointer.
     switch -nocase -glob -- [interp invokehidden {} $w identify $x $y] {
         "*uparrow"   -
         "*leftarrow" {
@@ -2403,8 +2405,8 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
         }
         "*downarrow"  -
         "*rightarrow" {
-            # Scroll the thumb by one page towards the bottom or towards the right  (depending on the widget orientation).
-            ::ms::scrollbar::Pathname_Cmd $w scroll 1 pages
+            # Scroll the thumb by one page towards the bottom or towards the right (depending on the widget orientation).
+            ::ms::scrollbar::Pathname_Cmd $w scroll +1 pages
 
             set ::ms::temp(drag_allowed) no
         }
@@ -2413,7 +2415,7 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
             set ::ms::temp(drag_allowed) yes
 
             # Compute the fraction for the center of the thumb.
-            set ::ms::temp(fraction) [expr { ($view2+$view1)*0.5 }]
+            set ::ms::temp(fraction) [expr { ($view1+$view2)*0.5 }]
         }
         "*trough" {
             # Get the fraction for the center of the thumb.
@@ -2429,7 +2431,7 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
                 }
                 scroll {
                     if { $::ms::temp(fraction) < $view1 } {
-                        # The User has click on the left or top trough  (depending on the widget orientation).
+                        # The User has click on the left or top trough (depending on the widget orientation).
 
                         # Scroll the thumb by one page towards the left or towards the top (depending on the widget orientation).
                         ::ms::scrollbar::Pathname_Cmd $w scroll -1 pages
@@ -2439,7 +2441,7 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
                         # The User has click on the right or bottom trough (depending on the widget orientation).
 
                         # Scroll the thumb by one page towards the right or towards the bottom (depending on the widget orientation).
-                        ::ms::scrollbar::Pathname_Cmd $w scroll 1 pages
+                        ::ms::scrollbar::Pathname_Cmd $w scroll +1 pages
 
                         set ::ms::temp(drag_allowed) yes
                     } else {
