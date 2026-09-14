@@ -2963,55 +2963,96 @@ proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
-# delta     Should be the delta of the scroll.
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
+#           The delta value represents the rotation units the mouse wheel has been moved.
+#           The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll** event
+#           trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
+#
 #           If not provided, defaults to **units**.
 #
 # speed     Should be the scroll speed (1x, 2x, 3x ...)
 #
 # It doesn't return anything.
-proc ::ms::scale::Touchpad { w counter delta { what units } { speed 1x } } {
+proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        disabled { ::ms::TouchpadScroll_Parent $w $counter $delta $what }
-        default  {
-            # Check if the widget is focussable or not.
-            switch -- [::ms::Is_Focussable $w] {
-                0   { ::ms::TouchpadScroll_Parent $w $counter $delta $what }
-                1   {
-                    # <TouchpadScroll> events can be generated about 60 times per second
-                    # during a two-finger gesture.
-                    # This allow the binding script to respond to every 5th **TouchpadScroll** events
-                    # by testing is the 'counter' is divisible by 5.
-                    set counter [expr { $counter%5 }]
-                    if { $counter != 0 } {
-                        # Set 'increment' based on the direction of the movement.
-                        if { $delta > 0 } {
-                            set increment [expr { -1.0*$::ms::current($w,increment) }]
-                        } else {
-                            set increment $::ms::current($w,increment)
-                        }
+        disabled {
+            ::ms::TouchpadScroll_Parent $w $counter $amount $what
 
-                        # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
-                        switch -- $::ms::scrollmode {
-                            natural { set increment [expr { -1.0*$increment }] }
-                        }
+            return ""
+        }
+    }
 
-                        # Augment 'increment' by 'speed'.
-                        set speed [string range $speed 0 end-1]
-                        switch -- [string is integer -strict $speed] {
-                            1   { set increment [expr { $increment*$speed }] }
-                        }
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            ::ms::TouchpadScroll_Parent $w $counter $amount $what
 
-                        # Move the widget's thumb.
-                        interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
-                    }
-                }
+            return ""
+        }
+    }
+
+    # <TouchpadScroll> events can be generated about 60 times per second
+    # during a two-finger gesture.
+    # This allow the binding script to respond to every 5th **TouchpadScroll** events
+    # by testing is the 'counter' is divisible by 5.
+    set counter [expr { $counter%5 }]
+    if { $counter != 0 } {
+        return ""
+    }
+
+    # Translate 'amount' in 'delta_x' and 'delta_y'.
+    lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
+
+    # Check the widget orientation axis.
+    switch -- $::ms::current($w,orient) {
+        horizontal {
+            # Scroll the widget if there was a movement along the X axis, otherwise do nothing.
+            if { $delta_x > 0 } {
+                set increment $::ms::current($w,increment)
+            } elseif { $delta_x < 0 } {
+                set increment [expr { -1.0*$::ms::current($w,increment) }]
+            } else {
+                return ""
+            }
+
+            # Do nothing if there is a movement along the Y axis.
+        }
+        vertical {
+            # Do nothing if there is a movement along the X axis.
+
+            # Scroll the widget if there was a movement along the Y axis, otherwise do nothing.
+            if { $delta_y > 0 } {
+                set increment $::ms::current($w,increment)
+            } elseif { $delta_y < 0 } {
+                set increment [expr { -1.0*$::ms::current($w,increment) }]
+            } else {
+                return ""
             }
         }
     }
+
+    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
+    switch -- $::ms::scrollmode {
+        natural { set increment [expr { -1.0*$increment }] }
+    }
+
+    # Augment 'increment' by 'speed'.
+    set speed [string range $speed 0 end-1]
+    switch -- [string is integer -strict $speed] {
+        1   { set increment [expr { $increment*$speed }] }
+    }
+
+    # Move the widget's thumb.
+    set current_value [interp invokehidden {} $w get]
+    interp invokehidden {} $w set [expr { $current_value+$increment }]
 
     return ""
 }
