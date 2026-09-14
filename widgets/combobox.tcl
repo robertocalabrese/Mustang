@@ -6126,13 +6126,12 @@ proc ::ms::combobox::Validate_String { w } {
 # amount   Should be the delta value of a **MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
-#          *Amount* is normally delivered by the **MouseWheel** event with a value of
-#          **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#          If the value provided as *amount* is not an integer or a float,
-#          defaults to **+120.0**.
+#          If *amount* was provided by a **MouseWheel** event, its value will be **+120**
+#          (towards top) or **-120** (towards bottom).
 #
-#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
+#          or **+1** (towards bottom).
 #
 # It doesn't return anything.
 proc ::ms::combobox::MouseWheel { w amount } {
@@ -6201,6 +6200,12 @@ proc ::ms::combobox::MouseWheel { w amount } {
         }
     }
 
+    # If 'amount' has been provided by a **MouseWheel** event,
+    # trasform it into **-1** (towards left) or **+1** (towards right).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
     # Check the 'scrollmode' value ('classic' or 'natural').
     switch -- $::ms::scrollmode {
         natural { set amount [expr { -1.0*$amount }] }
@@ -6209,9 +6214,9 @@ proc ::ms::combobox::MouseWheel { w amount } {
     # Change the widget textarea value by scrolling the items list provided up or down
     # (depending on the scroll direction).
     if { $amount > 0 } {
-        set index [expr { $::ms::data($w,current_index)-1 }]
-    } else {
         set index [expr { $::ms::data($w,current_index)+1 }]
+    } else {
+        set index [expr { $::ms::data($w,current_index)-1 }]
     }
 
     # Check the 'scrollstopper' value ('disabled' or 'enabled').
