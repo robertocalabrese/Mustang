@@ -6918,7 +6918,7 @@ proc ::ms::combobox::MouseWheel { w amount } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **MouseWheel** event.
+# amount   Should be the delta value of a **Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mousewheel has been moved.
 #          The sign of the value represents the direction the mousewheel was scrolled.
 #
