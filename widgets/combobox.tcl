@@ -7120,6 +7120,66 @@ proc ::ms::combobox::Popdown_MouseWheel { w x y amount { what units } } {
     return -code break
 }
 
+## Popdown_Shift_MouseWheel
+#
+# If the popdown listbox can scroll horizontally, scroll it by units (**Shift-MouseWheel**) or by pages
+# (**Control-Shift-MouseWheel**), otherwise don't do anything.
+#
+# Where:
+#
+# w        Should be the widget real address involved.
+#
+# x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#          These values should be provided by the **Shift-MouseWheel**/**Control-Shift-MouseWheel**
+#          event.
+#
+# amount   Should be the delta value of a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
+#
+#          If *amount* was provided by a **Shift-MouseWheel** event, its value will be
+#          **+120** (towards left) or **-120** (towards right).
+#
+#          If *amount* was provided by a procedure, its value will be **-1** (towards left)
+#          or **+1** (towards right).
+#
+# what     Should be a string that specifies the unit type.
+#          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **Shift-MouseWheel** event while *pages* are used
+#          by the **Control-Shift-MouseWheel** event.
+#
+#          If not provided, defaults to **units**.
+#
+# It doesn't return anything.
+proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
+    # If 'amount' has been provided by a **Shift-MouseWheel** event,
+    # trasform it into **-1** (towards left) or **+1** (towards right).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
+    # Check the 'scrollmode' value ('classic' or 'natural').
+    switch -- $::ms::scrollmode {
+        natural {
+            # Invert the scroll direction.
+            set amount [expr { -1*$amount }]
+        }
+    }
+
+    # Scroll the popdown listbox horizontally.
+    $w.popdown.f.lb xview scroll $amount $what
+
+    # Get the index of the current hovered row.
+    set index [$w.popdown.f.lb index @$x,$y]
+
+    # Select and activate the new index.
+    $w.popdown.f.lb activate $index
+    $w.popdown.f.lb selection clear 0 end
+    $w.popdown.f.lb selection set $index
+
+    return -code break
+}
+
 ## Popdown_Touchpad
 #
 # Manage the **TouchpadScroll** and **Control-TouchpadScroll** events on the popdown window.
@@ -7223,66 +7283,6 @@ proc ::ms::combobox::Popdown_Scrollbar_MouseWheel { w amount what } {
     $w.popdown.f.lb yview scroll $amount $what
 
     return ""
-}
-
-## Popdown_Shift_MouseWheel
-#
-# If the popdown listbox can scroll horizontally, scroll it by units (**Shift-MouseWheel**) or by pages
-# (**Control-Shift-MouseWheel**), otherwise don't do anything.
-#
-# Where:
-#
-# w        Should be the widget real address involved.
-#
-# x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
-#          These values should be provided by the **Shift-MouseWheel**/**Control-Shift-MouseWheel**
-#          event.
-#
-# amount   Should be the delta value of a **Shift-MouseWheel**/**Control-Shift-MouseWheel** event.
-#          The delta value represents the rotation units the mouse wheel has been moved.
-#          The sign of the value represents the direction the mouse wheel was scrolled.
-#
-#          If *amount* was provided by a **Shift-MouseWheel** event, its value will be
-#          **+120** (towards left) or **-120** (towards right).
-#
-#          If *amount* was provided by a procedure, its value will be **-1** (towards left)
-#          or **+1** (towards right).
-#
-# what     Should be a string that specifies the unit type.
-#          Allowed values are the word **units** or **pages**.
-#          *Units* are used by the **Shift-MouseWheel** event while *pages* are used
-#          by the **Control-Shift-MouseWheel** event.
-#
-#          If not provided, defaults to **units**.
-#
-# It doesn't return anything.
-proc ::ms::combobox::Popdown_Shift_MouseWheel { w x y amount { what units } } {
-    # If 'amount' has been provided by a **Shift-MouseWheel** event,
-    # trasform it into **-1** (towards left) or **+1** (towards right).
-    if { ($amount == 120) || ($amount == -120) } {
-         set amount [expr { -$amount/120 }]
-    }
-
-    # Check the 'scrollmode' value ('classic' or 'natural').
-    switch -- $::ms::scrollmode {
-        natural {
-            # Invert the scroll direction.
-            set amount [expr { -1*$amount }]
-        }
-    }
-
-    # Scroll the popdown listbox horizontally.
-    $w.popdown.f.lb xview scroll $amount $what
-
-    # Get the index of the current hovered row.
-    set index [$w.popdown.f.lb index @$x,$y]
-
-    # Select and activate the new index.
-    $w.popdown.f.lb activate $index
-    $w.popdown.f.lb selection clear 0 end
-    $w.popdown.f.lb selection set $index
-
-    return -code break
 }
 
 ## Popdown_Scrollbar_Touchpad
