@@ -7240,7 +7240,7 @@ proc ::ms::combobox::Popdown_Touchpad { w x y counter amount { what units } } {
         ::ms::combobox::Popdown_MouseWheel $w $x $y -1 $what
     }
 
-    return ""
+    return -code break
 }
 
 ## Popdown_Scrollbar_MouseWheel
@@ -7282,7 +7282,7 @@ proc ::ms::combobox::Popdown_Scrollbar_MouseWheel { w amount what } {
     # Scroll the popdown listbox vertically.
     $w.popdown.f.lb yview scroll $amount $what
 
-    return ""
+    return -code break
 }
 
 ## Popdown_Scrollbar_Touchpad
@@ -7349,7 +7349,7 @@ proc ::ms::combobox::Popdown_Scrollbar_Touchpad { w counter amount { what units 
         $w.popdown.f.lb yview scroll -1 $what
     }
 
-    return ""
+    return -code break
 }
 
 #*EOF*
