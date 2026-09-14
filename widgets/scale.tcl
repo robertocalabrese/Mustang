@@ -2905,7 +2905,7 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
         +1  { set increment $::ms::current($w,increment) }
     }
 
-    # Augment 'increment' by 'speed'.
+    # Increase 'increment' by the 'speed' factor.
     set speed [string range $speed 0 end-1]
     switch -- [string is integer -strict $speed] {
         1   { set increment [expr { $increment*$speed }] }
