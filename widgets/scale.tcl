@@ -2887,64 +2887,72 @@ proc ::ms::scale::Increment { w direction { speed 1x } } {
 #
 # w        Should be the widget real address involved.
 #
-# delta    Should be the delta of the scroll.
+# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
+#          The delta value represents the rotation units the mouse wheel has been moved.
+#          The sign of the value represents the direction the mouse wheel was scrolled.
 #
-# axis     Should be the axis of the scroll.
-#          Allowed values are **X** or **Y**.
+#          If *amount* was provided by a **MouseWheel**/**Control-MouseWheel** event, its value will be **+120**
+#          (towards top) or **-120** (towards bottom).
+#
+#          If *amount* was provided by a procedure, its value will be **-1** (towards top)
+#          or **+1** (towards bottom).
 #
 # what     Should be a string that specifies the unit type.
 #          Allowed values are the word **units** or **pages**.
+#          *Units* are used by the **MouseWheel** event while *pages* are used
+#          by the **Control-MouseWheel** event.
+#
 #          If not provided, defaults to **units**.
 #
 # speed    Should be the scroll speed (1x, 2x, 3x ...).
 #          If not provided, defaults to **1x**.
 #
 # It doesn't return anything.
-proc ::ms::scale::MouseWheel { w delta axis { what units } { speed 1x } } {
+proc ::ms::scale::MouseWheel { w amount { what units } { speed 1x } } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled {
-            # Check the axis provided.
-            switch -nocase -- $axis {
-                X       { ::ms::Scroll_Parent_X $w $delta $what }
-                default { ::ms::Scroll_Parent_Y $w $delta $what }
-            }
-        }
-        default {
-            # Check if the widget is focussable or not.
-            switch -- [::ms::Is_Focussable $w] {
-                0   {
-                    # Check the axis provided.
-                    switch -nocase -- $axis {
-                        X       { ::ms::Scroll_Parent_X $w $delta $what }
-                        default { ::ms::Scroll_Parent_Y $w $delta $what }
-                    }
-                }
-                1   {
-                    # Set 'increment' based on the direction of the movement.
-                    if { $delta > 0 } {
-                        set increment [expr { -1.0*$::ms::current($w,increment) }]
-                    } else {
-                        set increment $::ms::current($w,increment)
-                    }
+            ::ms::Scroll_Parent_Y $w $amount $what
 
-                    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
-                    switch -- $::ms::scrollmode {
-                        natural { set increment [expr { -1.0*$increment }] }
-                    }
-
-                    # Augment 'increment' by 'speed'.
-                    set speed [string range $speed 0 end-1]
-                    switch -- [string is integer -strict $speed] {
-                        1   { set increment [expr { $increment*$speed }] }
-                    }
-
-                    # Move the widget's thumb.
-                    interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
-                }
-            }
+            return ""
         }
     }
+
+    # Check if the widget is focussable or not.
+    switch -- [::ms::Is_Focussable $w] {
+        0   {
+            ::ms::Scroll_Parent_Y $w $delta $what
+
+            return ""
+        }
+    }
+
+    # If 'amount' has been provided by a **Shift-MouseWheel** event,
+    # trasform it into **-1** (towards top) or **+1** (towards bottom).
+    if { ($amount == 120) || ($amount == -120) } {
+         set amount [expr { -$amount/120 }]
+    }
+
+    # Set 'increment' based on the direction of the movement.
+    if { $amount > 0 } {
+        set increment $::ms::current($w,increment)
+    } else {
+        set increment [expr { -1*$::ms::current($w,increment) }]
+    }
+
+    # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
+    switch -- $::ms::scrollmode {
+        natural { set increment [expr { -1*$increment }] }
+    }
+
+    # Augment 'increment' by 'speed'.
+    set speed [string range $speed 0 end-1]
+    switch -- [string is integer -strict $speed] {
+        1   { set increment [expr { $increment*$speed }] }
+    }
+
+    # Move the widget's thumb.
+    interp invokehidden {} $w set [expr { [interp invokehidden {} $w get]+$increment }]
 
     return ""
 }
@@ -3018,7 +3026,7 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
             if { $delta_x > 0 } {
                 set increment $::ms::current($w,increment)
             } elseif { $delta_x < 0 } {
-                set increment [expr { -1.0*$::ms::current($w,increment) }]
+                set increment [expr { -1*$::ms::current($w,increment) }]
             } else {
                 return ""
             }
@@ -3032,7 +3040,7 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
             if { $delta_y > 0 } {
                 set increment $::ms::current($w,increment)
             } elseif { $delta_y < 0 } {
-                set increment [expr { -1.0*$::ms::current($w,increment) }]
+                set increment [expr { -1*$::ms::current($w,increment) }]
             } else {
                 return ""
             }
@@ -3041,7 +3049,7 @@ proc ::ms::scale::Touchpad { w counter amount { what units } { speed 1x } } {
 
     # Adjust 'increment' based on the mouse scrollmode ('natural' or 'classic').
     switch -- $::ms::scrollmode {
-        natural { set increment [expr { -1.0*$increment }] }
+        natural { set increment [expr { -1*$increment }] }
     }
 
     # Augment 'increment' by 'speed'.
