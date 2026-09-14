@@ -3941,7 +3941,7 @@ proc ::ms::Scrollable_Widgets_Propagation_Mechanism { w } {
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
 #          If *amount* was provided by a **Shift-MouseWheel** or **Control-Shift-MouseWheel**
-#          event, its value will be **+120.0** (towards left) or **-120.0** (towards right).
+#          event, its value will be **+120** (towards left) or **-120** (towards right).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards left)
 #          or **+1** (towards right).
@@ -4067,7 +4067,7 @@ proc ::ms::Scroll_Parent_X { w amount { what units } } {
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
 #          If *amount* was provided by a **MouseWheel** or **Control-MouseWheel** event,
-#          its value will be **+120.0** (towards top) or **-120.0** (towards bottom).
+#          its value will be **+120** (towards top) or **-120** (towards bottom).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards top)
 #          or **+1** (towards bottom).
@@ -4189,7 +4189,7 @@ proc ::ms::Scroll_Parent_Y { w amount { what units } } {
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
 #          If *amount* was provided by a **Shift-MouseWheel** or **Control-Shift-MouseWheel**
-#          event, its value will be **+120.0** (towards left) or **-120.0** (towards right).
+#          event, its value will be **+120** (towards left) or **-120** (towards right).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards left)
 #          or **+1** (towards right).
@@ -4286,7 +4286,7 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
 #          If *amount* was provided by a **MouseWheel** or **Control-MouseWheel** event,
-#          its value will be **+120.0** (towards top) or **-120.0** (towards bottom).
+#          its value will be **+120** (towards top) or **-120** (towards bottom).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards top)
 #          or **+1** (towards bottom).
