@@ -6628,8 +6628,6 @@ proc ::ms::palette::Touchpad { w counter amount } {
 #
 #          If not provided, defaults to **units**.
 #
-# Note: 1.0/120.0 = 0.008333333333333333
-#
 # It doesn't return anything.
 proc ::ms::palette::Popdown_MouseWheel { w x y amount { what units } } {
     # Trasform 'amount' into **-1** (towards top) or **+1** (towards bottom).
