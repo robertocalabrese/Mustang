@@ -4287,11 +4287,11 @@ proc ::ms::Scroll_Widget_X { w amount { what units } } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **MouseWheel** or **Control-MouseWheel** event.
+# amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
 #          The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#          If *amount* was provided by a **MouseWheel** or **Control-MouseWheel** event,
+#          If *amount* was provided by a **MouseWheel**/**Control-MouseWheel** event,
 #          its value will be **+120** (towards top) or **-120** (towards bottom).
 #
 #          If *amount* was provided by a procedure, its value will be **-1** (towards top)
