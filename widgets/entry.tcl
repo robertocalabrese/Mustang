@@ -4753,16 +4753,15 @@ proc ::ms::entry::Return { w } {
 #
 # w        Should be the widget real address involved.
 #
-# amount   Should be the delta value of a **MouseWheel** event.
+# amount   Should be the delta value of a **Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mousewheel has been moved.
 #          The sign of the value represents the direction the mousewheel was scrolled.
-#          *Amount* is normally delivered by the **MouseWheel** event with a value of
-#          **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#          If the value provided as *amount* is not an integer or a float,
-#          defaults to **+120.0**.
+#          If *amount* was provided by a **Shift-MouseWheel** event, its value will be
+#          **+120** (towards left) or **-120** (towards right).
 #
-#          Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#          If *amount* was provided by a procedure, its value will be **-1** (towards left)
+#          or **+1** (towards right).
 #
 # It doesn't return anything.
 proc ::ms::entry::Shift_MouseWheel { w amount } {
@@ -4794,15 +4793,17 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
             ::ms::Scroll_Parent_X $w $amount units
         }
         1   {
-            # Check that 'amount' is an integer or a float.
-            switch -- [string is double -strict $amount] {
-                0   { set amount 120.0 }
-                1   {
-                    if { $amount == 0 } {
-                        set amount 120
-                    } else {
-                        set amount [expr { $amount*1.0 }]
-                    }
+            # If 'amount' has been provided by a **Shift-MouseWheel** event,
+            # trasform it into **-1** (towards left) or **+1** (towards right).
+            if { ($amount == 120) || ($amount == -120) } {
+                 set amount [expr { -$amount/120 }]
+            }
+
+            # Check the 'scrollmode' value ('classic' or 'natural').
+            switch -- $::ms::scrollmode {
+                natural {
+                    # Invert the scroll direction.
+                    set amount [expr { -1*$amount }]
                 }
             }
 
