@@ -2055,7 +2055,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 2   {
                     # Execute the command.
                     try {
-                        interp invokehidden {} $w $cmd {*}$args
+                        interp invokehidden {} $w set {*}$args
                     } on error { errortext errorcode } {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     } on ok { result } {
