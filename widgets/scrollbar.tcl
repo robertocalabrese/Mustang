@@ -2009,7 +2009,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         default {
                             # Execute the command.
                             try {
-                                {*}$::ms::current($w,command) moveto $fraction
+                                interp invokehidden {} {*}$::ms::current($w,command) moveto $fraction
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok {} {
