@@ -2691,13 +2691,9 @@ proc ::ms::scrollbar::Drag { w x y } {
 # amount    Should be the delta value of a **TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
-#           *Amount* is normally delivered by the **TouchpadScroll** event with a value of
-#           **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#           If the value provided as *amount* is not an integer or a float,
-#           defaults to **+120.0**.
-#
-#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
+#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
