@@ -3456,7 +3456,7 @@ proc ::ms::notebook::Traverse_Clean_Up { w } {
 # w     Should be the widget real address involved.
 #
 # dir   Should be the amount of the movement.
-#       Its sign determines the direction to take (**+1.0** or **-1.0).
+#       Its sign determines the direction to take, **1** means forward and **-1** means backward.
 #
 # If a suitable notebook is found, cycle the tab and return a TCL_BREAK, otherwise return an empty string.
 proc ::ms::notebook::Traverse_Cycle_Tab { w dir } {
@@ -3464,7 +3464,7 @@ proc ::ms::notebook::Traverse_Cycle_Tab { w dir } {
     switch -- $notebook_addr {
         ""      { return "" }
         default {
-            ::ms::notebook::Cycle_Tab $notebook_addr $dir -1.0
+            ::ms::notebook::Cycle_Tab $notebook_addr $dir 1.0
             return -code break
         }
     }
