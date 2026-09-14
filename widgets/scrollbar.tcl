@@ -2686,17 +2686,20 @@ proc ::ms::scrollbar::Drag { w x y } {
 #
 # w         Should be the scrollable widget real address involved.
 #
-# counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
+# counter   Should be the *serial* field of a **TouchpadScroll**/**Control-TouchpadScroll** event (**%#**).
 #
-# amount    Should be the delta value of a **TouchpadScroll** event.
+# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
 #
-#           *Amount* is delivered by the **TouchpadScroll** or **Control-TouchpadScroll**
+#           *Amount* is delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
 #           event trough the **%D** parameter.
 #
 # what      Should be a string that specifies the unit type.
 #           Allowed values are the word **units** or **pages**.
+#           *Units* are used by the **TouchpadScroll** event while *pages* are used
+#           by the **Control-TouchpadScroll** event.
+#
 #           If not provided, defaults to **units**.
 #
 # It doesn't return anything.
@@ -2722,8 +2725,12 @@ proc ::ms::scrollbar::Touchpad { w counter amount { what units } } {
             } elseif { $delta_x < 0 } {
                 ::ms::scrollbar::Pathname_Cmd $w scroll -1 $what
             }
+
+            # Do nothing if there is a movement along the Y axis.
         }
         vertical {
+            # Do nothing if there is a movement along the X axis.
+
             # Scroll the widget if there was a movement along the Y axis, otherwise do nothing.
             if { $delta_y > 0 } {
                 ::ms::scrollbar::Pathname_Cmd $w scroll +1 $what
