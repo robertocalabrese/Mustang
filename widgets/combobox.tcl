@@ -6846,7 +6846,7 @@ proc ::ms::combobox::MouseWheel { w amount } {
 
     # Check the 'scrollmode' value ('classic' or 'natural').
     switch -- $::ms::scrollmode {
-        natural { set amount [expr { -1.0*$amount }] }
+        natural { set amount [expr { -1*$amount }] }
     }
 
     # Change the widget textarea value by scrolling the items list provided up or down
