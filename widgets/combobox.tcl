@@ -6371,11 +6371,15 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
 #
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 #
-#   1 - If the listbox can scroll horizontally, scroll it by units (**TouchpadScroll**) or by pages
-#       (**Control-TouchpadScroll**), otherwise don't do any movement on the horizontal axis.
+#   1 - If the widget has the focus, any movement along the X axis will move the insert cursor by one
+#       character to the left or to the right (depending on the mousewheel direction), otherwise any movement
+#       along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
+#       scrollbar and move that scrollbar by one unit left or right (again, depending on the mousewheel direction).
+#       If none of the widget's parent meets the required condition, it doesn't do anything on the horizontal axis.
 #
-#   2 - If the listbox can scroll vertically, scroll it by units (**TouchpadScroll**) or by pages
-#       (**Control-TouchpadScroll**), otherwise don't do any movement on the vertical axis.
+#   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
+#       and move that scrollbar by one unit up or down (depending on the touchpad direction).
+#       If none of the widget's parent meets the required condition, it doesn't do anything on the vertical axis.
 #
 # Note: This code is taken (and adapted) from the 'Recent improvements
 #       on Tk 9' pdf paper by 'Csaba Nemethi'.
@@ -6387,23 +6391,11 @@ proc ::ms::combobox::Shift_MouseWheel { w amount } {
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
-# amount    Should be the delta value of a **TouchpadScroll**/**Control-TouchpadScroll** event.
+# amount    Should be the delta value of a **TouchpadScroll** event.
 #           The delta value represents the rotation units the mouse wheel has been moved.
 #           The sign of the value represents the direction the mouse wheel was scrolled.
-#           *Amount* is normally delivered by the **TouchpadScroll**/**Control-TouchpadScroll**
-#           event with a value of **+120.0** or **-120.0**, depending on the scroll direction.
 #
-#           If the value provided as *amount* is not an integer or a float,
-#           defaults to **+120.0**.
-#
-#           Note: **0** is not allowed. If provided, it will be changed to **+120.0**.
-#
-# what      Should be a string that specifies the unit type.
-#           Allowed values are the word **units** or **pages**.
-#           *Units* are used by the **TouchpadScroll** event while *pages* are used
-#           by the **Control-TouchpadScroll** event.
-#
-#           If not provided, defaults to **units**.
+#           *Amount* is delivered by the **TouchpadScroll** event trough the **%D** parameter.
 #
 # It doesn't return anything.
 proc ::ms::combobox::Touchpad { w counter amount } {
@@ -6419,18 +6411,18 @@ proc ::ms::combobox::Touchpad { w counter amount } {
     # Translate 'amount' in 'delta_x' and 'delta_y'.
     lassign [::tk::PreciseScrollDeltas $amount] delta_x delta_y
 
-    # Adjust 'delta_x' and 'delta_y' values, or the movement will be too slow.
-    set delta_x [expr { $delta_x*30 }]
-    set delta_y [expr { $delta_y*30 }]
-
-    # If there is a movement along the X axis, launch '::ms::combobox::Shift_MouseWheel'.
-    if { $delta_x != 0 } {
-        ::ms::combobox::Shift_MouseWheel $w $delta_x
+    # Launch '::ms::combobox::Shift_MouseWheel' if there is a movement along the X axis, otherwise do nothing.
+    if { $delta_x > 0 } {
+        ::ms::combobox::Shift_MouseWheel $w +1
+    } elseif { $delta_x < 0 } {
+        ::ms::combobox::Shift_MouseWheel $w -1
     }
 
-    # If there is a movement along the Y axis, launch '::ms::combobox::MouseWheel'.
-    if { $delta_y != 0 } {
-        ::ms::combobox::MouseWheel $w $delta_y
+    # Launch '::ms::combobox::MouseWheel' if there is a movement along the Y axis, otherwise do nothing.
+    if { $delta_y > 0 } {
+        ::ms::combobox::MouseWheel $w +1
+    } elseif { $delta_y < 0 } {
+        ::ms::combobox::MouseWheel $w -1
     }
 
     return ""
