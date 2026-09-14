@@ -7106,12 +7106,8 @@ proc ::ms::combobox::Popdown_MouseWheel { w x y amount { what units } } {
         }
     }
 
-    # If possible, scroll the popdown listbox vertically.
-    try {
-        $w.popdown.f.lb yview scroll $amount $what
-    } on error {} {
-        # The popdown listbox cannot scroll vertically.
-    }
+    # Scroll the popdown listbox vertically.
+    $w.popdown.f.lb yview scroll $amount $what
 
     # Get the index of the current hovered row.
     set index [$w.popdown.f.lb index @$x,$y]
