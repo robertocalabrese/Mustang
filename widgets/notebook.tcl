@@ -3308,23 +3308,23 @@ proc ::ms::notebook::Enable_Traversal { w } {
             }
 
             # Tab navigation.
-            _bind $::ms::addr($w,toplevel) <Control-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W -1.0]
+            _bind $::ms::addr($w,toplevel) <Control-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W +1]
 
             switch -- [_tk windowingsystem] {
-                win32   { _bind $::ms::addr($w,toplevel) <Control-Shift-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W 1.0] }
+                win32   { _bind $::ms::addr($w,toplevel) <Control-Shift-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W -1] }
                 default {
                     # Note: Some OS's define a goofy <Control-Shift-Tab> keysym.
 
                     # This is needed for XFree86 systems and macOS.
                     try {
-                        _bind $::ms::addr($w,toplevel) <Control-KeyPress-ISO_Left_Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W 1.0]
+                        _bind $::ms::addr($w,toplevel) <Control-KeyPress-ISO_Left_Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W -1]
                     } on error {} {
                         # Do Nothing
                     }
 
                     # This seems to be correct on *some* HP systems.
                     try {
-                        _bind $::ms::addr($w,toplevel) <Control-KeyPress-hpBackTab> [list +::ms::notebook::Traverse_Cycle_Tab %W 1.0]
+                        _bind $::ms::addr($w,toplevel) <Control-KeyPress-hpBackTab> [list +::ms::notebook::Traverse_Cycle_Tab %W +1]
                     } on error {} {
                         # Do Nothing
                     }
