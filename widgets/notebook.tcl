@@ -3243,7 +3243,7 @@ proc ::ms::notebook::Clean_Up { w } {
 # w        Should be the widget real address involved.
 #
 # dir      Should be the amount of the movement.
-#          Its sign determines the direction to take (**+120** or **-120).
+#          Its sign determines the direction to take, **1** means forward and **-1** means backward.
 #
 # factor   Should be a double.
 #          It's used as dividend of the amount provided.
