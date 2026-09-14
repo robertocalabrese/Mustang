@@ -760,25 +760,39 @@ _bind _Scrollbar <Leave> { interp invokehidden %W state [list !hover]; break }
 _bind _Scrollbar <FocusIn>  { interp invokehidden %W state [list  focus]; break }
 _bind _Scrollbar <FocusOut> { interp invokehidden %W state [list !focus]; break }
 
-# Mousewheel and Touchpad
-
-# Move the widget's content address by one unit up or down (depending on the mousewheel direction).
-_bind _Scrollbar <MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D units; break }
-
-# Move the widget's content address by one unit left or right (depending on the mousewheel direction).
-_bind _Scrollbar <Shift-MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D units; break }
-
-# Move the widget's content address by one page up or down (depending on the mousewheel direction).
-_bind _Scrollbar <Control-MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D pages; break }
-
-# Move the widget's content address by one page left or right (depending on the mousewheel direction).
-_bind _Scrollbar <Control-Shift-MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D pages; break }
+# Touchpad
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
 
 _bind _Scrollbar <TouchpadScroll>         { ::ms::scrollbar::Touchpad %W %# %D units; break }
 _bind _Scrollbar <Control-TouchpadScroll> { ::ms::scrollbar::Touchpad %W %# %D pages; break }
+
+###################################
+##                               ##
+##     _X_SCROLLBAR BINDINGS     ##
+##                               ##
+###################################
+
+# Move the widget's content address by one unit left or right (depending on the mousewheel direction).
+_bind _X_Scrollbar <MouseWheel>       { ::ms::scrollbar::Pathname_Cmd %W scroll %D units; break }
+_bind _X_Scrollbar <Shift-MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D units; break }
+
+# Move the widget's content address by one page left or right (depending on the mousewheel direction).
+_bind _X_Scrollbar <Control-MouseWheel>       { ::ms::scrollbar::Pathname_Cmd %W scroll %D pages; break }
+_bind _X_Scrollbar <Control-Shift-MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D pages; break }
+
+###################################
+##                               ##
+##     _Y_SCROLLBAR BINDINGS     ##
+##                               ##
+###################################
+
+# Move the widget's content address by one unit up or down (depending on the mousewheel direction).
+_bind _Y_Scrollbar <MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D units; break }
+
+# Move the widget's content address by one page up or down (depending on the mousewheel direction).
+_bind _Y_Scrollbar <Control-MouseWheel> { ::ms::scrollbar::Pathname_Cmd %W scroll %D pages; break }
 
 # Create the mustang **scrollbar** package.
 namespace eval ::ms::scrollbar {
@@ -1297,10 +1311,22 @@ proc ::ms::scrollbar::Command { window { args "" } } {
             ##                  ##
             ######################
 
-            # Set the new bindtags for the widget.
-            switch -- $::ms::current($w,class) {
-                Scrollbar { _bindtags $w [list $w _Scrollbar TScrollbar $::ms::addr($w,toplevel) all] }
-                default   { _bindtags $w [list $w $::ms::current($w,class) _Scrollbar TScrollbar $::ms::addr($w,toplevel) all] }
+            # Check the widget's orientation.
+            switch -- $::ms::current($w,orient) {
+                horizontal {
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        Scrollbar { _bindtags $w [list $w _X_Scrollbar _Scrollbar TScrollbar $::ms::addr($w,toplevel) all] }
+                        default   { _bindtags $w [list $w $::ms::current($w,class) _X_Scrollbar _Scrollbar TScrollbar $::ms::addr($w,toplevel) all] }
+                    }
+                }
+                vertical {
+                    # Set the new bindtags for the widget.
+                    switch -- $::ms::current($w,class) {
+                        Scrollbar { _bindtags $w [list $w _Y_Scrollbar _Scrollbar TScrollbar $::ms::addr($w,toplevel) all] }
+                        default   { _bindtags $w [list $w $::ms::current($w,class) _Y_Scrollbar _Scrollbar TScrollbar $::ms::addr($w,toplevel) all] }
+                    }
+                }
             }
 
             #####################
