@@ -962,8 +962,8 @@ package provide ::ms::toolbutton 0.1
 ##################################
 
 # Activate/Deactivate
-_bind _Toolbutton <Activate>   { interp invokehidden {} %W state [list !background]; break }
-_bind _Toolbutton <Deactivate> { interp invokehidden {} %W state [list  background]; break }
+_bind _Toolbutton <Activate>   { ::ms::toplevel::Pathname_Cmd %W state [list !background]; break }
+_bind _Toolbutton <Deactivate> { ::ms::toplevel::Pathname_Cmd %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Toolbutton <ButtonPress-1>   { ::ms::toolbutton::ButtonPress %W; break }
@@ -978,11 +978,11 @@ _bind _Toolbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break
 _bind _Toolbutton <Destroy> { ::ms::toolbutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Toolbutton <Enter> { interp invokehidden {} %W state [list  hover]; break }
-_bind _Toolbutton <Leave> { interp invokehidden {} %W state [list !hover]; break }
+_bind _Toolbutton <Enter> { ::ms::toplevel::Pathname_Cmd %W state [list  hover]; break }
+_bind _Toolbutton <Leave> { ::ms::toplevel::Pathname_Cmd %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Toolbutton <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
+_bind _Toolbutton <FocusIn>  { ::ms::toplevel::Pathname_Cmd %W state [list focus]; break }
 _bind _Toolbutton <FocusOut> { ::ms::toolbutton::FocusOut %W; break }
 
 # Return/KP_Enter/space

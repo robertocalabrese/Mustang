@@ -1230,8 +1230,8 @@ package provide ::ms::listbox 0.1
 ######################################
 
 # Activate/Deactivate
-_bind _Simple_Listbox <Activate>   { interp invokehidden {} %W state [list !background]; break }
-_bind _Simple_Listbox <Deactivate> { interp invokehidden {} %W state [list  background]; break }
+_bind _Simple_Listbox <Activate>   { ::ms::listbox::Pathname_Cmd %W state [list !background]; break }
+_bind _Simple_Listbox <Deactivate> { ::ms::listbox::Pathname_Cmd %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Simple_Listbox <B1-Motion>     { ::ms::listbox::B1_Motion    %W %x %y; break }

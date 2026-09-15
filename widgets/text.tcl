@@ -2682,8 +2682,8 @@ _bind _Simple_Text <Meta-KeyPress-greater> { break }
 _bind _Simple_Text <Escape> { break }
 
 # Activate/Deactivate
-_bind _Simple_Text <Activate>   { interp invokehidden {} %W state [list !background]; break }
-_bind _Simple_Text <Deactivate> { interp invokehidden {} %W state [list  background]; break }
+_bind _Simple_Text <Activate>   { ::ms::text::Pathname_Cmd %W state [list !background]; break }
+_bind _Simple_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state [list  background]; break }
 
 # Contextual menu
 _bind _Simple_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
@@ -2692,12 +2692,12 @@ _bind _Simple_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; brea
 _bind _Simple_Text <Destroy> { ::ms::text::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Text <Enter> { interp invokehidden {} %W state [list  hover]; break }
-_bind _Simple_Text <Leave> { interp invokehidden {} %W state [list !hover]; break }
+_bind _Simple_Text <Enter> { ::ms::text::Pathname_Cmd %W state [list  hover]; break }
+_bind _Simple_Text <Leave> { ::ms::text::Pathname_Cmd %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Simple_Text <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
-_bind _Simple_Text <FocusOut> { ::ms::text::FocusOut %W; break }
+_bind _Simple_Text <FocusIn>  { ::ms::text::Pathname_Cmd %W state [list focus]; break }
+_bind _Simple_Text <FocusOut> { ::ms::text::FocusOut     %W; break }
 
 # Insert
 _bind _Simple_Text <KeyPress-Insert>    { ::ms::text::Insert %W; break }
@@ -2864,8 +2864,8 @@ _bind _Simple_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pag
 #################################
 
 # Activate/Deactivate
-_bind _Hull_Text <Activate>   { ::ms::text::Pathname_Cmd %W state !background; break }
-_bind _Hull_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state  background; break }
+_bind _Hull_Text <Activate>   { ::ms::text::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Text <Deactivate> { ::ms::text::Pathname_Cmd %W state [list  background]; break }
 
 # Contextual menu
 _bind _Hull_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
@@ -3305,8 +3305,8 @@ _bind _Y_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_win
 #############################################
 
 # Activate/Deactivate
-_bind _X_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _X_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _X_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _X_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _X_Fake_Scrollbar_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
@@ -3369,8 +3369,8 @@ _bind _X_Fake_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_
 #############################################
 
 # Activate/Deactivate
-_bind _Y_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _Y_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _Y_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _Y_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _Y_Fake_Scrollbar_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }

@@ -1210,8 +1210,8 @@ package provide ::ms::frame 0.1
 ####################################
 
 # Activate/Deactivate
-_bind _Simple_Frame <Activate>   { interp invokehidden {} %W state [list !background]; break }
-_bind _Simple_Frame <Deactivate> { interp invokehidden {} %W state [list  background]; break }
+_bind _Simple_Frame <Activate>   { ::ms::frame::Pathname_Cmd %W state [list !background]; break }
+_bind _Simple_Frame <Deactivate> { ::ms::frame::Pathname_Cmd %W state [list  background]; break }
 
 # Configure
 _bind _Simple_Frame <Configure> { ::ms::frame::Configure %W %w %h; break }
@@ -1223,12 +1223,12 @@ _bind _Simple_Frame <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; bre
 _bind _Simple_Frame <Destroy> { ::ms::frame::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Frame <Enter> { interp invokehidden {} %W state [list  hover]; break }
-_bind _Simple_Frame <Leave> { interp invokehidden {} %W state [list !hover]; break }
+_bind _Simple_Frame <Enter> { ::ms::frame::Pathname_Cmd %W state [list  hover]; break }
+_bind _Simple_Frame <Leave> { ::ms::frame::Pathname_Cmd %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Simple_Frame <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
-_bind _Simple_Frame <FocusOut> { ::ms::frame::FocusOut  %W; break }
+_bind _Simple_Frame <FocusIn>  { ::ms::frame::Pathname_Cmd %W state [list focus]; break }
+_bind _Simple_Frame <FocusOut> { ::ms::frame::FocusOut     %W; break }
 
 # Mousewheel and Touchpad
 
@@ -1286,8 +1286,8 @@ _bind _Simple_Frame <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pa
 ##################################
 
 # Activate/Deactivate
-_bind _Hull_Frame <Activate>   { ::ms::frame::Pathname_Cmd %W state !background; break }
-_bind _Hull_Frame <Deactivate> { ::ms::frame::Pathname_Cmd %W state  background; break }
+_bind _Hull_Frame <Activate>   { ::ms::frame::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Frame <Deactivate> { ::ms::frame::Pathname_Cmd %W state [list  background]; break }
 
 # Configure
 _bind _Hull_Frame <Configure> { ::ms::frame::Configure %W %w %h; break }
@@ -1594,8 +1594,8 @@ _bind _Y_Scrollbar_Frame <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_wi
 ##############################################
 
 # Activate/Deactivate
-_bind _X_Fake_Scrollbar_Frame <Activate>   { ::ms::frame::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _X_Fake_Scrollbar_Frame <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _X_Fake_Scrollbar_Frame <Activate>   { ::ms::frame::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _X_Fake_Scrollbar_Frame <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _X_Fake_Scrollbar_Frame <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
@@ -1658,8 +1658,8 @@ _bind _X_Fake_Scrollbar_Frame <Control-TouchpadScroll> { ::ms::Touchpad_Parent [
 ##############################################
 
 # Activate/Deactivate
-_bind _Y_Fake_Scrollbar_Frame <Activate>   { ::ms::frame::Pathname_Cmd [_winfo parent %W] state !background; break }
-_bind _Y_Fake_Scrollbar_Frame <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo parent %W] state  background; break }
+_bind _Y_Fake_Scrollbar_Frame <Activate>   { ::ms::frame::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _Y_Fake_Scrollbar_Frame <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _Y_Fake_Scrollbar_Frame <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }

@@ -808,8 +808,8 @@ package provide ::ms::toplevel 0.1
 ################################
 
 # Activate/Deactivate
-_bind _Toplevel <Activate>   { interp invokehidden {} %W state [list !background]; break }
-_bind _Toplevel <Deactivate> { interp invokehidden {} %W state [list  background]; break }
+_bind _Toplevel <Activate>   { ::ms::toplevel::Pathname_Cmd %W state [list !background]; break }
+_bind _Toplevel <Deactivate> { ::ms::toplevel::Pathname_Cmd %W state [list  background]; break }
 
 # Configure
 _bind _Toplevel <Configure> { ::ms::toplevel::Configure %W; break }
@@ -825,8 +825,8 @@ _bind _Toplevel <Enter> { ::ms::Hover %W %X %Y; break }
 _bind _Toplevel <Leave> { ::ms::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Toplevel <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
-_bind _Toplevel <FocusOut> { ::ms::toplevel::FocusOut %W; break }
+_bind _Toplevel <FocusIn>  { ::ms::toplevel::Pathname_Cmd %W state [list focus]; break }
+_bind _Toplevel <FocusOut> { ::ms::toplevel::FocusOut     %W; break }
 
 # Create the mustang **toplevel** package.
 namespace eval ::ms::toplevel {
