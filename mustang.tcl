@@ -3321,7 +3321,7 @@ proc ::ms::Check_Widget_Address { window caller_info } {
                     default     { ::ms::Error "Invalid address, '$window'." $caller_info }
                 }
 
-                set parent_real_addr  $::ms::addr($real_address,widget)
+                set parent_real_addr  $::ms::addr($real_addr,widget)
                 set parent_short_addr $parent_addr
             } elseif { $parent_addr in $::ms::addr(reals) } {
                 # 'parent_addr' is the real address of a widget created by mustang.
