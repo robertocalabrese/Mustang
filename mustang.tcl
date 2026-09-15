@@ -344,7 +344,7 @@ proc ::ms::Init {} {
     #       In those systems it's value is fixed to '100.0' and any modification attempt will be ignored.
     #
     # It must be in the range [100.0,1000.0].
-    set ::ms::scale 100.0
+    set ::ms::scalefactor 100.0
 
     # Set how the mousewheel events iteracts with the combobox and spinbox widget.
     #
@@ -1560,12 +1560,12 @@ proc ::ms::Init {} {
             # If needed save the 'scale' value.
             switch -- $windowingsystem {
                 x11 {
-                    chan puts $channel "# Scale"
+                    chan puts $channel "# Scale factor"
                     chan puts $channel "#"
                     chan puts $channel "# It's a floating point number that specifies the UI scaling factor (in percentage, but without the '%' sign)."
                     chan puts $channel "#"
                     chan puts $channel "# \[100.0,1000.0\]"
-                    chan puts $channel "Scale: $::ms::scale"
+                    chan puts $channel "ScaleFactor: $::ms::scalefactor"
                     chan puts $channel ""
                 }
             }
@@ -1824,7 +1824,7 @@ proc ::ms::Init {} {
                             _font configure MonospaceFont -family $family \
                                                             -size $size;
                         }
-                        "Scale:" {
+                        "ScaleFactor:" {
                             # If the operating system is macOS or Windows, do not allow to change it's value (100.0).
                             switch -- $windowingsystem {
                                 aqua    -
@@ -1841,7 +1841,7 @@ proc ::ms::Init {} {
                                         }
                                     }
 
-                                    set ::ms::scale $value
+                                    set ::ms::scalefactor $value
                                 }
                             }
                         }
@@ -2314,7 +2314,7 @@ proc ::ms::Init {} {
     switch -- $windowingsystem {
         aqua    -
         win32   {}
-        default { set ::ms::temp(scale,last) $::ms::scale }
+        default { set ::ms::temp(scalefactor,last) $::ms::scalefactor }
     }
 
     # Set a trace on every mustang special variables for 'unset' and 'write' operations.
@@ -2336,7 +2336,7 @@ proc ::ms::Init {} {
     trace add variable           ::ms::middleclick \
               [list unset write] [list ::ms::Check_And_React];
 
-    trace add variable           ::ms::scale \
+    trace add variable           ::ms::scalefactor \
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::scrollbox \
@@ -2398,13 +2398,13 @@ proc ::ms::Check_And_React { name1 name2 op } {
                 "::ms::focusmodel"  { set ::ms::focusmodel  $::ms::temp(focusmodel,last) }
                 "::ms::language"    { set ::ms::language    $::ms::temp(language,last) }
                 "::ms::middleclick" { set ::ms::middleclick $::ms::temp(middleclick,last) }
-                "::ms::scale" {
-                    # If the operating system is macOS or Windows, set '::ms::scale' to '100.0',
+                "::ms::scalefactor" {
+                    # If the operating system is macOS or Windows, set '::ms::scalefactor' to '100.0',
                     # else set it back to its last valid value.
                     switch -- [_tk windowingsystem] {
                         aqua    -
-                        win32   { set ::ms::scale 100.0 }
-                        default { set ::ms::scale $::ms::temp(scale,last) }
+                        win32   { set ::ms::scalefactor 100.0 }
+                        default { set ::ms::scalefactor $::ms::temp(scalefactor,last) }
                     }
                 }
                 "::ms::scrollbox"     { set ::ms::scrollbox     $::ms::temp(scrollbox,last) }
@@ -2550,30 +2550,30 @@ proc ::ms::Check_And_React { name1 name2 op } {
                             set ::ms::middleclick $::ms::temp(middleclick,last) }
                     }
                 }
-                ::ms::scale {
+                ::ms::scalefactor {
                     # If the operating system is macOS or Windows, do not allow to change the UI 'scale' value.
                     switch -- [_tk windowingsystem] {
                         aqua  -
                         win32 {
                             # Restore the 'scale' value to '100.0'.
-                            set ::ms::scale 100.0
+                            set ::ms::scalefactor 100.0
                         }
                         default {
                             # Check that the new 'scale' provided is a valid value.
-                            switch -- [string is double -strict $::ms::scale] {
+                            switch -- [string is double -strict $::ms::scalefactor] {
                                 0   {
                                     # Restore the last valid 'scale' value.
-                                    set ::ms::scale $::ms::temp(scale,last)
+                                    set ::ms::scalefactor $::ms::temp(scalefactor,last)
                                 }
                                 1   {
-                                    if { ($::ms::scale < 100.0) || ($::ms::scale > 1000.0) } {
+                                    if { ($::ms::scalefactor < 100.0) || ($::ms::scalefactor > 1000.0) } {
                                         # Restore the last valid 'scale' value.
-                                        set ::ms::scale $::ms::temp(scale,last)
+                                        set ::ms::scalefactor $::ms::temp(scalefactor,last)
                                     } else {
                                         # Check that the new 'scale' value is not the same as the one currently registered.
-                                        if { $::ms::scale ne $::ms::temp(scale,last) } {
+                                        if { $::ms::scalefactor ne $::ms::temp(scalefactor,last) } {
                                             # Register the last valid 'scale' value.
-                                            set ::ms::temp(scale,last) $::ms::scale
+                                            set ::ms::temp(scalefactor,last) $::ms::scalefactor
 
                                             # Note: Some mustang special variables requires to refresh the theme after their validation.
                                             #       If all of these variables are setted at once, multiple refresh will happen.
@@ -6034,7 +6034,7 @@ proc ::ms::Load_SVG_Images { theme } {
         switch -- [_tk windowingsystem] {
             aqua    -
             win32   { set scale 100.0 }
-            default { set scale $::ms::scale }
+            default { set scale $::ms::scalefactor }
         }
 
         # Load the svg image at the current UI scale factor.
