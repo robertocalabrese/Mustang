@@ -291,7 +291,7 @@ proc ::ms::style::Command { args } {
 
                             # Update each classtype real address that have 'style' as a style.
                             foreach classtype $::ms::data(classtypes) {
-                                if { $style in $::ms::style($classtype) } {
+                                if { $style in $::ms::style($classtype,classtype) } {
                                     [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
                                 }
                             }
@@ -461,7 +461,7 @@ proc ::ms::style::Command { args } {
 
                             # Update each classtype real address that have 'style' as a style.
                             foreach classtype $::ms::data(classtypes) {
-                                if { $style in $::ms::style($classtype) } {
+                                if { $style in $::ms::style($classtype,classtype) } {
                                     [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
                                 }
                             }
@@ -580,7 +580,7 @@ proc ::ms::style::Command { args } {
 
                                 # Refresh all widgets option (for each classtype) that are not managed directly by Tk.
                                 foreach classtype $::ms::data(classtypes) {
-                                    foreach style $::ms::style($classtype) {
+                                    foreach style $::ms::style($classtype,classtype) {
                                         [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
                                     }
                                 }
