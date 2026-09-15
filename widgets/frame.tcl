@@ -2819,8 +2819,8 @@ proc ::ms::frame::Command { window { args "" } } {
             lappend ::ms::style($::ms::current($w,style),frame,addrs) $w
 
             # If needed, add '::ms::current($w,style)' to the available styles for the frame classtype.
-            if { $::ms::current($w,style) ni $::ms::style(frame) } {
-                lappend ::ms::style(frame) $::ms::current($w,style)
+            if { $::ms::current($w,style) ni $::ms::style(frame,classtype) } {
+                lappend ::ms::style(frame,classtype) $::ms::current($w,style)
             }
 
             # Depending on the address type provided, return the widget real or short address.
@@ -3133,17 +3133,17 @@ proc ::ms::frame::Pathname_Cmd { w cmd args } {
                                             # for the frame classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),frame,addrs)] {
                                                 0   {
-                                                    set index [lsearch -exact $::ms::style(frame) $::ms::current($w,style)]
+                                                    set index [lsearch -exact $::ms::style(frame,classtype) $::ms::current($w,style)]
                                                     switch -- $index {
                                                         -1      {}
-                                                        default { set ::ms::style(frame) [lremove $::ms::style(frame) $index] }
+                                                        default { set ::ms::style(frame,classtype) [lremove $::ms::style(frame,classtype) $index] }
                                                     }
                                                 }
                                             }
 
                                             # If needed, add 'value' to the available styles for the frame classtype.
-                                            if { $value ni $::ms::style(frame) } {
-                                                lappend ::ms::style(frame) $value
+                                            if { $value ni $::ms::style(frame,classtype) } {
+                                                lappend ::ms::style(frame,classtype) $value
                                             }
 
                                             # Update the current style associated with the widget with 'value'.
