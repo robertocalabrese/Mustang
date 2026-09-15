@@ -2754,6 +2754,7 @@ proc ::ms::frame::Command { window { args "" } } {
                     set ::ms::addr($w.fake_x,short)                  $short_addr
                     set ::ms::addr($w.fake_y,short)                  $short_addr
                     set ::ms::addr($w.x,short)                       $short_addr
+                    set ::ms::addr($w.y,short)                       $short_addr
 
                     # Add the widget real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
