@@ -425,6 +425,9 @@
 #
 #   grid .b .e .l -sticky ew
 #   grid columnconfigure . "all" -uniform allTheSame
+package provide ::ms::grid 0.1
+
+# Create the mustang **grid** package.
 namespace eval ::ms::grid {}
 
 # Rename the original Tk **grid** command.
