@@ -3643,6 +3643,7 @@ proc ::ms::Scan_Or_Paste { w x event } {
                                 normal { ::ms::Paste $w PRIMARY }
                             }
                         }
+                    }
                 }
                 default {
                     # Disable paste selection on ButtonPress-3 and enable it on ButtonPress-2 (Linux and Windows).
