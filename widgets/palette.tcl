@@ -1635,24 +1635,24 @@ _bind _Palette <Meta-Shift-KeyPress>    { # Enable binding }
 # list without displaying the popdown window, otherwise try to find the innermost widget's scrollable parent
 # with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the
 # mousewheel direction). If none of the widget's parents meets the required condition, nothing will happen.
-_bind _Palette <MouseWheel> [list ::ms::palette::MouseWheel [_winfo parent %W] %D]
+_bind _Palette <MouseWheel> { ::ms::palette::MouseWheel [_winfo parent %W] %D; break }
 
 # If the widget is in its **normal** state and has the focus, move the insert cursor by one character
 # towards the left or the right (depending on the direction of the mousewheel event), otherwise try to
 # find the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar
 # by one unit left or right (again, depending on the mousewheel direction).
 # If none of the widget's parents meets the required condition, nothing will happen.
-_bind _Palette <Shift-MouseWheel> [list ::ms::palette::Shift_MouseWheel [_winfo parent %W] %D]
+_bind _Palette <Shift-MouseWheel> { ::ms::palette::Shift_MouseWheel [_winfo parent %W] %D; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Palette <Control-MouseWheel> [list ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages]
+_bind _Palette <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Palette <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo parent %W] %D pages]
+_bind _Palette <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
 #       On Linux they will be ignored and touchpads movements will be processed as mousewheel events.
@@ -1662,7 +1662,7 @@ _bind _Palette <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo pa
 # touchpad direction.
 #   1 - View the '_Palette' **Mousewheel** event.
 #   2 - View the '_Palette' **Shift-Mousewheel** event.
-_bind _Palette <TouchpadScroll> [list ::ms::palette::Touchpad [_winfo parent %W] %# %D]
+_bind _Palette <TouchpadScroll> { ::ms::palette::Touchpad [_winfo parent %W] %# %D; break }
 
 # This binding movement will happen on two different planes, horizontal and vertical.
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1674,7 +1674,7 @@ _bind _Palette <TouchpadScroll> [list ::ms::palette::Touchpad [_winfo parent %W]
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Palette <Control-TouchpadScroll> [list ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages]
+_bind _Palette <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 
 # Create the mustang **palette** package.
