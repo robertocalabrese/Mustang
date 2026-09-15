@@ -1981,7 +1981,7 @@ proc ::ms::Init {} {
         # If 'theme' is a valid mustang theme, source it.
         try {
             source -encoding utf-8 [file join $::ms_library themes $::ms::theme "theme.tcl"]
-        } on error {} {
+        } on error { errortext errorcode } {
             # If the '::DEBUG' variable is enabled, display on the standard output channel
             # that the current theme examined was ignored.
             switch -nocase -- $::DEBUG {
@@ -3280,7 +3280,10 @@ proc ::ms::Check_State { state } {
 #
 # caller_info   Should be the location of the command that generated the error.
 #
-# Returns the real and short address relative to 'window'.
+# Returns a list containing the following three elements (in order):
+#    - the real address relative to 'window'
+#    - the short address relative to 'window'
+#    - the address type provided by the developer (either 'real' or 'short')
 proc ::ms::Check_Widget_Address { window caller_info } {
     # Set the widget real and short addresses.
     set index [string last "." $window]
@@ -3355,7 +3358,7 @@ proc ::ms::Check_Widget_Address { window caller_info } {
         1   { ::ms::Error "The address provided already exists, '$window'." $caller_info }
     }
 
-    return [list $real_addr $short_addr]
+    return [list $real_addr $short_addr $type]
 }
 
 ########################################
