@@ -2435,8 +2435,8 @@ proc ::ms::toplevel::Destroy { w } {
 proc ::ms::toplevel::FocusOut { w } {
     # If '$::ms::current($w,cmenu)' exists (meaning it's open), do not loose the focus (graphically).
     switch -- [_winfo exists $::ms::current($w,cmenu)] {
-        0   { interp invokehidden {} $w state [list !focus] }
-        1   { interp invokehidden {} $w state [list  focus] }
+        0   { ::ms::toplevel::Pathname_Cmd $w state [list !focus] }
+        1   { ::ms::toplevel::Pathname_Cmd $w state [list  focus] }
     }
 
     return ""
