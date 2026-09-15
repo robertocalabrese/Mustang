@@ -1601,8 +1601,8 @@ _bind _X_Fake_Scrollbar_Frame <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo p
 _bind _X_Fake_Scrollbar_Frame <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _X_Fake_Scrollbar_Frame <Enter> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
-_bind _X_Fake_Scrollbar_Frame <Leave> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Frame <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Fake_Scrollbar_Frame <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
@@ -1665,8 +1665,8 @@ _bind _Y_Fake_Scrollbar_Frame <Deactivate> { ::ms::frame::Pathname_Cmd [_winfo p
 _bind _Y_Fake_Scrollbar_Frame <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _Y_Fake_Scrollbar_Frame <Enter> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
-_bind _Y_Fake_Scrollbar_Frame <Leave> { ::ms::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Frame <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Fake_Scrollbar_Frame <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
