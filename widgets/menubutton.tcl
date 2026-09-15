@@ -1846,8 +1846,8 @@ proc ::ms::menubutton::Command { window { args "" } } {
             lappend ::ms::style($::ms::current($w,style),menubutton,addrs) $w
 
             # If needed, add '::ms::current($w,style)' to the available styles for the menubutton classtype.
-            if { $::ms::current($w,style) ni $::ms::style(menubutton.classtype) } {
-                lappend ::ms::style(menubutton.classtype) $::ms::current($w,style)
+            if { $::ms::current($w,style) ni $::ms::style(menubutton,classtype) } {
+                lappend ::ms::style(menubutton,classtype) $::ms::current($w,style)
             }
 
             # Depending on the address type provided, return the widget real or short address.
@@ -2230,17 +2230,17 @@ proc ::ms::menubutton::Pathname_Cmd { w cmd args } {
                                             # for the menubutton classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),menubutton,addrs)] {
                                                 0   {
-                                                    set index [lsearch -exact $::ms::style(menubutton.classtype) $::ms::current($w,style)]
+                                                    set index [lsearch -exact $::ms::style(menubutton,classtype) $::ms::current($w,style)]
                                                     switch -- $index {
                                                         -1      {}
-                                                        default { set ::ms::style(menubutton.classtype) [lremove $::ms::style(menubutton.classtype) $index] }
+                                                        default { set ::ms::style(menubutton,classtype) [lremove $::ms::style(menubutton,classtype) $index] }
                                                     }
                                                 }
                                             }
 
                                             # If needed, add 'value' to the available styles for the menubutton classtype.
-                                            if { $value ni $::ms::style(menubutton.classtype) } {
-                                                lappend ::ms::style(menubutton.classtype) $value
+                                            if { $value ni $::ms::style(menubutton,classtype) } {
+                                                lappend ::ms::style(menubutton,classtype) $value
                                             }
 
                                             # Update the current style associated with the widget with 'value'.
