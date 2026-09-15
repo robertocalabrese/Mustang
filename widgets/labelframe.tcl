@@ -3370,8 +3370,8 @@ proc ::ms::labelframe::Command { window { args "" } } {
             lappend ::ms::style($::ms::current($w,style),labelframe,addrs) $w
 
             # If needed, add '::ms::current($w,style)' to the available styles for the labelframe classtype.
-            if { $::ms::current($w,style) ni $::ms::style(labelframe) } {
-                lappend ::ms::style(labelframe) $::ms::current($w,style)
+            if { $::ms::current($w,style) ni $::ms::style(labelframe,classtype) } {
+                lappend ::ms::style(labelframe,classtype) $::ms::current($w,style)
             }
 
             # Depending on the address type provided, return the widget real or short address.
@@ -3731,17 +3731,17 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                             # for the labelframe classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),labelframe,addrs)] {
                                                 0   {
-                                                    set index [lsearch -exact $::ms::style(labelframe) $::ms::current($w,style)]
+                                                    set index [lsearch -exact $::ms::style(labelframe,classtype) $::ms::current($w,style)]
                                                     switch -- $index {
                                                         -1      {}
-                                                        default { set ::ms::style(labelframe) [lremove $::ms::style(labelframe) $index] }
+                                                        default { set ::ms::style(labelframe,classtype) [lremove $::ms::style(labelframe,classtype) $index] }
                                                     }
                                                 }
                                             }
 
                                             # If needed, add 'value' to the available styles for the labelframe classtype.
-                                            if { $value ni $::ms::style(labelframe) } {
-                                                lappend ::ms::style(labelframe) $value
+                                            if { $value ni $::ms::style(labelframe,classtype) } {
+                                                lappend ::ms::style(labelframe,classtype) $value
                                             }
 
                                             # Update the current style associated with the widget with 'value'.
