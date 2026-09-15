@@ -783,6 +783,8 @@ proc ::ms::style::Check_Option { option value } {
                 default { return invalid }
             }
         }
+        -activebackground         -
+        -activeforeground         -
         -arrowcolor               -
         -background               -
         -bordercolor              -
@@ -807,6 +809,7 @@ proc ::ms::style::Check_Option { option value } {
         -preselectforeground      -
         -troughcolor              -
         -selectbackground         -
+        -selectcolor              -
         -selectforeground         -
         -shellbackground          -
         -stripedbackground        {
@@ -892,6 +895,7 @@ proc ::ms::style::Check_Option { option value } {
                 default { return invalid }
             }
         }
+        -activeborderwidth    -
         -arrowsize            -
         -barsize              -
         -borderwidth          -
@@ -921,6 +925,13 @@ proc ::ms::style::Check_Option { option value } {
         -width                {
             set value [::ms::Check_Measure $value invalid]
             switch -- $value {
+                invalid { return invalid }
+                default { return $value }
+            }
+        }
+        -backgroundimage -
+        -image           {
+            switch -- [::ms::Check_Image $value] {
                 invalid { return invalid }
                 default { return $value }
             }
@@ -967,7 +978,8 @@ proc ::ms::style::Check_Option { option value } {
             }
         }
         -embossed     -
-        -labeloutside {
+        -labeloutside -
+        -tile         {
             switch -nocase -- $value {
                 0        -
                 no       -
@@ -989,12 +1001,6 @@ proc ::ms::style::Check_Option { option value } {
                 return $value
             } else {
                 return invalid
-            }
-        }
-        -image {
-            switch -- [::ms::Check_Image $value] {
-                invalid { return invalid }
-                default { return $value }
             }
         }
         -inactiveselectbackground {
@@ -1038,6 +1044,7 @@ proc ::ms::style::Check_Option { option value } {
                 1   { return $value }
             }
         }
+        -activerelief    -
         -indicatorrelief -
         -relief          -
         -pbarrelief      -
