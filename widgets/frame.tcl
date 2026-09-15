@@ -1816,7 +1816,7 @@ proc ::ms::frame::Command { window { args "" } } {
             # Set the default widget (not styleable) options.
             set ::ms::default($w,class)            $::ms::default(frame,class)
             set ::ms::default($w,cmenu)            $::ms::default(frame,cmenu)
-            set ::ms::default($w,colomap)          $::ms::default(frame,colomap)
+            set ::ms::default($w,colormap)         $::ms::default(frame,colormap)
             set ::ms::default($w,container)        $::ms::default(frame,container)
             set ::ms::default($w,height)           $::ms::default(frame,height)
             set ::ms::default($w,scrollable)       $::ms::default(frame,scrollable)
