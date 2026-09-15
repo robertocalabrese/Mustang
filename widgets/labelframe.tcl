@@ -1956,6 +1956,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
     set addresses  [::ms::Check_Widget_Address $window $caller_info]
     set w          [lindex $addresses 0]
     set short_addr [lindex $addresses 1]
+    set type       [lindex $addresses 2]
 
     # Check that the widget's 'args' forms a valid 'option/value' list.
     switch -- [expr { [llength $args]%2 }] {
