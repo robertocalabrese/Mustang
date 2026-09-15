@@ -3821,7 +3821,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                                  -xscrollcommand $::ms::current($w,xscrollcommand);
 
                             # Check if a new list of values was provided.
-                            if { ($new_values eq "true") || ($new_datatype eq "true") {
+                            if { ($new_values eq "true") || ($new_datatype eq "true") } {
                                 interp invokehidden {} $w configure -values $::ms::current($w,values)
 
                                 # Set the current index as the first one of '::ms::data($w,values)', and get the relative value.
