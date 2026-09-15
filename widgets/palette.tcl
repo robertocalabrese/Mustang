@@ -1475,22 +1475,22 @@ _bind _Preview_Palette <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parents meets the required condition, don't do anything.
-_bind _Preview_Palette <MouseWheel> [list ::ms::Scroll_Parent_Y [_winfo parent %W] %D units]
+_bind _Preview_Palette <MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 # If none of the widget's parents meets the required condition, don't do anything.
-_bind _Preview_Palette <Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo parent %W] %D units]
+_bind _Preview_Palette <Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D units; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Preview_Palette <Control-MouseWheel> [list ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages]
+_bind _Preview_Palette <Control-MouseWheel> { ::ms::Scroll_Parent_Y [_winfo parent %W] %D pages; break }
 
 # Try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page left or right (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
-_bind _Preview_Palette <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_winfo parent %W] %D pages]
+_bind _Preview_Palette <Control-Shift-MouseWheel> { ::ms::Scroll_Parent_X [_winfo parent %W] %D pages; break }
 
 # This binding movement will happen on two different planes, horizontal (1) and vertical (2).
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1502,7 +1502,7 @@ _bind _Preview_Palette <Control-Shift-MouseWheel> [list ::ms::Scroll_Parent_X [_
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Preview_Palette <TouchpadScroll> [list ::ms::palette::Touchpad [_winfo parent %W] %# %D]
+_bind _Preview_Palette <TouchpadScroll> { ::ms::palette::Touchpad [_winfo parent %W] %# %D; break }
 
 # This binding movement will happen on two different planes, horizontal and vertical.
 # These two planes may involve different widgets depending on the active scrollbars on them and on the
@@ -1514,7 +1514,7 @@ _bind _Preview_Palette <TouchpadScroll> [list ::ms::palette::Touchpad [_winfo pa
 #   2 - Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
-_bind _Preview_Palette <Control-TouchpadScroll> [list ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages]
+_bind _Preview_Palette <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
 
 ##############################
 ##                          ##
