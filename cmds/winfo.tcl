@@ -500,21 +500,25 @@ proc ::ms::winfo::Command { args } {
             }
         }
         children {
-            # ATTENTION! Differently than others mustang commands, the **winfo children** command will **always**
-            #            return real addresses, even if a short address was provided as input.
-            #
-            #            You can always ask if an address is a short or real address with **tk get addr**.
-            #            You can always translate a real address into a short address using the **tk get short**
-            #            command or a short address into a real address using the **tk get real** command.
             switch -- [llength $args] {
                 1   {
                     set window $args
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
+                    # Check if the address provided is a valid real or short address.
+                    if { $window in $::ms::addr(reals) } {
+                        set w    $window
+                        set type real
+                    } elseif { $window in $::ms::addr(shorts) } {
+                        set w    $::ms::addr($window,real)
+                        set type short
+
+                        # Check if 'w' belongs to a megawidget container.
+                        # If so, change 'w' with it's content address.
+                        if { $w in $::ms::addr(megawidgets,containers) } {
+                            set w $::ms::addr($w,widget)
+                        }
+                    } else {
+                        ::ms::Error "Invalid address (must be a real address), '$window'." $caller_info
                     }
 
                     # Execute the command.
@@ -522,8 +526,36 @@ proc ::ms::winfo::Command { args } {
                         _winfo children $w
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
+                    } on ok { children } {
+                        switch -- $type {
+                            real  { return $children }
+                            short {
+                                # Trasform all the addresses returned into short addresses.
+                                set short_children [list ]
+                                foreach address $children {
+                                    set index [string last "." $address]
+                                    switch -- $index {
+                                        0       {}
+                                        default {
+                                            # Separate 'address' real address into it's parent real address and it's relative address.
+                                            set parent_real_addr [string range $address 0 $index-1]
+                                            set relative_addr    [string range $address $index end]
+
+                                            # Trasform 'parent_real_addr' into it's equivalent short address.
+                                            set parent_short_addr $::ms::addr($parent_real_addr,short)
+
+                                            # Recompone the full address (this time in its short form).
+                                            set address [string cat $parent_short_addr $relative_addr]
+                                        }
+                                    }
+
+                                    # Append 'address' to the short children list.
+                                    lappend short_children $address
+                                }
+
+                                return $short_children
+                            }
+                        }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
