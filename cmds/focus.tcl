@@ -574,7 +574,7 @@ proc ::ttk::focusFirst { w } {
         return $w
     }
 
-    foreach child [winfo children $w] {
+    foreach child [_winfo children $w] {
         set c [::ttk::focusFirst $child]
         switch -- $c {
             ""      {}
