@@ -122,7 +122,8 @@
 #          - A short address, if the *window* provided as input is a short address.
 #          - A real address, if the *window* provided as input is a real address.
 #       Unless stated differently.
-#       You can always convert a real address into a short address through the **tk get short** command.
+#       You can always convert a real address into a short address (and viceversa) through the **tk get short**
+#       and **tk get real** commands.
 #
 #### DESCRIPTION
 #
@@ -159,12 +160,6 @@
 #      which are not returned in stacking order.
 #
 #      Use the **wm stackorder** command to query the stacking order of Top-level windows.
-#
-#      ATTENTION! Differently than others mustang commands, the **winfo children** command will **always**
-#                 return real addresses, even if a short address was provided as input.
-#
-#                 You can always translate a real address into a short address using the **tk get short**
-#                 command or a short address into a real address using the **tk get real** command.
 #
 #   **winfo** **class** *window*
 #      Returns the class name for *window*.
