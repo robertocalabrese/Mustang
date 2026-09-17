@@ -1399,8 +1399,8 @@ package provide ::ms::palette 0.1
 ####################################
 
 # Activate/Deactivate
-_bind _Hull_Palette <Activate>   { ::ms::palette::Pathname_Cmd %W state !background; break }
-_bind _Hull_Palette <Deactivate> { ::ms::palette::Pathname_Cmd %W state  background; break }
+_bind _Hull_Palette <Activate>   { ::ms::palette::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Palette <Deactivate> { ::ms::palette::Pathname_Cmd %W state [list  background]; break }
 
 # Contextual menu
 _bind _Hull_Palette <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; break }
@@ -1409,8 +1409,8 @@ _bind _Hull_Palette <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; bre
 _bind _Hull_Palette <Destroy> { ::ms::palette::Destroy %W; break }
 
 # Enter/Leave
-_bind _Hull_Palette <Enter> { ::ms::palette::Pathname_Cmd %W state !hover; break }
-_bind _Hull_Palette <Leave> { ::ms::palette::Pathname_Cmd %W state !hover; break }
+_bind _Hull_Palette <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Hull_Palette <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Mousewheel and Touchpad
 
@@ -1550,8 +1550,8 @@ _bind _Palette <<Paste>> { ::ms::Paste [winfo parent %W] CLIPBOARD; break }
 _bind _Palette <Motion> { ::ms::Set_Cursor [_winfo parent %W] %x %y; break }
 
 # Enter/Leave
-_bind _Palette <Enter> { ::ms::palette::Pathname_Cmd [_winfo parent %W] state  hover; break }
-_bind _Palette <Leave> { ::ms::palette::Pathname_Cmd [_winfo parent %W] state !hover; break }
+_bind _Palette <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Palette <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Palette <FocusIn>  { ::ms::palette::FocusIn  [_winfo parent %W]; break }
@@ -1675,7 +1675,6 @@ _bind _Palette <TouchpadScroll> { ::ms::palette::Touchpad [_winfo parent %W] %# 
 #       and move that scrollbar by one page up or down (depending on the touchpad direction).
 #       If none of the widget's parent meets the required condition, don't do anything on the vertical axis.
 _bind _Palette <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_winfo parent %W] %# %D pages; break }
-
 
 # Create the mustang **palette** package.
 namespace eval ::ms::palette {
