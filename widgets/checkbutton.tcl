@@ -977,8 +977,8 @@ _bind _Highlight_Checkbutton <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_
 ########################################
 
 # Activate/Deactivate
-_bind _Hull_Checkbutton <Activate>   { ::ms::checkbutton::Pathname_Cmd %W state !background; break }
-_bind _Hull_Checkbutton <Deactivate> { ::ms::checkbutton::Pathname_Cmd %W state  background; break }
+_bind _Hull_Checkbutton <Activate>   { ::ms::checkbutton::Pathname_Cmd %W state [list !background]; break }
+_bind _Hull_Checkbutton <Deactivate> { ::ms::checkbutton::Pathname_Cmd %W state [list  background]; break }
 
 # ButtonPress-1
 _bind _Hull_Checkbutton <ButtonPress-1>   { ::ms::checkbutton::ButtonPress   %W; break }
@@ -1061,7 +1061,7 @@ _bind _Indicator_Checkbutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; bre
 _bind _Indicator_Checkbutton <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Indicator_Checkbutton <FocusIn>  { ::ms::checkbutton::Pathname_Cmd [_winfo parent %W] state focus; break }
+_bind _Indicator_Checkbutton <FocusIn>  { ::ms::checkbutton::Pathname_Cmd [_winfo parent %W] state [list focus]; break }
 _bind _Indicator_Checkbutton <FocusOut> { ::ms::checkbutton::FocusOut     [_winfo parent %W]; break }
 
 # Return/KP_Enter
