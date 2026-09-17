@@ -430,15 +430,17 @@ proc ::ms::pack::Command { args } {
                                 foreach w $addresses {
                                     # Check if 'w' is a scrollable widget.
                                     if { $w in $::ms::addr(megawidgets,scrollable) } {
-                                        # If its classtype is a listbox, canvas or text, update its scrollbar if needed.
-                                        # The listbox is not a container, its scrollbar update needs to be launched each time it change
-                                        # its placement on the screen.
-                                        # For safeguarding we will do the same for canvas and text because even if they are containers,
+                                        # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                                        # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                                        # the moment they are positioned on screen.
+                                        # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
                                         # they normally don't contain any widgets.
                                         switch -- $::ms::data($w,classtype) {
-                                            canvas  -
-                                            listbox -
-                                            text    { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                                            canvas    -
+                                            listbox   -
+                                            scrollbar -
+                                            text      -
+                                            treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
                                         }
                                     }
 
@@ -734,16 +736,17 @@ proc ::ms::pack::Command { args } {
                 foreach w $addresses {
                     # Check if 'w' is a scrollable widget.
                     if { $w in $::ms::addr(megawidgets,scrollable) } {
-                        # If its classtype is a listbox, canvas or text, update its scrollbar if needed.
-                        # The listbox and the treeview are not a container, its scrollbar update needs to be launched the
-                        # moment they are positioned on screen.
-                        # For safeguarding we will do the same for canvas and text because even if they are containers,
+                        # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                        # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                        # the moment they are positioned on screen.
+                        # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
                         # they normally don't contain any widgets.
                         switch -- $::ms::data($w,classtype) {
-                            canvas   -
-                            listbox  -
-                            text     -
-                            treeview { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                            canvas    -
+                            listbox   -
+                            scrollbar -
+                            text      -
+                            treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
                         }
                     }
 
