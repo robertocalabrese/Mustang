@@ -1223,8 +1223,8 @@ _bind _Simple_Frame <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; bre
 _bind _Simple_Frame <Destroy> { ::ms::frame::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Frame <Enter> { ::ms::frame::Pathname_Cmd %W state [list  hover]; break }
-_bind _Simple_Frame <Leave> { ::ms::frame::Pathname_Cmd %W state [list !hover]; break }
+_bind _Simple_Frame <Enter> { ::ms::Hover %W %X %Y; break }
+_bind _Simple_Frame <Leave> { ::ms::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
 _bind _Simple_Frame <FocusIn>  { ::ms::frame::Pathname_Cmd %W state [list focus]; break }
