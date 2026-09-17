@@ -3305,15 +3305,15 @@ _bind _Y_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Widget_Y [_win
 #############################################
 
 # Activate/Deactivate
-_bind _X_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
-_bind _X_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
+_bind _X_Fake_Scrollbar_Text <Activate>   { ::ms::text::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _X_Fake_Scrollbar_Text <Deactivate> { ::ms::text::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _X_Fake_Scrollbar_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _X_Fake_Scrollbar_Text <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
-_bind _X_Fake_Scrollbar_Text <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _X_Fake_Scrollbar_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _X_Fake_Scrollbar_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
@@ -3369,15 +3369,15 @@ _bind _X_Fake_Scrollbar_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent [_
 #############################################
 
 # Activate/Deactivate
-_bind _Y_Fake_Scrollbar_Text <Activate>   { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
-_bind _Y_Fake_Scrollbar_Text <Deactivate> { ::ms::treeview::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
+_bind _Y_Fake_Scrollbar_Text <Activate>   { ::ms::text::Pathname_Cmd [_winfo parent %W] state [list !background]; break }
+_bind _Y_Fake_Scrollbar_Text <Deactivate> { ::ms::text::Pathname_Cmd [_winfo parent %W] state [list  background]; break }
 
 # Contextual menu
 _bind _Y_Fake_Scrollbar_Text <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y shell; break }
 
 # Enter/Leave
-_bind _Y_Fake_Scrollbar_Text <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
-_bind _Y_Fake_Scrollbar_Text <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Y_Fake_Scrollbar_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Y_Fake_Scrollbar_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
