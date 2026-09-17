@@ -180,9 +180,9 @@
 #
 #                          Simple canvas (**-scrollable false**):
 #                             The contextual menu will be assign to the widget.
-#                              If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
-#                              toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
-#                              contextual menu, nothing will happen.
+#                             If the *cmenu* value is the empty string or invalid, the contextual menu of the widget's
+#                             toplevel (if any) will be used instead. If the widget's toplevel doesn't have a
+#                             contextual menu, nothing will happen.
 #
 #                          Scrollable canvas (**-scrollable true**):
 #                             The contextual menu will be assign to the *content* object of the megawidget (the *canvas area*).
@@ -3618,7 +3618,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # Set the new bindtags for the hull object.
                     _bindtags $w [list $w _Hull_Canvas TFrame $::ms::addr($w,toplevel) all]
 
-                    # Set the new bindtags for the widget container ('w').
+                    # Set the new bindtags for the canvas object.
                     switch -- $::ms::current($w,class) {
                         Canvas  { _bindtags $w.canvas [list $w.canvas _Scrollable_Canvas Canvas $::ms::addr($w,toplevel) all] }
                         default { _bindtags $w.canvas [list $w.canvas $::ms::current($w,class) _Scrollable_Canvas Canvas $::ms::addr($w,toplevel) all] }
@@ -4490,10 +4490,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                 1       -
                 2       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
-                    set type   [lindex  $args 0]
-                    set x      [lindex  $args 1]
-                    set y      [lindex  $args 2]
-                    set args   [lremove $args 0 2]
+                    set type [lindex  $args 0]
+                    set args [lremove $args 0 0]
 
                     # Check 'type'.
                     switch -- $type {
@@ -4509,42 +4507,65 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         default   { ::ms::Error "Invalid option, '$type'." $caller_info }
                     }
 
-                    # Check 'coords'.
-                    set coords [list $x $y]
-                    switch -- [expr { [llength $coords]%2 }] {
-                        0   {
-                            foreach coord $coords {
-                                switch -- [string index $coord end] {
-                                    0   -
-                                    1   -
-                                    2   -
-                                    3   -
-                                    4   -
-                                    5   -
-                                    6   -
-                                    7   -
-                                    8   -
-                                    9   {
-                                        # The coordinate have no unit, its value is assumed to be in pixels.
-                                        if { ![string is double -strict $coords] || ( $coords < 0 ) } {
-                                            ::ms::Error "Invalid coordinate, '$coords'." $caller_info
-                                        }
-                                    }
-                                    i   -
-                                    c   -
-                                    m   -
-                                    p   {
-                                        set coord [string range $coords 0 end-1]
+                    # Make a copy of the 'args' list.
+                    set args_copy $args
 
-                                        if { ![string is double -strict $coords] || ( $coords < 0 ) } {
-                                            ::ms::Error "Invalid coordinate, '$coords'." $caller_info
-                                        }
-                                    }
-                                    default { ::ms::Error "Invalid coordinate, '$coords'." $caller_info }
+                    # Check the coordinates provided.
+                    set coords [list ]
+                    foreach param $args_copy {
+                        switch -- [string index $param end] {
+                            0   -
+                            1   -
+                            2   -
+                            3   -
+                            4   -
+                            5   -
+                            6   -
+                            7   -
+                            8   -
+                            9   {
+                                # The coordinate have no unit, its value is assumed to be in pixels.
+                                # Check that is a positive number (**0** is allowed).
+                                if { ![string is double -strict $param] || ( $param < 0 ) } {
+                                    break
+                                } else {
+                                    # Add the coordinate to the 'coords' list.
+                                    lappend coords $param
+
+                                    # Remove the coordinate from the 'args' list.
+                                    set args [lremove $args 0 0]
                                 }
                             }
+                            i   -
+                            c   -
+                            m   -
+                            p   {
+                                # Remove the 'unit' from the 'measure'.
+                                set measure [string range $param 0 end-1]
+
+                                # Check that 'measure' is a positive number (**0** is allowed).
+                                if { ![string is double -strict $measure] || ( $measure < 0 ) } {
+                                    break
+                                } else {
+                                    # Add the coordinate to the 'coords' list.
+                                    lappend coords $param
+
+                                    # Remove the coordinate from the 'args' list.
+                                    set args [lremove $args 0 0]
+                                }
+                            }
+                            default { break }
                         }
-                        default { ::ms::Error "Invalid number of coordinates, '$coords'." $caller_info }
+                    }
+
+                    # Check that 'coords' is divisible by two and have at least two coordinates.
+                    switch -- [expr { [llength $coords]%2 }] {
+                        0   {
+                            if { [llength $coords] < 2 } {
+                                ::ms::Error "Invalid set of coordinates, '$coords'." $caller_info
+                            }
+                        }
+                        default { ::ms::Error "Invalid set of coordinates, '$coords'." $caller_info }
                     }
 
                     # Check that the remaining 'args' forms a valid 'option/value' list.
@@ -4643,7 +4664,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                     # Execute the command.
                     try {
-                        {*}$address $cmd $type $coords {*}$new_args
+                        {*}$address $cmd $type {*}$coords {*}$new_args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -4975,10 +4996,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
                 false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
+                true  { set address [list $w.canvas] }
             }
 
             # Check the subcommand.
+            set subcommand [lindex $args 0]
             switch -nocase -- $subcommand {
                 ""  {
                     # Execute the command.
@@ -5061,10 +5083,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
                 false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
+                true  { set address [list $w.canvas] }
             }
 
             # Check the subcommand.
+            set subcommand [lindex $args 0]
             switch -nocase -- $subcommand {
                 ""  {
                     # Execute the command.
@@ -5334,7 +5357,7 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
                 #       No internal styles needs to be created.
 
                 # Apply the changes.
-                $w.canvas {*}$canvas_options
+                $w.canvas configure {*}$canvas_options
 
                 ########################
                 ##                    ##
