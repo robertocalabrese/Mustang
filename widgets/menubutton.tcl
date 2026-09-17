@@ -987,8 +987,8 @@ package provide ::ms::menubutton 0.1
 ##################################
 
 # Activate/Deactivate
-_bind _Menubutton <Activate>   { interp invokehidden {} %W state !background; break }
-_bind _Menubutton <Deactivate> { interp invokehidden {} %W state  background; break }
+_bind _Menubutton <Activate>   { interp invokehidden {} %W state [list !background]; break }
+_bind _Menubutton <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Buttonpress
 switch -- [_tk windowingsystem] {
