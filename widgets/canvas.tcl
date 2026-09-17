@@ -3216,7 +3216,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                         }
                     }
                     -style {
-                        if { $value in $::ms::style($::ms::theme,theme) } {
+                        if { $value in $::ms::style($::ms::theme) } {
                             set ::ms::current($w,style) $value
                         }
                     }
