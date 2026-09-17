@@ -927,7 +927,7 @@ _bind _Progressbar <Enter> { interp invokehidden {} %W state [list  hover]; brea
 _bind _Progressbar <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
-_bind _Progressbar <FocusIn>  { interp invokehidden {}      %W state [list focus]; break }
+_bind _Progressbar <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Progressbar <FocusOut> { ::ms::progressbar::FocusOut %W; break }
 
 # Mousewheel and Touchpad
