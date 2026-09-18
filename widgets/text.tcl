@@ -7070,7 +7070,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                         "ButtonRelease-3" {
                             # Check the widget's state.
                             switch -- $::ms::current($w,state) {
-                                normal { ::ms::text::Paste $w $x $y }
+                                normal { ::ms::text::Paste_Selection $w $x $y }
                             }
                         }
                     }
@@ -7082,7 +7082,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                         "ButtonRelease-2" {
                             # Check the widget's state.
                             switch -- $::ms::current($w,state) {
-                                normal { ::ms::text::Paste $w $x $y }
+                                normal { ::ms::text::Paste_Selection $w $x $y }
                             }
                         }
                     }
@@ -7637,6 +7637,72 @@ proc ::ms::text::Paste { w x y } {
                 } on error {} {
                     # Do nothing
                 }
+            }
+        }
+
+        {*}$address insert insert $selection
+
+        # If autoseparators are active, put an autoseparator.
+        switch -- $::ms::current($w,autoseparators) {
+            1   {
+                {*}$address edit separator
+                {*}$address configure -autoseparators 1
+            }
+        }
+
+        # Check if the widget is scrollable or not.
+        switch -- $::ms::current($w,scrollable) {
+            true {
+                # Update the scrollbars.
+                ::ms::text::Scrollbar_Update $w
+            }
+        }
+    }
+
+    focus $::ms::addr($w,widget)
+
+    return ""
+}
+
+## Paste_Selection
+#
+# Manages the **Paste_Selection** event by inserting the clipboard content ('PRIMARY')
+# at the current insert point.
+#
+# Where:
+#
+# w      Should be the widget real address involved.
+#
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **Paste** event.
+#
+# It doesn't return anything.
+proc ::ms::text::Paste_Selection { w x y } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled -
+        readonly { return "" }
+    }
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
+    {*}$address mark set insert [::ms::text::Closest_Gap $w $x $y]
+
+    # Execute the command.
+    try {
+        ::tk::GetSelection $w PRIMARY
+    } on error {} {
+        # Do nothing.
+    } on ok { selection } {
+        # If autoseparators are active, put an autoseparator.
+        switch -- $::ms::current($w,autoseparators) {
+            1   {
+                {*}$address configure -autoseparators 0
+                {*}$address edit separator
             }
         }
 
