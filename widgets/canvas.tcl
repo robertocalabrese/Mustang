@@ -5882,8 +5882,6 @@ proc ::ms::canvas::Scrollbar_Drag { w orient x y } {
 proc ::ms::canvas::Scrollbar_Update { w } {
     update
 
-    puts "AFTER UPDATE"
-
     ##################################
     ##                              ##
     ##     HORIZONTAL SCROLLBAR     ##
