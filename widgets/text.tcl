@@ -6443,31 +6443,37 @@ proc ::ms::text::Style_Update { stylename caller_info } {
         # background
         switch -- $::ms::managed_by($w,background) {
             developer { set background $::ms::current($w,background) }
-            Tk        { set background [_ttk_style lookup $stylename -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+            Tk        { set background [_ttk_style lookup $::ms::current($w,style) -background $::ms::data($w,statespec) $::ms::default($w,background)] }
+        }
+
+        # bordercolor
+        switch -- $::ms::managed_by($w,bordercolor) {
+            developer { set bordercolor $::ms::current($w,bordercolor) }
+            Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
         }
 
         # foreground
         switch -- $::ms::managed_by($w,foreground) {
             developer { set foreground $::ms::current($w,foreground) }
-            Tk        { set foreground [_ttk_style lookup $stylename -foreground $::ms::data($w,statespec) $::ms::default($w,foreground)] }
+            Tk        { set foreground [_ttk_style lookup $::ms::current($w,style) -foreground $::ms::data($w,statespec) $::ms::default($w,foreground)] }
         }
 
         # insertbackground
         switch -- $::ms::managed_by($w,insertbackground) {
             developer { set insertbackground $::ms::current($w,insertbackground) }
-            Tk        { set insertbackground [_ttk_style lookup $stylename -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
+            Tk        { set insertbackground [_ttk_style lookup $::ms::current($w,style) -insertbackground $::ms::data($w,statespec) $::ms::default($w,insertbackground)] }
         }
 
         # selectbackground
         switch -- $::ms::managed_by($w,selectbackground) {
             developer { set selectbackground $::ms::current($w,selectbackground) }
-            Tk        { set selectbackground [_ttk_style lookup $stylename -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
+            Tk        { set selectbackground [_ttk_style lookup $::ms::current($w,style) -selectbackground $::ms::data($w,statespec) $::ms::default($w,selectbackground)] }
         }
 
         # selectforeground
         switch -- $::ms::managed_by($w,selectforeground) {
             developer { set selectforeground $::ms::current($w,selectforeground) }
-            Tk        { set selectforeground [_ttk_style lookup $stylename -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
+            Tk        { set selectforeground [_ttk_style lookup $::ms::current($w,style) -selectforeground $::ms::data($w,statespec) $::ms::default($w,selectforeground)] }
         }
 
         # Set the text options.
