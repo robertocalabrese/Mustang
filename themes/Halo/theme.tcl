@@ -1587,9 +1587,9 @@ namespace eval ttk::theme::Halo {
                                               -columns 80 \
                                                -cursor xterm \
                                                  -font BiggerFont \
-                                           -foreground Text \
+                                           -foreground TextAlternate \
                              -inactiveselectbackground Background6 \
-                                     -insertbackground Text \
+                                     -insertbackground TextAlternate \
                                     -insertborderwidth 0 \
                                               -padding [list 0] \
                                                -relief flat \
@@ -1606,7 +1606,7 @@ namespace eval ttk::theme::Halo {
                                             disabled BordercolorDisabled \
                                                hover Accent] \
                         -foreground [list   disabled TextDisabled \
-                                            readonly Text];
+                                            readonly TextAlternate];
 
         ########################
         ##                    ##
