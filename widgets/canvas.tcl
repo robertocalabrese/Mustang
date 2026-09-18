@@ -4992,6 +4992,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **xview**
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
+            set subcommand [lindex $args 0]
+            set args       [lremove $args 0 0]
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
@@ -5000,7 +5002,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             }
 
             # Check the subcommand.
-            set subcommand [lindex $args 0]
             switch -nocase -- $subcommand {
                 ""  {
                     # Execute the command.
@@ -5036,7 +5037,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     try {
                         {*}$address xview moveto $fraction
                     } on error {} {
-                        return ""
+                        # Do nothing.
                     }
 
                     return ""
@@ -5065,7 +5066,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     try {
                         {*}$address xview scroll $number $what
                     } on error {} {
-                        return ""
+                        # Do nothing.
                     }
 
                     return ""
@@ -5079,6 +5080,8 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **yview**
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
+            set subcommand [lindex $args 0]
+            set args       [lremove $args 0 0]
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
@@ -5087,7 +5090,6 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             }
 
             # Check the subcommand.
-            set subcommand [lindex $args 0]
             switch -nocase -- $subcommand {
                 ""  {
                     # Execute the command.
@@ -5123,7 +5125,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     try {
                         {*}$address yview moveto $fraction
                     } on error {} {
-                        return ""
+                        # Do nothing.
                     }
 
                     return ""
@@ -5152,7 +5154,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     try {
                         {*}$address yview scroll $number $what
                     } on error {} {
-                        return ""
+                        # Do nothing.
                     }
 
                     return ""
@@ -5879,6 +5881,8 @@ proc ::ms::canvas::Scrollbar_Drag { w orient x y } {
 # It doesn't return anything.
 proc ::ms::canvas::Scrollbar_Update { w } {
     update
+
+    puts "AFTER UPDATE"
 
     ##################################
     ##                              ##
