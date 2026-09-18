@@ -7766,8 +7766,9 @@ proc ::ms::text::Delete { w } {
     switch -- [::ms::text::The_Cursor_Is_Inside_The_Selection $w] {
         0   {
             if { [{*}$address compare end != insert+1c] } {
-                set index1 [::ms::text::Next_Index     $w insert+1c ::tk::startOfCluster]
-                set index2 [::ms::text::Previous_Index $w insert    ::tk::endOfCluster]
+                set index1 [::ms::text::Previous_Index $w insert    ::tk::endOfCluster]
+                set index2 [::ms::text::Next_Index     $w insert+1c ::tk::startOfCluster]
+
                 {*}$address delete $index1 $index2
             }
 
