@@ -2650,7 +2650,7 @@ _bind _Simple_Text <Control-Shift-Tab> { ::ms::text::Control_Tab %W -1; break }
 # Cut/Copy/Paste/Clear
 _bind _Simple_Text <<Cut>>   { ::ms::text::Cut   %W; break }
 _bind _Simple_Text <<Copy>>  { ::ms::text::Copy  %W; break }
-_bind _Simple_Text <<Paste>> { ::ms::text::Paste %W %x %y CLIPBOARD; break }
+_bind _Simple_Text <<Paste>> { ::ms::text::Paste %W %x %y; break }
 _bind _Simple_Text <<Clear>> { ::ms::text::Clear %W; break }
 
 # Delete key
@@ -2971,7 +2971,7 @@ _bind _Scrollable_Text <Control-Shift-Tab> { ::ms::text::Control_Tab [_winfo par
 # Cut/Copy/Paste/Clear
 _bind _Scrollable_Text <<Cut>>   { ::ms::text::Cut   [_winfo parent %W]; break }
 _bind _Scrollable_Text <<Copy>>  { ::ms::text::Copy  [_winfo parent %W]; break }
-_bind _Scrollable_Text <<Paste>> { ::ms::text::Paste [_winfo parent %W] %x %y CLIPBOARD; break }
+_bind _Scrollable_Text <<Paste>> { ::ms::text::Paste [_winfo parent %W] %x %y; break }
 _bind _Scrollable_Text <<Clear>> { ::ms::text::Clear [_winfo parent %W]; break }
 
 # Delete key
@@ -7070,7 +7070,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                         "ButtonRelease-3" {
                             # Check the widget's state.
                             switch -- $::ms::current($w,state) {
-                                normal { ::ms::text::Paste $w $x $y PRIMARY }
+                                normal { ::ms::text::Paste $w $x $y }
                             }
                         }
                     }
@@ -7082,7 +7082,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                         "ButtonRelease-2" {
                             # Check the widget's state.
                             switch -- $::ms::current($w,state) {
-                                normal { ::ms::text::Paste $w $x $y PRIMARY }
+                                normal { ::ms::text::Paste $w $x $y }
                             }
                         }
                     }
@@ -7591,23 +7591,18 @@ proc ::ms::text::Cut { w } {
 
 ## Paste
 #
-# Manages the **Paste** event by inserting the clipboard content ('CLIPBOARD' or 'PRIMARY')
+# Manages the **Paste** event by inserting the clipboard content ('CLIPBOARD')
 # at the current insert point.
 #
 # Where:
 #
-# w                Should be the widget real address involved.
+# w      Should be the widget real address involved.
 #
-# x, y             Should be the (x,y) mouse pointer relative coordinates at the time of the event.
-#                  These values should be provided by the **Paste** event.
-#
-# clipboard_type   Optional, should be a string indicating from which clipboard to take paste data.
-#                  Allowed values are:
-#                    'CLIPBOARD' --> the primary clipboard
-#                    'PRIMARY'   --> the secondary clipboard
+# x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
+#        These values should be provided by the **Paste** event.
 #
 # It doesn't return anything.
-proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
+proc ::ms::text::Paste { w x y } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
         disabled -
@@ -7620,19 +7615,9 @@ proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
         true  { set address [list $w.text] }
     }
 
-    # Check the 'clipboard_type'.
-    switch -nocase -- $clipboard_type {
-        primary {
-            {*}$address mark set insert [::ms::text::Closest_Gap $w $x $y]
-
-            set clipboard_type PRIMARY
-        }
-        default { set clipboard_type CLIPBOARD }
-    }
-
     # Execute the command.
     try {
-        ::tk::GetSelection $w $clipboard_type
+        ::tk::GetSelection $w CLIPBOARD
     } on error {} {
         # Do nothing.
     } on ok { selection } {
