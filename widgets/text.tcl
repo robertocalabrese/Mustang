@@ -6655,8 +6655,14 @@ proc ::ms::text::ButtonPress { w x y } {
         0   { return "" }
     }
 
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
     # Check if the widget is already focussed.
-    switch -- [{*}$address instate [list focus]] {
+    switch -- [::ms::text::Pathname_Cmd $w instate [list focus]] {
         0   {
             # Focus the widget.
             _focus -force $::ms::addr($w,widget)
@@ -6675,12 +6681,6 @@ proc ::ms::text::ButtonPress { w x y } {
     set ::tk::Priv(mouseMoved) 0
     set ::tk::Priv(selectMode) char
 
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.text] }
-    }
-
     # Remove the selection, if any.
     {*}$address tag remove sel 1.0 end
 
@@ -6694,7 +6694,7 @@ proc ::ms::text::ButtonPress { w x y } {
 
     set anchor_name [::tk::TextAnchor $::ms::addr($w,widget)]
 
-    {*}$address mark set insert [::ms::text::Closest_Gap {*}$address $x $y]
+    {*}$address mark set insert [::ms::text::Closest_Gap $w $x $y]
     {*}$address mark set $anchor_name insert
 
     # Set the anchor mark's gravity depending on the click position
