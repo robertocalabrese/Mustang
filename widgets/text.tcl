@@ -6670,7 +6670,7 @@ proc ::ms::text::ButtonPress { w x y } {
     set ::tk::Priv(selectMode) char
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -6720,7 +6720,7 @@ proc ::ms::text::ButtonPress { w x y } {
 # It doesn't return anything.
 proc ::ms::text::Configure { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7450,7 +7450,7 @@ proc ::ms::text::Clear { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7473,7 +7473,7 @@ proc ::ms::text::Clear { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7500,7 +7500,7 @@ proc ::ms::text::Copy { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7516,7 +7516,7 @@ proc ::ms::text::Copy { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7544,7 +7544,7 @@ proc ::ms::text::Cut { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7573,7 +7573,7 @@ proc ::ms::text::Cut { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7609,7 +7609,7 @@ proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7660,7 +7660,7 @@ proc ::ms::text::Paste { w x y { clipboard_type CLIPBOARD } } {
         }
 
         # Check if the widget is scrollable or not.
-        switch -- $::ms::current($w,scrollbar) {
+        switch -- $::ms::current($w,scrollable) {
             true {
                 # Update the scrollbars.
                 ::ms::text::Scrollbar_Update $w
@@ -7702,7 +7702,7 @@ proc ::ms::text::Backspace { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7722,7 +7722,7 @@ proc ::ms::text::Backspace { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7751,7 +7751,7 @@ proc ::ms::text::Delete { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7771,7 +7771,7 @@ proc ::ms::text::Delete { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7799,7 +7799,7 @@ proc ::ms::text::Delete_Word { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7810,7 +7810,7 @@ proc ::ms::text::Delete_Word { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -7838,7 +7838,7 @@ proc ::ms::text::Delete_Till_LineEnd { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7883,7 +7883,7 @@ proc ::ms::text::Accent_Backspace { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7911,7 +7911,7 @@ proc ::ms::text::Clear_IME_Marked_Text { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7939,7 +7939,7 @@ proc ::ms::text::Start_IME_Marked_Text { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -7967,7 +7967,7 @@ proc ::ms::text::End_IME_Marked_Text { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8022,7 +8022,7 @@ proc ::ms::text::Insert { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -8051,7 +8051,7 @@ proc ::ms::text::Insert_String { w data } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8139,7 +8139,7 @@ proc ::ms::text::KeyPress { w key } {
     ::ms::text::Insert_String $w $key
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -8166,7 +8166,7 @@ proc ::ms::text::Return { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8180,7 +8180,7 @@ proc ::ms::text::Return { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -8211,7 +8211,7 @@ proc ::ms::text::Return { w } {
 # It doesn't return anything.
 proc ::ms::text::PageUp { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to a vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
@@ -8254,7 +8254,7 @@ proc ::ms::text::PageUp { w } {
 # It doesn't return anything.
 proc ::ms::text::PageDown { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to a vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
@@ -8297,7 +8297,7 @@ proc ::ms::text::PageDown { w } {
 # It doesn't return anything.
 proc ::ms::text::PageLeft { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8328,7 +8328,7 @@ proc ::ms::text::PageLeft { w } {
 # It doesn't return anything.
 proc ::ms::text::PageRight { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8375,7 +8375,7 @@ proc ::ms::text::PageRight { w } {
 # Returns the resulting index.
 proc ::ms::text::Line_Index { w n } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8410,7 +8410,7 @@ proc ::ms::text::Line_Index { w n } {
 # It doesn't return anything.
 proc ::ms::text::Line_Start { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8465,7 +8465,7 @@ proc ::ms::text::Line_Start { w } {
 # It doesn't return anything.
 proc ::ms::text::Line_End { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8520,7 +8520,7 @@ proc ::ms::text::Line_End { w } {
 # It doesn't return anything.
 proc ::ms::text::Line_Top { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8575,7 +8575,7 @@ proc ::ms::text::Line_Top { w } {
 # It doesn't return anything.
 proc ::ms::text::Line_Bottom { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8644,7 +8644,7 @@ proc ::ms::text::Line_Bottom { w } {
 # Returns the resulting index.
 proc ::ms::text::Next_Index { w start op } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8680,7 +8680,7 @@ proc ::ms::text::Next_Index { w start op } {
 # Returns the resulting index.
 proc ::ms::text::Next_Paragraph_Index { w start } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8721,7 +8721,7 @@ proc ::ms::text::Next_Paragraph_Index { w start } {
 # It doesn't return anything.
 proc ::ms::text::Next_Char { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8776,7 +8776,7 @@ proc ::ms::text::Next_Char { w } {
 # It doesn't return anything.
 proc ::ms::text::Next_Word { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -8831,7 +8831,7 @@ proc ::ms::text::Next_Word { w } {
 # It doesn't return anything.
 proc ::ms::text::Next_Line { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
@@ -8886,7 +8886,7 @@ proc ::ms::text::Next_Line { w } {
 # It doesn't return anything.
 proc ::ms::text::Next_Paragraph { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
@@ -8955,7 +8955,7 @@ proc ::ms::text::Next_Paragraph { w } {
 # Returns the resulting index.
 proc ::ms::text::Previous_Index { w start op } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -8991,7 +8991,7 @@ proc ::ms::text::Previous_Index { w start op } {
 # Returns the resulting index.
 proc ::ms::text::Previous_Paragraph_Index { w pos } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9025,7 +9025,7 @@ proc ::ms::text::Previous_Paragraph_Index { w pos } {
 # It doesn't return anything.
 proc ::ms::text::Previous_Char { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -9080,7 +9080,7 @@ proc ::ms::text::Previous_Char { w } {
 # It doesn't return anything.
 proc ::ms::text::Previous_Word { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::current($w,xscrollcommand) {
@@ -9135,7 +9135,7 @@ proc ::ms::text::Previous_Word { w } {
 # It doesn't return anything.
 proc ::ms::text::Previous_Line { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
@@ -9190,7 +9190,7 @@ proc ::ms::text::Previous_Line { w } {
 # It doesn't return anything.
 proc ::ms::text::Previous_Paragraph { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
@@ -9261,7 +9261,7 @@ proc ::ms::text::Select_All { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9292,7 +9292,7 @@ proc ::ms::text::Select_Key { w new } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9351,7 +9351,7 @@ proc ::ms::text::Select_None { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9685,7 +9685,7 @@ proc ::ms::text::Undo { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9708,7 +9708,7 @@ proc ::ms::text::Undo { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -9735,7 +9735,7 @@ proc ::ms::text::Redo { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9748,7 +9748,7 @@ proc ::ms::text::Redo { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         true {
             # Update the scrollbars.
             ::ms::text::Scrollbar_Update $w
@@ -9778,7 +9778,7 @@ proc ::ms::text::Transpose { w } {
     }
 
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9843,7 +9843,7 @@ proc ::ms::text::Transpose { w } {
 # Return '1' if the selection exists and contains the insertion cursor, otherwise returns '0'.
 proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9871,7 +9871,7 @@ proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
 # It doesn't return anything.
 proc ::ms::text::Move_Cursor { w pos } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9909,7 +9909,7 @@ proc ::ms::text::Move_Cursor { w pos } {
 # Returns the resulting index.
 proc ::ms::text::Scroll_Pages { w n } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
@@ -9949,7 +9949,7 @@ proc ::ms::text::Scroll_Pages { w n } {
 # Returns the resulting index.
 proc ::ms::text::Closest_Gap { w x y } {
     # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollbar) {
+    switch -- $::ms::current($w,scrollable) {
         false { set address [list interp invokehidden {} $w] }
         true  { set address [list $w.text] }
     }
