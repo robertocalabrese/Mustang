@@ -2510,7 +2510,7 @@ _bind _Scrollable_Canvas <Deactivate> { ::ms::canvas::Pathname_Cmd [_winfo paren
 _bind _Scrollable_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
 
 # Configure
-_bind _Scrollable_Canvas <Configure> { ::ms::canvas::Configure [_winfo parent [_winfo parent %W]]; break }
+_bind _Scrollable_Canvas <Configure> { ::ms::canvas::Configure [_winfo parent %W]; break }
 
 # Enter/Leave
 _bind _Scrollable_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
