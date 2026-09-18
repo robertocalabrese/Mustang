@@ -8845,14 +8845,14 @@ proc ::ms::text::Next_Line { w } {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
                     }
                 }
             }
@@ -8864,14 +8864,14 @@ proc ::ms::text::Next_Line { w } {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index 1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
                     }
                 }
             }
@@ -9149,14 +9149,14 @@ proc ::ms::text::Previous_Line { w } {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
                     }
                 }
                 default {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w -1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
                     }
                 }
             }
@@ -9168,14 +9168,14 @@ proc ::ms::text::Previous_Line { w } {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
                     }
                 }
                 on  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w -1 units }
-                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index -1] }
+                        normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
                     }
                 }
             }
@@ -9558,7 +9558,7 @@ proc ::ms::text::Select_Next_Word { w } {
 proc ::ms::text::Select_Next_Line { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal { ::ms::text::Select_Key $w [::ms::text::Line_Index 1] }
+        normal { ::ms::text::Select_Key $w [::ms::text::Line_Index $w 1] }
     }
 
     return ""
@@ -9640,7 +9640,7 @@ proc ::ms::text::Select_Previous_Word { w } {
 proc ::ms::text::Select_Previous_Line { w } {
     # Check the widget's state.
     switch -- $::ms::current($w,state) {
-        normal { ::ms::text::Select_Key $w [::ms::text::Line_Index -1] }
+        normal { ::ms::text::Select_Key $w [::ms::text::Line_Index $w -1] }
     }
 
     return ""
