@@ -7719,7 +7719,7 @@ proc ::ms::text::Backspace { w } {
             if { [{*}$address compare insert != 1.0] } {
                 set index1 [::ms::text::Next_Index     $w insert    ::tk::startOfCluster]
                 set index2 [::ms::text::Previous_Index $w insert-1c ::tk::endOfCluster]
-                {*}$address delete $index1 $index2
+                {*}$address delete $index2 $index1
             }
 
             {*}$address see insert
