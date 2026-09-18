@@ -7813,7 +7813,7 @@ proc ::ms::text::Delete_Word { w } {
 
     # Execute the command.
     if { [{*}$address compare end != insert+1c] } {
-        {*}$address delete insert [::ms::text::Next_Word $w insert]
+        {*}$address delete insert [::ms::text::Next_Index $w [::ms::text::Next_Index $w insert tk::endOfWord] tk::startOfNextWord]
     }
 
     # Check if the widget is scrollable or not.
