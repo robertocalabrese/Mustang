@@ -2970,7 +2970,7 @@ _bind _Scrollable_Text <Control-Shift-Tab> { ::ms::text::Control_Tab [_winfo par
 
 # Cut/Copy/Paste/Clear
 _bind _Scrollable_Text <<Cut>>   { ::ms::text::Cut   [_winfo parent %W]; break }
-_bind _Scrollable_Text <<Copy>>  { ::ms::text::Copy  %W; break }
+_bind _Scrollable_Text <<Copy>>  { ::ms::text::Copy  [_winfo parent %W]; break }
 _bind _Scrollable_Text <<Paste>> { ::ms::text::Paste [_winfo parent %W] %x %y CLIPBOARD; break }
 _bind _Scrollable_Text <<Clear>> { ::ms::text::Clear [_winfo parent %W]; break }
 
@@ -3007,8 +3007,8 @@ _bind _Scrollable_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 _bind _Scrollable_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
-_bind _Scrollable_Text <FocusIn>  { ::ms::text::FocusIn  [_winfo parent %W]; break }
-_bind _Scrollable_Text <FocusOut> { ::ms::text::FocusOut [_winfo parent %W]; break }
+_bind _Scrollable_Text <FocusIn>  { ::ms::text::Pathname_Cmd [_winfo parent %W] state [list  focus]; break }
+_bind _Scrollable_Text <FocusOut> { ::ms::text::FocusOut     [_winfo parent %W]; break }
 
 # Insert
 _bind _Scrollable_Text <KeyPress-Insert>    { ::ms::text::Insert [_winfo parent %W]; break }
@@ -3035,15 +3035,15 @@ _bind _Scrollable_Text <<Undo>> { ::ms::text::Undo [_winfo parent %W]; break }
 _bind _Scrollable_Text <<Redo>> { ::ms::text::Redo [_winfo parent %W]; break }
 
 # Scan or Paste.
-_bind _Scrollable_Text <Button-2>         { ::ms::text::Scan_Or_Paste %W %x %y "Button-2"; break }
-_bind _Scrollable_Text <B2-Motion>        { ::ms::text::Scan_Or_Paste %W %x %y "B2-Motion"; break }
-_bind _Scrollable_Text <ButtonRelease-2>  { ::ms::text::Scan_Or_Paste %W %x %y "ButtonRelease-2"; break }
+_bind _Scrollable_Text <Button-2>         { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "Button-2"; break }
+_bind _Scrollable_Text <B2-Motion>        { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "B2-Motion"; break }
+_bind _Scrollable_Text <ButtonRelease-2>  { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "ButtonRelease-2"; break }
 
-_bind _Scrollable_Text <Button-3>         { ::ms::text::Scan_Or_Paste %W %x %y "Button-3"; break }
-_bind _Scrollable_Text <B3-Motion>        { ::ms::text::Scan_Or_Paste %W %x %y "B3-Motion"; break }
-_bind _Scrollable_Text <ButtonRelease-3>  { ::ms::text::Scan_Or_Paste %W %x %y "ButtonRelease-3"; break }
+_bind _Scrollable_Text <Button-3>         { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "Button-3"; break }
+_bind _Scrollable_Text <B3-Motion>        { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "B3-Motion"; break }
+_bind _Scrollable_Text <ButtonRelease-3>  { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "ButtonRelease-3"; break }
 
-_bind _Scrollable_Text <<PasteSelection>> { ::ms::text::Scan_Or_Paste %W %x %y "PasteSelection"; break }
+_bind _Scrollable_Text <<PasteSelection>> { ::ms::text::Scan_Or_Paste [_winfo parent %W] %x %y "PasteSelection"; break }
 
 # PageUp/PageDown/PageLeft/PageRight
 _bind _Scrollable_Text <Prior>         { ::ms::text::PageUp    [_winfo parent %W]; break }
