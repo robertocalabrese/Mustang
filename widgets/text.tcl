@@ -7853,8 +7853,8 @@ proc ::ms::text::Delete_Till_LineEnd { w } {
     # Execute the command.
     switch -- [{*}$address compare end != insert+1c] {
         1   {
-            switch -- [{*}$address compare insert == { insert lineend }] {
-                0   { {*}$address delete insert { insert lineend } }
+            switch -- [{*}$address compare insert == {insert lineend}] {
+                0   { {*}$address delete insert {insert lineend} }
                 1   { {*}$address delete insert }
             }
         }
