@@ -2378,6 +2378,9 @@ proc ::ms::listbox::Command { window { args "" } } {
                         }
                     }
 
+                    # Set the widget toplevel.
+                    set ::ms::addr($w,toplevel) [_winfo toplevel $w]
+
                     ######################
                     ##                  ##
                     ##     BINDINGS     ##
