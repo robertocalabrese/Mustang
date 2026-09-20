@@ -5398,9 +5398,6 @@ proc ::ms::listbox::Motion { w x y } {
         {*}$address activate $::ms::data($w,preselected_index)
     }
 
-    # Adjust the listbox viewport.
-    {*}$address see $::ms::data($w,preselected_index)
-
     return ""
 }
 
