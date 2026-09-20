@@ -4789,6 +4789,11 @@ proc ::ms::palette::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::palette::KeyPress { w key } {
+    # Check if the key provided is an empty string.
+    switch -- $key {
+        ""  { return "" }
+    }
+
     # Check if 'key' is a special key.
     switch -- $key {
         Caps_Lock   -
@@ -4802,8 +4807,12 @@ proc ::ms::palette::KeyPress { w key } {
         }
     }
 
+    # If a selection is present, remove the characters selected.
+    ::ttk::entry::PendingDelete $w.combobox
+
     # 😀 Insert the key.
-    ::ttk::entry::Insert $w.combobox $key
+    $w.combobox insert insert $key
+    ::ttk::entry::See $w.combobox insert
 
     return ""
 }
