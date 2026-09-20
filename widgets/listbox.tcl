@@ -2291,7 +2291,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             # bordercolor
             switch -- $::ms::managed_by($w,bordercolor) {
                 developer { set bordercolor $::ms::current($w,bordercolor) }
-                Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
+                Tk        { set bordercolor [_ttk_style lookup $::ms::current($w,style) -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
             }
 
             # Set the listbox options.
@@ -4154,7 +4154,7 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
         # bordercolor
         switch -- $::ms::managed_by($w,bordercolor) {
             developer { set bordercolor $::ms::current($w,bordercolor) }
-            Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $statespec $::ms::default($w,bordercolor)] }
+            Tk        { set bordercolor [_ttk_style lookup $stylename -bordercolor $::ms::data($w,statespec) $::ms::default($w,bordercolor)] }
         }
 
         # Set the listbox options.
@@ -5195,18 +5195,6 @@ proc ::ms::listbox::FocusIn { w } {
 
     # Change the widget dynamic state to 'focus'.
     ::ms::listbox::Pathname_Cmd $w state [list focus]
-
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.listbox] }
-    }
-
-    # Register the current rows selected.
-    set ::ms::temp($w,selected_rows) [{*}$address curselection]
-    switch -- [llength $::ms::temp($w,selected_rows)] {
-        0   { set ::ms::temp($w,selected_rows) [list 0] }
-    }
 
     return ""
 }
