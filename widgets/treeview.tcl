@@ -2084,6 +2084,7 @@ proc ::ms::treeview::Command { window { args "" } } {
             set ::ms::default($w,cmenu)          $::ms::default(treeview,cmenu)
             set ::ms::default($w,columns)        $::ms::default(treeview,columns)
             set ::ms::default($w,displaycolumns) $::ms::default(treeview,displaycolumns)
+            set ::ms::default($w,scrollable)     $::ms::default(treeview,scrollable)
             set ::ms::default($w,selectmode)     $::ms::default(treeview,selectmode)
             set ::ms::default($w,selecttype)     $::ms::default(treeview,selecttype)
             set ::ms::default($w,show)           $::ms::default(treeview,show)
@@ -2101,6 +2102,7 @@ proc ::ms::treeview::Command { window { args "" } } {
             set ::ms::current($w,cmenu)          $::ms::default(treeview,cmenu)
             set ::ms::current($w,columns)        $::ms::default(treeview,columns)
             set ::ms::current($w,displaycolumns) $::ms::default(treeview,displaycolumns)
+            set ::ms::current($w,scrollable)     $::ms::default(treeview,scrollable)
             set ::ms::current($w,selectmode)     $::ms::default(treeview,selectmode)
             set ::ms::current($w,selecttype)     $::ms::default(treeview,selecttype)
             set ::ms::current($w,show)           $::ms::default(treeview,show)
@@ -2383,6 +2385,20 @@ proc ::ms::treeview::Command { window { args "" } } {
                                     set ::ms::managed_by($w,rows) developer
                                 }
                             }
+                        }
+                    }
+                    -scrollable {
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,scrollable) false }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,scrollable) true }
                         }
                     }
                     -selectmode {
@@ -3609,6 +3625,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                             }
                                         }
                                     }
+                                    -scrollable {}
                                     -selectmode {
                                         set value [string tolower $value]
                                         switch -- $value {
