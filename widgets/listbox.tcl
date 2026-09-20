@@ -5215,23 +5215,6 @@ proc ::ms::listbox::FocusOut { w } {
         1   { ::ms::listbox::Pathname_Cmd $w state [list  focus] }
     }
 
-    # Check if the widget is scrollable or not.
-    switch -- $::ms::current($w,scrollable) {
-        false { set address [list interp invokehidden {} $w] }
-        true  { set address [list $w.listbox] }
-    }
-
-    # Check if there is at least one selected row.
-    switch -- [{*}$address curselection] {
-        ""  {
-            foreach index $::ms::temp($w,selected_rows) {
-                {*}$address selection set $index
-            }
-        }
-    }
-
-    unset -nocomplain -- ::ms::temp($w,selected_rows)
-
     return ""
 }
 
