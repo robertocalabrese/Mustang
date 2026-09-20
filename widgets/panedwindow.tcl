@@ -1278,7 +1278,7 @@ proc ::ms::panedwindow::Command { window { args "" } } {
 
             # If needed, create the hull object mapping.
             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                _ttk_style map $::ms::style($w,hull) {*}$mapping
+                _ttk_style map $::ms::style($w,widget) {*}$mapping
 
                 # Add the hull object mapping to the stylemap list containing all the mappings
                 # created by mustang for the current theme.
@@ -1796,7 +1796,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
 
                             # If needed, create the hull object mapping.
                             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-                                _ttk_style map $::ms::style($w,hull) {*}$mapping
+                                _ttk_style map $::ms::style($w,widget) {*}$mapping
 
                                 # Add the hull object mapping to the stylemap list containing all the mappings
                                 # created by mustang for the current theme.
@@ -2285,7 +2285,7 @@ proc ::ms::panedwindow::Style_Update { stylename caller_info } {
 
         # If needed, create the hull object mapping.
         if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
-            _ttk_style map $::ms::style($w,hull) {*}$mapping
+            _ttk_style map $::ms::style($w,widget) {*}$mapping
 
             # Add the hull object mapping to the stylemap list containing all the mappings
             # created by mustang for the current theme.
