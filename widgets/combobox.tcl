@@ -5627,7 +5627,7 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
     switch -- $value {
         ""  {
             # Change the widget dynamic state to '!invalid'.
-            interp invoke hidden {} $w state [list !invalid]
+            interp invokehidden {} $w state [list !invalid]
 
             return 1
         }
@@ -5654,7 +5654,7 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
                                 switch -- [string is alnum $char] {
                                     0   {
                                         # Change the widget dynamic state to 'invalid'.
-                                        interp invoke hidden {} $w state [list invalid]
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5676,7 +5676,7 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
                                 switch -- [string is alpha $char] {
                                     0   {
                                         # Change the widget dynamic state to 'invalid'.
-                                        interp invoke hidden {} $w state [list invalid]
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5694,7 +5694,7 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
                             switch -- [string is integer $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    interp invoke hidden {} $w state [list invalid]
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5706,14 +5706,14 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
                     switch -- [string is integer $value] {
                         0   {
                             # Change the widget dynamic state to 'invalid'.
-                            interp invoke hidden {} $w state [list invalid]
+                            interp invokehidden {} $w state [list invalid]
 
                             return 1
                         }
                         1   {
                             if { $value < 0 } {
                                 # Change the widget dynamic state to 'invalid'.
-                                interp invoke hidden {} $w state [list invalid]
+                                interp invokehidden {} $w state [list invalid]
 
                                 return 1
                             }
@@ -5727,14 +5727,14 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
                             switch -- [string is double $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    interp invoke hidden {} $w state [list invalid]
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
                                 1   {
                                     if { $value < 0 } {
                                         # Change the widget dynamic state to 'invalid'.
-                                        interp invoke hidden {} $w state [list invalid]
+                                        interp invokehidden {} $w state [list invalid]
 
                                         return 1
                                     }
@@ -5751,7 +5751,7 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
                             switch -- [string is double $value] {
                                 0   {
                                     # Change the widget dynamic state to 'invalid'.
-                                    interp invoke hidden {} $w state [list invalid]
+                                    interp invokehidden {} $w state [list invalid]
 
                                     return 1
                                 }
@@ -5790,9 +5790,9 @@ proc ::ms::combobox::Validate_KeyPress { w string } {
     # 'value' with 'value' itself and change the widget dynamic invalid state accordingly.
     set end [expr { [string length $value]-1 }]
     if { [string range [::tcl::prefix longest $values $value] 0 $end] eq $value } {
-        interp invoke hidden {} $w state [list !invalid]
+        interp invokehidden {} $w state [list !invalid]
     } else {
-        interp invoke hidden {} $w state [list  invalid]
+        interp invokehidden {} $w state [list  invalid]
     }
 
     return 1
@@ -6110,7 +6110,7 @@ proc ::ms::combobox::Validate_String { w } {
     }
 
     # Set the widget dynamic state to '!invalid'.
-    interp invoke hidden {} $w state [list !invalid]
+    interp invokehidden {} $w state [list !invalid]
 
     return [lindex $::ms::data($w,values) $index]
 }
