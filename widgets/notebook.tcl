@@ -3264,7 +3264,7 @@ proc ::ms::notebook::Cycle_Tab { w dir { factor 1.0 } } {
             set select [expr { ($select + $step) % $tab_count }]
         }
 
-        if {$select != $current} {
+        if { $select != $current } {
             # Register the focussed widget for the current tab.
             set current_tab [interp invokehidden {} $w select]
             set ::ms::temp($w,$current_tab,focussed_widget) [_focus]
@@ -3353,13 +3353,16 @@ proc ::ms::notebook::Enable_Traversal { w } {
 #
 # Returns the nearest traversal enabled notebook address or an empty string is none is found.
 proc ::ms::notebook::Enclosing_Notebook { w } {
+    # Find the toplevel related to 'w'.
+    set toplevel [_winfo toplevel $w]
+
     # Check if exists the notebook traversal variable for the toplevel of 'w'.
-    switch -- [info exists ::ms::notebook(traversal,$::ms::addr($w,toplevel))] {
+    switch -- [info exists ::ms::notebook(traversal,$toplevel)] {
         0   { return "" }
     }
 
-    while { $w ne $::ms::addr($w,toplevel) && $w ne "" } {
-        switch -- [lsearch -exact $::ms::notebook(traversal,$::ms::addr($w,toplevel)) $w] {
+    while { ($w ne $toplevel) && ($w ne "") } {
+        switch -- [lsearch -exact $::ms::notebook(traversal,$toplevel) $w] {
             -1      {}
             default { return $w }
         }
