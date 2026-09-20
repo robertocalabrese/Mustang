@@ -3706,7 +3706,16 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
                     # Check the index value.
                     switch -- [string is integer -strict $index] {
-                        0   { ::ms::Error "Invalid index, '$index'." $caller_info }
+                        0   {
+                            # Check if index is one of the allowed keyword for indexes.
+                            switch -- $index {
+                                insert    -
+                                end       -
+                                sel.first -
+                                sel.last  { set index [interp invokehidden {} $w index $index] }
+                                default   { ::ms::Error "Invalid index, '$index'." $caller_info }
+                            }
+                        }
                     }
 
                     # Construct the new value that should be displayed inside the widget.
@@ -3823,7 +3832,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
                                     # If the corrected value is different than the current value,
                                     # clear the widget field, insert the corrected value and position the cursor at the end.
-                                    if { $value ne $args } {
+                                    if { $value ne $::ms::data($w,current_value) } {
                                         interp invokehidden {} $w delete    0 end
                                         interp invokehidden {} $w selection clear
                                         interp invokehidden {} $w insert    0 $value
@@ -3865,7 +3874,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
                                             # If the corrected value is different than the current value,
                                             # clear the widget field, insert the corrected value and position the cursor at the end.
-                                            if { $value ne $args } {
+                                            if { $value ne $::ms::data($w,current_value) } {
                                                 interp invokehidden {} $w delete    0 end
                                                 interp invokehidden {} $w selection clear
                                                 interp invokehidden {} $w insert    0 $value
@@ -3911,7 +3920,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
                                             # If the corrected value is different than the current value,
                                             # clear the widget field, insert the corrected value and position the cursor at the end.
-                                            if { $value ne $args } {
+                                            if { $value ne $::ms::data($w,current_value) } {
                                                 interp invokehidden {} $w delete    0 end
                                                 interp invokehidden {} $w selection clear
                                                 interp invokehidden {} $w insert    0 $value
@@ -4595,11 +4604,6 @@ proc ::ms::entry::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::KeyPress { w key } {
-    # Check if the key provided is an empty string.
-    switch -- $key {
-        ""  { return "" }
-    }
-
     # Enable only the keypress bindings that are needed for the 'datatype' provided and
     # disable everything else.
     switch -- $::ms::current($w,datatype) {
@@ -4705,12 +4709,8 @@ proc ::ms::entry::KeyPress { w key } {
         }
     }
 
-    # If a selection is present, remove the characters selected.
-    ::ttk::entry::PendingDelete $w
-
     # 😀 Insert the key.
-    interp invokehidden {} $w insert insert $key
-    ::ttk::entry::See $w insert
+    ::ttk::entry::Insert $w $key
 
     return ""
 }
