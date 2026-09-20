@@ -4715,7 +4715,7 @@ proc ::ms::listbox::Begin_Select { w x y } {
     ::tk::FireListboxSelectEvent $::ms::addr($w,widget)
 
     # Check if the widget is already focussed.
-    switch -- [{*}$address instate [list focus]] {
+    switch -- [::ms::listbox::Pathname_Cmd $w instate [list focus]] {
         0   {
             # Focus the widget.
             _focus -force $::ms::addr($w,widget)
