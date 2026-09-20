@@ -2449,9 +2449,9 @@ proc ::ms::scale::Style_Update { stylename caller_info } {
             }
         }
 
-        # If the parent style layout is not known by mustang, set it as the current theme layout '$orient.TProgressbar'.
+        # If the parent style layout is not known by mustang, set it as the current theme layout '$orient.TScale'.
         if { $parent_style($orient) ni $::ms::layouts($::ms::theme) } {
-            _ttk_style layout $parent_style($orient) [_ttk_style layout [string cat $dir "." TProgressbar]]
+            _ttk_style layout $parent_style($orient) [_ttk_style layout [string cat $dir "." TScale]]
         }
     }
 
