@@ -1646,7 +1646,7 @@ proc ::ms::button::Command { window { args "" } } {
                                    -text "" \
                            -textvariable $text_variable \
                               -underline $::ms::current($w,underline) \
-                                  -width $::ms::current($w,charwidth)
+                                  -width $::ms::current($w,charwidth);
 
             # Set the widget toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
