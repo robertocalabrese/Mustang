@@ -3701,6 +3701,11 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
             switch -- [llength $args] {
                 2   {
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
                     set index  [lindex $args 0]
                     set string [lindex $args 1]
 
