@@ -5657,6 +5657,11 @@ proc ::ms::spinbox::Increment { w value amount } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::KeyPress { w key } {
+    # Check if the key provided is an empty string.
+    switch -- $key {
+        ""  { return "" }
+    }
+
     # Enable only the keypress bindings that are needed for the 'datatype' provided and
     # disable everything else.
     switch -- $::ms::current($w,datatype) {
@@ -5737,8 +5742,12 @@ proc ::ms::spinbox::KeyPress { w key } {
         }
     }
 
+    # If a selection is present, remove the characters selected.
+    ::ttk::entry::PendingDelete $w
+
     # 😀 Insert the key.
-    ::ttk::entry::Insert $w $key
+    interp invokehidden {} $w insert insert $key
+    ::ttk::entry::See $w insert
 
     return ""
 }
