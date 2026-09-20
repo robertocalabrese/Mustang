@@ -8358,7 +8358,7 @@ proc ::ms::text::PageLeft { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""      { ::ms::Scroll_Parent_X  $w -1 pages }
                 default { interp invokehidden {} $w xview scroll -1 pages}
             }
@@ -8389,7 +8389,7 @@ proc ::ms::text::PageRight { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""      { ::ms::Scroll_Parent_X $w +1 pages }
                 default { interp invokehidden {} $w xview scroll +1 pages }
             }
@@ -8471,7 +8471,7 @@ proc ::ms::text::Line_Start { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -8526,7 +8526,7 @@ proc ::ms::text::Line_End { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -8581,7 +8581,7 @@ proc ::ms::text::Line_Top { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -8636,7 +8636,7 @@ proc ::ms::text::Line_Bottom { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an vertical scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -8782,7 +8782,7 @@ proc ::ms::text::Next_Char { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -8837,7 +8837,7 @@ proc ::ms::text::Next_Word { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -9086,7 +9086,7 @@ proc ::ms::text::Previous_Char { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
@@ -9141,7 +9141,7 @@ proc ::ms::text::Previous_Word { w } {
     switch -- $::ms::current($w,scrollable) {
         false {
             # Check if the simple text is linked to an horizontal scrollbar.
-            switch -- $::current($w,xscrollcommand) {
+            switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
                     # Check the widget's state.
                     switch -- $::ms::current($w,state) {
