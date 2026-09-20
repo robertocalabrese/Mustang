@@ -2266,7 +2266,7 @@ proc ::ms::entry::Command { window { args "" } } {
                 real       {
                     set ::ms::current($w,invalidcommand)  {}
                     set ::ms::current($w,validate)        key
-                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_Keypress %W %P]
+                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_KeyPress %W %P]
 
                     switch -- $::ms::current($w,maxlength) {
                         0       {}
@@ -3270,7 +3270,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                 real       {
                                     set ::ms::current($w,invalidcommand)  {}
                                     set ::ms::current($w,validate)        key
-                                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_Keypress %W %P]
+                                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_KeyPress %W %P]
 
                                     switch -- $::ms::current($w,maxlength) {
                                         0       {}
