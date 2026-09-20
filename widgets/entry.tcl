@@ -4595,7 +4595,13 @@ proc ::ms::entry::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::KeyPress { w key } {
-    # Check the datatype provided for the widget.
+    # Check if the key provided is an empty string.
+    switch -- $key {
+        ""  { return "" }
+    }
+
+    # Enable only the keypress bindings that are needed for the 'datatype' provided and
+    # disable everything else.
     switch -- $::ms::current($w,datatype) {
         alnum {
             # Check if 'key' is a special key.
@@ -4643,7 +4649,7 @@ proc ::ms::entry::KeyPress { w key } {
                 Caps_Lock {}
                 default   {
                     # Check if 'key' is not an hexadecimal valid key.
-                    if { ![regexp "\[0-9a-fA-F\]" %A] } {
+                    if { ![regexp "\[0-9a-fA-F\]" $key] } {
                         # 😕 Do not insert the key.
                         return -code break
                     }
@@ -4699,8 +4705,12 @@ proc ::ms::entry::KeyPress { w key } {
         }
     }
 
+    # If a selection is present, remove the characters selected.
+    ::ttk::entry::PendingDelete $w
+
     # 😀 Insert the key.
-    ::ttk::entry::Insert $w $key
+    interp invokehidden {} $w insert insert $key
+    ::ttk::entry::See $w insert
 
     return ""
 }
