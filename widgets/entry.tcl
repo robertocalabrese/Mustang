@@ -3807,6 +3807,11 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             # *window* **set** *value*?
             switch -- [llength $args] {
                 1   {
+                    # Check the widget's state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
                     # Remove any consecutive whitespaces at the beginning or at the end of the current value.
                     set value [string trim $args]
 
