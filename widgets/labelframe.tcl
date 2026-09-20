@@ -2365,11 +2365,18 @@ proc ::ms::labelframe::Command { window { args "" } } {
             switch -- $::ms::current($w,textvariable) {
                 ""  {
                     # Automatic translation: ON
-                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+
+                    # Check the current text provided.
+                    switch -- [string trim $::ms::current($w,text)] {
+                        ""      { set ::ms::data($w,translated_text) $::ms::current($w,text) }
+                        default { set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)] }
+                    }
+
                     set text_variable ::ms::data($w,translated_text)
                 }
                 default {
                     # Automatic translation: OFF
+
                     set text_variable $::ms::current($w,textvariable)
                 }
             }
@@ -3814,11 +3821,18 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                             switch -- $::ms::current($w,textvariable) {
                                 ""  {
                                     # Automatic translation: ON
-                                    set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)]
+
+                                    # Check the current text provided.
+                                    switch -- [string trim $::ms::current($w,text)] {
+                                        ""      { set ::ms::data($w,translated_text) $::ms::current($w,text) }
+                                        default { set ::ms::data($w,translated_text) [::msgcat::mc {*}$::ms::current($w,text)] }
+                                    }
+
                                     set text_variable ::ms::data($w,translated_text)
                                 }
                                 default {
                                     # Automatic translation: OFF
+
                                     set text_variable $::ms::current($w,textvariable)
                                 }
                             }
