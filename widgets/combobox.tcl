@@ -4565,13 +4565,13 @@ proc ::ms::combobox::ButtonPress { w x y mode } {
                             set ::ttk::entry::State(selectMode) $mode
                         }
                         default {
-                            interp invokehidden $w icursor   [::ttk::entry::ClosestGap $w $x]
-                            interp invokehidden $w selection clear
+                            interp invokehidden {} $w icursor   [::ttk::entry::ClosestGap $w $x]
+                            interp invokehidden {} $w selection clear
 
                             # Set up for future drag, double-click, triple-click or quadruple-click.
                             set ::ttk::entry::State(x)          $x
                             set ::ttk::entry::State(selectMode) char
-                            set ::ttk::entry::State(anchor)     [interp invokehidden $w index insert]
+                            set ::ttk::entry::State(anchor)     [interp invokehidden {} $w index insert]
                         }
                     }
                 }
