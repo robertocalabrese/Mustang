@@ -2633,11 +2633,11 @@ proc ::ms::palette::Command { window { args "" } } {
             $w.combobox icursor end
 
             # Pack the combobox object.
-            pack $w.combobox -expand true \
-                               -fill x \
-                               -padx [list 0 3p] \
-                               -pady 0 \
-                               -side left;
+            _pack $w.combobox -expand true \
+                                -fill x \
+                                -padx [list 0 3p] \
+                                -pady 0 \
+                                -side left;
 
             ######################
             ##                  ##
@@ -2673,11 +2673,11 @@ proc ::ms::palette::Command { window { args "" } } {
                                             -width $::ms::styleopt($::ms::theme,Preview,width);
 
             # Pack the preview object.
-            pack $w.preview -expand false \
-                              -fill none \
-                              -padx [list 3p 0] \
-                              -pady 0 \
-                              -side left;
+            _pack $w.preview -expand false \
+                               -fill none \
+                               -padx [list 3p 0] \
+                               -pady 0 \
+                               -side left;
 
             ######################
             ##                  ##
