@@ -673,14 +673,21 @@ proc ::ms::winfo::Command { args } {
                 1   {
                     set window $args
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
+                    # Check if the address provided is a valid real or short address.
+                    if { ($window in $::ms::addr(reals)) || [_winfo exists $window] } {
+                        set w    $window
+                        set type real
+                    } elseif { $window in $::ms::addr(shorts) } {
+                        set w    $::ms::addr($window,real)
+                        set type short
+
+                        # Check if 'w' belongs to a megawidget container.
+                        # If so, change 'w' with it's content address.
+                        if { $w in $::ms::addr(megawidgets,containers) } {
+                            set w $::ms::addr($w,widget)
                         }
+                    } else {
+                        ::ms::Error "Invalid address, '$window'." $caller_info
                     }
 
                     # Execute the command.
