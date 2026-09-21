@@ -2262,7 +2262,7 @@ proc ::ms::scrollbar::Style_Update { stylename caller_info } {
                                                "_lc=" $::ms::current($w,lightcolor) \
                                                "_rl=" $::ms::current($w,relief) \
                                                "_tc=" $::ms::current($w,troughcolor) \
-                                               "." $parent_style];
+                                               "." $parent_style($::ms::current($w,orient))];
 
         # If needed, create the widget style name.
         if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
