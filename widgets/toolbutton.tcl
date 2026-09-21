@@ -1690,7 +1690,7 @@ proc ::ms::toolbutton::Command { window { args "" } } {
                                   -style $::ms::style($w,widget) \
                               -takefocus $takefocus \
                                    -text "" \
-                           -textvariable $textvariable \
+                           -textvariable $text_variable \
                               -underline $::ms::current($w,underline) \
                                   -width $::ms::current($w,charwidth)
 
@@ -2376,7 +2376,7 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
                                                                        -style $::ms::style($w,widget) \
                                                                    -takefocus $takefocus \
                                                                         -text "" \
-                                                                -textvariable $textvariable \
+                                                                -textvariable $text_variable \
                                                                    -underline $::ms::current($w,underline) \
                                                                        -width $::ms::current($w,charwidth);
 
