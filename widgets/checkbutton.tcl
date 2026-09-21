@@ -2889,19 +2889,13 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
                         disabled { return "" }
                     }
 
-                    # Check if there is a command associated with the widget.
-                    switch -- $::ms::current($w,command) {
-                        ""      { return "" }
-                        default {
-                            # Invoke the command associated with the widget.
-                            try {
-                                uplevel #0 [list {*}$::ms::current($w,command)]
-                            } on error {} {
-                                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
-                            } on ok { result } {
-                                return $result
-                            }
-                        }
+                    # Execute the command.
+                    try {
+                        $w.indicator invoke
+                    } on error {} {
+                        ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
+                    } on ok { result } {
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
