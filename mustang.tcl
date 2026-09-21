@@ -203,6 +203,7 @@ proc ::ms::Init {} {
                             progressbar \
                             radiobutton \
                             scale \
+                            scrollbar \
                             separator \
                             sizegrip \
                             spinbox \
