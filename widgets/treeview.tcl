@@ -3357,8 +3357,13 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             } on error {} {
                 ::ms::Error "Invalid script." $caller_info
             } on ok { result } {
-                # If needed, update the scrollbar/s.
-                ::ms::treeview::Scrollbar_Update $w
+                # Check if the widget is scrollable or not.
+                switch -- $::ms::current($w,scrollable) {
+                    true {
+                        # If needed, update the scrollbar/s.
+                        ::ms::treeview::Scrollbar_Update $w
+                    }
+                }
 
                 return $result
             }
