@@ -2026,8 +2026,10 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                 1   {
                     # Check the argument provided (fraction).
                     set fraction $args
-                    if { ($fraction < 0) || ($fraction > 1.0) } {
-                        ::ms::Error "Invalid option, '$args'." $caller_info
+                    if { $fraction < 0 } {
+                        set fraction 0
+                    } elseif { $fraction > 1.0 } {
+                        set fraction 1.0
                     }
 
                     # Check the command associated with the widget.
