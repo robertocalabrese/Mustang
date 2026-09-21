@@ -997,9 +997,20 @@ proc ::ms::scrollbar::Command { window { args "" } } {
                                     2   {
                                         # Check the first argument of 'value' (the address of the widget in which the scrollbar will act upon).
                                         set address [lindex $value 0]
-                                        set result  [::ms::Check_Pathname $address invalid]
-                                        switch -- $result {
-                                            invalid { continue }
+                                        switch -- [_winfo exists $address] {
+                                            0   {
+                                                if { $address in $::ms::addr(shorts) } {
+                                                    set address $::ms::addr($address,real)
+
+                                                    # Check if 'address' belongs to a megawidget container.
+                                                    # If so, change 'address' with it's content address.
+                                                    if { $address in $::ms::addr(megawidgets,containers) } {
+                                                        set address $::ms::addr($address,widget)
+                                                    }
+                                                } else {
+                                                    continue
+                                                }
+                                            }
                                         }
 
                                         # Check the second argument of 'value' (the command, 'xview' or 'yview').
@@ -1551,26 +1562,27 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                                                     2   {
                                                         # Check the first argument of 'value' (the address of the widget in which the scrollbar will act upon).
                                                         set address [lindex $value 0]
-                                                        set result  [::ms::Check_Pathname $address invalid]
-                                                        switch -- $result {
-                                                            invalid { continue }
+                                                        switch -- [_winfo exists $address] {
+                                                            0   {
+                                                                if { $address in $::ms::addr(shorts) } {
+                                                                    set address $::ms::addr($address,real)
+
+                                                                    # Check if 'address' belongs to a megawidget container.
+                                                                    # If so, change 'address' with it's content address.
+                                                                    if { $address in $::ms::addr(megawidgets,containers) } {
+                                                                        set address $::ms::addr($address,widget)
+                                                                    }
+                                                                } else {
+                                                                    continue
+                                                                }
+                                                            }
                                                         }
 
-                                                        # Check that the second argument of 'value' (the command, 'xview' or 'yview') is in sync with the widget orientation.
+                                                        # Check the second argument of 'value' (the command, 'xview' or 'yview').
                                                         set cmd [string tolower [lindex $value 1]]
-                                                        switch -- $::ms::current($w,orient) {
-                                                            horizontal {
-                                                                switch -- $cmd {
-                                                                    xview { set ::ms::current($w,command) [list $address $cmd] }
-
-                                                                }
-                                                            }
-                                                            vertrical {
-                                                                switch -- $cmd {
-                                                                    yview { set ::ms::current($w,command) [list $address $cmd] }
-
-                                                                }
-                                                            }
+                                                        switch -- $cmd {
+                                                            xview   -
+                                                            yview   { set ::ms::current($w,command) [list $address $cmd] }
                                                         }
                                                     }
                                                 }
