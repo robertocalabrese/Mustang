@@ -3504,35 +3504,4 @@ proc ::ms::checkbutton::FocusOut { w } {
     return ""
 }
 
-## Return
-#
-# Launch the associated command, if any.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# It doesn't return anything.
-proc ::ms::checkbutton::Return { w } {
-    # Check the widget's state.
-    switch -- $::ms::current($w,state) {
-        disabled { return "" }
-    }
-
-    # Check if there is a command associated with the widget.
-    switch -- $::ms::current($w,command) {
-        ""      {}
-        default {
-            # Invoke the command associated with the widget.
-            try {
-                uplevel #0 [list {*}$::ms::current($w,command)]
-            } on error {} {
-                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
-            }
-        }
-    }
-
-    return ""
-}
-
 #*EOF*
