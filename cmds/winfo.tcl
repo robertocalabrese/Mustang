@@ -500,7 +500,7 @@ proc ::ms::winfo::Command { args } {
                     set window $args
 
                     # Check if the address provided is a valid real or short address.
-                    if { $window in $::ms::addr(reals) } {
+                    if { ($window in $::ms::addr(reals)) || [_winfo exists $window] } {
                         set w    $window
                         set type real
                     } elseif { $window in $::ms::addr(shorts) } {
@@ -513,7 +513,7 @@ proc ::ms::winfo::Command { args } {
                             set w $::ms::addr($w,widget)
                         }
                     } else {
-                        ::ms::Error "Invalid address (must be a real address), '$window'." $caller_info
+                        ::ms::Error "Invalid address, '$window'." $caller_info
                     }
 
                     # Execute the command.
