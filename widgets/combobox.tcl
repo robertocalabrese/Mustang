@@ -4834,6 +4834,11 @@ proc ::ms::combobox::FocusIn { w } {
 #
 # It doesn't return anything.
 proc ::ms::combobox::FocusOut { w } {
+    # Check the widget's state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
     # If the widget's contextual menu is open do not:
     #   - loose the focus (graphically),
     #   - validate the data,
