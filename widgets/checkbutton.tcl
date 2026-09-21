@@ -3284,17 +3284,15 @@ proc ::ms::checkbutton::ButtonRelease { w } {
         0   { return "" }
     }
 
-    # Check if there is a command associated with the widget.
-    switch -- $::ms::current($w,command) {
-        ""      {}
-        default {
-            # Invoke the command associated with the widget.
-            try {
-                uplevel #0 [list {*}$::ms::current($w,command)]
-            } on error {} {
-                ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
-            }
-        }
+    # Toggles between the selected and deselected states and evaluates the associated widget command.
+    # The widget sets the selected state whenever the linked variable is set to the widget's 'onvalue', and clears it otherwise.
+    # The widget sets the alternate state whenever the linked variable is unset.
+    try {
+        $w.indicator invoke
+    } on error {} {
+        ::ms::Error "Invalid command, '$::ms::current($w,command)'." ""
+    } on ok {} {
+        return ""
     }
 
     return ""
