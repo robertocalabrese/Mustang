@@ -500,20 +500,25 @@ proc ::ms::winfo::Command { args } {
                     set window $args
 
                     # Check if the address provided is a valid real or short address.
-                    if { ($window in $::ms::addr(reals)) || [_winfo exists $window] } {
-                        set w    $window
-                        set type real
-                    } elseif { $window in $::ms::addr(shorts) } {
-                        set w    $::ms::addr($window,real)
-                        set type short
+                    switch -- [_winfo exists $window] {
+                        0   {
+                            if { $window in $::ms::addr(shorts) } {
+                                set w    $::ms::addr($window,real)
+                                set type short
 
-                        # Check if 'w' belongs to a megawidget container.
-                        # If so, change 'w' with it's content address.
-                        if { $w in $::ms::addr(megawidgets,containers) } {
-                            set w $::ms::addr($w,widget)
+                                # Check if 'w' belongs to a megawidget container.
+                                # If so, change 'w' with it's content address.
+                                if { $w in $::ms::addr(megawidgets,containers) } {
+                                    set w $::ms::addr($w,widget)
+                                }
+                            } else {
+                                ::ms::Error "Invalid address, '$window'." $caller_info
+                            }
                         }
-                    } else {
-                        ::ms::Error "Invalid address, '$window'." $caller_info
+                        1   {
+                            set w    $window
+                            set type real
+                        }
                     }
 
                     # Execute the command.
@@ -674,20 +679,25 @@ proc ::ms::winfo::Command { args } {
                     set window $args
 
                     # Check if the address provided is a valid real or short address.
-                    if { ($window in $::ms::addr(reals)) || [_winfo exists $window] } {
-                        set w    $window
-                        set type real
-                    } elseif { $window in $::ms::addr(shorts) } {
-                        set w    $::ms::addr($window,real)
-                        set type short
+                    switch -- [_winfo exists $window] {
+                        0   {
+                            if { $window in $::ms::addr(shorts) } {
+                                set w    $::ms::addr($window,real)
+                                set type short
 
-                        # Check if 'w' belongs to a megawidget container.
-                        # If so, change 'w' with it's content address.
-                        if { $w in $::ms::addr(megawidgets,containers) } {
-                            set w $::ms::addr($w,widget)
+                                # Check if 'w' belongs to a megawidget container.
+                                # If so, change 'w' with it's content address.
+                                if { $w in $::ms::addr(megawidgets,containers) } {
+                                    set w $::ms::addr($w,widget)
+                                }
+                            } else {
+                                ::ms::Error "Invalid address, '$window'." $caller_info
+                            }
                         }
-                    } else {
-                        ::ms::Error "Invalid address, '$window'." $caller_info
+                        1   {
+                            set w    $window
+                            set type real
+                        }
                     }
 
                     # Execute the command.
