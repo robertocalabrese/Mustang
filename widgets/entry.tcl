@@ -1572,16 +1572,19 @@ _bind _Entry <KeyPress-Return>   { ::ms::entry::Return %W; break }
 _bind _Entry <KeyPress-KP_Enter> { ::ms::entry::Return %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Entry <KeyPress-Tab> { # Enable binding }
-switch -- [_tk windowingsystem] {
-    x11 {
-        _bind _Entry <KeyPress-ISO_Left_Tab> { # Enable binding }
+_bind _Entry <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-        # This seems to be correct on *some* HP systems.
-        catch { _bind _Entry <KeyPress-hpBackTab> { # Enable binding } }
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Entry <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Entry <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Entry <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
     }
-    aqua  { _bind _Entry <KeyPress-ISO_Left_Tab> { # Enable binding } }
-    win32 { _bind _Entry <Shift-KeyPress-Tab>    { # Enable binding } }
 }
 
 # Enabling window traversal navigation.
