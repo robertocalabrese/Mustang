@@ -948,6 +948,24 @@ _bind _Notebook <Leave> [list +::ms::Hover %W %X %Y]
 _bind _Notebook <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Notebook <FocusOut> { ::ms::notebook::FocusOut %W; break }
 
+# Tab/Shift-Tab keys
+_bind _Notebook <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Notebook <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Notebook <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Notebook <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
+# Mousewheel and touchpad
+
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 # If none of the widget's parent meets the required condition, don't do anything.
