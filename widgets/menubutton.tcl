@@ -1023,16 +1023,19 @@ _bind _Menubutton <KeyPress-KP_Enter> { ::ms::menubutton::ButtonPress %W; break 
 _bind _Menubutton <KeyPress-space>    { ::ms::menubutton::ButtonPress %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Menubutton <KeyPress-Tab> { # Enable binding }
-switch -- [_tk windowingsystem] {
-    x11 {
-        _bind _Menubutton <KeyPress-ISO_Left_Tab> { # Enable binding }
+_bind _Menubutton <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-        # This seems to be correct on *some* HP systems.
-        catch { _bind _Menubutton <KeyPress-hpBackTab> { # Enable binding } }
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Menubutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Menubutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Menubutton <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
     }
-    aqua  { _bind _Menubutton <KeyPress-ISO_Left_Tab> { # Enable binding } }
-    win32 { _bind _Menubutton <Shift-KeyPress-Tab>    { # Enable binding } }
 }
 
 # Mousewheel and Touchpad
