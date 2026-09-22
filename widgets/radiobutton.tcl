@@ -994,7 +994,9 @@ _bind _Indicator_Radiobutton <FocusOut> { ::ms::radiobutton::FocusOut     [_winf
 _bind _Indicator_Radiobutton <Return>   { ::radiobutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 _bind _Indicator_Radiobutton <KP_Enter> { ::radiobutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 
-# Shift-Tab
+# Tab/Shift-Tab
+_bind _Indicator_Radiobutton <Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+
 switch -- [_tk windowingsystem] {
     win32   { _bind _Indicator_Radiobutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
