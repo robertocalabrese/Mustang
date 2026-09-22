@@ -1658,16 +1658,19 @@ _bind _Combobox <KeyPress-Return>   { ::ms::combobox::Return %W; break }
 _bind _Combobox <KeyPress-KP_Enter> { ::ms::combobox::Return %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Combobox <KeyPress-Tab> { # Enable binding }
-switch -- [_tk windowingsystem] {
-    x11 {
-        _bind _Combobox <KeyPress-ISO_Left_Tab> { # Enable binding }
+_bind _Combobox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-        # This seems to be correct on *some* HP systems.
-        catch { _bind _Combobox <KeyPress-hpBackTab> { # Enable binding } }
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Combobox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Combobox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Combobox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
     }
-    aqua  { _bind _Combobox <KeyPress-ISO_Left_Tab> { # Enable binding } }
-    win32 { _bind _Combobox <Shift-KeyPress-Tab>    { # Enable binding } }
 }
 
 # Enabling window traversal navigation.
