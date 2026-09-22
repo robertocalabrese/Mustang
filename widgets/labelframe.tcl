@@ -1399,6 +1399,22 @@ _bind _Simple_Labelframe <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 _bind _Simple_Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent %W] state [list focus]; break }
 _bind _Simple_Labelframe <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent %W]; break }
 
+# Tab/Shift-Tab keys
+_bind _Simple_labelframe <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Simple_labelframe <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+    default {
+        _bind _Simple_labelframe <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+        try {
+            _bind _Simple_labelframe <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
@@ -1612,6 +1628,22 @@ _bind _Scrollable_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent
 # FocusIn/FocusOut
 _bind _Scrollable_Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] state [list focus]; break }
 _bind _Scrollable_Labelframe <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+
+# Tab/Shift-Tab keys
+_bind _Scrollable_Labelframe <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Scrollable_Labelframe <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break } }
+    default {
+        _bind _Scrollable_Labelframe <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+
+        try {
+            _bind _Scrollable_Labelframe <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
 
 # Mousewheel and Touchpad
 
