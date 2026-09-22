@@ -358,6 +358,30 @@ proc ::tk_focusNext { w } {
         default { set w [lindex $result 0] }
     }
 
+    # Check if the widget is a megawidget or not.
+    if { $w in $::ms::addr(megawidgets) } {
+        # Check if its a checkbutton, palette or radiobutton.
+        switch -- $::ms::data($w,classtype) {
+            checkbutton -
+            palette     -
+            radiobutton {
+                # Collect information about the current window's position among its siblings.
+                set parent   [winfo parent $w]
+                set children [winfo children $parent]
+                set index    [lsearch -exact $children $w]
+
+                # Substitute 'w' with the next widget in its parent children list or
+                # the widget's parent if there are no more child after 'w' in the children list.
+                set last_index [expr { [llength $children]-1 }]
+                if { $index < $last_index } {
+                    set w [lindex $children $index+1]
+                } else {
+                    set w $parent
+                }
+            }
+        }
+    }
+
     # Original procedure.
     set cur $w
     while { 1 } {
@@ -372,6 +396,7 @@ proc ::tk_focusNext { w } {
             incr i
             if { $i < [llength $children] } {
                 set cur [lindex $children $i]
+
                 if { [_winfo toplevel $cur] eq $cur } {
                     continue
                 } else {
@@ -384,6 +409,7 @@ proc ::tk_focusNext { w } {
             # look for its next sibling.
 
             set cur $parent
+
             if { [_winfo toplevel $cur] eq $cur } {
                 break
             }
@@ -478,14 +504,6 @@ proc ::tk_focusPrev { w } {
 #   0 --> The window provided cannot take the keyboard focus.
 #   1 --> The window provided can take the keyboard focus.
 proc ::tk::FocusOK { w } {
-    # Check if 'w' is the hull of a megawidget of some kind.
-    if { $w in $::ms::addr(megawidgets) } {
-        set address [list $::ms::addr($w,widget)]
-        set w       $::ms::addr($w,widget)
-    } else {
-        set address [list interp invokehidden {} $w]
-    }
-
     set code [catch { {*}$address cget -takefocus } value]
     if { ($code == 0) && ($value ne "") } {
         switch -- $value {
