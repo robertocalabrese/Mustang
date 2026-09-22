@@ -969,6 +969,22 @@ _bind _Button <Return>   { ::ms::button::Pathname_Cmd %W invoke; break }
 _bind _Button <KP_Enter> { ::ms::button::Pathname_Cmd %W invoke; break }
 _bind _Button <space>    { ::ms::button::Pathname_Cmd %W invoke; break }
 
+# Tab/Shift-Tab keys
+_bind _Button <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Button <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Button <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Button <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
