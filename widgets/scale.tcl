@@ -889,6 +889,22 @@ _bind _Scale <<ScanMark>>    { ::ttk::scale::Jump    %W %x %y; break }
 _bind _Scale <<ScanDrag>>    { ::ttk::scale::Drag    %W %x %y; break }
 _bind _Scale <<ScanRelease>> { ::ttk::scale::Release %W %x %y; break }
 
+# Tab/Shift-Tab keys
+_bind _Scale <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Scale <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Scale <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Scale <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
