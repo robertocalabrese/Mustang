@@ -990,6 +990,22 @@ _bind _Toolbutton <Return>   { ::ms::toolbutton::ButtonRelease %W; break }
 _bind _Toolbutton <KP_Enter> { ::ms::toolbutton::ButtonRelease %W; break }
 _bind _Toolbutton <space>    { ::ms::toolbutton::ButtonRelease %W; break }
 
+# Tab/Shift-Tab keys
+_bind _Toolbutton <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Toolbutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Toolbutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Toolbutton <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
