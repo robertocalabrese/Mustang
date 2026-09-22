@@ -504,31 +504,21 @@ proc ::tk_focusPrev { w } {
 #   0 --> The window provided cannot take the keyboard focus.
 #   1 --> The window provided can take the keyboard focus.
 proc ::tk::FocusOK { w } {
-    set code [catch { {*}$address cget -takefocus } value]
-    if { ($code == 0) && ($value ne "") } {
-        switch -- $value {
-            0       { return 0 }
-            1       { return [_winfo viewable $w] }
-            default {
-                set value [uplevel #0 $value [list $w]]
-                switch -- $value {
-                    ""      {}
-                    default { return $value }
-                }
-            }
-        }
+    # If 'w' is a megawidget object address, substitute it with the megawidget's hull address.
+    set short_addr $::ms::addr($w,short)
+    set w          $::ms::addr($short_addr,real)
+
+    # Check the widget's physycal state.
+    switch -- $::ms::current($w,state) {
+        disabled { return 0 }
     }
 
-    switch -- [_winfo viewable $w] {
+    # Check the widget's takefocus option.
+    switch -- $::ms::current($w,takefocus) {
         0   { return 0 }
     }
 
-    set code [catch { {*}$address cget -state } value]
-    if { ($code == 0) && $value eq "disabled" } {
-        return 0
-    }
-
-    regexp Key|Focus "[_bind $w] [_bind [_winfo class $w]]"
+    return [_winfo viewable $::ms::addr($w,widget)]
 }
 
 ############################
