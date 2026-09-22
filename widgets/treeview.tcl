@@ -1519,6 +1519,22 @@ _bind _Simple_Treeview <KeyPress-Return>   { ::ms::treeview::Return %W; break }
 _bind _Simple_Treeview <KeyPress-KP_Enter> { ::ms::treeview::Return %W; break }
 _bind _Simple_Treeview <KeyPress-space>    { ::ms::treeview::Return %W; break }
 
+# Tab/Shift-Tab keys
+_bind _Simple_Treeview <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Simple_Treeview <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Simple_Treeview <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Simple_Treeview <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # If the widget's vertical scrollbar is active, move the treeview object by one unit up or down
@@ -1703,6 +1719,22 @@ _bind _Scrollable_Treeview <<PageUp>>    { ::ms::treeview::Pages [_winfo parent 
 _bind _Scrollable_Treeview <KeyPress-Return>   { ::ms::treeview::Return [_winfo parent %W]; break }
 _bind _Scrollable_Treeview <KeyPress-KP_Enter> { ::ms::treeview::Return [_winfo parent %W]; break }
 _bind _Scrollable_Treeview <KeyPress-space>    { ::ms::treeview::Return [_winfo parent %W]; break }
+
+# Tab/Shift-Tab keys
+_bind _Scrollable_Treeview <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Scrollable_Treeview <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+    default {
+        _bind _Scrollable_Treeview <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+        try {
+            _bind _Scrollable_Treeview <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
 
 # Mousewheel and Touchpad
 
