@@ -998,7 +998,9 @@ _bind _Indicator_Checkbutton <FocusOut> { ::ms::checkbutton::FocusOut     [_winf
 _bind _Indicator_Checkbutton <Return>   { ::ms::checkbutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 _bind _Indicator_Checkbutton <KP_Enter> { ::ms::checkbutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 
-# Shift-Tab
+# Tab/Shift-Tab
+_bind _Indicator_Checkbutton <Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+
 switch -- [_tk windowingsystem] {
     win32   { _bind _Indicator_Checkbutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
