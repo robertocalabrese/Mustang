@@ -760,6 +760,22 @@ _bind _Scrollbar <Leave> { interp invokehidden {} %W state [list !hover]; break 
 _bind _Scrollbar <FocusIn>  { interp invokehidden {} %W state [list  focus]; break }
 _bind _Scrollbar <FocusOut> { interp invokehidden {} %W state [list !focus]; break }
 
+# Tab/Shift-Tab keys
+_bind _Scrollbar <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Scrollbar <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Scrollbar <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Scrollbar <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Touchpad
 
 # Note: **TouchpadScroll** and **Control-TouchpadScroll** only works on Windows and macOS.
