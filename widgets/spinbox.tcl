@@ -1609,16 +1609,19 @@ _bind _Spinbox <KeyPress-Return>   { ::ms::spinbox::Return %W; break }
 _bind _Spinbox <KeyPress-KP_Enter> { ::ms::spinbox::Return %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Spinbox <KeyPress-Tab> { # Enable binding }
-switch -- [_tk windowingsystem] {
-    x11 {
-        _bind _Spinbox <KeyPress-ISO_Left_Tab> { # Enable binding }
+_bind _Spinbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-        # This seems to be correct on *some* HP systems.
-        catch { _bind _Spinbox <KeyPress-hpBackTab> { # Enable binding } }
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Spinbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Spinbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Spinbox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
     }
-    aqua  { _bind _Spinbox <KeyPress-ISO_Left_Tab> { # Enable binding } }
-    win32 { _bind _Spinbox <Shift-KeyPress-Tab>    { # Enable binding } }
 }
 
 # Enabling window traversal navigation.
