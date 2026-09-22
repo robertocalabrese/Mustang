@@ -828,6 +828,22 @@ _bind _Toplevel <Leave> { ::ms::Hover %W %X %Y; break }
 _bind _Toplevel <FocusIn>  { ::ms::toplevel::Pathname_Cmd %W state [list focus]; break }
 _bind _Toplevel <FocusOut> { ::ms::toplevel::FocusOut     %W; break }
 
+# Tab/Shift-Tab keys
+_bind _Toplevel <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Toplevel <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Toplevel <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Toplevel <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Create the mustang **toplevel** package.
 namespace eval ::ms::toplevel {
     # Set the 'non-styleable' toplevel option list.
