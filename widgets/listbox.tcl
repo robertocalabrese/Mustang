@@ -1319,6 +1319,22 @@ _bind _Simple_Listbox <Control-KeyPress-space> { break }
 _bind _Simple_Listbox <<NextWord>>             { break }
 _bind _Simple_Listbox <<PrevWord>>             { break }
 
+# Tab/Shift-Tab keys
+_bind _Simple_Listbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Simple_Listbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Simple_Listbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Simple_Listbox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # If the widget's vertical scrollbar is active, move the listbox object by one unit up or down
@@ -1544,6 +1560,22 @@ _bind _Scrollable_Listbox <<Copy>>                 { break }
 _bind _Scrollable_Listbox <Control-KeyPress-space> { break }
 _bind _Scrollable_Listbox <<NextWord>>             { break }
 _bind _Scrollable_Listbox <<PrevWord>>             { break }
+
+# Tab/Shift-Tab keys
+_bind _Scrollable_Listbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Scrollable_Listbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+    default {
+        _bind _Scrollable_Listbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+        try {
+            _bind _Scrollable_Listbox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
 
 # Mousewheel and Touchpad
 
