@@ -898,6 +898,22 @@ _bind _Label <Leave> { interp invokehidden {} %W state [list !hover]; break }
 _bind _Label <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Label <FocusOut> { ::ms::label::FocusOut %W; break }
 
+# Tab/Shift-Tab keys
+_bind _Label <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Label <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Label <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Label <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
