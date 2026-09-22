@@ -1230,6 +1230,22 @@ _bind _Simple_Frame <Leave> { ::ms::Hover %W %X %Y; break }
 _bind _Simple_Frame <FocusIn>  { ::ms::frame::Pathname_Cmd %W state [list focus]; break }
 _bind _Simple_Frame <FocusOut> { ::ms::frame::FocusOut     %W; break }
 
+# Tab/Shift-Tab keys
+_bind _Simple_Frame <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Simple_Frame <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    default {
+        _bind _Simple_Frame <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+        try {
+            _bind _Simple_Frame <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
+
 # Mousewheel and Touchpad
 
 # Try to find the innermost widget's scrollable parent with an active vertical scrollbar
@@ -1455,6 +1471,22 @@ _bind _Content_Frame <Leave> { ::ms::Hover [_winfo parent [_winfo parent [_winfo
 # FocusIn/FocusOut
 _bind _Content_Frame <FocusIn>  { ::ms::frame::Pathname_Cmd [_winfo parent [_winfo parent [_winfo parent %W]]] state [list focus]; break }
 _bind _Content_Frame <FocusOut> { ::ms::frame::FocusOut     [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+
+# Tab/Shift-Tab keys
+_bind _Content_Frame <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Content_Frame <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+    default {
+        _bind _Content_Frame <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+        try {
+            _bind _Content_Frame <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        } on error {} {
+            # Do nothing.
+        }
+    }
+}
 
 # Mousewheel and Touchpad
 
