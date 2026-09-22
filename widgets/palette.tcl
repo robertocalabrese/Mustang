@@ -1600,16 +1600,19 @@ _bind _Palette <KeyPress-Return>   { ::ms::palette::Return [_winfo parent %W]; b
 _bind _Palette <KeyPress-KP_Enter> { ::ms::palette::Return [_winfo parent %W]; break }
 
 # Tab/Shift-Tab keys
-_bind _Palette <KeyPress-Tab> { # Enable binding }
-switch -- [_tk windowingsystem] {
-    x11 {
-        _bind _Palette <KeyPress-ISO_Left_Tab> { # Enable binding }
+_bind _Palette <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-        # This seems to be correct on *some* HP systems.
-        catch { _bind _Palette <KeyPress-hpBackTab> { # Enable binding } }
+switch -- [_tk windowingsystem] {
+    win32   { _bind _Palette <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
+    default {
+        _bind _Palette <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+        try {
+            _bind _Palette <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        } on error {} {
+            # Do nothing.
+        }
     }
-    aqua  { _bind _Palette <KeyPress-ISO_Left_Tab> { # Enable binding } }
-    win32 { _bind _Palette <Shift-KeyPress-Tab>    { # Enable binding } }
 }
 
 # Enabling window traversal navigation.
