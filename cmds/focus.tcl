@@ -121,6 +121,13 @@
 #                 You can always translate a real address into a short address using the **tk get short**
 #                 command or a short address into a real address using the **tk get real** command.
 #
+#   **focus** *window*
+#      If the application currently has the input focus on *window*'s display, this command resets the input focus for *window*'s display
+#      to *window* and returns an empty string.
+#      If the application does not currently have the input focus on *window*'s display, *window* will be remembered as the focus for its
+#      toplevel; the next time the focus arrives at the toplevel, mustang will redirect it to *window*.
+#      If *window* is an empty string then the command does nothing. Returns an empty string.
+#
 #   **focus** **-displayof** *window*
 #      Returns the pathname of the focus window on the display containing *window*.
 #      If the focus window for *window*'s display is not in this application, the return value is an empty string.
@@ -137,27 +144,26 @@
 #      then the pathname of the toplevel is returned.
 #      The return value is the window that will receive the input focus the next time the window manager gives the focus to the toplevel.
 #
-#   **focus** **-next** *window*
-#      This command is used for keyboard traversal. It returns the pathname of the *next* window after *window* in focus order.
+#   **focus** **next** ?**-displayof** *window*?
+#      This command is used for keyboard traversal. It focus the *next* window after the one currently focussed on the same screen as *window*
+#      in focus order.
+#
 #      The focus order is determined by the stacking order of windows and the structure of the *window* hierarchy.
 #      Among siblings, the focus order is the same as the stacking order, with the lowest window being first.
 #      If a window has children, the window is visited first, followed by its children (recursively), followed by its next sibling.
-#      Toplevel windows other than the *window* toplevel are skipped, so that **focus -next** never returns a window in a different
+#
+#      Note that toplevel windows other than the *window* toplevel are skipped, so that **focus next** never returns a window in a different
 #      toplevel from *window*.
 #
-#      After computing the pathname of the next window, **focus -next** examines the *window*'s **-takefocus** option to see whether
-#      it should be skipped. If so, **focus -next** continues on to the next window in the focus order, until it eventually finds a
-#      window that will accept the focus or returns back to *window*.
+#      If the **-displayof** option is not provided, the command will focus the next window after the one currently focussed on the same
+#      screen as the main application ('.').
 #
-#   **focus** **-prev** *window*
-#      **focus -prev** is similar to **focus -next** except that it returns the pathname of the window just before *window* in the focus order.
+#   **focus** **prev** ?**-displayof** *window*?
+#      **focus prev** is similar to **focus next** except that it focus the pathname of the window just before the one currently focussed
+#      on the same screen as *window*.
 #
-#   **focus** *window*
-#      If the application currently has the input focus on *window*'s display, this command resets the input focus for *window*'s display
-#      to *window* and returns an empty string.
-#      If the application does not currently have the input focus on *window*'s display, *window* will be remembered as the focus for its
-#      toplevel; the next time the focus arrives at the toplevel, mustang will redirect it to *window*.
-#      If *window* is an empty string then the command does nothing. Returns an empty string.
+#      If the **-displayof** option is not provided, the command will focus the previous window after the one currently focussed on the same
+#      screen as the main application ('.').
 #
 #### QUIRKS:
 #
@@ -191,10 +197,184 @@ proc ::ms::focus::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # **focus**
+    # **focus** *window*
+    # **focus** **-displayof** *window*
+    # **focus** **-force** *window*
+    # **focus** **-lastfor** *window*
+    # **focus** **next** ?**-displayof** *window*?
+    # **focus** **prev** ?**-displayof** *window*?
     switch -- [llength $args] {
-        0   { return [_focus] }
+        0   {
+            # Synopsis:
+            #
+            # **focus**
+
+            # Get the current real address in focus
+            set address [_focus]
+
+            # If the address is a megawidget, return its hull address, otherwise return the address.
+            switch -- [info exists ::ms::addr($address,short)] {
+                0   { return $address }
+                1   { return $::ms::addr($::ms::addr($address,short),real) }
+            }
+        }
         1   {
-            set window $args
+            # Synopsis:
+            #
+            # **focus** **next**
+            # **focus** **prev**
+            # **focus** *window*
+            switch -- $args {
+                next {
+                    # Get the current widget in focus in the same display as '.'.
+                    set current [_focus -displayof .]
+                    switch -- $current {
+                        ""  {
+                            # There are no widget in focus in the same display as '.'.
+                            # Do nothing.
+                        }
+                        default {
+                            # Get the next address relative to 'current'.
+                            set address [::tk_focusNext $current]
+
+                            # Focus the new widget address 'address'.
+                            _focus $::ms::addr($address,widget)
+                        }
+                    }
+
+                    return ""
+                }
+                prev {
+                    # Get the current widget in focus in the same display as '.'.
+                    set current [_focus -displayof .]
+                    switch -- $current {
+                        ""  {
+                            # There are no widget in focus in the same display as '.'.
+                            # Do nothing.
+                        }
+                        default {
+                            # Get the previous address relative to 'current'.
+                            set address [::tk_focusPrev $current]
+
+                            # Focus the new widget address 'address'.
+                            _focus $::ms::addr($address,widget)
+                        }
+                    }
+
+                    return ""
+                }
+                default {
+                    set window $args
+
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Check the widget's physycal state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
+                    # Check the widget's takefocus option.
+                    switch -- $::ms::current($w,takefocus) {
+                        0   { return "" }
+                    }
+
+                    # Check if the widget is viewable.
+                    switch -- [_winfo viewable $::ms::addr($w,widget)] {
+                        1   { _focus $::ms::addr($w,widget) }
+                    }
+
+                    return ""
+                }
+            }
+        }
+        2   {
+            # Synopsis:
+            #
+            # **focus** **-displayof** *window*
+            # **focus** **-force** *window*
+            # **focus** **-lastfor** *window*
+            set action [lindex $args 0]
+            set window [lindex $args 1]
+
+            # Check the 'action' value.
+            switch -- $action {
+                "-displayof" -
+                "-lastfor"   {
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+                        }
+                    }
+
+                    # Execute the command.
+                    set address [_focus $action $w]
+
+                    # Check if 'address' is a real address created by mustang.
+                    if { $address in $::ms::addr(reals) } {
+                        set short_addr $::ms::addr($address,short)
+
+                        # Check the initial address type provided (short or real).
+                        switch -- $type {
+                            short { return $short_addr }
+                            real  { return $::ms::addr($short_addr,real) }
+                        }
+                    } else {
+                        return $address
+                    }
+                }
+                "-force" {
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Check the widget's physycal state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
+                    # Check the widget's takefocus option.
+                    switch -- $::ms::current($w,takefocus) {
+                        0   { return "" }
+                    }
+
+                    switch -- [_winfo viewable $::ms::addr($w,widget)] {
+                        1   { _focus -force $::ms::addr($w,widget) }
+                    }
+
+                    return ""
+                }
+                default { ::ms::Error "Wrong option or option with no value." $caller_info }
+            }
+        }
+        3   {
+            # Synopsis:
+            #
+            # **focus** **next** **-displayof** *window*
+            # **focus** **prev** **-displayof** *window*
+            set action    [lindex $args 0]
+            set displayof [lindex $args 1]
+            set window    [lindex $args 2]
+
+            # Check the 'displayof' option.
+            switch -- $displayof {
+                -displayof {}
+                default    { ::ms::Error "Invalid option, '$displayof'." $caller_info }
+            }
 
             # Get the 'window' real address.
             set result [::ms::Check_Pathname $window invalid]
@@ -203,85 +383,28 @@ proc ::ms::focus::Command { args } {
                 default { set w [lindex $result 0] }
             }
 
-            # Check if 'w' is the hull of a megawidget of some kind.
-            if { $w in $::ms::addr(megawidgets) } {
-                set w $::ms::addr($w,widget)
-            }
+            # Get the current widget in focus in the same display as 'w'.
+            set current [_focus -displayof $w]
 
-            # Execute the command.
-            _focus $w
-        }
-        2   {
-            set action [lindex $args 0]
-            set window [lindex $args 1]
-
-            # Get the 'window' real address.
-            set result [::ms::Check_Pathname $window invalid]
-            switch -- $result {
-                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            # Check if 'current' is an empty string.
+            switch -- $current {
+                ""  {
+                    # There are no widget in focus in the same display as 'current'.
+                    # Do nothing.
+                }
                 default {
-                    set w    [lindex $result 0]
-                    set type [lindex $result 1]
+                    # Check the 'action' value.
+                    switch -- $action {
+                        "next" { set address [::tk_focusNext $current] }
+                        "prev" { set address [::tk_focusPrev $current] }
+                    }
+
+                    # Focus the next/previous new widget address 'address'.
+                    _focus $::ms::addr($address,widget)
                 }
             }
 
-            # Check the 'action' value.
-            switch -- $action {
-                "-displayof" -
-                "-lastfor"   {
-                    set address [_focus $action $w]
-
-                    # Check the initial address type provided (short or real).
-                    switch -- $type {
-                        short {
-                            if { $address in $::ms::addr(reals) } {
-                                return $::ms::addr($address,short)
-                            }
-                        }
-                    }
-
-                    return $address
-                }
-                "-force" {
-                    # Check if 'w' is the hull of a megawidget of some kind.
-                    if { $w in $::ms::addr(megawidgets) } {
-                        set w $::ms::addr($w,widget)
-                    }
-
-                    _focus -force $w
-                }
-                "-next" {
-                    # Get the next address relative to 'w'.
-                    set next_address [::tk_focusNext $w]
-
-                    # Check the initial address type provided (short or real).
-                    switch -- $type {
-                        short {
-                            if { $next_address in $::ms::addr(reals) } {
-                                return $::ms::addr($next_address,short)
-                            }
-                        }
-                    }
-
-                    return $next_address
-                }
-                "-prev" {
-                    # Get the previous address relative to 'w'.
-                    set prev_address [::tk_focusPrev $w]
-
-                    # Check the initial address type provided (short or real).
-                    switch -- $type {
-                        short {
-                            if { $prev_address in $::ms::addr(reals) } {
-                                return $::ms::addr($prev_address,short)
-                            }
-                        }
-                    }
-
-                    return $prev_address
-                }
-                default { ::ms::Error "Wrong option or option with no value." $caller_info }
-            }
+            return ""
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
@@ -325,9 +448,31 @@ proc ::ms::focus::Implicit { w detail } {
         NotifyAncestor  -
         NotifyNonlinear -
         NotifyInferior  {
-            switch -- [::tk::FocusOK $w] {
+            # Check if 'w' is an empty string.
+            switch -- $w {
+                ""  { return "" }
+            }
+
+            # If 'w' is a megawidget object address, substitute it with the megawidget's hull address.
+            set short_addr $::ms::addr($w,short)
+            set w          $::ms::addr($short_addr,real)
+
+            # Check the widget's physycal state.
+            switch -- $::ms::current($w,state) {
+                disabled { return "" }
+            }
+
+            # Check the widget's takefocus option.
+            switch -- $::ms::current($w,takefocus) {
+                0   { return "" }
+            }
+
+            # Check if the widget is viewable or not.
+            switch -- [_winfo viewable $w] {
                 1   { _focus $w }
             }
+
+            return ""
         }
     }
 
@@ -382,12 +527,11 @@ proc ::tk_focusNext { w } {
         }
     }
 
-    # Original procedure.
-    set cur $w
+    set current $w
     while { 1 } {
-        # Descend to just before the first child of the current widget.
-        set parent   $cur
-        set children [_winfo children $cur]
+        # Descend to just before the first child of the currentrent widget.
+        set parent   $current
+        set children [_winfo children $current]
 
         set i -1
 
@@ -395,32 +539,57 @@ proc ::tk_focusNext { w } {
         while { 1 } {
             incr i
             if { $i < [llength $children] } {
-                set cur [lindex $children $i]
+                set current [lindex $children $i]
 
-                if { [_winfo toplevel $cur] eq $cur } {
+                if { [_winfo toplevel $current] eq $current } {
                     continue
                 } else {
                     break
                 }
             }
 
-            # No more siblings, so go to the current widget's parent.
+            # No more siblings, so go to the currentrent widget's parent.
             # If it's a top-level, break out of the loop, otherwise
             # look for its next sibling.
 
-            set cur $parent
+            set current $parent
 
-            if { [_winfo toplevel $cur] eq $cur } {
+            if { [_winfo toplevel $current] eq $current } {
                 break
             }
             set parent   [_winfo parent $parent]
             set children [_winfo children $parent]
 
-            set i [lsearch -exact $children $cur]
+            set i [lsearch -exact $children $current]
         }
 
-        if { $w eq $cur || [::tk::FocusOK $cur] } {
-            return $cur
+        # Check if 'current' is equal to the initial address 'w'.
+        if { $w eq $current } {
+            return $current
+        }
+
+        # Check if 'current' is an empty string.
+        switch -- $current {
+            ""  { return $w }
+        }
+
+        # If 'current' is a megawidget object address, substitute it with the megawidget's hull address.
+        set short_addr $::ms::addr($current,short)
+        set address    $::ms::addr($short_addr,real)
+
+        # Check the widget's physycal state.
+        switch -- $::ms::current($address,state) {
+            disabled { continue }
+        }
+
+        # Check the widget's takefocus option.
+        switch -- $::ms::current($address,takefocus) {
+            0   { continue }
+        }
+
+        # Check if the widget is viewable or not.
+        switch -- [_winfo viewable $address] {
+            1   { return $current }
         }
     }
 }
@@ -449,23 +618,22 @@ proc ::tk_focusPrev { w } {
         default { set w [lindex $result 0] }
     }
 
-    # Original procedure.
-    set cur $w
+    set current $w
     while { 1 } {
-        # Collect information about the current window's position
+        # Collect information about the currentrent window's position
         # among its siblings.  Also, if the window is a top-level,
         # then reposition to just after the last child of the window.
 
-        if { [_winfo toplevel $cur] eq $cur }  {
-            set parent   $cur
-            set children [_winfo children $cur]
+        if { [_winfo toplevel $current] eq $current }  {
+            set parent   $current
+            set children [_winfo children $current]
 
             set i [llength $children]
         } else {
-            set parent   [_winfo parent $cur]
+            set parent   [_winfo parent $current]
             set children [_winfo children $parent]
 
-            set i [lsearch -exact $children $cur]
+            set i [lsearch -exact $children $current]
         }
 
         # Go to the previous sibling, then descend to its last descendant
@@ -475,50 +643,47 @@ proc ::tk_focusPrev { w } {
 
         while { $i > 0 } {
             incr i -1
-            set cur [lindex $children $i]
-            if { [_winfo toplevel $cur] eq $cur } {
+            set current [lindex $children $i]
+            if { [_winfo toplevel $current] eq $current } {
                 continue
             }
-            set parent   $cur
+            set parent   $current
             set children [_winfo children $parent]
 
             set i [llength $children]
         }
 
-        set cur $parent
-        if { $w eq $cur || [::tk::FocusOK $cur] } {
-            return $cur
+        set current $parent
+
+        # Check if 'current' is equal to the initial address 'w'.
+        if { $w eq $current } {
+            return $current
+        }
+
+        # Check if 'current' is an empty string.
+        switch -- $current {
+            ""  { return $w }
+        }
+
+        # If 'current' is a megawidget object address, substitute it with the megawidget's hull address.
+        set short_addr $::ms::addr($current,short)
+        set address    $::ms::addr($short_addr,real)
+
+        # Check the widget's physycal state.
+        switch -- $::ms::current($address,state) {
+            disabled { continue }
+        }
+
+        # Check the widget's takefocus option.
+        switch -- $::ms::current($address,takefocus) {
+            0   { continue }
+        }
+
+        # Check if the widget is viewable or not.
+        switch -- [_winfo viewable $address] {
+            1   { return $current }
         }
     }
-}
-
-## FocusOK (from the Tk 'focus.tcl' file)
-#
-# Determines if a window can be focussed or not.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# Return a boolean value indicating if the window provided can take the keyboard focus or not.
-#   0 --> The window provided cannot take the keyboard focus.
-#   1 --> The window provided can take the keyboard focus.
-proc ::tk::FocusOK { w } {
-    # If 'w' is a megawidget object address, substitute it with the megawidget's hull address.
-    set short_addr $::ms::addr($w,short)
-    set w          $::ms::addr($short_addr,real)
-
-    # Check the widget's physycal state.
-    switch -- $::ms::current($w,state) {
-        disabled { return 0 }
-    }
-
-    # Check the widget's takefocus option.
-    switch -- $::ms::current($w,takefocus) {
-        0   { return 0 }
-    }
-
-    return [_winfo viewable $::ms::addr($w,widget)]
 }
 
 ############################
@@ -527,8 +692,8 @@ proc ::tk::FocusOK { w } {
 ##                        ##
 ############################
 
-# Note: The following procedure were inspired by their ttk equivalent.
-#       The procedures have been slighty modified to work with mustang.
+# Note: The following procedure is inspired by its ttk equivalent.
+#       The procedure have been slighty modified to work with mustang.
 #       All credits goes to the original author/s.
 
 ## clickToFocus (from the ttk 'utils.tcl' file)
@@ -552,42 +717,22 @@ proc ::ttk::clickToFocus { w } {
         default { set w [lindex $result 0] }
     }
 
-    if { [::ttk::takesFocus $w] } {
-        focus $w
+    # Check the widget's physycal state.
+    switch -- $::ms::current($w,state) {
+        disabled { return "" }
+    }
+
+    # Check the widget's takefocus option.
+    switch -- $::ms::current($w,takefocus) {
+        0   { return "" }
+    }
+
+    # Check if the widget is viewable.
+    switch -- [_winfo viewable $::ms::addr($w,widget)] {
+        1   { _focus $::ms::addr($w,widget) }
     }
 
     return ""
-}
-
-## takesFocus (from the ttk 'utils.tcl' file)
-#
-# Test if the widget can take the keyboard focus.
-#
-# Where:
-#
-# w   Should be the widget real address involved.
-#
-# Return a boolean value indicating if the window can take the keyboard focus or not.
-#   0 --> The window provided cannot take the keyboard focus.
-#   1 --> The window provided can take the keyboard focus.
-proc ::ttk::takesFocus { w } {
-    # Check if 'w' is the hull of a megawidget of some kind.
-    if { $w in $::ms::addr(megawidgets) } {
-        set w $::ms::addr($w,widget)
-    }
-
-    if { ![_winfo viewable $w] } {
-        return 0
-    } elseif { [catch { $w cget -takefocus } takefocus] } {
-        return [::ttk::GuessTakeFocus $w]
-    } else {
-        switch -- $takefocus {
-            ""      { return [::ttk::GuessTakeFocus $w] }
-            0       { return 0 }
-            1       { return 1 }
-            default { return [expr { [uplevel #0 $takefocus [list $w]] == 1 }] }
-        }
-    }
 }
 
 #*EOF*
