@@ -861,7 +861,7 @@ _bind _Scale <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Scale <Destroy> { ::ms::scale::Destroy %W; break }
 
 # Enter/Leave
-_bind _Scale <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Scale <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Scale <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
