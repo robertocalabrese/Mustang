@@ -568,28 +568,53 @@ proc ::tk_focusNext { w } {
             return $current
         }
 
-        # Check if 'current' is an empty string.
-        switch -- $current {
-            ""  { return $w }
-        }
+        # Check if 'current' is a real address created by mustang or not.
+        if { $current in $::ms::addr(reals) } {
+            # If 'current' is a megawidget object address, substitute it with the megawidget's hull address.
+            set short_addr $::ms::addr($current,short)
+            set address    $::ms::addr($short_addr,real)
 
-        # If 'current' is a megawidget object address, substitute it with the megawidget's hull address.
-        set short_addr $::ms::addr($current,short)
-        set address    $::ms::addr($short_addr,real)
+            # Check the 'address' physycal state.
+            switch -- $::ms::current($address,state) {
+                disabled { continue }
+            }
 
-        # Check the widget's physycal state.
-        switch -- $::ms::current($address,state) {
-            disabled { continue }
-        }
+            # Check the 'address' takefocus option.
+            switch -- $::ms::current($address,takefocus) {
+                0   { continue }
+            }
 
-        # Check the widget's takefocus option.
-        switch -- $::ms::current($address,takefocus) {
-            0   { continue }
-        }
+            # Check if 'current' is viewable or not.
+            switch -- [_winfo viewable $current] {
+                1   { return $current }
+            }
+        } else {
+            # Check the current's physycal state.
+            try {
+                $current cget -state
+            } on error {} {
+                # Do nothing.
+            } on ok { result } {
+                switch -- $result {
+                    disabled { continue }
+                }
+            }
 
-        # Check if the widget is viewable or not.
-        switch -- [_winfo viewable $address] {
-            1   { return $current }
+            # Check the current's takefocus option.
+            try {
+                $current cget -takefocus
+            } on error {} {
+                # Do nothing.
+            } on ok { result } {
+                switch -- $result {
+                    0   { continue }
+                }
+            }
+
+            # Check if the current is viewable or not.
+            switch -- [_winfo viewable $current] {
+                1   { return $current }
+            }
         }
     }
 }
