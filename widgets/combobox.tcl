@@ -1618,7 +1618,7 @@ _bind _Combobox <Motion> { ::ms::Set_Cursor %W %x %y; break }
 _bind _Combobox <Destroy> { ::ms::combobox::Destroy %W; break }
 
 # Enter/Leave
-_bind _Combobox <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Combobox <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Combobox <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # Escape key
