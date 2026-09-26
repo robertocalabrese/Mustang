@@ -891,7 +891,7 @@ _bind _Label <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Label <Destroy> { ::ms::label::Destroy %W; break }
 
 # Enter/Leave
-_bind _Label <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Label <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Label <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
