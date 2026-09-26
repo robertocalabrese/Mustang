@@ -65,7 +65,7 @@
 
 ## winfo - Return window-related information
 #
-#### SYNOPSIS
+#### SYNOPSIS:
 #
 # **winfo** **atom** ?**-displayof** *window*? *name*
 # **winfo** **atomname** ?**-displayof** *window*? *id*
@@ -125,7 +125,7 @@
 #       You can always convert a real address into a short address (and viceversa) through the **tk get short**
 #       and **tk get real** commands.
 #
-#### DESCRIPTION
+#### DESCRIPTION:
 #
 # The **winfo** command is used to retrieve information about windows managed by Tk.
 # The *winfo* command can have any of several forms, depending on the *action* argument.
