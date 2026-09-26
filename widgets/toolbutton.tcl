@@ -978,7 +978,7 @@ _bind _Toolbutton <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break
 _bind _Toolbutton <Destroy> { ::ms::toolbutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Toolbutton <Enter> { ::ms::toolbutton::Pathname_Cmd %W state [list  hover]; break }
+_bind _Toolbutton <Enter> { ::ms::toolbutton::Pathname_Cmd %W state [list  hover] }
 _bind _Toolbutton <Leave> { ::ms::toolbutton::Pathname_Cmd %W state [list !hover]; break }
 
 # FocusIn/FocusOut
