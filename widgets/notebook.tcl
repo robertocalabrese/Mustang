@@ -934,8 +934,8 @@ _bind _Notebook <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break  
 
 # Cursor Management
 _bind _Notebook <Motion> { ::ms::notebook::Set_Cursor   %W %x %y; break  }
-_bind _Notebook <Enter>  { ::ms::notebook::Reset_Cursor %W; break  }
-_bind _Notebook <Leave>  { ::ms::notebook::Reset_Cursor %W; break  }
+_bind _Notebook <Enter>  { ::ms::notebook::Reset_Cursor %W  }
+_bind _Notebook <Leave>  { ::ms::notebook::Reset_Cursor %W  }
 
 # Destroy
 _bind _Notebook <Destroy> { ::ms::notebook::Destroy %W; break  }
