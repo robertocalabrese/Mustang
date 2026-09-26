@@ -547,7 +547,7 @@ _bind _Sizegrip <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Sizegrip <Destroy> { ::ms::sizegrip::Destroy %W; break }
 
 # Enter/Leave
-_bind _Sizegrip <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Sizegrip <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Sizegrip <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
