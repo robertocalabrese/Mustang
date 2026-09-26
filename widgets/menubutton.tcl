@@ -1007,7 +1007,7 @@ switch -- [_tk windowingsystem] {
 _bind _Menubutton <Destroy> { ::ms::menubutton::Destroy %W; break }
 
 # Enter/Leave
-_bind _Menubutton <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Menubutton <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Menubutton <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
