@@ -987,7 +987,7 @@ _bind _Indicator_Checkbutton <ButtonRelease-1> { ::ms::checkbutton::ButtonReleas
 _bind _Indicator_Checkbutton <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
 
 # Enter/Leave
-_bind _Indicator_Checkbutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Indicator_Checkbutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y }
 _bind _Indicator_Checkbutton <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
@@ -1077,7 +1077,7 @@ _bind _Label_Checkbutton <ButtonRelease-1> { ::ms::checkbutton::ButtonRelease [_
 _bind _Label_Checkbutton <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent %W] %X %Y cmenu; break }
 
 # Enter/Leave
-_bind _Label_Checkbutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Label_Checkbutton <Enter> { ::ms::Hover [_winfo parent %W] %X %Y }
 _bind _Label_Checkbutton <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # Mousewheel and Touchpad
