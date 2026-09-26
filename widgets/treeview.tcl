@@ -1499,7 +1499,7 @@ _bind _Simple_Treeview <Enter> { ::ms::treeview::Hover %W %x %y ""; break }
 _bind _Simple_Treeview <Leave> { ::ms::treeview::Hover %W %x %y ""; break }
 
 # FocusIn/FocusOut
-_bind _Simple_Treeview <FocusIn>  { ::ms::treeview::Pathname_Cmd %W state [list focus]; break }
+_bind _Simple_Treeview <FocusIn>  { ::ms::treeview::Pathname_Cmd %W state [list focus] }
 _bind _Simple_Treeview <FocusOut> { ::ms::treeview::FocusOut     %W; break }
 
 # Keyboard navigation
@@ -1693,7 +1693,7 @@ _bind _Scrollable_Treeview <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo pare
 _bind _Scrollable_Treeview <Configure> { ::ms::treeview::Configure [_winfo parent %W]; break }
 
 # Enter/Leave
-_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y ""; break }
+_bind _Scrollable_Treeview <Enter> { ::ms::treeview::Hover [_winfo parent %W] %X %Y "" }
 _bind _Scrollable_Treeview <Leave> { ::ms::treeview::Hover [_winfo parent %W] %X %Y Leave; break }
 
 # FocusIn/FocusOut
