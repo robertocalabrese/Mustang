@@ -821,7 +821,7 @@ _bind _Toplevel <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Toplevel <Destroy> { ::ms::toplevel::Destroy %W; break }
 
 # Enter/Leave
-_bind _Toplevel <Enter> { ::ms::Hover %W %X %Y; break }
+_bind _Toplevel <Enter> { ::ms::Hover %W %X %Y }
 _bind _Toplevel <Leave> { ::ms::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
