@@ -830,8 +830,12 @@ _bind _Panedwindow <Configure> { ::ms::panedwindow::Configure %W }
 
 # Cursor Management
 _bind _Panedwindow <Motion> { ::ms::panedwindow::Set_Cursor   %W %x %y; break }
-_bind _Panedwindow <Enter>  { ::ms::panedwindow::Reset_Cursor %W; break }
-_bind _Panedwindow <Leave>  { ::ms::panedwindow::Reset_Cursor %W; break }
+_bind _Panedwindow <Enter>  { ::ms::panedwindow::Reset_Cursor %W }
+_bind _Panedwindow <Leave>  { ::ms::panedwindow::Reset_Cursor %W }
+
+# Enter/Leave
+_bind _Notebook <Enter> [list +::ms::Hover %W %X %Y]
+_bind _Notebook <Leave> [list +::ms::Hover %W %X %Y]
 
 # FocusIn/FocusOut
 _bind _Panedwindow <FocusIn>  { interp invokehidden {} %W state [list  focus]; break }
