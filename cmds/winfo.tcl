@@ -448,12 +448,68 @@ proc ::ms::winfo::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # **winfo** **atom** ?**-displayof** *window*? *name*
+    # **winfo** **atomname** ?**-displayof** *window*? *id*
+    # **winfo** **cells** *window*
+    # **winfo** **children** *window*
+    # **winfo** **class** *window*
+    # **winfo** **colormapfull** *window*
+    # **winfo** **containing** ?**-displayof** *window*? *rootX* *rootY*
+    # **winfo** **depth** *window*
+    # **winfo** **exists** *window*
+    # **winfo** **fpixels** *window* *number*
+    # **winfo** **geometry** *window*
+    # **winfo** **height** *window*
+    # **winfo** **id** *window*
+    # **winfo** **interps** ?**-displayof** *window*?
+    # **winfo** **ismapped** *window*
+    # **winfo** **manager** *window*
+    # **winfo** **name** *window*
+    # **winfo** **parent** *window*
+    # **winfo** **pathname** ?**-displayof** *window*? *id*
+    # **winfo** **pixels** *window* *number*
+    # **winfo** **pointerx** *window*
+    # **winfo** **pointerxy** *window*
+    # **winfo** **pointery** *window*
+    # **winfo** **reqheight** *window*
+    # **winfo** **reqwidth** *window*
+    # **winfo** **rgb** *window* *color*
+    # **winfo** **rootx** *window*
+    # **winfo** **rooty** *window*
+    # **winfo** **screen** *window*
+    # **winfo** **screencells** *window*
+    # **winfo** **screendepth** *window*
+    # **winfo** **screenheight** *window*
+    # **winfo** **screenmmheight** *window*
+    # **winfo** **screenmmwidth** *window*
+    # **winfo** **screenvisual** *window*
+    # **winfo** **screenwidth** *window*
+    # **winfo** **server** *window*
+    # **winfo** **toplevel** *window*
+    # **winfo** **viewable** *window*
+    # **winfo** **visual** *window*
+    # **winfo** **visualid** *window*
+    # **winfo** **visualsavailable** *window* ?*includeids*?
+    # **winfo** **vrootheight** *window*
+    # **winfo** **vrootwidth** *window*
+    # **winfo** **vrootx** *window*
+    # **winfo** **vrooty** *window*
+    # **winfo** **width** *window*
+    # **winfo** **x** *window*
+    # **winfo** **y** *window*
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
         atom     -
         atomname {
+            # Synopsis:
+            #
+            # **winfo** **atom** ?**-displayof** *window*? *name*
+            # **winfo** **atomname** ?**-displayof** *window*? *id*
             switch -- [llength $args] {
                 1   {}
                 3   {
@@ -494,7 +550,109 @@ proc ::ms::winfo::Command { args } {
                 return $result
             }
         }
+        cells          -
+        class          -
+        colormapfull   -
+        depth          -
+        geometry       -
+        height         -
+        id             -
+        ismapped       -
+        manager        -
+        name           -
+        pointerx       -
+        pointerxy      -
+        pointery       -
+        reqheight      -
+        reqwidth       -
+        rootx          -
+        rooty          -
+        screen         -
+        screencells    -
+        screendepth    -
+        screenheight   -
+        screenmmheight -
+        screenmmwidth  -
+        screenvisual   -
+        screenwidth    -
+        server         -
+        toplevel       -
+        viewable       -
+        visual         -
+        visualid       -
+        vrootheight    -
+        vrootwidth     -
+        vrootx         -
+        vrooty         -
+        width          -
+        x              -
+        y              {
+            # Synopsis:
+            #
+            # **winfo** **cells** *window*
+            # **winfo** **class** *window*
+            # **winfo** **colormapfull** *window*
+            # **winfo** **depth** *window*
+            # **winfo** **geometry** *window*
+            # **winfo** **height** *window*
+            # **winfo** **id** *window*
+            # **winfo** **ismapped** *window*
+            # **winfo** **manager** *window*
+            # **winfo** **name** *window*
+            # **winfo** **pointerx** *window*
+            # **winfo** **pointerxy** *window*
+            # **winfo** **pointery** *window*
+            # **winfo** **reqheight** *window*
+            # **winfo** **reqwidth** *window*
+            # **winfo** **rootx** *window*
+            # **winfo** **rooty** *window*
+            # **winfo** **screen** *window*
+            # **winfo** **screencells** *window*
+            # **winfo** **screendepth** *window*
+            # **winfo** **screenheight** *window*
+            # **winfo** **screenmmheight** *window*
+            # **winfo** **screenmmwidth** *window*
+            # **winfo** **screenvisual** *window*
+            # **winfo** **screenwidth** *window*
+            # **winfo** **server** *window*
+            # **winfo** **toplevel** *window*
+            # **winfo** **viewable** *window*
+            # **winfo** **visual** *window*
+            # **winfo** **visualid** *window*
+            # **winfo** **vrootheight** *window*
+            # **winfo** **vrootwidth** *window*
+            # **winfo** **vrootx** *window*
+            # **winfo** **vrooty** *window*
+            # **winfo** **width** *window*
+            # **winfo** **x** *window*
+            # **winfo** **y** *window*
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         children {
+            # Synopsis:
+            #
+            # **winfo** **children** *window*
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -568,6 +726,10 @@ proc ::ms::winfo::Command { args } {
             #            You can always ask if an address is a short or real address with **tk get addr**.
             #            You can always translate a real address into a short address using the **tk get short**
             #            command or a short address into a real address using the **tk get real** command.
+
+            # Synopsis:
+            #
+            # **winfo** **containing** ?**-displayof** *window*? *rootX* *rootY*
             switch -- [llength $args] {
                 2   {}
                 4   {
@@ -609,6 +771,9 @@ proc ::ms::winfo::Command { args } {
             }
         }
         exists {
+            # Synopsis:
+            #
+            # **winfo** **exists** *window*
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -623,7 +788,42 @@ proc ::ms::winfo::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        fpixels -
+        pixels  -
+        rgb     {
+            # Synopsis:
+            #
+            # **winfo** **fpixels** *window* *number*
+            # **winfo** **pixels** *window* *number*
+            # **winfo** **rgb** *window* *color*
+            switch -- [llength $args] {
+                2   {
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Get the real address associated with 'window'.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default { set w [lindex $result 0] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo $action $w $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         interps {
+            # Synopsis:
+            #
+            # **winfo** **interps** ?**-displayof** *window*?
             switch -- [llength $args] {
                 0   {
                     # Execute the command.
@@ -674,6 +874,9 @@ proc ::ms::winfo::Command { args } {
             }
         }
         parent {
+            # Synopsis:
+            #
+            # **winfo** **parent** *window*
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -728,6 +931,10 @@ proc ::ms::winfo::Command { args } {
             #            You can always ask if an address is a short or real address with **tk get addr**.
             #            You can always translate a real address into a short address using the **tk get short**
             #            command or a short address into a real address using the **tk get real** command.
+
+            # Synopsis:
+            #
+            # **winfo** **pathname** ?**-displayof** *window*? *id*
             switch -- [llength $args] {
                 1   {}
                 3   {
@@ -768,34 +975,10 @@ proc ::ms::winfo::Command { args } {
                 return $result
             }
         }
-        fpixels -
-        pixels  -
-        rgb     {
-            switch -- [llength $args] {
-                2   {
-                    set window [lindex  $args 0]
-                    set args   [lremove $args 0]
-
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
-                    }
-
-                    # Execute the command.
-                    try {
-                        _winfo $action $w $args
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-        }
         visualsavailable {
+            # Synopsis:
+            #
+            # **winfo** **visualsavailable** *window* ?*includeids*?
             switch -- [llength $args] {
                 1   {}
                 2   {
@@ -819,66 +1002,6 @@ proc ::ms::winfo::Command { args } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
                 return $result
-            }
-        }
-        cells          -
-        class          -
-        colormapfull   -
-        depth          -
-        geometry       -
-        height         -
-        id             -
-        ismapped       -
-        manager        -
-        name           -
-        pointerx       -
-        pointerxy      -
-        pointery       -
-        reqheight      -
-        reqwidth       -
-        rootx          -
-        rooty          -
-        screen         -
-        screencells    -
-        screendepth    -
-        screenheight   -
-        screenmmheight -
-        screenmmwidth  -
-        screenvisual   -
-        screenwidth    -
-        server         -
-        toplevel       -
-        viewable       -
-        visual         -
-        visualid       -
-        vrootheight    -
-        vrootwidth     -
-        vrootx         -
-        vrooty         -
-        width          -
-        x              -
-        y              {
-            switch -- [llength $args] {
-                1   {
-                    set window $args
-
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
-                    }
-
-                    # Execute the command.
-                    try {
-                        _winfo $action $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         default { ::ms::Error "Invalid option, '$action'." $caller_info }
