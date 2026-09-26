@@ -65,7 +65,7 @@
 
 ## style - Manipulate the style database.
 #
-#### SYNOPSIS
+#### SYNOPSIS:
 #
 # **style** **configure** *style* ?**option**? ?*value*? ?**option** *value*? ... ?**option** *value*?
 # **style** **element** **create** *elementName* *type ?*arg* ... *arg*?
@@ -80,7 +80,7 @@
 # **style** **theme** **styles**
 # **style** **theme** **use** ?*MustangTheme*?
 #
-#### DEFINITIONS
+#### DEFINITIONS:
 #
 # At each widget is assigned a *style*, which specifies the set of elements making up the widget and how
 # they are arranged, along with dynamic and default settings for element options.
@@ -89,7 +89,7 @@
 # A *theme* is a collection of elements and styles which controls the overall look and feel of an application.
 # The mustang default theme is called *Halo*, a cross platform dynamic theme based on the *clam* engine.
 #
-#### DESCRIPTION
+#### DESCRIPTION:
 #
 # The *style* command can have any of several forms, depending on the *action* argument.
 # The *action* argument is always the first argument after the command itself.
@@ -166,7 +166,7 @@
 #       Without an argument the result is the name of the current mustang theme. Otherwise this command sets the current theme
 #       to *themeName*, and refreshes all widgets.
 #
-#### LAYOUTS
+#### LAYOUTS:
 #
 # A *layout* specifies a list of elements, each followed by one or more options specifying how to arrange the element.
 # The layout mechanism uses a simplified version of the [pack](/wiki/commands/pack.md) geometry manager: given an initial cavity,
