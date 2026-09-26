@@ -923,7 +923,7 @@ _bind _Progressbar <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; brea
 _bind _Progressbar <Destroy> { ::ms::progressbar::Destroy %W; break }
 
 # Enter/Leave
-_bind _Progressbar <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Progressbar <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Progressbar <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
