@@ -1223,7 +1223,7 @@ _bind _Simple_Frame <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; bre
 _bind _Simple_Frame <Destroy> { ::ms::frame::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Frame <Enter> { ::ms::Hover %W %X %Y; break }
+_bind _Simple_Frame <Enter> { ::ms::Hover %W %X %Y }
 _bind _Simple_Frame <Leave> { ::ms::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
@@ -1465,7 +1465,7 @@ _bind _Content_Frame <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent [_w
 # Configure
 _bind _Content_Frame <Configure> { update; break }
 # Enter/Leave
-_bind _Content_Frame <Enter> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent %W]]] %X %Y; break }
+_bind _Content_Frame <Enter> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent %W]]] %X %Y }
 _bind _Content_Frame <Leave> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent %W]]] %X %Y; break }
 
 # FocusIn/FocusOut
