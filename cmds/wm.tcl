@@ -65,7 +65,7 @@
 
 ## wm - Communicate with the window manager
 #
-#### SYNOPSIS
+#### SYNOPSIS:
 #
 # **wm** **aspect** *window* ?*minNumer* *minDenom* *maxNumer* *maxDenom*?
 # **wm** **attributes** *window*
@@ -108,7 +108,7 @@
 #          - A short address, if the *window* provided as input is a short address.
 #          - A real address, if the *window* provided as input is a real address.
 #
-#### DESCRIPTION
+#### DESCRIPTION:
 #
 # The **wm** command is used to interact with window managers in order to control such things as the title for a window,
 # its geometry, or the increments in terms of which it may be resized.
@@ -736,7 +736,7 @@
 #      Note: It sometimes seems to be necessary to withdraw a window and then re-map it (e.g. with **wm deiconify**)
 #            to get some window managers to pay attention to changes in *window* attributes such as group.
 #
-#### GEOMETRY MANAGEMENT
+#### GEOMETRY MANAGEMENT:
 #
 # By default a top-level window appears on the screen in its natural size, which is the one determined internally by
 # its widgets and geometry managers.
@@ -767,7 +767,7 @@
 # or **wm forget** command, must be redone to adjust any top-level widget path in the bindtags.
 # Bindtags that have not been customized do not have to be redone.
 #
-#### GRIDDED GEOMETRY MANAGEMENT
+#### GRIDDED GEOMETRY MANAGEMENT:
 #
 # Gridded geometry management occurs when one of the widgets of an application supports a range of useful sizes.
 # This occurs, for example, in a text editor where the scrollbars, menus, and other adornments are fixed in size
@@ -793,13 +793,13 @@
 # and **wm geometry** commands are treated as grid units rather than pixel units.
 # Interactive resizing is also carried out in even numbers of grid units rather than pixels.
 #
-#### BUGS
+#### BUGS:
 #
 # Most existing window managers appear to have bugs that affect the operation of the **wm command**.
 # For example, some changes will not take effect if *window* is already active: *window* will have to be withdrawn
 # and de-iconified in order to make the change happen.
 #
-#### EXAMPLES
+#### EXAMPLES:
 #
 # A fixed-size window that says that it is fixed-size too:
 #
