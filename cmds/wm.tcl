@@ -855,11 +855,130 @@ proc ::ms::wm::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # **wm** **aspect** *window* ?*minNumer* *minDenom* *maxNumer* *maxDenom*?
+    # **wm** **attributes** *window*
+    # **wm** **attributes** *window* ?*option*?
+    # **wm** **attributes** *window* ?*option* *value*? ... ?*option* *value*?
+    # **wm** **client** *window* ?*name*?
+    # **wm** **colormapwindows** *window* ?*windowList*?
+    # **wm** **command** *window* ?*value*?
+    # **wm** **deiconify** *window*
+    # **wm** **focusmodel** *window* ?**active**|**passive**?
+    # **wm** **forget** *window*
+    # **wm** **frame** *window*
+    # **wm** **geometry** *window* ?*newGeometry*?
+    # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
+    # **wm** **group** *window* ?*pathname*?
+    # **wm** **iconbitmap** *window* ?*bitmap*?
+    # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
+    # **wm** **iconify** *window*
+    # **wm** **iconmask** *window* ?*bitmap*?
+    # **wm** **iconname** *window* ?*newName*?
+    # **wm** **iconphoto** *window* ?**-default**? *image1* ?*image2*? ... ?*imageN*? ?
+    # **wm** **iconposition** *window* ?*x* *y*?
+    # **wm** **iconwindow** *window* ?*pathname*?
+    # **wm** **manage** *window*
+    # **wm** **maxsize** *window* ?*width* *height*?
+    # **wm** **minsize** *window* ?*width* *height*?
+    # **wm** **overrideredirect** *window* ?*boolean*?
+    # **wm** **positionfrom** *window* ?*who*?
+    # **wm** **protocol** *window* ?*name*? ?*command*?
+    # **wm** **resizable** *window* ?*width* *height*?
+    # **wm** **sizefrom** *window* ?*who*?
+    # **wm** **stackorder** *window* ?**isabove**|**isbelow** *window*?
+    # **wm** **state** *window* ?*newstate*?
+    # **wm** **title** *window* ?*string*?
+    # **wm** **transient** *window* ?*container*?
+    # **wm** **withdraw** *window*
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
+        aspect           -
+        attribute        -
+        attributes       -
+        client           -
+        command          -
+        deiconify        -
+        focusmodel       -
+        forget           -
+        frame            -
+        geometry         -
+        grid             -
+        iconbitmap       -
+        iconbitmap       -
+        iconify          -
+        iconmask         -
+        iconname         -
+        iconphoto        -
+        iconposition     -
+        maxsize          -
+        minsize          -
+        overrideredirect -
+        positionfrom     -
+        protocol         -
+        resizable        -
+        sizefrom         -
+        state            -
+        title            -
+        withdraw         {
+            # Synopsis:
+            #
+            # **wm** **aspect** *window* ?*minNumer* *minDenom* *maxNumer* *maxDenom*?
+            # **wm** **attributes** *window*
+            # **wm** **attributes** *window* ?*option*?
+            # **wm** **attributes** *window* ?*option* *value*? ... ?*option* *value*?
+            # **wm** **client** *window* ?*name*?
+            # **wm** **command** *window* ?*value*?
+            # **wm** **deiconify** *window*
+            # **wm** **focusmodel** *window* ?**active**|**passive**?
+            # **wm** **forget** *window*
+            # **wm** **frame** *window*
+            # **wm** **geometry** *window* ?*newGeometry*?
+            # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
+            # **wm** **iconbitmap** *window* ?*bitmap*?
+            # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
+            # **wm** **iconify** *window*
+            # **wm** **iconmask** *window* ?*bitmap*?
+            # **wm** **iconname** *window* ?*newName*?
+            # **wm** **iconphoto** *window* ?**-default**? *image1* ?*image2*? ... ?*imageN*? ?
+            # **wm** **iconposition** *window* ?*x* *y*?
+            # **wm** **maxsize** *window* ?*width* *height*?
+            # **wm** **minsize** *window* ?*width* *height*?
+            # **wm** **overrideredirect** *window* ?*boolean*?
+            # **wm** **positionfrom** *window* ?*who*?
+            # **wm** **protocol** *window* ?*name*? ?*command*?
+            # **wm** **resizable** *window* ?*width* *height*?
+            # **wm** **sizefrom** *window* ?*who*?
+            # **wm** **state** *window* ?*newstate*?
+            # **wm** **title** *window* ?*string*?
+            # **wm** **withdraw** *window*
+            set window [lindex  $args 0]
+            set args   [lremove $args 0]
+
+            # Get the real address associated with 'window'.
+            set result [::ms::Check_Pathname $window invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                default { set w [lindex $result 0] }
+            }
+
+            # Execute the command.
+            try {
+                _wm $action $w {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         colormapwindows {
+            # Synopsis:
+            #
+            # **wm** **colormapwindows** *window* ?*windowList*?
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -936,6 +1055,11 @@ proc ::ms::wm::Command { args } {
         group      -
         iconwindow -
         transient  {
+            # Synopsis:
+            #
+            # **wm** **group** *window* ?*pathname*?
+            # **wm** **iconwindow** *window* ?*pathname*?
+            # **wm** **transient** *window* ?*container*?
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -1009,6 +1133,9 @@ proc ::ms::wm::Command { args } {
             }
         }
         manage {
+            # Synopsis:
+            #
+            # **wm** **manage** *window*
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -1042,6 +1169,9 @@ proc ::ms::wm::Command { args } {
             }
         }
         stackorder {
+            # Synopsis:
+            #
+            # **wm** **stackorder** *window* ?**isabove**|**isbelow** *window*?
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -1105,53 +1235,6 @@ proc ::ms::wm::Command { args } {
                 _wm stackorder $w {*}$args
             } on error {} {
                 ::ms::Error "Invalid address, '$widget' is not a frame, labelframe, or toplevel widget." $caller_info
-            } on ok { result } {
-                return $result
-            }
-        }
-        aspect           -
-        attribute        -
-        attributes       -
-        client           -
-        command          -
-        deiconify        -
-        focusmodel       -
-        forget           -
-        frame            -
-        geometry         -
-        grid             -
-        iconbitmap       -
-        iconbitmap       -
-        iconify          -
-        iconmask         -
-        iconname         -
-        iconphoto        -
-        iconposition     -
-        maxsize          -
-        minsize          -
-        overrideredirect -
-        positionfrom     -
-        protocol         -
-        resizable        -
-        sizefrom         -
-        state            -
-        title            -
-        withdraw         {
-            set window [lindex  $args 0]
-            set args   [lremove $args 0]
-
-            # Get the real address associated with 'window'.
-            set result [::ms::Check_Pathname $window invalid]
-            switch -- $result {
-                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                default { set w [lindex $result 0] }
-            }
-
-            # Execute the command.
-            try {
-                _wm $action $w {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
             } on ok { result } {
                 return $result
             }
