@@ -1244,7 +1244,7 @@ _bind _Simple_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; b
 _bind _Simple_Listbox <Destroy> { ::ms::listbox::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Listbox <Enter> { ::ms::listbox::Hover %W %X %Y; break }
+_bind _Simple_Listbox <Enter> { ::ms::listbox::Hover %W %X %Y }
 _bind _Simple_Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
 
 # FocusIn/FocusOut
@@ -1486,7 +1486,7 @@ _bind _Scrollable_Listbox <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo paren
 _bind _Scrollable_Listbox <Configure> { ::ms::listbox::Scrollbar_Update [_winfo parent %W]; break }
 
 # Enter/Leave
-_bind _Scrollable_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Listbox <Enter> { ::ms::listbox::Hover [_winfo parent %W] %X %Y }
 _bind _Scrollable_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
