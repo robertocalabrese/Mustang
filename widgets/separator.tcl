@@ -547,7 +547,7 @@ _bind _Separator <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break 
 _bind _Separator <Destroy> { ::ms::separator::Destroy %W; break }
 
 # Enter/Leave
-_bind _Separator <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Separator <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Separator <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
