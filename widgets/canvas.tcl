@@ -2371,7 +2371,7 @@ _bind _Simple_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; br
 _bind _Simple_Canvas <Destroy> { ::ms::canvas::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Canvas <Enter> { ::ms::canvas::Pathname_Cmd %W state [list  hover]; break }
+_bind _Simple_Canvas <Enter> { ::ms::canvas::Pathname_Cmd %W state [list  hover] }
 _bind _Simple_Canvas <Leave> { ::ms::canvas::Pathname_Cmd %W state [list !hover]; break }
 
 # FocusIn/FocusOut
@@ -2529,7 +2529,7 @@ _bind _Scrollable_Canvas <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent
 _bind _Scrollable_Canvas <Configure> { ::ms::canvas::Configure [_winfo parent %W]; break }
 
 # Enter/Leave
-_bind _Scrollable_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Canvas <Enter> { ::ms::Hover [_winfo parent %W] %X %Y }
 _bind _Scrollable_Canvas <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
