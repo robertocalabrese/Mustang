@@ -1535,7 +1535,7 @@ _bind _Entry <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y cmenu; break }
 _bind _Entry <Destroy> { ::ms::entry::Destroy %W; break }
 
 # Enter/Leave
-_bind _Entry <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Entry <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Entry <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # Escape key
