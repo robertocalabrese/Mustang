@@ -65,7 +65,7 @@
 
 ## pack - Geometry manager that packs around edges of cavity
 #
-#### SYNOPSYS
+#### SYNOPSYS:
 #
 # **pack** *window* ?*-option* *value*? ... ?*-option* *value*?
 # **pack** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
@@ -73,6 +73,7 @@
 # **pack** **forget** *window* ?*window*? ... ?*window*?
 # **pack** **info** *window*
 # **pack** **propagate** *container* ?*boolean*?
+# **pack** **remove** *window* ?*window*? ... ?*window*?
 # **pack** **slaves** *window*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
@@ -80,7 +81,7 @@
 #          - A short address, if the *window* provided as input is a short address.
 #          - A real address, if the *window* provided as input is a real address.
 #
-#### DESCRIPTION
+#### DESCRIPTION:
 #
 # The **pack** command is used to communicate with the packer, a geometry manager that arranges the children
 # of a parent by packing them in order around the edges of the parent.
@@ -208,7 +209,7 @@
 #   **pack** **slaves** *container*
 #      Synonym for **pack content**.
 #
-#### THE PACKER ALGORITHM
+#### THE PACKER ALGORITHM:
 #
 # For each container the packer maintains an ordered list of content windows called the *packing list*.
 # The **-in**, **-after**, and **-before** configuration options are used to specify the container for
@@ -263,7 +264,7 @@
 # If the cavity shrinks to zero size, then all remaining content on the packing list will be unmapped
 # from the screen until the container window becomes large enough to hold them again.
 #
-#### EXPANSION
+#### EXPANSION:
 #
 # If a container window is so large that there will be extra space left over after all of its content
 # have been packed, then the extra space is distributed uniformly among all of the content for which the
@@ -271,7 +272,7 @@
 # Extra horizontal space is distributed among the expandable content whose **-side** is **left** or **right**,
 # and extra vertical space is distributed among the expandable content whose **-side** is **top** or **bottom**.
 #
-#### GEOMETRY PROPAGATION
+#### GEOMETRY PROPAGATION:
 #
 # The packer normally computes how large a container must be to just exactly meet the needs of its content,
 # and it sets the requested width and height of the container to these dimensions.
@@ -281,14 +282,14 @@
 # If propagation is disabled then the packer will not set the requested width and height of the packer.
 # This may be useful if, for example, you wish for a container window to have a fixed size that you specify.
 #
-#### RESTRICTIONS ON CONTAINER WINDOWS
+#### RESTRICTIONS ON CONTAINER WINDOWS:
 #
 # The container for each content must either be the content's parent (the default) or a descendant of the
 # content's parent.
 # This restriction is necessary to guarantee that the content can be placed over any part of its container
 # that is visible without danger of the content being clipped by its parent.
 #
-#### PACKING ORDER
+#### PACKING ORDER:
 #
 # If the container for a content is not its parent then you must make sure that the content is higher in the
 # stacking order than the container, otherwise the container will obscure the content and it will appear as if
@@ -298,7 +299,7 @@
 # The most recently created window will be highest in the stacking order, or you can use the [raise](/wiki/commands/raise.md)
 # and [lower](/wiki/commands/lower.md) commands to change the stacking order of either the container or the content.
 #
-#### EXAMPLE
+#### EXAMPLE:
 #
 # A toplevel window containing four labels and a text widgets:
 #
@@ -340,11 +341,25 @@ proc ::ms::pack::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsys:
+    #
+    # **pack** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **pack** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **pack** **content** *window*
+    # **pack** **forget** *window* ?*window*? ... ?*window*?
+    # **pack** **info** *window*
+    # **pack** **propagate** *container* ?*boolean*?
+    # **pack** **remove** *window* ?*window*? ... ?*window*?
+    # **pack** **slaves** *window*
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
         configure {
+            # Synopsys:
+            #
+            # **pack** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 1       { return "" }
@@ -458,6 +473,10 @@ proc ::ms::pack::Command { args } {
         }
         content -
         slaves  {
+            # Synopsys:
+            #
+            # **pack** **content** *window*
+            # **pack** **slaves** *window*
             switch -- [llength $args] {
                 1   {
                     set container $args
@@ -501,6 +520,10 @@ proc ::ms::pack::Command { args } {
         }
         forget -
         remove {
+            # Synopsys:
+            #
+            # **pack** **forget** *window* ?*window*? ... ?*window*?
+            # **pack** **remove** *window* ?*window*? ... ?*window*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
@@ -529,6 +552,9 @@ proc ::ms::pack::Command { args } {
             }
         }
         info {
+            # Synopsys:
+            #
+            # **pack** **info** *window*
             switch -- [llength $args] {
                 1   {
                     set window [lindex $args 0]
@@ -628,6 +654,9 @@ proc ::ms::pack::Command { args } {
             }
         }
         propagate {
+            # Synopsys:
+            #
+            # **pack** **propagate** *container* ?*boolean*?
             switch -- [llength $args] {
                 1   -
                 2   {
@@ -654,6 +683,9 @@ proc ::ms::pack::Command { args } {
             }
         }
         default {
+            # Synopsys:
+            #
+            # **pack** *window* ?*-option* *value*? ... ?*-option* *value*?
             set window $action
 
             # Get the 'window' real address.
