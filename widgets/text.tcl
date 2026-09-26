@@ -2692,7 +2692,7 @@ _bind _Simple_Text <<ContextMenu>> { ::ms::Show_ContextMenu %W %X %Y shell; brea
 _bind _Simple_Text <Destroy> { ::ms::text::Destroy %W; break }
 
 # Enter/Leave
-_bind _Simple_Text <Enter> { ::ms::text::Pathname_Cmd %W state [list  hover]; break }
+_bind _Simple_Text <Enter> { ::ms::text::Pathname_Cmd %W state [list  hover] }
 _bind _Simple_Text <Leave> { ::ms::text::Pathname_Cmd %W state [list !hover]; break }
 
 # FocusIn/FocusOut
@@ -3003,7 +3003,7 @@ _bind _Scrollable_Text <Meta-KeyPress-greater> { break }
 _bind _Scrollable_Text <Escape> { break }
 
 # Enter/Leave
-_bind _Scrollable_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Scrollable_Text <Enter> { ::ms::Hover [_winfo parent %W] %X %Y }
 _bind _Scrollable_Text <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
