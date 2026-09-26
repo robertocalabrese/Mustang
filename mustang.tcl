@@ -2355,6 +2355,8 @@ proc ::ms::Init {} {
     # Set the end of the initialization phase.
     set ::ms::temp(init,phase) done
 
+    update
+
     return ""
 }
 
