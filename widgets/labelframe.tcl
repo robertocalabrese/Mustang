@@ -1392,7 +1392,7 @@ _bind _Simple_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo parent
 _bind _Simple_Labelframe <Configure> { ::ms::labelframe::Configure [_winfo parent %W] %w %h; break }
 
 # Enter/Leave
-_bind _Simple_Labelframe <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Simple_Labelframe <Enter> { ::ms::Hover [_winfo parent %W] %X %Y }
 _bind _Simple_Labelframe <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
@@ -1622,7 +1622,7 @@ _bind _Scrollable_Labelframe <<ContextMenu>> { ::ms::Show_ContextMenu [_winfo pa
 _bind _Scrollable_Labelframe <Configure> { update; break }
 
 # Enter/Leave
-_bind _Scrollable_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
+_bind _Scrollable_Labelframe <Enter> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y }
 _bind _Scrollable_Labelframe <Leave> { ::ms::Hover [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] %X %Y; break }
 
 # FocusIn/FocusOut
