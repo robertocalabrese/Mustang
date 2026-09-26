@@ -1550,7 +1550,7 @@ _bind _Palette <<Paste>> { ::ms::Paste [winfo parent %W] CLIPBOARD; break }
 _bind _Palette <Motion> { ::ms::Set_Cursor [_winfo parent %W] %x %y; break }
 
 # Enter/Leave
-_bind _Palette <Enter> { ::ms::Hover [_winfo parent %W] %X %Y; break }
+_bind _Palette <Enter> { ::ms::Hover [_winfo parent %W] %X %Y }
 _bind _Palette <Leave> { ::ms::Hover [_winfo parent %W] %X %Y; break }
 
 # FocusIn/FocusOut
