@@ -65,7 +65,7 @@
 
 ## grid - Geometry manager that arranges widgets in a grid
 #
-#### SYNOPSIS
+#### SYNOPSIS:
 #
 # **grid** *window* ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **anchor** *window* ?*anchor*?
@@ -87,7 +87,7 @@
 #          - A short address, if the *window* provided as input is a short address.
 #          - A real address, if the *window* provided as input is a real address.
 #
-#### DESCRIPTION
+#### DESCRIPTION:
 #
 # The **grid** command is used to communicate with the grid geometry manager that arranges widgets in rows
 # and columns inside of another window, called the geometry container (or container window).
@@ -327,7 +327,7 @@
 #   **grid** **slaves** *container* ?*-option* *value*?
 #      Synonym for **grid content**.
 #
-#### THE GRID ALGORITHM
+#### THE GRID ALGORITHM:
 #
 # The grid geometry manager lays out its content in three steps.
 # In the first step, the minimum size needed to fit all of the content is computed, then (if propagation is
@@ -369,7 +369,7 @@
 # as when all the rows or columns are at their minimum sizes, the layout is placed and clipped according
 # to the *anchor* value.
 #
-#### GEOMETRY PROPAGATION
+#### GEOMETRY PROPAGATION:
 #
 # The grid geometry manager normally computes how large a container must be to just exactly meet the needs
 # of its content, and it sets the requested width and height of the container to these dimensions.
@@ -379,7 +379,7 @@
 # If propagation is disabled then grid will not set the requested width and height of the container window.
 # This may be useful if, for example, you wish for a container window to have a fixed size that you specify.
 #
-#### RESTRICTIONS ON CONTAINER WINDOWS
+#### RESTRICTIONS ON CONTAINER WINDOWS:
 #
 # The container for each content must either be the content's parent (the default) or a descendant of
 # the content's parent.
@@ -387,7 +387,7 @@
 # that is visible without danger of the content being clipped by its parent.
 # In addition, all content in one call to **grid** must have the same container.
 #
-#### STACKING ORDER
+#### STACKING ORDER:
 #
 # If the container for a content is not its parent then you must make sure that the content is higher in the
 # stacking order than the container.
@@ -395,12 +395,12 @@
 # correctly. The easiest way to make sure the content is higher than the container is to create the container
 # window first: the most recently created window will be highest in the stacking order.
 #
-#### CREDITS
+#### CREDITS:
 #
 # The **grid** command is based on ideas taken from the **GridBag** geometry manager written by *Doug. Stein*,
 # and the **blt_table** geometry manager, written by *George Howlett*.
 #
-#### EXAMPLE
+#### EXAMPLE:
 #
 # A toplevel window containing a text widget and two scrollbars:
 #
@@ -449,12 +449,33 @@ proc ::ms::grid::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # **grid** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **anchor** *window* ?*anchor*?
+    # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
+    # **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **content** *window* ?*-option* *value*?
+    # **grid** **forget** *window* ?*window*? ... ?*window*?
+    # **grid** **info** *window*
+    # **grid** **location** *window* x y
+    # **grid** **propagate** *container* ?*boolean*?
+    # **grid** **remove** *window* ?*window*? ... ?*window*?
+    # **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **size** *window*
+    # **grid** **slaves** *window* ?*-option* *value*?
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
         anchor    -
         propagate {
+            # Synopsis:
+            #
+            # **grid** **anchor** *window* ?*anchor*?
+            # **grid** **propagate** *container* ?*boolean*?
             switch -- [llength $args] {
                 1   -
                 2   {
@@ -481,6 +502,9 @@ proc ::ms::grid::Command { args } {
             }
         }
         bbox {
+            # Synopsis:
+            #
+            # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
             switch -- [llength $args] {
                 1   -
                 3   -
@@ -509,6 +533,10 @@ proc ::ms::grid::Command { args } {
         }
         columnconfigure -
         rowconfigure    {
+            # Synopsis:
+            #
+            # **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+            # **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0   -
                 1   { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -663,6 +691,9 @@ proc ::ms::grid::Command { args } {
             # Note: Differently from Tk, the 'grid configure' command do not accepts
             #       shortforms ('-', 'x' and '^').
 
+            # Synopsis:
+            #
+            # **grid** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 1       { return "" }
@@ -769,6 +800,10 @@ proc ::ms::grid::Command { args } {
         }
         content -
         slaves  {
+            # Synopsis:
+            #
+            # **grid** **content** *window* ?*-option* *value*?
+            # **grid** **slaves** *window* ?*-option* *value*?
             switch -- [llength $args] {
                 1   -
                 3   {
@@ -814,6 +849,10 @@ proc ::ms::grid::Command { args } {
         }
         forget -
         remove {
+            # Synopsis:
+            #
+            # **grid** **forget** *window* ?*window*? ... ?*window*?
+            # **grid** **remove** *window* ?*window*? ... ?*window*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
@@ -846,6 +885,9 @@ proc ::ms::grid::Command { args } {
             }
         }
         info {
+            # Synopsis:
+            #
+            # **grid** **info** *window*
             switch -- [llength $args] {
                 1   {
                     set window [lindex $args 0]
@@ -944,6 +986,9 @@ proc ::ms::grid::Command { args } {
             }
         }
         location {
+            # Synopsis:
+            #
+            # **grid** **location** *window* x y
             switch -- [llength $args] {
                 3   {
                     set container [lindex  $args 0]
@@ -969,6 +1014,9 @@ proc ::ms::grid::Command { args } {
             }
         }
         size {
+            # Synopsis:
+            #
+            # **grid** **size** *window*
             switch -- [llength $args] {
                 1   {
                     set container [lindex $args 0]
@@ -996,6 +1044,9 @@ proc ::ms::grid::Command { args } {
             # Note: Differently from Tk, the 'grid' command do not accepts
             #       shortforms ('-', 'x' and '^').
 
+            # Synopsis:
+            #
+            # **grid** *window* ?*-option* *value*? ... ?*-option* *value*?
             set window $action
 
             # Get the 'window' real address.
