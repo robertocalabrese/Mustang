@@ -228,11 +228,29 @@ proc ::ms::style::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # **style** **configure** *style* ?**option**? ?*value*? ?**option** *value*? ... ?**option** *value*?
+    # **style** **element** **create** *elementName* *type ?*arg* ... *arg*?
+    # **style** **element** **names**
+    # **style** **element** **options** *element*
+    # **style** **layout** *style*
+    # **style** **lookup** *style* *option* ?*state*? ?*default*?
+    # **style** **map** *style* ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
+    # **style** **theme** **create** *themeName* ?**-parent** *basedon*? ?**-settings** *script*?
+    # **style** **theme** **names**
+    # **style** **theme** **settings** *themeName* *script*
+    # **style** **theme** **styles**
+    # **style** **theme** **use** ?*themeName*?
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
         configure {
+            # Synopsis:
+            #
+            # **style** **configure** *style* ?**option**? ?*value*? ?**option** *value*? ... ?**option** *value*?
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
                 1   {
@@ -304,6 +322,12 @@ proc ::ms::style::Command { args } {
             }
         }
         element {
+            # Synopsis:
+            #
+            # **style** **element** **create** *elementName* *type ?*arg* ... *arg*?
+            # **style** **element** **names**
+            # **style** **element** **options** *element*
+
             # Separate the 'subcommand' from its 'args'.
             set subcommand [lindex  $args 0]
             set args       [lremove $args 0]
@@ -357,6 +381,9 @@ proc ::ms::style::Command { args } {
             #       Trying to associate a layout to one of these widget will be ignored by mustang.
             #       The layout will be created but never applied.
 
+            # Synopsis:
+            #
+            # **style** **layout** *style*
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
                 1   {
@@ -398,6 +425,10 @@ proc ::ms::style::Command { args } {
             }
         }
         lookup {
+            # Synopsis:
+            #
+            # **style** **lookup** *style* *option* ?*state*? ?*default*?
+
             # Execute the command.
             try {
                 _ttk_style lookup {*}$args
@@ -408,6 +439,9 @@ proc ::ms::style::Command { args } {
             }
         }
         map {
+            # Synopsis:
+            #
+            # **style** **map** *style* ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
                 1   {
@@ -474,6 +508,14 @@ proc ::ms::style::Command { args } {
             }
         }
         theme {
+            # Synopsis:
+            #
+            # **style** **theme** **create** *themeName* ?**-parent** *basedon*? ?**-settings** *script*?
+            # **style** **theme** **names**
+            # **style** **theme** **settings** *themeName* *script*
+            # **style** **theme** **styles**
+            # **style** **theme** **use** ?*themeName*?
+
             # Separate the 'subcommand' from its 'args'.
             set subcommand [lindex  $args 0]
             set args       [lremove $args 0]
