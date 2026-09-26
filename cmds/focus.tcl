@@ -468,8 +468,6 @@ proc ::ms::focus::Implicit { w detail } {
                 switch -- [_winfo viewable $w] {
                     1   { _focus -force $::ms::addr($w,widget) }
                 }
-
-                return ""
             } else {
                 # Check the 'w' physycal state.
                 try {
@@ -497,8 +495,6 @@ proc ::ms::focus::Implicit { w detail } {
                 switch -- [_winfo viewable $w] {
                     1   { _focus -force $w }
                 }
-
-                return ""
             }
         }
     }
