@@ -753,7 +753,7 @@ bind _Scrollbar <B3-Motion>       { break }
 _bind _Scrollbar <Destroy> { ::ms::scrollbar::Destroy %W; break }
 
 # Enter/Leave
-_bind _Scrollbar <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Scrollbar <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Scrollbar <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # FocusIn/FocusOut
