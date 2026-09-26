@@ -72,6 +72,7 @@
 # **place** **content** *container*
 # **place** **forget** *window* ?*window*? ... ?*window*?
 # **place** **info** *window*
+# **place** **remove** *window* ?*window*? ... ?*window*?
 # **place** **slaves** *container*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
@@ -210,8 +211,8 @@
 #         If the same value is specified separately with two different options, such as *-x* and *-relx*,
 #         then the most recent option is used and the older one is ignored.
 #
-#   **place** **forget** *window*
-#   **place** **remove** *window*
+#   # **place** **forget** *window* ?*window*? ... ?*window*?
+#   # **place** **remove** *window* ?*window*? ... ?*window*?
 #      Causes the placer to stop managing the geometry of *window*.
 #      As a side effect of this command *window* will be unmapped so that it does not appear on the screen.
 #      If *window* is not currently managed by the placer then the command has no effect.
@@ -287,11 +288,25 @@ proc ::ms::place::Command { args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **place** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **place** **content** *container*
+    # **place** **forget** *window* ?*window*? ... ?*window*?
+    # **place** **info** *window*
+    # **place** **remove** *window* ?*window*? ... ?*window*?
+    # **place** **slaves** *container*
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
         configure {
+            # Synopsis:
+            #
+            # **place** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
+
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 1       { return "" }
@@ -350,6 +365,10 @@ proc ::ms::place::Command { args } {
                 }
             }
         }
+        # Synopsis:
+        #
+        # **place** **content** *container*
+        # **place** **slaves** *container*
         content -
         slaves  {
             switch -- [llength $args] {
@@ -393,6 +412,10 @@ proc ::ms::place::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        # Synopsis:
+        #
+        # **place** **forget** *window* ?*window*? ... ?*window*?
+        # **place** **remove** *window* ?*window*? ... ?*window*?
         forget -
         remove {
             switch -- [llength $args] {
@@ -415,6 +438,9 @@ proc ::ms::place::Command { args } {
             }
         }
         info {
+            # Synopsis:
+            #
+            # **place** **info** *window*
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -513,6 +539,9 @@ proc ::ms::place::Command { args } {
             }
         }
         default {
+            # Synopsis:
+            #
+            # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
             set window $action
 
             # Get the 'window' real address.
