@@ -1560,7 +1560,7 @@ _bind _Spinbox <Motion> { ::ms::Set_Cursor %W %x %y; break }
 _bind _Spinbox <Destroy> { ::ms::spinbox::Destroy %W; break }
 
 # Enter/Leave
-_bind _Spinbox <Enter> { interp invokehidden {} %W state [list  hover]; break }
+_bind _Spinbox <Enter> { interp invokehidden {} %W state [list  hover] }
 _bind _Spinbox <Leave> { interp invokehidden {} %W state [list !hover]; break }
 
 # Escape key
