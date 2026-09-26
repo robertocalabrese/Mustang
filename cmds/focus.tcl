@@ -448,31 +448,58 @@ proc ::ms::focus::Implicit { w detail } {
         NotifyAncestor  -
         NotifyNonlinear -
         NotifyInferior  {
-            # Check if 'w' is an empty string.
-            switch -- $w {
-                ""  { return "" }
+            # Check if 'w' is a real address created by mustang or not.
+            if { $w in $::ms::addr(reals) } {
+                # If 'w' is a megawidget object address, substitute it with the megawidget's hull address.
+                set short_addr $::ms::addr($w,short)
+                set w          $::ms::addr($short_addr,real)
+
+                # Check the 'w' physycal state.
+                switch -- $::ms::current($w,state) {
+                    disabled { return "" }
+                }
+
+                # Check the 'w' takefocus option.
+                switch -- $::ms::current($w,takefocus) {
+                    0   { return "" }
+                }
+
+                # Check if 'w' is viewable or not.
+                switch -- [_winfo viewable $w] {
+                    1   { _focus -force $::ms::addr($w,widget) }
+                }
+
+                return ""
+            } else {
+                # Check the 'w' physycal state.
+                try {
+                    $w cget -state
+                } on error {} {
+                    # Do nothing.
+                } on ok { result } {
+                    switch -- $result {
+                        disabled { return "" }
+                    }
+                }
+
+                # Check the 'w' takefocus option.
+                try {
+                    $w cget -takefocus
+                } on error {} {
+                    # Do nothing.
+                } on ok { result } {
+                    switch -- $result {
+                        0   { return "" }
+                    }
+                }
+
+                # Check if 'w' is viewable or not.
+                switch -- [_winfo viewable $w] {
+                    1   { _focus -force $w }
+                }
+
+                return ""
             }
-
-            # If 'w' is a megawidget object address, substitute it with the megawidget's hull address.
-            set short_addr $::ms::addr($w,short)
-            set w          $::ms::addr($short_addr,real)
-
-            # Check the widget's physycal state.
-            switch -- $::ms::current($w,state) {
-                disabled { return "" }
-            }
-
-            # Check the widget's takefocus option.
-            switch -- $::ms::current($w,takefocus) {
-                0   { return "" }
-            }
-
-            # Check if the widget is viewable or not.
-            switch -- [_winfo viewable $w] {
-                1   { _focus $w }
-            }
-
-            return ""
         }
     }
 
