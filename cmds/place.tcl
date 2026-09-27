@@ -69,11 +69,11 @@
 #
 # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
 # **place** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-# **place** **content** *container*
+# **place** **content** *window*
 # **place** **forget** *window* ?*window*? ... ?*window*?
 # **place** **info** *window*
 # **place** **remove** *window* ?*window*? ... ?*window*?
-# **place** **slaves** *container*
+# **place** **slaves** *window*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
 #       *Action*s that gives as a result a window pathname (or more than one), will always return the address as:
@@ -221,18 +221,18 @@
 #   **place** **info** *window* ?*option*?
 #      If *option* is not provided, returns a list whose elements are the current configuration state of the
 #      content given by *pathname* in the same option-value form that might be specified to **place configure**.
-#      The first two elements of the list are "**-in** *container*" where *container* is the *pathname*'s
+#      The first two elements of the list are "**-in** *container*" where *container* is the *window*'s
 #      container window.
 #
 #      If *option* is provided, returns the current value for *option*.
 #
-#   **place** **content** *container*
-#      Returns a list of all of the content windows in the packing order for *container*.
+#   **place** **content** *window*
+#      Returns a list of all of the content windows in the packing order for *window*.
 #      The order of the content windows in the list is the same as their order in the packing order.
 #
-#      If *container* has no content then an empty string is returned.
+#      If *window* has no content then an empty string is returned.
 #
-#   **place** **slaves** *container*
+#   **place** **slaves** *window*
 #      Synonym for **place content**.
 #
 # If the configuration of a window has been retrieved with **place info**, that configuration can be restored
@@ -470,9 +470,9 @@ proc ::ms::place::Command { args } {
                                         # Note: The 'place info' command returns an option/value list that
                                         #       will always contain the '-in' option value at index '1'.
 
-                                        set container [lindex $result 1]
-                                        if { $container in $::ms::addr(reals) } {
-                                            set result [lreplace $result 1 1 $::ms::addr($container,short)]
+                                        set w [lindex $result 1]
+                                        if { $w in $::ms::addr(reals) } {
+                                            set result [lreplace $result 1 1 $::ms::addr($w,short)]
                                         }
                                     }
                                 }
@@ -510,18 +510,18 @@ proc ::ms::place::Command { args } {
                                         # Note: The 'place info' command returns an option/value list that
                                         #       will always contain the '-in' option value at index '1'.
 
-                                        set container [lindex $result 1]
+                                        set w [lindex $result 1]
 
                                         # Check the initial address type provided (short or real).
                                         switch -- $type {
                                             short {
-                                                if { $container in $::ms::addr(reals) } {
-                                                    return $::ms::addr($container,short)
+                                                if { $w in $::ms::addr(reals) } {
+                                                    return $::ms::addr($w,short)
                                                 }
                                             }
                                         }
 
-                                        return $container
+                                        return $w
                                     }
                                     default {
                                         set index [lsearch -exact $result $optionName]
@@ -573,7 +573,7 @@ proc ::ms::place::Command { args } {
                                     # Check the initial address type provided (short or real).
                                     switch -- $type {
                                         short {
-                                            # Substitute 'window' with its relative real address.
+                                            # Substitute 'container' with its relative real address.
                                             set args [lreplace $args $index+1 $index+1 $w]
                                         }
                                     }
