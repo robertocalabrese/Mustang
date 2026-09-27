@@ -72,7 +72,7 @@
 # **pack** **content** *window*
 # **pack** **forget** *window* ?*window*? ... ?*window*?
 # **pack** **info** *window*
-# **pack** **propagate** *container* ?*boolean*?
+# **pack** **propagate** *window* ?*boolean*?
 # **pack** **remove** *window* ?*window*? ... ?*window*?
 # **pack** **slaves** *window*
 #
@@ -174,11 +174,11 @@
 #      If any of the content are already managed by the geometry manager then any unspecified options for them
 #      retain their previous values rather than receiving default values.
 #
-#   **pack** **content** *container*
-#      Returns a list of all of the content windows in the packing order for *container*.
+#   **pack** **content** *window*
+#      Returns a list of all of the content windows in the packing order for *window*.
 #      The order of the content windows in the list is the same as their order in the packing order.
 #
-#      If *container* has no content then an empty string is returned.
+#      If *window* has no content then an empty string is returned.
 #
 #   **pack** **forget** *window* ?*window*? ... ?*window*?
 #   **pack** **remove** *window* ?*window*? ... ?*window*?
@@ -192,21 +192,21 @@
 #   **pack** **info** *window* ?*option*?
 #      If *option* is not provided, returns a list whose elements are the current configuration state of the
 #      content given by *window* in the same option-value form that might be specified to **pack configure**.
-#      The first two elements of the list are "**-in** *container*" where *container* is the window's
+#      The first two elements of the list are "**-in** *window*" where *window* is the window's
 #      container window. If *option* is provided, returns the current value for *option*.
 #
-#   **pack** **propagate** *container* ?*boolean*?
-#      If *boolean* has a true boolean value such as **1** or **on** then propagation is enabled for *container*,
+#   **pack** **propagate** *window* ?*boolean*?
+#      If *boolean* has a true boolean value such as **1** or **on** then propagation is enabled for *window*,
 #      which must be a window name (see **GEOMETRY PROPAGATION** below).
-#      If *boolean* has a false boolean value then propagation is disabled for *container*.
+#      If *boolean* has a false boolean value then propagation is disabled for *window*.
 #      In either of these cases an empty string is returned.
 #
 #      If *boolean* is omitted then the command returns **0** or **1** to indicate whether propagation
-#      is currently enabled for *container*.
+#      is currently enabled for *window*.
 #
 #      Propagation is enabled by default.
 #
-#   **pack** **slaves** *container*
+#   **pack** **slaves** *window*
 #      Synonym for **pack content**.
 #
 #### THE PACKER ALGORITHM:
@@ -348,7 +348,7 @@ proc ::ms::pack::Command { args } {
     # **pack** **content** *window*
     # **pack** **forget** *window* ?*window*? ... ?*window*?
     # **pack** **info** *window*
-    # **pack** **propagate** *container* ?*boolean*?
+    # **pack** **propagate** *window* ?*boolean*?
     # **pack** **remove** *window* ?*window*? ... ?*window*?
     # **pack** **slaves** *window*
 
@@ -408,12 +408,12 @@ proc ::ms::pack::Command { args } {
                                         set window [lindex $args $index+1]
 
                                         switch -- $window {
-                                            ""      {}
+                                            ""      { ::ms::Error "Missing address for '$optionName'." $caller_info }
                                             default {
                                                 # Get the real address associated with 'window'.
                                                 set result [::ms::Check_Pathname $window invalid]
                                                 switch -- $result {
-                                                    invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                                    invalid { ::ms::Error "Invalid address for '$optionName', '$window'." $caller_info }
                                                     default {
                                                         set w    [lindex $result 0]
                                                         set type [lindex $result 1]
@@ -479,12 +479,12 @@ proc ::ms::pack::Command { args } {
             # **pack** **slaves** *window*
             switch -- [llength $args] {
                 1   {
-                    set container $args
+                    set window $args
 
-                    # Get the 'container' real address.
-                    set result [::ms::Check_Pathname $container invalid]
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
                     switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                         default {
                             set w    [lindex $result 0]
                             set type [lindex $result 1]
@@ -538,13 +538,13 @@ proc ::ms::pack::Command { args } {
                         # Note: The 'pack info' command returns an option/value list that
                         #       will always contain the '-in' option at index '0'.
 
-                        set container [lindex [_pack info $w] 1]
+                        set window [lindex [_pack info $w] 1]
 
                         # Forget the real address.
                         _pack forget $w
 
                         # Force the propagation inside any scrollable widget ancestor, if any.
-                        ::ms::Scrollable_Widgets_Propagation_Mechanism $container
+                        ::ms::Scrollable_Widgets_Propagation_Mechanism $window
                     }
 
                     return ""
@@ -656,17 +656,17 @@ proc ::ms::pack::Command { args } {
         propagate {
             # Synopsys:
             #
-            # **pack** **propagate** *container* ?*boolean*?
+            # **pack** **propagate** *window* ?*boolean*?
             switch -- [llength $args] {
                 1   -
                 2   {
-                    set container [lindex  $args 0]
-                    set args      [lremove $args 0]
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
 
-                    # Get the 'container' real address.
-                    set result [::ms::Check_Pathname $container invalid]
+                    # Get the 'window' real address.
+                    set result [::ms::Check_Pathname $window invalid]
                     switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                         default { set w [lindex $result 0] }
                     }
 
@@ -729,13 +729,13 @@ proc ::ms::pack::Command { args } {
                                 # Get the 'optionName' window provided.
                                 set window [lindex $args $index+1]
                                 switch -- $window {
-                                   ""  { continue }
+                                   ""  { ::ms::Error "Missing address for '$optionName'." $caller_info }
                                 }
 
                                 # Get the 'window' real address.
                                 set result [::ms::Check_Pathname $window invalid]
                                 switch -- $result {
-                                    invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                    invalid { ::ms::Error "Invalid address for '$optionName', '$window'." $caller_info }
                                     default {
                                         set w    [lindex $result 0]
                                         set type [lindex $result 1]
