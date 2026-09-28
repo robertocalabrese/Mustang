@@ -735,19 +735,19 @@ package provide ::ms::scrollbar 0.1
 #################################
 
 # ButtonPress-1 (Scroll/Jump/Drag)
-bind _Scrollbar <Button-1>        { ::ms::scrollbar::ButtonPress1 %W %x %y; break }
-bind _Scrollbar <ButtonRelease-1> { ::ms::scrollbar::ButtonRelease1; break }
-bind _Scrollbar <B1-Motion>       { ::ms::scrollbar::Drag %W %x %y; break }
+_bind _Scrollbar <Button-1>        { ::ms::scrollbar::ButtonPress1 %W %x %y; break }
+_bind _Scrollbar <ButtonRelease-1> { ::ms::scrollbar::ButtonRelease1; break }
+_bind _Scrollbar <B1-Motion>       { ::ms::scrollbar::Drag %W %x %y; break }
 
 # ButtonPress-2 (Jump only)
-bind _Scrollbar <Button-2>        { ::ms::scrollbar::ButtonPress2 %W %x %y; break }
-bind _Scrollbar <ButtonRelease-2> { break }
-bind _Scrollbar <B2-Motion>       { break }
+_bind _Scrollbar <Button-2>        { ::ms::scrollbar::ButtonPress2 %W %x %y; break }
+_bind _Scrollbar <ButtonRelease-2> { break }
+_bind _Scrollbar <B2-Motion>       { break }
 
 # ButtonPress-3 (Jump only)
-bind _Scrollbar <Button-3>        { ::ms::scrollbar::ButtonPress2 %W %x %y; break }
-bind _Scrollbar <ButtonRelease-3> { break }
-bind _Scrollbar <B3-Motion>       { break }
+_bind _Scrollbar <Button-3>        { ::ms::scrollbar::ButtonPress2 %W %x %y; break }
+_bind _Scrollbar <ButtonRelease-3> { break }
+_bind _Scrollbar <B3-Motion>       { break }
 
 # Destroy
 _bind _Scrollbar <Destroy> { ::ms::scrollbar::Destroy %W; break }
