@@ -587,7 +587,6 @@ proc ::ms::event::Command { args } {
                 1       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     set window [lindex  $args 0]
-                    set args   [lremove $args 0]
 
                     # Get the 'window' real address.
                     set result [::ms::Check_Pathname $window invalid]
