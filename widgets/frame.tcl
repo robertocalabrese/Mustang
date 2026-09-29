@@ -2395,9 +2395,6 @@ proc ::ms::frame::Command { window { args "" } } {
 
                     # Set the actual widget address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w
-
-                    # Set the structure address.
-                    set ::ms::addr($w,structure) [list $w]
                 }
                 true {
                     ##############################
@@ -2805,15 +2802,6 @@ proc ::ms::frame::Command { window { args "" } } {
 
                     # Set the actual widget address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.border.viewport.content
-
-                    # Set the structure addresses.
-                    # Is important to note that the scrollbar addresses must not be included.
-                    set ::ms::addr($w,structure) [list $w \
-                                                       $w.border \
-                                                       $w.border.viewport \
-                                                       $w.border.viewport.content \
-                                                       $w.fake_x \
-                                                       $w.fake_y];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -4900,7 +4888,6 @@ proc ::ms::frame::Destroy { w } {
                          ::ms::addr($w.y,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
-                         ::ms::addr($w,structure) \
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
