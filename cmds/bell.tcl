@@ -62,6 +62,50 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## bell - Ring the display bell.
+#
+#### SYNOPSIS:
+#
+# **bell**
+# **bell** **-nice**
+# **bell** **-displayof** *window*
+# **bell** **-nice** **-displayof** *window*
+#
+#### DESCRIPTION:
+#
+# The following options are available:
+#
+#   ?**-displayof** *window*?
+#      If this option is omitted, the display of the application's main window (".") is used by default.
+#      If this option is provided, *window* can either be a short or real address.
+#      The command uses the current *bell-related* settings for the display, which may be modified with programs such as **xset**.
+#
+#   **-nice**
+#      If this option is not specified, this command resets the screen saver for the screen.
+#      Some screen savers will ignore this, but others will reset so that the screen becomes visible again.
+#
+#### COMMAND:
+#
+# The *bell* command can have any of the following forms:
+#
+#   **bell**
+#      Rings the bell of the screen where the main application (".") is displayed.
+#      Returns an empty string.
+#
+#   **bell** **-nice**
+#      Rings the display bell and reset the screen saver (if any and if supported by the screen saver).
+#      Returns an empty string.
+#
+#   **bell** **-displayof** *window*
+#      Rings the bell of the screen where *window* is displayed.
+#      Returns an empty string.
+#
+#   **bell** **-nice** **-displayof** *window*
+#      Rings the bell of the screen where *window* is displayed and reset the screen saver (if any and if supported by the screen saver).
+#      Returns an empty string.
+#
+# The **bell** command returns an empty string.
 package provide ::ms::bell 0.1
 
 # Create the mustang **bell** package.
@@ -83,10 +127,50 @@ interp alias {} bell {} ::ms::bell::Command
 #
 # Return the empty string.
 proc ::ms::bell::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _bell {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+    # **bell**
+    # **bell** **-nice**
+    # **bell** **-displayof** *window*
+    # **bell** **-nice** **-displayof** *window*
+
+    switch -- [llength $args] {
+        0   -
+        1   -
+        2   -
+        3   {
+            # Check if a '-displayof' option was provided.
+            set index [lsearch -exact $args "-displayof"]
+            switch -- $index {
+                -1      {}
+                default {
+                    # Check if the '-displayof' address is a valid address or not.
+                    set addr   [lindex $args $index+1]
+                    set result [::ms::Check_Pathname $addr invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set args [lreplace $args $index+1 $index+1 $w]
+                        }
+                    }
+                }
+            }
+
+            # Execute the command.
+            try {
+                _bell {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
 }
 
 #*EOF*
