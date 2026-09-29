@@ -110,11 +110,37 @@
 #      If *action* is not prefixed by "**+**" or "**-**", it replaces any existing binding.
 #      If *action* is an empty string then the current binding for *sequence* is destroyed, leaving *sequence* unbound.
 #
-# In all of the cases where a *action* argument is provided, bind returns an empty string.
-# If *sequence* is specified without a *action*, then the *action* currently bound to *sequence* is returned,
-# or an empty string is returned if there is no binding for *sequence*.
-# If neither *sequence* nor *action* is specified, then the return value is a list whose elements are all the sequences
-# for which there exist bindings for *tag*.
+#### COMMAND:
+#
+# The *bind* command can have any of the following forms:
+#
+#   **bind** *tag*
+#      The return value is a list whose elements are all the sequences for which there exist bindings for *tag*.
+#      If there are none, an empty list will be returned.
+#
+#   **bind** *tag* *sequence*
+#      The return value is a list whose elements are all the actions currently bound to *sequence* for *tag*.
+#      If there are none, an empty list will be returned.
+#
+#   **bind** *tag* *sequence* {}
+#      Remove any binding setted on *tag* for the sequence *sequence*.
+#      It is not considered an error if there are no bindings for *tags* for the sequence *sequence*.
+#      Returns an empty string.
+#
+#   **bind** *tag* *sequence* *action*
+#      Set a binding on *tag* for the sequence *sequence* with action *action*.
+#      Returns an empty string.
+#
+#   **bind** *tag* *sequence* +*action*
+#      Add a binding on the existing bindings on *tag* for the sequence *sequence*, with action *action*.
+#      If a *tag* have more than one binding for a sequence, the actions will be executed in the order in which they was given
+#      unless a return break code is issued. If this is the case the executions of the remaining actions will not be performed.
+#      Returns an empty string.
+#
+#   **bind** *tag* *sequence* -*action*
+#      Remove a binding on *tag* for the sequence *sequence* with action *action*.
+#      It is not considered an error if there are no bindings for *tags* for the sequence *sequence* and action *action*.
+#      Returns an empty string.
 #
 ###### EVENT PATTERNS
 #
