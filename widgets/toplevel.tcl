@@ -1439,9 +1439,6 @@ proc ::ms::toplevel::Command { window { args "" } } {
             # Set the actual widget address.
             set ::ms::addr($w,widget) $w
 
-            # Set the structure address.
-            set ::ms::addr($w,structure) [list $w];
-
             # Add the widget address to the toplevel widgets real address list.
             lappend ::ms::addr(toplevel) $w
 
@@ -2374,7 +2371,6 @@ proc ::ms::toplevel::Destroy { w } {
                                  ::ms::addr($w,short);
 
             unset -nocomplain -- ::ms::addr($w,border) \
-                                 ::ms::addr($w,structure) \
                                  ::ms::addr($w,toplevel) \
                                  ::ms::addr($w,widget);
 
