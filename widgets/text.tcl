@@ -4369,10 +4369,6 @@ proc ::ms::text::Command { window { args "" } } {
 
                     # Set the actual widget address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w
-
-                    # Set the structure addresses.
-                    # Is important to note that the scrollbar addresses must not be included.
-                    set ::ms::addr($w,structure) [list $w]
                 }
                 true {
                     #############################
@@ -4583,13 +4579,6 @@ proc ::ms::text::Command { window { args "" } } {
 
                     # Set the actual widget address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.text
-
-                    # Set the structure addresses.
-                    # Is important to note that the scrollbar addresses must not be included.
-                    set ::ms::addr($w,structure) [list $w \
-                                                       $w.fake_x \
-                                                       $w.fake_y \
-                                                       $w.text];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -6863,7 +6852,6 @@ proc ::ms::text::Destroy { w } {
                          ::ms::addr($w.y,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
-                         ::ms::addr($w,structure) \
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
