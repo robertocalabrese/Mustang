@@ -86,7 +86,7 @@
 #      The *tag* argument determines which window(s) the binding applies to.
 #      If *tag* begins with a dot, as in ".a.b.c", then it must be the path name for a window;
 #      otherwise it may be an arbitrary string.
-#      If *tag* is a path name for a window it must be a short or long address.
+#      If *tag* is a path name for a window it must be a short or real address.
 #      Each window has an associated list of tags, and a binding applies to a particular window if its *tag* is among
 #      those specified for the window.
 #
@@ -554,7 +554,7 @@
 #      Valid for all event types.
 #
 #   **%W**:
-#      The path name of the window (always as a long address) to which the event was reported (the window field from the event).
+#      The path name of the window (always as a real address) to which the event was reported (the window field from the event).
 #      Valid for all event types.
 #
 #   **%X**, **%Y**:
