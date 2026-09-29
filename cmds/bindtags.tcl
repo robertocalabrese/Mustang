@@ -62,6 +62,84 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## bindtags - Determine which bindings apply to a window, and order of evaluation.
+#
+#### SYNOPSIS:
+#
+# **bindtags** *window*
+# **bindtags** *window* *taglist*
+#
+#### DESCRIPTION:
+#
+# When a binding is created with the **[bind](/wiki/commands/bind.md)** command, it is associated either
+# with a particular window such as **.a.b.c**, a class name such as **Button**, the keyword **all**,
+# or any other string. All of these forms are called binding tags.
+#
+# Each window contains a list of binding tags that determine how events are processed for the window.
+# When an event occurs in a window, it is applied to each of the window's tags in order: for each tag,
+# the most specific binding that matches the given tag and event is executed.
+#
+# The **bindtags** command allows the binding tags for a window to be read and modified.
+#
+# See the **[bind](/wiki/commands/bind.md)** command for more information on the matching process.
+#
+# The following options are available:
+#
+#   *window*
+#       It's the window address that will be associated with the binding tags.
+#       It can either be a short or real address.
+#
+#   ?*taglist*?
+#       If the *taglist* argument is specified to **bindtags**, then it must be a proper list;
+#       the tags for window are changed to the elements of the list.
+#       The elements of *taglist* may be arbitrary strings; however, any tag starting with a dot is treated
+#       as a window address (either a short or real one); if no window by that name exists at the time an event is processed,
+#       then the tag is ignored for that event.
+#       The order of the elements in *tagList* determines the order in which binding scripts
+#       are executed in response to events.
+#
+#       For example, the next command reverses the order in which the binding scripts will be evaluated for
+#       a button named **.b** so that the **all** bindings are invoked first, following by the bindings for
+#       the button's toplevel ("."), followed by the class bindings (**Button**), followed by the bindings for **.b**.
+#
+#          **bindtags .b { all . Button .b }**
+#
+#       If *taglist* is an empty list then the binding tags for *window* are returned to the default state described above.
+#
+#       By default, each window has four binding tags consisting of the name of the window,
+#       the window's class name, the name of the window's nearest toplevel ancestor, and all, in that order.
+#       Toplevel windows have only three tags by default, since the toplevel name is the same as that of the window.
+#
+#       If **bindtags** is invoked with only one argument, then the current set of binding tags for window
+#       is returned as a list.
+#       The **bindtags** command may be used to introduce arbitrary additional binding tags for a *window*,
+#       or to remove standard tags. For example, the command:
+#
+#          **bindtags .b { .b TrickyButton . all }**
+#
+#       replaces the **Button** tag for **.b** with **TrickyButton**.
+#
+#       This means that the default widget bindings for buttons, which are associated with the **Button** tag,
+#       will no longer apply to **.b**, but any bindings associated with **TrickyButton**
+#       (perhaps some new button behavior) will apply.
+#
+#### COMMAND:
+#
+# The *bindtags* command can have any of the following forms:
+#
+#   **bindtags** *window*
+#      Return the taglist associated with the *window* address.
+#
+#      Differently than others mustang commands, the **bindtags** command will **always**
+#      return real addresses, even if a short address was provided as input.
+#
+#      You can always ask if an address is a short or real address with **tk get addr**.
+#      You can always translate a real address into a short address using the **tk get short**
+#      command or a short address into a real address using the **tk get real** command.
+#
+#   **bindtags** *window* *taglist*
+#      Set the bindtags for the *window* address as *taglist*.
 package provide ::ms::bindtags 0.1
 
 # Create the mustang **bindtags** package.
@@ -83,10 +161,90 @@ interp alias {} bindtags {} ::ms::bindtags::Command
 #
 # Depending on the number of arguments provided, the return value/s may vary.
 proc ::ms::bindtags::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _bindtags {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+    # **bindtags** *window*
+    # **bindtags** *window* *taglist*
+
+    switch -- [llength $args] {
+        1   {
+            # ATTENTION! Differently than others mustang commands, the **bindtags** command will **always**
+            #            return real addresses, even if a short address was provided as input.
+            #
+            #            You can always ask if an address is a short or real address with **tk get addr**.
+            #            You can always translate a real address into a short address using the **tk get short**
+            #            command or a short address into a real address using the **tk get real** command.
+
+            # Synopsis:
+            #
+            # **bindtags** *window*
+            set addr   $args
+
+            # Check if 'addr' is a valid address or not.
+            set result [::ms::Check_Pathname $addr invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                default {
+                    set w    [lindex $result 0]
+                    set type [lindex $result 1]
+
+                    # Check if 'addr' is a short address.
+                    switch -- $type {
+                        short {
+                            # Substitute 'w' with its meaningful object.
+                            set w $::ms::addr($w,widget)
+                        }
+                    }
+
+                    # Execute the command.
+                    return [_bindtags $w]
+                }
+            }
+        }
+        2   {
+            # Synopsis:
+            #
+            # **bindtags** *window* *taglist*
+            set addr    [lindex $args 0]
+            set taglist [lindex $args 1]
+
+            # Check if 'addr' is a valid address or not.
+            set result [::ms::Check_Pathname $addr invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                default {
+                    set w    [lindex $result 0]
+                    set type [lindex $result 1]
+
+                    # Check if 'addr' is a short address.
+                    switch -- $type {
+                        short {
+                            # Substitute 'w' with its meaningful object.
+                            set w $::ms::addr($w,widget)
+                        }
+                    }
+                }
+            }
+
+            # Convert any short address present in 'taglist'.
+            set new_taglist [list ]
+            foreach tag $taglist {
+                # Check if 'tag' is a valid address or just a tag.
+                set result [::ms::Check_Pathname $tag invalid]
+                switch -- $result {
+                    invalid { lappend new_taglist $tag }
+                    default { lappend new_taglist [lindex $result 0] }
+                }
+            }
+
+            # Execute the command.
+            return [_bindtags $w $new_taglist]
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
 }
 
 #*EOF*
