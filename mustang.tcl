@@ -2281,9 +2281,6 @@ proc ::ms::Init {} {
     # Set the actual widget address.
     set ::ms::addr(.,widget) .
 
-    # Set the structure address.
-    set ::ms::addr(.,structure) [list .];
-
     # Add the widget address to the toplevel widgets real address list.
     lappend ::ms::addr(toplevel) .
 
