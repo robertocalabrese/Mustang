@@ -2021,12 +2021,6 @@ proc ::ms::checkbutton::Command { window { args "" } } {
             # Set the actual widget address (the widget that the developer was intended to build).
             set ::ms::addr($w,widget) $w.indicator
 
-            # Set the structure addresses.
-            set ::ms::addr($w,structure) [list $w \
-                                               $w.highlight \
-                                               $w.indicator \
-                                               $w.label];
-
             # Set the widget real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
@@ -3384,7 +3378,6 @@ proc ::ms::checkbutton::Destroy { w } {
                          ::ms::addr($w.highlight,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
-                         ::ms::addr($w,structure) \
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
