@@ -2281,8 +2281,8 @@ proc ::ms::Init {} {
     # Set the actual widget address.
     set ::ms::addr(.,widget) .
 
-    # Add the widget address to the toplevel widgets real address list.
-    lappend ::ms::addr(toplevel) .
+    # Add the widget address to the toplevel classtype widgets real address list.
+    lappend ::ms::addr(toplevel,classtype) .
 
     # Add the widget class to the available class list.
     lappend ::ms::data(classes) $::ms::current(.,class)
