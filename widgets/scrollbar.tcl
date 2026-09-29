@@ -1380,9 +1380,6 @@ proc ::ms::scrollbar::Command { window { args "" } } {
             # Set the actual widget address (the widget that the developer was intended to build).
             set ::ms::addr($w,widget) $w
 
-            # Set the structure address.
-            set ::ms::addr($w,structure) [list $w]
-
             # Set the widget real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
@@ -2606,7 +2603,6 @@ proc ::ms::scrollbar::Destroy { w } {
                          ::ms::addr($w,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
-                         ::ms::addr($w,structure) \
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
