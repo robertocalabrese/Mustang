@@ -686,15 +686,19 @@
 #### EXAMPLES
 #
 #   bind .f                             --> Returns every bindings sequence upon the tag (.f) provided.
+#
 #   bind .f <FocusIn>                   --> Returns every bindings actions upon the tag (.f), for the sequence (<FocusIn>) provided.
+#
 #   bind .f <FocusIn> {}                --> Removes every binding ever applied for the tag (.f) and sequence (<FocusIn>) provided.
 #
 #   bind .f <FocusIn> [list  MyProc %W] --> Removes every binding ever applied for the tag (.f) and sequence (<FocusIn>) provided,
 #                                           and applies a new binding for the tag (.f), sequence (<FocusIn>)
 #                                           and action ([list MyProc %W]) provided.
+#
 #   bind .f <FocusIn> [list -MyProc %W] --> Removes the binding previously applied for the tag (.f), sequence (<FocusIn>)
 #                                           and action ([list MyProc %W]) provided.
 #                                           If the binding is not found, then this command will be ignored.
+#
 #   bind .f <FocusIn> [list +MyProc %W] --> Appends a new binding with the tag (.f), sequence (<FocusIn>)
 #                                           and action ([list MyProc %W]) provided, to whatever binding that allready exists
 #                                           for the tag (.f) and sequence (<FocusIn>) provided.
