@@ -2795,12 +2795,6 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     # Set the actual widget address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.content
 
-                    # Set the structure addresses.
-                    # Is important to note that the scrollbar addresses must not be included.
-                    set ::ms::addr($w,structure) [list $w \
-                                                       $w.title \
-                                                       $w.content];
-
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
@@ -3361,17 +3355,6 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
                     # Set the actual widget address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.container.border.viewport.content
-
-                    # Set the structure addresses.
-                    # Is important to note that the scrollbar addresses must not be included.
-                    set ::ms::addr($w,structure) [list $w \
-                                                       $w.title \
-                                                       $w.container \
-                                                       $w.container.border \
-                                                       $w.container.border.viewport \
-                                                       $w.container.border.viewport.content \
-                                                       $w.container.fake_x \
-                                                       $w.container.fake_y];
 
                     # Add the widget address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
@@ -6086,7 +6069,6 @@ proc ::ms::labelframe::Destroy { w } {
                          ::ms::addr($w.title,short);
 
     unset -nocomplain -- ::ms::addr($w,border) \
-                         ::ms::addr($w,structure) \
                          ::ms::addr($w,toplevel) \
                          ::ms::addr($w,widget);
 
