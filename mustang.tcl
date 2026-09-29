@@ -221,6 +221,9 @@ proc ::ms::Init {} {
         lappend ::ms::data(classtypes) $classtype
     }
 
+    # Initialize the class list.
+    set ::ms::data(classes) [list ]
+
     # Note: Panedwindows are disabled for Windows and macOS systems.
     #       See the [panedwindow](/wiki/widgets/panedwindow.md) page for more information.
     switch -nocase -glob -- $::tcl_platform(os) {
@@ -2283,6 +2286,9 @@ proc ::ms::Init {} {
 
     # Add the widget address to the toplevel widgets real address list.
     lappend ::ms::addr(toplevel) .
+
+    # Add the widget class to the available class list.
+    lappend ::ms::data(classes) $::ms::current(.,class)
 
     # Add the widget address to the toplevel classtype real address list with class '::ms::current(.,class)'.
     lappend ::ms::class($::ms::current(.,class),toplevel,addrs) .
