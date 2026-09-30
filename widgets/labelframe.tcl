@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -118,7 +118,7 @@
 #                                   If it's not provided --> The widget will follow the '*-anchor*' specified in its style.
 #                                                            If there isn't one, the '*-anchor*' of the **TLabelframe** style will be used instead.
 #                                                            The **-anchor** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 # **-background**             It's a list that specifies the color to use as background.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
@@ -175,7 +175,7 @@
 #                                                            If there isn't one, the **-borderwidth** of the **TLabelframe** style
 #                                                            will be used instead.
 #                                                            The **-borderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-bordercolor** and **-relief**.
 #
@@ -257,7 +257,7 @@
 #                                                            If there isn't one, the **-compound** of the **TLabelframe** style
 #                                                            will be used instead.
 #                                                            The **-compound** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-image**, **-text** and **-textvariable**.
 #
@@ -276,7 +276,7 @@
 #                                                            If there isn't one, the **-cursor** of the **TLabelframe** style
 #                                                            will be used instead.
 #                                                            The **-cursor** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 # **-darkcolor**              It's a list that specifies the color to use as darkcolor.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
@@ -346,7 +346,7 @@
 #                                                            If there isn't one, the **-font** of the **TLabelframe** style
 #                                                            will be used instead.
 #                                                            The **-font** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-foreground**.
 #
@@ -432,7 +432,7 @@
 #                                                            If there isn't one, the **-padding** of the **TLabelframe** style
 #                                                            will be used instead.
 #                                                            The **-padding** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 # **-relief**                 Specifies the three-dimensional effect desired for the widget.
 #                             The value indicates how the widget's interior should appear relative to its exterior.
@@ -457,7 +457,7 @@
 #                                                            If there isn't one, the **-relief** of the **TLabelframe** style
 #                                                            will be used instead.
 #                                                            The **-relief** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-bordercolor** and **-borderwidth**.
 #
@@ -465,11 +465,11 @@
 #                             If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single canvas widget.
 #
 #                             The scrollbars will be automatically managed by Tk with the following rules:
-#                                The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
-#                                the widget *viewport* width and *not needed* when it's not.
+#                                The horizontal scrollbar is defined to be *needed* each time the widget's *content* width is bigger then
+#                                the widget's *viewport* width and *not needed* when it's not.
 #
-#                                The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
-#                                the widget *viewport* height and *not needed* when it's not.
+#                                The vertical scrollbar is defined to be *needed* each time the widget's *content* height is bigger then
+#                                the widget's *viewport* height and *not needed* when it's not.
 #
 #                                If a scrollbar is currently needed, then it will be displayed (if it's not already displayed).
 #                                If a scrollbar is not currently needed, then it will not be displayed (or removed if it was
@@ -503,21 +503,18 @@
 #                             See also **-background** and **-foreground**.
 #
 # **-state**                  Specifies the state for the widget.
+#                             Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
 #
-#                             Note: Labelframes have only the **normal** state.
-#
-#                             Note: This option will be ignored if provided while creating the widget.
-#                                   Attempts to change this value after the widget was created, by using the **configure** command,
-#                                   will be ignored by mustang.
+#                             Labelframes have only the **normal** state.
 #
 #                             It's set to **normal**.
 #
-# **-style**                  Specifies a custom widget style.
-#                             If not provided, defaults to **TLabelframe**.
-#
+# **-style**                  Specifies a custom widget's style.
 #                             Style should be already exists at the time the widget is created.
 #
 #                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                             If not provided, defaults to **TLabelframe**.
 #
 # **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                             and **Shift-Tab**).
@@ -657,7 +654,7 @@
 #
 #   *window* **cget** *option*
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the labelframe command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the labelframe command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -667,7 +664,7 @@
 #     If an 'option' is specified with no value, then the command returns a list describing the one named option.
 #     This list will be identical to the corresponding sublist of the value returned if no option is specified.
 #
-#     If one or more 'option value' pairs are specified, then the command modifies the given widget option(s)
+#     If one or more 'option value' pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options are not configurable, some can only be setted at creation time.
@@ -678,8 +675,8 @@
 #     *X* and *y* are pixel coordinates relative to the widget.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamyc state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -693,8 +690,8 @@
 #     Returns an empty string.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire the widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire the widget's dynamyc state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -795,14 +792,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -811,31 +808,31 @@
 #
 ######## SIMPLE LABELFRAME:
 #
-# 1.  **MouseWheel** events will try to find the innermost widget scrollable parent with an active vertical scrollbar and move
+# 1.  **MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar and move
 #     that scrollbar by one unit up or down (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
-# 2.  **Shift-MouseWheel** events will try to find the innermost widget scrollable parent with an active horizontal scrollbar
+# 2.  **Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 #     and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
-# 3.  **Control-MouseWheel** events will try to find the innermost widget scrollable parent with an active vertical scrollbar
+# 3.  **Control-MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar
 #     and move that scrollbar by one page up or down (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
-# 4.  **Control-Shift-MouseWheel** events will try to find the innermost widget scrollable parent with an active horizontal
+# 4.  **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal
 #     scrollbar and move that scrollbar by one page left or right (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
 # 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
-#        1 - **TouchpadScroll** events along the X axis will try to find the innermost widget scrollable parent with an active
+#        1 - **TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an active
 #            horizontal scrollbar and move that scrollbar by one unit towards the left or the right (depending on the direction
 #            of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
-#        2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget scrollable parent with an active
+#        2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an active
 #            vertical scrollbar and move that scrollbar by one unit towards the top or the bottom (depending on the direction
 #            of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
@@ -843,12 +840,12 @@
 # 6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
-#        1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget scrollable parent with an
+#        1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an
 #            active horizontal scrollbar and move that scrollbar by one page towards the left or the right (depending on the
 #            direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
-#        2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget scrollable parent with an
+#        2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an
 #            active vertical scrollbar and move that scrollbar by one page towards the top or the bottom (depending on the
 #            direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
@@ -861,14 +858,14 @@
 # 1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of
 #     the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable
+#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget's scrollable
 #     parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
 # 2.  If the widget have an active horizontal scrollbar, **Shift-MouseWheel** events will scroll one unit towards the left or the right
 #     of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the
 #     mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -876,7 +873,7 @@
 # 3.  If the widget have an active vertical scrollbar, **Control-MouseWheel** events will scroll one page towards the top or the
 #     bottom of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the mousewheel
 #     direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -884,7 +881,7 @@
 # 4.  If the widget have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will scroll one page towards the left or
 #     the right of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel
 #     direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -896,7 +893,7 @@
 #            scrollbar one unit towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to find the
-#            innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
+#            innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
 #            or the right (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
@@ -904,7 +901,7 @@
 #            scrollbar one unit towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to find the
-#            innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
+#            innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
 #            or the bottom (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -912,18 +909,18 @@
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
 #        1 - If the widget have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try will scroll the
-#            widget scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
-#            the innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
+#            the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
 #            or the right (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
 #        2 - If the widget have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try will scroll the
-#            widget scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
-#            the innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
+#            the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
 #            or the bottom (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -932,7 +929,7 @@
 #
 ###### INTERNAL MECHANISM:
 #
-# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth** and
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget's styleable options (**-borderwidth** and
 #     **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually indicate
 #     that the user is inside the widget.
 #
@@ -945,17 +942,17 @@
 # 1.  The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the
 #     previous focussable widget.
 #
-# 2.  If the widget vertical scrollbar is active:
+# 2.  If the widget's vertical scrollbar is active:
 #       - **Prior**        Scrolls one page towards the top of the widget.
 #       - **Next**         Scrolls one page towards the bottom of the widget.
-#     If the widget vertical scrollbar is not active or not present, mustang will try to find the innermost widget scrollable parent
+#     If the widget's vertical scrollbar is not active or not present, mustang will try to find the innermost widget's scrollable parent
 #     with an active vertical scrollbar and scroll that scrollbar.
 #     If none of the widget's parents meets the required conditions, nothing will happen.
 #
-# 3.  If the widget horizontal scrollbar is active:
+# 3.  If the widget's horizontal scrollbar is active:
 #       - **Control-Prior** Scrolls one page towards the right of the widget.
 #       - **Control-Next**  Scrolls one page towards the left of the widget.
-#     If the widget horizontal scrollbar is not active or not present, mustang will try to find the innermost widget scrollable parent
+#     If the widget's horizontal scrollbar is not active or not present, mustang will try to find the innermost widget's scrollable parent
 #     with an active horizontal scrollbar and scroll that scrollbar.
 #     If none of the widget's parents meets the required conditions, nothing will happen.
 #
@@ -1971,12 +1968,12 @@ interp alias {} ttk::labelframe {} ::ms::labelframe::Command
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -2002,7 +1999,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)            $::ms::default(labelframe,class)
             set ::ms::default($w,cmenu)            $::ms::default(labelframe,cmenu)
             set ::ms::default($w,height)           $::ms::default(labelframe,height)
@@ -2016,7 +2013,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
             set ::ms::default($w,xscrollincrement) $::ms::default(labelframe,xscrollincrement)
             set ::ms::default($w,yscrollincrement) $::ms::default(labelframe,yscrollincrement)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)            $::ms::default(labelframe,class)
             set ::ms::current($w,cmenu)            $::ms::default(labelframe,cmenu)
             set ::ms::current($w,height)           $::ms::default(labelframe,height)
@@ -2030,7 +2027,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
             set ::ms::current($w,xscrollincrement) $::ms::default(labelframe,xscrollincrement)
             set ::ms::current($w,yscrollincrement) $::ms::default(labelframe,yscrollincrement)
 
-            # Set some widget variables needed for internal mechanisms.
+            # Set some widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype)  labelframe
             set ::ms::data($w,scrollx)    off
             set ::ms::data($w,scrolly)    off
@@ -2539,7 +2536,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                     -takefocus 0 \
                                         -width 0;
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ###################
@@ -2773,16 +2770,16 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses relative to its real address, 'w'.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short)         $short_addr
                     set ::ms::addr($w.title,short)   $short_addr
                     set ::ms::addr($w.content,short) $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.title \
                                               $w.content;
@@ -2792,13 +2789,13 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.content
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.content
 
-                    # Add the widget address to the megawidget addresses list.
+                    # Add the widget's real address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
-                    # Add the widget address to the megawidget container addresses list.
+                    # Add the widget's real address to the megawidget container addresses list.
                     lappend ::ms::addr(megawidgets,containers) $w
                 }
                 true {
@@ -2863,7 +2860,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                     -takefocus 0 \
                                         -width 0;
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ###################
@@ -3212,7 +3209,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                                                                       -rely 0;
 
                     # NOTE:  The widget's content is placed by the 'place' geometry manager.
-                    #        The reasons around the 'place' choice is to intercepts any widget dimensions
+                    #        The reasons around the 'place' choice is to intercepts any widget's dimensions
                     #        changes or scrolls upon it.
 
                     ########################
@@ -3316,15 +3313,15 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Configure the internal widget rows and columns.
+                    # Configure the internal widget's rows and columns.
                     _grid rowconfigure    $w.container [list 0] -weight 1
                     _grid columnconfigure $w.container [list 0] -weight 1
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses relative to its real address, 'w'.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short)                                   $short_addr
                     set ::ms::addr($w.title,short)                             $short_addr
                     set ::ms::addr($w.container,short)                         $short_addr
@@ -3336,7 +3333,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     set ::ms::addr($w.container.x,short)                       $short_addr
                     set ::ms::addr($w.container.y,short)                       $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.title \
                                               $w.container \
@@ -3353,16 +3350,16 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.container.border
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.container.border.viewport.content
 
-                    # Add the widget address to the megawidget addresses list.
+                    # Add the widget's real address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
-                    # Add the widget address to the megawidget container addresses list.
+                    # Add the widget's real address to the megawidget container addresses list.
                     lappend ::ms::addr(megawidgets,containers) $w
 
-                    # Add the widget address to the scrollable megawidget addresses list.
+                    # Add the widget's real address to the scrollable megawidget addresses list.
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
@@ -3373,32 +3370,40 @@ proc ::ms::labelframe::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::labelframe::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::labelframe::Pathname_Cmd $w]
             }
 
-            # Add the widget address to the labelframe widgets real address list.
-            lappend ::ms::addr(labelframe) $w
+            # Add the widget's real address to the labelframe widgets real address list.
+            lappend ::ms::addr(labelframe,classtype) $w
 
-            # Add the widget address to the labelframe real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),labelframe,addrs) $w
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
 
-            # Add the widget address to the labelframe real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the labelframe classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),labelframe,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the labelframe classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the labelframe classtype.
             if { $::ms::current($w,style) ni $::ms::style(labelframe,classtype) } {
                 lappend ::ms::style(labelframe,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -3416,13 +3421,13 @@ proc ::ms::labelframe::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -3486,7 +3491,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
-                            # Note: The widget new dimensions will be updated only if they phisically change
+                            # Note: The widget's new dimensions will be updated only if they phisically change
                             #       after the configure command was issued.
                             #
                             #       Their registration (if any) is done in the '::ms::labelframe::Configure' event procedure.
@@ -3739,19 +3744,18 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TLabelframe]
                                             }
 
-                                            # Remove the widget address from the labelframe classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the labelframe classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),labelframe,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),labelframe,addrs) [lremove $::ms::style($::ms::current($w,style),labelframe,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,labelframe,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the labelframe classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),labelframe,addrs)] {
                                                 0   {
@@ -4566,7 +4570,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                 return ""
             }
 
-            # Get the widget address containing the point given by the root coordinates calculated.
+            # Get the widget's real address containing the point given by the root coordinates calculated.
             set widget [_winfo containing -display $w $X $Y]
 
             # Check if the widget is scrollable or not.
@@ -4664,7 +4668,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                 default { set widget_real_pathname [lindex $result 0] }
             }
 
-            # Get the parent address of the widget real pathname.
+            # Get the parent address of the widget's real pathname.
             set parent_addr [_winfo parent $widget_real_pathname]
             switch -- $parent_addr {
                 ""  { return "" }
@@ -4688,12 +4692,12 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
                     switch -- $::ms::data($w,scrollx) {
                         on  {
-                            # Get the widget width and horizontal coordinates.
+                            # Get the widget's width and horizontal coordinates.
                             set width  [_winfo width $widget_real_pathname]
                             set x1     [_winfo x $widget_real_pathname]
                             set x2     [expr { $x1+$width }]
 
-                            # Set the widget xview1 and xview2.
+                            # Set the widget's xview1 and xview2.
                             set xview1 [expr { ($x1*1.0)/$::ms::data($w,reqwidth) }]
                             set xview2 [expr { ($x2*1.0)/$::ms::data($w,reqwidth) }]
 
@@ -4762,12 +4766,12 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
                     switch -- $::ms::data($w,scrolly) {
                         on  {
-                            # Get the widget height and vertical coordinates.
+                            # Get the widget's height and vertical coordinates.
                             set height [_winfo height $widget_real_pathname]
                             set y1     [_winfo y $widget_real_pathname]
                             set y2     [expr { $y1+$height }]
 
-                            # Set the widget yview1 and yview2.
+                            # Set the widget's yview1 and yview2.
                             set yview1 [expr { ($y1*1.0)/$::ms::data($w,reqheight) }]
                             set yview2 [expr { ($y2*1.0)/$::ms::data($w,reqheight) }]
 
@@ -5912,14 +5916,14 @@ proc ::ms::labelframe::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w               Should be the widget real address involved.
+# w               Should be the widget's real address involved.
 #
 # width, height   Should be the new width and height of the widget.
 #                 These values should be provided by the **Configure** event.
 #
 # It doesn't return anything.
 proc ::ms::labelframe::Configure { w width height } {
-    # Check if we are here due to a widget configure command or not.
+    # Check if we are here due to a widget's configure command or not.
     switch -- [info exists ::ms::temp($w,height)] {
         1   {
             set ::ms::current($w,height) $::ms::temp($w,height)
@@ -5951,47 +5955,64 @@ proc ::ms::labelframe::Configure { w width height } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::labelframe::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget short address from the list of all available short addresses.
+    # Remove the widget's short address from the list of all available short addresses.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the labelframe widgets real address list.
-    set index [lsearch -exact $::ms::addr(labelframe) $w]
+    # Remove the widget's real address from the labelframe classtype real address list.
+    set index [lsearch -exact $::ms::addr(labelframe,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(labelframe) [lremove $::ms::addr(labelframe) $index] }
+        default { set ::ms::addr(labelframe,classtype) [lremove $::ms::addr(labelframe,classtype) $index] }
     }
 
-    # Remove the widget address from the labelframe classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),labelframe,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),labelframe,addrs) [lremove $::ms::class($::ms::current($w,class),labelframe,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the labelframe classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the labelframe classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),labelframe,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),labelframe,addrs) [lremove $::ms::style($::ms::current($w,style),labelframe,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the labelframe classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the labelframe classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),labelframe,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(labelframe,classtype) $::ms::current($w,style)]
@@ -6022,24 +6043,24 @@ proc ::ms::labelframe::Destroy { w } {
         }
     }
 
-    # Remove the widget address from the megawidget real address list.
+    # Remove the widget's real address from the megawidget real address list.
     set index [lsearch -exact $::ms::addr(megawidgets) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
     }
 
-    # Remove the widget address from the megawidget container real address list.
+    # Remove the widget's real address from the megawidget container real address list.
     set index [lsearch -exact $::ms::addr(megawidgets,containers) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(megawidgets,containers) [lremove $::ms::addr(megawidgets,containers) $index] }
     }
 
-    # Check if the widget is scrollable or not.
+    # Check if the widget's is scrollable or not.
     switch -- $::ms::current($w,scrollable) {
         true {
-            # Remove the widget address from the megawidget scrollable real address list.
+            # Remove the widget's real address from the megawidget scrollable real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
             switch -- $index {
                 -1      {}
@@ -6048,7 +6069,7 @@ proc ::ms::labelframe::Destroy { w } {
         }
     }
 
-    # Destroy the bindings for the widget real address in its related toplevel.
+    # Destroy the bindings for the widget's real address in its related toplevel.
     ::ms::Clean_Up $w
 
     # Destroy every widget's variables previously created.
@@ -6170,7 +6191,7 @@ proc ::ms::labelframe::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::labelframe::FocusOut { w } {
@@ -6202,7 +6223,7 @@ proc ::ms::labelframe::FocusOut { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -6356,7 +6377,7 @@ proc ::ms::labelframe::Scrollbar_ButtonRelease {} {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -6410,7 +6431,7 @@ proc ::ms::labelframe::Scrollbar_Drag { w orient x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::labelframe::Scrollbar_Update { w } {
