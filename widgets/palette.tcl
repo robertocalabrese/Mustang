@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -69,7 +69,7 @@
 #
 # A palette combines a text field with a pop-down list of colornamess and a color preview object; the user may select the colorname
 # of the text field from among the colornames in the list. Palette widgets support horizontal scrolling with the standard **-xscrollcommand**
-# option and **xview** widget command but only if the **-maxlength** option value is **0**.
+# option and **xview** widget's command but only if the **-maxlength** option value is **0**.
 #
 # Note 1: At the time this command is invoked, there must not exist a window with the same pathname,
 #         but the pathname's parents must exists.
@@ -125,7 +125,7 @@
 #                                                             If there isn't one, the **-arrowsize** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-arrowsize** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-arrowcolor**.
 #
@@ -181,7 +181,7 @@
 #                                                             If there isn't one, the **-charwidth** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-charwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-maxlength**.
 #
@@ -238,7 +238,7 @@
 #                                                             If there isn't one, the **-cursor** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-cursor** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-darkcolor**               It's a list that specifies the color to use as darkcolor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -262,7 +262,7 @@
 #
 # **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
 #                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
-#                              selecting outside the widget deselects any widget selection, and the widget will respond to selection retrieval
+#                              selecting outside the widget deselects any widget's selection, and the widget will respond to selection retrieval
 #                              requests when it has a selection.
 #
 #                              If a palette is exporting its selection then it will observe the standard X11 protocols for handling the selection;
@@ -327,7 +327,7 @@
 #                                                             If there isn't one, the **-focuswidth** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-focuswidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-font**                    Specifies the font to use for the text displayed by the widget.
 #                              The widget will accept as fontname any font created with the **font** command, including any Tk
@@ -343,7 +343,7 @@
 #                                                             If there isn't one, the **-font** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-font** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-foreground**.
 #
@@ -392,7 +392,7 @@
 #                                                             If there isn't one, the **-insertwidth** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-insertwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-insertcolor**.
 #
@@ -411,7 +411,7 @@
 #                                                             If there isn't one, the **-justify** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-justify** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-lightcolor**              It's a list that specifies the color to use as lightcolor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -472,13 +472,13 @@
 #                                                             If there isn't one, the **-padding** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-padding** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-placeholder**             Specifies a help text string to display if no text is otherwise displayed, that is when the widget is empty.
 #                              The placeholder text is displayed using the values of the **-font**, **-justify** and **-placeholderforeground**
 #                              options.
 #
-#                              The placeholder text will disappear when the widget will take the focus, and reappears (if the widget value is
+#                              The placeholder text will disappear when the widget will take the focus, and reappears (if the widget's value is
 #                              empty) when the widget loses the focus. An empty string will mean no placeholder text to display.
 #
 #                              If not provided, defaults to the empty string.
@@ -547,7 +547,7 @@
 #                                                             If there isn't one, the **-selectborderwidth** of the **TPalette** style
 #                                                             will be used instead.
 #                                                             The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-selectbackground** and **-selectforeground**.
 #
@@ -587,18 +587,18 @@
 #                                                                   an **Activate**/**Deactivate** event.
 #
 # **-state**                   Specifies the state for the widget.
-#                              May be set to **normal**, **readonly** or **disabled**.
-#                              This is a write-only option: setting it changes the widget state, but the state widget command does not
-#                              affect the *-state* option.
+#                              Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
+#
+#                              Allowed states values are **normal**, **readonly** or **disabled**.
 #
 #                              If not provided, defaults to **normal**.
 #
-# **-style**                   Specifies a custom widget style.
-#                              If not provided, defaults to **TPalette**.
-#
+# **-style**                   Specifies a custom widget's style.
 #                              The *style* provided should already exists at the time the widget is created.
 #
 #                              See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                              If not provided, defaults to **TPalette**.
 #
 # **-takefocus**               Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                              and **Shift-Tab**).
@@ -698,7 +698,7 @@
 #
 #   *window* *action* ?*arg* *arg* ... *arg*?
 #
-# *Window* is the name of the command, which is the same as the palette widget pathname.
+# *Window* is the name of the command, which is the same as the palette widget's pathname.
 # *Actions* and the *arg*s determine the exact behavior of the *window* command.
 #
 # The following commands are possible for palette widgets:
@@ -712,7 +712,7 @@
 #
 #   *window* **cget** ?*option*?
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the palette command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the palette command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -723,7 +723,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -764,8 +764,8 @@
 #     Returns the empty string.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -793,8 +793,8 @@
 #     Returns the empty string.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -837,7 +837,7 @@
 #
 #### INDICES:
 #
-# Many of the palette widget commands take one or more indices as arguments.
+# Many of the palette widget's commands take one or more indices as arguments.
 # An index specifies a particular character in the palette's string, in any of the following ways:
 #
 #   **number**
@@ -914,10 +914,10 @@
 #
 # In the **readonly** state, no insert cursor is displayed, the text can be selected (depending on the theme), the palette
 # cannot be edited (specifically: the insert and delete commands have no effect) and the popdown window can be used to
-# change the widget textarea value.
+# change the widget's textarea value.
 #
 # In the **normal** state, the insert cursor is displayed, the text can be selected, the palette can be edited and the
-# popdown window can be also used to change the widget textarea value.
+# popdown window can be also used to change the widget's textarea value.
 #
 # Note that changes to the linked **-textvariable** will still be reflected in the palette, even if it is **disabled**.
 #
@@ -976,14 +976,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -1124,25 +1124,25 @@
 # Note: In the descriptions below, **word** refers to a contiguous group of letters, digits, or "_" characters, or any single
 #       character other than these.
 #
-# 1.  Clicking the left mouse button inside the widget textarea will put the insert cursor just before the character underneath
+# 1.  Clicking the left mouse button inside the widget's textarea will put the insert cursor just before the character underneath
 #     the mouse cursor, sets the input focus to this widget, and clears any selection in the widget.
 #     Dragging with mouse **button 1** down strokes out a selection between the insert cursor and the character under the mouse.
 #
-#     Clicking the left mouse button upon the widget arrow will display the popdown window.
+#     Clicking the left mouse button upon the widget's arrow will display the popdown window.
 #
-# 2.  Double-clicking with the left mouse button inside the widget textarea selects the word under the mouse and positions the
+# 2.  Double-clicking with the left mouse button inside the widget's textarea selects the word under the mouse and positions the
 #     insert cursor at the end of the word. Dragging after a double click strokes out a selection consisting of whole words.
 #
-# 3.  Triple-clicking with the left mouse button inside the widget textarea selects all of the text in the widget textarea and
+# 3.  Triple-clicking with the left mouse button inside the widget's textarea selects all of the text in the widget's textarea and
 #     positions the insert cursor at the end of the line. The ends of the selection can be adjusted by dragging with left mouse
 #     button while the **Shift** key is down. If the button is double-clicked before dragging then the selection will be adjusted
 #     in units of whole words.
 #
-# 4.  Clicking the left mouse button inside the widget textarea with the **Control** key down will position the insert cursor in
-#     the widget textarea without affecting the selection.
+# 4.  Clicking the left mouse button inside the widget's textarea with the **Control** key down will position the insert cursor in
+#     the widget's textarea without affecting the selection.
 #
-# 5.  If the mouse is dragged out of the widget textarea on the left or right sides while the left mouse button is pressed and
-#     the datatype of the palette allows it, the widget textarea will automatically scroll to make more text visible (if there
+# 5.  If the mouse is dragged out of the widget's textarea on the left or right sides while the left mouse button is pressed and
+#     the datatype of the palette allows it, the widget's textarea will automatically scroll to make more text visible (if there
 #     is more text off-screen on the side where the mouse left the window).
 #
 # The following behavior will happen if the palette widget has the focus and its state is normal.
@@ -1150,35 +1150,35 @@
 # Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
 #       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
 #
-# 1.  If any alphanumeric characters (plus the space and underline character) are typed in an widget textarea, they are inserted at
+# 1.  If any alphanumeric characters (plus the space and underline character) are typed in an widget's textarea, they are inserted at
 #     the point of the insert cursor.
 #
 # 2.  The **Left** and **Right** keys move the insert cursor one character to the left or right; they also clear any selection in
-#     the widget textarea. If **Shift-Left** or **Shift-Right** is typed then the insertion cursor moves and the selection is
+#     the widget's textarea. If **Shift-Left** or **Shift-Right** is typed then the insertion cursor moves and the selection is
 #     extended to include the new character. **Control-Left** and **Control-Right** move the insert cursor by words, and
 #     **Control-Shift-Left** and **Control-Shift-Right** move the insert cursor by words and also extend the selection.
 #
-# 3.  The **Down** key will display the popdown window, selects the closest match to the value of the widget textarea and displays
+# 3.  The **Down** key will display the popdown window, selects the closest match to the value of the widget's textarea and displays
 #     the relative color of that item in the preview object. If none are found, the first element of the list will be selected and
 #     the relative color of that item will be displayed in the preview object.
 #
-# 4.  The **Home** key move the insert cursor to the beginning of the widget textarea and clears any previous selection.
-#     **Shift-Home** moves the insert cursor to the beginning of the widget textarea and extends the selection to that point.
+# 4.  The **Home** key move the insert cursor to the beginning of the widget's textarea and clears any previous selection.
+#     **Shift-Home** moves the insert cursor to the beginning of the widget's textarea and extends the selection to that point.
 #
-# 5.  The **End** key move the insert cursor to the end of the widget textarea and clears any previous selection.
+# 5.  The **End** key move the insert cursor to the end of the widget's textarea and clears any previous selection.
 #     **Shift-End** moves the cursor to the end and extends the selection to that point.
 #
-# 6.  **Control-a** (**Command-a** for macOS) selects all the text in the widget textarea.
+# 6.  **Control-a** (**Command-a** for macOS) selects all the text in the widget's textarea.
 #     **Control-Shift-a** (**Command-Shift-a** for macOS) clears any selection in the widget or does nothing if there isn't any.
 #
 # 7.  The standard Tk **Cut**, **Copy**, **Paste**, and **Clear** virtual events operate on the selection in the expected manner.
 #
-# 8.  The **Delete** key deletes the selection, if there is one in the widget textarea.
+# 8.  The **Delete** key deletes the selection, if there is one in the widget's textarea.
 #     If there is no selection, it deletes the character to the right of the insertion cursor.
-#     **Alt-d** (**Option-d** for macOS) deletes from the insertion cursor to the end of the widget textarea or does nothing if
-#     the insertion cursor is already at the end of the widget textarea.
+#     **Alt-d** (**Option-d** for macOS) deletes from the insertion cursor to the end of the widget's textarea or does nothing if
+#     the insertion cursor is already at the end of the widget's textarea.
 #
-# 9.  The **BackSpace** key delete the selection, if there is one in the widget textarea.
+# 9.  The **BackSpace** key delete the selection, if there is one in the widget's textarea.
 #     If there is no selection, it deletes the character to the left of the insert cursor.
 #
 # 10. The **Escape** key clears any current value that is not yet validated and restore the last valid one.
@@ -1767,12 +1767,12 @@ interp alias {} palette {} ::ms::palette::Command
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1798,7 +1798,7 @@ proc ::ms::palette::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)           $::ms::default(palette,class)
             set ::ms::default($w,cmenu)           $::ms::default(palette,cmenu)
             set ::ms::default($w,command)         $::ms::default(palette,command)
@@ -1814,7 +1814,7 @@ proc ::ms::palette::Command { window { args "" } } {
             set ::ms::default($w,values)          $::ms::default(palette,values)
             set ::ms::default($w,xscrollcommand)  $::ms::default(palette,xscrollcommand)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)           $::ms::default(palette,class)
             set ::ms::current($w,cmenu)           $::ms::default(palette,cmenu)
             set ::ms::current($w,command)         $::ms::default(palette,command)
@@ -1830,7 +1830,7 @@ proc ::ms::palette::Command { window { args "" } } {
             set ::ms::current($w,values)          $::ms::default(palette,values)
             set ::ms::current($w,xscrollcommand)  $::ms::default(palette,xscrollcommand)
 
-            # Set the widget variables needed for internal mechanisms.
+            # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype)    palette
             set ::ms::data($w,colornames)   [list ]
             set ::ms::data($w,hexadecimals) [list ]
@@ -2249,7 +2249,7 @@ proc ::ms::palette::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the takefocus and cursor accordingly.
+            # Check the widget's physical state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2419,7 +2419,7 @@ proc ::ms::palette::Command { window { args "" } } {
                             -takefocus 0 \
                                 -width 0;
 
-            # Set the widget toplevel.
+            # Set the widget's toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
             #######################
@@ -2435,7 +2435,7 @@ proc ::ms::palette::Command { window { args "" } } {
             }
             set padding [string trimright $padding "-"]
 
-            # Set the widget style.
+            # Set the widget's style.
             set ::ms::style($w,widget) [string cat "_ac="  $::ms::current($w,arrowcolor) \
                                                    "_as="  $::ms::current($w,arrowsize) \
                                                    "_bg="  $::ms::current($w,background) \
@@ -2454,7 +2454,7 @@ proc ::ms::palette::Command { window { args "" } } {
                                                    "_sfg=" $::ms::current($w,selectforeground) \
                                                    "." $::ms::current($w,style)];
 
-            # If needed, create the widget style.
+            # If needed, create the widget's style.
             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                 _ttk_style configure $::ms::style($w,widget)            -arrowcolor $::ms::current($w,arrowcolor) \
                                                                          -arrowsize $::ms::current($w,arrowsize) \
@@ -2471,11 +2471,11 @@ proc ::ms::palette::Command { window { args "" } } {
                                                                   -selectbackground $::ms::current($w,selectbackground) \
                                                                   -selectforeground $::ms::current($w,selectforeground);
 
-                # Add the widget object style name to the theme styles list created by mustang.
+                # Add the widget's object style name to the theme styles list created by mustang.
                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
             }
 
-            # Initialize the widget mapping.
+            # Initialize the widget's mapping.
             set mapping [list ]
 
             # arrowcolor
@@ -2599,11 +2599,11 @@ proc ::ms::palette::Command { window { args "" } } {
                 }
             }
 
-            # If needed, create the widget mapping.
+            # If needed, create the widget's mapping.
             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                # Add the widget mapping to the stylemap list containing all the mappings
+                # Add the widget's mapping to the stylemap list containing all the mappings
                 # created by mustang for the current theme.
                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
             }
@@ -2706,63 +2706,65 @@ proc ::ms::palette::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::palette::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::palette::Pathname_Cmd $w]
             }
 
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w.combobox
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w.combobox
-
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short addresses relative to its real address, 'w'.
-            # They will all point to the widget hull object short address.
+            # Set the widget's short addresses relative to its real address, 'w'.
+            # They will all point to the widget's hull object short address.
             set ::ms::addr($w,short)          $short_addr
             set ::ms::addr($w.preview,short)  $short_addr
             set ::ms::addr($w.combobox,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals) $w \
                                       $w.preview \
                                       $w.combobox;
 
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the palette widgets real address list.
-            lappend ::ms::addr(palette) $w
-
             # Set the border object (where the 'Enter' and 'Leave' event will happen).
             set ::ms::addr($w,border) $w
 
-            # Set the actual widget address (the widget that the developer was intended to build).
+            # Set the actual widget's real address (the widget that the developer was intended to build).
             set ::ms::addr($w,widget) $w.combobox
 
-            # Add the widget address to the palette classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),palette,addrs) $w
+            # Add the widget's real address to the palette widgets real address list.
+            lappend ::ms::addr(palette,classtype) $w
 
-            # Add the widget address to the palette classtype real address list with style '::ms::current($w,style)'.
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
+
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the palette classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),palette,addrs) $w
 
-            # Add the widget address to the megawidget addresses list.
-            lappend ::ms::addr(megawidgets) $w
-
-            # If needed, add '::ms::current($w,style)' to the available styles for the palette classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the palette classtype.
             if { $::ms::current($w,style) ni $::ms::style(palette,classtype) } {
                 lappend ::ms::style(palette,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Add the widget's real address to the megawidget's addresses list.
+            lappend ::ms::addr(megawidgets) $w
+
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -2780,13 +2782,13 @@ proc ::ms::palette::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -2883,7 +2885,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                             ##                                              ##
                             ##################################################
 
-                            # Check the widget options provided.
+                            # Check the widget's options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
                                     -arrowcolor {
@@ -3200,19 +3202,18 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TPalette]
                                             }
 
-                                            # Remove the widget address from the palette classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the palette classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),palette,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),palette,addrs) [lremove $::ms::style($::ms::current($w,style),palette,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,palette,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the palette classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),palette,addrs)] {
                                                 0   {
@@ -3358,7 +3359,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the takefocus and cursor accordingly.
+                            # Check the widget's physical state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -3493,7 +3494,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                                                                   -selectbackground $::ms::current($w,selectbackground) \
                                                                                   -selectforeground $::ms::current($w,selectforeground);
 
-                                # Add the widget object style name to the theme styles list created by mustang.
+                                # Add the widget's object style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
                             }
 
@@ -3823,7 +3824,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                     switch -nocase -- $result {
                         downarrow { return "Palette.downarrow" }
                         default   {
-                            # Check the widget's state.
+                            # Check the widget's physical state.
                             switch -- $::ms::current($w,state) {
                                 normal  { return "Palette.textarea" }
                                 default { return "Palette.label" }
@@ -3845,7 +3846,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                 enabled { chan puts stdout "'insert' is a deprecated mustang palette command. Use 'set' instead." }
             }
 
-            # Check the widget's state.
+            # Check the widget's physical state.
             switch -- $::ms::current($w,state) {
                 disabled { return "" }
             }
@@ -4082,7 +4083,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the cursor accordingly.
+        # Check the widget's physical state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             readonly {
@@ -4176,7 +4177,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
         }
         set padding [string trimright $padding "-"]
 
-        # Set the widget style.
+        # Set the widget's style.
         set ::ms::style($w,widget) [string cat "_ac="  $::ms::current($w,arrowcolor) \
                                                "_as="  $::ms::current($w,arrowsize) \
                                                "_bg="  $::ms::current($w,background) \
@@ -4195,7 +4196,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
                                                "_sfg=" $::ms::current($w,selectforeground) \
                                                "." $::ms::current($w,style)];
 
-        # If needed, create the widget style.
+        # If needed, create the widget's style.
         if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
             _ttk_style configure $::ms::style($w,widget)            -arrowcolor $::ms::current($w,arrowcolor) \
                                                                      -arrowsize $::ms::current($w,arrowsize) \
@@ -4212,11 +4213,11 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
                                                               -selectbackground $::ms::current($w,selectbackground) \
                                                               -selectforeground $::ms::current($w,selectforeground);
 
-            # Add the widget object style name to the theme styles list created by mustang.
+            # Add the widget's object style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
         }
 
-        # Initialize the widget mapping.
+        # Initialize the widget's mapping.
         set mapping [list ]
 
         # arrowcolor
@@ -4340,11 +4341,11 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
             }
         }
 
-        # If needed, create the widget mapping.
+        # If needed, create the widget's mapping.
         if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
             _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-            # Add the widget mapping to the stylemap list containing all the mappings
+            # Add the widget's mapping to the stylemap list containing all the mappings
             # created by mustang for the current theme.
             lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
         }
@@ -4381,15 +4382,15 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
 ## ButtonPress
 #
 # Manage the **ButtonPress-1** event on the widget.
-# Post/Unpost the popdown listbox or perform the entry widget binding,
-# depending on widget state and the location of the ButtonPress.
+# Post/Unpost the popdown listbox or perform the entry widget's binding,
+# depending on widget's state and the location of the ButtonPress.
 #
 # Note: The following procedure is a modified version of the 'ttk::combobox::Press' procedure.
 #       All credits goes to the original author/s.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **ButtonPress** event.
@@ -4403,7 +4404,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
 #
 # It doesn't return anything.
 proc ::ms::palette::ButtonPress { w x y mode } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { ::ms::palette::Post $w }
@@ -4422,7 +4423,7 @@ proc ::ms::palette::ButtonPress { w x y mode } {
                             # Focus the widget.
                             _focus -force $w.combobox
 
-                            # Change the widget dynamic state to 'focus'.
+                            # Change the widget's dynamic state to 'focus'.
                             $w.combobox state [list focus]
                         }
                     }
@@ -4475,16 +4476,23 @@ proc ::ms::palette::ButtonPress { w x y mode } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::palette::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
+    }
+
+    # Remove the widget's short address from the widgets short address list.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
     # Remove all the objects real addresses from the list of all available real addresses.
@@ -4498,35 +4506,45 @@ proc ::ms::palette::Destroy { w } {
         }
     }
 
-    # Remove the widget short address from the widgets short address list.
-    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    # Remove the widget's real address from the palette classtype real address list.
+    set index [lsearch -exact $::ms::addr(palette,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
+        default { set ::ms::addr(palette,classtype) [lremove $::ms::addr(palette,classtype) $index] }
     }
 
-    # Remove the widget address from the palette widgets real address list.
-    set index [lsearch -exact $::ms::addr(palette) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(palette) [lremove $::ms::addr(palette) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the palette classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),palette,addrs) $w]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::class($::ms::current($w,class),palette,addrs) [lremove $::ms::class($::ms::current($w,class),palette,addrs) $index] }
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
     }
 
-    # Remove the widget address from the palette classtype real address list with style '::ms::current($w,style)'.
+    # Remove the widget's real address from the style list that contains all the palette classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),palette,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),palette,addrs) [lremove $::ms::style($::ms::current($w,style),palette,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the palette classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the palette classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),palette,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(palette,classtype) $::ms::current($w,style)]
@@ -4537,7 +4555,7 @@ proc ::ms::palette::Destroy { w } {
         }
     }
 
-    # Remove the widget address from the megawidget real address list.
+    # Remove the widget's real address from the megawidget real address list.
     set index [lsearch -exact $::ms::addr(megawidgets) $w]
     switch -- $index {
         -1      {}
@@ -4666,17 +4684,17 @@ proc ::ms::palette::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::palette::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
+    # Change the widget's dynamic state to 'focus'.
     ::ms::palette::Pathname_Cmd $w state [list focus]
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal {
-            # Select all the widget textarea characters.
+            # Select all the widget's textarea characters.
             $w.combobox selection range 0 end
         }
     }
@@ -4690,7 +4708,7 @@ proc ::ms::palette::FocusIn { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::palette::FocusOut { w } {
@@ -4700,7 +4718,7 @@ proc ::ms::palette::FocusOut { w } {
     #   - or execute the command associated with the widget (if any).
     switch -- [_winfo exists $::ms::current($w,cmenu)] {
         1   {
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             interp invokehidden {} $w state [list focus]
 
             return ""
@@ -4714,27 +4732,27 @@ proc ::ms::palette::FocusOut { w } {
         1   { return "" }
     }
 
-    # Change the widget dynamic state to '!focus'.
+    # Change the widget's dynamic state to '!focus'.
     interp invokehidden {} $w state [list !focus]
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         readonly { set value [$w.combobox get] }
         normal   {
-            # Validate the widget string.
+            # Validate the widget's string.
             set value [::ms::palette::Validate_String $w]
 
-            # Clear the widget field, insert the validated value and put the cursor at the end.
+            # Clear the widget's field, insert the validated value and put the cursor at the end.
             $w.combobox delete  0 end
             $w.combobox set     $value
             $w.combobox icursor end
 
-            # Remove the widget selection, if any.
+            # Remove the widget's selection, if any.
             $w.combobox selection clear
         }
     }
 
-    # Check the widget value.
+    # Check the widget's value.
     if { $value ne $::ms::data($w,current_value) } {
         # Update the current values.
         set ::ms::data($w,current_value) $value
@@ -4780,7 +4798,7 @@ proc ::ms::palette::FocusOut { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be the key pressed.
 #
@@ -4830,7 +4848,7 @@ proc ::ms::palette::Post { w } {
     # Note: This procedure have been highly influenced by many 'ttk::palette' procedures.
     #       All credits goes to the original author/s.
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4871,7 +4889,7 @@ proc ::ms::palette::Post { w } {
     set selectborderwidth $::ms::styleopt($::ms::theme,Popdown,selectborderwidth)
     set selectforeground  $::ms::styleopt($::ms::theme,Popdown,selectforeground)
 
-    # Change the widget dynamic state to 'pressed'.
+    # Change the widget's dynamic state to 'pressed'.
     ::ms::palette::Pathname_Cmd $w state [list pressed]
 
     ######################
@@ -5295,29 +5313,29 @@ proc ::ms::palette::Post { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::palette::Return { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [$w.combobox get] }
         normal {
-            # Validate the widget string.
+            # Validate the widget's string.
             set value [::ms::palette::Validate_String $w]
 
-            # Clear the widget field, insert the validated value and put the cursor at the end.
+            # Clear the widget's field, insert the validated value and put the cursor at the end.
             $w.combobox delete  0 end
             $w.combobox set     $value
             $w.combobox icursor end
 
-            # Remove the widget selection, if any.
+            # Remove the widget's selection, if any.
             $w.combobox selection clear
         }
     }
 
-    # Check the widget value.
+    # Check the widget's value.
     if { $value ne $::ms::data($w,current_value) } {
         # Update the current values.
         set ::ms::data($w,current_value) $value
@@ -5383,7 +5401,7 @@ proc ::ms::palette::Unpost { w } {
         }
     }
 
-    # Change the widget dynamic state to '!pressed'.
+    # Change the widget's dynamic state to '!pressed'.
     ::ms::palette::Pathname_Cmd $w state [list !pressed]
 
     # Unset the toplevel temporary variables.
@@ -5461,13 +5479,13 @@ proc ::ms::palette::Unpost { w } {
 
 ## Validate_KeyPress
 #
-# Limit the input keypresses in a palette widget and set the widget state to 'invalid' or '!invalid'
+# Limit the input keypresses in a palette widget and set the widget's state to 'invalid' or '!invalid'
 # depending if there are illegal characters or if the string is not contained inside any of the items
 # provided by the first column of the '::ms::current($w,values)' variable.
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # string   Should be the string to check.
 #
@@ -5492,7 +5510,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
     # Check 'value'.
     switch -- $value {
         ""  {
-            # Change the widget dynamic state to '!invalid'.
+            # Change the widget's dynamic state to '!invalid'.
             ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
             # Hide the preview object.
@@ -5504,7 +5522,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
         }
         default {
             # Note: Illegal characters cannot be inserted directly through the keyboard, we made
-            #       sure of that in the widget bindings section.
+            #       sure of that in the widget's bindings section.
             #       Nonetheless, they can be inserted trough a paste or pasteselection event.
             #       If this is the case, we will let the illegal character be inserted but we will
             #       mark the string as invalid.
@@ -5519,7 +5537,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
                     default {
                         switch -- [string is alnum $char] {
                             0   {
-                                # Change the widget dynamic state to 'invalid'.
+                                # Change the widget's dynamic state to 'invalid'.
                                 ::ms::palette::Pathname_Cmd $w state [list invalid]
 
                                 # Hide the preview object.
@@ -5574,7 +5592,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
     # Check the resulting 'longest' value after the loop.
     switch -- $longest {
         ""  {
-            # Change the widget dynamic state to 'invalid'.
+            # Change the widget's dynamic state to 'invalid'.
             ::ms::palette::Pathname_Cmd $w state [list invalid]
 
             # Hide the preview object.
@@ -5592,7 +5610,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
             }
 
             # Compare the longest common characters found in 'values' that contains consecutive characters of
-            # 'value' with 'value' itself and change the widget dynamic invalid state accordingly.
+            # 'value' with 'value' itself and change the widget's dynamic invalid state accordingly.
             if { [string range $longest 0 $limit-1] eq $value } {
                 ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
@@ -5627,7 +5645,7 @@ proc ::ms::palette::Validate_KeyPress { w string } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # Return the validated string.
 proc ::ms::palette::Validate_String { w } {
@@ -5718,7 +5736,7 @@ proc ::ms::palette::Validate_String { w } {
         }
     }
 
-    # Set the widget dynamic state to '!invalid'.
+    # Set the widget's dynamic state to '!invalid'.
     ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
     return [lindex $::ms::data($w,colornames) $index]
@@ -5842,7 +5860,7 @@ proc ::ms::palette::Popdown_ArrowUp { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::palette::Popdown_AutoSelection { w } {
@@ -5852,7 +5870,7 @@ proc ::ms::palette::Popdown_AutoSelection { w } {
     ##                          ##
     ##############################
 
-    # Remove any leading and trailing spaces from the widget textarea value.
+    # Remove any leading and trailing spaces from the widget's textarea value.
     set value [string trim [$w.combobox get]]
 
     # Clear 'value' from illegal characters, if any.
@@ -6038,7 +6056,7 @@ proc ::ms::palette::Popdown_Home { w } {
 #       All credits goes to the original author/s.
 #
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **Motion** event.
@@ -6071,11 +6089,11 @@ proc ::ms::palette::Popdown_Hover { w x y } {
 
 ## Popdown_Motion
 #
-# Manage the **Motion** event on the widget popdown.
+# Manage the **Motion** event on the widget's popdown.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # X, Y   Should be the (x,y) mouse pointer absolute coordinates at the time of the event.
 #        These values should be provided by the **Motion** event.
@@ -6216,7 +6234,7 @@ proc ::ms::palette::Popdown_Select { w } {
     $w.combobox selection range 0 end
     $w.combobox icursor end
 
-    # Change the widget dynamic state to '!invalid'.
+    # Change the widget's dynamic state to '!invalid'.
     ::ms::palette::Pathname_Cmd $w state [list !invalid]
 
     # Set the preview color and its bordercolor (black or white).
@@ -6294,7 +6312,7 @@ proc ::ms::palette::Popdown_Tab { popdown dir } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be the delta value of a **MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
@@ -6307,17 +6325,17 @@ proc ::ms::palette::Popdown_Tab { popdown dir } {
 #
 # It doesn't return anything.
 proc ::ms::palette::MouseWheel { w amount } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled {
-            # Try to find a widget parent to scroll vertically, if any.
+            # Try to find a widget's parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
 
             return ""
         }
     }
 
-    # Check if the widget popdown is on the screen.
+    # Check if the widget's popdown is on the screen.
     switch -- [_winfo exists $w.popdown] {
         1   { return "" }
     }
@@ -6325,7 +6343,7 @@ proc ::ms::palette::MouseWheel { w amount } {
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   {
-            # Try to find a widget parent to scroll vertically, if any.
+            # Try to find a widget's parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
 
             return ""
@@ -6356,7 +6374,7 @@ proc ::ms::palette::MouseWheel { w amount } {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
             switch -- $::ms::scrollbox {
                 disabled {
-                    # Try to find a widget parent to scroll vertically, if any.
+                    # Try to find a widget's parent to scroll vertically, if any.
                     ::ms::Scroll_Parent_Y $w $amount units
 
                     return ""
@@ -6365,7 +6383,7 @@ proc ::ms::palette::MouseWheel { w amount } {
                     # Focus the widget.
                     _focus -force $w.combobox
 
-                    # Change the widget dynamic state to 'focus'.
+                    # Change the widget's dynamic state to 'focus'.
                     $w.combobox state [list focus]
                 }
             }
@@ -6383,7 +6401,7 @@ proc ::ms::palette::MouseWheel { w amount } {
         natural { set amount [expr { -1*$amount }] }
     }
 
-    # Change the widget textarea value by scrolling the items list provided up or down
+    # Change the widget's textarea value by scrolling the items list provided up or down
     # (depending on the scroll direction).
     if { $amount > 0 } {
         set index [expr { $::ms::data($w,current_index)+1 }]
@@ -6416,7 +6434,7 @@ proc ::ms::palette::MouseWheel { w amount } {
     set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames)   $index]
     set ::ms::data($w,current_hex)   [lindex $::ms::data($w,hexadecimals) $index]
 
-    # Clear the widget textarea, remove any previous selection and display the new widget value.
+    # Clear the widget's textarea, remove any previous selection and display the new widget's value.
     $w.combobox delete    0 end
     $w.combobox selection clear
     $w.combobox set       $::ms::data($w,current_value)
@@ -6441,7 +6459,7 @@ proc ::ms::palette::MouseWheel { w amount } {
                          -highlightbackground $bordercolor \
                               -highlightcolor $bordercolor;
 
-    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+    # Note: To avoid executing the associated widget's command multiple times, we introduce a timer (50ms) before actually
     #       executing the command. This timer will be resetted if, while active, another mousewheel action on the widget
     #       asks to launch again the command.
     if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
@@ -6463,7 +6481,7 @@ proc ::ms::palette::MouseWheel { w amount } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be the delta value of a **Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mousewheel has been moved.
@@ -6477,11 +6495,11 @@ proc ::ms::palette::MouseWheel { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::palette::Shift_MouseWheel { w amount } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
 
             return ""
@@ -6491,7 +6509,7 @@ proc ::ms::palette::Shift_MouseWheel { w amount } {
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
 
             return ""
@@ -6504,7 +6522,7 @@ proc ::ms::palette::Shift_MouseWheel { w amount } {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
             switch -- $::ms::scrollbox {
                 disabled {
-                    # Try to find a widget parent to scroll horizontally, if any.
+                    # Try to find a widget's parent to scroll horizontally, if any.
                     ::ms::Scroll_Parent_X $w $amount units
 
                     return ""
@@ -6513,7 +6531,7 @@ proc ::ms::palette::Shift_MouseWheel { w amount } {
                     # Focus the widget.
                     _focus -force $w.combobox
 
-                    # Change the widget dynamic state to 'focus'.
+                    # Change the widget's dynamic state to 'focus'.
                     $w.combobox state [list focus]
                 }
             }
@@ -6568,7 +6586,7 @@ proc ::ms::palette::Shift_MouseWheel { w amount } {
 #
 # Where:
 #
-# w         Should be the scrollable widget real address involved.
+# w         Should be the widget's real address involved.
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
@@ -6616,7 +6634,7 @@ proc ::ms::palette::Touchpad { w counter amount } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #          These values should be provided by the **Mousewheel**/**Control-MouseWheel** event.
@@ -6683,7 +6701,7 @@ proc ::ms::palette::Popdown_MouseWheel { w x y amount { what units } } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # x, y     Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #          These values should be provided by the **Shift-Mousewheel**/**Control-Shift-MouseWheel**
@@ -6759,7 +6777,7 @@ proc ::ms::palette::Popdown_Shift_MouseWheel { w x y amount { what units } } {
 #
 # Where:
 #
-# w         Should be the scrollable widget real address involved.
+# w         Should be the widget's real address involved.
 #
 # x, y      Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #           These values should be provided by the **TouchpadScroll**/**Control-TouchpadScroll**
@@ -6818,7 +6836,7 @@ proc ::ms::palette::Popdown_Touchpad { w x y counter amount { what units } } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be the delta value of a **MouseWheel**/**Control-MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
@@ -6885,7 +6903,7 @@ proc ::ms::palette::Popdown_Scrollbar_MouseWheel { w amount what } {
 #
 # Where:
 #
-# w         Should be the scrollable widget real address involved.
+# w         Should be the widget's real address involved.
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
