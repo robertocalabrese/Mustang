@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 # *option*             --> A mandatory parameter that must be substituted with a proper value.
 # **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 # ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                          the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 # *text*               --> Italic.
 # **text**             --> Bold.
@@ -132,7 +132,7 @@
 #                                                       If there isn't one, the **-backgroundimage** of the **Toplevel** style
 #                                                       will be used instead.
 #                                                       The **-backgroundimage** will not abide by its mapping values, if any.
-#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#                                                       It is not supposed to change when the widget dynamic state changes.
 #
 #                        If not provided, defaults to the empty string.
 #
@@ -177,7 +177,7 @@
 #                                                       If there isn't one, the **-borderwidth** of the **Toplevel** style
 #                                                       will be used instead.
 #                                                       The **-borderwidth** will not abide by its mapping values, if any.
-#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#                                                       It is not supposed to change when the widget dynamic state changes.
 #
 #                        See also **-bordercolor** and **-relief** in this section.
 #
@@ -245,7 +245,7 @@
 #                                                       If there isn't one, the **-cursor** of the *Toplevel* style
 #                                                       will be used instead.
 #                                                       The **-cursor** will not abide by its mapping values, if any.
-#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#                                                       It is not supposed to change when the widget dynamic state changes.
 #
 # **-height**            Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
 #                        (pixels, points, inches, millimeters or centimeters).
@@ -315,7 +315,7 @@
 #                                                       If there isn't one, the **-padding** of the **Toplevel** style
 #                                                       will be used instead.
 #                                                       The **-padding** will not abide by its mapping values, if any.
-#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#                                                       It is not supposed to change when the widget dynamic state changes.
 #
 # **-relief**            Specifies the three-dimensional effect desired for the widget.
 #                        The value indicates how the widget's interior should appear relative to its exterior.
@@ -339,7 +339,7 @@
 #                                                       If there isn't one, the **-relief** of the **Toplevel** style
 #                                                       will be used instead.
 #                                                       The **-relief** will not abide by its mapping values, if any.
-#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#                                                       It is not supposed to change when the widget dynamic state changes.
 #
 #                        See also **-bordercolor** and **-borderwidth** in this section.
 #
@@ -357,21 +357,19 @@
 #
 #                        If not provided, defaults to the empty string.
 #
-# **-state**             Specifies the 'physical' state for the widget.
+# **-state**             Specifies the state for the widget.
+#                        Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
 #
-#                        Note: Toplevels have only the **normal** state.
-#
-#                        Note: This option will be ignored if provided while creating the widget.
-#                              Attempts to change this value after the widget was created, by using the **configure** command,
-#                              will be ignored by mustang.
-#                              This option can only be retrieved.
+#                        Toplevels have only the **normal** state.
 #
 #                        It's set to **normal**.
 #
-# **-style**             Specifies a custom widget style.
-#                        If not provided, defaults to **Toplevel**.
+# **-style**             Specifies a custom widget's style.
+#                        The *style* provided should already exists at the time the widget is created.
 #
 #                        See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                        If not provided, defaults to **Toplevel**.
 #
 # **-takefocus**         Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                        and **Shift-Tab**).
@@ -399,7 +397,7 @@
 #                                                       If there isn't one, the **-tile** of the **Toplevel** style
 #                                                       will be used instead.
 #                                                       The **-tile** will not abide by its mapping values, if any.
-#                                                       It is not supposed to change when the widget 'dynamic' state changes.
+#                                                       It is not supposed to change when the widget dynamic state changes.
 #
 #                        If not provided, defaults to **0** (false).
 #
@@ -503,7 +501,7 @@
 #
 #   *window* **cget** ?*option*?
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the toplevel command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the toplevel command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -514,7 +512,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -525,8 +523,8 @@
 #     not lie within any element. *X* and *y* are pixel coordinates relative to the widget.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -534,8 +532,8 @@
 #     See the [mustang intro](/wiki/commands/intro.md) wiki page to know the names of the allowed dynamic states.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -568,7 +566,7 @@
 #
 ###### INTERNAL MECHANISM:
 #
-# 1.  If the widget styleable options **-borderwidth** and **-bordercolor** allows it, everytime the mouse cursor enters the
+# 1.  If the widget's styleable options **-borderwidth** and **-bordercolor** allows it, everytime the mouse cursor enters the
 #     widget it will illuminate its borders to visually indicate that the user is inside the widget.
 #
 # 2.  **ContextMenu** events will display the contextual menu associated with the widget.
@@ -905,16 +903,16 @@ interp alias {} toplevel {} ::ms::toplevel::Command
 
 ## Command
 #
-# Replace the Tk **toplevel** widget command.
+# Replace the Tk **toplevel** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -922,7 +920,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
     # Get the caller information.
     set caller_info [info frame -1]
 
-    # Set the widget real and short addresses.
+    # Set the widget's real and short addresses.
     # Toplevels have their short address always equal to their real address.
     set w          $window
     set short_addr $window
@@ -939,7 +937,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)     $::ms::default(toplevel,class)
             set ::ms::default($w,cmenu)     $::ms::default(toplevel,cmenu)
             set ::ms::default($w,colormap)  $::ms::default(toplevel,colormap)
@@ -953,7 +951,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::default($w,visual)    $::ms::default(toplevel,visual)
             set ::ms::default($w,width)     $::ms::default(toplevel,width)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)     $::ms::default(toplevel,class)
             set ::ms::current($w,cmenu)     $::ms::default(toplevel,cmenu)
             set ::ms::current($w,colormap)  $::ms::default(toplevel,colormap)
@@ -967,7 +965,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::current($w,visual)    $::ms::default(toplevel,visual)
             set ::ms::current($w,width)     $::ms::default(toplevel,width)
 
-            # Set some widget variables needed for internal mechanisms.
+            # Set some widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) toplevel
             set ::ms::data($w,statespec) $::ms::data(statespec,normal)
 
@@ -1390,7 +1388,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             # Create the widget.
             _toplevel $w {*}$toplevel_options
 
-            # Set the widget toplevel.
+            # Set the widget's toplevel.
             set ::ms::addr($w,toplevel) $w
 
             # Set the toplevel title, if any.
@@ -1423,32 +1421,40 @@ proc ::ms::toplevel::Command { window { args "" } } {
             # Create an alias for the toplevel real pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::toplevel::Pathname_Cmd $w]
 
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short address relative to its real address, 'w'.
+            # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
             # Set the border object (where the 'Enter' and 'Leave' event will happen).
             set ::ms::addr($w,border) $w
 
-            # Set the actual widget address.
+            # Set the actual widget's real address.
             set ::ms::addr($w,widget) $w
 
-            # Add the widget address to the toplevel widgets real address list.
-            lappend ::ms::addr(toplevel) $w
+            # Add the widget's real address to the toplevel widgets real address list.
+            lappend ::ms::addr(toplevel,classtype) $w
 
-            # Add the widget address to the toplevel classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),toplevel,addrs) $w
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
 
-            # Add the widget address to the toplevel classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the toplevel classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),toplevel,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the toplevel classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the toplevel classtype.
             if { $::ms::current($w,style) ni $::ms::style(toplevel,classtype) } {
                 lappend ::ms::style(toplevel,classtype) $::ms::current($w,style)
             }
@@ -1468,13 +1474,13 @@ proc ::ms::toplevel::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -1538,7 +1544,7 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
-                            # Note: The widget new dimensions will be updated only if they phisically change
+                            # Note: The widget's new dimensions will be updated only if they phisically change
                             #       after the configure command was issued.
                             #
                             #       Their registration (if any) is done in the '::ms::toplevel::Configure' event procedure.
@@ -1554,7 +1560,7 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                             ##                                              ##
                             ##################################################
 
-                            # Check the widget options provided.
+                            # Check the widget's options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
                                     -background {
@@ -1713,19 +1719,18 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                                     -state  {}
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
-                                            # Remove the widget address from the toplevel classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the toplevel classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),toplevel,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),toplevel,addrs) [lremove $::ms::style($::ms::current($w,style),toplevel,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,toplevel,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the toplevel classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),toplevel,addrs)] {
                                                 0   {
@@ -2280,11 +2285,11 @@ proc ::ms::toplevel::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::toplevel::Configure { w } {
-    # Check if we are here due to a widget configure command or not.
+    # Check if we are here due to a widget's configure command or not.
     switch -- [info exists ::ms::temp($w,height)] {
         1   {
             set ::ms::current($w,height) $::ms::temp($w,height)
@@ -2301,7 +2306,7 @@ proc ::ms::toplevel::Configure { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::toplevel::Destroy { w } {
@@ -2314,48 +2319,65 @@ proc ::ms::toplevel::Destroy { w } {
                 0   { return "" }
             }
 
-            # Get the short address related to the widget real address.
-            set short_addr $w
+            # Get the short address related to the widget's real address.
+            set short_addr $::ms::addr($w,short)
 
             # Destroy the aliased command.
             interp alias {} $::ms::data($w,token) {}
 
-            # Remove the widget real address from the widgets real address list.
+            # Remove the widget's real address from the widgets real address list.
             set index [lsearch -exact $::ms::addr(reals) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
             }
 
-            # Remove the widget short address from the widgets short address list.
+            # Remove the widget's short address from the widgets short address list.
             set index [lsearch -exact $::ms::addr(shorts) $short_addr]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
             }
 
-            # Remove the widget address from the toplevel widgets real address list.
-            set index [lsearch -exact $::ms::addr(toplevel) $w]
+            # Remove the widget's real address from the toplevel classtype real address list.
+            set index [lsearch -exact $::ms::addr(toplevel,classtype) $w]
             switch -- $index {
                 -1      {}
-                default { set ::ms::addr(toplevel) [lremove $::ms::addr(toplevel) $index] }
+                default { set ::ms::addr(toplevel,classtype) [lremove $::ms::addr(toplevel,classtype) $index] }
             }
 
-            # Remove the widget address from the toplevel classtype real address list with class '::ms::current($w,class)'.
-            set index [lsearch -exact $::ms::class($::ms::current($w,class),toplevel,addrs) $w]
+            # Remove the widget's real address from the class list that contains all the widgets real address list
+            # with class '::ms::current($w,class)'.
+            set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
             switch -- $index {
                 -1      {}
-                default { set ::ms::class($::ms::current($w,class),toplevel,addrs) [lremove $::ms::class($::ms::current($w,class),toplevel,addrs) $index] }
+                default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
             }
 
-            # Remove the widget address from the toplevel classtype real address list with style '::ms::current($w,style)'.
+            # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+            switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+                0   {
+                    set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+                    switch -- $index {
+                        -1      {}
+                        default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+                    }
+
+                    # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+                    unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+                }
+            }
+
+            # Remove the widget's real address from the style list that contains all the toplevel classtype real addresses
+            # with style '::ms::current($w,style)'.
             set index [lsearch -exact $::ms::style($::ms::current($w,style),toplevel,addrs) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::style($::ms::current($w,style),toplevel,addrs) [lremove $::ms::style($::ms::current($w,style),toplevel,addrs) $index] }
             }
 
-            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the toplevel classtype.
+            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+            # for the toplevel classtype.
             switch -- [llength $::ms::style($::ms::current($w,style),toplevel,addrs)] {
                 0   {
                     set index [lsearch -exact $::ms::style(toplevel,classtype) $::ms::current($w,style)]
@@ -2441,7 +2463,7 @@ proc ::ms::toplevel::Destroy { w } {
 #
 # Where:
 #
-# w   should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::toplevel::FocusOut { w } {
