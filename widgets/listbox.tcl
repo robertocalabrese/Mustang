@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -69,7 +69,7 @@
 #
 # The listbox command creates a new window (given by the *window* argument) and makes it into a listbox widget.
 # A listbox is a widget that displays a list of strings, one per line. When first created, a new listbox has no elements.
-# Elements may be added or deleted using widget commands described below. In addition, one or more elements may be selected as described below.
+# Elements may be added or deleted using widget's commands described below. In addition, one or more elements may be selected as described below.
 # If a listbox is exporting its selection (see -exportselection option), then it will observe the standard X11 protocols for handling the selection.
 # Listbox selections are available as type **STRING**; the value of the selection will be the text of the selected elements, with newlines separating
 # the elements.
@@ -122,7 +122,7 @@
 #                                                            If there isn't one, the **-background** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-background** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-shellbackground** and **-foreground**.
 #
@@ -165,7 +165,7 @@
 #                                                            If there isn't one, the **-borderwidth** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-borderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-bordercolor** and **-relief**.
 #
@@ -221,7 +221,7 @@
 #
 #                             See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
 #
-#                             Note: If the widget state is disabled, the cursor shape upon the listbox will always be the 'arrow'.
+#                             Note: If the widget's physical state is disabled, the cursor shape upon the listbox will always be the 'arrow'.
 #
 #                             Note: This is a styleable option.
 #
@@ -232,7 +232,7 @@
 #                                                            If there isn't one, the **-cursor** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-cursor** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 # **-disabledforeground**     It's a list that specifies the color to use as foreground color to use when drawing a disabled element.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
@@ -250,7 +250,7 @@
 #                                                            If there isn't one, the **-disabledforeground** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-disabledforeground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-foreground**.
 #
@@ -258,7 +258,7 @@
 #                             The value may have any of the forms accepted by [Tcl_GetBoolean](https://www.tcl-lang.org/man/tcl9.0/TclLib/GetInt.html),
 #                             such as **true**, **false**, **0**, **1**, **yes**, or **no**.
 #                             If the selection is exported, then selecting in the widget deselects the current X selection, selecting outside the
-#                             widget deselects any widget selection, and the widget will respond to selection retrieval requests when it has a selection.
+#                             widget deselects any widget's selection, and the widget will respond to selection retrieval requests when it has a selection.
 #
 #                             If not provided, defaults to **0**.
 #
@@ -276,7 +276,7 @@
 #                                                            If there isn't one, the **-font** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-font** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-foreground**.
 #
@@ -292,7 +292,7 @@
 #                                                            If there isn't one, the **-foreground** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-foreground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-background** and **-font**.
 #
@@ -308,7 +308,7 @@
 #                                                            If there isn't one, the **-preselectbackground** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-preselectbackground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-selectbackground**.
 #
@@ -324,7 +324,7 @@
 #                                                            If there isn't one, the **-preselectforeground** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-preselectforeground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-selectforeground**.
 #
@@ -350,7 +350,7 @@
 #                                                            If there isn't one, the **-relief** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-relief** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-bordercolor** and **-borderwidth**.
 #
@@ -365,11 +365,11 @@
 #                             If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single listbox widget.
 #
 #                             The scrollbars will be automatically managed by Tk with the following rules:
-#                                The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
-#                                the widget *viewport* width and *not needed* when it's not.
+#                                The horizontal scrollbar is defined to be *needed* each time the widget's *content* width is bigger then
+#                                the widget's *viewport* width and *not needed* when it's not.
 #
-#                                The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
-#                                the widget *viewport* height and *not needed* when it's not.
+#                                The vertical scrollbar is defined to be *needed* each time the widget's *content* height is bigger then
+#                                the widget's *viewport* height and *not needed* when it's not.
 #
 #                                If a scrollbar is currently needed, then it will be displayed (if it's not already displayed) and it's related
 #                                fake scrollbar will be removed.
@@ -394,7 +394,7 @@
 #                                                            If there isn't one, the **-selectbackground** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-selectbackground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-selectforeground** and **-insertborderwidth**.
 #
@@ -412,7 +412,7 @@
 #                                                            If there isn't one, the **-selectborderwidth** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-selectbackground** and **-selectforeground**.
 #
@@ -428,7 +428,7 @@
 #                                                            If there isn't one, the **-selectforeground** of the **Listbox** style
 #                                                            will be used instead.
 #                                                            The **-selectforeground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamyc state changes.
 #
 #                             See also **-selectbackground** and **-selectborderwidth**.
 #
@@ -471,22 +471,22 @@
 #                             See also **-background** and **-foreground**.
 #
 # **-state**                  Specifies the state for the widget.
-#                             The listbox widget state acts differently than the other widgets states, because it's a classic widget
-#                             and do not support natively any dynamic states.
-#                             Changes to the widget 'physical' state affects it's dynamic state.
-#                             Allowed states values are **normal** and **disabled**.
+#                             Setting it changes the widget's **physical** state and the widget's *look* (because it's a classic widget
+#                             and do not support natively any dynamic states).
 #
-#                             If the listbox is disabled then items may not be inserted or deleted, items are drawn in the **-disabledforeground** color,
-#                             and selection cannot be modified and is not shown (though selection information is retained).
+#                             Allowed states values are **normal** or **disabled**.
+#
+#                             Note that if the listbox is disabled then items may not be inserted or deleted, items are drawn in the **-disabledforeground**
+#                             color, and selection cannot be modified and is not shown (though selection information is retained).
 #
 #                             If not provided, defaults to **normal**.
 #
-# **-style**                  Specifies a custom widget style.
-#                             If not provided, defaults to **Listbox**.
-#
+# **-style**                  Specifies a custom widget's style.
 #                             Style should be already exists at the time the widget is created.
 #
 #                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                             If not provided, defaults to **Listbox**.
 #
 # **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                             and **Shift-Tab**).
@@ -578,7 +578,7 @@
 #
 #   *window* **cget** *option*
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the listbox command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the listbox command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -588,7 +588,7 @@
 #     If an 'option' is specified with no value, then the command returns a list describing the one named option.
 #     This list will be identical to the corresponding sublist of the value returned if no option is specified.
 #
-#     If one or more 'option value' pairs are specified, then the command modifies the given widget option(s)
+#     If one or more 'option value' pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options are not configurable, some can only be setted at creation time.
@@ -621,8 +621,8 @@
 #     Returns an empty string.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -646,7 +646,7 @@
 #     for information on the format of this list).
 #     If *option* is specified with no value, then the command returns a list describing the one named option (this list will be identical
 #     to the corresponding sublist of the value returned if no option is specified).
-#     If one or more option-value pairs are specified, then the command modifies the given widget option(s) to have the given value(s);
+#     If one or more option-value pairs are specified, then the command modifies the given widget's option(s) to have the given value(s);
 #     in this case the command returns an empty string.
 #     The following options are currently supported for items:
 #
@@ -709,8 +709,8 @@
 #     Returns a decimal string indicating the total number of elements in the listbox.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire the widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire the widget's dynamyc state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -778,7 +778,7 @@
 #
 #### INDICES:
 #
-# Many of the widget commands for listboxes take one or more indices as arguments.
+# Many of the widget's commands for listboxes take one or more indices as arguments.
 # An index specifies a particular element of the listbox, in any of the following ways:
 #
 #   number
@@ -787,10 +787,10 @@
 #   active
 #     Indicates the element that has the location cursor.
 #     This element will be displayed as specified by **-activestyle** when the listbox has the keyboard focus,
-#     and it is specified with the activate widget command.
+#     and it is specified with the activate widget's command.
 #
 #   anchor
-#     Indicates the anchor point for the selection, which is set with the selection anchor widget command.
+#     Indicates the anchor point for the selection, which is set with the selection anchor widget's command.
 #
 #   end
 #     Indicates the end of the listbox. For most commands this refers to the last element in the listbox,
@@ -801,7 +801,7 @@
 #     If no element covers that point, then the closest element to that point is used.
 #
 # Indexes support the same simple interpretation as for the command string index, with simple integer index arithmetic and indexing relative to end.
-# In the widget command descriptions below, arguments named index, first, and last always contain text indices in one of the above forms.
+# In the widget's command descriptions below, arguments named index, first, and last always contain text indices in one of the above forms.
 #
 #### STATES:
 #
@@ -849,14 +849,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -866,14 +866,14 @@
 # 1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of
 #     the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable
+#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget's scrollable
 #     parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
 # 2.  If the widget have an active horizontal scrollbar, **Shift-MouseWheel** events will scroll one unit towards the left or the right
 #     of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the
 #     mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -881,7 +881,7 @@
 # 3.  If the widget have an active vertical scrollbar, **Control-MouseWheel** events will scroll one page towards the top or the
 #     bottom of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the mousewheel
 #     direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -889,7 +889,7 @@
 # 4.  If the widget have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will scroll one page towards the left or
 #     the right of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel
 #     direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -901,7 +901,7 @@
 #            scrollbar one unit towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to find the
-#            innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
+#            innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
 #            or the right (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
@@ -909,7 +909,7 @@
 #            scrollbar one unit towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to find the
-#            innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
+#            innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
 #            or the bottom (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -917,18 +917,18 @@
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
 #        1 - If the widget have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try will scroll the
-#            widget scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
-#            the innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
+#            the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
 #            or the right (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
 #        2 - If the widget have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try will scroll the
-#            widget scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
-#            the innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
+#            the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
 #            or the bottom (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -942,7 +942,7 @@
 # Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
 #       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
 #
-# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth** and
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget's styleable options (**-borderwidth** and
 #     **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually indicate that
 #     the user is inside the widget.
 #
@@ -1251,25 +1251,25 @@ _bind _Simple_Listbox <Leave> { ::ms::listbox::Hover %W %X %Y; break }
 _bind _Simple_Listbox <FocusIn>  { ::ms::listbox::FocusIn  %W; break }
 _bind _Simple_Listbox <FocusOut> { ::ms::listbox::FocusOut %W; break }
 
-# If the widget state is normal, move the active row item to the very first item, otherwise don't do anything.
+# If the widget's physical state is normal, move the active row item to the very first item, otherwise don't do anything.
 _bind _Simple_Listbox <<LineTop>>   { ::ms::listbox::Home %W; break }
 _bind _Simple_Listbox <<LineStart>> { ::ms::listbox::Home %W; break }
 
-# If the widget state is normal, move the active row item to the very last item, otherwise don't do anything.
+# If the widget's physical state is normal, move the active row item to the very last item, otherwise don't do anything.
 _bind _Simple_Listbox <<LineBottom>> { ::ms::listbox::End %W; break }
 _bind _Simple_Listbox <<LineEnd>>    { ::ms::listbox::End %W; break }
 
 # Motion
 _bind _Simple_Listbox <Motion> { ::ms::listbox::Motion %W %x %y; break }
 
-# If the widget state is normal, move back or forward the active row item by one row (depending on the key pressed).
+# If the widget's physical state is normal, move back or forward the active row item by one row (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit towards the top or bottom.
 # If none of the widget's parent meets the required condition, don't do anything.
 _bind _Simple_Listbox <<NextLine>> { ::ms::listbox::ArrowDown %W; break }
 _bind _Simple_Listbox <<PrevLine>> { ::ms::listbox::ArrowUp   %W; break }
 
-# If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
+# If the widget's physical state is normal and the widget has an active horizontal scrollbar, move one unit towards the
 # right or left (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit towards the right or left.
@@ -1277,7 +1277,7 @@ _bind _Simple_Listbox <<PrevLine>> { ::ms::listbox::ArrowUp   %W; break }
 _bind _Simple_Listbox <<NextChar>> { ::ms::listbox::Next_Char %W; break }
 _bind _Simple_Listbox <<PrevChar>> { ::ms::listbox::Prev_Char %W; break }
 
-# If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
+# If the widget's physical state is normal and the widget has an active horizontal scrollbar, move one page towards the
 # left or right (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page towards the left, right, top or bottom.
@@ -1285,7 +1285,7 @@ _bind _Simple_Listbox <<PrevChar>> { ::ms::listbox::Prev_Char %W; break }
 _bind _Simple_Listbox <<PageLeft>>  { ::ms::listbox::PageLeft  %W; break }
 _bind _Simple_Listbox <<PageRight>> { ::ms::listbox::PageRight %W; break }
 
-# If the widget state is normal and the widget has an active vertical scrollbar, move one page towards the
+# If the widget's physical state is normal and the widget has an active vertical scrollbar, move one page towards the
 # top or bottom (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page towards the left, right, top or bottom.
@@ -1302,11 +1302,11 @@ _bind _Simple_Listbox <<ScanRelease>> { ::ms::Scan_Release; break }
 _bind _Simple_Listbox <<SelectAll>>   { ::ms::listbox::Select_All   %W; break }
 _bind _Simple_Listbox <<SelectNone>>  { ::ms::listbox::Unselect_All %W; break }
 
-# If the widget state is normal, start selecting from the active item row towards the top or bottom.
+# If the widget's physical state is normal, start selecting from the active item row towards the top or bottom.
 _bind _Simple_Listbox <<SelectNextLine>> { ::ms::listbox::Extend %W  1; break }
 _bind _Simple_Listbox <<SelectPrevLine>> { ::ms::listbox::Extend %W -1; break }
 
-# If the widget state is normal, start selecting from the active item row to the very first or last item.
+# If the widget's physical state is normal, start selecting from the active item row to the very first or last item.
 _bind _Simple_Listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End %W end; break }
 _bind _Simple_Listbox <<SelectLineTop>>    { ::ms::listbox::Extend_Home_End %W home; break }
 
@@ -1493,25 +1493,25 @@ _bind _Scrollable_Listbox <Leave> { ::ms::listbox::Hover [_winfo parent %W] %X %
 _bind _Scrollable_Listbox <FocusIn>  { ::ms::listbox::FocusIn  [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <FocusOut> { ::ms::listbox::FocusOut [_winfo parent %W]; break }
 
-# If the widget state is normal, move the active row item to the very first item, otherwise don't do anything.
+# If the widget's physical state is normal, move the active row item to the very first item, otherwise don't do anything.
 _bind _Scrollable_Listbox <<LineTop>>   { ::ms::listbox::Home [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <<LineStart>> { ::ms::listbox::Home [_winfo parent %W]; break }
 
-# If the widget state is normal, move the active row item to the very last item, otherwise don't do anything.
+# If the widget's physical state is normal, move the active row item to the very last item, otherwise don't do anything.
 _bind _Scrollable_Listbox <<LineBottom>> { ::ms::listbox::End [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <<LineEnd>>    { ::ms::listbox::End [_winfo parent %W]; break }
 
 # Motion
 _bind _Scrollable_Listbox <Motion> { ::ms::listbox::Motion [_winfo parent %W] %x %y; break }
 
-# If the widget state is normal, move back or forward the active row item by one row (depending on the key pressed).
+# If the widget's physical state is normal, move back or forward the active row item by one row (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one unit towards the top or bottom.
 # If none of the widget's parent meets the required condition, don't do anything.
 _bind _Scrollable_Listbox <<NextLine>> { ::ms::listbox::ArrowDown [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <<PrevLine>> { ::ms::listbox::ArrowUp   [_winfo parent %W]; break }
 
-# If the widget state is normal and the widget has an active horizontal scrollbar, move one unit towards the
+# If the widget's physical state is normal and the widget has an active horizontal scrollbar, move one unit towards the
 # right or left (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one unit towards the right or left.
@@ -1519,7 +1519,7 @@ _bind _Scrollable_Listbox <<PrevLine>> { ::ms::listbox::ArrowUp   [_winfo parent
 _bind _Scrollable_Listbox <<NextChar>> { ::ms::listbox::Next_Char [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent %W]; break }
 
-# If the widget state is normal and the widget has an active horizontal scrollbar, move one page towards the
+# If the widget's physical state is normal and the widget has an active horizontal scrollbar, move one page towards the
 # left or right (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 # and move that scrollbar by one page towards the left, right, top or bottom.
@@ -1527,7 +1527,7 @@ _bind _Scrollable_Listbox <<PrevChar>> { ::ms::listbox::Prev_Char [_winfo parent
 _bind _Scrollable_Listbox <<PageLeft>>  { ::ms::listbox::PageLeft  [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <<PageRight>> { ::ms::listbox::PageRight [_winfo parent %W]; break }
 
-# If the widget state is normal and the widget has an active vertical scrollbar, move one page towards the
+# If the widget's physical state is normal and the widget has an active vertical scrollbar, move one page towards the
 # top or bottom (depending on the key pressed).
 # In any other cases, try to find the innermost widget's scrollable parent with an active vertical scrollbar
 # and move that scrollbar by one page towards the left, right, top or bottom.
@@ -1544,11 +1544,11 @@ _bind _Scrollable_Listbox <<ScanRelease>> { ::ms::Scan_Release; break }
 _bind _Scrollable_Listbox <<SelectAll>>   { ::ms::listbox::Select_All   [_winfo parent %W]; break }
 _bind _Scrollable_Listbox <<SelectNone>>  { ::ms::listbox::Unselect_All [_winfo parent %W]; break }
 
-# If the widget state is normal, start selecting from the active item row towards the top or bottom.
+# If the widget's physical state is normal, start selecting from the active item row towards the top or bottom.
 _bind _Scrollable_Listbox <<SelectNextLine>> { ::ms::listbox::Extend [_winfo parent %W]  1; break }
 _bind _Scrollable_Listbox <<SelectPrevLine>> { ::ms::listbox::Extend [_winfo parent %W] -1; break }
 
-# If the widget state is normal, start selecting from the active item row to the very first or last item.
+# If the widget's physical state is normal, start selecting from the active item row to the very first or last item.
 _bind _Scrollable_Listbox <<SelectLineBottom>> { ::ms::listbox::Extend_Home_End [_winfo parent %W] end; break }
 _bind _Scrollable_Listbox <<SelectLineTop>>    { ::ms::listbox::Extend_Home_End [_winfo parent %W] home; break }
 
@@ -1902,16 +1902,16 @@ interp alias {} listbox {} ::ms::listbox::Command
 
 ## Command
 #
-# Replace the Tk **listbox** widget command.
+# Replace the Tk **listbox** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1937,7 +1937,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,activestyle)     $::ms::default(listbox,activestyle)
             set ::ms::default($w,class)           $::ms::default(listbox,class)
             set ::ms::default($w,cmenu)           $::ms::default(listbox,cmenu)
@@ -1952,7 +1952,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             set ::ms::default($w,xscrollcommand)  $::ms::default(listbox,xscrollcommand)
             set ::ms::default($w,yscrollcommand)  $::ms::default(listbox,yscrollcommand)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,activestyle)     $::ms::default(listbox,activestyle)
             set ::ms::current($w,class)           $::ms::default(listbox,class)
             set ::ms::current($w,cmenu)           $::ms::default(listbox,cmenu)
@@ -1967,7 +1967,7 @@ proc ::ms::listbox::Command { window { args "" } } {
             set ::ms::current($w,xscrollcommand)  $::ms::default(listbox,xscrollcommand)
             set ::ms::current($w,yscrollcommand)  $::ms::default(listbox,yscrollcommand)
 
-            # Set some widget variables needed for internal mechanisms.
+            # Set some widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype)         listbox
             set ::ms::data($w,preselected_index) ""
             set ::ms::data($w,statespec)         $::ms::data(statespec,normal)
@@ -2245,7 +2245,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                             disabled {
                                 set ::ms::current($w,state) disabled
 
-                                # Set the widget dynamic state to 'disabled'
+                                # Set the widget's dynamic state to 'disabled'
                                 set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                             }
                             normal { set ::ms::current($w,state) normal }
@@ -2298,7 +2298,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the takefocus and cursor accordingly.
+            # Check the widget's physical state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2410,7 +2410,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                         }
                     }
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ######################
@@ -2434,20 +2434,20 @@ proc ::ms::listbox::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
+                    # Set the widget's short addresses relative to its real address, 'w'.
                     set ::ms::addr($w,short) $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals)  $w
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w
                 }
                 true {
@@ -2513,7 +2513,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                                     -takefocus 0 \
                                         -width 0;
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     #####################
@@ -2643,15 +2643,15 @@ proc ::ms::listbox::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Configure the internal widget rows and columns.
+                    # Configure the internal widget's rows and columns.
                     _grid rowconfigure    $w [list 0] -weight 1
                     _grid columnconfigure $w [list 0] -weight 1
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to their real address, 'w'.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses relative to their real address, 'w'.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short)         $short_addr
                     set ::ms::addr($w.fake_x,short)  $short_addr
                     set ::ms::addr($w.fake_y,short)  $short_addr
@@ -2659,7 +2659,7 @@ proc ::ms::listbox::Command { window { args "" } } {
                     set ::ms::addr($w.x,short)       $short_addr
                     set ::ms::addr($w.y,short)       $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.fake_x \
                                               $w.fake_y \
@@ -2672,13 +2672,13 @@ proc ::ms::listbox::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.listbox
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.listbox
 
-                    # Add the widget address to the megawidget addresses list.
+                    # Add the widget's real address to the megawidget addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
-                    # Add the widget address to the scrollable megawidget addresses list.
+                    # Add the widget's real address to the scrollable megawidget addresses list.
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
@@ -2689,32 +2689,40 @@ proc ::ms::listbox::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::listbox::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::listbox::Pathname_Cmd $w]
             }
 
-            # Add the widget address to the listbox widgets real address list.
-            lappend ::ms::addr(listbox) $w
+            # Add the widget's real address to the listbox widgets real address list.
+            lappend ::ms::addr(listbox,classtype) $w
 
-            # Add the widget address to the listbox classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),listbox,addrs) $w
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
 
-            # Add the widget address to the listbox classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the listbox classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),listbox,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the listbox classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the listbox classtype.
             if { $::ms::current($w,style) ni $::ms::style(listbox,classtype) } {
                 lappend ::ms::style(listbox,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -2732,13 +2740,13 @@ proc ::ms::listbox::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -3101,32 +3109,31 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                             disabled {
                                                 set ::ms::current($w,state) disabled
 
-                                                # Set the widget dynamic state to 'disabled'
+                                                # Set the widget's dynamic state to 'disabled'
                                                 set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                                             }
                                             normal {
                                                 set ::ms::current($w,state) normal
 
-                                                # Set the widget dynamic state to '!disabled'
+                                                # Set the widget's dynamic state to '!disabled'
                                                 set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
                                             }
                                         }
                                     }
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
-                                            # Remove the widget address from the listbox classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the listbox classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),listbox,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),listbox,addrs) [lremove $::ms::style($::ms::current($w,style),listbox,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,listbox,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the listbox classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),listbox,addrs)] {
                                                 0   {
@@ -3206,7 +3213,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the cursor, statespec and takefocus accordingly.
+                            # Check the widget's physical state and set the cursor, statespec and takefocus accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -3541,7 +3548,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             switch -- $::ms::current($w,scrollable) {
                 false { return "Listbox.area" }
                 true  {
-                    # Get the widget address containing the point given by the root coordinates calculated.
+                    # Get the widget's real address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
                     # Execute the command.
@@ -3781,7 +3788,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
                         normal {
@@ -4115,7 +4122,7 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the cursor accordingly.
+        # Check the widget's physical state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -4341,11 +4348,11 @@ proc ::ms::listbox::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::ArrowDown { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4433,11 +4440,11 @@ proc ::ms::listbox::ArrowDown { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::ArrowUp { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4523,14 +4530,14 @@ proc ::ms::listbox::ArrowUp { w } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **ButtonPress-1** event.
 #
 # It doesn't return anything.
 proc ::ms::listbox::B1_Motion { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4634,14 +4641,14 @@ proc ::ms::listbox::B1_Motion { w x y } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **ButtonPress-1** event.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Begin_Select { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4745,11 +4752,11 @@ proc ::ms::listbox::Begin_Select { w x y } {
             # Focus the widget.
             _focus -force $::ms::addr($w,widget)
 
-            # Change the widget dynamic state to 'pressed focus'.
+            # Change the widget's dynamic state to 'pressed focus'.
             ::ms::listbox::Pathname_Cmd $w state [list pressed focus]
         }
         1   {
-            # Change the widget dynamic state to 'pressed'.
+            # Change the widget's dynamic state to 'pressed'.
             ::ms::listbox::Pathname_Cmd $w state [list pressed]
         }
     }
@@ -4763,47 +4770,64 @@ proc ::ms::listbox::Begin_Select { w x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget short address from the list of all available short addresses.
+    # Remove the widget's short address from the list of all available short addresses.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the listbox widgets real address list.
-    set index [lsearch -exact $::ms::addr(listbox) $w]
+    # Remove the widget's real address from the listbox classtype real address list.
+    set index [lsearch -exact $::ms::addr(listbox,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(listbox) [lremove $::ms::addr(listbox) $index] }
+        default { set ::ms::addr(listbox,classtype) [lremove $::ms::addr(listbox,classtype) $index] }
     }
 
-    # Remove the widget address from the listbox classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),listbox,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),listbox,addrs) [lremove $::ms::class($::ms::current($w,class),listbox,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the listbox classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the listbox classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),listbox,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),listbox,addrs) [lremove $::ms::style($::ms::current($w,style),listbox,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the listbox classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the listbox classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),listbox,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(listbox,classtype) $::ms::current($w,style)]
@@ -4823,7 +4847,7 @@ proc ::ms::listbox::Destroy { w } {
             ##                        ##
             ############################
 
-            # Remove the widget address from the list of all available real addresses.
+            # Remove the widget's real address from the list of all available real addresses.
             set index [lsearch -exact $::ms::addr(reals) $w]
             switch -- $index {
                 -1      {}
@@ -4851,14 +4875,14 @@ proc ::ms::listbox::Destroy { w } {
                 }
             }
 
-            # Remove the widget address from the megawidget real address list.
+            # Remove the widget's real address from the megawidget real address list.
             set index [lsearch -exact $::ms::addr(megawidgets) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
             }
 
-            # Remove the widget address from the megawidget scrollable real address list.
+            # Remove the widget's real address from the megawidget scrollable real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
             switch -- $index {
                 -1      {}
@@ -4974,11 +4998,11 @@ proc ::ms::listbox::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::End { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5029,14 +5053,14 @@ proc ::ms::listbox::End { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be an integer that specifies the amount of the movement (in rows).
 #          Generally **+1** to move down one item, **-1** to move up one item.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Extend { w amount } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5141,13 +5165,13 @@ proc ::ms::listbox::Extend { w amount } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be a string that specifies the key pressed ('home' or 'end').
 #
 # It doesn't return anything.
 proc ::ms::listbox::Extend_Home_End { w key } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5208,7 +5232,7 @@ proc ::ms::listbox::Extend_Home_End { w key } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::FocusIn { w } {
@@ -5217,7 +5241,7 @@ proc ::ms::listbox::FocusIn { w } {
         ""  { return "" }
     }
 
-    # Change the widget dynamic state to 'focus'.
+    # Change the widget's dynamic state to 'focus'.
     ::ms::listbox::Pathname_Cmd $w state [list focus]
 
     return ""
@@ -5229,7 +5253,7 @@ proc ::ms::listbox::FocusIn { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::FocusOut { w } {
@@ -5252,11 +5276,11 @@ proc ::ms::listbox::FocusOut { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Home { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5303,7 +5327,7 @@ proc ::ms::listbox::Home { w } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # X, Y   Should be the mouse pointer (X,Y) root coordinates.
 #        These value are provided directly by the **Enter** or **Leave** event.
@@ -5326,7 +5350,7 @@ proc ::ms::listbox::Hover { w X Y } {
     if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
         # The mouse cursor is outside the widget acting as a border object.
 
-        # Change the widget dynamic state to '!hover'.
+        # Change the widget's dynamic state to '!hover'.
         ::ms::listbox::Pathname_Cmd $w state [list !hover]
 
         # Check if there are items associated to the listbox.
@@ -5352,7 +5376,7 @@ proc ::ms::listbox::Hover { w X Y } {
     } else {
         # The mouse cursor is inside the widget acting as a border object.
 
-        # Change the widget dynamic state to 'hover'.
+        # Change the widget's dynamic state to 'hover'.
         ::ms::listbox::Pathname_Cmd $w state [list hover]
     }
 
@@ -5365,14 +5389,14 @@ proc ::ms::listbox::Hover { w X Y } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **Motion** event.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Motion { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5431,11 +5455,11 @@ proc ::ms::listbox::Motion { w x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Next_Char { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5455,7 +5479,7 @@ proc ::ms::listbox::Next_Char { w } {
             }
         }
         true  {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off { ::ms::Scroll_Parent_X $w +1 units }
                 on  { $w.listbox xview scroll +1 units }
@@ -5472,11 +5496,11 @@ proc ::ms::listbox::Next_Char { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::PageDown { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5496,7 +5520,7 @@ proc ::ms::listbox::PageDown { w } {
             }
         }
         true  {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off { ::ms::Scroll_Parent_Y $w +1 pages }
                 on  { $w.listbox yview scroll +1 pages }
@@ -5513,11 +5537,11 @@ proc ::ms::listbox::PageDown { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::PageLeft { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5537,7 +5561,7 @@ proc ::ms::listbox::PageLeft { w } {
             }
         }
         true  {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off { ::ms::Scroll_Parent_X $w -1 pages }
                 on  { $w.listbox xview scroll -1 pages }
@@ -5554,11 +5578,11 @@ proc ::ms::listbox::PageLeft { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::PageRight { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5578,7 +5602,7 @@ proc ::ms::listbox::PageRight { w } {
             }
         }
         true  {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off { ::ms::Scroll_Parent_X $w +1 pages }
                 on  { $w.listbox xview scroll +1 pages }
@@ -5595,11 +5619,11 @@ proc ::ms::listbox::PageRight { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::PageUp { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5619,7 +5643,7 @@ proc ::ms::listbox::PageUp { w } {
             }
         }
         true  {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off { ::ms::Scroll_Parent_Y $w -1 pages }
                 on  { $w.listbox yview scroll -1 pages }
@@ -5636,11 +5660,11 @@ proc ::ms::listbox::PageUp { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Prev_Char { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5660,7 +5684,7 @@ proc ::ms::listbox::Prev_Char { w } {
             }
         }
         true  {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off { ::ms::Scroll_Parent_X $w -1 units }
                 on  { $w.listbox xview scroll -1 units }
@@ -5693,11 +5717,11 @@ proc ::ms::listbox::Prev_Char { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Select { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5798,7 +5822,7 @@ proc ::ms::listbox::Select { w } {
             # Focus the widget.
             _focus -force $::ms::addr($w,widget)
 
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             ::ms::listbox::Pathname_Cmd $w state [list focus]
         }
     }
@@ -5814,11 +5838,11 @@ proc ::ms::listbox::Select { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Select_All { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5874,11 +5898,11 @@ proc ::ms::listbox::Select_All { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Unselect_All { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5925,7 +5949,7 @@ proc ::ms::listbox::Unselect_All { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -6079,7 +6103,7 @@ proc ::ms::listbox::Scrollbar_ButtonRelease {} {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -6133,7 +6157,7 @@ proc ::ms::listbox::Scrollbar_Drag { w orient x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::listbox::Scrollbar_Update { w } {
