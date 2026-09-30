@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -126,7 +126,7 @@
 #                                                          If there isn't one, the **-activebackground** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-activebackground** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-activeforeground**, **-background** and **-foreground**.
 #
@@ -151,7 +151,7 @@
 #                                                          If there isn't one, the **-activeborderwidth** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-activeborderwidth** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-activerelief**.
 #
@@ -167,7 +167,7 @@
 #                                                          If there isn't one, the **-activeforeground** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-activeforeground** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-activebackground**, **-background** and **-foreground**.
 #
@@ -193,7 +193,7 @@
 #                                                          If there isn't one, the **-activerelief** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-activerelief** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-activeborderwidth**.
 #
@@ -209,7 +209,7 @@
 #                                                          If there isn't one, the **-background** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-background** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-activebackground**, **-activeforeground** and **-foreground**.
 #
@@ -235,7 +235,7 @@
 #                                                          If there isn't one, the **-borderwidth** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-borderwidth** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-relief**.
 #
@@ -263,7 +263,7 @@
 #                                                          If there isn't one, the **-cursor** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-cursor** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 # **-font**                 Specifies the font to use for the text displayed by the widget.
 #                           The widget will accept as fontname any font created with the **font** command, including any Tk
@@ -279,7 +279,7 @@
 #                                                          If there isn't one, the **-font** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-font** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-foreground**.
 #
@@ -295,7 +295,7 @@
 #                                                          If there isn't one, the **-foreground** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-foreground** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-activebackground**, **-activeforeground** and **-background**.
 #
@@ -311,12 +311,12 @@
 #                                                          If there isn't one, the **-disabledforeground** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-disabledforeground** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-foreground**.
 #
 # **-postcommand**          It's a list that specifies a Tcl command to execute each time the menu is posted.
-#                           The command is invoked by the post widget command before posting the menu.
+#                           The command is invoked by the post widget's command before posting the menu.
 #
 #                           If not provided, defaults to the empty string (meaning no postcommand command).
 #
@@ -342,7 +342,7 @@
 #                                                          If there isn't one, the **-relief** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-relief** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
 #                           See also **-borderwidth**.
 #
@@ -358,25 +358,21 @@
 #                                                          If there isn't one, the **-selectcolor** of the **Menu** style
 #                                                          will be used instead.
 #                                                          The **-selectcolor** will not abide by its mapping values, if any.
-#                                                          It is not supposed to change when the widget state changes.
+#                                                          It is not supposed to change when the widget's dynamic state changes.
 #
-# **-state**                Specifies the physical state for the widget.
+# **-state**                Specifies the state for the widget.
+#                           Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
 #
-#                           Note: Menus have only the **normal** state.
-#
-#                           Note: This option will be ignored if provided while creating the widget.
-#                                 Attempts to change this value after the widget was created, by using the **configure** command,
-#                                 will be ignored by mustang.
-#                                 This option can only be retrieved.
+#                           Menus have only the **normal** state.
 #
 #                           It's set to **normal**.
 #
-# **-style**                Specifies a custom widget style.
-#                           If not provided, defaults to **Menu**.
-#
+# **-style**                Specifies a custom widget's style.
 #                           The *style* provided should already exists at the time the widget is created.
 #
 #                           See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                           If not provided, defaults to **Menu**.
 #
 # **-takefocus**            Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                           and **Shift-Tab**).
@@ -399,7 +395,7 @@
 #
 #   *window* *action* ?*arg* *arg* ... *arg*?
 #
-# *Window* is the name of the command, which is the same as the menu widget pathname.
+# *Window* is the name of the command, which is the same as the menu widget's pathname.
 # *Actions* and the *arg*s determine the exact behavior of the *window* command.
 #
 # Note: Differently than any other widgets, the menu widget doesn't have the '-identify element', 'instate' or 'state' command.
@@ -421,11 +417,11 @@
 #     Otherwise, a new unique identifier is generated.
 #     If additional arguments are present, they specify the options listed in the **MENU ENTRY OPTIONS** section below.
 #
-#     The **add** widget command returns the *id* of the new entry.
+#     The **add** widget's command returns the *id* of the new entry.
 #
 #   *window* **cget** ?*option*?
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the menu command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the menu command (See **WIDGET OPTIONS**).
 #
 #   *window* **clone** *newWindow* ?*cloneType*?
 #     Makes a clone of the current menu named *newWindow*.
@@ -444,7 +440,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -468,7 +464,7 @@
 #
 #   *window* **id** *index*
 #     Returns the id of the menu entry given by *index*.
-#     This is the identifier that was assigned to the entry when it was created using the **add** or **insert** widget command.
+#     This is the identifier that was assigned to the entry when it was created using the **add** or **insert** widget's command.
 #
 #     Returns an empty string if index is equivalent to the empty string.
 #
@@ -476,18 +472,18 @@
 #     Returns the numerical index corresponding to *index*, or an empty string if index was specified as an empty string.
 #
 #   *window* **insert** *index* *type* ?*id*? ?*option* *value*? ... ?*option* *value*?
-#     Same as the **add** widget command except that it inserts the new entry just before the entry given by *index*, instead of appending to the end of the menu.
-#     The *type*, *id*, *option*, and *value* arguments have the same interpretation as for the **add** widget command.
+#     Same as the **add** widget's command except that it inserts the new entry just before the entry given by *index*, instead of appending to the end of the menu.
+#     The *type*, *id*, *option*, and *value* arguments have the same interpretation as for the **add** widget's command.
 #
-#     The insert widget command returns the id of the new entry.
+#     The insert widget's command returns the id of the new entry.
 #
 #   *window* **invoke** *index*
 #     Invoke the action of the menu entry. See the sections on the individual entries below for details on what happens.
 #     If the menu entry is disabled then nothing happens.
-#     If the entry has a command associated with it then the result of that command is returned as the result of the invoke widget command.
+#     If the entry has a command associated with it then the result of that command is returned as the result of the invoke widget's command.
 #     Otherwise the result is an empty string.
 #
-#     Note: invoking a menu entry does not automatically unpost the menu; the default bindings normally take care of this before invoking the invoke widget command.
+#     Note: invoking a menu entry does not automatically unpost the menu; the default bindings normally take care of this before invoking the invoke widget's command.
 #
 #   *window* **post** *x* *y* ?*index*?
 #     Arrange for the menu to be displayed on the screen at the root-window coordinates given by *x* and *y*.
@@ -497,7 +493,7 @@
 #     This command normally returns an empty string.
 #
 #     If the **-postcommand** option has been specified, then its value is executed as a Tcl script before posting the menu and the result of that script
-#     is returned as the result of the post widget command.
+#     is returned as the result of the post widget's command.
 #
 #     If an error returns while executing the command, then the error is returned without posting the menu.
 #
@@ -507,7 +503,7 @@
 #
 #   *window* **type** *index*
 #     Returns the type of the menu entry given by *index*.
-#     This is the type argument passed to the **add** or **insert** widget command when the entry was created, such as command or separator.
+#     This is the type argument passed to the **add** or **insert** widget's command when the entry was created, such as command or separator.
 #
 #   *window* **unpost**
 #     Unmap the window so that it is no longer displayed.
@@ -528,7 +524,7 @@
 #
 #### INDEXES:
 #
-# Many of the widget commands for a menu take as one argument an indicator of which entry of the menu to operate on.
+# Many of the widget's commands for a menu take as one argument an indicator of which entry of the menu to operate on.
 # These indicators are called indexes and may be specified in any of the following forms:
 #
 #   **active**
@@ -548,7 +544,7 @@
 #
 #   **{}**
 #     Indicates 'no entry at all'; this is used most commonly with the activate option to deactivate all the entries in the menu.
-#     In most cases the specification of an empty string causes nothing to happen in the widget command.
+#     In most cases the specification of an empty string causes nothing to happen in the widget's command.
 #
 #   *@x,y*
 #     Indicates the entry that covers the point in the menu's window specified by *x* and *y* (in pixel coordinates).
@@ -621,7 +617,7 @@
 #
 # A cascade entry is one with an associated menu (determined by the *-menu* option).
 # Cascade entries allow the construction of cascading menus.
-# The postcascade widget command can be used to post and unpost the associated menu just next to of the cascade entry.
+# The postcascade widget's command can be used to post and unpost the associated menu just next to of the cascade entry.
 # The associated menu must be a child of the menu containing the cascade entry (this is needed in order for menu traversal to work correctly).
 #
 # A cascade entry posts its associated menu by invoking a Tcl command of the form:
@@ -847,7 +843,7 @@
 #       This is the most common case.
 #       You create a menu widget that will become the menu bar.
 #       You then add cascade entries to this menu, specifying the pull down menus you wish to use in your menu bar.
-#       You then create all of the pulldowns. Once you have done this, specify the menu using the **-menu** option of the toplevel's widget command.
+#       You then create all of the pulldowns. Once you have done this, specify the menu using the **-menu** option of the toplevel's widget's command.
 #
 #       See the toplevel manual entry for details.
 #
@@ -1161,16 +1157,16 @@ interp alias {} menu {} ::ms::menu::Command
 
 ## Command
 #
-# Replace the Tk **menu** widget command.
+# Replace the Tk **menu** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1195,21 +1191,21 @@ proc ::ms::menu::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default(menu,class)       $::ms::default(menu,class)
             set ::ms::default(menu,postcommand) $::ms::default(menu,postcommand)
             set ::ms::default(menu,state)       $::ms::default(menu,state)
             set ::ms::default(menu,style)       $::ms::default(menu,style)
             set ::ms::default(menu,takefocus)   $::ms::default(menu,takefocus)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current(menu,class)       $::ms::default(menu,class)
             set ::ms::current(menu,postcommand) $::ms::default(menu,postcommand)
             set ::ms::current(menu,state)       $::ms::default(menu,state)
             set ::ms::current(menu,style)       $::ms::default(menu,style)
             set ::ms::current(menu,takefocus)   $::ms::default(menu,takefocus)
 
-            # Set the widget variables needed for internal mechanisms.
+            # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) menu
 
             # Set each styleable option to be managed by Tk.
@@ -1419,7 +1415,7 @@ proc ::ms::menu::Command { window { args "" } } {
                                  -title {} \
                                   -type menubar;
 
-            # Set the widget toplevel.
+            # Set the widget's toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
             ######################
@@ -1437,48 +1433,56 @@ proc ::ms::menu::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::menu::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::menu::Pathname_Cmd $w]
             }
 
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w
-
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short address relative to its real address, 'w'.
+            # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the menu widgets real address list.
-            lappend ::ms::addr(menu) $w
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
 
-            # Add the widget address to the menu classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),menu,addrs) $w
+            # Set the actual widget's real address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w
 
-            # Add the widget address to the menu classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the menu widgets real address list.
+            lappend ::ms::addr(menu,classtype) $w
+
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
+
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the menu classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),menu,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the menu classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the menu classtype.
             if { $::ms::current($w,style) ni $::ms::style(menu,classtype) } {
                 lappend ::ms::style(menu,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -1496,13 +1500,13 @@ proc ::ms::menu::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -1738,19 +1742,18 @@ proc ::ms::menu::Pathname_Cmd { w cmd args } {
                                     -state {}
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
-                                            # Remove the widget address from the menu classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the menu classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),menu,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),menu,addrs) [lremove $::ms::style($::ms::current($w,style),menu,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,menu,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the menu classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),menu,addrs)] {
                                                 0   {
@@ -2022,47 +2025,64 @@ proc ::ms::menu::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::menu::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget short address from the list of all available short addresses.
+    # Remove the widget's real address from the menu classtype real address list.
+    set index [lsearch -exact $::ms::addr(menu,classtype) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(menu,classtype) [lremove $::ms::addr(menu,classtype) $index] }
+    }
+
+    # Remove the widget's short address from the list of all available short addresses.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the menu widgets real address list.
-    set index [lsearch -exact $::ms::addr(menu) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(menu) [lremove $::ms::addr(menu) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the menu real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),menu,addrs) $w]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::class($::ms::current($w,class),menu,addrs) [lremove $::ms::class($::ms::current($w,class),menu,addrs) $index] }
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
     }
 
-    # Remove the widget address from the menu real address list with style '::ms::current($w,style)'.
+    # Remove the widget's real address from the style list that contains all the menu classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),menu,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),menu,addrs) [lremove $::ms::style($::ms::current($w,style),menu,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the menu classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the menu classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),menu,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(menu,classtype) $::ms::current($w,style)]
@@ -2073,7 +2093,7 @@ proc ::ms::menu::Destroy { w } {
         }
     }
 
-    # Remove the widget real address from the list of all available real addresses.
+    # Remove the widget's real address from the list of all available real addresses.
     set index [lsearch -exact $::ms::addr(reals) $w]
     switch -- $index {
         -1      {}
