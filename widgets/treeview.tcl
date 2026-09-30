@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -72,7 +72,7 @@
 # Each item has a textual label, an optional image, and an optional list of data values.
 # The data values are displayed in successive columns after the tree label.
 #
-# The order in which data values are displayed may be controlled by setting the **-displaycolumns** widget option.
+# The order in which data values are displayed may be controlled by setting the **-displaycolumns** widget's option.
 # The tree widget can also display column headings. Columns may be accessed by number or by symbolic names listed
 # in the **-columns** widget option; see **COLUMN IDENTIFIERS**.
 #
@@ -91,8 +91,10 @@
 #            - A short address, if the *window* provided as input is a short address.
 #            - A real address, if the *window* provided as input is a real address.
 #
-# Note 2: The mustang treeview widget is a megawidget composed by an hull object (the megawidget container), a treeview object,
-#         two scrollbar objects (displayed only when needed) and two fake scrollbar objects (displayed only when needed).
+# Note 2: Depending on the **-scrollable** option value, two kinds of treeview structures are possible.
+#         The mustang simple treeview (**-scrollable** false) is a single treeview widget.
+#         The mustang scrollable treeview (**-scrollable** true) is a megawidget composed by an hull object (the megawidget container),
+#         a treeview object, two scrollbar objects (displayed only when needed) and two fake scrollbar objects (displayed only when needed).
 #
 # Additional options, described below, may be specified on the command line to configure aspects of the text.
 #
@@ -163,7 +165,7 @@
 #                                                            If there isn't one, the **-borderwidth** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-borderwidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 #                             See also **-bordercolor** and **-relief**.
 #
@@ -232,7 +234,7 @@
 #                                                            If there isn't one, the **-cursor** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-cursor** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 # **-darkcolor**              It's a list that specifies the color to use as darkcolor.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
@@ -314,7 +316,7 @@
 #                                                            If there isn't one, the **-focuswidth** of the **TEntry** style
 #                                                            will be used instead.
 #                                                            The **-focuswidth** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 ## **-font**                   Specifies the font to use for the treeview items and values displayed by the widget.
 #                             The widget will accept as fontname any font created with the **font** command, including any Tk
 #                             defaults fonts, the new mustang fonts (**BiggestFont**, **BiggerFont**, **NormalFont**, **SmallerFont**,
@@ -329,7 +331,7 @@
 #                                                            If there isn't one, the **-font** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-font** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 #                             See also **-foreground**.
 #
@@ -362,7 +364,7 @@
 #                                                            If there isn't one, the **-indent** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-indent** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 # **-lightcolor**             It's a list that specifies the color to use as lightcolor.
 #                             See the **COLOR OPTION** section to know how this list should be composed.
@@ -410,7 +412,7 @@
 #                                                            If there isn't one, the **-padding** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-padding** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 # **-relief**                 Specifies the three-dimensional effect desired for the widget.
 #                             The value indicates how the widget's interior should appear relative to its exterior.
@@ -434,7 +436,7 @@
 #                                                            If there isn't one, the **-relief** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-relief** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 #                             See also **-bordercolor** and **-borderwidth**.
 #
@@ -455,7 +457,7 @@
 #                                                            If there isn't one, the **-rowheight** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-rowheight** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 # **-rows**                   Specifies the number of rows which should be visible.
 #                             Note that the requested width is determined from the sum of the column widths.
@@ -471,7 +473,7 @@
 #                                                            If there isn't one, the **-rows** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-rows** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 # **-selectmode**             Controls how the built-in class bindings manage the selection.
 #                             Allowed values are **extended**, **browse**, or **none**.
@@ -524,8 +526,9 @@
 #                             If not provided, defaults to **tree headings**.
 #
 # **-state**                  Specifies the state for the widget.
-#                             Setting it changes the widget **physical** state and not the widget *look* (the state widget command does that).
-#                             Allowed states values are **normal** and **disabled**.
+#                             Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
+#
+#                             Allowed states values are **normal** or **disabled**.
 #
 #                             If the treeview is disabled then characters may not be inserted or deleted and no insertion cursor will be displayed,
 #                             even if the input focus is in the widget.
@@ -551,16 +554,16 @@
 #                                                            If there isn't one, the **-stripedbackground** of the **Treeview** style
 #                                                            will be used instead.
 #                                                            The **-stripedbackground** will not abide by its mapping values, if any.
-#                                                            It is not supposed to change when the widget state changes.
+#                                                            It is not supposed to change when the widget's dynamic state changes.
 #
 #                             See also **-background**, **-fieldbackground**, **-foreground** and **-shellbackground**.
 #
-# **-style**                  Specifies a custom widget style.
-#                             If not provided, defaults to **Treeview**.
-#
+# **-style**                  Specifies a custom widget's style.
 #                             The *style* provided should already exists at the time the widget is created.
 #
 #                             See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                             If not provided, defaults to **Treeview**.
 #
 # **-takefocus**              Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                             and **Shift-Tab**).
@@ -643,7 +646,7 @@
 #
 #   *window* **cget** *option*
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the frame command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the frame command (See **WIDGET OPTIONS**).
 #
 #   *window* **children** *item* ?*newchildren*?
 #     If *newchildren* is not specified, returns the list of children belonging to item.
@@ -917,7 +920,7 @@
 #
 #### ITEM OPTIONS:
 #
-# The following item options may be specified for items in the insert and item widget commands.
+# The following item options may be specified for items in the insert and item widget's commands.
 #
 #   -text
 #     The textual label to display for the item in the tree column.
@@ -1017,7 +1020,7 @@
 #
 # <<TreeviewClose>>  Generated just after setting the focus item to **-open** **false**.
 #
-# The focus and selection widget commands can be used to determine the affected item or items.
+# The focus and selection widget's commands can be used to determine the affected item or items.
 #
 #### STATES:
 #
@@ -1058,14 +1061,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -1075,14 +1078,14 @@
 # 1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of
 #     the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable
+#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget's scrollable
 #     parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
 # 2.  If the widget have an active horizontal scrollbar, **Shift-MouseWheel** events will scroll one unit towards the left or the right
 #     of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the
 #     mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -1090,7 +1093,7 @@
 # 3.  If the widget have an active vertical scrollbar, **Control-MouseWheel** events will scroll one page towards the top or the
 #     bottom of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the mousewheel
 #     direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -1098,7 +1101,7 @@
 # 4.  If the widget have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will scroll one page towards the left or
 #     the right of the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget
+#     If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget's
 #     scrollable parent with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel
 #     direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
@@ -1106,19 +1109,19 @@
 # 5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
-#        1 - If the widget have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try will scroll the widget
+#        1 - If the widget have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try will scroll the widget's
 #            scrollbar one unit towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to find the
-#            innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
+#            innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left
 #            or the right (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
-#        2 - If the widget have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try will scroll the widget
+#        2 - If the widget have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try will scroll the widget's
 #            scrollbar one unit towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to find the
-#            innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
+#            innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top
 #            or the bottom (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -1126,18 +1129,18 @@
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
 #        1 - If the widget have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try will scroll the
-#            widget scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
-#            the innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
+#            the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
 #            or the right (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
 #        2 - If the widget have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try will scroll the
-#            widget scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
-#            the innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
+#            the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
 #            or the bottom (depending on the direction of the touchpad event).
 #            If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -1146,7 +1149,7 @@
 #
 ###### INTERNAL MECHANISM:
 #
-# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth**
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget's styleable options (**-borderwidth**
 #     and **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually
 #     indicate that the user is inside the widget.
 #
@@ -1175,17 +1178,17 @@
 # 3.  The **Return** and **space** keys will select the item row or cell (depending on the value of the **selecttype** option) and
 #     will open or close items that have children (like the **Left** or **Right** keys).
 #
-# 4.  If the widget vertical scrollbar is active:
+# 4.  If the widget's vertical scrollbar is active:
 #       - **Prior**        Scrolls one page towards the top of the widget.
 #       - **Next**         Scrolls one page towards the bottom of the widget.
-#     If the widget vertical scrollbar is not active, mustang will try to find the innermost widget scrollable parent with an
+#     If the widget's vertical scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
 #     active vertical scrollbar and scroll that scrollbar. If none of the widget's parents meets the required conditions,
 #     nothing will happen.
 #
-# 5.  If the widget horizontal scrollbar is active:
+# 5.  If the widget's horizontal scrollbar is active:
 #       - **Control-Prior** Scrolls one page towards the right of the widget.
 #       - **Control-Next**  Scrolls one page towards the left of the widget.
-#     If the widget horizontal scrollbar is not active, mustang will try to find the innermost widget scrollable parent with an
+#     If the widget's horizontal scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
 #     active horizontal scrollbar and scroll that scrollbar. If none of the widget's parents meets the required conditions,
 #     nothing will happen.
 #
@@ -2073,16 +2076,16 @@ interp alias {} ttk::treeview {} ::ms::treeview::Command
 
 ## Command
 #
-# Replace the Tk **ttk::treeview** widget command.
+# Replace the Tk **ttk::treeview** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -2108,7 +2111,7 @@ proc ::ms::treeview::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)          $::ms::default(treeview,class)
             set ::ms::default($w,cmenu)          $::ms::default(treeview,cmenu)
             set ::ms::default($w,columns)        $::ms::default(treeview,columns)
@@ -2126,7 +2129,7 @@ proc ::ms::treeview::Command { window { args "" } } {
             set ::ms::default($w,xscrollcommand) $::ms::default(treeview,xscrollcommand)
             set ::ms::default($w,yscrollcommand) $::ms::default(treeview,yscrollcommand)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)          $::ms::default(treeview,class)
             set ::ms::current($w,cmenu)          $::ms::default(treeview,cmenu)
             set ::ms::current($w,columns)        $::ms::default(treeview,columns)
@@ -2144,7 +2147,7 @@ proc ::ms::treeview::Command { window { args "" } } {
             set ::ms::current($w,xscrollcommand) $::ms::default(treeview,xscrollcommand)
             set ::ms::current($w,yscrollcommand) $::ms::default(treeview,yscrollcommand)
 
-            # Set some widget variables needed for internal mechanisms.
+            # Set some widget's variables needed for internal mechanisms.
             set ::ms::data($w,active,column)  {}
             set ::ms::data($w,cell,anchor)    {}
             set ::ms::data($w,cell,anchor,op) set
@@ -2562,7 +2565,7 @@ proc ::ms::treeview::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the takefocus and cursor accordingly.
+            # Check the widget's physical state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2888,19 +2891,19 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Note: The Tk treeview widget don't have a '-state' option.
                     #       We need to simulate it graphically.
 
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled {
-                            # Change the widget dynamic state to 'disabled'.
+                            # Change the widget's dynamic state to 'disabled'.
                             $w state [list disabled]
                         }
                         normal {
-                            # Change the widget dynamic state to '!disabled'.
+                            # Change the widget's dynamic state to '!disabled'.
                             $w state [list !disabled]
                         }
                     }
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ######################
@@ -2921,13 +2924,13 @@ proc ::ms::treeview::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
+                    # Set the widget's short addresses relative to its real address, 'w'.
                     set ::ms::addr($w,short) $short_addr
 
-                    # Add the widget real and short address into the list of all available real
+                    # Add the widget's real and short address into the list of all available real
                     # and short addresses.
                     lappend ::ms::addr(reals)  $w
                     lappend ::ms::addr(shorts) $short_addr
@@ -2935,7 +2938,7 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w
                 }
                 true {
@@ -2997,7 +3000,7 @@ proc ::ms::treeview::Command { window { args "" } } {
                                     -takefocus 0 \
                                         -width 0;
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ######################
@@ -3027,14 +3030,14 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Note: The Tk treeview widget don't have a '-state' option.
                     #       We need to simulate it graphically.
 
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled {
-                            # Change the widget dynamic state to 'disabled'.
+                            # Change the widget's dynamic state to 'disabled'.
                             $w.treeview state disabled
                         }
                         normal {
-                            # Change the widget dynamic state to '!disabled'.
+                            # Change the widget's dynamic state to '!disabled'.
                             $w.treeview state !disabled
                         }
                     }
@@ -3125,15 +3128,15 @@ proc ::ms::treeview::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Configure the internal widget rows and columns.
+                    # Configure the internal widget's rows and columns.
                     _grid rowconfigure    $w [list 0] -weight 1
                     _grid columnconfigure $w [list 0] -weight 1
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses relative to its real address, 'w'.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short)          $short_addr
                     set ::ms::addr($w.fake_x,short)   $short_addr
                     set ::ms::addr($w.fake_y,short)   $short_addr
@@ -3141,7 +3144,7 @@ proc ::ms::treeview::Command { window { args "" } } {
                     set ::ms::addr($w.x,short)        $short_addr
                     set ::ms::addr($w.y,short)        $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.fake_x \
                                               $w.fake_y \
@@ -3154,13 +3157,13 @@ proc ::ms::treeview::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.treeview
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.treeview
 
-                    # Add the widget address to the megawidget addresses list.
+                    # Add the widget's real address to the megawidget's addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
-                    # Add the widget address to the scrollable megawidget addresses list.
+                    # Add the widget's real address to the scrollable megawidget's addresses list.
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
@@ -3171,32 +3174,40 @@ proc ::ms::treeview::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::treeview::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::treeview::Pathname_Cmd $w]
             }
 
-            # Add the widget address to the treeview widgets real address list.
-            lappend ::ms::addr(treeview) $w
+            # Add the widget's real address to the treeview widgets real address list.
+            lappend ::ms::addr(treeview,classtype) $w
 
-            # Add the widget address to the treeview classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),treeview,addrs) $w
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
 
-            # Add the widget address to the treeview classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the treeview classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),treeview,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the treeview classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the treeview classtype.
             if { $::ms::current($w,style) ni $::ms::style(treeview,classtype) } {
                 lappend ::ms::style(treeview,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -3214,13 +3225,13 @@ proc ::ms::treeview::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -3423,7 +3434,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
 
-                            # Set a variable that keeps tracks if the developer changes the widget state.
+                            # Set a variable that keeps tracks if the developer changes the widget's physical state.
                             set state_changed false
 
                             ##################################################
@@ -3723,25 +3734,24 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                     }
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
-                                            ## Check if exists a layout for the style provided.
-                                            ## If not, create one by mirroring the current theme 'Treeview' layout.
-                                            #if { $value ni $::ms::layouts($::ms::theme) } {
-                                            #    _ttk_style layout $value [_ttk_style layout Treeview]
-                                            #}
+                                            # Check if exists a layout for the style provided.
+                                            # If not, create one by mirroring the current theme 'Treeview' layout.
+                                            if { $value ni $::ms::layouts($::ms::theme) } {
+                                                _ttk_style layout $value [_ttk_style layout Treeview]
+                                            }
 
-                                            # Remove the widget address from the treeview classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the treeview classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),treeview,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),treeview,addrs) [lremove $::ms::style($::ms::current($w,style),treeview,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,treeview,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the treeview classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),treeview,addrs)] {
                                                 0   {
@@ -3833,7 +3843,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the takefocus and cursor accordingly.
+                            # Check the widget's physical state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4230,20 +4240,20 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check if the developer changed the widget state as well.
+                            # Check if the developer changed the widget's physical state as well.
                             switch -- $state_changed {
                                 true {
                                     # Note: The Tk treeview widget don't have a '-state' option.
                                     #       We need to simulate it graphically.
 
-                                    # Check the widget's state.
+                                    # Check the widget's physical state.
                                     switch -- $::ms::current($w,state) {
                                         disabled {
-                                            # Change the widget dynamic state to 'disabled'.
+                                            # Change the widget's dynamic state to 'disabled'.
                                             ::ms::treeview::Pathname_Cmd $w state [list disabled]
                                         }
                                         normal {
-                                            # Change the widget dynamic state to '!disabled'.
+                                            # Change the widget's dynamic state to '!disabled'.
                                             ::ms::treeview::Pathname_Cmd $w state [list !disabled]
                                         }
                                     }
@@ -4399,7 +4409,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                     set X [expr { $rootx+$x }]
                     set Y [expr { $rooty+$y }]
 
-                    # Get the widget address containing the point given by the root coordinates calculated.
+                    # Get the widget's real address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
                     # Check the 'subcommand'.
@@ -4992,7 +5002,7 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the cursor accordingly.
+        # Check the widget's physical state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -5240,14 +5250,14 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
         # Note: The Tk treeview widget don't have a '-state' option.
         #       We need to simulate it graphically.
 
-        # Check the widget's state.
+        # Check the widget's physical state.
         switch -- $::ms::current($w,state) {
             disabled {
-                # Change the widget dynamic state to 'disabled'.
+                # Change the widget's dynamic state to 'disabled'.
                 ::ms::treeview::Pathname_Cmd $w state [list disabled]
             }
             normal {
-                # Change the widget dynamic state to '!disabled'.
+                # Change the widget's dynamic state to '!disabled'.
                 ::ms::treeview::Pathname_Cmd $w state [list !disabled]
             }
         }
@@ -5268,7 +5278,7 @@ proc ::ms::treeview::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Configure { w } {
@@ -5293,7 +5303,7 @@ proc ::ms::treeview::Configure { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Destroy { w } {
@@ -5312,28 +5322,45 @@ proc ::ms::treeview::Destroy { w } {
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget's address from the treeview widgets real address list.
-    set index [lsearch -exact $::ms::addr(treeview) $w]
+    # Remove the widget's real address from the treeview classtype real address list.
+    set index [lsearch -exact $::ms::addr(treeview,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(treeview) [lremove $::ms::addr(treeview) $index] }
+        default { set ::ms::addr(treeview,classtype) [lremove $::ms::addr(treeview,classtype) $index] }
     }
 
-    # Remove the widget's address from the treeview classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),treeview,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),treeview,addrs) [lremove $::ms::class($::ms::current($w,class),treeview,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget's address from the treeview classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the treeview classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),treeview,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),treeview,addrs) [lremove $::ms::style($::ms::current($w,style),treeview,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the treeview classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the treeview classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),treeview,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(treeview,classtype) $::ms::current($w,style)]
@@ -5354,7 +5381,7 @@ proc ::ms::treeview::Destroy { w } {
             #############################
 
             # Remove all the widget's objects real addresses from the list of all available real addresses.
-            # Remove the widget address from the list of all available real addresses.
+            # Remove the widget's real address from the list of all available real addresses.
             set index [lsearch -exact $::ms::addr(reals) $w]
             switch -- $index {
                 -1      {}
@@ -5382,14 +5409,14 @@ proc ::ms::treeview::Destroy { w } {
                 }
             }
 
-            # Remove the widget's address from the megawidget real address list.
+            # Remove the widget's real address from the megawidget real address list.
             set index [lsearch -exact $::ms::addr(megawidgets) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
             }
 
-            # Remove the widget's address from the megawidget scrollable real address list.
+            # Remove the widget's real address from the megawidget scrollable real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
             switch -- $index {
                 -1      {}
@@ -5507,7 +5534,7 @@ proc ::ms::treeview::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::FocusOut { w } {
@@ -5533,7 +5560,7 @@ proc ::ms::treeview::FocusOut { w } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # X, Y   Should be the mouse pointer (X,Y) root coordinates at the time of the event.
 #        These value are provided directly by the **Enter** or **Leave** event.
@@ -5545,7 +5572,7 @@ proc ::ms::treeview::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Hover { w X Y { type "" } } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5556,14 +5583,14 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
             # Check if a **Leave** event has just happened upon a treeview object.
             switch -- $type {
                 Leave {
-                    # Change the widget dynamic state to '!hover'
+                    # Change the widget's dynamic state to '!hover'
                     interp invokehidden {} $w state [list !hover]
 
                     # Reset the widget's active column.
                     set ::ms::data($w,active,column) {}
                 }
                 default {
-                    # Change the widget dynamic state to 'hover'
+                    # Change the widget's dynamic state to 'hover'
                     interp invokehidden {} $w state [list hover]
                 }
             }
@@ -5585,7 +5612,7 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
             if { ($X <= $X_nw) || ($X >= $X_se) || ($Y <= $Y_nw) || ($Y >= $Y_se) } {
                 # The mouse cursor is outside the widget acting as a border object.
 
-                # Change the widget dynamic state to '!hover'
+                # Change the widget's dynamic state to '!hover'
                 ::ms::treeview::Pathname_Cmd $w state [list !hover]
 
                 # Check if a **Leave** event has just happened upon a treeview object.
@@ -5595,7 +5622,7 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
             } else {
                 # The mouse cursor is inside the widget acting as a border object.
 
-                # Change the widget dynamic state to 'hover'
+                # Change the widget's dynamic state to 'hover'
                 ::ms::treeview::Pathname_Cmd $w state [list hover]
             }
         }
@@ -5611,7 +5638,7 @@ proc ::ms::treeview::Hover { w X Y { type "" } } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Map { w } {
@@ -5630,14 +5657,14 @@ proc ::ms::treeview::Map { w } {
 #
 # Where:
 #
-# w           Should be the widget real address involved.
+# w           Should be the widget's real address involved.
 #
 # direction   Should be the direction of the movement.
 #             Allowed values are **up**, **down**, **left** or **right**.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Pages { w direction } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5659,11 +5686,11 @@ proc ::ms::treeview::Pages { w direction } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Return { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5686,7 +5713,7 @@ proc ::ms::treeview::Return { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -5840,7 +5867,7 @@ proc ::ms::treeview::Scrollbar_ButtonRelease {} {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -5894,7 +5921,7 @@ proc ::ms::treeview::Scrollbar_Drag { w orient x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Scrollbar_Update { w } {
@@ -6025,14 +6052,14 @@ proc ::ms::treeview::Scrollbar_Update { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be arrow key event that happened on the widget.
 #       Allowed values are **down**, **left**, **right** and **up**.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Arrow_Keys { w key } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6208,14 +6235,14 @@ proc ::ms::treeview::Arrow_Keys { w key } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **ButtonPress** event.
 #
 # It doesn't return anything.
 proc ::ms::treeview::ButtonPress { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6227,7 +6254,7 @@ proc ::ms::treeview::ButtonPress { w x y } {
             # Focus the treeview.
             _focus -force $::ms::addr($w,widget)
 
-            # Change the widget dynamic state to 'focus'
+            # Change the widget's dynamic state to 'focus'
             ::ms::treeview::Pathname_Cmd $w state [list focus]
         }
     }
@@ -6285,13 +6312,13 @@ proc ::ms::treeview::ButtonPress { w x y } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
 #
 # It doesn't return anything.
 proc ::ms::treeview::ButtonRelease { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6340,13 +6367,13 @@ proc ::ms::treeview::ButtonRelease { w x y } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
 #
 # It doesn't return anything.
 proc ::ms::treeview::DoubleClick { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6381,13 +6408,13 @@ proc ::ms::treeview::DoubleClick { w x y } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Drag { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6428,13 +6455,13 @@ proc ::ms::treeview::Drag { w x y } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Motion { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6506,13 +6533,13 @@ proc ::ms::treeview::Motion { w x y } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # item   Should be the 'item' ID involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Open_Item { w item } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6538,13 +6565,13 @@ proc ::ms::treeview::Open_Item { w item } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # item   Should be the 'item' ID involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Close_Item { w item } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6570,13 +6597,13 @@ proc ::ms::treeview::Close_Item { w item } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # item   Should be the 'item' ID involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Toggle { w item } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6608,11 +6635,11 @@ proc ::ms::treeview::Toggle { w item } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::treeview::Toggle_Focus { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6649,7 +6676,7 @@ proc ::ms::treeview::Toggle_Focus { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
 #
@@ -6658,7 +6685,7 @@ proc ::ms::treeview::Toggle_Focus { w } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Select { w x y op } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6690,7 +6717,7 @@ proc ::ms::treeview::Select { w x y op } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # item   Should be the 'item' ID involved.
 #
@@ -6701,7 +6728,7 @@ proc ::ms::treeview::Select { w x y op } {
 #
 # It doesn't return anything.
 proc ::ms::treeview::Select_Op { w item cell op } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6780,7 +6807,7 @@ proc ::ms::treeview::Select_Op { w item cell op } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # x,y   Should be the (x,y) coordinates of the mouse pointer at the time of the event.
 #
@@ -6811,7 +6838,7 @@ proc ::ms::treeview::Identify_Cell { w x y } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # item   Should be the 'item' ID involved.
 #
