@@ -2259,10 +2259,10 @@ proc ::ms::Init {} {
     ##                 ##
     #####################
 
-    # Hide the point pathcommand.
+    # Hide the point's pathcommand.
     interp hide {} .
 
-    # Create an alias for the point pathcommand.
+    # Create an alias for the point's pathcommand.
     set ::ms::data(.,token) [interp alias {} . {} ::ms::toplevel::Pathname_Cmd .]
 
     # Set the point real address relative to the point short address.
@@ -2271,29 +2271,32 @@ proc ::ms::Init {} {
     # Set the point short address relative to the point real address.
     set ::ms::addr(.,short) .
 
-    # Add the widget real and short address into the list of all available real and short addresses.
+    # Add the widget's real and short address into the list of all available real and short addresses.
     lappend ::ms::addr(reals)  .
     lappend ::ms::addr(shorts) .
 
     # Set the border object (where the 'Enter' and 'Leave' event will happen).
     set ::ms::addr(.,border) .
 
-    # Set the actual widget address.
+    # Set the actual widget's address.
     set ::ms::addr(.,widget) .
 
-    # Add the widget address to the toplevel classtype widgets real address list.
+    # Add the widget's real address to the toplevel classtype widgets real address list.
     lappend ::ms::addr(toplevel,classtype) .
 
-    # Add the widget class to the available class list.
+    # Add the widget's class to the available class list.
     lappend ::ms::data(classes) $::ms::current(.,class)
 
-    # Add the widget address to the toplevel classtype real address list with class '::ms::current(.,class)'.
-    lappend ::ms::class($::ms::current(.,class),toplevel,addrs) .
+    # Add the widget's real address to the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    lappend ::ms::class($::ms::current(.,class),addrs) .
 
-    # Add the widget address to the toplevel classtype real address list with style '::ms::current(.,style)'.
+    # Add the widget's address to the style list that contains all the toplevel classtype real address
+    # with style '::ms::current(.,style)'.
     lappend ::ms::style($::ms::current(.,style),toplevel,addrs) .
 
-    # Add '::ms::current(.,style)' to the available styles for the toplevel classtype.
+    # Add '::ms::current(.,style)' to the style list that contains all the available styles
+    # for the toplevel classtype.
     lappend ::ms::style(toplevel,classtype) $::ms::current(.,style)
 
     #########################################
