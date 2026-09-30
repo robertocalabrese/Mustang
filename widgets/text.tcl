@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -188,7 +188,7 @@
 #                                                                If there isn't one, the **-borderwidth** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-borderwidth** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 #                                 See also **-bordercolor** and **-relief**.
 #
@@ -252,7 +252,7 @@
 #                                                                If there isn't one, the **-cursor** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-cursor** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 # **-endline**                    Specifies an integer line index representing the line of the underlying textual data store that should be just after
 #                                 the last line contained in the widget.
@@ -267,7 +267,7 @@
 #                                 such as **0**, **1**, **yes**, **no**, **true**, **false**, **enabled**, or **disabled**.
 #
 #                                 If the selection is exported, then selecting in the widget deselects the current X selection, selecting outside the
-#                                 widget deselects any widget selection, and the widget will respond to selection retrieval requests when it has a selection.
+#                                 widget deselects any widget's selection, and the widget will respond to selection retrieval requests when it has a selection.
 #
 #                                 If not provided, defaults to **1**.
 #
@@ -285,7 +285,7 @@
 #                                                                If there isn't one, the **-font** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-font** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 #                                 See also **-foreground**.
 #
@@ -317,7 +317,7 @@
 #                                                                If there isn't one, the **-inactiveselectbackground** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-inactiveselectbackground** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 # **-insertbackground**           It's a list that specifies the color to use as background in the area covered by the insertion cursor.
 #                                 This color will normally override either the normal background for the widget or the selection background
@@ -351,7 +351,7 @@
 #                                                                If there isn't one, the **-insertborderwidth** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-insertborderwidth** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 #                                 See also **-selectborderwidth**.
 #
@@ -415,7 +415,7 @@
 #                                                                If there isn't one, the **-padding** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-padding** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 # **-relief**                     Specifies the three-dimensional effect desired for the widget.
 #                                 The value indicates how the widget's interior should appear relative to its exterior.
@@ -439,7 +439,7 @@
 #                                                                If there isn't one, the **-relief** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-relief** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 #                                 See also **-bordercolor** and **-borderwidth**.
 #
@@ -503,7 +503,7 @@
 #                                                                If there isn't one, the **-selectborderwidth** of the **Text** style
 #                                                                will be used instead.
 #                                                                The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                                It is not supposed to change when the widget 'dynamic' state changes.
+#                                                                It is not supposed to change when the widget's dynamic state changes.
 #
 #                                 See also **-selectbackground** and **-selectforeground**.
 #
@@ -583,11 +583,11 @@
 #
 #                                 If not provided, defaults to the empty string.
 #
-# **-state**                      Specifies the 'physical' state for the widget.
-#                                 The text widget 'physical' state acts differently than in the other widgets due to it's a classic widget nature that
-#                                 do not support natively any 'dynamic' states.
-#                                 Changes to the widget's 'physical' state affects the widget's 'dynamic' state.
-#                                 Allowed 'physical' states values are **normal**, **readonly** and **disabled**.
+# **-state**                      Specifies the state for the widget.
+#                                 Setting it changes the widget's **physical** state and the widget's *look* (because it's a classic widget
+#                                 and do not support natively any dynamic states).
+#
+#                                 Allowed states values are **normal**, **readonly** and **disabled**.
 #
 #                                 If the text is *disabled* or *readonly* then characters may not be inserted or deleted and no insertion cursor will be displayed,
 #                                 even if the input focus is in the widget.
@@ -596,12 +596,12 @@
 #
 #                                 If not provided, defaults to **normal**.
 #
-# **-style**                      Specifies a custom widget style.
-#                                 If not provided, defaults to **Text**.
-#
+# **-style**                      Specifies a custom widget's style.
 #                                 The *style* provided should already exists at the time the widget is created.
 #
 #                                 See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                                 If not provided, defaults to **Text**.
 #
 # **-tabs**                       Specifies a set of tab stops for the window.
 #                                 The option's value consists of a list of screen distances giving the positions of the tab stops, each of which is a
@@ -740,7 +740,7 @@
 #
 #   *window* **cget** *option*
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the frame command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the frame command (See **WIDGET OPTIONS**).
 #
 #   *window* **compare** *index1* *op* *index2*
 #     Compares the indices given by *index1* and *index2* according to the relational operator given by *op*, and returns **1** if the
@@ -758,7 +758,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -1015,13 +1015,13 @@
 #     be applied to the new text.
 #     If *tagList* is specified then it consists of a list of tag names; the new characters will receive all of the tags in this list and no
 #     others, regardless of the tags present around the insertion point.
-#     If multiple *chars*-*tagList* argument pairs are present, they produce the same effect as if a separate **window insert** widget command
+#     If multiple *chars*-*tagList* argument pairs are present, they produce the same effect as if a separate **window insert** widget's command
 #     had been issued for each pair, in order.
 #     The last *tagList* argument may be omitted.
 #
 #   *window* **instate** *statespec* ?*script*?
 #     Test the widget's 'dynamic' state.
-#     If *script* is not specified, returns **1** if the widget 'dynamic' state matches *statespec* and **0** otherwise.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -1197,8 +1197,8 @@
 #     If *index* is far out of view, then the command centers index in the window.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire the widget 'dynamic' state.
-#     If *statespec* is present       --> Sets the widget 'dynamic' state.
+#     Modify or inquire the widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -1239,7 +1239,7 @@
 #        *window* **tag** **bind** *tagname* ?*sequence*? ?*script*?
 #          This command associates *script* with the tag given by *tagname*.
 #          Whenever the event sequence given by *sequence* occurs for a character that has been tagged with *tagname*, the *script* will be invoked.
-#          This widget command is similar to the bind command except that it operates on characters in a text rather than entire widgets.
+#          This widget's command is similar to the bind command except that it operates on characters in a text rather than entire widgets.
 #          See the [bind](/wiki/commands/bind.md) manual entry for complete details on the syntax of sequence and the substitutions performed
 #          on script before invoking it.
 #          If all arguments are specified then a new binding is created, replacing any existing binding for the same *sequence* and *tagname*
@@ -1272,10 +1272,10 @@
 #
 #        *window* **tag** **cget** *tagname* *option*
 #          This command returns the current value of the option named *option* associated with the tag given by *tagname*.
-#          *Option* may have any of the values accepted by the **window tag configure** widget command.
+#          *Option* may have any of the values accepted by the **window tag configure** widget's command.
 #
 #        *window* **tag** **configure** *tagname* ?*option*? ?*value*? ?*option value* ... *option value*?
-#          This command is similar to the **window configure** widget command except that it modifies options associated with the tag given
+#          This command is similar to the **window configure** widget's command except that it modifies options associated with the tag given
 #          by *tagname* instead of modifying options for the overall text widget.
 #          If no option is specified, the command returns a list describing all of the available options for *tagname* (see
 #          [Tk_ConfigureInfo](https://www.tcl-lang.org/man/tcl9.0/TkLib/ConfigWidg.html) for information on the format of this list).
@@ -1296,7 +1296,10 @@
 #          If *belowThis* is omitted, then tagname's priority is changed to make it lowest priority of all tags.
 #
 #        *window* **tag** **names** ?*index*?
-#          Returns a list whose elements are the names of all the tags that are active at the character position given by index. If index is omitted, then the return value will describe all of the tags that exist for the text (this includes all tags that have been named in a "*window* tag" widget command but have not been deleted by a "*window* tag delete" widget command, even if no characters are currently marked with the tag). The list will be sorted in order from lowest priority to highest priority.
+#          Returns a list whose elements are the names of all the tags that are active at the character position given by index.
+#          If index is omitted, then the return value will describe all of the tags that exist for the text (this includes all tags that have
+#          been named in a "*window* tag" widget's command but have not been deleted by a "*window* tag delete" widget's command, even if no
+#          characters are currently marked with the tag). The list will be sorted in order from lowest priority to highest priority.
 #
 #        *window* **tag** **nextrange** *tagname* *index1* ?*index2*?
 #          This command searches the text for a range of characters tagged with *tagname* where the first character of the range is no earlier
@@ -1424,7 +1427,7 @@
 #
 #### INDICES:
 #
-# Many of the widget commands for texts take one or more indices as arguments.
+# Many of the widget's commands for texts take one or more indices as arguments.
 # An index is a string used to indicate a particular place within a text, such as a place to insert characters or one endpoint
 # of a range of characters to delete. Indices have the syntax:
 #
@@ -1572,12 +1575,12 @@
 #
 # A priority order is defined among tags, and this order is used in implementing some of the tag-related functions described below.
 # When a tag is defined (by associating it with characters or setting its display options or binding commands to it), it is given a priority higher
-# than any existing tag. The priority order of tags may be redefined using the "*window* tag raise" and "*window* tag lower" widget commands.
+# than any existing tag. The priority order of tags may be redefined using the "*window* tag raise" and "*window* tag lower" widget's commands.
 #
 # Tags serve three purposes in text widgets.
 # First, they control the way information is displayed on the screen.
 # By default, characters are displayed as determined by the **-background**, **-font**, and **-foreground** options for the text widget.
-# However, display options may be associated with individual tags using the "*window* tag configure" widget command.
+# However, display options may be associated with individual tags using the "*window* tag configure" widget's command.
 # If a character has been tagged, then the display options associated with the tag override the default display style.
 # The following options are currently supported for tags:
 #
@@ -1632,7 +1635,9 @@
 #      This option is only used when wrapping is enabled, and it only applies to the second and later display lines for a text line.
 #
 #   **-lmargincolor** *color*
-#      *Color* specifies the background color to use in regions that do not contain characters because they are indented by -lmargin1 or -lmargin2. It may have any of the forms accepted by mustang. If color has not been specified, or if it is specified as an empty string, then the color used is specified by the -background tag option (or, if this is also unspecified, by the -background widget option).
+#      *Color* specifies the background color to use in regions that do not contain characters because they are indented by **-lmargin1** or **-lmargin2**.
+#      It may have any of the forms accepted by mustang. If color has not been specified, or if it is specified as an empty string, then the color
+#      used is specified by the **-background** tag option (or, if this is also unspecified, by the **-background** widget's option).
 #
 #   **-offset** *pixels*
 #      *Pixels* specifies an amount by which the text's baseline should be offset vertically from the baseline of the overall line, in pixels.
@@ -1653,13 +1658,16 @@
 #      This option is used in conjunction with the **-borderwidth** option to enable to the desired border appearance.
 #
 #   **-rmargin** *pixels*
-#      If the first non-elided character of a display line has a tag for which this option has been specified, then pixels specifies how wide a margin to leave between the end of the line and the right edge of the window. Pixels may have any of the standard forms for screen distances. This option is only used when wrapping is enabled. If a text line wraps, the right margin for each line on the display is determined by the first non-elided character of that display line.
+#      If the first non-elided character of a display line has a tag for which this option has been specified, then pixels specifies how wide
+#      a margin to leave between the end of the line and the right edge of the window.
+#      *Pixels* may have any of the standard forms for screen distances. This option is only used when wrapping is enabled.
+#      If a text line wraps, the right margin for each line on the display is determined by the first non-elided character of that display line.
 #
 #   **-rmargincolor** *color*
 #      *Color* specifies the background color to use in regions that do not contain characters because they are indented by **-rmargin**.
 #      It may have any of the forms accepted by mustang.
 #      If color has not been specified, or if it is specified as an empty string, then the color used is specified by the **-background** tag option
-#      (or, if this is also unspecified, by the **-background** widget option).
+#      (or, if this is also unspecified, by the **-background** widget's option).
 #
 #   **-selectbackground** *color*
 #      *Color* specifies the background color to use when displaying selected items.
@@ -1688,7 +1696,7 @@
 #      This option only applies to a display line if it applies to the first non-elided character on that display line.
 #      If this option is specified as an empty string, it cancels the option, leaving it unspecified for the tag (the default).
 #      If the option is specified as a non-empty string that is an empty list, such as **-tags { }**, then it requests default 8-character tabs
-#      as described for the **-tags** widget option.
+#      as described for the **-tags** widget's option.
 #
 #   **-tabstyle** *style*
 #      *Style* specifies either the **tabular** or **wordprocessor** style of tabbing to use for the text widget.
@@ -1719,7 +1727,7 @@
 # You can associate bindings with a tag in much the same way you can associate bindings with a widget class: whenever particular X events occur on
 # characters with the given tag, a given Tcl command will be executed.
 # Tag bindings can be used to give behaviors to ranges of characters; among other things, this allows hypertext-like features to be implemented.
-# For details, see the description of the "pathName tag bind" widget command below.
+# For details, see the description of the "pathName tag bind" widget's command below.
 # Tag bindings are shared between all peer widgets (including any bindings for the special sel tag).
 #
 # The third use for tags is in managing the selection. See **THE SELECTION** below.
@@ -1735,8 +1743,8 @@
 # Only a single position may be associated with a mark at any given time.
 # If the characters around a mark are deleted the mark will still remain; it will just have new neighbor characters.
 # In contrast, if the characters containing a tag are deleted then the tag will no longer have an association with characters in the file.
-# Marks may be manipulated with the "pathName mark" widget command, and their current locations may be determined by using the mark name as an index
-# in widget commands.
+# Marks may be manipulated with the "pathName mark" widget's command, and their current locations may be determined by using the mark name as an index
+# in widget's commands.
 #
 # Each mark also has a "gravity", which is either left or right.
 # The gravity for a mark specifies what happens to the mark when text is inserted at the point of the mark.
@@ -1775,8 +1783,8 @@
 # creation script.
 # After destroying an elided embedded window, the latter won't get automatically recreated.
 #
-# When an embedded window is added to a text widget with the pathName window create widget command, several configuration options may be associated with it.
-# These options may be modified later with the pathName window configure widget command.
+# When an embedded window is added to a text widget with the pathName window create widget's command, several configuration options may be associated with it.
+# These options may be modified later with the pathName window configure widget's command.
 # The following options are currently supported:
 #
 #   **-align** *where*
@@ -1830,7 +1838,7 @@
 # creation script.
 # After destroying an elided embedded image, the latter won't get automatically recreated.
 #
-# When an embedded image is added to a text widget with the pathName image create widget command, a name unique to this instance of the image is returned.
+# When an embedded image is added to a text widget with the pathName image create widget's command, a name unique to this instance of the image is returned.
 # This name may then be used to refer to this image instance.
 # The name is taken to be the value of the -name option (described below).
 # If the **-name** option is not provided, the **-image** name is used instead. If the imageName is already in use in the text widget,
@@ -1839,8 +1847,8 @@
 # Once this name is assigned to this instance of the image, it does not change, even though the **-image** or **-name** values can be changed
 # with **pathName image configure**.
 #
-# When an embedded image is added to a text widget with the pathName image create widget command, several configuration options may be associated with it.
-# These options may be modified later with the pathName image configure widget command.
+# When an embedded image is added to a text widget with the pathName image create widget's command, several configuration options may be associated with it.
+# These options may be modified later with the pathName image configure widget's command.
 # The following options are currently supported:
 #
 #   **-align** *where*
@@ -1880,7 +1888,7 @@
 #   It might also be generated when selection is affected but not actually changed.
 #   Further, multiple selection changes could happen before events can be processed leading to multiple events with the same visible selection.
 #
-# The sel tag is automatically defined when a text widget is created, and it may not be deleted with the "pathName tag delete" widget command.
+# The sel tag is automatically defined when a text widget is created, and it may not be deleted with the "pathName tag delete" widget's command.
 # Furthermore, the **-selectbackground**, **-selectborderwidth**, and **-selectforeground** options for the text widget are tied to the **-background**,
 # **-borderwidth**, and **-foreground** options for the sel tag: changes in either will automatically be reflected in the other.
 # Also the **-inactiveselectbackground** option for the text widget is used instead of **-selectbackground** when the text widget does not have the focus.
@@ -1891,11 +1899,11 @@
 #### THE INSERTION CURSOR:
 #
 # The mark named insert has special significance in text widgets.
-# It is defined automatically when a text widget is created and it may not be unset with the "pathName mark unset" widget command.
+# It is defined automatically when a text widget is created and it may not be unset with the "pathName mark unset" widget's command.
 # The insert mark represents the position of the insertion cursor, and the insertion cursor will automatically be drawn at this point whenever
 # the text widget has the input focus.
 #
-# The **-blockcursor** widget option controls the drawing of the cursor.
+# The **-blockcursor** widget's option controls the drawing of the cursor.
 # However, drawing the cursor as a solid blinking block is not exactly performed as in real or emulated terminals.
 # The character at the cursor position is always drawn in it's foreground color, i.e. not in "reverse video", which can lead to unwanted visual effects
 # and even hide the character entirely, when the cursor is in its on-state.
@@ -1906,11 +1914,11 @@
 # Inserting or deleting text will set this flag.
 # The flag can be queried, set and cleared programmatically as well.
 # Whenever the flag changes state a <<Modified>> virtual event is generated.
-# See the pathName edit modified widget command for more details.
+# See the pathName edit modified widget's command for more details.
 #
 #### THE UNDO MECHANISM:
 #
-# The text widget has an unlimited undo and redo mechanism (when the **-undo** widget option is true) which records every insert and delete action
+# The text widget has an unlimited undo and redo mechanism (when the **-undo** widget's option is true) which records every insert and delete action
 # on a stack.
 #
 # Boundaries (called "separators") are inserted between edit actions.
@@ -1920,7 +1928,7 @@
 # The redo stack is cleared whenever new edit actions are recorded on the undo stack.
 # The undo and redo stacks can be cleared to keep their depth under control.
 #
-# Separators are inserted automatically when the **-autoseparators** widget option is true.
+# Separators are inserted automatically when the **-autoseparators** widget's option is true.
 # You can insert separators programmatically as well.
 # If a separator is already present at the top of the undo stack no other will be inserted.
 # That means that two separators on the undo stack are always separated by at least one insert or delete action.
@@ -1932,7 +1940,7 @@
 # The modified flag will be set automatically to the appropriate state.
 # This automatic coupling does not work when the modified flag has been set by the user, until the flag has been reset again.
 #
-# See below for the pathName edit widget command that controls the undo mechanism.
+# See below for the pathName edit widget's command that controls the undo mechanism.
 #
 #### PEER WIDGETS:
 #
@@ -1972,7 +1980,7 @@
 # Note that peers are really peers.
 # Deleting the "original" text widget will not cause any other peers to be deleted, or otherwise affected.
 #
-# See below for the pathName peer widget command that controls the creation of peer widgets.
+# See below for the pathName peer widget's command that controls the creation of peer widgets.
 #
 #### ASYNCHRONOUS UPDATE OF LINE HEIGHTS:
 #
@@ -1987,7 +1995,7 @@
 # **pathName pendingsync** to control the synchronization of the view of text widgets.
 #
 # The **WidgetViewSync** virtual event fires when the line heights of the text widget become obsolete (due to some editing command or configuration change),
-# and again when the internal data of the text widget are back in sync with the widget view.
+# and again when the internal data of the text widget are back in sync with the widget's view.
 # The detail field (**%d** substitution) is either true (when the widget is in sync) or false (when it is not).
 #
 # **pathName sync**, **pathName pendingsync** and **WidgetViewSync** apply to each text widget independently of its peers.
@@ -2072,14 +2080,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -2088,41 +2096,41 @@
 #
 # Simple texts (**-scrollbar false**):
 #
-#     1.  **MouseWheel** events will try to find the innermost widget scrollable parent with an active vertical scrollbar and move that
+#     1.  **MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar and move that
 #         scrollbar by one unit up or down (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
-#     2.  **Shift-MouseWheel** events will try to find the innermost widget scrollable parent with an active horizontal scrollbar and move
+#     2.  **Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal scrollbar and move
 #         that scrollbar by one unit left or right (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
-#     3.  **Control-MouseWheel** events will try to find the innermost widget scrollable parent with an active vertical scrollbar and move
+#     3.  **Control-MouseWheel** events will try to find the innermost widget's scrollable parent with an active vertical scrollbar and move
 #         that scrollbar by one page up or down (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
-#     4.  **Control-Shift-MouseWheel** events will try to find the innermost widget scrollable parent with an active horizontal scrollbar
+#     4.  **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable parent with an active horizontal scrollbar
 #         and move that scrollbar by one page left or right (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
 #     5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
 #         These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
-#            1 - **TouchpadScroll** events along the X axis will try to find the innermost widget scrollable parent with an active horizontal
+#            1 - **TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an active horizontal
 #                scrollbar and move that scrollbar by one unit towards the left or the right (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
-#            2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget scrollable parent with an active vertical
+#            2 - **TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an active vertical
 #                scrollbar and move that scrollbar by one unit towards the top or the bottom (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
 #     6.  **Control-TouchpadScroll** events may happen on two different planes, horizontal and vertical.
 #         These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
-#            1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget scrollable parent with an active
+#            1 - **Control-TouchpadScroll** events along the X axis will try to find the innermost widget's scrollable parent with an active
 #                horizontal scrollbar and move that scrollbar by one page towards the left or the right (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
-#            2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget scrollable parent with an active
+#            2 - **Control-TouchpadScroll** events along the Y axis will try to find the innermost widget's scrollable parent with an active
 #                vertical scrollbar and move that scrollbar by one page towards the top or the bottom (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -2131,47 +2139,47 @@
 #     1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of the widget
 #         (depending on the direction of the mousewheel event).
 #
-#         If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable parent
+#         If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget's scrollable parent
 #         with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
 #     2.  If the widget have an active horizontal scrollbar, **Shift-MouseWheel** events will scroll one unit towards the left or the right of the
 #         widget (depending on the direction of the mousewheel event).
 #
-#         If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget scrollable
+#         If the widget doesn't have an active horizontal scrollbar, **Shift-MouseWheel** events will try to find the innermost widget's scrollable
 #         parent with an active horizontal scrollbar and move that scrollbar by one unit left or right (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
 #     3.  If the widget have an active vertical scrollbar, **Control-MouseWheel** events will scroll one page towards the top or the bottom of the
 #         widget (depending on the direction of the mousewheel event).
 #
-#         If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget scrollable
+#         If the widget doesn't have an active vertical scrollbar, **Control-MouseWheel** events will try to find the innermost widget's scrollable
 #         parent with an active vertical scrollbar and move that scrollbar by one page up or down (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
 #     4.  If the widget have an active horizontal scrollbar **Control-Shift-MouseWheel** events will scroll one page towards the left or the right
 #         of the widget (depending on the direction of the mousewheel event).
 #
-#         If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget scrollable
+#         If the widget doesn't have an active horizontal scrollbar, **Control-Shift-MouseWheel** events will try to find the innermost widget's scrollable
 #         parent with an active horizontal scrollbar and move that scrollbar by one page left or right (depending on the mousewheel direction).
 #         If none of the widget's parents meets the required condition, nothing will happen.
 #
 #     5.  **TouchpadScroll** events may happen on two different planes, horizontal and vertical.
 #         These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
-#            1 - If the widget have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to scroll the widget scrollbar
+#            1 - If the widget have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to scroll the widget's scrollbar
 #                one unit towards the left or the right (depending on the direction of the touchpad event).
 #
 #                If the widget does not have an active horizontal scrollbar, **TouchpadScroll** events along the X axis will try to find the innermost
-#                widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left or the right
+#                widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one unit towards the left or the right
 #                (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
-#            2 - If the widget have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to scroll the widget scrollbar
+#            2 - If the widget have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to scroll the widget's scrollbar
 #                one unit towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #                If the widget does not have an active vertical scrollbar, **TouchpadScroll** events along the Y axis will try to find the innermost
-#                widget scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top or the bottom
+#                widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one unit towards the top or the bottom
 #                (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -2182,7 +2190,7 @@
 #                scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
 #
 #                If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
-#                the innermost widget scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
+#                the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
 #                or the right (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
@@ -2190,7 +2198,7 @@
 #                scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #                If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
-#                the innermost widget scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
+#                the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
 #                or the bottom (depending on the direction of the touchpad event).
 #                If none of the widget's parents meets the required condition, nothing will happen on the vertical axis.
 #
@@ -2205,14 +2213,14 @@
 # 1.  If the widget is scrollable and its vertical scrollbar is active:
 #       - **Prior**        Scrolls one page towards the top of the widget.
 #       - **Next**         Scrolls one page towards the bottom of the widget.
-#     If the widget vertical scrollbar is not active (or the widget is not scrollable), mustang will try to find the innermost widget scrollable
+#     If the widget's vertical scrollbar is not active (or the widget is not scrollable), mustang will try to find the innermost widget's scrollable
 #     parent with an active vertical scrollbar and scroll that scrollbar.
 #     If none of the widget's parents meets the required conditions, nothing will happen.
 #
 # 2.  If the widget is scrollable and its horizontal scrollbar is active:
 #       - **Control-Prior** Scrolls one page towards the right of the widget.
 #       - **Control-Next**  Scrolls one page towards the left of the widget.
-#     If the widget horizontal scrollbar is not active (or the widget is not scrollable), mustang will try to find the innermost widget scrollable
+#     If the widget's horizontal scrollbar is not active (or the widget is not scrollable), mustang will try to find the innermost widget's scrollable
 #     parent with an active horizontal scrollbar and scroll that scrollbar.
 #     If none of the widget's parents meets the required conditions, nothing will happen.
 #
@@ -2220,7 +2228,7 @@
 #
 ###### INTERNAL MECHANISM:
 #
-# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth**
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget's styleable options (**-borderwidth**
 #     and **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually
 #     indicate that the user is inside the widget.
 #
@@ -2479,7 +2487,11 @@
 #
 ###### ISSUES CONCERNING CHARS AND INDICES:
 #
-# Before Tk 8.5, the widget used the string "chars" to refer to index positions (which included characters, embedded windows and embedded images). As of Tk 8.5 the text widget deals separately and correctly with "chars" and "indices". For backwards compatibility, however, the index modifiers "+N chars" and "-N chars" continue to refer to indices. One must use any of the full forms "+N any chars" or "-N any chars" etc. to refer to actual character indices. This confusion may be fixed in a future release by making the widget correctly interpret "+N chars" as a synonym for "+N any chars".
+# Before Tk 8.5, the widget used the string "chars" to refer to index positions (which included characters, embedded windows and embedded images).
+# As of Tk 8.5 the text widget deals separately and correctly with *chars* and *indices*.
+# For backwards compatibility, however, the index modifiers *+N chars* and *-N chars* continue to refer to indices. One must use any of the full
+# forms *+N any chars* or *-N any chars* etc. to refer to actual character indices.
+# This confusion may be fixed in a future release by making the widget correctly interpret *+N chars* as a synonym for *+N any chars*.
 #
 ###### PERFORMANCE ISSUES:
 #
@@ -2780,29 +2792,29 @@ _bind _Simple_Text <<SelectLineBottom>> { ::ms::text::Select_Line_Bottom %W; bre
 _bind _Simple_Text <Shift-Prior> { ::ms::text::Select_PageUp   %W; break }
 _bind _Simple_Text <Shift-Next>  { ::ms::text::Select_PageDown %W; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next character.
-# If the widget state is disabled, try to move the widget horizontal scrollbar (if any) by one unit towards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next character.
+# If the widget's physical state is disabled, try to move the widget's horizontal scrollbar (if any) by one unit towards the
 # left or the right ; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # horizontal scrollbar and move that scrollbar by one unit towards the left or the right, otherwise don't do anything.
 _bind _Simple_Text <<PrevChar>> { ::ms::text::Previous_Char %W; break }
 _bind _Simple_Text <<NextChar>> { ::ms::text::Next_Char     %W; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next line.
-# If the widget state is disabled, try to move the widget vertical scrollbar (if any) by one unit towards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next line.
+# If the widget's physical state is disabled, try to move the widget's vertical scrollbar (if any) by one unit towards the
 # top or the bottom; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # vertical scrollbar and move that scrollbar by one unit towards the top or the bottom, otherwise don't do anything.
 _bind _Simple_Text <<PrevLine>> { ::ms::text::Previous_Line %W; break }
 _bind _Simple_Text <<NextLine>> { ::ms::text::Next_Line     %W; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next word.
-# If the widget state is disabled, try to move the widget horizontal scrollbar (if any) by one page towards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next word.
+# If the widget's physical state is disabled, try to move the widget's horizontal scrollbar (if any) by one page towards the
 # left or the right; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # horizontal scrollbar and move that scrollbar by one page towards the left or right, otherwise don't do anything.
 _bind _Simple_Text <<PrevWord>> { ::ms::text::Previous_Word %W; break }
 _bind _Simple_Text <<NextWord>> { ::ms::text::Next_Word     %W; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next paragraph.
-# If the widget state is disabled, try to move the widget vertical scrollbar (if any) by one pagetowards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next paragraph.
+# If the widget's physical state is disabled, try to move the widget's vertical scrollbar (if any) by one pagetowards the
 # top or the bottom; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # vertical scrollbar and move that scrollbar by one page towards the top or bottom, otherwise don't do anything.
 _bind _Simple_Text <<PrevPara>> { ::ms::text::Previous_Paragraph %W; break }
@@ -3091,29 +3103,29 @@ _bind _Scrollable_Text <<SelectLineBottom>> { ::ms::text::Select_Line_Bottom [_w
 _bind _Scrollable_Text <Shift-Prior> { ::ms::text::Select_PageUp   [_winfo parent %W]; break }
 _bind _Scrollable_Text <Shift-Next>  { ::ms::text::Select_PageDown [_winfo parent %W]; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next character.
-# If the widget state is disabled, try to move the widget horizontal scrollbar (if any) by one unit towards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next character.
+# If the widget's physical state is disabled, try to move the widget's horizontal scrollbar (if any) by one unit towards the
 # left or the right ; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # horizontal scrollbar and move that scrollbar by one unit towards the left or the right, otherwise don't do anything.
 _bind _Scrollable_Text <<PrevChar>> { ::ms::text::Previous_Char [_winfo parent %W]; break }
 _bind _Scrollable_Text <<NextChar>> { ::ms::text::Next_Char     [_winfo parent %W]; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next line.
-# If the widget state is disabled, try to move the widget vertical scrollbar (if any) by one unit towards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next line.
+# If the widget's physical state is disabled, try to move the widget's vertical scrollbar (if any) by one unit towards the
 # top or the bottom; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # vertical scrollbar and move that scrollbar by one unit towards the top or the bottom, otherwise don't do anything.
 _bind _Scrollable_Text <<PrevLine>> { ::ms::text::Previous_Line [_winfo parent %W]; break }
 _bind _Scrollable_Text <<NextLine>> { ::ms::text::Next_Line     [_winfo parent %W]; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next word.
-# If the widget state is disabled, try to move the widget horizontal scrollbar (if any) by one page towards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next word.
+# If the widget's physical state is disabled, try to move the widget's horizontal scrollbar (if any) by one page towards the
 # left or the right; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # horizontal scrollbar and move that scrollbar by one page towards the left or right, otherwise don't do anything.
 _bind _Scrollable_Text <<PrevWord>> { ::ms::text::Previous_Word [_winfo parent %W]; break }
 _bind _Scrollable_Text <<NextWord>> { ::ms::text::Next_Word     [_winfo parent %W]; break }
 
-# If the widget state is normal, move the insertion cursor to the previous or next paragraph.
-# If the widget state is disabled, try to move the widget vertical scrollbar (if any) by one pagetowards the
+# If the widget's physical state is normal, move the insertion cursor to the previous or next paragraph.
+# If the widget's physical state is disabled, try to move the widget's vertical scrollbar (if any) by one pagetowards the
 # top or the bottom; if it's not possible, try to find the innermost widget's scrollable parent with an active
 # vertical scrollbar and move that scrollbar by one page towards the top or bottom, otherwise don't do anything.
 _bind _Scrollable_Text <<PrevPara>> { ::ms::text::Previous_Paragraph [_winfo parent %W]; break }
@@ -3520,16 +3532,16 @@ interp alias {} text {} ::ms::text::Command
 
 ## Command
 #
-# Replace the Tk **text** widget command.
+# Replace the Tk **text** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -3555,7 +3567,7 @@ proc ::ms::text::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,autoseparators)   $::ms::default(text,autoseparators)
             set ::ms::default($w,blockcursor)      $::ms::default(text,blockcursor)
             set ::ms::default($w,class)            $::ms::default(text,class)
@@ -3583,7 +3595,7 @@ proc ::ms::text::Command { window { args "" } } {
             set ::ms::default($w,xscrollcommand)   $::ms::default(text,xscrollcommand)
             set ::ms::default($w,yscrollcommand)   $::ms::default(text,yscrollcommand)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,autoseparators)   $::ms::default(text,autoseparators)
             set ::ms::current($w,blockcursor)      $::ms::default(text,blockcursor)
             set ::ms::current($w,class)            $::ms::default(text,class)
@@ -3611,7 +3623,7 @@ proc ::ms::text::Command { window { args "" } } {
             set ::ms::current($w,xscrollcommand)   $::ms::default(text,xscrollcommand)
             set ::ms::current($w,yscrollcommand)   $::ms::default(text,yscrollcommand)
 
-            # Set some widget variables needed for internal mechanisms.
+            # Set some widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) text
             set ::ms::data($w,statespec) $::ms::data(statespec,normal)
             set ::ms::data($w,scrollx)   off
@@ -4165,14 +4177,14 @@ proc ::ms::text::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the state, takefocus and cursor accordingly.
+            # Check the widget's physical state and set the state, takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
                     set state     disabled
                     set takefocus 0
 
-                    # Set the widget dynamic state to 'disabled'
+                    # Set the widget's dynamic state to 'disabled'
                     set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                 }
                 readonly {
@@ -4180,7 +4192,7 @@ proc ::ms::text::Command { window { args "" } } {
                     set state     disabled
                     set takefocus $::ms::current($w,takefocus)
 
-                    # Set the widget dynamic state to 'readonly'
+                    # Set the widget's dynamic state to 'readonly'
                     set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 8 8 "readonly"]
                 }
                 normal {
@@ -4330,7 +4342,7 @@ proc ::ms::text::Command { window { args "" } } {
                         ::ms::Error "$errortext" $caller_info
                     }
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ######################
@@ -4353,13 +4365,13 @@ proc ::ms::text::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
+                    # Set the widget's short addresses relative to its real address, 'w'.
                     set ::ms::addr($w,short) $short_addr
 
-                    # Add the widget real and short address into the list of all available real
+                    # Add the widget's real and short address into the list of all available real
                     # and short addresses.
                     lappend ::ms::addr(reals)  $w
                     lappend ::ms::addr(shorts) $short_addr
@@ -4367,7 +4379,7 @@ proc ::ms::text::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w
                 }
                 true {
@@ -4429,7 +4441,7 @@ proc ::ms::text::Command { window { args "" } } {
                                     -takefocus 0 \
                                         -width 0;
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ##################
@@ -4547,15 +4559,15 @@ proc ::ms::text::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Configure the internal widget rows and columns.
+                    # Configure the internal widget's rows and columns.
                     _grid rowconfigure    $w [list 0] -weight 1
                     _grid columnconfigure $w [list 0] -weight 1
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses relative to its real address, 'w'.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short)        $short_addr
                     set ::ms::addr($w.fake_x,short) $short_addr
                     set ::ms::addr($w.fake_y,short) $short_addr
@@ -4563,7 +4575,7 @@ proc ::ms::text::Command { window { args "" } } {
                     set ::ms::addr($w.x,short)      $short_addr
                     set ::ms::addr($w.y,short)      $short_addr
 
-                    # Add the widget real and short address into the list of all available real
+                    # Add the widget's real and short address into the list of all available real
                     # and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.fake_x \
@@ -4577,16 +4589,16 @@ proc ::ms::text::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.text
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.text
 
-                    # Add the widget address to the megawidget addresses list.
+                    # Add the widget's real address to the megawidget's addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
-                    # Add the widget address to the megawidget container addresses list.
+                    # Add the widget's real address to the megawidget container addresses list.
                     lappend ::ms::addr(megawidgets,containers) $w
 
-                    # Add the widget address to the scrollable megawidget addresses list.
+                    # Add the widget's real address to the scrollable megawidget's addresses list.
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
@@ -4597,32 +4609,40 @@ proc ::ms::text::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::text::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::text::Pathname_Cmd $w]
             }
 
-            # Add the widget address to the text widgets real address list.
-            lappend ::ms::addr(text) $w
+            # Add the widget's real address to the text widgets real address list.
+            lappend ::ms::addr(text,classtype) $w
 
-            # Add the widget address to the text classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),text,addrs) $w
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
 
-            # Add the widget address to the text classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the text classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),text,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the text classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the text classtype.
             if { $::ms::current($w,style) ni $::ms::style(text,classtype) } {
                 lappend ::ms::style(text,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -4640,13 +4660,13 @@ proc ::ms::text::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -5183,19 +5203,18 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     }
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
-                                            # Remove the widget address from the text classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the text classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),text,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),text,addrs) [lremove $::ms::style($::ms::current($w,style),text,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,text,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the text classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),text,addrs)] {
                                                 0   {
@@ -5320,14 +5339,14 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the state, takefocus and cursor accordingly.
+                            # Check the widget's physical state and set the state, takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
                                     set state     disabled
                                     set takefocus 0
 
-                                    # Set the widget dynamic state to 'disabled'
+                                    # Set the widget's dynamic state to 'disabled'
                                     set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                                 }
                                 readonly {
@@ -5335,7 +5354,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     set state     disabled
                                     set takefocus $::ms::current($w,takefocus)
 
-                                    # Set the widget dynamic state to 'readonly'
+                                    # Set the widget's dynamic state to 'readonly'
                                     set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 8 8 "readonly"]
                                 }
                                 normal {
@@ -5343,7 +5362,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     set state     normal
                                     set takefocus $::ms::current($w,takefocus)
 
-                                     # Set the widget dynamic state to 'normal'
+                                     # Set the widget's dynamic state to 'normal'
                                     set ::ms::data($w,statespec) $::ms::data(statespec,normal)
                                 }
                             }
@@ -5654,7 +5673,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             switch -- $::ms::current($w,scrollable) {
                 false { return "Text.area" }
                 true  {
-                    # Get the widget address containing the point given by the root coordinates calculated.
+                    # Get the widget's real address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
                     # Execute the command.
@@ -5809,7 +5828,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
                         normal {
@@ -6408,7 +6427,7 @@ proc ::ms::text::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the relative cursor.
+        # Check the widget's physical state and set the relative cursor.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -6624,7 +6643,7 @@ proc ::ms::text::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the mouse pointer (x,y) relative coordinates at the time of the event.
 #        These value are provided directly by the **ButtonPress** event.
@@ -6634,7 +6653,7 @@ proc ::ms::text::ButtonPress { w x y } {
     # Note: This procedure is a modified version of the '::tk::TextButton1' of the Tk text widget.
     #       All credits goes to the original author/s.
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -6656,12 +6675,12 @@ proc ::ms::text::ButtonPress { w x y } {
             # Focus the widget.
             _focus -force $::ms::addr($w,widget)
 
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             {*}$address state [list focus]
         }
     }
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         readonly { return "" }
     }
@@ -6710,7 +6729,7 @@ proc ::ms::text::ButtonPress { w x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Configure { w } {
@@ -6731,47 +6750,64 @@ proc ::ms::text::Configure { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget short address from the list of all available short addresses.
+    # Remove the widget's short address from the list of all available short addresses.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the text widgets real address list.
-    set index [lsearch -exact $::ms::addr(text) $w]
+    # Remove the widget's real address from the text classtype real address list.
+    set index [lsearch -exact $::ms::addr(text,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(text) [lremove $::ms::addr(text) $index] }
+        default { set ::ms::addr(text,classtype) [lremove $::ms::addr(text,classtype) $index] }
     }
 
-    # Remove the widget address from the text classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),text,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),text,addrs) [lremove $::ms::class($::ms::current($w,class),text,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the text classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the text classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),text,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),text,addrs) [lremove $::ms::style($::ms::current($w,style),text,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the text classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the text classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),text,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(text,classtype) $::ms::current($w,style)]
@@ -6791,7 +6827,7 @@ proc ::ms::text::Destroy { w } {
             ##                     ##
             #########################
 
-            # Remove the widget address from the list of all available real addresses.
+            # Remove the widget's real address from the list of all available real addresses.
             set index [lsearch -exact $::ms::addr(reals) $w]
             switch -- $index {
                 -1      {}
@@ -6819,21 +6855,21 @@ proc ::ms::text::Destroy { w } {
                 }
             }
 
-            # Remove the widget address from the megawidget real address list.
+            # Remove the widget's real address from the megawidget real address list.
             set index [lsearch -exact $::ms::addr(megawidgets) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
             }
 
-            # Remove the widget address from the megawidget container real address list.
+            # Remove the widget's real address from the megawidget container real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,containers) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(megawidgets,containers) [lremove $::ms::addr(megawidgets,containers) $index] }
             }
 
-            # Remove the widget address from the megawidget scrollable real address list.
+            # Remove the widget's real address from the megawidget scrollable real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
             switch -- $index {
                 -1      {}
@@ -6977,7 +7013,7 @@ proc ::ms::text::Destroy { w } {
 #
 # Where:
 #
-# w   should be the widget real address involved.
+# w   should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::FocusOut { w } {
@@ -6997,7 +7033,7 @@ proc ::ms::text::FocusOut { w } {
 #
 # Where:
 #
-# w       Should be the widget real address involved.
+# w       Should be the widget's real address involved.
 #
 # x, y    Should be the (x,y) relative coordinate of the mouse pointer at the time of the event.
 #         This parameter should be passed by the event itself.
@@ -7015,7 +7051,7 @@ proc ::ms::text::FocusOut { w } {
 #
 # It doesn't return anything.
 proc ::ms::text::Scan_Or_Paste { w x y event } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -7056,7 +7092,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                     switch -- $event {
                         "PasteSelection"  -
                         "ButtonRelease-3" {
-                            # Check the widget's state.
+                            # Check the widget's physical state.
                             switch -- $::ms::current($w,state) {
                                 normal { ::ms::text::Paste_Selection $w $x $y }
                             }
@@ -7068,7 +7104,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
                     switch -- $event {
                         "PasteSelection"  -
                         "ButtonRelease-2" {
-                            # Check the widget's state.
+                            # Check the widget's physical state.
                             switch -- $::ms::current($w,state) {
                                 normal { ::ms::text::Paste_Selection $w $x $y }
                             }
@@ -7094,7 +7130,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -7248,7 +7284,7 @@ proc ::ms::text::Scrollbar_ButtonRelease {} {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -7302,7 +7338,7 @@ proc ::ms::text::Scrollbar_Drag { w orient x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Scrollbar_Update { w } {
@@ -7433,11 +7469,11 @@ proc ::ms::text::Scrollbar_Update { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Clear { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7483,11 +7519,11 @@ proc ::ms::text::Clear { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Copy { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7527,11 +7563,11 @@ proc ::ms::text::Copy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Cut { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7584,14 +7620,14 @@ proc ::ms::text::Cut { w } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **Paste** event.
 #
 # It doesn't return anything.
 proc ::ms::text::Paste { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7659,14 +7695,14 @@ proc ::ms::text::Paste { w x y } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **Paste** event.
 #
 # It doesn't return anything.
 proc ::ms::text::Paste_Selection { w x y } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7736,11 +7772,11 @@ proc ::ms::text::Paste_Selection { w x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Backspace { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7785,11 +7821,11 @@ proc ::ms::text::Backspace { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Delete { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7834,11 +7870,11 @@ proc ::ms::text::Delete { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Delete_Word { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7873,11 +7909,11 @@ proc ::ms::text::Delete_Word { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Delete_Till_LineEnd { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7918,11 +7954,11 @@ proc ::ms::text::Delete_Till_LineEnd { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Accent_Backspace { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7946,11 +7982,11 @@ proc ::ms::text::Accent_Backspace { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Clear_IME_Marked_Text { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -7974,11 +8010,11 @@ proc ::ms::text::Clear_IME_Marked_Text { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Start_IME_Marked_Text { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -8002,11 +8038,11 @@ proc ::ms::text::Start_IME_Marked_Text { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::End_IME_Marked_Text { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -8048,11 +8084,11 @@ proc ::ms::text::End_IME_Marked_Text { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Insert { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -8086,7 +8122,7 @@ proc ::ms::text::Insert { w } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # data   The string to insert (usually just a single character)
 #
@@ -8146,7 +8182,7 @@ proc ::ms::text::Insert_String { w data } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # dir   Should be the direction that the focus needs to take.
 #          +1 --> means go to the next focussable widget.
@@ -8169,13 +8205,13 @@ proc ::ms::text::Control_Tab { w dir } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be the unicode of the key involved.
 #
 # It doesn't return anything.
 proc ::ms::text::KeyPress { w key } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -8201,11 +8237,11 @@ proc ::ms::text::KeyPress { w key } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Return { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -8252,7 +8288,7 @@ proc ::ms::text::Return { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::PageUp { w } {
@@ -8263,7 +8299,7 @@ proc ::ms::text::PageUp { w } {
             switch -- $::current($w,yscrollcommand) {
                 ""      { ::ms::Scroll_Parent_Y $w -1 pages }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { interp invokehidden {} $w yview scroll -1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
@@ -8276,7 +8312,7 @@ proc ::ms::text::PageUp { w } {
             switch -- $::ms::data($w,scrolly) {
                 off     { ::ms::Scroll_Parent_Y $w -1 pages }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w -1] }
@@ -8295,7 +8331,7 @@ proc ::ms::text::PageUp { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::PageDown { w } {
@@ -8306,7 +8342,7 @@ proc ::ms::text::PageDown { w } {
             switch -- $::current($w,yscrollcommand) {
                 ""      { ::ms::Scroll_Parent_Y $w +1 pages }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { interp invokehidden {}  $w yview scroll +1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w 1] }
@@ -8319,7 +8355,7 @@ proc ::ms::text::PageDown { w } {
             switch -- $::ms::data($w,scrolly) {
                 off { ::ms::Scroll_Parent_Y $w +1 pages }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Scroll_Pages $w 1] }
@@ -8338,7 +8374,7 @@ proc ::ms::text::PageDown { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::PageLeft { w } {
@@ -8369,7 +8405,7 @@ proc ::ms::text::PageLeft { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::PageRight { w } {
@@ -8412,7 +8448,7 @@ proc ::ms::text::PageRight { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # n   The number of display lines to move:
 #       -1 --> up one line
@@ -8451,7 +8487,7 @@ proc ::ms::text::Line_Index { w n } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Line_Start { w } {
@@ -8461,14 +8497,14 @@ proc ::ms::text::Line_Start { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display linestart} }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w xview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display linestart} }
@@ -8480,14 +8516,14 @@ proc ::ms::text::Line_Start { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display linestart} }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w xview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display linestart} }
@@ -8506,7 +8542,7 @@ proc ::ms::text::Line_Start { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Line_End { w } {
@@ -8516,14 +8552,14 @@ proc ::ms::text::Line_End { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
@@ -8535,14 +8571,14 @@ proc ::ms::text::Line_End { w } {
             # Check if the widget horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {insert display lineend} }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w xview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {insert display lineend} }
@@ -8561,7 +8597,7 @@ proc ::ms::text::Line_End { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Line_Top { w } {
@@ -8571,14 +8607,14 @@ proc ::ms::text::Line_Top { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w 1.0 }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w yview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w 1.0 }
@@ -8587,17 +8623,17 @@ proc ::ms::text::Line_Top { w } {
             }
         }
         true {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 pages }
                         normal   { ::ms::text::Move_Cursor $w 1.0 }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w yview moveto 0 }
                         normal   { ::ms::text::Move_Cursor  $w 1.0 }
@@ -8616,7 +8652,7 @@ proc ::ms::text::Line_Top { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Line_Bottom { w } {
@@ -8626,14 +8662,14 @@ proc ::ms::text::Line_Bottom { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {end - 1 indices} }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w yview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {end - 1 indices} }
@@ -8642,17 +8678,17 @@ proc ::ms::text::Line_Bottom { w } {
             }
         }
         true {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 pages }
                         normal   { ::ms::text::Move_Cursor $w {end - 1 indices} }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::text::Pathname_Cmd $w yview moveto 1.0 }
                         normal   { ::ms::text::Move_Cursor  $w {end - 1 indices} }
@@ -8681,7 +8717,7 @@ proc ::ms::text::Line_Bottom { w } {
 #
 # Where:
 #
-# w       Should be the widget real address involved.
+# w       Should be the widget's real address involved.
 #
 # start   Position at which to start search.
 #
@@ -8719,7 +8755,7 @@ proc ::ms::text::Next_Index { w start op } {
 #
 # Where:
 #
-# w       Should be the widget real address involved.
+# w       Should be the widget's real address involved.
 #
 # start   Position at which to start search.
 #
@@ -8762,7 +8798,7 @@ proc ::ms::text::Next_Paragraph_Index { w start } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Next_Char { w } {
@@ -8772,14 +8808,14 @@ proc ::ms::text::Next_Char { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
@@ -8788,17 +8824,17 @@ proc ::ms::text::Next_Char { w } {
             }
         }
         true {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
@@ -8817,7 +8853,7 @@ proc ::ms::text::Next_Char { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Next_Word { w } {
@@ -8827,14 +8863,14 @@ proc ::ms::text::Next_Word { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w insert tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w insert tk::endOfWord] tk::startOfNextWord] }
@@ -8843,17 +8879,17 @@ proc ::ms::text::Next_Word { w } {
             }
         }
         true {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w insert tk::endOfWord] tk::startOfNextWord] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Index $w [::ms::text::Next_Index $w insert tk::endOfWord] tk::startOfNextWord] }
@@ -8872,7 +8908,7 @@ proc ::ms::text::Next_Word { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Next_Line { w } {
@@ -8882,14 +8918,14 @@ proc ::ms::text::Next_Line { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
@@ -8898,17 +8934,17 @@ proc ::ms::text::Next_Line { w } {
             }
         }
         true {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w 1] }
@@ -8927,7 +8963,7 @@ proc ::ms::text::Next_Line { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Next_Paragraph { w } {
@@ -8937,14 +8973,14 @@ proc ::ms::text::Next_Paragraph { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
@@ -8953,17 +8989,17 @@ proc ::ms::text::Next_Paragraph { w } {
             }
         }
         true {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w +1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Next_Paragraph_Index $w insert] }
@@ -8992,7 +9028,7 @@ proc ::ms::text::Next_Paragraph { w } {
 #
 # Where:
 #
-# w       Should be the widget real address involved.
+# w       Should be the widget's real address involved.
 #
 # start   Position at which to start search.
 #
@@ -9030,7 +9066,7 @@ proc ::ms::text::Previous_Index { w start op } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # pos   Position at which to start search.
 #
@@ -9066,7 +9102,7 @@ proc ::ms::text::Previous_Paragraph_Index { w pos } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Previous_Char { w } {
@@ -9076,14 +9112,14 @@ proc ::ms::text::Previous_Char { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
@@ -9092,17 +9128,17 @@ proc ::ms::text::Previous_Char { w } {
             }
         }
         true {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
@@ -9121,7 +9157,7 @@ proc ::ms::text::Previous_Char { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Previous_Word { w } {
@@ -9131,14 +9167,14 @@ proc ::ms::text::Previous_Word { w } {
             # Check if the simple text is linked to an horizontal scrollbar.
             switch -- $::ms::current($w,xscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
@@ -9147,17 +9183,17 @@ proc ::ms::text::Previous_Word { w } {
             }
         }
         true {
-            # Check if the widget horizontal scrollbar is active or not.
+            # Check if the widget's horizontal scrollbar is active or not.
             switch -- $::ms::data($w,scrollx) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_X   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
@@ -9176,7 +9212,7 @@ proc ::ms::text::Previous_Word { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Previous_Line { w } {
@@ -9186,14 +9222,14 @@ proc ::ms::text::Previous_Line { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
@@ -9202,17 +9238,17 @@ proc ::ms::text::Previous_Line { w } {
             }
         }
         true {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Line_Index $w -1] }
@@ -9231,7 +9267,7 @@ proc ::ms::text::Previous_Line { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Previous_Paragraph { w } {
@@ -9241,14 +9277,14 @@ proc ::ms::text::Previous_Paragraph { w } {
             # Check if the simple text is linked to an vertical scrollbar.
             switch -- $::current($w,yscrollcommand) {
                 ""  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
                 default {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
@@ -9257,17 +9293,17 @@ proc ::ms::text::Previous_Paragraph { w } {
             }
         }
         true {
-            # Check if the widget vertical scrollbar is active or not.
+            # Check if the widget's vertical scrollbar is active or not.
             switch -- $::ms::data($w,scrolly) {
                 off {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Parent_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
                     }
                 }
                 on  {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         readonly { ::ms::Scroll_Widget_Y   $w -1 units }
                         normal   { ::ms::text::Move_Cursor $w [::ms::text::Previous_Paragraph_Index $w insert] }
@@ -9296,11 +9332,11 @@ proc ::ms::text::Previous_Paragraph { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_All { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -9325,13 +9361,13 @@ proc ::ms::text::Select_All { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # new   A new position for the insertion cursor (the cursor hasn't actually been moved to this position yet).
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Key { w new } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -9386,11 +9422,11 @@ proc ::ms::text::Select_Key { w new } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_None { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -9428,11 +9464,11 @@ proc ::ms::text::Select_None { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_PageUp { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w -1] }
     }
@@ -9446,11 +9482,11 @@ proc ::ms::text::Select_PageUp { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_PageDown { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Scroll_Pages $w +1] }
     }
@@ -9474,11 +9510,11 @@ proc ::ms::text::Select_PageDown { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_Start { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w {insert display linestart} }
     }
@@ -9492,11 +9528,11 @@ proc ::ms::text::Select_Line_Start { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_End { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w {insert display lineend} }
     }
@@ -9510,11 +9546,11 @@ proc ::ms::text::Select_Line_End { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_Top { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w 1.0 }
     }
@@ -9528,11 +9564,11 @@ proc ::ms::text::Select_Line_Top { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Line_Bottom { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w {end - 1 indices} }
     }
@@ -9556,11 +9592,11 @@ proc ::ms::text::Select_Line_Bottom { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Char { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Next_Index $w insert ::tk::endOfCluster] }
     }
@@ -9574,11 +9610,11 @@ proc ::ms::text::Select_Next_Char { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Word { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Next_Index $w insert tk::endOfWord] }
     }
@@ -9592,11 +9628,11 @@ proc ::ms::text::Select_Next_Word { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Line { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Line_Index $w 1] }
     }
@@ -9610,11 +9646,11 @@ proc ::ms::text::Select_Next_Line { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Next_Paragraph { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Next_Paragraph_Index $w insert] }
     }
@@ -9638,11 +9674,11 @@ proc ::ms::text::Select_Next_Paragraph { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Char { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Previous_Index $w insert ::tk::startOfCluster] }
     }
@@ -9656,11 +9692,11 @@ proc ::ms::text::Select_Previous_Char { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Word { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Previous_Index $w insert ::tk::startOfPreviousWord] }
     }
@@ -9674,11 +9710,11 @@ proc ::ms::text::Select_Previous_Word { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Line { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Line_Index $w -1] }
     }
@@ -9692,11 +9728,11 @@ proc ::ms::text::Select_Previous_Line { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Select_Previous_Paragraph { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal { ::ms::text::Select_Key $w [::ms::text::Previous_Paragraph $w insert] }
     }
@@ -9720,11 +9756,11 @@ proc ::ms::text::Select_Previous_Paragraph { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Undo { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -9770,11 +9806,11 @@ proc ::ms::text::Undo { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Redo { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -9813,11 +9849,11 @@ proc ::ms::text::Redo { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::text::Transpose { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
@@ -9884,7 +9920,7 @@ proc ::ms::text::Transpose { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # Return '1' if the selection exists and contains the insertion cursor, otherwise returns '0'.
 proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
@@ -9910,7 +9946,7 @@ proc ::ms::text::The_Cursor_Is_Inside_The_Selection { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # pos   The desired new position for the cursor in the window.
 #
@@ -9946,7 +9982,7 @@ proc ::ms::text::Move_Cursor { w pos } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # n   Number of pages to scroll:
 #        -1 --> one page up
@@ -9988,7 +10024,7 @@ proc ::ms::text::Scroll_Pages { w n } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) relative coordinates at the time of the event.
 #
