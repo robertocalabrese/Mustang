@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -114,7 +114,7 @@
 #                                                    If there isn't one, the **-anchor** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-anchor** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also *-justify*.
 #
@@ -175,7 +175,7 @@
 #                                                    If there isn't one, the **-borderwidth** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-borderwidth** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also **-bordercolor**.
 #
@@ -208,7 +208,7 @@
 #                                                    If there isn't one, the **-cursor** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-cursor** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 # **-darkcolor**      It's a list that specifies the color to use as darkcolor.
 #                     See the **COLOR OPTION** section to know how this list should be composed.
@@ -244,7 +244,7 @@
 #                                                    If there isn't one, the **-font** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-font** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also **-anchor**, **-foreground**, **-justify**, **-text**, **-textvariable** and **-wraplength**.
 #
@@ -280,7 +280,7 @@
 #                                                    If there isn't one, the **-justify** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-justify** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also **-anchor**, **-font**, **-foreground**, **-text**, **-textvariable** and **-wraplength**.
 #
@@ -339,22 +339,18 @@
 #                     See also **-maximum**, **-mode** and **-value**.
 #
 # **-state**          Specifies the state for the widget.
+#                     Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
 #
-#                     Note: Progressbars have only the **normal** state.
-#
-#                     Note: This option will be ignored if provided while creating the widget.
-#                           Attempts to change this value after the widget was created, by using the **configure** command,
-#                           will be ignored by mustang.
-#                           This option can only be retrieved.
+#                     Progressbars have only the **normal** state.
 #
 #                     It's set to **normal**.
 #
-# **-style**          Specifies a custom widget style.
-#                     If not provided, defaults to **TProgressbar**.
-#
+# **-style**          Specifies a custom widget's style.
 #                     The *style* provided should already exists at the time the widget is created.
 #
 #                     See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                     If not provided, defaults to **TProgressbar**.
 #
 # **-takefocus**      Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                     and **Shift-Tab**).
@@ -435,7 +431,7 @@
 #                                                    If there isn't one, the **-thickness** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-thickness** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also **-length**.
 #
@@ -451,7 +447,7 @@
 #                                                    If there isn't one, the **-troughcolor** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-troughcolor** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also **-background** and **-foreground**.
 #
@@ -489,7 +485,7 @@
 #                                                    If there isn't one, the **-wraplength** of the **TProgressbar** style
 #                                                    will be used instead.
 #                                                    The **-wraplength** will not abide by its mapping values, if any.
-#                                                    It is not supposed to change when the widget state changes.
+#                                                    It is not supposed to change when the widget's dynamic state changes.
 #
 #                     See also **-anchor**, **-font**, **-foreground**, **-justify**, **-length**, **-text* and **-textvariable**.
 #
@@ -501,14 +497,14 @@
 #
 #   *window* *action* ?*arg* *arg* ... *arg*?
 #
-# *Window* is the name of the command, which is the same as the progressbar widget pathname.
+# *Window* is the name of the command, which is the same as the progressbar widget's pathname.
 # *Actions* and the *arg*s determine the exact behavior of the *window* command.
 #
 # The following commands are possible for progressbar widgets:
 #
 #   *window* **cget** ?*option*?
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the progressbar command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the progressbar command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -519,7 +515,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -530,8 +526,8 @@
 #     does not lie within any element. *X* and *y* are pixel coordinates relative to the widget.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -543,8 +539,8 @@
 #     If omitted, *interval* defaults to 50 milliseconds (20 steps/second).
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -586,14 +582,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -1062,16 +1058,16 @@ interp alias {} ttk::progressbar {} ::ms::progressbar::Command
 
 ## Command
 #
-# Replace the Tk **ttk::progressbar** widget command.
+# Replace the Tk **ttk::progressbar** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1097,7 +1093,7 @@ proc ::ms::progressbar::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)        $::ms::default(progressbar,class)
             set ::ms::default($w,cmenu)        $::ms::default(progressbar,cmenu)
             set ::ms::default($w,length)       $::ms::default(progressbar,length)
@@ -1113,7 +1109,7 @@ proc ::ms::progressbar::Command { window { args "" } } {
             set ::ms::default($w,value)        $::ms::default(progressbar,value)
             set ::ms::default($w,variable)     $::ms::default(progressbar,variable)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)        $::ms::default(progressbar,class)
             set ::ms::current($w,cmenu)        $::ms::default(progressbar,cmenu)
             set ::ms::current($w,length)       $::ms::default(progressbar,length)
@@ -1129,7 +1125,7 @@ proc ::ms::progressbar::Command { window { args "" } } {
             set ::ms::current($w,value)        $::ms::default(progressbar,value)
             set ::ms::current($w,variable)     $::ms::default(progressbar,variable)
 
-            # Set the widget variables needed for internal mechanisms.
+            # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) progressbar
 
             # Set each styleable option to be managed by Tk.
@@ -1466,7 +1462,7 @@ proc ::ms::progressbar::Command { window { args "" } } {
 
             # Note: 'arrowsize' is only understood by the clam engine while 'thickness' is understood by the other engines.
 
-            # Set the widget style name.
+            # Set the widget's style name.
             set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
                                                    "_bc=" $::ms::current($w,bordercolor) \
                                                    "_bw=" $::ms::current($w,borderwidth) \
@@ -1476,7 +1472,7 @@ proc ::ms::progressbar::Command { window { args "" } } {
                                                    "_tc=" $::ms::current($w,troughcolor) \
                                                    "." $parent_style];
 
-            # If needed, create the widget style name.
+            # If needed, create the widget's style name.
             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                 _ttk_style configure $::ms::style($w,widget)   -arrowsize $::ms::current($w,thickness) \
                                                               -background $::ms::current($w,background) \
@@ -1487,11 +1483,11 @@ proc ::ms::progressbar::Command { window { args "" } } {
                                                                -thickness $::ms::current($w,thickness) \
                                                              -troughcolor $::ms::current($w,troughcolor);
 
-                # Add the widget style name to the theme styles list created by mustang.
+                # Add the widget's style name to the theme styles list created by mustang.
                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
             }
 
-            # Initialize the widget mapping.
+            # Initialize the widget's mapping.
             set mapping [list ]
 
             # background
@@ -1538,11 +1534,11 @@ proc ::ms::progressbar::Command { window { args "" } } {
                 }
             }
 
-            # If needed, create the widget mapping.
+            # If needed, create the widget's mapping.
             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                # Add the widget mapping to the stylemap list containing all the mappings
+                # Add the widget's mapping to the stylemap list containing all the mappings
                 # created by mustang for the current theme.
                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
             }
@@ -1566,7 +1562,7 @@ proc ::ms::progressbar::Command { window { args "" } } {
                                   -variable $::ms::current($w,variable) \
                                 -wraplength $::ms::current($w,wraplength);
 
-            # Set the widget toplevel.
+            # Set the widget's toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
             ######################
@@ -1590,48 +1586,56 @@ proc ::ms::progressbar::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::progressbar::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::progressbar::Pathname_Cmd $w]
             }
 
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w
-
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short address relative to its real address, 'w'.
+            # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the progressbar widgets real address list.
-            lappend ::ms::addr(progressbar) $w
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
 
-            # Add the widget address to the progressbar classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),progressbar,addrs) $w
+            # Set the actual widget's real address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w
 
-            # Add the widget address to the progressbar classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the progressbar widgets real address list.
+            lappend ::ms::addr(progressbar,classtype) $w
+
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
+
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the progressbar classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),progressbar,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the progressbar classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the progressbar classtype.
             if { $::ms::current($w,style) ni $::ms::style(progressbar,classtype) } {
                 lappend ::ms::style(progressbar,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -1649,13 +1653,13 @@ proc ::ms::progressbar::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -1728,7 +1732,7 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                             ##                                              ##
                             ##################################################
 
-                            # Check the widget options provided.
+                            # Check the widget's options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
                                     -anchor {
@@ -1876,42 +1880,39 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                                             normal   { set ::ms::current($w,state) $value }
                                         }
                                     }
-                                    -style  {
-                                        if { $value ni $::ms::style($::ms::theme) } {
-                                            continue
-                                        }
+                                    -style {
+                                        if { $value in $::ms::style($::ms::theme) } {
+                                            # Remove the widget's real address from the style list that contains all the progressbar classtype real addresses
+                                            # with style '::ms::current($w,style)'.
+                                            set index [lsearch -exact $::ms::style($::ms::current($w,style),progressbar,addrs) $w]
+                                            switch -- $index {
+                                                -1      {}
+                                                default { set ::ms::style($::ms::current($w,style),progressbar,addrs) [lremove $::ms::style($::ms::current($w,style),progressbar,addrs) $index] }
+                                            }
 
-                                        # Remove the widget address from the progressbar classtype real address list that contains all the
-                                        # widgets addresses with style '::ms::current($w,style)'.
-                                        set index [lsearch -exact $::ms::style($::ms::current($w,style),progressbar,addrs) $w]
-                                        switch -- $index {
-                                            -1      {}
-                                            default { set ::ms::style($::ms::current($w,style),progressbar,addrs) [lremove $::ms::style($::ms::current($w,style),progressbar,addrs) $index] }
-                                        }
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
+                                            lappend ::ms::style($value,progressbar,addrs) $w
 
-                                        # Add the widget address to the address list that contains all the
-                                        # widgets addresses with style 'value'.
-                                        lappend ::ms::style($value,progressbar,addrs) $w
-
-                                        # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
-                                        # for the progressbar classtype.
-                                        switch -- [llength $::ms::style($::ms::current($w,style),progressbar,addrs)] {
-                                            0   {
-                                                set index [lsearch -exact $::ms::style(progressbar,classtype) $::ms::current($w,style)]
-                                                switch -- $index {
-                                                    -1      {}
-                                                    default { set ::ms::style(progressbar,classtype) [lremove $::ms::style(progressbar,classtype) $index] }
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+                                            # for the progressbar classtype.
+                                            switch -- [llength $::ms::style($::ms::current($w,style),progressbar,addrs)] {
+                                                0   {
+                                                    set index [lsearch -exact $::ms::style(progressbar,classtype) $::ms::current($w,style)]
+                                                    switch -- $index {
+                                                        -1      {}
+                                                        default { set ::ms::style(progressbar,classtype) [lremove $::ms::style(progressbar,classtype) $index] }
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        # If needed, add 'value' to the available styles for the progressbar classtype.
-                                        if { $value ni $::ms::style(progressbar,classtype) } {
-                                            lappend ::ms::style(progressbar,classtype) $value
-                                        }
+                                            # If needed, add 'value' to the available styles for the progressbar classtype.
+                                            if { $value ni $::ms::style(progressbar,classtype) } {
+                                                lappend ::ms::style(progressbar,classtype) $value
+                                            }
 
-                                        # Update the current style associated with the widget with 'value'.
-                                        set ::ms::current($w,style) $value
+                                            # Update the current style associated with the widget with 'value'.
+                                            set ::ms::current($w,style) $value
+                                        }
                                     }
                                     -takefocus {
                                         switch -nocase -- $value {
@@ -2053,7 +2054,7 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
 
                             # Note: 'arrowsize' is only understood by the clam engine while 'thickness' is understood by the other engines.
 
-                            # Set the widget style name.
+                            # Set the widget's style name.
                             set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
                                                                    "_bc=" $::ms::current($w,bordercolor) \
                                                                    "_bw=" $::ms::current($w,borderwidth) \
@@ -2063,7 +2064,7 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                                                                    "_tc=" $::ms::current($w,troughcolor) \
                                                                    "." $parent_style];
 
-                            # If needed, create the widget style name.
+                            # If needed, create the widget's style name.
                             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                                 _ttk_style configure $::ms::style($w,widget)   -arrowsize $::ms::current($w,thickness) \
                                                                               -background $::ms::current($w,background) \
@@ -2074,11 +2075,11 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                                                                                -thickness $::ms::current($w,thickness) \
                                                                              -troughcolor $::ms::current($w,troughcolor);
 
-                                # Add the widget style name to the theme styles list created by mustang.
+                                # Add the widget's style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
                             }
 
-                            # Initialize the widget mapping.
+                            # Initialize the widget's mapping.
                             set mapping [list ]
 
                             # background
@@ -2125,11 +2126,11 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # If needed, create the widget mapping.
+                            # If needed, create the widget's mapping.
                             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                                # Add the widget mapping to the stylemap list containing all the mappings
+                                # Add the widget's mapping to the stylemap list containing all the mappings
                                 # created by mustang for the current theme.
                                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                             }
@@ -2448,7 +2449,7 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
 
         # Note: 'arrowsize' is only understood by the clam engine while 'thickness' is understood by the other engines.
 
-        # Set the widget style name.
+        # Set the widget's style name.
         set ::ms::style($w,widget) [string cat "_bg=" $::ms::current($w,background) \
                                                "_bc=" $::ms::current($w,bordercolor) \
                                                "_bw=" $::ms::current($w,borderwidth) \
@@ -2458,7 +2459,7 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
                                                "_tc=" $::ms::current($w,troughcolor) \
                                                "." $parent_style($::ms::current($w,orient))];
 
-        # If needed, create the widget style name.
+        # If needed, create the widget's style name.
         if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
             _ttk_style configure $::ms::style($w,widget)   -arrowsize $::ms::current($w,thickness) \
                                                           -background $::ms::current($w,background) \
@@ -2469,11 +2470,11 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
                                                            -thickness $::ms::current($w,thickness) \
                                                          -troughcolor $::ms::current($w,troughcolor);
 
-            # Add the widget style name to the theme styles list created by mustang.
+            # Add the widget's style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
         }
 
-        # Initialize the widget mapping.
+        # Initialize the widget's mapping.
         set mapping [list ]
 
         # background
@@ -2520,11 +2521,11 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
             }
         }
 
-        # If needed, create the widget mapping.
+        # If needed, create the widget's mapping.
         if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
             _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-            # Add the widget mapping to the stylemap list containing all the mappings
+            # Add the widget's mapping to the stylemap list containing all the mappings
             # created by mustang for the current theme.
             lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
         }
@@ -2559,54 +2560,71 @@ proc ::ms::progressbar::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::progressbar::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget real address from the widgets real address list.
+    # Remove the widget's real address from the widgets real address list.
     set index [lsearch -exact $::ms::addr(reals) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
     }
 
-    # Remove the widget short address from the widgets short address list.
+    # Remove the widget's short address from the widgets short address list.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the progressbar widgets real address list.
-    set index [lsearch -exact $::ms::addr(progressbar) $w]
+    # Remove the widget's real address from the progressbar classtype real address list.
+    set index [lsearch -exact $::ms::addr(progressbar,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(progressbar) [lremove $::ms::addr(progressbar) $index] }
+        default { set ::ms::addr(progressbar,classtype) [lremove $::ms::addr(progressbar,classtype) $index] }
     }
 
-    # Remove the widget address from the progressbar classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),progressbar,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),progressbar,addrs) [lremove $::ms::class($::ms::current($w,class),progressbar,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the progressbar classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the progressbar classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),progressbar,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),progressbar,addrs) [lremove $::ms::style($::ms::current($w,style),progressbar,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the progressbar classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the progressbar classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),progressbar,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(progressbar,classtype) $::ms::current($w,style)]
@@ -2617,7 +2635,7 @@ proc ::ms::progressbar::Destroy { w } {
         }
     }
 
-    # Destroy the bindings for the widget real address in its related toplevel.
+    # Destroy the bindings for the widget's real address in its related toplevel.
     ::ms::Clean_Up $w
 
     # Destroy every widget's variables previously created.
@@ -2711,7 +2729,7 @@ proc ::ms::progressbar::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::progressbar::FocusOut { w } {
