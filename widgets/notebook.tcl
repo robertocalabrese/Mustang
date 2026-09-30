@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -160,7 +160,7 @@
 #                                                   If there isn't one, the **-cursor** of the **TNotebook** style
 #                                                   will be used instead.
 #                                                   The **-cursor** will not abide by its mapping values, if any.
-#                                                   It is not supposed to change when the widget state changes.
+#                                                   It is not supposed to change when the widget's dynamic state changes.
 #
 # **-darkcolor**     It's a list that specifies the color to use as darkcolor.
 #                    See the **COLOR OPTION** section to know how this list should be composed.
@@ -232,22 +232,18 @@
 #                    See also **-darkcolor**.
 #
 # **-state**         Specifies the state for the widget.
+#                    Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
 #
-#                    Note: Notebooks have only the **normal** state.
-#
-#                    Note: This option will be ignored if provided while creating the widget.
-#                          Attempts to change this value after the widget was created, by using the **configure** command,
-#                          will be ignored by mustang.
-#                          This option can only be retrieved.
+#                    Notebooks have only the **normal** state.
 #
 #                    It's set to **normal**.
 #
 # **-style**         Specifies a custom widget style.
-#                    If not provided, defaults to **TNotebook**.
-#
 #                    The *style* provided should already exists at the time the widget is created.
 #
 #                    See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                    If not provided, defaults to **TNotebook**.
 #
 # **-tabposition**   Specifies the position of the tab row or column as a string of length 1 or 2.
 #                    The first character indicates the side as **n**, **s**, **w**, or **e**, while the second character (if present)
@@ -262,7 +258,7 @@
 #                                                   If there isn't one, the **-tabposition** of the **TNotebook** style
 #                                                   will be used instead.
 #                                                   The **-tabposition** will not abide by its mapping values, if any.
-#                                                   It is not supposed to change when the widget state changes.
+#                                                   It is not supposed to change when the widget's dynamic state changes.
 #
 # **-takefocus**     Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                    and **Shift-Tab**).
@@ -330,7 +326,7 @@
 #
 #   *window* **cget** *option*
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the notebook command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the notebook command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -341,7 +337,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -377,8 +373,8 @@
 #     See **TAB OPTIONS** for the list of available options.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -391,8 +387,8 @@
 #     If *tabid* is omitted, returns the address of the currently selected tab.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire the widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire the widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -498,7 +494,7 @@
 #
 #### TAB IDENTIFIERS:
 #
-# The *tabid* argument to the widget commands may take any of the following forms:
+# The *tabid* argument to the widget's commands may take any of the following forms:
 #
 #  - An integer between zero and the number of tabs.
 #  - The address of a subwindow (tab).
@@ -1059,16 +1055,16 @@ interp alias {} ttk::notebook {} ::ms::notebook::Command
 
 ## Command
 #
-# Replace the Tk **ttk::notebook** widget command.
+# Replace the Tk **ttk::notebook** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1490,50 +1486,58 @@ proc ::ms::notebook::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::notebook::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::notebook::Pathname_Cmd $w]
             }
 
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w
-
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short addresses relative to its real address, 'w'.
-            # They will all point to the widget hull object short address.
+            # Set the widget's short addresses relative to its real address, 'w'.
+            # They will all point to the widget's hull object short address.
             set ::ms::addr($w,short)      $short_addr
             set ::ms::addr($w.tabs,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the notebook widgets real address list.
-            lappend ::ms::addr(notebook) $w
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
 
-            # Add the widget address to the notebook classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),notebook,addrs) $w
+            # Set the actual widget's real address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w
 
-            # Add the widget address to the notebook classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the notebook widgets real address list.
+            lappend ::ms::addr(notebook,classtype) $w
+
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
+
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the notebook classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),notebook,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the notebook classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the notebook classtype.
             if { $::ms::current($w,style) ni $::ms::style(notebook,classtype) } {
                 lappend ::ms::style(notebook,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -1551,13 +1555,13 @@ proc ::ms::notebook::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -1673,7 +1677,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
-                            # Note: The widget new dimensions will be updated only if they phisically change
+                            # Note: The widget's new dimensions will be updated only if they phisically change
                             #       after the configure command was issued.
                             #
                             #       Their registration (if any) is done in the '::ms::notebook::Configure' event procedure.
@@ -1759,19 +1763,18 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TNotebook]
                                             }
 
-                                            # Remove the widget address from the notebook classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the notebook classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),notebook,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),notebook,addrs) [lremove $::ms::style($::ms::current($w,style),notebook,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,notebook,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the notebook classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),notebook,addrs)] {
                                                 0   {
@@ -1912,7 +1915,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                                               -lightcolor $::ms::current($w,lightcolor) \
                                                                              -tabposition $::ms::current($w,tabposition);
 
-                                # Add the widget style name to the theme styles list created by mustang.
+                                # Add the widget's style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
                             }
 
@@ -1955,7 +1958,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                                 -takefocus $::ms::current($w,takefocus) \
                                                                     -width $::ms::temp($w,width);
 
-                            # Set the widget toplevel.
+                            # Set the widget's toplevel.
                             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                             ##########################
@@ -2752,7 +2755,7 @@ proc ::ms::notebook::Style_Update { stylename caller_info } {
                                                           -lightcolor $::ms::current($w,lightcolor) \
                                                          -tabposition $::ms::current($w,tabposition);
 
-            # Add the widget style name to the theme styles list created by mustang.
+            # Add the widget's style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
         }
 
@@ -2864,11 +2867,11 @@ proc ::ms::notebook::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::Configure { w } {
-    # Check if we are here due to a widget configure command or not.
+    # Check if we are here due to a widget's configure command or not.
     switch -- [info exists ::ms::temp($w,height)] {
         1   {
             set ::ms::current($w,height) $::ms::temp($w,height)
@@ -2885,54 +2888,71 @@ proc ::ms::notebook::Configure { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget short address from the list of all available short addresses.
-    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
-    }
-
-    # Remove the widget real address from the list of all available real addresses.
+    # Remove the widget's real address from the list of all available real addresses.
     set index [lsearch -exact $::ms::addr(reals) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
     }
 
-    # Remove the widget address from the notebook widgets real address list.
-    set index [lsearch -exact $::ms::addr(notebook) $w]
+    # Remove the widget's short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(notebook) [lremove $::ms::addr(notebook) $index] }
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the notebook classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),notebook,addrs) $w]
+    # Remove the widget's real address from the notebook classtype real address list.
+    set index [lsearch -exact $::ms::addr(notebook,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),notebook,addrs) [lremove $::ms::class($::ms::current($w,class),notebook,addrs) $index] }
+        default { set ::ms::addr(notebook,classtype) [lremove $::ms::addr(notebook,classtype) $index] }
     }
 
-    # Remove the widget address from the notebook classtype real address list with style '::ms::current($w,style)'.
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
+    }
+
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the notebook classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),notebook,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),notebook,addrs) [lremove $::ms::style($::ms::current($w,style),notebook,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the notebook classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the notebook classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),notebook,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(notebook,classtype) $::ms::current($w,style)]
@@ -2943,7 +2963,7 @@ proc ::ms::notebook::Destroy { w } {
         }
     }
 
-    # Destroy the bindings for the widget real address in its related toplevel.
+    # Destroy the bindings for the widget's real address in its related toplevel.
     ::ms::notebook::Clean_Up $w
 
     # Destroy every widget's variables previously created.
@@ -3002,7 +3022,7 @@ proc ::ms::notebook::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::FocusOut { w } {
@@ -3028,7 +3048,7 @@ proc ::ms::notebook::FocusOut { w } {
 #
 # Where:
 #
-# w    Should be the widget real address involved.
+# w    Should be the widget's real address involved.
 #
 # x,
 # y    Should be the coordinates of the event relative to the widget.
@@ -3108,7 +3128,7 @@ proc ::ms::notebook::Select_Tab { w x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::Reset_Cursor { w } {
@@ -3126,7 +3146,7 @@ proc ::ms::notebook::Reset_Cursor { w } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates of the event.
 #        These values should be provided by the <Motion> event.
@@ -3178,7 +3198,7 @@ proc ::ms::notebook::Set_Cursor { w x y } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # tab   Should be the tab address to activate.
 #
@@ -3232,7 +3252,7 @@ proc ::ms::notebook::Activate_Tab { w tab } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::Clean_Up { w } {
@@ -3255,7 +3275,7 @@ proc ::ms::notebook::Clean_Up { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # dir      Should be the amount of the movement.
 #          Its sign determines the direction to take, **1** means forward and **-1** means backward.
@@ -3300,7 +3320,7 @@ proc ::ms::notebook::Cycle_Tab { w dir { factor 1.0 } } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::Enable_Traversal { w } {
@@ -3360,7 +3380,7 @@ proc ::ms::notebook::Enable_Traversal { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # BUGS: This routine should follow the geometry manager hierarchy, not window ancestry,
 #       but that information is not available in Tk.
@@ -3394,7 +3414,7 @@ proc ::ms::notebook::Enclosing_Notebook { w } {
 #
 # Where:
 #
-# toplevel   Should be the toplevel related to the widget real address involved.
+# toplevel   Should be the toplevel related to the widget's real address involved.
 #
 # key        Should be the mnemonic key to search for.
 #
@@ -3427,7 +3447,7 @@ proc ::ms::notebook::Mnemonic_Activation { toplevel key } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be the mnemonic key to search for.
 #
@@ -3455,7 +3475,7 @@ proc ::ms::notebook::Mnemonic_Tab { w key } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::notebook::Traverse_Clean_Up { w } {
@@ -3471,7 +3491,7 @@ proc ::ms::notebook::Traverse_Clean_Up { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # dir   Should be the amount of the movement.
 #       Its sign determines the direction to take, **1** means forward and **-1** means backward.
