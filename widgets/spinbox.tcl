@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -70,7 +70,7 @@
 # A spinbox widget is an entry widget with built-in up and down buttons that are used to either modify a numeric value
 # or to select among a set of values. The widget implements all the features of the entry widget including support of
 # the **-textvariable** option to link the value displayed by the widget to a Tcl variable.
-# Spinbox widgets support horizontal scrolling with the standard **-xscrollcommand** option and **xview** widget command
+# Spinbox widgets support horizontal scrolling with the standard **-xscrollcommand** option and **xview** widget's command
 # but only if the **-datatype** option for the spinbox is **none** or the **-maxlength** option value is **0**.
 #
 # Two kind of spinbox are possible:
@@ -132,7 +132,7 @@
 #                                                             If there isn't one, the **-arrowsize** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-arrowsize** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-arrowcolor**.
 #
@@ -188,7 +188,7 @@
 #                                                             If there isn't one, the **-charwidth** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-charwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-datatype** and **-maxlength**.
 #
@@ -230,7 +230,7 @@
 #                                                             If there isn't one, the **-cursor** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-cursor** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-darkcolor**               It's a list that specifies the color to use as darkcolor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -306,7 +306,7 @@
 #
 # **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
 #                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
-#                              selecting outside the widget deselects any widget selection, and the widget will respond to selection retrieval
+#                              selecting outside the widget deselects any widget's selection, and the widget will respond to selection retrieval
 #                              requests when it has a selection.
 #
 #                              If a spinbox is exporting its selection then it will observe the standard X11 protocols for handling the selection;
@@ -371,7 +371,7 @@
 #                                                             If there isn't one, the **-focuswidth** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-focuswidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-font**                    Specifies the font to use for the text displayed by the widget.
 #                              The widget will accept as fontname any font created with the **font** command, including any Tk
@@ -387,7 +387,7 @@
 #                                                             If there isn't one, the **-font** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-font** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-foreground**.
 #
@@ -409,14 +409,14 @@
 #
 # **-from**                    Specifies the lowest value acceptable for a numerical datatype (integer, posinteger, posreal and real).
 #                              This is used in conjunction with **-to** and **-increment** to set a numerical range.
-#                              Note that the *from* value will be ignored for any other widget datatypes.
+#                              Note that the *from* value will be ignored for any other widget's datatypes.
 #
 #                              The following rules must be taked in account when providing the *from* value:
 #                                - For **posinteger** and **posreal** datatypes only, the *from* value must be greater or equal to zero.
 #                                - For any numerical datatypes the *from* value must always be lesser or equal than the *to* value.
 #
 #                              Failing to respect one or both of these rules will cause the *from* and *to* values provided to be ignored
-#                              and their defaults values for the widget datatype to be used instead.
+#                              and their defaults values for the widget's datatype to be used instead.
 #
 #                              A limit check will be performed during the validation process to assure that the value inserted by the user
 #                              is always between the *from* and *to* values (*from* and *to* included).
@@ -429,7 +429,7 @@
 #                              See also **-datatype**, **-decimals**, **-increment**, **-maxlength** and **-to**.
 #
 # **-increment**               Should be a positive number (an integer or a floating-point value depending on the datatype specified for
-#                              the widget) specifying the change in value to be applied each time one of the widget spin buttons is pressed.
+#                              the widget) specifying the change in value to be applied each time one of the widget's spin buttons is pressed.
 #                              The up button applies a positive increment, the down button applies a negative increment.
 #
 #                              If not provided, defaults to:
@@ -467,7 +467,7 @@
 #                                                             If there isn't one, the **-insertwidth** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-insertwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-insertcolor**.
 #
@@ -496,7 +496,7 @@
 #                                                             If there isn't one, the **-justify** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-justify** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-lightcolor**              It's a list that specifies the color to use as lightcolor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -560,7 +560,7 @@
 #                                                             If there isn't one, the **-padding** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-padding** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-placeholder**             Specifies a help text string to display if no text is otherwise displayed, that is when the widget is empty.
 #                              The placeholder text is displayed using the values of the **-font**, **-justify** and **-placeholderforeground**
@@ -619,7 +619,7 @@
 #                                                             If there isn't one, the **-selectborderwidth** of the **TSpinbox** style
 #                                                             will be used instead.
 #                                                             The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-selectbackground** and **-selectforeground**.
 #
@@ -640,18 +640,18 @@
 #                              See also **-selectbackground** and **-selectborderwidth**.
 #
 # **-state**                   Specifies the state for the widget.
-#                              May be set to **normal**, **readonly** or **disabled**.
-#                              This is a write-only option: setting it changes the widget state, but the state widget command does not
-#                              affect the *-state* option.
+#                              Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
+#
+#                              Allowed states values are **normal**, **readonly** or **disabled**.
 #
 #                              If not provided, defaults to **normal**.
 #
-# **-style**                   Specifies a custom widget style.
-#                              If not provided, defaults to **TSpinbox**.
-#
+# **-style**                   Specifies a custom widget's style.
 #                              The *style* provided should already exists at the time the widget is created.
 #
 #                              See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                              If not provided, defaults to **TSpinbox**.
 #
 # **-takefocus**               Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                              and **Shift-Tab**).
@@ -675,14 +675,14 @@
 #
 # **-to**                      Specifies the highest value acceptable for a numerical datatype (integer, posinteger, posreal and real).
 #                              This is used in conjunction with **-from** and **-increment** to set a numerical range.
-#                              Note that the *to* value will be ignored for any other widget datatypes.
+#                              Note that the *to* value will be ignored for any other widget's datatypes.
 #
 #                              The following rules must be taked in account when providing the *to* value:
 #                                - For 'posinteger' and 'posreal' datatypes only, the *to* value must be greater or equal to zero.
 #                                - For any numerical datatypes the *to* value must always be greater or equal than the *from* value.
 #
 #                              Failing to respect one or both of these rules will cause the *from* and *to* values provided to be ignored
-#                              and their defaults values for the widget datatype to be used instead.
+#                              and their defaults values for the widget's datatype to be used instead.
 #
 #                              A limit check will be performed during the validation process to assure that the value inserted by the user
 #                              is always between the *from* and *to* values (*from* and *to* included).
@@ -702,18 +702,18 @@
 #
 #                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
 #
-#                                 none     --> The validation will only occur when specifically requested by the validate widget command.
+#                                 none     --> The validation will only occur when specifically requested by the validate widget's command.
 #                                 focus    --> The spinbox is revalidated when the spinbox receives or loses focus.
 #                                 focusin  --> The spinbox is revalidated when the spinbox receives focus.
 #                                 focusout --> The spinbox is revalidated when the spinbox loses focus.
 #                                 key      --> The spinbox will be prevalidated prior to each edit (specifically, whenever the insert or delete
-#                                              widget commands are called). If prevalidation fails, the edit is rejected.
+#                                              widget's commands are called). If prevalidation fails, the edit is rejected.
 #                                 all      --> Validation is performed for all above conditions.
 #
 #                              Note that every **-datatype** except **none** will force this value to **key** to perform automatic validation.
 #
 #                              The **-invalidcommand** is evaluated whenever the **-validatecommand** returns a false value.
-#                              The **-validatecommand** and **-invalidcommand** may modify the spinbox widget's value via the widget insert or
+#                              The **-validatecommand** and **-invalidcommand** may modify the spinbox widget's value via the widget's insert or
 #                              delete commands, or by setting the linked **-textvariable**.
 #                              If either does so during prevalidation, then the edit is rejected regardless of the value returned by the
 #                              **-validatecommand**. If **-validatecommand** is empty, validation always succeeds.
@@ -770,7 +770,7 @@
 #
 #   *window* *action* ?*arg* *arg* ... *arg*?
 #
-# *Window* is the name of the command, which is the same as the spinbox widget pathname.
+# *Window* is the name of the command, which is the same as the spinbox widget's pathname.
 # *Actions* and the *arg*s determine the exact behavior of the *window* command.
 #
 # The following commands are possible for spinbox widgets:
@@ -784,7 +784,7 @@
 #
 #   *window* **cget** ?*option*?
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the spinbox command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the spinbox command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -795,7 +795,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -827,8 +827,8 @@
 #     Returns the empty string.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -856,8 +856,8 @@
 #     Returns the empty string.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -902,7 +902,7 @@
 #
 #### INDICES:
 #
-# Many of the spinbox widget commands take one or more indices as arguments.
+# Many of the spinbox widget's commands take one or more indices as arguments.
 # An index specifies a particular character in the spinbox's string, in any of the following ways:
 #
 #   **number**
@@ -1028,10 +1028,10 @@
 #
 # In the **readonly** state, no insert cursor is displayed, the text can be selected (depending on the theme), the spinbox
 # cannot be edited (specifically: the insert and delete commands have no effect) and the popdown window can be used to
-# change the widget textarea value.
+# change the widget's textarea value.
 #
 # In the **normal** state, the insert cursor is displayed, the text can be selected, the spinbox can be edited and the
-# popdown window can be also used to change the widget textarea value.
+# popdown window can be also used to change the widget's textarea value.
 #
 # Note that changes to the linked **-textvariable** will still be reflected in the spinbox, even if it is **disabled**.
 #
@@ -1066,14 +1066,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -1141,25 +1141,25 @@
 # Note: In the descriptions below, **word** refers to a contiguous group of letters, digits, or "_" characters, or any single
 #       character other than these.
 #
-# 1.  Clicking the left mouse button inside the widget textarea will put the insert cursor just before the character underneath
+# 1.  Clicking the left mouse button inside the widget's textarea will put the insert cursor just before the character underneath
 #     the mouse cursor, sets the input focus to this widget, and clears any selection in the widget.
 #     Dragging with mouse **button 1** down strokes out a selection between the insert cursor and the character under the mouse.
 #
-#     Clicking the left mouse button upon the widget arrow will display the popdown window.
+#     Clicking the left mouse button upon the widget's arrow will display the popdown window.
 #
-# 2.  Double-clicking with the left mouse button inside the widget textarea selects the word under the mouse and positions the
+# 2.  Double-clicking with the left mouse button inside the widget's textarea selects the word under the mouse and positions the
 #     insert cursor at the end of the word. Dragging after a double click strokes out a selection consisting of whole words.
 #
-# 3.  Triple-clicking with the left mouse button inside the widget textarea selects all of the text in the widget textarea and
+# 3.  Triple-clicking with the left mouse button inside the widget's textarea selects all of the text in the widget's textarea and
 #     positions the insert cursor at the end of the line. The ends of the selection can be adjusted by dragging with left mouse
 #     button while the **Shift** key is down. If the button is double-clicked before dragging then the selection will be adjusted
 #     in units of whole words.
 #
-# 4.  Clicking the left mouse button inside the widget textarea with the **Control** key down will position the insert cursor in
-#     the widget textarea without affecting the selection.
+# 4.  Clicking the left mouse button inside the widget's textarea with the **Control** key down will position the insert cursor in
+#     the widget's textarea without affecting the selection.
 #
-# 5.  If the mouse is dragged out of the widget textarea on the left or right sides while the left mouse button is pressed and
-#     the datatype of the spinbox allows it, the widget textarea will automatically scroll to make more text visible (if there
+# 5.  If the mouse is dragged out of the widget's textarea on the left or right sides while the left mouse button is pressed and
+#     the datatype of the spinbox allows it, the widget's textarea will automatically scroll to make more text visible (if there
 #     is more text off-screen on the side where the mouse left the window).
 #
 # 6.  If the arrow up button is pressed than **incremental spinbox** will increment the value in the textarea by **increment** while
@@ -1177,11 +1177,11 @@
 # Note: Under virtual machines, some of the bindings shortcut keys explained below may be different depending on the virtual
 #       machine program used (Parallels, VirtualBox, VMWare...), on the host machine and on the virtualized operating system in use.
 #
-# 1.  If any normal printing characters are typed in an widget textarea (according to its datatype), they are inserted at the
+# 1.  If any normal printing characters are typed in an widget's textarea (according to its datatype), they are inserted at the
 #     point of the insert cursor.
 #
 # 2.  The **Left** and **Right** keys move the insert cursor one character to the left or right; they also clear any selection in
-#     the widget textarea. If **Shift-Left** or **Shift-Right** is typed then the insertion cursor moves and the selection is
+#     the widget's textarea. If **Shift-Left** or **Shift-Right** is typed then the insertion cursor moves and the selection is
 #     extended to include the new character. **Control-Left** and **Control-Right** move the insert cursor by words, and
 #     **Control-Shift-Left** and **Control-Shift-Right** move the insert cursor by words and also extend the selection.
 #
@@ -1195,23 +1195,23 @@
 #     In both cases the value in the textarea will be validated before the actions occurs.
 #     The same actions could also be achived by pressing the arrow down button.
 #
-# 5.  The **Home** key move the insert cursor to the beginning of the widget textarea  and clears any previous selection.
-#     **Shift-Home** moves the insert cursor to the beginning of the widget textarea and extends the selection to that point.
+# 5.  The **Home** key move the insert cursor to the beginning of the widget's textarea  and clears any previous selection.
+#     **Shift-Home** moves the insert cursor to the beginning of the widget's textarea and extends the selection to that point.
 #
-# 6.  The **End** key move the insert cursor to the end of the widget textarea and clears any previous selection.
+# 6.  The **End** key move the insert cursor to the end of the widget's textarea and clears any previous selection.
 #     **Shift-End** moves the cursor to the end and extends the selection to that point.
 #
-# 7.  **Control-a** (**Command-a** for macOS) selects all the text in the widget textarea.
+# 7.  **Control-a** (**Command-a** for macOS) selects all the text in the widget's textarea.
 #     **Control-Shift-a** (**Command-Shift-a** for macOS) clears any selection in the widget or does nothing if there isn't any.
 #
 # 8.  The standard Tk **Cut**, **Copy**, **Paste**, and **Clear** virtual events operate on the selection in the expected manner.
 #
-# 9.  The **Delete** key deletes the selection, if there is one in the widget textarea.
+# 9.  The **Delete** key deletes the selection, if there is one in the widget's textarea.
 #     If there is no selection, it deletes the character to the right of the insertion cursor.
-#     **Alt-d** (**Option-d** for macOS) deletes from the insertion cursor to the end of the widget textarea or does nothing if
-#     the insertion cursor is already at the end of the widget textarea.
+#     **Alt-d** (**Option-d** for macOS) deletes from the insertion cursor to the end of the widget's textarea or does nothing if
+#     the insertion cursor is already at the end of the widget's textarea.
 #
-# 10.  he **BackSpace** key delete the selection, if there is one in the widget textarea.
+# 10.  he **BackSpace** key delete the selection, if there is one in the widget's textarea.
 #     If there is no selection, it deletes the character to the left of the insert cursor.
 #
 # 11. The **Escape** key clears any current value that is not yet validated and restore the last valid one.
@@ -1768,12 +1768,12 @@ interp alias {} ttk::spinbox {} ::ms::spinbox::Command
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1799,7 +1799,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)           $::ms::default(spinbox,class)
             set ::ms::default($w,cmenu)           $::ms::default(spinbox,cmenu)
             set ::ms::default($w,command)         $::ms::default(spinbox,command)
@@ -1821,7 +1821,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
             set ::ms::default($w,values)          $::ms::default(spinbox,values)
             set ::ms::default($w,xscrollcommand)  $::ms::default(spinbox,xscrollcommand)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)           $::ms::default(spinbox,class)
             set ::ms::current($w,cmenu)           $::ms::default(spinbox,cmenu)
             set ::ms::current($w,command)         $::ms::default(spinbox,command)
@@ -1843,7 +1843,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
             set ::ms::current($w,values)          $::ms::default(spinbox,values)
             set ::ms::current($w,xscrollcommand)  $::ms::default(spinbox,xscrollcommand)
 
-            # Set the widget variables needed for internal mechanisms.
+            # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) spinbox
             set ::ms::data($w,format)    "%.1f"
 
@@ -2289,7 +2289,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the takefocus and cursor accordingly.
+            # Check the widget's physical state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2802,7 +2802,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
             }
             set padding [string trimright $padding "-"]
 
-            # Set the widget style name.
+            # Set the widget's style name.
             set ::ms::style($w,widget) [string cat "_ac="  $::ms::current($w,arrowcolor) \
                                                    "_as="  $::ms::current($w,arrowsize) \
                                                    "_bg="  $::ms::current($w,background) \
@@ -2821,7 +2821,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                                    "_sfg=" $::ms::current($w,selectforeground) \
                                                    "." $::ms::current($w,style)];
 
-            # If needed, create the widget style name.
+            # If needed, create the widget's style name.
             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                 _ttk_style configure $::ms::style($w,widget)            -arrowcolor $::ms::current($w,arrowcolor) \
                                                                          -arrowsize $::ms::current($w,arrowsize) \
@@ -2838,11 +2838,11 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                                                   -selectbackground $::ms::current($w,selectbackground) \
                                                                   -selectforeground $::ms::current($w,selectforeground);
 
-                # Add the widget style name to the theme styles list created by mustang.
+                # Add the widget's style name to the theme styles list created by mustang.
                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
             }
 
-            # Initialize the widget mapping.
+            # Initialize the widget's mapping.
             set mapping [list ]
 
             # arrowcolor
@@ -2966,11 +2966,11 @@ proc ::ms::spinbox::Command { window { args "" } } {
                 }
             }
 
-            # If needed, create the widget mapping.
+            # If needed, create the widget's mapping.
             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                # Add the widget mapping to the stylemap list containing all the mappings
+                # Add the widget's mapping to the stylemap list containing all the mappings
                 # created by mustang for the current theme.
                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
             }
@@ -3000,7 +3000,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                        -wrap 0 \
                              -xscrollcommand $::ms::current($w,xscrollcommand);
 
-            # Set the widget toplevel.
+            # Set the widget's toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
             # Set the current value in the spinbox entry.
@@ -3027,48 +3027,56 @@ proc ::ms::spinbox::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::spinbox::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::spinbox::Pathname_Cmd $w]
             }
 
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w
-
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short address relative to its real address, 'w'.
+            # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the spinbox widgets real address list.
-            lappend ::ms::addr(spinbox) $w
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
 
-            # Add the widget address to the spinbox classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),spinbox,addrs) $w
+            # Set the actual widget's real address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w
 
-            # Add the widget address to the spinbox classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the spinbox widgets real address list.
+            lappend ::ms::addr(spinbox,classtype) $w
+
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
+
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the spinbox classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),spinbox,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the spinbox classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the spinbox classtype.
             if { $::ms::current($w,style) ni $::ms::style(spinbox,classtype) } {
                 lappend ::ms::style(spinbox,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -3086,13 +3094,13 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -3187,7 +3195,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             ##                                              ##
                             ##################################################
 
-                            # Check the widget options provided.
+                            # Check the widget's options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
                                     -arrowcolor {
@@ -3507,19 +3515,18 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TSpinbox]
                                             }
 
-                                            # Remove the widget address from the spinbox classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the spinbox classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),spinbox,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),spinbox,addrs) [lremove $::ms::style($::ms::current($w,style),spinbox,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,spinbox,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the spinbox classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),spinbox,addrs)] {
                                                 0   {
@@ -3611,7 +3618,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the takefocus and cursor accordingly.
+                            # Check the widget's physical state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4129,7 +4136,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             }
                             set padding [string trimright $padding "-"]
 
-                            # Set the widget style name.
+                            # Set the widget's style name.
                             set ::ms::style($w,widget) [string cat "_ac="  $::ms::current($w,arrowcolor) \
                                                                    "_as="  $::ms::current($w,arrowsize) \
                                                                    "_bg="  $::ms::current($w,background) \
@@ -4148,7 +4155,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                                    "_sfg=" $::ms::current($w,selectforeground) \
                                                                    "." $::ms::current($w,style)];
 
-                            # If needed, create the widget style name.
+                            # If needed, create the widget's style name.
                             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                                 _ttk_style configure $::ms::style($w,widget)            -arrowcolor $::ms::current($w,arrowcolor) \
                                                                                          -arrowsize $::ms::current($w,arrowsize) \
@@ -4165,11 +4172,11 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                                                   -selectbackground $::ms::current($w,selectbackground) \
                                                                                   -selectforeground $::ms::current($w,selectforeground);
 
-                                # Add the widget style name to the theme styles list created by mustang.
+                                # Add the widget's style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
                             }
 
-                            # Initialize the widget mapping.
+                            # Initialize the widget's mapping.
                             set mapping [list ]
 
                             # arrowcolor
@@ -4293,11 +4300,11 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # If needed, create the widget mapping.
+                            # If needed, create the widget's mapping.
                             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                                # Add the widget mapping to the stylemap list containing all the mappings
+                                # Add the widget's mapping to the stylemap list containing all the mappings
                                 # created by mustang for the current theme.
                                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                             }
@@ -4409,7 +4416,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                     *rightarrow { return "Spinbox.rightarrow" }
                     *uparrow    { return "Spinbox.uparrow" }
                     default     {
-                        # Check the widget's state.
+                        # Check the widget's physical state.
                         switch -- $::ms::current($w,state) {
                             normal  { return "Spinbox.textarea" }
                             default { return "Spinbox.label" }
@@ -4430,7 +4437,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 enabled { chan puts stdout "'insert' is a deprecated mustang spinbox command. Use 'set' instead." }
             }
 
-            # Check the widget's state.
+            # Check the widget's physical state.
             switch -- $::ms::current($w,state) {
                 disabled { return "" }
             }
@@ -4559,7 +4566,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             }
                         }
                         default {
-                            # Check the widget datatype.
+                            # Check the widget's datatype.
                             switch -- $::ms::current($w,datatype) {
                                 integer    -
                                 posinteger { set index [lsearch -exact -integer $::ms::data($w,values) $value] }
@@ -4701,7 +4708,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the cursor accordingly.
+        # Check the widget's physical state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             readonly {
@@ -4751,7 +4758,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
         }
         set padding [string trimright $padding "-"]
 
-        # Set the widget style name.
+        # Set the widget's style name.
         set ::ms::style($w,widget) [string cat "_ac="  $::ms::current($w,arrowcolor) \
                                                "_as="  $::ms::current($w,arrowsize) \
                                                "_bg="  $::ms::current($w,background) \
@@ -4770,7 +4777,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
                                                "_sfg=" $::ms::current($w,selectforeground) \
                                                "." $::ms::current($w,style)];
 
-        # If needed, create the widget style name.
+        # If needed, create the widget's style name.
         if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
             _ttk_style configure $::ms::style($w,widget)            -arrowcolor $::ms::current($w,arrowcolor) \
                                                                      -arrowsize $::ms::current($w,arrowsize) \
@@ -4787,11 +4794,11 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
                                                               -selectbackground $::ms::current($w,selectbackground) \
                                                               -selectforeground $::ms::current($w,selectforeground);
 
-            # Add the widget style name to the theme styles list created by mustang.
+            # Add the widget's style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
         }
 
-        # Initialize the widget mapping.
+        # Initialize the widget's mapping.
         set mapping [list ]
 
         # arrowcolor
@@ -4915,11 +4922,11 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
             }
         }
 
-        # If needed, create the widget mapping.
+        # If needed, create the widget's mapping.
         if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
             _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-            # Add the widget mapping to the stylemap list containing all the mappings
+            # Add the widget's mapping to the stylemap list containing all the mappings
             # created by mustang for the current theme.
             lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
         }
@@ -4948,7 +4955,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w       Should be the widget real address involved.
+# w       Should be the widget's real address involved.
 #
 # event   Should be the event type.
 #         Allowed values are **incr** for increments and **decr** for decrements.
@@ -4958,7 +4965,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Arrows { w event { speed 1x } } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -4970,7 +4977,7 @@ proc ::ms::spinbox::Arrows { w event { speed 1x } } {
         1   { set amount [expr { $amount*$speed }] }
     }
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         readonly { set value [interp invokehidden {} $w get] }
         normal   { set value [::ms::spinbox::Validate_String $w] }
@@ -4994,7 +5001,7 @@ proc ::ms::spinbox::Arrows { w event { speed 1x } } {
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
 # x, y   Should be the (x,y) mouse pointer relative coordinates at the time of the event.
 #        These values should be provided by the **ButtonPress** event.
@@ -5008,7 +5015,7 @@ proc ::ms::spinbox::Arrows { w event { speed 1x } } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::ButtonPress { w x y mode } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disable { return "" }
     }
@@ -5024,7 +5031,7 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
             # Focus the widget.
             _focus -force $w
 
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             interp invokehidden {} $w state [list focus]
         }
     }
@@ -5032,7 +5039,7 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
     # Check the cursor location.
     switch -glob -- [interp invokehidden {} $w identify element $x $y] {
         "textarea" {
-            # Check the widget's state.
+            # Check the widget's physical state.
             switch -- $::ms::current($w,state) {
                 normal {
                     # Check the press type.
@@ -5086,7 +5093,7 @@ proc ::ms::spinbox::ButtonPress { w x y mode } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # name1,
 # name2,
@@ -5109,7 +5116,7 @@ proc ::ms::spinbox::Check_TextVariable { w name1 name2 op } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # value    Should be the starting value (eventually allready valuated).
 #
@@ -5143,7 +5150,7 @@ proc ::ms::spinbox::Decrement { w value amount } {
                 }
             }
 
-            # Check the widget datatype.
+            # Check the widget's datatype.
             switch --$::ms::current($w,datatype) {
                 posreal -
                 real    { set value [format $::ms::data($w,format) $value] }
@@ -5191,7 +5198,7 @@ proc ::ms::spinbox::Decrement { w value amount } {
         }
     }
 
-    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+    # Note: To avoid executing the associated widget's command multiple times, we introduce a timer (50ms) before actually
     #       executing the command. This timer will be resetted if, while active, another Increment or Decrement action
     #       on the widget asks to launch again the command.
     if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
@@ -5209,7 +5216,7 @@ proc ::ms::spinbox::Decrement { w value amount } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Destroy { w } {
@@ -5218,50 +5225,67 @@ proc ::ms::spinbox::Destroy { w } {
         1   { set ::wait_for_user_response "Unpost" }
     }
 
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget real address from the widgets real address list.
+    # Remove the widget's real address from the widgets real address list.
     set index [lsearch -exact $::ms::addr(reals) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
     }
 
-    # Remove the widget short address from the widgets short address list.
+    # Remove the widget's short address from the widgets short address list.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the spinbox widgets real address list.
-    set index [lsearch -exact $::ms::addr(spinbox) $w]
+    # Remove the widget's real address from the spinbox classtype real address list.
+    set index [lsearch -exact $::ms::addr(spinbox,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(spinbox) [lremove $::ms::addr(spinbox) $index] }
+        default { set ::ms::addr(spinbox,classtype) [lremove $::ms::addr(spinbox,classtype) $index] }
     }
 
-    # Remove the widget address from the spinbox classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),spinbox,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),spinbox,addrs) [lremove $::ms::class($::ms::current($w,class),spinbox,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the spinbox classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the spinbox classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),spinbox,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),spinbox,addrs) [lremove $::ms::style($::ms::current($w,style),spinbox,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the spinbox classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the spinbox classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),spinbox,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(spinbox,classtype) $::ms::current($w,style)]
@@ -5403,17 +5427,17 @@ proc ::ms::spinbox::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::spinbox::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
+    # Change the widget's dynamic state to 'focus'.
     interp invokehidden {} $w state [list focus]
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         normal {
-            # Select all the widget textarea characters.
+            # Select all the widget's textarea characters.
             interp invokehidden {} $w selection range 0 end
         }
     }
@@ -5427,7 +5451,7 @@ proc ::ms::spinbox::FocusIn { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::spinbox::FocusOut { w } {
@@ -5437,29 +5461,29 @@ proc ::ms::spinbox::FocusOut { w } {
     #   - or execute the command associated with the widget (if any).
     switch -- [_winfo exists $::ms::current($w,cmenu)] {
         1   {
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             interp invokehidden {} $w state [list focus]
 
             return ""
         }
     }
 
-    # Change the widget dynamic state to '!focus'.
+    # Change the widget's dynamic state to '!focus'.
     interp invokehidden {} $w state [list !focus]
 
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         readonly { set value [interp invokehidden {} $w get] }
         normal   {
-            # Validate the widget string.
+            # Validate the widget's string.
             set value [::ms::spinbox::Validate_String $w]
 
-            # Clear the widget field, insert the validated value and put the cursor at the end.
+            # Clear the widget's field, insert the validated value and put the cursor at the end.
             interp invokehidden {} $w delete  0 end
             interp invokehidden {} $w set     $value
             interp invokehidden {} $w icursor end
 
-            # Remove the widget selection, if any.
+            # Remove the widget's selection, if any.
             interp invokehidden {} $w selection clear
         }
     }
@@ -5484,14 +5508,14 @@ proc ::ms::spinbox::FocusOut { w } {
 #
 # Where:
 #
-# w       Should be the widget real address involved.
+# w       Should be the widget's real address involved.
 #
 # event   Should be the event type.
 #         Allowed values are **home** for **Control-Home** and **end** for **Control-End**.
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Home_End { w event } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
     }
@@ -5520,11 +5544,11 @@ proc ::ms::spinbox::Home_End { w event } {
     # Update the current value.
     set ::ms::data($w,current_value) $value
 
-    # Clear the widget field and insert the 'value'.
+    # Clear the widget's field and insert the 'value'.
     interp invokehidden {} $w delete 0 end
     interp invokehidden {} $w set    $value
 
-    # If the widget is in its normal state, select the value.
+    # If the widget is in its normal physical state, select the value.
     switch -- $::ms::current($w,state) {
         normal {
             interp invokehidden {} $w selection range 0 end
@@ -5532,7 +5556,7 @@ proc ::ms::spinbox::Home_End { w event } {
         }
     }
 
-    # Execute the associated widget command, if any.
+    # Execute the associated widget's command, if any.
     ::ms::Execute_Widget_Cmd $w
 
     return ""
@@ -5544,7 +5568,7 @@ proc ::ms::spinbox::Home_End { w event } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # value    Should be the starting value (eventually allready valuated).
 #
@@ -5578,7 +5602,7 @@ proc ::ms::spinbox::Increment { w value amount } {
                 }
             }
 
-            # Check the widget datatype.
+            # Check the widget's datatype.
             switch --$::ms::current($w,datatype) {
                 posreal -
                 real    { set value [format $::ms::data($w,format) $value] }
@@ -5621,7 +5645,7 @@ proc ::ms::spinbox::Increment { w value amount } {
     # Display the incremented value.
     interp invokehidden {} $w set $::ms::data($w,current_value)
 
-    # If the widget is not in the readonly state, select the incremented value.
+    # If the widget is not in the readonly physycal state, select the incremented value.
     switch -- $::ms::current($w,state) {
         normal {
             interp invokehidden {} $w selection range 0 end
@@ -5629,7 +5653,7 @@ proc ::ms::spinbox::Increment { w value amount } {
         }
     }
 
-    # Note: To avoid executing the associated widget command multiple times, we introduce a timer (50ms) before actually
+    # Note: To avoid executing the associated widget's command multiple times, we introduce a timer (50ms) before actually
     #       executing the command. This timer will be resetted if, while active, another Increment or Decrement action
     #       on the widget asks to launch again the command.
     if { [info exists ::ms::temp($w,pending_execute_cmd)] } {
@@ -5650,7 +5674,7 @@ proc ::ms::spinbox::Increment { w value amount } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be the key pressed.
 #
@@ -5757,7 +5781,7 @@ proc ::ms::spinbox::KeyPress { w key } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be an integer value indicating how many times
 #          the increment must be subtracted from value.
@@ -5775,7 +5799,7 @@ proc ::ms::spinbox::Repeat_Decrement { w amount } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be an integer value indicating how many times
 #          the increment must be summed to value.
@@ -5793,24 +5817,24 @@ proc ::ms::spinbox::Repeat_Increment { w amount } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Return { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return "" }
         readonly { set value [interp invokehidden {} $w get] }
         default  {
-            # Validate the widget string.
+            # Validate the widget's string.
             set value [::ms::spinbox::Validate_String $w]
 
-            # Clear the widget field, insert the validated value and put the cursor at the end.
+            # Clear the widget's field, insert the validated value and put the cursor at the end.
             interp invokehidden {} $w delete  0 end
             interp invokehidden {} $w set     $value
             interp invokehidden {} $w icursor end
 
-            # Remove the widget selection, if any.
+            # Remove the widget's selection, if any.
             interp invokehidden {} $w selection clear
         }
     }
@@ -5834,13 +5858,13 @@ proc ::ms::spinbox::Return { w } {
 
 ## Validate_KeyPress
 #
-# Limit the input keypresses in an spinbox widget and set the widget state to 'invalid' or '!invalid'
+# Limit the input keypresses in an spinbox widget and set the widget's dynamic state to 'invalid' or '!invalid'
 # depending if there are illegal characters for the datatype specified or if the string is not contained
 # inside any of the items provided by the ::ms::current($w,values) variable.
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # string   Should be the string to check.
 #
@@ -5867,12 +5891,12 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
         ""      {}
         default {
             # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
-            #       we made sure of that in the widget bindings section.
+            #       we made sure of that in the widget's bindings section.
             #       Nonetheless, they can be inserted trough a paste or pasteselection event.
             #       If this is the case, we will let the illegal character be inserted but we will
             #       mark the string as invalid.
 
-            # Depending on the widget datatype, check for illegal characters in 'value'.
+            # Depending on the widget's datatype, check for illegal characters in 'value'.
             switch -- $::ms::current($w,datatype) {
                 alnum {
                     # Check every character in 'value'.
@@ -5887,7 +5911,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                             default {
                                 switch -- [string is alnum $char] {
                                     0   {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5909,7 +5933,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                             default {
                                 switch -- [string is alpha $char] {
                                     0   {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5927,7 +5951,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                         default {
                             switch -- [string is integer $value] {
                                 0   {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -5937,7 +5961,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                         incremental {
                                             # Check if 'value' is between the 'from' and the 'to' values.
                                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                                # Change the widget dynamic state to 'invalid'.
+                                                # Change the widget's dynamic state to 'invalid'.
                                                 interp invokehidden {} $w state [list invalid]
 
                                                 return 1
@@ -5946,7 +5970,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                         default {
                                             # Check if 'value' is between the first element and the last element values.
                                             if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
-                                                # Change the widget dynamic state to 'invalid'.
+                                                # Change the widget's dynamic state to 'invalid'.
                                                 interp invokehidden {} $w state [list invalid]
 
                                                 return 1
@@ -5961,7 +5985,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                 posinteger {
                     switch -- [string is integer $value] {
                         0   {
-                            # Change the widget dynamic state to 'invalid'.
+                            # Change the widget's dynamic state to 'invalid'.
                             interp invokehidden {} $w state [list invalid]
 
                             return 1
@@ -5971,7 +5995,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                 incremental {
                                     # Check if 'value' is between the 'from' and the 'to' values.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5980,7 +6004,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                 default {
                                     # Check if 'value' is between the first element and the last element values.
                                     if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5996,7 +6020,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                         default {
                             switch -- [string is double $value] {
                                 0   {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -6006,7 +6030,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                         incremental {
                                             # Check if 'value' is between the 'from' and the 'to' values.
                                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                                # Change the widget dynamic state to 'invalid'.
+                                                # Change the widget's dynamic state to 'invalid'.
                                                 interp invokehidden {} $w state [list invalid]
 
                                                 return 1
@@ -6015,7 +6039,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                         default {
                                             # Check if 'value' is between the first element and the last element values.
                                             if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
-                                                # Change the widget dynamic state to 'invalid'.
+                                                # Change the widget's dynamic state to 'invalid'.
                                                 interp invokehidden {} $w state [list invalid]
 
                                                 return 1
@@ -6034,7 +6058,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                         default {
                             switch -- [string is double $value] {
                                 0   {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -6044,7 +6068,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                         incremental {
                                             # Check if 'value' is between the 'from' and the 'to' values.
                                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                                # Change the widget dynamic state to 'invalid'.
+                                                # Change the widget's dynamic state to 'invalid'.
                                                 interp invokehidden {} $w state [list invalid]
 
                                                 return 1
@@ -6053,7 +6077,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
                                         default {
                                             # Check if 'value' is between the first element and the last element values.
                                             if { ($value < [lindex $::ms::data($w,values) 0]) || ($value > [lindex $::ms::data($w,values) end]) } {
-                                                # Change the widget dynamic state to 'invalid'.
+                                                # Change the widget's dynamic state to 'invalid'.
                                                 interp invokehidden {} $w state [list invalid]
 
                                                 return 1
@@ -6069,7 +6093,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
         }
     }
 
-    # Change the widget dynamic state to '!invalid'.
+    # Change the widget's dynamic state to '!invalid'.
     interp invokehidden {} $w state [list !invalid]
 
     return 1
@@ -6081,7 +6105,7 @@ proc ::ms::spinbox::Validate_KeyPress { w string } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # Return the validated string.
 proc ::ms::spinbox::Validate_String { w } {
@@ -6396,7 +6420,7 @@ proc ::ms::spinbox::Validate_String { w } {
         }
     }
 
-    # Set the widget dynamic state to '!invalid'.
+    # Set the widget's dynamic state to '!invalid'.
     interp invokehidden {} $w state [list !invalid]
 
     return $value
@@ -6418,7 +6442,7 @@ proc ::ms::spinbox::Validate_String { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be the delta value of a **MouseWheel** event.
 #          The delta value represents the rotation units the mouse wheel has been moved.
@@ -6432,10 +6456,10 @@ proc ::ms::spinbox::Validate_String { w } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::MouseWheel { w amount } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled {
-            # Try to find a widget parent to scroll vertically, if any.
+            # Try to find a widget's parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
 
             return ""
@@ -6445,7 +6469,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   {
-            # Try to find a widget parent to scroll vertically, if any.
+            # Try to find a widget's parent to scroll vertically, if any.
             ::ms::Scroll_Parent_Y $w $amount units
 
             return ""
@@ -6458,7 +6482,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
             switch -- $::ms::scrollbox {
                 disabled {
-                    # Try to find a widget parent to scroll vertically, if any.
+                    # Try to find a widget's parent to scroll vertically, if any.
                     ::ms::Scroll_Parent_Y $w $amount units
 
                     return ""
@@ -6467,7 +6491,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
                     # Focus the widget.
                     _focus -force $w
 
-                    # Change the widget dynamic state to 'focus'.
+                    # Change the widget's dynamic state to 'focus'.
                     interp invokehidden {} $w state [list focus]
                 }
             }
@@ -6479,7 +6503,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
         natural { set amount [expr { -1.0*$amount }] }
     }
 
-    # Change the widget textarea value by scrolling the items list provided up or down
+    # Change the widget's textarea value by scrolling the items list provided up or down
     # (depending on the scroll direction).
     if { $amount > 0 } {
         ::ms::spinbox::Decrement $w [::ms::spinbox::Validate_String $w] 1
@@ -6500,7 +6524,7 @@ proc ::ms::spinbox::MouseWheel { w amount } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be the delta value of a **MouseWheel** event.
 #          The delta value represents the rotation units the mousewheel has been moved.
@@ -6514,11 +6538,11 @@ proc ::ms::spinbox::MouseWheel { w amount } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Shift_MouseWheel { w amount } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
 
             return ""
@@ -6528,7 +6552,7 @@ proc ::ms::spinbox::Shift_MouseWheel { w amount } {
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
 
             return ""
@@ -6541,7 +6565,7 @@ proc ::ms::spinbox::Shift_MouseWheel { w amount } {
             # Check the 'scrollbox' value ('disabled' or 'enabled').
             switch -- $::ms::scrollbox {
                 disabled {
-                    # Try to find a widget parent to scroll horizontally, if any.
+                    # Try to find a widget's parent to scroll horizontally, if any.
                     ::ms::Scroll_Parent_X $w $amount units
 
                     return ""
@@ -6550,7 +6574,7 @@ proc ::ms::spinbox::Shift_MouseWheel { w amount } {
                     # Focus the widget.
                     _focus -force $w
 
-                    # Change the widget dynamic state to 'focus'.
+                    # Change the widget's dynamic state to 'focus'.
                     interp invokehidden {} $w state [list focus]
                 }
             }
@@ -6590,7 +6614,7 @@ proc ::ms::spinbox::Shift_MouseWheel { w amount } {
 #
 # Where:
 #
-# w         Should be the scrollable widget real address involved.
+# w         Should be the widget's real address involved.
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
