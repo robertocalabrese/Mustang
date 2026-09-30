@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -69,7 +69,7 @@
 #
 # An entry widget displays a one-line text string and allows that string to be edited by the user. The value of the string may be linked
 # to a Tcl variable with the **-textvariable** option. Entry widgets support horizontal scrolling with the standard **-xscrollcommand**
-# option and **xview** widget command but only if the **-datatype** option for the entry is **none** or the **-maxlength** option value
+# option and **xview** widget's command but only if the **-datatype** option for the entry is **none** or the **-maxlength** option value
 # is **0**.
 #
 # Note: At the time this command is invoked, there must not exist a window with the same pathname,
@@ -142,7 +142,7 @@
 #                                                             If there isn't one, the **-charwidth** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-charwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-datatype** and **-maxlength**.
 #
@@ -172,7 +172,7 @@
 #
 #                              See the [cursors](/wiki/cursors/index.md) wiki page to know which cursors are allowed.
 #
-#                              Note: If the widget state is disabled or readonly, the cursor shape upon the textarea will always be the 'arrow'.
+#                              Note: If the widget's physical state is disabled or readonly, the cursor shape upon the textarea will always be the 'arrow'.
 #
 #                              Note: This is a styleable option.
 #
@@ -183,7 +183,7 @@
 #                                                             If there isn't one, the **-cursor** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-cursor** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-darkcolor**               It's a list that specifies the color to use as darkcolor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -269,7 +269,7 @@
 #
 # **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
 #                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
-#                              selecting outside the widget deselects any widget selection, and the widget will respond to selection retrieval
+#                              selecting outside the widget deselects any widget's selection, and the widget will respond to selection retrieval
 #                              requests when it has a selection.
 #
 #                              If an entry is exporting its selection then it will observe the standard X11 protocols for handling the selection;
@@ -337,7 +337,7 @@
 #                                                             If there isn't one, the **-focuswidth** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-focuswidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-font**                    Specifies the font to use for the text displayed by the widget.
 #                              The widget will accept as fontname any font created with the **font** command, including any Tk
@@ -353,7 +353,7 @@
 #                                                             If there isn't one, the **-font** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-font** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-foreground**.
 #
@@ -374,14 +374,14 @@
 #                              See also **-background**, **-fieldbackground** and **-font**.
 #
 # **-from**                    Specifies the minimum value acceptable for a numerical datatype (integer, posinteger, posreal and real).
-#                              Note that the *from* value will be ignored for any other widget datatypes.
+#                              Note that the *from* value will be ignored for any other widget's datatypes.
 #
 #                              The following rules must be taked in account when providing the *from* value:
 #                                - For 'posinteger' and 'posreal' datatypes only, the *from* value must be greater or equal to zero.
 #                                - For any numerical datatypes the *from* value must always be lesser or equal than the *to* value.
 #
 #                              Failing to respect one or both of these rules will cause the *from* and *to* values provided to be ignored
-#                              and their defaults values for the widget datatype to be used instead.
+#                              and their defaults values for the widget's datatype to be used instead.
 #
 #                              A limit check will be performed during the validation process to assure that the value inserted by the user
 #                              is always between the *from* and *to* values (*from* and *to* included).
@@ -443,7 +443,7 @@
 #                                                             If there isn't one, the **-insertwidth** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-insertwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-insertcolor**.
 #
@@ -462,7 +462,7 @@
 #                                                             If there isn't one, the **-justify** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-justify** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-lightcolor**              It's a list that specifies the color to use as lightcolor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -534,13 +534,13 @@
 #                                                             If there isn't one, the **-padding** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-padding** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 # **-placeholder**             Specifies a help text string to display if no text is otherwise displayed, that is when the widget is empty.
 #                              The placeholder text is displayed using the values of the **-font**, **-justify** and **-placeholderforeground**
 #                              options.
 #
-#                              The placeholder text will disappear when the widget will take the focus, and reappears (if the widget value is
+#                              The placeholder text will disappear when the widget will take the focus, and reappears (if the widget's value is
 #                              empty) when the widget loses the focus. An empty string will mean no placeholder text to display.
 #
 #                              If not provided, defaults to the empty string.
@@ -593,7 +593,7 @@
 #                                                             If there isn't one, the **-selectborderwidth** of the **TEntry** style
 #                                                             will be used instead.
 #                                                             The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                             It is not supposed to change when the widget state changes.
+#                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-selectbackground** and **-selectforeground**.
 #
@@ -623,18 +623,18 @@
 #                              If not provided, defaults to the empty string.
 #
 # **-state**                   Specifies the state for the widget.
-#                              May be set to **normal**, **readonly** or **disabled** to control the disabled state bit.
-#                              This is a write-only option: setting it changes the widget state,
-#                              but the state widget command does not affect the *-state* option.
+#                              Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
+#
+#                              Allowed states values are **normal**, **readonly** or **disabled**.
 #
 #                              If not provided, defaults to **normal**.
 #
-# **-style**                   Specifies a custom widget style.
-#                              If not provided, defaults to **TEntry**.
-#
+# **-style**                   Specifies a custom widget's style.
 #                              The *style* provided should already exists at the time the widget is created.
 #
 #                              See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                              If not provided, defaults to **TEntry**.
 #
 # **-takefocus**               Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                              and **Shift-Tab**).
@@ -657,14 +657,14 @@
 #                              If not provided, defaults to the empty string.
 #
 # **-to**                      Specifies the maximum value acceptable for a numerical datatype (integer, posinteger, posreal and real).
-#                              Note that the *to* value will be ignored for any other widget datatypes.
+#                              Note that the *to* value will be ignored for any other widget's datatypes.
 #
 #                              The following rules must be taked in account when providing the *to* value:
 #                                - For 'posinteger' and 'posreal' datatypes only, the *to* value must be greater or equal to zero.
 #                                - For any numerical datatypes the *to* value must always be greater or equal than the *from* value.
 #
 #                              Failing to respect one or both of these rules will cause the *from* and *to* values provided to be ignored
-#                              and their defaults values for the widget datatype to be used instead.
+#                              and their defaults values for the widget's datatype to be used instead.
 #
 #                              A limit check will be performed during the validation process to assure that the value inserted by the user
 #                              is always between the *from* and *to* values (*from* and *to* included).
@@ -684,18 +684,18 @@
 #
 #                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
 #
-#                                 none     --> The validation will only occur when specifically requested by the validate widget command.
+#                                 none     --> The validation will only occur when specifically requested by the validate widget's command.
 #                                 focus    --> The entry is revalidated when the entry receives or loses focus.
 #                                 focusin  --> The entry is revalidated when the entry receives focus.
 #                                 focusout --> The entry is revalidated when the entry loses focus.
 #                                 key      --> The entry will be prevalidated prior to each edit (specifically, whenever the insert or delete
-#                                              widget commands are called). If prevalidation fails, the edit is rejected.
+#                                              widget's commands are called). If prevalidation fails, the edit is rejected.
 #                                 all      --> Validation is performed for all above conditions.
 #
 #                              Note that every **-datatype** except **none** will force this value to **key** to perform automatic validation.
 #
 #                              The **-invalidcommand** is evaluated whenever the **-validatecommand** returns a false value.
-#                              The **-validatecommand** and **-invalidcommand** may modify the entry widget's value via the widget insert or
+#                              The **-validatecommand** and **-invalidcommand** may modify the entry widget's value via the widget's insert or
 #                              delete commands, or by setting the linked **-textvariable**.
 #                              If either does so during prevalidation, then the edit is rejected regardless of the value returned by the
 #                              **-validatecommand**. If **-validatecommand** is empty, validation always succeeds.
@@ -742,7 +742,7 @@
 #
 #   *window* *action* ?*arg* *arg* ... *arg*?
 #
-# *Window* is the name of the command, which is the same as the entry widget pathname.
+# *Window* is the name of the command, which is the same as the entry widget's pathname.
 # *Actions* and the *arg*s determine the exact behavior of the *window* command.
 #
 # The following commands are possible for entry widgets:
@@ -756,7 +756,7 @@
 #
 #   *window* **cget** ?*option*?
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the entry command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the entry command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -767,7 +767,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -794,8 +794,8 @@
 #     Returns the numerical index corresponding to *index*.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -823,8 +823,8 @@
 #     Returns the empty string.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -869,7 +869,7 @@
 #
 #### INDICES:
 #
-# Many of the entry widget commands take one or more indices as arguments.
+# Many of the entry widget's commands take one or more indices as arguments.
 # An index specifies a particular character in the entry's string, in any of the following ways:
 #
 #   **number**
@@ -972,14 +972,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided, a multiple of it.
 #       See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -1729,12 +1729,12 @@ interp alias {} ttk::entry {} ::ms::entry::Command
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -1760,7 +1760,7 @@ proc ::ms::entry::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)           $::ms::default(entry,class)
             set ::ms::default($w,cmenu)           $::ms::default(entry,cmenu)
             set ::ms::default($w,command)         $::ms::default(entry,command)
@@ -1782,7 +1782,7 @@ proc ::ms::entry::Command { window { args "" } } {
             set ::ms::default($w,validatecommand) $::ms::default(entry,validatecommand)
             set ::ms::default($w,xscrollcommand)  $::ms::default(entry,xscrollcommand)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)           $::ms::default(entry,class)
             set ::ms::current($w,cmenu)           $::ms::default(entry,cmenu)
             set ::ms::current($w,command)         $::ms::default(entry,command)
@@ -1804,7 +1804,7 @@ proc ::ms::entry::Command { window { args "" } } {
             set ::ms::current($w,validatecommand) $::ms::default(entry,validatecommand)
             set ::ms::current($w,xscrollcommand)  $::ms::default(entry,xscrollcommand)
 
-            # Set the widget variables needed for internal mechanisms.
+            # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype)     entry
             set ::ms::data($w,current_value) ""
             set ::ms::data($w,format)        "%.1f"
@@ -2239,7 +2239,7 @@ proc ::ms::entry::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the takefocus and cursor accordingly.
+            # Check the widget's dynamic state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -2451,7 +2451,7 @@ proc ::ms::entry::Command { window { args "" } } {
             ##               ##
             ###################
 
-            # Set the widget style name.
+            # Set the widget's style name.
             set ::ms::style($w,widget) [string cat "_bg="  $::ms::current($w,background) \
                                                    "_bc="  $::ms::current($w,bordercolor) \
                                                    "_dc="  $::ms::current($w,darkcolor) \
@@ -2468,7 +2468,7 @@ proc ::ms::entry::Command { window { args "" } } {
                                                    "_sfg=" $::ms::current($w,selectforeground) \
                                                    "." $::ms::current($w,style)];
 
-            # If needed, create the widget style name.
+            # If needed, create the widget's style name.
             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                 _ttk_style configure $::ms::style($w,widget)             -background $::ms::current($w,background) \
                                                                         -bordercolor $::ms::current($w,bordercolor) \
@@ -2483,11 +2483,11 @@ proc ::ms::entry::Command { window { args "" } } {
                                                                    -selectbackground $::ms::current($w,selectbackground) \
                                                                    -selectforeground $::ms::current($w,selectforeground);
 
-                # Add the widget style name to the theme styles list created by mustang.
+                # Add the widget's style name to the theme styles list created by mustang.
                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
             }
 
-            # Initialize the widget mapping.
+            # Initialize the widget's mapping.
             set mapping [list ]
 
             # background
@@ -2600,11 +2600,11 @@ proc ::ms::entry::Command { window { args "" } } {
                 }
             }
 
-            # If needed, create the widget mapping.
+            # If needed, create the widget's mapping.
             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                # Add the widget mapping to the stylemap list containing all the mappings
+                # Add the widget's mapping to the stylemap list containing all the mappings
                 # created by mustang for the current theme.
                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
             }
@@ -2627,7 +2627,7 @@ proc ::ms::entry::Command { window { args "" } } {
                                     -width $::ms::current($w,charwidth) \
                            -xscrollcommand $::ms::current($w,xscrollcommand);
 
-            # Set the widget toplevel.
+            # Set the widget's toplevel.
             set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
             ######################
@@ -2648,48 +2648,56 @@ proc ::ms::entry::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::entry::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::entry::Pathname_Cmd $w]
             }
 
-            # Set the border object (where the 'Enter' and 'Leave' event will happen).
-            set ::ms::addr($w,border) $w
-
-            # Set the actual widget address (the widget that the developer was intended to build).
-            set ::ms::addr($w,widget) $w
-
-            # Set the widget real address relative to its short address, 'short_addr'.
+            # Set the widget's real address relative to its short address, 'short_addr'.
             set ::ms::addr($short_addr,real) $w
 
-            # Set the widget short address relative to its real address, 'w'.
+            # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget real and short address into the list of all available real and short addresses.
+            # Add the widget's real and short address into the list of all available real and short addresses.
             lappend ::ms::addr(reals)  $w
             lappend ::ms::addr(shorts) $short_addr
 
-            # Add the widget address to the entry widgets real address list.
-            lappend ::ms::addr(entry) $w
+            # Set the border object (where the 'Enter' and 'Leave' event will happen).
+            set ::ms::addr($w,border) $w
 
-            # Add the widget address to the entry classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),entry,addrs) $w
+            # Set the actual widget's real address (the widget that the developer was intended to build).
+            set ::ms::addr($w,widget) $w
 
-            # Add the widget address to the entry classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the entry widgets real address list.
+            lappend ::ms::addr(entry,classtype) $w
+
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
+
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the entry classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),entry,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the entry classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the entry classtype.
             if { $::ms::current($w,style) ni $::ms::style(entry,classtype) } {
                 lappend ::ms::style(entry,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -2707,13 +2715,13 @@ proc ::ms::entry::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -2819,7 +2827,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             ##                                              ##
                             ##################################################
 
-                            # Check the widget options provided.
+                            # Check the widget's options provided.
                             foreach { option value } $args {
                                 switch -nocase -- $option {
                                     -background {
@@ -3141,19 +3149,18 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                 _ttk_style layout $value [_ttk_style layout TEntry]
                                             }
 
-                                            # Remove the widget address from the entry classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the entry classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),entry,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),entry,addrs) [lremove $::ms::style($::ms::current($w,style),entry,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,entry,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the entry classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),entry,addrs)] {
                                                 0   {
@@ -3227,7 +3234,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the takefocus and cursor accordingly.
+                            # Check the widget's dynamic state and set the takefocus and cursor accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -3452,7 +3459,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             ##               ##
                             ###################
 
-                            # Set the widget style name.
+                            # Set the widget's style name.
                             set ::ms::style($w,widget) [string cat "_bg="  $::ms::current($w,background) \
                                                                    "_bc="  $::ms::current($w,bordercolor) \
                                                                    "_dc="  $::ms::current($w,darkcolor) \
@@ -3469,7 +3476,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                                    "_sfg=" $::ms::current($w,selectforeground) \
                                                                    "." $::ms::current($w,style)];
 
-                            # If needed, create the widget style name.
+                            # If needed, create the widget's style name.
                             if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
                                 _ttk_style configure $::ms::style($w,widget)             -background $::ms::current($w,background) \
                                                                                         -bordercolor $::ms::current($w,bordercolor) \
@@ -3484,11 +3491,11 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                                                    -selectbackground $::ms::current($w,selectbackground) \
                                                                                    -selectforeground $::ms::current($w,selectforeground);
 
-                                # Add the widget style name to the theme styles list created by mustang.
+                                # Add the widget's style name to the theme styles list created by mustang.
                                 lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
                             }
 
-                            # Initialize the widget mapping.
+                            # Initialize the widget's mapping.
                             set mapping [list ]
 
                             # background
@@ -3601,11 +3608,11 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # If needed, create the widget mapping.
+                            # If needed, create the widget's mapping.
                             if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
                                 _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-                                # Add the widget mapping to the stylemap list containing all the mappings
+                                # Add the widget's mapping to the stylemap list containing all the mappings
                                 # created by mustang for the current theme.
                                 lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                             }
@@ -3701,7 +3708,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
             switch -- [llength $args] {
                 2   {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { return "" }
                     }
@@ -3807,7 +3814,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             # *window* **set** *value*?
             switch -- [llength $args] {
                 1   {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { return "" }
                     }
@@ -3823,7 +3830,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             # Check if current value is the empty string.
                             switch -- $value {
                                 ""  {
-                                    # Clear the widget field.
+                                    # Clear the widget's field.
                                     interp invokehidden {} $w delete    0 end
                                     interp invokehidden {} $w selection clear
                                 }
@@ -3841,7 +3848,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     }
 
                                     # If the corrected value is different than the current value,
-                                    # clear the widget field, insert the corrected value and position the cursor at the end.
+                                    # clear the widget's field, insert the corrected value and position the cursor at the end.
                                     if { $value ne $::ms::data($w,current_value) } {
                                         interp invokehidden {} $w delete    0 end
                                         interp invokehidden {} $w selection clear
@@ -3856,7 +3863,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             # Check if current value is the empty string.
                             switch -- $value {
                                 ""  {
-                                    # Clear the widget field.
+                                    # Clear the widget's field.
                                     interp invokehidden {} $w delete    0 end
                                     interp invokehidden {} $w selection clear
                                 }
@@ -3883,7 +3890,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                             }
 
                                             # If the corrected value is different than the current value,
-                                            # clear the widget field, insert the corrected value and position the cursor at the end.
+                                            # clear the widget's field, insert the corrected value and position the cursor at the end.
                                             if { $value ne $::ms::data($w,current_value) } {
                                                 interp invokehidden {} $w delete    0 end
                                                 interp invokehidden {} $w selection clear
@@ -3900,7 +3907,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             # Check if current value is the empty string.
                             switch -- $value {
                                 ""  {
-                                    # Clear the widget field.
+                                    # Clear the widget's field.
                                     interp invokehidden {} $w delete    0 end
                                     interp invokehidden {} $w selection clear
                                 }
@@ -3929,7 +3936,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                             }
 
                                             # If the corrected value is different than the current value,
-                                            # clear the widget field, insert the corrected value and position the cursor at the end.
+                                            # clear the widget's field, insert the corrected value and position the cursor at the end.
                                             if { $value ne $::ms::data($w,current_value) } {
                                                 interp invokehidden {} $w delete    0 end
                                                 interp invokehidden {} $w selection clear
@@ -3945,13 +3952,13 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             # Check if current value is the empty string.
                             switch -- $value {
                                 ""  {
-                                    # Clear the widget field.
+                                    # Clear the widget's field.
                                     interp invokehidden {} $w delete    0 end
                                     interp invokehidden {} $w selection clear
                                 }
                                 default {
                                     # If the corrected value is different than the current value,
-                                    # clear the widget field, insert the corrected value and position the cursor at the end.
+                                    # clear the widget's field, insert the corrected value and position the cursor at the end.
                                     if { $value ne $args } {
                                         interp invokehidden {} $w delete    0 end
                                         interp invokehidden {} $w selection clear
@@ -3963,7 +3970,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    # Set the widget dynamic state as '!invalid'.
+                    # Set the widget's dynamic state as '!invalid'.
                     interp invokehidden {} $w state [list !invalid]
 
                     # If the current value is different than the previous registered one, register it
@@ -4072,7 +4079,7 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the cursor accordingly.
+        # Check the widget's dynamic state and set the cursor accordingly.
         switch -- $::ms::current($w,state) {
             disabled -
             readonly { set cursor arrow }
@@ -4111,7 +4118,7 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
         ##               ##
         ###################
 
-        # Set the widget style name.
+        # Set the widget's style name.
         set ::ms::style($w,widget) [string cat "_bg="  $::ms::current($w,background) \
                                                "_bc="  $::ms::current($w,bordercolor) \
                                                "_dc="  $::ms::current($w,darkcolor) \
@@ -4128,7 +4135,7 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
                                                "_sfg=" $::ms::current($w,selectforeground) \
                                                "." $stylename];
 
-        # If needed, create the widget style name.
+        # If needed, create the widget's style name.
         if { $::ms::style($w,widget) ni $::ms::style($::ms::theme,created_by_mustang) } {
             _ttk_style configure $::ms::style($w,widget)            -background $::ms::current($w,background) \
                                                                    -bordercolor $::ms::current($w,bordercolor) \
@@ -4143,11 +4150,11 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
                                                               -selectbackground $::ms::current($w,selectbackground) \
                                                               -selectforeground $::ms::current($w,selectforeground);
 
-            # Add the widget style name to the theme styles list created by mustang.
+            # Add the widget's style name to the theme styles list created by mustang.
             lappend ::ms::style($::ms::theme,created_by_mustang) $::ms::style($w,widget)
         }
 
-        # Initialize the widget mapping.
+        # Initialize the widget's mapping.
         set mapping [list ]
 
         # background
@@ -4260,11 +4267,11 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
             }
         }
 
-        # If needed, create the widget mapping.
+        # If needed, create the widget's mapping.
         if { $mapping ni $::ms::stylemap($::ms::theme,created_by_mustang) } {
             _ttk_style map $::ms::style($w,widget) {*}$mapping
 
-            # Add the widget mapping to the stylemap list containing all the mappings
+            # Add the widget's mapping to the stylemap list containing all the mappings
             # created by mustang for the current theme.
             lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
         }
@@ -4303,13 +4310,13 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # x   Should be the current 'x' coordinate of the mouse pointer.
 #
 # It doesn't return anything.
 proc ::ms::entry::ButtonPress { w x } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled { return ""}
     }
@@ -4325,7 +4332,7 @@ proc ::ms::entry::ButtonPress { w x } {
             # Focus the widget.
             _focus -force $w
 
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             interp invokehidden {} $w state [list focus]
         }
     }
@@ -4348,54 +4355,71 @@ proc ::ms::entry::ButtonPress { w x } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::entry::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget real address from the widgets real address list.
+    # Remove the widget's real address from the widgets real address list.
     set index [lsearch -exact $::ms::addr(reals) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
     }
 
-    # Remove the widget short address from the widgets short address list.
+    # Remove the widget's short address from the widgets short address list.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the entry widgets real address list.
-    set index [lsearch -exact $::ms::addr(entry) $w]
+    # Remove the widget's real address from the entry classtype real address list.
+    set index [lsearch -exact $::ms::addr(entry,classtype) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::addr(entry) [lremove $::ms::addr(entry) $index] }
+        default { set ::ms::addr(entry,classtype) [lremove $::ms::addr(entry,classtype) $index] }
     }
 
-    # Remove the widget address from the entry classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),entry,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),entry,addrs) [lremove $::ms::class($::ms::current($w,class),entry,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the entry classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the entry classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),entry,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),entry,addrs) [lremove $::ms::style($::ms::current($w,style),entry,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the entry classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the entry classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),entry,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(entry,classtype) $::ms::current($w,style)]
@@ -4528,14 +4552,14 @@ proc ::ms::entry::Destroy { w } {
 #
 # Where:
 #
-# w   should be the widget real address involved.
+# w   should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::entry::FocusIn { w } {
-    # Change the widget dynamic state to 'focus'.
+    # Change the widget's dynamic state to 'focus'.
     interp invokehidden {} $w state [list focus]
 
-    # Select all the widget textarea characters.
+    # Select all the widget's textarea characters.
     interp invokehidden {} $w selection range 0 end
 
     # Remove the placeholder, if any.
@@ -4550,7 +4574,7 @@ proc ::ms::entry::FocusIn { w } {
 #
 # Where:
 #
-# w   should be the widget real address involved.
+# w   should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::entry::FocusOut { w } {
@@ -4561,27 +4585,27 @@ proc ::ms::entry::FocusOut { w } {
     #   - or change the placeholder.
     switch -- [_winfo exists $::ms::current($w,cmenu)] {
         0   {
-            # Change the widget dynamic state to '!focus'.
+            # Change the widget's dynamic state to '!focus'.
             interp invokehidden {} $w state [list !focus]
         }
         1   {
-            # Change the widget dynamic state to 'focus'.
+            # Change the widget's dynamic state to 'focus'.
             interp invokehidden {} $w state [list  focus]
 
             return ""
         }
     }
 
-    # Remove the widget selection, if any.
+    # Remove the widget's selection, if any.
     interp invokehidden {} $w selection clear
 
     # Re-enable the placeholder.
     interp invokehidden {} $w configure -placeholder $::ms::current($w,placeholder)
 
-    # Validate the widget string.
+    # Validate the widget's string.
     set value [::ms::entry::Validate_String $w]
 
-    # Clear the widget field, insert the validated value and put the cursor at the end.
+    # Clear the widget's field, insert the validated value and put the cursor at the end.
     interp invokehidden {} $w delete    0 end
     interp invokehidden {} $w selection clear
     interp invokehidden {} $w insert    0 $value
@@ -4607,7 +4631,7 @@ proc ::ms::entry::FocusOut { w } {
 #
 # Where:
 #
-# w     Should be the widget real address involved.
+# w     Should be the widget's real address involved.
 #
 # key   Should be the key pressed.
 #
@@ -4730,20 +4754,20 @@ proc ::ms::entry::KeyPress { w key } {
 #
 # Where:
 #
-# w   should be the widget real address involved.
+# w   should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::entry::Return { w } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly { return "" }
     }
 
-    # Validate the widget string.
+    # Validate the widget's string.
     set value [::ms::entry::Validate_String $w]
 
-    # Clear the widget field, insert the validated value, select all characters
+    # Clear the widget's field, insert the validated value, select all characters
     # and put the cursor at the end.
     interp invokehidden {} $w delete    0 end
     interp invokehidden {} $w insert    0 $value
@@ -4777,7 +4801,7 @@ proc ::ms::entry::Return { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # amount   Should be the delta value of a **Shift-MouseWheel** event.
 #          The delta value represents the rotation units the mousewheel has been moved.
@@ -4791,11 +4815,11 @@ proc ::ms::entry::Return { w } {
 #
 # It doesn't return anything.
 proc ::ms::entry::Shift_MouseWheel { w amount } {
-    # Check the widget's state.
+    # Check the widget's physical state.
     switch -- $::ms::current($w,state) {
         disabled -
         readonly {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
 
             return ""
@@ -4805,7 +4829,7 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
     # Check if the widget is focussable or not.
     switch -- [::ms::Is_Focussable $w] {
         0   {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
 
             return ""
@@ -4815,7 +4839,7 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
     # Check if the widget is already focussed.
     switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
-            # Try to find a widget parent to scroll horizontally, if any.
+            # Try to find a widget's parent to scroll horizontally, if any.
             ::ms::Scroll_Parent_X $w $amount units
         }
         1   {
@@ -4875,7 +4899,7 @@ proc ::ms::entry::Shift_MouseWheel { w amount } {
 #
 # Where:
 #
-# w         Should be the widget real address involved.
+# w         Should be the widget's real address involved.
 #
 # counter   Should be the *serial* field of a **TouchpadScroll** event (**%#**).
 #
@@ -4899,7 +4923,7 @@ proc ::ms::entry::Touchpad { w counter amount } {
     # Check if the widget is already focussed.
     switch -- [interp invokehidden {} $w instate [list focus]] {
         0   {
-            # Try to find a widget parent to scroll horizontally and/or vertically, if any.
+            # Try to find a widget's parent to scroll horizontally and/or vertically, if any.
             ::ms::Touchpad_Parent $w $counter $amount units
         }
         1   {
@@ -4933,11 +4957,11 @@ proc ::ms::entry::Touchpad { w counter amount } {
 
 ## Validate_KeyPress
 #
-# Limit the input keypresses in an entry widget and update the widget state ('invalid' or '!invalid').
+# Limit the input keypresses in an entry widget and update the widget's dynamic state ('invalid' or '!invalid').
 #
 # Where:
 #
-# w        should be the widget real address involved.
+# w        should be the widget's real address involved.
 #
 # string   should be the string to check.
 #
@@ -4963,7 +4987,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
         ""      {}
         default {
             # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
-            #       we made sure of that trough the widget bindings.
+            #       we made sure of that trough the widget's bindings.
             #       Nonetheless, they can be inserted trough a paste or pasteselection event.
             #       If this is the case, we will let the illegal character be inserted but we will
             #       mark the string as invalid.
@@ -4983,7 +5007,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             default {
                                 switch -- [string is alnum $char] {
                                     0   {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5005,7 +5029,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             default {
                                 switch -- [string is alpha $char] {
                                     0   {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5027,7 +5051,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             # Check if hash are allowed for the widget.
                             switch -- $::ms::current($w,hash) {
                                 no  {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -5039,7 +5063,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             set result [::ms::Check_Color [list $value $::ms::current($w,datatype)] invalid]
                             switch -- $result {
                                 invalid {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -5056,7 +5080,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             # Check if 'value' is an integer.
                             switch -- [string is integer $value] {
                                 0   {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -5064,7 +5088,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                 1   {
                                     # Check that 'value' is not beyond the entry limits.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5078,7 +5102,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                     # Check if 'value' is an integer.
                     switch -- [string is integer $value] {
                         0   {
-                            # Change the widget dynamic state to 'invalid'.
+                            # Change the widget's dynamic state to 'invalid'.
                             interp invokehidden {} $w state [list invalid]
 
                             return 1
@@ -5086,7 +5110,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                         1   {
                             # Check that 'value' is not beyond the entry limits.
                             if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                # Change the widget dynamic state to 'invalid'.
+                                # Change the widget's dynamic state to 'invalid'.
                                 interp invokehidden {} $w state [list invalid]
 
                                 return 1
@@ -5102,7 +5126,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             # Check if 'value' is a double.
                             switch -- [string is double $value] {
                                 0   {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -5110,7 +5134,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                 1   {
                                     # Check that 'value' is not beyond the entry limits.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5129,7 +5153,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                             # Check if 'value' is a double.
                             switch -- [string is double $value] {
                                 0   {
-                                    # Change the widget dynamic state to 'invalid'.
+                                    # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
                                     return 1
@@ -5137,7 +5161,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                                 1   {
                                     # Check that 'value' is not beyond the entry limits.
                                     if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
-                                        # Change the widget dynamic state to 'invalid'.
+                                        # Change the widget's dynamic state to 'invalid'.
                                         interp invokehidden {} $w state [list invalid]
 
                                         return 1
@@ -5151,7 +5175,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
         }
     }
 
-    # Change the widget dynamic state to '!invalid'.
+    # Change the widget's dynamic state to '!invalid'.
     interp invokehidden {} $w state [list !invalid]
 
     return 1
@@ -5163,7 +5187,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
 #
 # Where:
 #
-# w   should be the widget real address involved.
+# w   should be the widget's real address involved.
 #
 # Return the validated string.
 proc ::ms::entry::Validate_String { w } {
@@ -5173,11 +5197,11 @@ proc ::ms::entry::Validate_String { w } {
     ##                          ##
     ##############################
 
-    # Get the widget string and remove any leading/trailing spaces from it.
+    # Get the widget's string and remove any leading/trailing spaces from it.
     set value [string trim [interp invokehidden {} $w get]]
 
     # Note: Illegal datatype characters cannot be inserted directly through the keyboard,
-    #       we made sure of that trough the widget bindings.
+    #       we made sure of that trough the widget's bindings.
     #       Nonetheless, they can be inserted trough a paste or pasteselection event.
 
     # Clear 'value' from any illegal characters, if any.
@@ -5430,7 +5454,7 @@ proc ::ms::entry::Validate_String { w } {
                     switch -- [string is integer -strict $value] {
                         0   { set value $::ms::data($w,current_value) }
                         1   {
-                            # Check that 'value' is not beyond the widget limits, truncate if needed.
+                            # Check that 'value' is not beyond the widget's limits, truncate if needed.
                             if { $value < $::ms::current($w,from) } {
                                 set value $::ms::current($w,from)
                             } elseif { $value > $::ms::current($w,to) } {
@@ -5454,7 +5478,7 @@ proc ::ms::entry::Validate_String { w } {
                     switch -- [string is double -strict $value] {
                         0   { set value $::ms::data($w,current_value) }
                         1   {
-                            # Check that 'value' is not beyond the widget limits, truncate if needed.
+                            # Check that 'value' is not beyond the widget's limits, truncate if needed.
                             if { $value <= $::ms::current($w,from) } {
                                 set value $::ms::current($w,from)
                             } elseif { $value >= $::ms::current($w,to) } {
@@ -5469,7 +5493,7 @@ proc ::ms::entry::Validate_String { w } {
         }
     }
 
-    # Set the widget dynamic state as '!invalid'.
+    # Set the widget's dynamic state as '!invalid'.
     interp invokehidden {} $w state [list !invalid]
 
     return $value
