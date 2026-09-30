@@ -38,7 +38,7 @@
 # permission to use and distribute the software in accordance with the
 # terms specified in this license.
 
-# Symbols meanings that may be used by the widget synopsis:
+# Symbols meanings that may be used by the widget's synopsis:
 #
 #   *option*             --> A mandatory parameter that must be substituted with a proper value.
 #   **option**           --> The command name or a mandatory parameter that must be written verbatim.
@@ -50,7 +50,7 @@
 #   ?**option** *value*? --> An optional 'key-value' parameter where the former must be written verbatim and
 #                            the latter must be substituted with a proper value.
 
-# Symbols meanings that may be used by the widget infos:
+# Symbols meanings that may be used by the widget's infos:
 #
 #   *text*               --> Italic.
 #   **text**             --> Bold.
@@ -158,7 +158,7 @@
 #                                                         If there isn't one, the **-borderwidth** of the **Canvas** style
 #                                                         will be used instead.
 #                                                         The **-borderwidth** will not abide by its mapping values, if any.
-#                                                         It is not supposed to change when the widget state changes.
+#                                                         It is not supposed to change when the widget's dynamic state changes.
 #
 #                          See also **-bordercolor** and **-relief**.
 #
@@ -230,7 +230,7 @@
 #                                                         If there isn't one, the **-cursor** of the **Canvas** style
 #                                                         will be used instead.
 #                                                         The **-cursor** will not abide by its mapping values, if any.
-#                                                         It is not supposed to change when the widget state changes.
+#                                                         It is not supposed to change when the widget's dynamic state changes.
 #
 # **-height**              Specifies the desired height for the widget in any of the forms acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html)
 #                          (pixels, points, inches, millimeters and centimeters).
@@ -303,7 +303,7 @@
 #                                                         If there isn't one, the **-insertborderwidth** of the **Canvas** style
 #                                                         will be used instead.
 #                                                         The **-insertborderwidth** will not abide by its mapping values, if any.
-#                                                         It is not supposed to change when the widget state changes.
+#                                                         It is not supposed to change when the widget's dynamic state changes.
 #
 #                          See also **-selectborderwidth**.
 #
@@ -351,7 +351,7 @@
 #                                                         If there isn't one, the **-relief** of the **Canvas** style
 #                                                         will be used instead.
 #                                                         The **-relief** will not abide by its mapping values, if any.
-#                                                         It is not supposed to change when the widget state changes.
+#                                                         It is not supposed to change when the widget's dynamic state changes.
 #
 #                          See also **-bordercolor** and **-borderwidth**.
 #
@@ -359,11 +359,11 @@
 #                          If **true**, a megawidget structure (with two scrollbars) will be constructed instead of a single canvas widget.
 #
 #                          The scrollbars will be automatically managed by Tk with the following rules:
-#                             The horizontal scrollbar is defined to be *needed* each time the widget *content* width is bigger then
-#                             the widget *viewport* width and *not needed* when it's not.
+#                             The horizontal scrollbar is defined to be *needed* each time the widget's *content* width is bigger then
+#                             the widget's *viewport* width and *not needed* when it's not.
 #
-#                             The vertical scrollbar is defined to be *needed* each time the widget *content* height is bigger then
-#                             the widget *viewport* height and *not needed* when it's not.
+#                             The vertical scrollbar is defined to be *needed* each time the widget's *content* height is bigger then
+#                             the widget's *viewport* height and *not needed* when it's not.
 #
 #                             If a scrollbar is currently needed, then it will be displayed (if it's not already displayed) and it's related
 #                             fake scrollbar will be removed.
@@ -413,7 +413,7 @@
 #                                                         If there isn't one, the **-selectborderwidth** of the **Canvas** style
 #                                                         will be used instead.
 #                                                         The **-selectborderwidth** will not abide by its mapping values, if any.
-#                                                         It is not supposed to change when the widget state changes.
+#                                                         It is not supposed to change when the widget's dynamic state changes.
 #
 #                          See also **-selectbackground** and **-selectforeground**.
 #
@@ -457,21 +457,21 @@
 #                          See also **-background**.
 #
 # **-state**               Specifies the state for the widget.
-#                          The canvas widget state acts differently than the other widgets states, because it's a classic widget
-#                          and do not support natively any dynamic states.
-#                          Changes to the widget 'physical' state affects it's dynamic state.
-#                          Allowed states values are **normal** and **disabled**.
+#                          Setting it changes the widget's **physical** state and the widget's *look* (because it's a classic widget
+#                          and do not support natively any dynamic states).
 #
-#                          Canvas items which are disabled will not react to canvas bindings.
+#                          Allowed states values are **normal** or **disabled**.
+#
+#                          Note that canvas items that are disabled will not react to any canvas bindings.
 #
 #                          If not provided, defaults to **normal**.
 #
-# **-style**               Specifies a custom widget style.
-#                          If not provided, defaults to **Canvas**.
-#
+# **-style**               Specifies a custom widget's style.
 #                          The *style* provided should already exists at the time the widget is created.
 #
 #                          See the [style](/wiki/commands/style.md) wiki page to know more about styles.
+#
+#                          If not provided, defaults to **Canvas**.
 #
 # **-takefocus**           Determines whether or not the widget will accept the focus during keyboard traversal (e.g., **Tab**
 #                          and **Shift-Tab**).
@@ -549,7 +549,7 @@
 #
 # **-xscrollincrement**    Specifies an integer indicating the increment for horizontal scrolling.
 #                          If the value of this option is greater than zero, the horizontal view in the widget will be constrained
-#                          so that the widget *x* coordinate at the left edge of the widget is always an even multiple of
+#                          so that the widget's *x* coordinate at the left edge of the widget is always an even multiple of
 #                          **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the left and
 #                          right arrows of a scrollbar are selected) will also be **xScrollIncrement**. If the value of this option
 #                          is zero, then horizontal scrolling is unconstrained.
@@ -580,7 +580,7 @@
 #
 # **-yscrollincrement**    Specifies an integer indicating the increment for vertical scrolling.
 #                          If the value of this option is greater than zero, the vertical view in the widget will be constrained
-#                          so that the widget *y* coordinate at the left edge of the widget is always an even multiple of
+#                          so that the widget's *y* coordinate at the left edge of the widget is always an even multiple of
 #                          **xScrollIncrement**; furthermore, the units for scrolling (e.g., the change in view when the top and
 #                          bottom arrows of a scrollbar are selected) will also be **yScrollIncrement**. If the value of this option
 #                          is zero, then vertical scrolling is unconstrained.
@@ -660,7 +660,7 @@
 #     This command associates command with all the items given by *tagOrId* such that whenever the event sequence given by sequence
 #     occurs for one of the items the command will be invoked.
 #
-#     This widget command is similar to the [bind](/wiki/commands/bind.md) command except that it operates on items in a canvas rather
+#     This widget's command is similar to the [bind](/wiki/commands/bind.md) command except that it operates on items in a canvas rather
 #     than entire widgets.
 #     See the **bind** manual entry for complete details on the syntax of sequence and the substitutions performed on command before
 #     invoking it.
@@ -682,7 +682,7 @@
 #
 #     Mouse-related events are directed to the current item, if any.
 #
-#     Keyboard-related events are directed to the focus item, if any (see the focus widget command below for more on this).
+#     Keyboard-related events are directed to the focus item, if any (see the focus widget's command below for more on this).
 #     If a virtual event is used in a binding, that binding can trigger only if the virtual event is defined by an underlying mouse-related
 #     or keyboard-related event.
 #
@@ -696,7 +696,7 @@
 #     scripts for the event, just as for the bind command.
 #
 #     If bindings have been created for a canvas window using the bind command, then they are invoked in addition to bindings created for the
-#     canvas's items using the bind widget command.
+#     canvas's items using the bind widget's command.
 #     The bindings for items will be invoked before any of the bindings for the window as a whole.
 #
 #   *window* **canvasx** *screenx* ?*gridspacing*?
@@ -709,7 +709,7 @@
 #
 #   *window* **cget** option
 #     Returns the current value of the option given by *option*.
-#     *Option* may be one of the widget options accepted by the canvas command (See **WIDGET OPTIONS**).
+#     *Option* may be one of the widget's options accepted by the canvas command (See **WIDGET OPTIONS**).
 #
 #   *window* **configure** **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
 #     Query or modify the configuration options of the widget.
@@ -720,7 +720,7 @@
 #     If a single *option* is specified with no *value*, then the command returns a list describing its default
 #     and current values.
 #
-#     If one or more *option value* pairs are specified, then the command modifies the given widget option(s)
+#     If one or more *option value* pairs are specified, then the command modifies the given widget's option(s)
 #     to have the given value(s) and the command returns an empty string.
 #
 #     Some options can only be setted at creation time.
@@ -778,7 +778,7 @@
 #     Once the focus has been set to an item, the item will display the insertion cursor and all keyboard events will be directed to
 #     that item. The focus item within a canvas and the focus window on the screen (set with the [focus](/wiki/commands/focus.md) command)
 #     are totally independent: a given item does not actually have the input focus unless (a) its canvas is the focus window and (b) the
-#     item is the focus item within the canvas. In most cases it is advisable to follow the focus widget command with the focus command
+#     item is the focus item within the canvas. In most cases it is advisable to follow the focus widget's command with the focus command
 #     to set the focus window to the canvas (if it was not there already).
 #
 #   *window* **gettags** *tagOrId*
@@ -806,13 +806,13 @@
 #     Draw the canvas into the Tk photo image named *imagename*.
 #     If a *-scrollregion* has been defined then this will be the boundaries of the canvas region drawn and the final size of the
 #     photo image.
-#     Otherwise the widget width and height with an origin of **0,0** will be the size of the canvas region drawn and the final size
+#     Otherwise the widget's width and height with an origin of **0,0** will be the size of the canvas region drawn and the final size
 #     of the photo image.
 #     Optionally an integer *subsample* factor may be given and the photo image will be reduced in size.
 #
 #     In addition to the *subsample* an integer *zoom* factor can also be given and the photo image will be enlarged.
 #     The image background will be filled with the canvas background colour.
-#     The canvas widget does not need to be mapped for this widget command to work, but at least one of it's ancestors must be mapped.
+#     The canvas widget does not need to be mapped for this widget's command to work, but at least one of it's ancestors must be mapped.
 #
 #     This command returns an empty string.
 #
@@ -843,8 +843,8 @@
 #     This command returns an empty string.
 #
 #   *window* **instate** *statespec* ?*script*?
-#     Test the widget's state.
-#     If *script* is not specified, returns **1** if the widget state matches *statespec* and **0** otherwise.
+#     Test the widget's dynamic state.
+#     If *script* is not specified, returns **1** if the widget's dynamic state matches *statespec* and **0** otherwise.
 #     If *script* is specified it's equivalent to:
 #
 #        if { [*window* **instate** *stateSpec*] } *script*
@@ -853,21 +853,21 @@
 #
 #   *window* **itemcget** *tagOrId* *option*
 #     Returns the current value of the configuration option for the item given by *tagOrId* whose name is *option*.
-#     This command is similar to the **cget** widget command except that it applies to a particular item rather than the widget
+#     This command is similar to the **cget** widget's command except that it applies to a particular item rather than the widget
 #     as a whole.
-#     *Option* may have any of the values accepted by the create widget command when the item was created.
+#     *Option* may have any of the values accepted by the create widget's command when the item was created.
 #     If *tagOrId* is a tag that refers to more than one item, the first (lowest) such item is used.
 #
 #   *window* **itemconfigure** *tagOrId* ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
-#     This command is similar to the configure widget command except that it modifies item-specific options for the items given
+#     This command is similar to the configure widget's command except that it modifies item-specific options for the items given
 #     by *tagOrId* instead of modifying options for the overall canvas widget.
 #     If no option is specified, returns a list describing all of the available options for the first item given by *tagOrId*
 #     (see [Tk_ConfigureInfo](https://www.tcl-lang.org/man/tcl9.0/TkLib/ConfigWidg.html) for information on the format of this list).
 #     If *option* is specified with no value, then the command returns a list describing the one named *option* (this list will be
 #     identical to the corresponding sublist of the value returned if no option is specified).
-#     If one or more option-value pairs are specified, then the command modifies the given widget option(s) to have the given value(s)
+#     If one or more option-value pairs are specified, then the command modifies the given widget's option(s) to have the given value(s)
 #     in each of the items given by tagOrId; in this case the command returns an empty string.
-#     The options and values are the same as those permissible in the create widget command when the item(s) were created; see the
+#     The options and values are the same as those permissible in the create widget's command when the item(s) were created; see the
 #     sections describing individual item types below for details on the legal options.
 #
 #   *window* **lower** *tagOrId* ?*belowThis*?
@@ -877,7 +877,7 @@
 #     used as the destination location for the moved items.
 #     Note that this command has no effect on window items.
 #     Window items always obscure other item types, and the stacking order of window items is determined by the raise command and
-#     lower command, not the raise widget command and lower widget command for canvases.
+#     lower command, not the raise widget command and lower widget's command for canvases.
 #
 #     This command returns an empty string.
 #
@@ -1020,7 +1020,7 @@
 #
 #     Note this this command has no effect on window items.
 #     Window items always obscure other item types, and the stacking order of window items is determined by the raise command and
-#     lower command, not the raise widget command and lower widget command for canvases.
+#     lower command, not the raise widget's command and lower widget's command for canvases.
 #
 #   *window* **rchars** *tagOrId* *first* *last* *string*
 #     This command causes the text or coordinates between *first* and *last* for each of the items indicated by *tagOrId* to be
@@ -1083,7 +1083,7 @@
 #         Locate the end of the selection in *tagOrId* nearest to the character given by *index*, and adjust that end of the selection
 #         to be at *index* (i.e. including but not going beyond *index*).
 #         The other end of the selection is made the anchor point for future select to commands.
-#         If the selection is not currently in *tagOrId* then this command behaves the same as the select to widget command.
+#         If the selection is not currently in *tagOrId* then this command behaves the same as the select to widget's command.
 #         Returns an empty string.
 #
 #       *window* **select** **clear**
@@ -1109,8 +1109,8 @@
 #         Returns an empty string.
 #
 #   *window* **state** ?*statespec*?
-#     Modify or inquire widget state.
-#     If *statespec* is present       --> Sets the widget dynamic state.
+#     Modify or inquire widget's dynamic state.
+#     If *statespec* is present       --> Sets the widget's dynamic state.
 #                                         For each flag in *statespec*, sets the corresponding flag or clears it
 #                                         if prefixed by an exclamation point.
 #                                         Returns a new *statespec* indicating which flags were changed.
@@ -1185,7 +1185,7 @@
 #
 # Window items are an exception to the above rules.
 # The underlying window systems require them always to be drawn on top of other items.
-# In addition, the stacking order of window items is not affected by any of the canvas widget commands; you must use the Tk
+# In addition, the stacking order of window items is not affected by any of the canvas widget's commands; you must use the Tk
 # raise command and lower command instead.
 #
 ##### ITEM IDS AND TAGS:
@@ -1208,7 +1208,7 @@
 # item type documentation for details).
 # If the mouse is not in the canvas widget or is not over an item, then no item has the current tag.
 #
-# When specifying items in canvas widget commands, if the specifier is an integer then it is assumed to refer to the single
+# When specifying items in canvas widget's commands, if the specifier is an integer then it is assumed to refer to the single
 # item with that id. If the specifier is not an integer, then it is assumed to refer to all of the items in the canvas that
 # have a tag matching the specifier. The symbol *tagOrId* is used below to indicate that an argument specifies either an id
 # that selects a single item or a tag that selects zero or more items.
@@ -1224,9 +1224,9 @@
 #
 # will find only those items with either "a" or "b" tags, but not both.
 #
-# Some widget commands only operate on a single item at a time; if *tagOrId* is specified in a way that names multiple items,
+# Some widget's commands only operate on a single item at a time; if *tagOrId* is specified in a way that names multiple items,
 # then the normal behavior is for the command to use the first (lowest) of these items in the display list that is suitable
-# for the command. Exceptions are noted in the widget command descriptions below.
+# for the command. Exceptions are noted in the widget's command descriptions below.
 #
 #### COORDINATES:
 #
@@ -1243,13 +1243,13 @@
 #
 # Normally the origin of the canvas coordinate system is at the upper-left corner of the window containing the canvas.
 # It is possible to adjust the origin of the canvas coordinate system relative to the origin of the window using the xview and
-# yview widget commands; this is typically used for scrolling.
+# yview widget's commands; this is typically used for scrolling.
 # Canvases do not support scaling or rotation of the canvas coordinate system relative to the window coordinate system.
 #
-# Individual items may be moved, scaled or rotated using widget commands described below.
+# Individual items may be moved, scaled or rotated using widget's commands described below.
 #
 # Note that the default origin of the canvas's visible area is coincident with the origin for the whole window as that makes
-# bindings using the mouse position easier to work with; you only need to use the **canvasx** and **canvasy** widget commands
+# bindings using the mouse position easier to work with; you only need to use the **canvasx** and **canvasy** widget's commands
 # if you adjust the origin of the visible area.
 # However, this also means that any window border (as controlled by the **-borderwidth** option) must be taken into account
 # before you get to the visible area of the canvas.
@@ -1327,7 +1327,7 @@
 #
 # The sections below describe the various types of items supported by canvas widgets.
 # Each item type is characterized by two things: first, the form of the create command used to create instances of the type; and
-# second, a set of configuration options for items of that type, which may be used in the create and itemconfigure widget commands.
+# second, a set of configuration options for items of that type, which may be used in the create and itemconfigure widget's commands.
 # Most items do not support indexing or selection or the commands related to them, such as index and insert.
 # Where items do support these facilities, it is noted explicitly in the descriptions below.
 # At present, text, line and polygon items provide this support.
@@ -1443,7 +1443,7 @@
 # that defines the arc (except when **-height** is specified - see below).
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
 # for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # An arc item becomes the current item when the mouse pointer is over any part that is painted or (when fully transparent)
 # that would be painted if both the **-fill** and **-outline** options were non-empty.
 #
@@ -1522,7 +1522,7 @@
 # display, as controlled by the **-anchor** option.
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
 # for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # A bitmap item becomes the current item when the mouse pointer is over any part of its bounding box.
 #
 # The following standard options are supported by bitmaps:
@@ -1565,7 +1565,7 @@
 # *-anchor* option.
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
 # for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # An image item becomes the current item when the mouse pointer is over any part of its bounding box.
 #
 # The following standard options are supported by images:
@@ -1585,7 +1585,7 @@
 ###### LINE ITEMS:
 #
 # Items of type line appear on the display as one or more connected line segments or curves.
-# Line items support coordinate indexing operations using the dchars, index and insert widget commands.
+# Line items support coordinate indexing operations using the dchars, index and insert widget's commands.
 # Lines are created with the following form:
 #
 #    *window* **create** **line** *coordList* ?*option* *value*? ... ?*option* *value*?
@@ -1594,7 +1594,7 @@
 # line segments.
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
 # for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # A line item is the current item whenever the mouse pointer is over any segment of the line, whether drawn or not and
 # whether or not the line is smoothed.
 #
@@ -1689,7 +1689,7 @@
 # If the region is square then the resulting oval is circular; otherwise it is elongated in shape.
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options for
 # the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # An oval item becomes the current item when the mouse pointer is over any part that is painted or (when fully transparent)
 # that would be painted if both the **-fill** and **-outline** options were non-empty.
 #
@@ -1724,7 +1724,7 @@
 ###### POLYGON ITEMS:
 #
 # Items of type polygon appear as polygonal or curved filled regions on the display.
-# Polygon items support coordinate indexing operations using the dchars, index and insert widget commands.
+# Polygon items support coordinate indexing operations using the dchars, index and insert widget's commands.
 # Polygons are created with the following form:
 #
 #    *window* **create** **polygon** *coordList* ?*option* *value*? ... ?*option* *value*?
@@ -1734,7 +1734,7 @@
 # the first and last points.
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
 # for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # A polygon item is the current item whenever the mouse pointer is over any part of the polygon, whether drawn or not and
 # whether or not the outline is smoothed.
 #
@@ -1795,7 +1795,7 @@
 #     This option is ignored unless the **-smooth** option is true or raw.
 #
 # Polygon items are different from other items such as rectangles, ovals and arcs in that interior points are considered to be "inside"
-# a polygon (e.g. for purposes of the find closest and find overlapping widget commands) even if it is not filled.
+# a polygon (e.g. for purposes of the find closest and find overlapping widget's commands) even if it is not filled.
 # For most other item types, an interior point is considered to be inside the item only if the item is filled or if it has neither a
 # fill nor an outline.
 # If you would like an unfilled polygon whose interior points are not considered to be inside the polygon, use a line item instead.
@@ -1811,7 +1811,7 @@
 # The argument *coordList* (which must have four elements) give the coordinates of two diagonally opposite corners of the rectangle
 # (the rectangle will include its upper and left edges but not its lower or right edges).
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # A rectangle item becomes the current item when the mouse pointer is over any part that is painted or (when fully transparent) that
 # would be painted if both the **-fill** and **-outline** options were non-empty.
 #
@@ -1846,8 +1846,8 @@
 ###### TEXT ITEMS:
 #
 # A text item displays a string of characters on the screen in one or more lines.
-# Text items support indexing, editing and selection through the dchars widget command, the focus widget command, the icursor widget
-# command, the index widget command, the insert widget command, and the select widget command.
+# Text items support indexing, editing and selection through the dchars widget's command, the focus widget's command, the icursor widget
+# command, the index widget's command, the insert widget's command, and the select widget's command.
 # Text items are created with the following form:
 #
 #    *window* **create** **text** *coordList* ?*option* *value*? ... ?*option* *value*?
@@ -1855,7 +1855,7 @@
 # The argument *coordList* (which must have two elements) specify the coordinates of a point used to position the text on the display
 # (see the options below for more information on how text is displayed).
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # A text item becomes the current item when the mouse pointer is over any part of its bounding box.
 #
 # The following standard options are supported by text items:
@@ -1889,7 +1889,7 @@
 #
 #   **-text** *string*
 #     **String** specifies the characters to be displayed in the text item. Newline characters cause line breaks.
-#     The characters in the item may also be changed with the insert and delete widget commands.
+#     The characters in the item may also be changed with the insert and delete widget's commands.
 #     This option defaults to an empty string.
 #
 #   **-underline** *number*
@@ -1915,7 +1915,7 @@
 # the display, as controlled by the **-anchor** option.
 # After the coordinates there may be any number of option-value pairs, each of which sets one of the configuration options
 # for the item.
-# These same option-value pairs may be used in itemconfigure widget commands to change the item's configuration.
+# These same option-value pairs may be used in itemconfigure widget's commands to change the item's configuration.
 # Theoretically, a window item becomes the current item when the mouse pointer is over any part of its bounding box,
 # but in practice this typically does not happen because the mouse pointer ceases to be over the canvas at that point.
 #
@@ -1981,14 +1981,14 @@
 #
 # The following behavior will happen if the mouse pointer is over the widget (no matter if it has the focus or not).
 #
-# Note: A *unit* is 1/10 of a scrollable widget visible zone relative axis or, if a scrollincrement is provided,
+# Note: A *unit* is 1/10 of a scrollable widget's visible zone relative axis or, if a scrollincrement is provided,
 #       a multiple of it. See '-xscrollincrement' and '-yscrollincrement' of the relative scrollable widget for more info.
 #
-#       A *page* is 9/10 of a scrollable widget visible zone relative axis.
+#       A *page* is 9/10 of a scrollable widget's visible zone relative axis.
 #
 # Note: Belows, when we talk about the widget's parents, we talk about it recursively.
 #       Mustang will iterate all widget's parents in search of one that is scrollable and has the proper scrollbar active
-#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget scrollbar,
+#       for the relative key combination examined. If mustang finds a suitable parent, it will scroll that widget's scrollbar,
 #       otherwise nothing will happen.
 #
 # Note: In Linux, **TouchpadScroll** events abide by the same rules of the **MouseWheel** for the X axis and the **Shift-MouseWheel**
@@ -2043,7 +2043,7 @@
 # 1.  If the widget have an active vertical scrollbar, **MouseWheel** events will scroll one unit towards the top or the bottom of
 #     the widget (depending on the direction of the mousewheel event).
 #
-#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget scrollable
+#     If the widget doesn't have an active vertical scrollbar, **MouseWheel** events will try to find the innermost widget's scrollable
 #     parent with an active vertical scrollbar and move that scrollbar by one unit up or down (depending on the mousewheel direction).
 #     If none of the widget's parents meets the required condition, nothing will happen.
 #
@@ -2094,7 +2094,7 @@
 #     These two planes may involve different widgets depending on the active scrollbars on them and on the touchpad directions.
 #
 #        1 - If the widget have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try will scroll the
-#            widget scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the left or the right (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active horizontal scrollbar, **Control-TouchpadScroll** events along the X axis will try to find
 #            the innermost widget's scrollable parent with an active horizontal scrollbar and move that scrollbar by one page towards the left
@@ -2102,7 +2102,7 @@
 #            If none of the widget's parents meets the required condition, nothing will happen on the horizontal axis.
 #
 #        2 - If the widget have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try will scroll the
-#            widget scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
+#            widget's scrollbar one page towards the top or the bottom (depending on the direction of the touchpad event).
 #
 #            If the widget does not have an active vertical scrollbar, **Control-TouchpadScroll** events along the Y axis will try to find
 #            the innermost widget's scrollable parent with an active vertical scrollbar and move that scrollbar by one page towards the top
@@ -2116,7 +2116,7 @@
 #
 ###### INTERNAL MECHANISM:
 #
-# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget styleable options (**-borderwidth**
+# 1.  If the current theme follows the **clam** engine (like the 'Halo' theme) and the widget's styleable options (**-borderwidth**
 #     and **-bordercolor**) allows it, everytime the mouse cursor enters the widget it will illuminate its borders to visually
 #     indicate that the user is inside the widget.
 #
@@ -2129,17 +2129,17 @@
 # 1.  The **Tab** key will change the focus to the next focussable widget while **Shift-Tab** key will change it to the previous
 #     focussable widget.
 #
-# 2.  If the widget vertical scrollbar is active:
+# 2.  If the widget's vertical scrollbar is active:
 #       - **Prior** Scrolls one page towards the top of the widget.
 #       - **Next**  Scrolls one page towards the bottom of the widget.
-#     If the widget vertical scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
+#     If the widget's vertical scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
 #     active vertical scrollbar and scroll that scrollbar. If none of the widget's parents meets the required conditions,
 #     nothing will happen.
 #
-# 3.  If the widget horizontal scrollbar is active:
+# 3.  If the widget's horizontal scrollbar is active:
 #       - **Control-Prior** Scrolls one page towards the right of the widget.
 #       - **Control-Next**  Scrolls one page towards the left of the widget.
-#     If the widget horizontal scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
+#     If the widget's horizontal scrollbar is not active, mustang will try to find the innermost widget's scrollable parent with an
 #     active horizontal scrollbar and scroll that scrollbar. If none of the widget's parents meets the required conditions,
 #     nothing will happen.
 #
@@ -2888,16 +2888,16 @@ interp alias {} canvas {} ::ms::canvas::Command
 
 ## Command
 #
-# Replace the Tk **canvas** widget command.
+# Replace the Tk **canvas** widget's command.
 #
 # Where:
 #
-# window   Should be the widget pathname address to create.
+# window   Should be the widget's pathname address to create.
 #          This address should be unique and all the parents addresses should exists already.
 #          *Window* can either be a real or short address.
 #
 # args     Should be one or more option-value pairs to configure various aspects of the widget.
-#          Any acceptable widget options may be specified.
+#          Any acceptable widget's options may be specified.
 #          See 'WIDGET OPTIONS' above for more info.
 #
 # Returns the pathname of the new window created.
@@ -2923,7 +2923,7 @@ proc ::ms::canvas::Command { window { args "" } } {
             ##                                           ##
             ###############################################
 
-            # Set the default widget (not styleable) options.
+            # Set the default widget's (not styleable) options.
             set ::ms::default($w,class)            $::ms::default(canvas,class)
             set ::ms::default($w,cmenu)            $::ms::default(canvas,cmenu)
             set ::ms::default($w,closeenough)      $::ms::default(canvas,closeenough)
@@ -2943,7 +2943,7 @@ proc ::ms::canvas::Command { window { args "" } } {
             set ::ms::default($w,yscrollcommand)   $::ms::default(canvas,yscrollcommand)
             set ::ms::default($w,yscrollincrement) $::ms::default(canvas,yscrollincrement)
 
-            # Set the current widget (not styleable) options.
+            # Set the current widget's (not styleable) options.
             set ::ms::current($w,class)            $::ms::default(canvas,class)
             set ::ms::current($w,cmenu)            $::ms::default(canvas,cmenu)
             set ::ms::current($w,closeenough)      $::ms::default(canvas,closeenough)
@@ -2963,7 +2963,7 @@ proc ::ms::canvas::Command { window { args "" } } {
             set ::ms::current($w,yscrollcommand)   $::ms::default(canvas,yscrollcommand)
             set ::ms::current($w,yscrollincrement) $::ms::default(canvas,yscrollincrement)
 
-            # Set some widget variables needed for internal mechanisms.
+            # Set some widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) canvas
             set ::ms::data($w,scrollx)   off
             set ::ms::data($w,scrolly)   off
@@ -3241,7 +3241,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                             disabled {
                                 set ::ms::current($w,state) disabled
 
-                                # Set the widget dynamic state to 'disabled'
+                                # Set the widget's dynamic state to 'disabled'
                                 set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                             }
                             normal { set ::ms::current($w,state) normal }
@@ -3311,7 +3311,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                 }
             }
 
-            # Check the widget's state and set the takefocus and cursor accordingly.
+            # Check the widget's dynamic state and set the takefocus and cursor accordingly.
             switch -- $::ms::current($w,state) {
                 disabled {
                     set cursor    arrow
@@ -3436,7 +3436,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                         ::ms::Error "$errortext" $caller_info
                     }
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ######################
@@ -3460,21 +3460,21 @@ proc ::ms::canvas::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses of all the object composing the megawidget.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses of all the object composing the megawidget.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short) $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals)  $w
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w
                 }
                 true {
@@ -3550,12 +3550,12 @@ proc ::ms::canvas::Command { window { args "" } } {
                                     -takefocus 0 \
                                         -width 0;
 
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { $w state [list disabled] }
                     }
 
-                    # Set the widget toplevel.
+                    # Set the widget's toplevel.
                     set ::ms::addr($w,toplevel) [_winfo toplevel $w]
 
                     ####################
@@ -3670,15 +3670,15 @@ proc ::ms::canvas::Command { window { args "" } } {
                     ##                 ##
                     #####################
 
-                    # Configure the internal widget rows and columns.
+                    # Configure the internal widget's rows and columns.
                     _grid rowconfigure    $w [list 0] -weight 1
                     _grid columnconfigure $w [list 0] -weight 1
 
-                    # Set the widget real address relative to its short address, 'short_addr'.
+                    # Set the widget's real address relative to its short address, 'short_addr'.
                     set ::ms::addr($short_addr,real) $w
 
-                    # Set the widget short addresses relative to its real address, 'w'.
-                    # They will all point to the widget hull object short address.
+                    # Set the widget's short addresses relative to its real address, 'w'.
+                    # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short)        $short_addr
                     set ::ms::addr($w.canvas,short) $short_addr
                     set ::ms::addr($w.fake_x,short) $short_addr
@@ -3686,7 +3686,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     set ::ms::addr($w.x,short)      $short_addr
                     set ::ms::addr($w.y,short)      $short_addr
 
-                    # Add the widget real and short address into the list of all available real and short addresses.
+                    # Add the widget's real and short address into the list of all available real and short addresses.
                     lappend ::ms::addr(reals) $w \
                                               $w.canvas \
                                               $w.fake_x \
@@ -3699,16 +3699,16 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
                     set ::ms::addr($w,border) $w.canvas
 
-                    # Set the actual widget address (the widget that the developer was intended to build).
+                    # Set the actual widget's real address (the widget that the developer was intended to build).
                     set ::ms::addr($w,widget) $w.canvas
 
-                    # Add the widget address to the megawidget addresses list.
+                    # Add the widget's real address to the megawidget's real addresses list.
                     lappend ::ms::addr(megawidgets) $w
 
-                    # Add the widget address to the megawidget container addresses list.
+                    # Add the widget's real address to the megawidget's container real addresses list.
                     lappend ::ms::addr(megawidgets,containers) $w
 
-                    # Add the widget address to the scrollable megawidget addresses list.
+                    # Add the widget's real address to the scrollable megawidget's real addresses list.
                     lappend ::ms::addr(megawidgets,scrollable) $w
                 }
             }
@@ -3719,32 +3719,40 @@ proc ::ms::canvas::Command { window { args "" } } {
             ##                 ##
             #####################
 
-            # Hide the widget pathcommand.
+            # Hide the widget's pathcommand.
             interp hide {} $w
 
-            # Create an alias for the widget pathcommand.
+            # Create an alias for the widget's pathcommand.
             lappend ::ms::data($w,token) [interp alias {} $w {} ::ms::canvas::Pathname_Cmd $w]
 
-            # If needed, create an alias for the widget short address pathcommand.
+            # If needed, create an alias for the widget's short address pathcommand.
             if { $short_addr ne $w } {
                 lappend ::ms::data($w,token) [interp alias {} $short_addr {} ::ms::canvas::Pathname_Cmd $w]
             }
 
-            # Add the widget address to the canvas classtype widgets real address list.
+            # Add the widget's real address to the canvas classtype widgets real address list.
             lappend ::ms::addr(canvas,classtype) $w
 
-            # Add the widget address to the canvas classtype real address list with class '::ms::current($w,class)'.
-            lappend ::ms::class($::ms::current($w,class),canvas,addrs) $w
+            # If needed, add '::ms::current($w,class)' to the available class list.
+            if { $::ms::current($w,class) ni $::ms::data(classes) } {
+                lappend ::ms::data(classes) $::ms::current($w,class)
+            }
 
-            # Add the widget address to the canvas classtype real address list with style '::ms::current($w,style)'.
+            # Add the widget's real address to the class list that contains all the available real address
+            # with class '::ms::current($w,class)'.
+            lappend ::ms::class($::ms::current($w,class),addrs) $w
+
+            # Add the widget's real address to the style list that contains all the canvas classtype real address
+            # with style '::ms::current($w,style)'.
             lappend ::ms::style($::ms::current($w,style),canvas,addrs) $w
 
-            # If needed, add '::ms::current($w,style)' to the available styles for the canvas classtype.
+            # If needed, add '::ms::current($w,style)' to the style list that contains all the available styles
+            # for the canvas classtype.
             if { $::ms::current($w,style) ni $::ms::style(canvas,classtype) } {
                 lappend ::ms::style(canvas,classtype) $::ms::current($w,style)
             }
 
-            # Depending on the address type provided, return the widget real or short address.
+            # Depending on the address type provided, return the widget's real or short address.
             switch -- $type {
                 real  { return $w }
                 short { return $short_addr }
@@ -3762,13 +3770,13 @@ proc ::ms::canvas::Command { window { args "" } } {
 
 ## Pathname_Cmd
 #
-# This procedure replaces the Tk widget address command.
+# This procedure replaces the Tk widget's real address command.
 #
 # Where:
 #
-# w      Should be the widget real address involved.
+# w      Should be the widget's real address involved.
 #
-# cmd    Should be the widget command to use.
+# cmd    Should be the widget's command to use.
 #        The aliased command will provided this data.
 #
 # args   Contains the options needed by the 'cmd', if any.
@@ -3916,7 +3924,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
-                            # Note: The widget new dimensions will be updated only if they phisically change
+                            # Note: The widget's new dimensions will be updated only if they phisically change
                             #       after the configure command was issued.
                             #
                             #       Their registration (if any) is done in the '::ms::canvas::Configure' event procedure.
@@ -4156,32 +4164,31 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                             disabled {
                                                 set ::ms::current($w,state) disabled
 
-                                                # Set the widget dynamic state to 'disabled'
+                                                # Set the widget's dynamic state to 'disabled'
                                                 set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "disabled"]
                                             }
                                             normal {
                                                 set ::ms::current($w,state) normal
 
-                                                # Set the widget dynamic state to '!disabled'
+                                                # Set the widget's dynamic state to '!disabled'
                                                 set ::ms::data($w,statespec) [lreplace $::ms::data($w,statespec) 3 3 "!disabled"]
                                             }
                                         }
                                     }
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
-                                            # Remove the widget address from the canvas classtype real address list that contains all the
-                                            # widgets addresses with style '::ms::current($w,style)'.
+                                            # Remove the widget's real address from the style list that contains all the canvas classtype real addresses
+                                            # with style '::ms::current($w,style)'.
                                             set index [lsearch -exact $::ms::style($::ms::current($w,style),canvas,addrs) $w]
                                             switch -- $index {
                                                 -1      {}
                                                 default { set ::ms::style($::ms::current($w,style),canvas,addrs) [lremove $::ms::style($::ms::current($w,style),canvas,addrs) $index] }
                                             }
 
-                                            # Add the widget address to the address list that contains all the
-                                            # widgets addresses with style 'value'.
+                                            # Add the widget's real address to the address list that contains all the widgets addresses with style 'value'.
                                             lappend ::ms::style($value,canvas,addrs) $w
 
-                                            # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles
+                                            # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
                                             # for the canvas classtype.
                                             switch -- [llength $::ms::style($::ms::current($w,style),canvas,addrs)] {
                                                 0   {
@@ -4271,7 +4278,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the widget's state and set the cursor and takefocus accordingly.
+                            # Check the widget's dynamic state and set the cursor and takefocus accordingly.
                             switch -- $::ms::current($w,state) {
                                 disabled {
                                     set cursor    arrow
@@ -4451,7 +4458,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         lappend ::ms::stylemap($::ms::theme,created_by_mustang) $mapping
                                     }
 
-                                    # Check the widget's state.
+                                    # Check the widget's physical state.
                                     switch -- $::ms::current($w,state) {
                                         disabled { interp invokehidden {} $w state [list disabled] }
                                     }
@@ -4766,7 +4773,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             switch -- $::ms::current($w,scrollable) {
                 false { return "Canvas.area" }
                 true  {
-                    # Get the widget address containing the point given by the root coordinates calculated.
+                    # Get the widget's real address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
                     # Execute the command.
@@ -4858,7 +4865,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
                 1   {
-                    # Check the widget's state.
+                    # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
                         normal {
@@ -5222,7 +5229,7 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
             }
         }
 
-        # Check the widget's state and set the relative cursor.
+        # Check the widget's dynamic state and set the relative cursor.
         switch -- $::ms::current($w,state) {
             disabled { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
@@ -5417,11 +5424,11 @@ proc ::ms::canvas::Style_Update { stylename caller_info } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::canvas::Configure { w } {
-    # Check if we are here due to a widget configure command or not.
+    # Check if we are here due to a widget's configure command or not.
     switch -- [info exists ::ms::temp($w,height)] {
         1   {
             set ::ms::current($w,height) $::ms::temp($w,height)
@@ -5443,47 +5450,64 @@ proc ::ms::canvas::Configure { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::canvas::Destroy { w } {
-    # Get the short address related to the widget real address.
+    # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
-    # Destroy the aliased widget pathcommands.
+    # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
     }
 
-    # Remove the widget short address from the list of all available short addresses.
+    # Remove the widget's short address from the list of the widgets short address list.
     set index [lsearch -exact $::ms::addr(shorts) $short_addr]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
-    # Remove the widget address from the canvas classtype widgets real address list.
+    # Remove the widget's real address from the canvas classtype real address list.
     set index [lsearch -exact $::ms::addr(canvas,classtype) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::addr(canvas,classtype) [lremove $::ms::addr(canvas,classtype) $index] }
     }
 
-    # Remove the widget address from the canvas classtype real address list with class '::ms::current($w,class)'.
-    set index [lsearch -exact $::ms::class($::ms::current($w,class),canvas,addrs) $w]
+    # Remove the widget's real address from the class list that contains all the widgets real address list
+    # with class '::ms::current($w,class)'.
+    set index [lsearch -exact $::ms::class($::ms::current($w,class),addrs) $w]
     switch -- $index {
         -1      {}
-        default { set ::ms::class($::ms::current($w,class),canvas,addrs) [lremove $::ms::class($::ms::current($w,class),canvas,addrs) $index] }
+        default { set ::ms::class($::ms::current($w,class),addrs) [lremove $::ms::class($::ms::current($w,class),addrs) $index] }
     }
 
-    # Remove the widget address from the canvas classtype real address list with style '::ms::current($w,style)'.
+    # If needed, remove the '::ms::current($w,class)' from the class list that contains all the available classes.
+    switch -- [llength $::ms::class($::ms::current($w,class),addrs)] {
+        0   {
+            set index [lsearch -exact $::ms::data(classes) $::ms::current($w,class)]
+            switch -- $index {
+                -1      {}
+                default { set ::ms::data(classes) [lremove $::ms::data(classes) $index] }
+            }
+
+            # Remove also the '::ms::class($::ms::current($w,class),addrs)' variable.
+            unset -nocomplain -- ::ms::class($::ms::current($w,class),addrs)
+        }
+    }
+
+    # Remove the widget's real address from the style list that contains all the canvas classtype real addresses
+    # with style '::ms::current($w,style)'.
     set index [lsearch -exact $::ms::style($::ms::current($w,style),canvas,addrs) $w]
     switch -- $index {
         -1      {}
         default { set ::ms::style($::ms::current($w,style),canvas,addrs) [lremove $::ms::style($::ms::current($w,style),canvas,addrs) $index] }
     }
 
-    # If needed, remove the '::ms::current($w,style)' from the list that contains the available styles for the canvas classtype.
+    # If needed, remove the '::ms::current($w,style)' from the style list that contains all the available styles
+    # for the canvas classtype.
     switch -- [llength $::ms::style($::ms::current($w,style),canvas,addrs)] {
         0   {
             set index [lsearch -exact $::ms::style(canvas,classtype) $::ms::current($w,style)]
@@ -5503,7 +5527,7 @@ proc ::ms::canvas::Destroy { w } {
             ##                       ##
             ###########################
 
-            # Remove the widget address from the list of all available real addresses.
+            # Remove the widget's real address from the widgets real address list.
             set index [lsearch -exact $::ms::addr(reals) $w]
             switch -- $index {
                 -1      {}
@@ -5517,7 +5541,7 @@ proc ::ms::canvas::Destroy { w } {
             ##                           ##
             ###############################
 
-            # Remove every widget's objects addresses from the list of all available real addresses.
+            # Remove all the widget's objects addresses from the widgets real address list.
             foreach object [list $w \
                                  $w.canvas \
                                  $w.fake_x \
@@ -5531,21 +5555,21 @@ proc ::ms::canvas::Destroy { w } {
                 }
             }
 
-            # Remove the widget address from the megawidget real address list.
+            # Remove the widget's real address from the megawidget's real address list.
             set index [lsearch -exact $::ms::addr(megawidgets) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(megawidgets) [lremove $::ms::addr(megawidgets) $index] }
             }
 
-            # Remove the widget address from the megawidget container real address list.
+            # Remove the widget's real address from the megawidget container real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,containers) $w]
             switch -- $index {
                 -1      {}
                 default { set ::ms::addr(megawidgets,containers) [lremove $::ms::addr(megawidgets,containers) $index] }
             }
 
-            # Remove the widget address from the megawidget scrollable real address list.
+            # Remove the widget's real address from the megawidget scrollable real address list.
             set index [lsearch -exact $::ms::addr(megawidgets,scrollable) $w]
             switch -- $index {
                 -1      {}
@@ -5554,7 +5578,7 @@ proc ::ms::canvas::Destroy { w } {
         }
     }
 
-    # Destroy the bindings for the widget real address in its related toplevel.
+    # Destroy the bindings for the widget's real address in its related toplevel.
     ::ms::CleanUp $w
 
     # Destroy every widget's variables previously created.
@@ -5657,7 +5681,7 @@ proc ::ms::canvas::Destroy { w } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::canvas::FocusOut { w } {
@@ -5689,7 +5713,7 @@ proc ::ms::canvas::FocusOut { w } {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -5843,7 +5867,7 @@ proc ::ms::canvas::Scrollbar_ButtonRelease {} {
 #
 # Where:
 #
-# w        Should be the widget real address involved.
+# w        Should be the widget's real address involved.
 #
 # orient   Specifies a string (**horizontal** or **vertical**) indicating
 #          the orientation of the scrollbar.
@@ -5897,7 +5921,7 @@ proc ::ms::canvas::Scrollbar_Drag { w orient x y } {
 #
 # Where:
 #
-# w   Should be the widget real address involved.
+# w   Should be the widget's real address involved.
 #
 # It doesn't return anything.
 proc ::ms::canvas::Scrollbar_Update { w } {
