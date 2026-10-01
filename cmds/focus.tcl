@@ -306,8 +306,8 @@ proc ::ms::focus::Command { args } {
 
             # Check the 'action' value.
             switch -- $action {
-                "-displayof" -
-                "-lastfor"   {
+                -displayof -
+                -lastfor   {
                     # Get the 'window' real address.
                     set result [::ms::Check_Pathname $window invalid]
                     switch -- $result {
@@ -334,7 +334,7 @@ proc ::ms::focus::Command { args } {
                         return $address
                     }
                 }
-                "-force" {
+                -force {
                     # Get the 'window' real address.
                     set result [::ms::Check_Pathname $window invalid]
                     switch -- $result {
@@ -358,7 +358,7 @@ proc ::ms::focus::Command { args } {
 
                     return ""
                 }
-                default { ::ms::Error "Wrong option or option with no value." $caller_info }
+                default { ::ms::Error "Invalid option, '$action'." $caller_info }
             }
         }
         3   {
@@ -369,6 +369,13 @@ proc ::ms::focus::Command { args } {
             set action    [lindex $args 0]
             set displayof [lindex $args 1]
             set window    [lindex $args 2]
+
+            # Check the 'action' value.
+            switch -- $action {
+                next    -
+                prev    {}
+                default { ::ms::Error "Invalid option, '$action'." $caller_info }
+            }
 
             # Check the 'displayof' option.
             switch -- $displayof {
@@ -393,10 +400,10 @@ proc ::ms::focus::Command { args } {
                     # Do nothing.
                 }
                 default {
-                    # Check the 'action' value.
+                    # Get the next/previous new widget address 'address'.
                     switch -- $action {
-                        "next" { set address [::tk_focusNext $current] }
-                        "prev" { set address [::tk_focusPrev $current] }
+                        next { set address [::tk_focusNext $current] }
+                        prev { set address [::tk_focusPrev $current] }
                     }
 
                     # Focus the next/previous new widget address 'address'.
