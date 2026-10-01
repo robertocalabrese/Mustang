@@ -1009,7 +1009,7 @@ proc ::ms::winfo::Command { args } {
                 return $result
             }
         }
-        default { ::ms::Error "Invalid option, '$action'." $caller_info }
+        default { ::ms::Error "Invalid action, '$action'." $caller_info }
     }
 }
 

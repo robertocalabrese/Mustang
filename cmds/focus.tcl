@@ -358,7 +358,7 @@ proc ::ms::focus::Command { args } {
 
                     return ""
                 }
-                default { ::ms::Error "Invalid option, '$action'." $caller_info }
+                default { ::ms::Error "Invalid action, '$action'." $caller_info }
             }
         }
         3   {
@@ -374,7 +374,7 @@ proc ::ms::focus::Command { args } {
             switch -- $action {
                 next    -
                 prev    {}
-                default { ::ms::Error "Invalid option, '$action'." $caller_info }
+                default { ::ms::Error "Invalid action, '$action'." $caller_info }
             }
 
             # Check the 'displayof' option.

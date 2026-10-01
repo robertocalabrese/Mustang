@@ -644,7 +644,7 @@ proc ::ms::event::Command { args } {
                 }
             }
         }
-        default { ::ms::Error "Invalid option, '$action'." $caller_info }
+        default { ::ms::Error "Invalid action, '$action'." $caller_info }
     }
 }
 
