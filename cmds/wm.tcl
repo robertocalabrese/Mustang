@@ -893,6 +893,11 @@ proc ::ms::wm::Command { args } {
     # **wm** **transient** *window* ?*container*?
     # **wm** **withdraw** *window*
 
+    # Check if 'args' is an empty string.
+    switch -- $args {
+        ""  { ::ms::Error "Missing action." $caller_info }
+    }
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
