@@ -83,7 +83,9 @@
 #
 # Note: 'window' must be a short or long address, see 'bison.tcl' LONG AND SHORT ADDRESSES section to know what they are and how to use them.
 #
-# The following forms are currently supported:
+#### COMMAND:
+#
+# The *font* command can have any of the following forms:
 #
 #   **font** **actual** *font* ?**-displayof** *window*? ?*option*? ?**--**? ?*char*?
 #      Returns information about the actual attributes that are obtained when *font* is used on window's display.
