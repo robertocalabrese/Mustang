@@ -202,7 +202,7 @@ proc ::ms::clipboard::Command { args } {
             switch -- $index {
                 -1      {}
                 default {
-                    # Check if the '-displayof' address is a valid address or not.
+                    # Check if the '-displayof' address provided is a valid address or not.
                     set addr   [lindex $args $index+1]
                     set result [::ms::Check_Pathname $addr invalid]
                     switch -- $result {
@@ -235,7 +235,7 @@ proc ::ms::clipboard::Command { args } {
                     set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
-                            # Check if the '-displayof' address is a valid address or not.
+                            # Check if the '-displayof' address provided is a valid address or not.
                             set addr   [lindex $args $index+1]
                             set result [::ms::Check_Pathname $addr invalid]
                             switch -- $result {
@@ -265,7 +265,7 @@ proc ::ms::clipboard::Command { args } {
                     set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
-                            # Check if the '-displayof' address is a valid address or not.
+                            # Check if the '-displayof' address provided is a valid address or not.
                             set addr   [lindex $args $index+1]
                             set result [::ms::Check_Pathname $addr invalid]
                             switch -- $result {
@@ -285,7 +285,7 @@ proc ::ms::clipboard::Command { args } {
                     switch -- $index {
                         -1      {}
                         default {
-                            # Check if the '-displayof' address is a valid address or not.
+                            # Check if the '-displayof' address provided is a valid address or not.
                             set addr   [lindex $args $index+1]
                             set result [::ms::Check_Pathname $addr invalid]
                             switch -- $result {
