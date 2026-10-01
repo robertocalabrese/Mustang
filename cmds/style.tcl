@@ -647,6 +647,7 @@ proc ::ms::style::Command { args } {
             }
         }
     }
+    default { ::ms::Error "Invalid action, '$action'." $caller_info }
 }
 
 ####################
