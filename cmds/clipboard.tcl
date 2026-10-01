@@ -84,7 +84,9 @@
 # The first argument of the **clipboard** command its called *action*, and it determines the format of the rest
 # of the arguments and the behavior of the command.
 #
-# The following forms are currently supported:
+#### COMMAND:
+#
+# The *clipboard* command can have any of the following forms:
 #
 #   **clipboard** **append** ?**-displayof** *window*? ?**-type** *type*? ?**-format** *format*? ?**--**? *data*
 #      Append *data* to the clipboard on *window*'s display in the form given by *type* with the representation given by *format*
