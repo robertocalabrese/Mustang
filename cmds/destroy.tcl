@@ -62,6 +62,21 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## destroy - Destroy one or more windows.
+#
+#### SYNOPSIS:
+#
+# **destroy** *window* ?*window*? ... ?*window*?
+#
+#### DESCRIPTION:
+#
+# This command deletes the *window*s given by the window arguments, plus all of their descendants.
+# If a window '.' is deleted then all windows will be destroyed and the application will (normally) exit.
+# The windows are destroyed in order, and if an error occurs in destroying a window the command aborts without destroying the remaining windows.
+# No error is returned if *window* does not exist.
+#
+# *Window*s must be short or real addresses.
 package provide ::ms::destroy 0.1
 
 # Create the mustang **destroy** package.
@@ -83,10 +98,31 @@ interp alias {} destroy {} ::ms::destroy::Command
 #
 # Return the empty string.
 proc ::ms::destroy::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _destroy {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+    # **destroy** *window* ?*window*? ... ?*window*?
+
+    switch -- [llength $args] {
+        0   { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
+
+    # Destroy each address provided, interrupt the cycle if an error occurs.
+    foreach addr $args {
+        # Check if 'addr' is a valid address or not.
+        set result [::ms::Check_Pathname $addr invalid]
+        switch -- $result {
+            invalid { break }
+            default { set w [lindex $result 0] }
+        }
+
+        # Execute the command.
+        _destroy $w
+    }
+
+    return ""
 }
 
 #*EOF*
