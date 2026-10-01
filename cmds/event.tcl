@@ -639,7 +639,7 @@ proc ::ms::event::Command { args } {
                 }
             }
         }
-        default { ::ms::Error "Wrong option or option with no value." $caller_info }
+        default { ::ms::Error "Invalid option, '$action'." $caller_info }
     }
 }
 
