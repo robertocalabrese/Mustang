@@ -518,6 +518,11 @@ proc ::ms::event::Command { args } {
     # **event** **generate** *window* *event* ?*-option* *value*? ... ?*-option* *value*?
     # **event** **info** ?*virtual*?
 
+    # Check if 'args' is an empty string.
+    switch -- $args {
+        ""  { ::ms::Error "Missing action." $caller_info }
+    }
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
