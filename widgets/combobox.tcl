@@ -1658,15 +1658,15 @@ _bind _Combobox <KeyPress-Return>   { ::ms::combobox::Return %W; break }
 _bind _Combobox <KeyPress-KP_Enter> { ::ms::combobox::Return %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Combobox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Combobox <KeyPress-Tab> { ::tk::TabToWindow [::tk_focusNext %W]; break }
 
 switch -- [_tk windowingsystem] {
-    win32   { _bind _Combobox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
+    win32   { _bind _Combobox <Shift-Tab> { ::tk::TabToWindow [::tk_focusPrev %W]; break } }
     default {
-        _bind _Combobox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Combobox <ISO_Left_Tab>    { ::tk::TabToWindow [::tk_focusPrev %W]; break }
 
         try {
-            _bind _Combobox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
+            _bind _Combobox <hpBackTab>   { ::tk::TabToWindow [::tk_focusPrev %W]; break }
         } on error {} {
             # Do nothing.
         }
@@ -5249,24 +5249,24 @@ proc ::ms::combobox::Post { w } {
     _bind $w.popdown <Motion> [list ::ms::combobox::Popdown_Motion $w %X %Y]
 
     # Scan
-    _bind $w.popdown <<ScanMark>>    [list ::ms::Scan_Mark $w.popdown.f.lb %x %y]
-    _bind $w.popdown <<ScanDrag>>    [list ::ms::Scan_Drag $w.popdown.f.lb %x %y]
-    _bind $w.popdown <<ScanRelease>> [list ::ms::Scan_Release]
+    _bind $w.popdown <<ScanMark>>    [list ::ms::ScanMark $w.popdown.f.lb %x %y]
+    _bind $w.popdown <<ScanDrag>>    [list ::ms::ScanDrag $w.popdown.f.lb %x %y]
+    _bind $w.popdown <<ScanRelease>> [list ::ms::ScanRelease]
 
     # ArrowDown/ArrowUp
-    _bind $w.popdown.f.lb <<NextLine>> [list ::ms::combobox::Popdown_ArrowDown $w]
-    _bind $w.popdown.f.lb <<PrevLine>> [list ::ms::combobox::Popdown_ArrowUp   $w]
+    _bind $w.popdown.f.lb <<NextLine>> { ::ms::combobox::Popdown_ArrowDown [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <<PrevLine>> { ::ms::combobox::Popdown_ArrowUp   [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # Control-End/Control-Home
-    _bind $w.popdown.f.lb <<LineEnd>>   [list ::ms::combobox::Popdown_End  $w]
-    _bind $w.popdown.f.lb <<LineStart>> [list ::ms::combobox::Popdown_Home $w]
+    _bind $w.popdown.f.lb <<LineEnd>>   { ::ms::combobox::Popdown_End  [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <<LineStart>> { ::ms::combobox::Popdown_Home [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # Escape
     _bind $w.popdown.f.lb <KeyPress-Escape> { set ::wait_for_user_response "Unpost"; break }
 
     # End/Home
-    _bind $w.popdown.f.lb <<LineBottom>> [list ::ms::combobox::Popdown_End  $w]
-    _bind $w.popdown.f.lb <<LineTop>>    [list ::ms::combobox::Popdown_Home $w]
+    _bind $w.popdown.f.lb <<LineBottom>> { ::ms::combobox::Popdown_End  [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <<LineTop>>    { ::ms::combobox::Popdown_Home [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # FocusOut, *only* do this on Windows (see #1814778).
     # Dismiss the listbox when the user switches to a different application.
@@ -5275,32 +5275,32 @@ proc ::ms::combobox::Post { w } {
     }
 
     # Motion
-    _bind $w.popdown.f.lb <Motion> [list ::ms::combobox::Popdown_Hover $w %x %y]
+    _bind $w.popdown.f.lb <Motion> { ::ms::combobox::Popdown_Hover [_winfo parent [_winfo parent [_winfo parent %W]]] %x %y; break }
 
     # PageDown/PageUp
-    _bind $w.popdown.f.lb <<PageDown>> [list ::ms::combobox::Popdown_PageDown $w]
-    _bind $w.popdown.f.lb <<PageUp>>   [list ::ms::combobox::Popdown_PageUp   $w]
+    _bind $w.popdown.f.lb <<PageDown>>  { ::ms::combobox::Popdown_PageDown [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <<PageUp>>    { ::ms::combobox::Popdown_PageUp   [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # Selection
-    _bind $w.popdown.f.lb <ButtonRelease-1>   [list ::ms::combobox::Popdown_Select $w]
-    _bind $w.popdown.f.lb <KeyPress-Return>   [list ::ms::combobox::Popdown_Select $w]
-    _bind $w.popdown.f.lb <KeyPress-KP_Enter> [list ::ms::combobox::Popdown_Select $w]
-    _bind $w.popdown.f.lb <KeyPress-space>    [list ::ms::combobox::Popdown_Select $w]
+    _bind $w.popdown.f.lb <ButtonPress-1>     { ::ms::combobox::Popdown_Select [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <KeyPress-Return>   { ::ms::combobox::Popdown_Select [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <KeyPress-KP_Enter> { ::ms::combobox::Popdown_Select [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
+    _bind $w.popdown.f.lb <KeyPress-space>    { ::ms::combobox::Popdown_Select [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # Shift-Tab/Tab
     switch -- [_tk windowingsystem] {
-        win32   { _bind $w.popdown.f.lb <Shift-Tab> { ::ms::combobox::Popdown_Tab %W previous; break } }
+        win32   { _bind $w.popdown.f.lb <Shift-Tab> { ::ms::combobox::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break } }
         default {
-            _bind $w.popdown.f.lb <ISO_Left_Tab>    { ::ms::combobox::Popdown_Tab %W previous; break }
+            _bind $w.popdown.f.lb <ISO_Left_Tab>    { ::ms::combobox::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break }
 
             try {
-                _bind $w.popdown.f.lb <hpBackTab>   { ::ms::combobox::Popdown_Tab %W previous; break }
+                _bind $w.popdown.f.lb <hpBackTab>   { ::ms::combobox::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break }
             } on error {} {
                 # Do nothing.
             }
         }
     }
-    _bind $w.popdown.f.lb <Tab> { ::ms::combobox::Popdown_Tab %W next; break }
+    _bind $w.popdown.f.lb <Tab> { ::ms::combobox::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] next; break }
 
     # If the listbox can scroll vertically, move the listbox viewpoint by one unit up or down
     # (depending on the mousewheel direction), otherwise don't do anything.
@@ -5393,33 +5393,6 @@ proc ::ms::combobox::Post { w } {
                                 -row 0 \
                              -sticky ns;
     }
-
-    ########################################################
-    ##                                                    ##
-    ##     SET THE POPDOWN'S SHORT AND REAL ADDRESSES     ##
-    ##                                                    ##
-    ########################################################
-
-    # Compose the popdown's short address.
-    set short_addr [string cat $::ms::addr($w,short) ".popdown"]
-
-    # Set the popdown's real address relative to its short address, 'short_addr'.
-    set ::ms::addr($short_addr,real) $w.popdown
-
-    # Set the popdown's short addresses relative to its real address, 'w.popdown'.
-    # They will all point to the popdown's toplevel short address.
-    set ::ms::addr($w.popdown,short)      $short_addr
-    set ::ms::addr($w.popdown.f,short)    $short_addr
-    set ::ms::addr($w.popdown.f.lb,short) $short_addr
-    set ::ms::addr($w.popdown.f.y,short)  $short_addr
-
-    # Add the popdown's real and short address into the list of all available real and short addresses.
-    lappend ::ms::addr(reals) $w.popdown \
-                              $w.popdown.f \
-                              $w.popdown.f.lb \
-                              $w.popdown.f.y;
-
-    lappend ::ms::addr(shorts) $short_addr
 
     #######################################
     ##                                   ##
@@ -5637,41 +5610,6 @@ proc ::ms::combobox::Unpost { w } {
                 }
             }
         }
-    }
-
-    ###########################################################
-    ##                                                       ##
-    ##     REMOVE THE POPDOWN'S SHORT AND REAL ADDRESSES     ##
-    ##                                                       ##
-    ###########################################################
-
-    # Compose the popdown's short address.
-    set short_addr [string cat $::ms::addr($w,short) ".popdown"]
-
-    # Unset any popdown's short or real addresses variables.
-    unset -nocomplain -- ::ms::addr($short_addr,real) \
-                         ::ms::addr($w.popdown,short) \
-                         ::ms::addr($w.popdown.f,short) \
-                         ::ms::addr($w.popdown.f.lb,short) \
-                         ::ms::addr($w.popdown.f.y,short);
-
-    # Remove the popdown's real addresses from the list of all available real addresses.
-    foreach addr [list $w.popdown \
-                       $w.popdown.f \
-                       $w.popdown.f.lb \
-                       $w.popdown.f.y] {
-        set index [lsearch -exact $::ms::addr(reals) $addr]
-        switch -- $index {
-            -1      {}
-            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-        }
-    }
-
-    # Remove the popdown's short address from the list of all available short addresses.
-    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
     return ""
@@ -6810,20 +6748,17 @@ proc ::ms::combobox::Popdown_Select { w } {
 #
 # Where:
 #
-# popdown   Should be the popdown window real address involved.
+# w     Should be the widget's real address involved.
 #
-# dir       The direction of the tab movement.
-#           Allowed values are 'previos' or 'next'.
+# dir   The direction of the tab movement.
+#       Allowed values are 'previos' or 'next'.
 #
 # It doesn't return anything.
-proc ::ms::combobox::Popdown_Tab { popdown dir } {
-    # Get the combobox real address.
-    set w [_winfo parent [_winfo parent [_winfo parent $popdown]]]
-
+proc ::ms::combobox::Popdown_Tab { w dir } {
     # Check if there is another widget to focus to.
     switch -- $dir {
-        next     { set newFocus [tk_focusNext $w] }
-        previous { set newFocus [tk_focusPrev $w] }
+        next     { set newFocus [::tk_focusNext $w] }
+        previous { set newFocus [::tk_focusPrev $w] }
     }
 
     # Chek the next/previous focussable widget found, if any.
