@@ -5254,8 +5254,8 @@ proc ::ms::combobox::Post { w } {
     _bind $w.popdown <<ScanRelease>> [list ::ms::Scan_Release]
 
     # ArrowDown/ArrowUp
-    _bind $w.popdown.f.lb <<NextLine>> [list ::ms::combobox::Popdown_ArrowDown  $w]
-    _bind $w.popdown.f.lb <<PrevLine>> [list ::ms::combobox::Popdown_ArrowUp    $w]
+    _bind $w.popdown.f.lb <<NextLine>> [list ::ms::combobox::Popdown_ArrowDown $w]
+    _bind $w.popdown.f.lb <<PrevLine>> [list ::ms::combobox::Popdown_ArrowUp   $w]
 
     # Control-End/Control-Home
     _bind $w.popdown.f.lb <<LineEnd>>   [list ::ms::combobox::Popdown_End  $w]
@@ -5278,8 +5278,8 @@ proc ::ms::combobox::Post { w } {
     _bind $w.popdown.f.lb <Motion> [list ::ms::combobox::Popdown_Hover $w %x %y]
 
     # PageDown/PageUp
-    _bind $w.popdown.f.lb <<PageDown>> [list ::ms::combobox::Popdown_PageDown  $w]
-    _bind $w.popdown.f.lb <<PageUp>>   [list ::ms::combobox::Popdown_PageUp    $w]
+    _bind $w.popdown.f.lb <<PageDown>> [list ::ms::combobox::Popdown_PageDown $w]
+    _bind $w.popdown.f.lb <<PageUp>>   [list ::ms::combobox::Popdown_PageUp   $w]
 
     # Selection
     _bind $w.popdown.f.lb <ButtonRelease-1>   [list ::ms::combobox::Popdown_Select $w]
@@ -5372,27 +5372,54 @@ proc ::ms::combobox::Post { w } {
     #######################
 
     if { $::ms::current($w,rows) < [llength $::ms::data($w,values)] } {
-        _ttk_scrollbar $w.popdown.f.vsb     -class TScrollbar \
-                                          -command [list $w.popdown.f.lb yview] \
-                                           -cursor arrow \
-                                           -orient vertical \
-                                            -style TScrollbar \
-                                        -takefocus 0;
+        _ttk_scrollbar $w.popdown.f.y     -class TScrollbar \
+                                        -command [list $w.popdown.f.lb yview] \
+                                         -cursor arrow \
+                                         -orient vertical \
+                                          -style TScrollbar \
+                                      -takefocus 0;
 
-        $w.popdown.f.lb configure -yscrollcommand [list $w.popdown.f.vsb set]
+        $w.popdown.f.lb configure -yscrollcommand [list $w.popdown.f.y set]
 
-        _bind $w.popdown.f.vsb <MouseWheel>         [list ::ms::combobox::Popdown_Scrollbar_MouseWheel $w %D units]
-        _bind $w.popdown.f.vsb <Control-MouseWheel> [list ::ms::combobox::Popdown_Scrollbar_MouseWheel $w %D pages]
+        _bind $w.popdown.f.y <MouseWheel>         [list ::ms::combobox::Popdown_Scrollbar_MouseWheel $w %D units]
+        _bind $w.popdown.f.y <Control-MouseWheel> [list ::ms::combobox::Popdown_Scrollbar_MouseWheel $w %D pages]
 
-        _bind $w.popdown.f.vsb <TouchpadScroll>         [list ::ms::combobox::Popdown_Scrollbar_Touchpad $w %# %D units]
-        _bind $w.popdown.f.vsb <Control-TouchpadScroll> [list ::ms::combobox::Popdown_Scrollbar_Touchpad $w %# %D pages]
+        _bind $w.popdown.f.y <TouchpadScroll>         [list ::ms::combobox::Popdown_Scrollbar_Touchpad $w %# %D units]
+        _bind $w.popdown.f.y <Control-TouchpadScroll> [list ::ms::combobox::Popdown_Scrollbar_Touchpad $w %# %D pages]
 
-        _grid $w.popdown.f.vsb -column 1 \
-                                 -padx [list 0  3p] \
-                                 -pady [list 3p 3p] \
-                                  -row 0 \
-                               -sticky ns;
+        _grid $w.popdown.f.y -column 1 \
+                               -padx [list 0  3p] \
+                               -pady [list 3p 3p] \
+                                -row 0 \
+                             -sticky ns;
     }
+
+    ########################################################
+    ##                                                    ##
+    ##     SET THE POPDOWN'S SHORT AND REAL ADDRESSES     ##
+    ##                                                    ##
+    ########################################################
+
+    # Compose the popdown's short address.
+    set short_addr [string cat $::ms::addr($w,short) ".popdown"]
+
+    # Set the popdown's real address relative to its short address, 'short_addr'.
+    set ::ms::addr($short_addr,real) $w.popdown
+
+    # Set the popdown's short addresses relative to its real address, 'w.popdown'.
+    # They will all point to the popdown's toplevel short address.
+    set ::ms::addr($w.popdown,short)      $short_addr
+    set ::ms::addr($w.popdown.f,short)    $short_addr
+    set ::ms::addr($w.popdown.f.lb,short) $short_addr
+    set ::ms::addr($w.popdown.f.y,short)  $short_addr
+
+    # Add the popdown's real and short address into the list of all available real and short addresses.
+    lappend ::ms::addr(reals) $w.popdown \
+                              $w.popdown.f \
+                              $w.popdown.f.lb \
+                              $w.popdown.f.y;
+
+    lappend ::ms::addr(shorts) $short_addr
 
     #######################################
     ##                                   ##
@@ -5610,6 +5637,41 @@ proc ::ms::combobox::Unpost { w } {
                 }
             }
         }
+    }
+
+    ###########################################################
+    ##                                                       ##
+    ##     REMOVE THE POPDOWN'S SHORT AND REAL ADDRESSES     ##
+    ##                                                       ##
+    ###########################################################
+
+    # Compose the popdown's short address.
+    set short_addr [string cat $::ms::addr($w,short) ".popdown"]
+
+    # Unset any popdown's short or real addresses variables.
+    unset -nocomplain -- ::ms::addr($short_addr,real) \
+                         ::ms::addr($w.popdown,short) \
+                         ::ms::addr($w.popdown.f,short) \
+                         ::ms::addr($w.popdown.f.lb,short) \
+                         ::ms::addr($w.popdown.f.y,short);
+
+    # Remove the popdown's real addresses from the list of all available real addresses.
+    foreach addr [list $w.popdown \
+                       $w.popdown.f \
+                       $w.popdown.f.lb \
+                       $w.popdown.f.y] {
+        set index [lsearch -exact $::ms::addr(reals) $addr]
+        switch -- $index {
+            -1      {}
+            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
+        }
+    }
+
+    # Remove the popdown's short address from the list of all available short addresses.
+    set index [lsearch -exact $::ms::addr(shorts) $short_addr]
+    switch -- $index {
+        -1      {}
+        default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
     }
 
     return ""
