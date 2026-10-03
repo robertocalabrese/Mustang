@@ -343,9 +343,11 @@
 #                    See also **-bordercolor** and **-borderwidth**.
 #
 # **-state**         Specifies the state for the widget.
-#                    Setting it changes the widget's **physical** state and not the widget's *look* (the state widget's command does that).
-#
 #                    Scrollbars have only the **normal** state.
+#
+#                    Note: This option will be ignored if provided while creating the widget.
+#                          Attempts to change this value after the widget was created, by using the **configure** command,
+#                          will be ignored by mustang.
 #
 #                    It's set to **normal**.
 #
