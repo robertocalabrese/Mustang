@@ -191,6 +191,7 @@
 #      ATTENTION! Differently than others mustang commands, the **winfo containing** command will **always**
 #                 return real addresses, even if a short address was provided as input.
 #
+#                 You can always ask if an address is a short or real address with **tk get addr**.
 #                 You can always translate a real address into a short address using the **tk get short**
 #                 command or a short address into a real address using the **tk get real** command.
 #
@@ -267,6 +268,7 @@
 #      ATTENTION! Differently than others mustang commands, the **winfo pathname** command will **always**
 #                 return real addresses, even if a short address was provided as input.
 #
+#                 You can always ask if an address is a short or real address with **tk get addr**.
 #                 You can always translate a real address into a short address using the **tk get short**
 #                 command or a short address into a real address using the **tk get real** command.
 #
