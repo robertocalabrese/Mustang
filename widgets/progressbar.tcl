@@ -1875,13 +1875,7 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
                                             }
                                         }
                                     }
-                                    -state {
-                                        set value [string tolower $value]
-                                        switch -- $value {
-                                            disabled -
-                                            normal   { set ::ms::current($w,state) $value }
-                                        }
-                                    }
+                                    -state {}
                                     -style {
                                         if { $value in $::ms::style($::ms::theme) } {
                                             # Remove the widget's real address from the style list that contains all the progressbar classtype real addresses
