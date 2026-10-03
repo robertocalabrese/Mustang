@@ -1327,6 +1327,12 @@ proc ::ms::toplevel::Command { window { args "" } } {
                 default { set ::ms::data($w,padding) $::ms::current($w,padding) }
             }
 
+            # Check the windowing system.
+            switch -- [_tk windowingsystem] {
+                aqua    {}
+                default { set ::ms::current($w,menu) "" }
+            }
+
             ###############################
             ##                           ##
             ##     CREATE THE WIDGET     ##
@@ -1817,6 +1823,12 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
                             switch -- [llength $::ms::current($w,padding)] {
                                 1       { set ::ms::data($w,padding) [list $::ms::current($w,padding) $::ms::current($w,padding)] }
                                 default { set ::ms::data($w,padding) $::ms::current($w,padding) }
+                            }
+
+                            # Check the windowing system.
+                            switch -- [_tk windowingsystem] {
+                                aqua    {}
+                                default { set ::ms::current($w,menu) "" }
                             }
 
                             ##################################
