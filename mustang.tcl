@@ -3208,25 +3208,17 @@ proc ::ms::Check_Measure { measure { fallback invalid } } {
 # *window*'s type (**real** or **short**) or the fallback value if the address provided
 # is invalid.
 proc ::ms::Check_Pathname { window { fallback invalid } } {
-    # Find the real address related to 'window'.
-    if { $window in $::ms::addr(shorts) } {
-        # 'window' is a short address created by mustang.
-
-        set type      short
-        set real_addr $::ms::addr($window,real)
-
-        return [list $real_addr $type]
-    } elseif { $window in $::ms::addr(reals) } {
-        # 'window' is a real address created by mustang.
-
-        set type       real
-        set short_addr $::ms::addr($window,short)
-        set real_addr  $::ms::addr($short_addr,real)
-
-        return [list $real_addr $type]
+    switch -- [_winfo exists $window] {
+        0   {
+            # Find the real address related to 'window'.
+            if { $window in $::ms::addr(shorts) } {
+                return [list $::ms::addr($window,real) short]
+            } else {
+                return $fallback
+            }
+        }
+        1   { return [list $window real] }
     }
-
-    return $fallback
 }
 
 ## Check_State
