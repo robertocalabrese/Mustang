@@ -226,9 +226,11 @@ proc ::ms::grab::Command { args } {
 
                             # Check the 'window' type.
                             switch -- $type {
-                                real  { return [_grab set $w] }
-                                short { return [_grab set $::ms::addr($w,widget)] }
+                                real  { _grab set $w }
+                                short { _grab set $::ms::addr($w,widget) }
                             }
+
+                            return ""
                         }
                     }
                 }
@@ -252,20 +254,49 @@ proc ::ms::grab::Command { args } {
 
                             # Check the 'window' type.
                             switch -- $type {
-                                real  { return [_grab set -global $w] }
-                                short { return [_grab set -global $::ms::addr($w,widget)] }
+                                real  { _grab set -global $w }
+                                short { _grab set -global $::ms::addr($w,widget) }
                             }
+
+                            return ""
                         }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        release -
-        status  {
+        release {
             # Synopsis:
             #
             # **grab** **release** *window*
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set result [::ms::Check_Pathname $window invalid]
+                    switch -- $result {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                        default {
+                            set w    [lindex $result 0]
+                            set type [lindex $result 1]
+
+                            # Check the 'window' type.
+                            switch -- $type {
+                                real  { _grab release $w }
+                                short { _grab release $::ms::addr($w,widget) }
+                            }
+
+                            return ""
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        status {
+            # Synopsis:
+            #
             # **grab** **status** *window*
             switch -- [llength $args] {
                 1   {
@@ -281,8 +312,8 @@ proc ::ms::grab::Command { args } {
 
                             # Check the 'window' type.
                             switch -- $type {
-                                real  { return [_grab $action $w] }
-                                short { return [_grab $action $::ms::addr($w,widget)] }
+                                real  { return [_grab status $w] }
+                                short { return [_grab status $::ms::addr($w,widget)] }
                             }
                         }
                     }
@@ -308,9 +339,11 @@ proc ::ms::grab::Command { args } {
 
                             # Check the 'window' type.
                             switch -- $type {
-                                real  { return [_grab set $w] }
-                                short { return [_grab set $::ms::addr($w,widget)] }
+                                real  { _grab set $w }
+                                short { _grab set $::ms::addr($w,widget) }
                             }
+
+                            return ""
                         }
                     }
                 }
@@ -334,9 +367,11 @@ proc ::ms::grab::Command { args } {
 
                             # Check the 'window' type.
                             switch -- $type {
-                                real  { return [_grab set -global $w] }
-                                short { return [_grab set -global $::ms::addr($w,widget)] }
+                                real  { _grab set -global $w }
+                                short { _grab set -global $::ms::addr($w,widget) }
                             }
+
+                            return ""
                         }
                     }
                 }
