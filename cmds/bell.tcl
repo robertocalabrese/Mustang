@@ -148,14 +148,11 @@ proc ::ms::bell::Command { args } {
                 -1      {}
                 default {
                     # Check if the '-displayof' address is a valid address or not.
-                    set addr   [lindex $args $index+1]
-                    set result [::ms::Check_Pathname $addr invalid]
-                    switch -- $result {
+                    set addr [lindex $args $index+1]
+                    set w    [::ms::Check_Pathname $addr invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set args [lreplace $args $index+1 $index+1 $w]
-                        }
+                        default { set args [lreplace $args $index+1 $index+1 $w] }
                     }
                 }
             }
