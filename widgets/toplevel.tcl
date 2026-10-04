@@ -1435,8 +1435,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget's real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals)  $w
+            # Add the widget's short address into the list of all available short addresses.
             lappend ::ms::addr(shorts) $short_addr
 
             # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -2338,13 +2337,6 @@ proc ::ms::toplevel::Destroy { w } {
 
             # Destroy the aliased command.
             interp alias {} $::ms::data($w,token) {}
-
-            # Remove the widget's real address from the widgets real address list.
-            set index [lsearch -exact $::ms::addr(reals) $w]
-            switch -- $index {
-                -1      {}
-                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-            }
 
             # Remove the widget's short address from the widgets short address list.
             set index [lsearch -exact $::ms::addr(shorts) $short_addr]
