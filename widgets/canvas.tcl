@@ -3467,8 +3467,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     # They will all point to the widget's hull object short address.
                     set ::ms::addr($w,short) $short_addr
 
-                    # Add the widget's real and short address into the list of all available real and short addresses.
-                    lappend ::ms::addr(reals)  $w
+                    # Add the widget's short address into the list of all available short addresses.
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -3686,14 +3685,7 @@ proc ::ms::canvas::Command { window { args "" } } {
                     set ::ms::addr($w.x,short)      $short_addr
                     set ::ms::addr($w.y,short)      $short_addr
 
-                    # Add the widget's real and short address into the list of all available real and short addresses.
-                    lappend ::ms::addr(reals) $w \
-                                              $w.canvas \
-                                              $w.fake_x \
-                                              $w.fake_y \
-                                              $w.x \
-                                              $w.y;
-
+                    # Add the widget's short address into the list of all available short addresses.
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -5520,40 +5512,12 @@ proc ::ms::canvas::Destroy { w } {
 
     # Check if the widget is scrollable or not.
     switch -- $::ms::current($w,scrollable) {
-        false {
-            ###########################
-            ##                       ##
-            ##     SIMPLE CANVAS     ##
-            ##                       ##
-            ###########################
-
-            # Remove the widget's real address from the widgets real address list.
-            set index [lsearch -exact $::ms::addr(reals) $w]
-            switch -- $index {
-                -1      {}
-                default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-            }
-        }
         true {
             ###############################
             ##                           ##
             ##     SCROLLABLE CANVAS     ##
             ##                           ##
             ###############################
-
-            # Remove all the widget's objects addresses from the widgets real address list.
-            foreach object [list $w \
-                                 $w.canvas \
-                                 $w.fake_x \
-                                 $w.fake_y \
-                                 $w.x \
-                                 $w.y] {
-                set index [lsearch -exact $::ms::addr(reals) $object]
-                switch -- $index {
-                    -1      {}
-                    default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-                }
-            }
 
             # Remove the widget's real address from the megawidget's real address list.
             set index [lsearch -exact $::ms::addr(megawidgets) $w]
