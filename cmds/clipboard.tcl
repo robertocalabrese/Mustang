@@ -205,14 +205,11 @@ proc ::ms::clipboard::Command { args } {
                 -1      {}
                 default {
                     # Check if the '-displayof' address provided is a valid address or not.
-                    set addr   [lindex $args $index+1]
-                    set result [::ms::Check_Pathname $addr invalid]
-                    switch -- $result {
+                    set addr [lindex $args $index+1]
+                    set w    [::ms::Check_Pathname $addr invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set args [lreplace $args $index+1 $index+1 $w]
-                        }
+                        default { set args [lreplace $args $index+1 $index+1 $w] }
                     }
                 }
             }
@@ -238,11 +235,10 @@ proc ::ms::clipboard::Command { args } {
                     switch -- $option {
                         -displayof {
                             # Check if the '-displayof' address provided is a valid address or not.
-                            set addr   [lindex $args $index+1]
-                            set result [::ms::Check_Pathname $addr invalid]
-                            switch -- $result {
+                            set addr [lindex $args $index+1]
+                            set w    [::ms::Check_Pathname $addr invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                                default { set w [lindex $result 0] }
                             }
                         }
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
@@ -268,14 +264,11 @@ proc ::ms::clipboard::Command { args } {
                     switch -- $option {
                         -displayof {
                             # Check if the '-displayof' address provided is a valid address or not.
-                            set addr   [lindex $args $index+1]
-                            set result [::ms::Check_Pathname $addr invalid]
-                            switch -- $result {
+                            set addr [lindex $args $index+1]
+                            set w    [::ms::Check_Pathname $addr invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set args [lreplace $args 1 1 $w]
-                                }
+                                default { set args [lreplace $args 1 1 $w] }
                             }
                         }
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
@@ -288,14 +281,11 @@ proc ::ms::clipboard::Command { args } {
                         -1      {}
                         default {
                             # Check if the '-displayof' address provided is a valid address or not.
-                            set addr   [lindex $args $index+1]
-                            set result [::ms::Check_Pathname $addr invalid]
-                            switch -- $result {
+                            set addr [lindex $args $index+1]
+                            set w    [::ms::Check_Pathname $addr invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set args [lreplace $args $index+1 $index+1 $w]
-                                }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
                         }
                     }
