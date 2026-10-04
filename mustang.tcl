@@ -181,8 +181,7 @@ proc ::ms::Init {} {
     # Set the start of the initialization phase.
     set ::ms::temp(init,phase) "ongoing"
 
-    # Initialize the widgets real and short address list.
-    set ::ms::addr(reals)  [list ]
+    # Initialize the widgets short address list.
     set ::ms::addr(shorts) [list ]
 
     # Initialize some styles and classtypes related lists.
@@ -2271,8 +2270,7 @@ proc ::ms::Init {} {
     # Set the point short address relative to the point real address.
     set ::ms::addr(.,short) .
 
-    # Add the widget's real and short address into the list of all available real and short addresses.
-    lappend ::ms::addr(reals)  .
+    # Add the widget's short address into the list of all available short addresses.
     lappend ::ms::addr(shorts) .
 
     # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -3324,7 +3322,7 @@ proc ::ms::Check_Widget_Address { window caller_info } {
 
                 set parent_real_addr  $::ms::addr($real_addr,widget)
                 set parent_short_addr $parent_addr
-            } elseif { $parent_addr in $::ms::addr(reals) } {
+            } elseif { [_winfo exists $parent_addr] } {
                 # 'parent_addr' is the real address of a widget created by mustang.
                 set type real
 
