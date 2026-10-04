@@ -67,7 +67,7 @@
 #
 #### SYNOPSIS:
 #
-# **bindtags** *window*
+# **bindtags** ?**short**? *window*
 # **bindtags** *window* *taglist*
 #
 #### DESCRIPTION:
@@ -89,6 +89,9 @@
 #   *window*
 #       It's the window address that will be associated with the binding tags.
 #       It can either be a short or real address.
+#
+#   ?**short**?
+#       Indicates if the taglist addresses returned should be short addresses (if the option *short* is present) or real addresses (if its not).
 #
 #   ?*taglist*?
 #       If the *taglist* argument is specified to **bindtags**, then it must be a proper list;
@@ -128,15 +131,11 @@
 #
 # The *bindtags* command can have any of the following forms:
 #
-#   **bindtags** *window*
+#   **bindtags** ?**short**? *window*
 #      Return the taglist associated with the *window* address.
 #
-#      Differently than others mustang commands, the **bindtags** command will **always**
-#      return real addresses, even if a short address was provided as input.
-#
-#      You can always ask if an address is a short or real address with **tk get addr**.
-#      You can always translate a real address into a short address using the **tk get short**
-#      command or a short address into a real address using the **tk get real** command.
+#      If the *short* option is provided the taglist addresses returned will be short addresses, otherwise they will be real addresses.
+#      If provided, the *short* option must be located just after the *bindtags* command.
 #
 #   **bindtags** *window* *taglist*
 #      Set the bindtags for the *window* address as *taglist*.
@@ -166,41 +165,60 @@ proc ::ms::bindtags::Command { args } {
 
     # Synopsis:
     #
-    # **bindtags** *window*
+    # **bindtags** ?**short**? *window*
     # **bindtags** *window* *taglist*
 
     switch -- [llength $args] {
         1   {
-            # ATTENTION! Differently than others mustang commands, the **bindtags** command will **always**
-            #            return real addresses, even if a short address was provided as input.
-            #
-            #            You can always ask if an address is a short or real address with **tk get addr**.
-            #            You can always translate a real address into a short address using the **tk get short**
-            #            command or a short address into a real address using the **tk get real** command.
-
             # Synopsis:
             #
-            # **bindtags** *window*
-            set addr   $args
+            # **bindtags** ?**short**? *window*
+            switch -- [llength $args] {
+                1   {
+                    set short 0
+                    set addr  $args
+                }
+                2   {
+                    set option [lindex $args 0]
+                    set addr  [lindex $args 1]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   { set short 1 }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
             # Check if 'addr' is a valid address or not.
-            set result [::ms::Check_Pathname $addr invalid]
-            switch -- $result {
+            set w [::ms::Check_Pathname $addr invalid]
+            switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
                 default {
-                    set w    [lindex $result 0]
-                    set type [lindex $result 1]
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        set taglist [_bindtags $::ms::addr($w,widget)]
+                    } else {
+                        set taglist [_bindtags $w]
+                    }
+                }
+            }
 
-                    # Check if 'addr' is a short address.
-                    switch -- $type {
-                        short {
-                            # Substitute 'w' with its meaningful object.
-                            set w $::ms::addr($w,widget)
+            # Check the 'short' option.
+            switch -- $short {
+                0   { return $taglist }
+                1   {
+                    set short_taglist [list ]
+                    foreach w $taglist {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { lappend short_taglist $w }
+                            1   { lappend short_taglist $::ms::addr($w,short) }
                         }
                     }
 
-                    # Execute the command.
-                    return [_bindtags $w]
+                    return $short_taglist
                 }
             }
         }
@@ -212,19 +230,13 @@ proc ::ms::bindtags::Command { args } {
             set taglist [lindex $args 1]
 
             # Check if 'addr' is a valid address or not.
-            set result [::ms::Check_Pathname $addr invalid]
-            switch -- $result {
+            set w [::ms::Check_Pathname $addr invalid]
+            switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
                 default {
-                    set w    [lindex $result 0]
-                    set type [lindex $result 1]
-
-                    # Check if 'addr' is a short address.
-                    switch -- $type {
-                        short {
-                            # Substitute 'w' with its meaningful object.
-                            set w $::ms::addr($w,widget)
-                        }
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        set w $::ms::addr($w,widget)
                     }
                 }
             }
@@ -233,10 +245,10 @@ proc ::ms::bindtags::Command { args } {
             set new_taglist [list ]
             foreach tag $taglist {
                 # Check if 'tag' is a valid address or just a tag.
-                set result [::ms::Check_Pathname $tag invalid]
+                set addr [::ms::Check_Pathname $tag invalid]
                 switch -- $result {
                     invalid { lappend new_taglist $tag }
-                    default { lappend new_taglist [lindex $result 0] }
+                    default { lappend new_taglist $addr }
                 }
             }
 
