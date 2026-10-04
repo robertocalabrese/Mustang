@@ -2781,11 +2781,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     set ::ms::addr($w.title,short)   $short_addr
                     set ::ms::addr($w.content,short) $short_addr
 
-                    # Add the widget's real and short address into the list of all available real and short addresses.
-                    lappend ::ms::addr(reals) $w \
-                                              $w.title \
-                                              $w.content;
-
+                    # Add the widget's short address into the list of all available short addresses.
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -3335,18 +3331,7 @@ proc ::ms::labelframe::Command { window { args "" } } {
                     set ::ms::addr($w.container.x,short)                       $short_addr
                     set ::ms::addr($w.container.y,short)                       $short_addr
 
-                    # Add the widget's real and short address into the list of all available real and short addresses.
-                    lappend ::ms::addr(reals) $w \
-                                              $w.title \
-                                              $w.container \
-                                              $w.container.border \
-                                              $w.container.border.viewport \
-                                              $w.container.border.viewport.content \
-                                              $w.container.fake_x \
-                                              $w.container.fake_y \
-                                              $w.container.x \
-                                              $w.container.y;
-
+                    # Add the widget's short address into the list of all available short addresses.
                     lappend ::ms::addr(shorts) $short_addr
 
                     # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -6022,26 +6007,6 @@ proc ::ms::labelframe::Destroy { w } {
                 -1      {}
                 default { set ::ms::style(labelframe,classtype) [lremove $::ms::style(labelframe,classtype) $index] }
             }
-        }
-    }
-
-    # Remove all the objects real addresses from the list of all available real addresses.
-    foreach object [list $w \
-                         $w.container \
-                         $w.container.border \
-                         $w.container.border.content \
-                         $w.container.border.viewport \
-                         $w.container.border.viewport.content \
-                         $w.container.fake_x \
-                         $w.container.fake_y \
-                         $w.container.x \
-                         $w.container.y \
-                         $w.content \
-                         $w.title] {
-        set index [lsearch -exact $::ms::addr(reals) $object]
-        switch -- $index {
-            -1      {}
-            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
         }
     }
 
