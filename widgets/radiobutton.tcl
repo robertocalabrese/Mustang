@@ -2013,12 +2013,7 @@ proc ::ms::radiobutton::Command { window { args "" } } {
             set ::ms::addr($w.label,short)     $short_addr
             set ::ms::addr($w.highlight,short) $short_addr
 
-            # Add the widget's real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals) $w \
-                                      $w.highlight \
-                                      $w.indicator \
-                                      $w.label;
-
+            # Add the widget's short address into the list of all available short addresses.
             lappend ::ms::addr(shorts) $short_addr
 
             # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -3298,18 +3293,6 @@ proc ::ms::radiobutton::Destroy { w } {
     # Destroy the aliased widget's pathcommands.
     foreach token $::ms::data($w,token) {
         interp alias {} $token {}
-    }
-
-    # Remove all the objects real addresses from the list of all available real addresses.
-    foreach object [list $w \
-                         $w.highlight \
-                         $w.indicator \
-                         $w.label] {
-        set index [lsearch -exact $::ms::addr(reals) $object]
-        switch -- $index {
-            -1      {}
-            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-        }
     }
 
     # Remove the widget's short address from the widgets short address list.
