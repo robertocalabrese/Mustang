@@ -594,10 +594,10 @@ proc ::ms::event::Command { args } {
                     set window [lindex  $args 0]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set args [lreplace $args 0 0 [lindex $result 0]] }
+                        default { set args [lreplace $args 0 0 $w] }
                     }
 
                     # Check if the '-above', '-root' or '-subwindow' options were provided.
@@ -613,21 +613,10 @@ proc ::ms::event::Command { args } {
                                 }
 
                                 # Get the 'window' real address.
-                                set result [::ms::Check_Pathname $window invalid]
-                                switch -- $result {
+                                set w [::ms::Check_Pathname $window invalid]
+                                switch -- $w {
                                     invalid { ::ms::Error "Invalid address for '$optionName', '$window'." $caller_info }
-                                    default {
-                                        set w    [lindex $result 0]
-                                        set type [lindex $result 1]
-
-                                        # Check the initial address type provided (short or real).
-                                        switch -- $type {
-                                            short {
-                                                # Substitute 'window' with its relative real address.
-                                                set args [lreplace $args $index+1 $index+1 $w]
-                                            }
-                                        }
-                                    }
+                                    default { set args [lreplace $args $index+1 $index+1 $w] }
                                 }
                             }
                         }
