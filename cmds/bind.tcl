@@ -747,22 +747,23 @@ proc ::ms::bind::Command { args } {
             if { $tag in $::ms::data(classes) } {
                 # 'tag' is a class.
 
-                # Append to 'tags' all the meaningful object for each address with class 'tag'.
+                # Append to 'tags' all the meaningful object address for each 'w' with class 'tag'.
                 set tags [list ]
                 foreach w $::ms::class($tag,addrs) {
-                    if { $w eq $::ms::addr($w,widget) } {
-                        # Append to 'tags' the address 'w'.
-                        lappend tags $w
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        # Append the meaningful object address of 'w' to 'tags'.
+                        lappend tags $::ms::addr($w,widget)
                     } else {
-                        # Append to 'tags' the address 'w' and the meaningful object for 'w'.
-                        lappend tags $w $::ms::addr($w,widget)
+                        # Append 'w' to 'tags'.
+                        lappend tags $w
                     }
                 }
             } else {
                 # Check if 'tag' is a valid address or an actual tag.
                 switch -- [string index $tag 0] {
                     "." {
-                        set result [::ms::Check_Pathname $tag invalid]
+                        set w [::ms::Check_Pathname $tag invalid]
                         switch -- $result {
                             invalid {
                                 # 'tag' could be an actual tag.
@@ -770,7 +771,7 @@ proc ::ms::bind::Command { args } {
                             }
                             default {
                                 # 'tag' is a valid address.
-                                set tags [list [lindex $result 0]]
+                                set tags [list $w]
                             }
                         }
                     }
@@ -819,14 +820,14 @@ proc ::ms::bind::Command { args } {
                     "<*Key*>"            -
                     "<*MouseWheel*>"     -
                     "<*TouchpadScroll>"  {
-                        # Append to 'tags' all the meaningful object for each address with class 'tag'.
+                        # Append to 'tags' all the meaningful object address for each 'w' with class 'tag'.
                         set tags [list ]
                         foreach w $::ms::class($tag,addrs) {
                             lappend tags $::ms::addr($w,widget)
                         }
                     }
                     default {
-                        # Append to 'tags' all the containers objects of each address with class 'tag'.
+                        # Append to 'tags' all the containers object address for each 'w' with class 'tag'.
                         set tags $::ms::class($tag,addrs)
                     }
                 }
@@ -834,16 +835,13 @@ proc ::ms::bind::Command { args } {
                 # Check if 'tag' is a valid address or an actual tag.
                 switch -- [string index $tag 0] {
                     "." {
-                        set result [::ms::Check_Pathname $tag invalid]
+                        set w [::ms::Check_Pathname $tag invalid]
                         switch -- $result {
                             invalid {
                                 # 'tag' could be an actual tag.
                                 set tags [list $tag]
                             }
                             default {
-                                # 'tag' is a valid address.
-                                set w [lindex $result 0]
-
                                 # Check the 'sequence' provided.
                                 switch -glob -- $sequence {
                                     "<*B*>"              -
@@ -857,8 +855,12 @@ proc ::ms::bind::Command { args } {
                                     "<*Key*>"            -
                                     "<*MouseWheel*>"     -
                                     "<*TouchpadScroll>"  {
-                                        # Set 'tags' with the meaningful object for 'w' instead of 'w'.
-                                        set tags [list $::ms::addr($w,widget)]
+                                        # Check if 'w' is a megawidget address.
+                                        if { $w in $::ms::addr(megawidgets) } {
+                                            set tags [list $::ms::addr($w,widget)]
+                                        } else {
+                                            set tags [list $w]
+                                        }
                                     }
                                     default {
                                         # Set 'tags' with 'w'.
@@ -916,14 +918,14 @@ proc ::ms::bind::Command { args } {
                     "<*Key*>"            -
                     "<*MouseWheel*>"     -
                     "<*TouchpadScroll>"  {
-                        # Append to 'tags' all the meaningful object for each address with class 'tag'.
+                        # Append to 'tags' all the meaningful object address for each 'w' with class 'tag'.
                         set tags [list ]
                         foreach w $::ms::class($tag,addrs) {
                             lappend tags $::ms::addr($w,widget)
                         }
                     }
                     default {
-                        # Append to 'tags' all the containers objects of each address with class 'tag'.
+                        # Append to 'tags' all the containers object address for each 'w' with class 'tag'.
                         set tags $::ms::class($tag,addrs)
                     }
                 }
@@ -931,16 +933,13 @@ proc ::ms::bind::Command { args } {
                 # Check if 'tag' is a valid address or an actual tag.
                 switch -- [string index $tag 0] {
                     "." {
-                        set result [::ms::Check_Pathname $tag invalid]
+                        set w [::ms::Check_Pathname $tag invalid]
                         switch -- $result {
                             invalid {
                                 # 'tag' could be an actual tag.
                                 set tags [list $tag]
                             }
                             default {
-                                # 'tag' is a valid address.
-                                set w [lindex $result 0]
-
                                 # Check the 'sequence' provided.
                                 switch -glob -- $sequence {
                                     "<*B*>"              -
@@ -954,8 +953,12 @@ proc ::ms::bind::Command { args } {
                                     "<*Key*>"            -
                                     "<*MouseWheel*>"     -
                                     "<*TouchpadScroll>"  {
-                                        # Set 'tags' with the meaningful object for 'w' instead of 'w'.
-                                        set tags [list $::ms::addr($w,widget)]
+                                        # Check if 'w' is a megawidget address.
+                                        if { $w in $::ms::addr(megawidgets) } {
+                                            set tags [list $::ms::addr($w,widget)]
+                                        } else {
+                                            set tags [list $w]
+                                        }
                                     }
                                     default {
                                         # Set 'tags' with 'w'.
