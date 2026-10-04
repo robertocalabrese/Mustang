@@ -2726,11 +2726,7 @@ proc ::ms::palette::Command { window { args "" } } {
             set ::ms::addr($w.preview,short)  $short_addr
             set ::ms::addr($w.combobox,short) $short_addr
 
-            # Add the widget's real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals) $w \
-                                      $w.preview \
-                                      $w.combobox;
-
+            # Add the widget's short address into the list of all available short addresses.
             lappend ::ms::addr(shorts) $short_addr
 
             # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -4493,17 +4489,6 @@ proc ::ms::palette::Destroy { w } {
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
-    }
-
-    # Remove all the objects real addresses from the list of all available real addresses.
-    foreach object [list $w \
-                         $w.preview \
-                         $w.combobox] {
-        set index [lsearch -exact $::ms::addr(reals) $object]
-        switch -- $index {
-            -1      {}
-            default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
-        }
     }
 
     # Remove the widget's real address from the palette classtype real address list.
