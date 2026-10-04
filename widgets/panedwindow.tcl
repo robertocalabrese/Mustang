@@ -1367,8 +1367,7 @@ proc ::ms::panedwindow::Command { window { args "" } } {
             # Set the widget's short address relative to its real address, 'w'.
             set ::ms::addr($w,short) $short_addr
 
-            # Add the widget's real and short address into the list of all available real and short addresses.
-            lappend ::ms::addr(reals)  $w
+            # Add the widget's short address into the list of all available short addresses.
             lappend ::ms::addr(shorts) $short_addr
 
             # Set the border object (where the 'Enter' and 'Leave' event will happen).
@@ -2383,13 +2382,6 @@ proc ::ms::panedwindow::Destroy { w } {
     switch -- $index {
         -1      {}
         default { set ::ms::addr(shorts) [lremove $::ms::addr(shorts) $index] }
-    }
-
-    # Remove the object real address from the list of all available real addresses.
-    set index [lsearch -exact $::ms::addr(reals) $w]
-    switch -- $index {
-        -1      {}
-        default { set ::ms::addr(reals) [lremove $::ms::addr(reals) $index] }
     }
 
     # Remove the widget's real address from the panedwindow classtype real address list.
