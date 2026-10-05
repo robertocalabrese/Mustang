@@ -62,6 +62,25 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## lower — Change a window's position in the stacking order.
+#
+#### SYNOPSIS:
+#
+# **lower** *window* *?belowThis*?
+#
+# Note: *window* and *belowThis* pathnames involved may be provided either as a short or as a real address.
+#
+#### DESCRIPTION:
+#
+# If the *belowThis* argument is omitted then the command lowers window so that it is below all of its siblings in the stacking order
+# (it will be obscured by any siblings that overlap it and will not obscure any siblings).
+# If *belowThis* is specified then it must be the pathname of a window that is either a sibling of *window* or the descendant of a sibling of *window*.
+# In this case the lower command will insert *window* into the stacking order just below *belowThis* (or the ancestor of *belowThis* that is a
+# sibling of *window*); this could end up either raising or lowering window.
+#
+# All toplevel windows may be restacked with respect to each other, whatever their relative pathnames, but the window manager is not obligated
+# to strictly honor requests to restack.
 package provide ::ms::lower 0.1
 
 # Create the mustang **lower** package.
@@ -83,10 +102,57 @@ interp alias {} lower {} ::ms::lower::Command
 #
 # Return the empty string.
 proc ::ms::lower::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _lower {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+    # **lower** *window* ?*belowThis*?
+
+    switch -- [llength $args] {
+        1   {
+            # Synopsis:
+            #
+            # **lower** *window*
+            set window $args
+
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Execute the command.
+            _lower $w
+
+            return ""
+        }
+        2   {
+            # Synopsis:
+            #
+            # **lower** *window* *belowThis*
+            set window    [lindex $args 0]
+            set belowThis [lindex $args 1]
+
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Check if 'belowThis' is a valid address or not.
+            set below [::ms::Check_Pathname $belowThis invalid]
+            switch -- $below {
+                invalid { ::ms::Error "Invalid address, '$belowThis'." $caller_info }
+            }
+
+            # Execute the command.
+            _lower $w $below
+
+            return ""
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
 }
 
 #*EOF*
