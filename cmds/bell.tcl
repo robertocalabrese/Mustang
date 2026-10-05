@@ -72,6 +72,8 @@
 # **bell** **-displayof** *window*
 # **bell** **-nice** **-displayof** *window*
 #
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
 #### DESCRIPTION:
 #
 # The following options are available:
@@ -138,28 +140,85 @@ proc ::ms::bell::Command { args } {
     # **bell** **-nice** **-displayof** *window*
 
     switch -- [llength $args] {
-        0   -
-        1   -
-        2   -
+        0   {
+            # Synopsis:
+            #
+            # **bell**
+
+            # Execute the command.
+            _bell
+
+            return ""
+        }
+        1   {
+            # Synopsis:
+            #
+            # **bell** **-nice**
+            set option $args
+
+            # Check the '-nice' option.
+            switch -- $option {
+                -nice   {}
+                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+            }
+
+            # Execute the command.
+            _bell -nice
+
+            return ""
+        }
+        2   {
+            # Synopsis:
+            #
+            # **bell** **-displayof** *window*
+            set option [lindex $args 0]
+            set window [lindex $args 1]
+
+            # Check the '-displayof' option.
+            switch -- $option {
+                -displayof {}
+                default    { ::ms::Error "Invalid option, '$option'." $caller_info }
+            }
+
+            # Check if the '-displayof' address is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Execute the command.
+            _bell -displayof $w
+
+            return ""
+        }
         3   {
-            # Check if a '-displayof' option was provided.
+            # Synopsis:
+            #
+            # **bell** **-nice** **-displayof** *window*
+
+            # Check that a '-nice' option was provided.
+            set index [lsearch -exact $args "-nice"]
+            switch -- $index {
+                -1  { ::ms::Error "Invalid options, '$args'." $caller_info}
+            }
+
+            # Check that a '-displayof' option was provided.
             set index [lsearch -exact $args "-displayof"]
             switch -- $index {
-                -1      {}
+                -1      { ::ms::Error "Invalid options, '$args'." $caller_info}
                 default {
                     # Check if the '-displayof' address is a valid address or not.
                     set addr [lindex $args $index+1]
                     set w    [::ms::Check_Pathname $addr invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                        default { set args [lreplace $args $index+1 $index+1 $w] }
                     }
                 }
             }
 
             # Execute the command.
             try {
-                _bell {*}$args
+                _bell -nice -displayof $w
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok {} {

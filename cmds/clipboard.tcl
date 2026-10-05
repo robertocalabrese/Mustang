@@ -71,6 +71,8 @@
 # **clipboard** **clear** ?**-displayof** *window*?
 # **clipboard** **get** ?**-displayof** *window*? ?**-type** *type*?
 #
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
 #### DESCRIPTION:
 #
 # This command provides a Tcl interface to the Tk clipboard, which stores data for later retrieval using
@@ -179,8 +181,8 @@ proc ::ms::clipboard::Command { args } {
     # Synopsis:
     #
     # **clipboard** **append** ?**-displayof** *window*? ?**-type** *type*? ?**-format** *format*? ?**--**? *data*
-    # **clipboard** **clear** ?**-displayof** *window*?
-    # **clipboard** **get** ?**-displayof** *window*? ?**-type** *type*?
+    # **clipboard** **clear**  ?**-displayof** *window*?
+    # **clipboard** **get**    ?**-displayof** *window*? ?**-type** *type*?
 
     # Check if 'args' is an empty string.
     switch -- $args {
@@ -194,7 +196,7 @@ proc ::ms::clipboard::Command { args } {
         append {
             # Synopsis:
             #
-            # **clipboard** *append* ?*-displayof window*? ?*-type type*? ?*-format format*? ?--? *data*
+            # **clipboard** *append* ?**-displayof** *window*? ?**-type** *type*? ?**-format** *format*? ?--? *data*
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -226,10 +228,20 @@ proc ::ms::clipboard::Command { args } {
         clear {
             # Synopsis:
             #
-            # **clipboard** *clear* ?*-displayof window*?
+            # **clipboard** *clear*
+            # **clipboard** *clear* **-displayof** *window*
             switch -- [llength $args] {
-                0   { return [_clipboard clear] }
+                0   {
+                    # Synopsis:
+                    #
+                    # **clipboard** *clear*
+                    return [_clipboard clear]
+                }
                 2   {
+                    # Synopsis:
+                    #
+                    # **clipboard** *clear* **-displayof** *window*
+
                     # Check that a '-displayof' option was provided.
                     set option [lindex $args 0]
                     switch -- $option {
@@ -255,10 +267,23 @@ proc ::ms::clipboard::Command { args } {
         get {
             # Synopsis:
             #
-            # **clipboard** *get* ?*-displayof window*? ?*-type type*?
+            # **clipboard** *get*
+            # **clipboard** *get* ?**-displayof** *window*?
+            # **clipboard** *get* ?**-type** *type*?
+            # **clipboard** *get* ?**-displayof** *window*? ?**-type** *type*?
             switch -- [llength $args] {
-                0   { return [_clipboard get] }
+                0   {
+                    # Synopsis:
+                    #
+                    # **clipboard** *get*
+                    return [_clipboard get]
+                }
                 2   {
+                    # Synopsis:
+                    #
+                    # **clipboard** *get* **-displayof** *window*
+                    # **clipboard** *get* **-type** *type*
+
                     # Check that a '-displayof' option was provided.
                     set option [lindex $args 0]
                     switch -- $option {
@@ -271,10 +296,24 @@ proc ::ms::clipboard::Command { args } {
                                 default { set args [lreplace $args 1 1 $w] }
                             }
                         }
+                        -type   {}
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _clipboard get {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
                     }
                 }
                 4   {
+                    # Synopsis:
+                    #
+                    # **clipboard** *get* **-displayof** *window* **-type** *type*
+
                     # Check that a '-displayof' option was provided.
                     set index [lsearch -exact $args "-displayof"]
                     switch -- $index {
@@ -289,17 +328,17 @@ proc ::ms::clipboard::Command { args } {
                             }
                         }
                     }
+
+                    # Execute the command.
+                    try {
+                        _clipboard get {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Execute the command.
-            try {
-                _clipboard get {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
             }
         }
         default { ::ms::Error "Invalid action, '$action'." $caller_info }

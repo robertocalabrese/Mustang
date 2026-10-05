@@ -76,12 +76,12 @@
 # **font** **metrics** *font* ?**-displayof** *window*? ?*option*?
 # **font** **names**
 #
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
 #### DESCRIPTION:
 #
 # The font command provides several facilities for dealing with fonts, such as defining named fonts and inspecting the actual attributes of a font.
 # The command has several different forms, determined by the first argument.
-#
-# Note: 'window' must be a short or long address, see 'bison.tcl' LONG AND SHORT ADDRESSES section to know what they are and how to use them.
 #
 #### COMMAND:
 #
@@ -446,7 +446,7 @@ proc ::ms::font::Command { args } {
         metrics {
             # Synopsis:
             #
-            # **font** **actual** *font* ?**-displayof** *window*? ?*option*? ?**--**? ?*char*?
+            # **font** **actual**  *font* ?**-displayof** *window*? ?*option*? ?**--**? ?*char*?
             # **font** **measure** *font* ?**-displayof** *window*? *text*
             # **font** **metrics** *font* ?**-displayof** *window*? ?*option*?
             switch -- [llength $args] {
@@ -481,7 +481,6 @@ proc ::ms::font::Command { args } {
             # Synopsis:
             #
             # **font** **configure** *fontname* ?*-option* *value*? ... ?*-option* *value*?
-            # **font** **delete** *fontname* ?*fontname*? ... ?*fontname*?
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -529,9 +528,14 @@ proc ::ms::font::Command { args } {
         families {
             # Synopsis:
             #
-            # **font** **families** ?**-displayof** *window*?
+            # **font** **families**
+            # **font** **families** **-displayof** *window*
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # **font** **families**
+
                     # Execute the command.
                     try {
                         _font families
@@ -542,12 +546,16 @@ proc ::ms::font::Command { args } {
                     }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **font** **families** **-displayof** *window*
+
                     # Check that a '-displayof' option was provided.
                     set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
                             # Check if the '-displayof' address provided is a valid address or not.
-                            set addr [lindex $args $index+1]
+                            set addr [lindex $args 1]
                             set w    [::ms::Check_Pathname $addr invalid]
                             switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
@@ -573,11 +581,9 @@ proc ::ms::font::Command { args } {
             #
             # **font** **names**
             switch -- [llength $args] {
-                0       {}
+                0       { return [_font names] }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
-
-            return [_font names]
         }
         default { ::ms::Error "Invalid action, '$action'." $caller_info }
     }

@@ -69,11 +69,13 @@
 #
 # **destroy** *window* ?*window*? ... ?*window*?
 #
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
 #### DESCRIPTION:
 #
 # This command deletes the *window*s given by the window arguments, plus all of their descendants.
 # If a window '.' is deleted then all windows will be destroyed and the application will (normally) exit.
-# The windows are destroyed in order, and if an error occurs in destroying a window the command aborts without destroying the remaining windows.
+# The *window*s are destroyed in order, and if an error occurs in destroying a window the command aborts without destroying the remaining windows.
 # No error is returned if *window* does not exist.
 #
 # *Window*s must be short or real addresses.

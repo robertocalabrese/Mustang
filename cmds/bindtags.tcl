@@ -70,6 +70,8 @@
 # **bindtags** ?**short**? *window*
 # **bindtags** *window* *taglist*
 #
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
 #### DESCRIPTION:
 #
 # When a binding is created with the **[bind](/wiki/commands/bind.md)** command, it is associated either
@@ -84,61 +86,51 @@
 #
 # See the **[bind](/wiki/commands/bind.md)** command for more information on the matching process.
 #
-# The following options are available:
-#
-#   *window*
-#       It's the window address that will be associated with the binding tags.
-#       It can either be a short or real address.
-#
-#   ?**short**?
-#       Indicates if the taglist addresses returned should be short addresses (if the option *short* is present) or real addresses (if its not).
-#
-#   ?*taglist*?
-#       If the *taglist* argument is specified to **bindtags**, then it must be a proper list;
-#       the tags for window are changed to the elements of the list.
-#       The elements of *taglist* may be arbitrary strings; however, any tag starting with a dot is treated
-#       as a window address (either a short or real one); if no window by that name exists at the time an event is processed,
-#       then the tag is ignored for that event.
-#       The order of the elements in *tagList* determines the order in which binding scripts
-#       are executed in response to events.
-#
-#       For example, the next command reverses the order in which the binding scripts will be evaluated for
-#       a button named **.b** so that the **all** bindings are invoked first, following by the bindings for
-#       the button's toplevel ("."), followed by the class bindings (**Button**), followed by the bindings for **.b**.
-#
-#          **bindtags .b { all . Button .b }**
-#
-#       If *taglist* is an empty list then the binding tags for *window* are returned to the default state described above.
-#
-#       By default, each window has four binding tags consisting of the name of the window,
-#       the window's class name, the name of the window's nearest toplevel ancestor, and all, in that order.
-#       Toplevel windows have only three tags by default, since the toplevel name is the same as that of the window.
-#
-#       If **bindtags** is invoked with only one argument, then the current set of binding tags for window
-#       is returned as a list.
-#       The **bindtags** command may be used to introduce arbitrary additional binding tags for a *window*,
-#       or to remove standard tags. For example, the command:
-#
-#          **bindtags .b { .b TrickyButton . all }**
-#
-#       replaces the **Button** tag for **.b** with **TrickyButton**.
-#
-#       This means that the default widget bindings for buttons, which are associated with the **Button** tag,
-#       will no longer apply to **.b**, but any bindings associated with **TrickyButton**
-#       (perhaps some new button behavior) will apply.
-#
 #### COMMAND:
 #
 # The *bindtags* command can have any of the following forms:
 #
 #   **bindtags** ?**short**? *window*
-#      Return the taglist associated with the *window* address.
+#      Return the taglist associated with the *window* address. *Window* can either be a short or real address.
 #
 #      If the *short* option is provided the taglist addresses returned will be short addresses, otherwise they will be real addresses.
 #      If provided, the *short* option must be located just after the *bindtags* command.
 #
 #   **bindtags** *window* *taglist*
-#      Set the bindtags for the *window* address as *taglist*.
+#      Set the bindtags for the *window* address as *taglist*. *Window* can either be a short or real address.
+#
+#      If the *taglist* argument is specified to **bindtags**, then it must be a proper list;
+#      the tags for window are changed to the elements of the list.
+#      The elements of *taglist* may be arbitrary strings; however, any tag starting with a dot is treated
+#      as a window address (either a short or real one); if no window by that name exists at the time an event is processed,
+#      then the tag is ignored for that event.
+#      The order of the elements in *tagList* determines the order in which binding scripts
+#      are executed in response to events.
+#
+#      For example, the next command reverses the order in which the binding scripts will be evaluated for
+#      a button named **.b** so that the **all** bindings are invoked first, following by the bindings for
+#      the button's toplevel ("."), followed by the class bindings (**Button**), followed by the bindings for **.b**.
+#
+#         **bindtags .b { all . Button .b }**
+#
+#      If *taglist* is an empty list then the binding tags for *window* are returned to the default state described above.
+#
+#      By default, each window has four binding tags consisting of the name of the window,
+#      the window's class name, the name of the window's nearest toplevel ancestor, and all, in that order.
+#      Toplevel windows have only three tags by default, since the toplevel name is the same as that of the window.
+#
+#      If **bindtags** is invoked with only one argument, then the current set of binding tags for window
+#      is returned as a list.
+#      The **bindtags** command may be used to introduce arbitrary additional binding tags for a *window*,
+#      or to remove standard tags. For example, the command:
+#
+#         **bindtags .b { .b TrickyButton . all }**
+#
+#      replaces the **Button** tag for **.b** with **TrickyButton**.
+#
+#      This means that the default widget bindings for buttons, which are associated with the **Button** tag,
+#      will no longer apply to **.b**, but any bindings associated with **TrickyButton**
+#      (perhaps some new button behavior) will apply.
 package provide ::ms::bindtags 0.1
 
 # Create the mustang **bindtags** package.
@@ -172,73 +164,84 @@ proc ::ms::bindtags::Command { args } {
         1   {
             # Synopsis:
             #
+            # **bindtags** *window*
             # **bindtags** ?**short**? *window*
             switch -- [llength $args] {
                 1   {
-                    set short 0
-                    set addr  $args
+                    # Synopsis:
+                    #
+                    # **bindtags** *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        return [_bindtags $::ms::addr($w,widget)]
+                    } else {
+                        return [_bindtags $w]
+                    }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **bindtags** ?**short**? *window*
                     set option [lindex $args 0]
-                    set addr  [lindex $args 1]
+                    set window [lindex $args 1]
 
                     # Check the 'short' option.
                     switch -- $option {
-                        short   { set short 1 }
+                        short   {}
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
 
-            # Check if 'addr' is a valid address or not.
-            set w [::ms::Check_Pathname $addr invalid]
-            switch -- $w {
-                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                default {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
                     # Check if 'w' is a megawidget address.
                     if { $w in $::ms::addr(megawidgets) } {
                         set taglist [_bindtags $::ms::addr($w,widget)]
                     } else {
                         set taglist [_bindtags $w]
                     }
-                }
-            }
 
-            # Check the 'short' option.
-            switch -- $short {
-                0   { return $taglist }
-                1   {
-                    set short_taglist [list ]
+                    set result [list ]
                     foreach w $taglist {
                         # Check if exists a short address for 'w'.
                         switch -- [info exists ::ms::addr($w,short)] {
-                            0   { lappend short_taglist $w }
-                            1   { lappend short_taglist $::ms::addr($w,short) }
+                            0   { lappend result $w }
+                            1   { lappend result $::ms::addr($w,short) }
                         }
                     }
 
-                    return $short_taglist
+                    return $result
                 }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         2   {
             # Synopsis:
             #
             # **bindtags** *window* *taglist*
-            set addr    [lindex $args 0]
+            set window  [lindex $args 0]
             set taglist [lindex $args 1]
 
-            # Check if 'addr' is a valid address or not.
-            set w [::ms::Check_Pathname $addr invalid]
+            # Check if 'window' is a valid windowess or not.
+            set w [::ms::Check_Pathname $window invalid]
             switch -- $w {
-                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                default {
-                    # Check if 'w' is a megawidget address.
-                    if { $w in $::ms::addr(megawidgets) } {
-                        set w $::ms::addr($w,widget)
-                    }
-                }
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Check if 'w' is a megawidget address.
+            if { $w in $::ms::addr(megawidgets) } {
+                set w $::ms::addr($w,widget)
             }
 
             # Convert any short address present in 'taglist'.

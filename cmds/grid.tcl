@@ -67,25 +67,22 @@
 #
 #### SYNOPSIS:
 #
-# **grid** *window* ?*-option* *value*? ... ?*-option* *value*?
+# **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **anchor** *window* ?*anchor*?
 # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
-# **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
-# **grid** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-# **grid** **content** *window* ?*-option* *value*?
+# **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+# **grid** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+# **grid** **content** ?**short**? *window* ?*-option* *value*?
 # **grid** **forget** *window* ?*window*? ... ?*window*?
-# **grid** **info** *window*
+# **grid** **info** ?**short**? *window*
 # **grid** **location** *window* x y
 # **grid** **propagate** *window* ?*boolean*?
 # **grid** **remove** *window* ?*window*? ... ?*window*?
-# **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+# **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **size** *window*
-# **grid** **slaves** *window* ?*-option* *value*?
+# **grid** **slaves** ?**short**? *window* ?*-option* *value*?
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
-#       *Action*s that gives as a result a window pathname (or more than one), will always return the address as:
-#          - A short address, if the *window* provided as input is a short address.
-#          - A real address, if the *window* provided as input is a real address.
 #
 #### DESCRIPTION:
 #
@@ -118,7 +115,7 @@
 #      If both *column* and *row* arguments are specified, then the bounding box spanning the rows
 #      and columns indicated is returned.
 #
-#   **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+#   **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
 #      Query or set the column properties of the *index* column of the geometry container, *window*.
 #      The valid options are **-minsize**, **-weight**, **-uniform** and **-pad**.
 #
@@ -150,8 +147,8 @@
 #      If only *window* and *index* are specified, all the current settings are returned in a list of
 #      "*-option* *value*" pairs.
 #
-#   **grid** **configure** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
-#      The arguments consist of a window pathname followed by pairs of arguments that specify how to manage
+#   **grid** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+#      The arguments consist of a window pathname/s followed by pairs of arguments that specify how to manage
 #      the content. The following options are supported:
 #
 #          **-column** *n*
@@ -235,12 +232,15 @@
 #
 #      Note: Differently from Tk, the **grid configure** command do not accepts shortforms ('-', 'x' and '^').
 #
-#   **grid** **content** *window* ?*-option* *value*?
+#   **grid** **content** ?**short**? *window* ?*-option* *value*?
 #      If no options are supplied, a list of all of the content in *window* is returned, most recently
 #      managed first.
 #
-#      Option can be either **-row** or **-column** which causes only the content in the row (or column)
+#      *Option* can be either **-row** or **-column** which causes only the content in the row (or column)
 #      specified by value to be returned.
+#
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *content* action.
 #
 #   **grid** **forget** *window* ?*window*? ... ?*window*?
 #      Removes each of the *window*s from grid for its container and unmaps their windows.
@@ -253,12 +253,14 @@
 #      **<<NoManagedChild>>** to the container: the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
-#   **grid** **info** *window* ?*option*?
-#      If *option* is not provided, returns a list whose elements are the current configuration state of the
-#      content given by *window* in the same option-value form that might be specified to **grid configure**.
+#   **grid** **info** ?**short**? *window*
+#      Returns a list whose elements are the current configuration state of the content given by *window* in the same
+#      option-value form that might be specified to **grid configure**.
 #      The first two elements of the list are "**-in** *container*" where *container* is the window's
 #      container window.
-#      If *option* is provided, returns the current value for *option*.
+#
+#      If the *short* option is provided the '-in' address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *info* action.
 #
 #   **grid** **location** *window* x y
 #      Given *x* and *y* values in screen units relative to *window*, the column and row number
@@ -288,7 +290,7 @@
 #      **<<NoManagedChild>>** to the container; the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
-#   **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+#   **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
 #      Query or set the row properties of the index row of the geometry container, *window*.
 #      The valid options are **-minsize**, **-weight**, **-uniform** and **-pad**.
 #
@@ -324,7 +326,7 @@
 #      The **size** is determined either by the *content* occupying the largest row or column, or the largest
 #      column or row with a **-minsize**, **-weight**, or **-pad** that is non-zero.
 #
-#   **grid** **slaves** *window* ?*-option* *value*?
+#   **grid** **slaves** ?**short**? *window* ?*-option* *value*?
 #      Synonym for **grid content**.
 #
 #### THE GRID ALGORITHM:
@@ -451,20 +453,20 @@ proc ::ms::grid::Command { args } {
 
     # Synopsis:
     #
-    # **grid** *window* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
     # **grid** **anchor** *window* ?*anchor*?
     # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
-    # **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
-    # **grid** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-    # **grid** **content** *window* ?*-option* *value*?
+    # **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **content** ?**short**? *window* ?*-option* *value*?
     # **grid** **forget** *window* ?*window*? ... ?*window*?
-    # **grid** **info** *window*
+    # **grid** **info** ?**short**? *window*
     # **grid** **location** *window* x y
     # **grid** **propagate** *window* ?*boolean*?
     # **grid** **remove** *window* ?*window*? ... ?*window*?
-    # **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
     # **grid** **size** *window*
-    # **grid** **slaves** *window* ?*-option* *value*?
+    # **grid** **slaves** ?**short**? *window* ?*-option* *value*?
 
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
@@ -474,24 +476,51 @@ proc ::ms::grid::Command { args } {
         propagate {
             # Synopsis:
             #
-            # **grid** **anchor** *window* ?*anchor*?
+            # **grid** **anchor**    *window*
+            # **grid** **anchor**    *window* ?*anchor*?
+            #
+            # **grid** **propagate** *window*
             # **grid** **propagate** *window* ?*boolean*?
             switch -- [llength $args] {
-                1   -
-                2   {
-                    set window [lindex  $args 0]
-                    set args   [lremove $args 0]
+                1   {
+                    # Synopsis:
+                    #
+                    # **grid** **anchor**    *window*
+                    # **grid** **propagate** *window*
+                    set window $args
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
                     try {
-                        _grid $action $w {*}$args
+                        _grid $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **grid** **anchor**    *window* ?*anchor*?
+                    # **grid** **propagate** *window* ?*boolean*?
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Get the 'window' real address.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid $action $w $args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -504,19 +533,44 @@ proc ::ms::grid::Command { args } {
         bbox {
             # Synopsis:
             #
-            # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
+            # **grid** **bbox** *window*
+            # **grid** **bbox** *window* *column* *row*
+            # **grid** **bbox** *window* *column* *row* *column2* *row2*
             switch -- [llength $args] {
-                1   -
+                1   {
+                    # Synopsis:
+                    #
+                    # **grid** **bbox** *window*
+                    set window $args
+
+                    # Get the 'window' real address.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid bbox $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
                 3   -
                 5   {
+                    # Synopsis:
+                    #
+                    # **grid** **bbox** *window* *column* *row*
+                    # **grid** **bbox** *window* *column* *row* *column2* *row2*
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
@@ -535,53 +589,26 @@ proc ::ms::grid::Command { args } {
         rowconfigure    {
             # Synopsis:
             #
-            # **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
-            # **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
+            # **grid** **columnconfigure** *window* *index*
+            # **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+            #
+            # **grid** **rowconfigure**    *window* *index*
+            # **grid** **rowconfigure**    *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0   -
                 1   { ::ms::Error "Invalid number of arguments." $caller_info }
                 2   {
+                    # Synopsis:
+                    #
+                    # **grid** **columnconfigure** *window* *index*
+                    # **grid** **rowconfigure**    *window* *index*
                     set window  [lindex $args 0]
                     set indexes [lindex $args 1]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
-                    }
-
-                    # Check the 'indexes' value/s.
-                    switch -- $indexes {
-                        all     {}
-                        default {
-                            # Check that every index in indexes is a column/row value or a widget address.
-                            set checked_indexes [list ]
-                            foreach index $indexes {
-                                switch -- [string is integer -strict $index] {
-                                    0   {
-                                        # Check if 'index' is a valid short or real address.
-
-                                        # Get the 'index' real address.
-                                        set result [::ms::Check_Pathname $index invalid]
-                                        switch -- $result {
-                                            invalid { ::ms::Error "Invalid index value, '$index'." $caller_info }
-                                            default { lappend checked_indexes $index }
-                                        }
-                                    }
-                                    1   {
-                                        # Check that 'index' is a positive integer (0 included).
-                                        if { $index > -1 } {
-                                            lappend checked_indexes $index
-                                        } else {
-                                            ::ms::Error "Invalid index value, '$index'." $caller_info
-                                        }
-                                    }
-                                }
-                            }
-
-                            set indexes $checked_indexes
-                        }
                     }
 
                     # Check if 'w' is a megawidget container.
@@ -599,48 +626,18 @@ proc ::ms::grid::Command { args } {
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+                    # **grid** **rowconfigure**    *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
                     set window  [lindex  $args 0]
                     set indexes [lindex  $args 1]
                     set args    [lremove $args 0 1]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
-                    }
-
-                    # Check the 'indexes' value/s.
-                    switch -- $indexes {
-                        all     {}
-                        default {
-                            # Check that every index in indexes is a column/row value or a widget address.
-                            set checked_indexes [list ]
-                            foreach index $indexes {
-                                switch -- [string is integer -strict $index] {
-                                    0   {
-                                        # Check if 'index' is a valid short or real address.
-
-                                        # Get the 'index' real address.
-                                        set result [::ms::Check_Pathname $index invalid]
-                                        switch -- $result {
-                                            invalid { ::ms::Error "Invalid index value, '$index'." $caller_info }
-                                            default { lappend checked_indexes $index }
-                                        }
-                                    }
-                                    1   {
-                                        # Check that 'index' is a positive integer (0 included).
-                                        if { $index > -1 } {
-                                            lappend checked_indexes $index
-                                        } else {
-                                            ::ms::Error "Invalid index value, '$index'." $caller_info
-                                        }
-                                    }
-                                }
-                            }
-
-                            set indexes $checked_indexes
-                        }
                     }
 
                     # Check if 'w' is a megawidget container.
@@ -656,31 +653,31 @@ proc ::ms::grid::Command { args } {
                                 _grid $action $w $indexes {*}$args
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                # Note: The 'grid info' command returns an option/value list that
-                                #       will always contain the '-in' option at index '0'.
-
-                                # Check if 'w' is a scrollable widget.
-                                if { $w in $::ms::addr(megawidgets,scrollable) } {
-                                    # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
-                                    # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
-                                    # the moment they are positioned on screen.
-                                    # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
-                                    # they normally don't contain any widgets.
-                                    switch -- $::ms::data($w,classtype) {
-                                        canvas    -
-                                        listbox   -
-                                        scrollbar -
-                                        text      -
-                                        treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
-                                    }
-                                }
-
-                                # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
-                                ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_grid info $w] 1]
-
-                                return ""
                             }
+
+                            # Check if 'w' is a scrollable widget.
+                            if { $w in $::ms::addr(megawidgets,scrollable) } {
+                                # If 'w' classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                                # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                                # the moment they are positioned on screen.
+                                # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
+                                # they normally don't contain any widgets (no harm will be done if they contains widgets).
+                                switch -- $::ms::data($w,classtype) {
+                                    canvas    -
+                                    listbox   -
+                                    scrollbar -
+                                    text      -
+                                    treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                                }
+                            }
+
+                            # Get the grid container real address.
+                            set in_addr_real [lindex [_grid info $w] 1]
+
+                            # Force the propagation inside the grid container real address.
+                            ::ms::Scrollable_Widgets_Propagation_Mechanism $in_addr_real
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
@@ -693,19 +690,20 @@ proc ::ms::grid::Command { args } {
 
             # Synopsis:
             #
-            # **grid** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
+            # **grid** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
-                0       { ::ms::Error "Invalid number of arguments." $caller_info }
-                1       { return "" }
+                0       -
+                1       -
+                2       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set addresses [lindex $result 0] }
+                        default { set addresses [list $w] }
                     }
 
                     # Check if there are other addresses.
@@ -716,11 +714,11 @@ proc ::ms::grid::Command { args } {
                                 set window $arg
 
                                 # Get the 'window' real address.
-                                set result [::ms::Check_Pathname $window invalid]
-                                switch -- $result {
+                                set w [::ms::Check_Pathname $window invalid]
+                                switch -- $w {
                                     invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                                     default {
-                                        lappend addresses  [lindex  $result 0]
+                                        lappend addresses  $w
                                         set remaining_args [lremove $remaining_args 0]
                                     }
                                 }
@@ -736,26 +734,15 @@ proc ::ms::grid::Command { args } {
                             # '-in'
                             set index [lsearch -exact $args "-in"]
                             switch -- $index {
-                                -1      {}
+                                -1      { set in_addr_real [_winfo parent [lindex $addresses 0]] }
                                 default {
-                                    set container [lindex $args $index+1]
+                                    set in_addr [lindex $args $index+1]
 
-                                    # Get the real address associated with 'container'.
-                                    set result [::ms::Check_Pathname $container invalid]
-                                    switch -- $result {
-                                        invalid { ::ms::Error "Invalid address, 'container'." $caller_info }
-                                        default {
-                                            set w    [lindex $result 0]
-                                            set type [lindex $result 1]
-
-                                            # Check the initial address type provided (short or real).
-                                            switch -- $type {
-                                                short {
-                                                    # Substitute 'container' with its relative real address.
-                                                    set args [lreplace $args $index+1 $index+1 $w]
-                                                }
-                                            }
-                                        }
+                                    # Get the real address associated with 'in_addr'.
+                                    set in_addr_real [::ms::Check_Pathname $in_addr invalid]
+                                    switch -- $in_addr_real {
+                                        invalid { ::ms::Error "Invalid address, 'in_addr'." $caller_info }
+                                        default { set args [lreplace $args $index+1 $index+1 $in_addr_real] }
                                     }
                                 }
                             }
@@ -765,33 +752,31 @@ proc ::ms::grid::Command { args } {
                                 _grid configure {*}$addresses {*}$args
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                # Note: The 'grid info' command returns an option/value list that
-                                #       will always contain the '-in' option at index '0'.
-
-                                foreach w $addresses {
-                                    # Check if 'w' is a scrollable widget.
-                                    if { $w in $::ms::addr(megawidgets,scrollable) } {
-                                        # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
-                                        # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
-                                        # the moment they are positioned on screen.
-                                        # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
-                                        # they normally don't contain any widgets.
-                                        switch -- $::ms::data($w,classtype) {
-                                            canvas    -
-                                            listbox   -
-                                            scrollbar -
-                                            text      -
-                                            treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
-                                        }
-                                    }
-
-                                    # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
-                                    ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_grid info $w] 1]
-                                }
-
-                                return ""
                             }
+
+                            # Check each address that has been configured.
+                            foreach w $addresses {
+                                # Check if 'w' is a scrollable widget.
+                                if { $w in $::ms::addr(megawidgets,scrollable) } {
+                                    # If 'w' classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                                    # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                                    # the moment they are positioned on screen.
+                                    # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
+                                    # they normally don't contain any widgets (no harm will be done if they contains widgets).
+                                    switch -- $::ms::data($w,classtype) {
+                                        canvas    -
+                                        listbox   -
+                                        scrollbar -
+                                        text      -
+                                        treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                                    }
+                                }
+                            }
+
+                            # Force the propagation inside the grid container ('in_addr_real').
+                            ::ms::Scrollable_Widgets_Propagation_Mechanism $in_addr_real
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
@@ -802,22 +787,88 @@ proc ::ms::grid::Command { args } {
         slaves  {
             # Synopsis:
             #
+            # **grid** **content** *window*
             # **grid** **content** *window* ?*-option* *value*?
-            # **grid** **slaves** *window* ?*-option* *value*?
+            # **grid** **content** ?**short**? *window*
+            # **grid** **content** ?**short**? *window* ?*-option* *value*?
+            #
+            # **grid** **slaves**  *window*
+            # **grid** **slaves**  *window* ?*-option* *value*?
+            # **grid** **slaves**  ?**short**? *window*
+            # **grid** **slaves**  ?**short**? *window* ?*-option* *value*?
             switch -- [llength $args] {
-                1   -
+                1   {
+                    # Synopsis:
+                    #
+                    # **grid** **content** *window*
+                    # **grid** **slaves**  *window*
+                    set window $args
+
+                    # Get the 'window' real address.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **grid** **content** ?**short**? *window*
+                    # **grid** **slaves**  ?**short**? *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Get the 'window' real address.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        set short_result [list ]
+                        foreach w $result {
+                            # Check if exists a short address for 'w'.
+                            switch -- [info exists ::ms::addr($w,short)] {
+                                0   { lappend short_result $w }
+                                1   { lappend short_result $::ms::addr($w,short) }
+                            }
+                        }
+
+                        return $short_result
+                    }
+                }
                 3   {
+                    # Synopsis:
+                    #
+                    # **grid** **content** *window* ?*-option* *value*?
+                    # **grid** **slaves**  *window* ?*-option* *value*?
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
@@ -826,22 +877,46 @@ proc ::ms::grid::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        # Check the initial address type provided (short or real).
-                        switch -- $type {
-                            short {
-                                set shorts_result [list ]
-                                foreach addr $result {
-                                    if { $addr in $::ms::addr(reals) } {
-                                        lappend shorts_result $::ms::addr($addr,short)
-                                    } else {
-                                        lappend shorts_result $addr
-                                    }
-                                }
+                        return $result
+                    }
+                }
+                4   {
+                    # Synopsis:
+                    #
+                    # **grid** **content** ?**short**? *window* ?*-option* *value*?
+                    # **grid** **slaves**  ?**short**? *window* ?*-option* *value*?
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
+                    set args   [lremove $args 0 1]
 
-                                return $shorts_result
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Get the 'window' real address.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _grid $action $w {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        set short_result [list ]
+                        foreach w $result {
+                            # Check if exists a short address for 'w'.
+                            switch -- [info exists ::ms::addr($w,short)] {
+                                0   { lappend short_result $w }
+                                1   { lappend short_result $::ms::addr($w,short) }
                             }
-                            default { return $result }
                         }
+
+                        return $short_result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -858,26 +933,16 @@ proc ::ms::grid::Command { args } {
                 default {
                     foreach window $args {
                         # Get the 'window' real address.
-                        set result [::ms::Check_Pathname $window invalid]
-                        switch -- $result {
+                        set w [::ms::Check_Pathname $window invalid]
+                        switch -- $w {
                             invalid { break }
-                            default { set w [lindex $result 0] }
-                        }
-
-                        # Note: The 'grid info' command returns an option/value list that
-                        #       will always contain the '-in' option at index '0'.
-
-                        set window [lindex [_grid info $w] 1]
-
-                        switch -- $window {
-                            ""  { break }
                         }
 
                         # Forget/Remove the real address.
                         _grid $action $w
 
-                        # Force the propagation inside any scrollable widget ancestor, if any.
-                        ::ms::Scrollable_Widgets_Propagation_Mechanism $window
+                        # Force the propagation inside any scrollable 'w' ancestor, if any.
+                        ::ms::Scrollable_Widgets_Propagation_Mechanism $w
                     }
 
                     return ""
@@ -887,19 +952,15 @@ proc ::ms::grid::Command { args } {
         info {
             # Synopsis:
             #
-            # **grid** **info** *window*
+            # **grid** **info** ?**short**? *window*
             switch -- [llength $args] {
                 1   {
-                    set window [lindex $args 0]
+                    set window $args
 
                     # Get the 'window' real address and type.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
@@ -908,39 +969,23 @@ proc ::ms::grid::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        switch -- $result {
-                            ""      {}
-                            default {
-                                # Check the initial address type provided (short or real).
-                                switch -- $type {
-                                    short {
-                                        # Note: The 'grid info' command returns an option/value list that
-                                        #       will always contain the '-in' option value at index '1'.
-
-                                        set container [lindex $result 1]
-                                        if { $container in $::ms::addr(reals) } {
-                                            set result [lreplace $result 1 1 $::ms::addr($container,short)]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
                         return $result
                     }
                 }
                 2   {
-                    set window     [lindex $args 0]
-                    set optionName [lindex $args 1]
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Get the 'window' real address and type.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
@@ -952,32 +997,17 @@ proc ::ms::grid::Command { args } {
                         switch -- $result {
                             ""      { return "" }
                             default {
-                                switch -- $optionName {
-                                    "-in" {
-                                        # Note: The 'grid info' command returns an option/value list that
-                                        #       will always contain the '-in' option value at index '1'.
+                                # Note: The 'grid info' command returns an option/value list that
+                                #       will always contain the '-in' option value at index '1'.
 
-                                        set container [lindex $result 1]
+                                set in_addr_real [lindex $result 1]
 
-                                        # Check the initial address type provided (short or real).
-                                        switch -- $type {
-                                            short {
-                                                if { $container in $::ms::addr(reals) } {
-                                                    return $::ms::addr($container,short)
-                                                }
-                                            }
-                                        }
-
-                                        return $container
-                                    }
-                                    default {
-                                        set index [lsearch -exact $result $optionName]
-                                        switch -- $index {
-                                            -1      { ::ms::Error "Invalid option name, '$optionName'." $caller_info }
-                                            default { return [lindex $result $index+1] }
-                                        }
-                                    }
+                                # Check if exists a short address for 'in_addr_real'.
+                                switch -- [info exists ::ms::addr($in_addr_real,short)] {
+                                    1   { set result [lreplace $result 1 1 $::ms::addr($in_addr_real,short)] }
                                 }
+
+                                return $result
                             }
                         }
                     }
@@ -995,10 +1025,9 @@ proc ::ms::grid::Command { args } {
                     set args   [lremove $args 0]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
@@ -1022,10 +1051,9 @@ proc ::ms::grid::Command { args } {
                     set window [lindex $args 0]
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
@@ -1046,14 +1074,14 @@ proc ::ms::grid::Command { args } {
 
             # Synopsis:
             #
-            # **grid** *window* ?*-option* *value*? ... ?*-option* *value*?
+            # **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
             set window $action
 
             # Get the 'window' real address.
-            set result [::ms::Check_Pathname $window invalid]
-            switch -- $result {
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                default { set addresses [lindex $result 0] }
+                default { set addresses [list $w] }
             }
 
             # Check if there are other addresses.
@@ -1064,11 +1092,11 @@ proc ::ms::grid::Command { args } {
                         set window $arg
 
                         # Get the 'window' real address.
-                        set result [::ms::Check_Pathname $window invalid]
-                        switch -- $result {
+                        set w [::ms::Check_Pathname $window invalid]
+                        switch -- $w {
                             invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             default {
-                                lappend addresses  [lindex  $result 0]
+                                lappend addresses  $w
                                 set remaining_args [lremove $remaining_args 0]
                             }
                         }
@@ -1087,24 +1115,13 @@ proc ::ms::grid::Command { args } {
                         -1      {}
                         default {
                             # '-in'
-                            set container [lindex $args $index+1]
+                            set in_addr [lindex $args $index+1]
 
-                            # Get the 'container' real address.
-                            set result [::ms::Check_Pathname $container invalid]
-                            switch -- $result {
-                                invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set type [lindex $result 1]
-
-                                    # Check the initial address type provided (short or real).
-                                    switch -- $type {
-                                        short {
-                                            # Substitute 'container' with its relative real address.
-                                            set args [lreplace $args $index+1 $index+1 $w]
-                                        }
-                                    }
-                                }
+                            # Get the 'in_addr' real address.
+                            set in_addr_real [::ms::Check_Pathname $in_addr invalid]
+                            switch -- $in_addr_real {
+                                invalid { ::ms::Error "Invalid address, '$in_addr'." $caller_info }
+                                default { set args [lreplace $args $index+1 $index+1 $in_addr_real] }
                             }
                         }
                     }
@@ -1117,31 +1134,29 @@ proc ::ms::grid::Command { args } {
                 _grid {*}$addresses {*}$args
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
-            } on ok {} {
-                # Note: The 'grid info' command returns an option/value list that
-                #       will always contain the '-in' option at index '0'.
+            }
 
-                foreach w $addresses {
-                    # Check if 'w' is a scrollable widget.
-                    if { $w in $::ms::addr(megawidgets,scrollable) } {
-                        # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
-                        # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
-                        # the moment they are positioned on screen.
-                        # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
-                        # they normally don't contain any widgets.
-                        switch -- $::ms::data($w,classtype) {
-                            canvas    -
-                            listbox   -
-                            scrollbar -
-                            text      -
-                            treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
-                        }
+            # Check each address that has been gridded.
+            foreach w $addresses {
+                # Check if 'w' is a scrollable widget.
+                if { $w in $::ms::addr(megawidgets,scrollable) } {
+                    # If 'w' classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                    # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                    # the moment they are positioned on screen.
+                    # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
+                    # they normally don't contain any widgets (no harm will be done if they contains widgets).
+                    switch -- $::ms::data($w,classtype) {
+                        canvas    -
+                        listbox   -
+                        scrollbar -
+                        text      -
+                        treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
                     }
-
-                    # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
-                    ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_grid info $w] 1]
                 }
             }
+
+            # Force the propagation inside the grid container ('in_addr_real').
+            ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
 
             return ""
         }

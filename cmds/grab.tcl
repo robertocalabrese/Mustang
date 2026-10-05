@@ -67,11 +67,13 @@
 #
 #### SYNOPSIS:
 #
-# **grab** ?*-global*? *window*
+# **grab** ?**-global**? *window*
 # **grab** **current** ?**short**? *window*
 # **grab** **release** *window*
-# **grab** **set** ?*-global*? *window*
+# **grab** **set** ?**-global**? *window*
 # **grab** **status** *window*
+#
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
 #
 #### DESCRIPTION:
 #
@@ -113,13 +115,11 @@
 # It is possible for different applications on a single display to have simultaneous local grabs, but only one application
 # can have a global grab on a given display at once.
 #
-# Note: *window* must be a short or real address.
-#
 #### COMMAND:
 #
 # The grab command can take any of the following forms:
 #
-#   **grab** ?*-global*? *window*
+#   **grab** ?**-global**? *window*
 #      Same as grab set, described below.
 #
 #   **grab** **current** ?**short**? *window*
@@ -132,7 +132,7 @@
 #      Releases the grab on *window* if there is one, otherwise does nothing.
 #      Returns an empty string.
 #
-#   **grab** **set** ?*-global*? *window*
+#   **grab** **set** ?**-global**? *window*
 #      Sets a grab on *window*. If *-global* is specified then the grab is global, otherwise it is local.
 #      If a grab was already in effect for this application on *window*'s display then it is automatically released.
 #      If there is already a grab on window and it has the same global/local form as the requested grab, then the command does nothing.
@@ -166,10 +166,10 @@ proc ::ms::grab::Command { args } {
 
     # Synopsis:
     #
-    # **grab** ?*-global*? *window*
+    # **grab** ?**-global**? *window*
     # **grab** **current** ?**short**? *window*
     # **grab** **release** *window*
-    # **grab** **set** ?*-global*? *window*
+    # **grab** **set** ?**-global**? *window*
     # **grab** **status** *window*
 
     # Separate the 'action' from the actual 'args'.
@@ -179,71 +179,86 @@ proc ::ms::grab::Command { args } {
         current {
             # Synopsis:
             #
+            # **grab** **current** *window*
             # **grab** **current** ?**short**? *window*
             switch -- [llength $args] {
                 1   {
-                    set short  0
+                    # Synopsis:
+                    #
+                    # **grab** **current** *window*
                     set window $args
+
+                    # Check if the 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    return [_grab current $w]
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **grab** **current** ?**short**? *window*
                     set option [lindex $args 0]
-                    set addr  [lindex $args 1]
+                    set window [lindex $args 1]
 
                     # Check the 'short' option.
                     switch -- $option {
-                        short   { set short 1 }
+                        short   {}
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
 
-            # Check if the 'window' is a valid address or not.
-            set w [::ms::Check_Pathname $window invalid]
-            switch -- $w {
-                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-            }
+                    # Check if the 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
 
-            # Execute the command.
-            set addr [_grab current $w]
+                    # Execute the command.
+                    set addr [_grab current $w]
 
-            # Check if the command requires a short address as an answer.
-            switch -- $short {
-                0   { return $addr }
-                1   {
                     # Check if exists a short address for 'addr'.
                     switch -- [info exists ::ms::addr($addr,short)] {
                         0   { return $addr }
                         1   { return $::ms::addr($addr,short) }
                     }
                 }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         set {
             # Synopsis:
             #
-            # **grab** **set** ?*-global*? *window*
+            # **grab** **set** *window*
+            # **grab** **set** **-global** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **grab** **set** *window*
                     set window $args
 
                     # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            # Check if 'w' is a megawidget address.
-                            if { $w in $::ms::addr(megawidgets) } {
-                                _grab set $::ms::addr($w,widget)
-                            } else {
-                                _grab set $w
-                            }
-
-                            return ""
-                        }
                     }
+
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        _grab set $::ms::addr($w,widget)
+                    } else {
+                        _grab set $w
+                    }
+
+                    return ""
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **grab** **set** **-global** *window*
                     set option [lindex $args 0]
                     set window [lindex $args 1]
 
@@ -257,17 +272,16 @@ proc ::ms::grab::Command { args } {
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            # Check if 'w' is a megawidget address.
-                            if { $w in $::ms::addr(megawidgets) } {
-                                _grab set -global $::ms::addr($w,widget)
-                            } else {
-                                _grab set -global $w
-                            }
-
-                            return ""
-                        }
                     }
+
+                    # Check if 'w' is a scrollable megawidget address.
+                    if { $w in $::ms::addr(megawidgets,scrollable) } {
+                        _grab set -global $::ms::addr($w,widget)
+                    } else {
+                        _grab set -global $w
+                    }
+
+                    return ""
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -284,17 +298,16 @@ proc ::ms::grab::Command { args } {
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            # Check if 'w' is a megawidget address.
-                            if { $w in $::ms::addr(megawidgets) } {
-                                _grab release $::ms::addr($w,widget)
-                            } else {
-                                _grab release $w
-                            }
-
-                            return ""
-                        }
                     }
+
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        _grab release $::ms::addr($w,widget)
+                    } else {
+                        _grab release $w
+                    }
+
+                    return ""
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -311,14 +324,13 @@ proc ::ms::grab::Command { args } {
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            # Check if 'w' is a megawidget address.
-                            if { $w in $::ms::addr(megawidgets) } {
-                                return [_grab status $::ms::addr($w,widget)]
-                            } else {
-                                return [_grab status $w]
-                            }
-                        }
+                    }
+
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        return [_grab status $::ms::addr($w,widget)]
+                    } else {
+                        return [_grab status $w]
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -327,28 +339,34 @@ proc ::ms::grab::Command { args } {
         default {
             # Synopsis:
             #
-            # **grab** ?*-global*? *window*
+            # **grab** *window*
+            # **grab** **-global** *window*
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # **grab** *window*
                     set window $action
 
                     # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            # Check if 'w' is a megawidget address.
-                            if { $w in $::ms::addr(megawidgets) } {
-                                _grab set $::ms::addr($w,widget)
-                            } else {
-                                _grab set $w
-                            }
-
-                            return ""
-                        }
                     }
+
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        _grab set $::ms::addr($w,widget)
+                    } else {
+                        _grab set $w
+                    }
+
+                    return ""
                 }
                 1   {
+                    # Synopsis:
+                    #
+                    # **grab** **-global** *window*
                     set option $action
                     set window $args
 
@@ -362,17 +380,16 @@ proc ::ms::grab::Command { args } {
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            # Check if 'w' is a megawidget address.
-                            if { $w in $::ms::addr(megawidgets) } {
-                                _grab set -global $::ms::addr($w,widget)
-                            } else {
-                                _grab set -global $w
-                            }
-
-                            return ""
-                        }
                     }
+
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        _grab set -global $::ms::addr($w,widget)
+                    } else {
+                        _grab set -global $w
+                    }
+
+                    return ""
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }

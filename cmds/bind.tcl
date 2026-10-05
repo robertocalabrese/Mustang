@@ -74,6 +74,8 @@
 # **bind** *tag* *sequence* -*action*
 # **bind** *tag* *sequence* +*action*
 #
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
 #### DESCRIPTION
 #
 # The bind command associates Tcl scripts with X events.
