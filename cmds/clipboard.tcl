@@ -88,7 +88,9 @@
 #
 #### COMMAND:
 #
-# The *clipboard* command can have any of the following forms:
+# The *clipboard* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is the first argument after the command itself.
+# The legal forms are:
 #
 #   **clipboard** **append** ?**-displayof** *window*? ?**-type** *type*? ?**-format** *format*? ?**--**? *data*
 #      Append *data* to the clipboard on *window*'s display in the form given by *type* with the representation given by *format*

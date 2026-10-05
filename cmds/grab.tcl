@@ -117,10 +117,12 @@
 #
 #### COMMAND:
 #
-# The grab command can take any of the following forms:
+# The *grab* command can have any of several forms, depending on the *action* argument.
+# The *action* argument, when present, is the first argument after the command itself.
+# The legal forms are:
 #
 #   **grab** ?**-global**? *window*
-#      Same as grab set, described below.
+#      Same as **grab set**, described below.
 #
 #   **grab** **current** ?**short**? *window*
 #      Returns the name of the current grab window in this application for *window*'s display, or an empty string if there is no such window.

@@ -86,8 +86,10 @@
 # The **pack** command is used to communicate with the packer, a geometry manager that arranges the children
 # of a parent by packing them in order around the edges of the parent.
 #
+#### COMMAND:
+#
 # The *pack* command can have any of several forms, depending on the *action* argument.
-# The *action* argument is always the first argument after the command itself.
+# The *action* argument, when present, is always the first argument after the command itself.
 # The legal forms are:
 #
 #   **pack** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?

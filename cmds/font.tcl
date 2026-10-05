@@ -85,7 +85,9 @@
 #
 #### COMMAND:
 #
-# The *font* command can have any of the following forms:
+# The *font* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is the first argument after the command itself.
+# The legal forms are:
 #
 #   **font** **actual** *font* ?**-displayof** *window*? ?*option*? ?**--**? ?*char*?
 #      Returns information about the actual attributes that are obtained when *font* is used on window's display.

@@ -92,8 +92,10 @@
 # Lastly, the placer allows you to mix these styles of placement so that, for example, the content has a fixed
 # width and height but is centered inside the container.
 #
+#### COMMAND:
+#
 # The *place* command can have any of several forms, depending on the *action* argument.
-# The *action* argument is always the first argument after the command itself.
+# The *action* argument, when present, is always the first argument after the command itself.
 # The legal forms are:
 #
 #   **place** *window* ?*option* *value*? ... ?*option* *value*?

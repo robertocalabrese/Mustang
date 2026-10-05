@@ -89,8 +89,10 @@
 # The **grid** command is used to communicate with the grid geometry manager that arranges widgets in rows
 # and columns inside of another window, called the geometry container (or container window).
 #
+#### COMMAND:
+#
 # The *grid* command can have any of several forms, depending on the *action* argument.
-# The *action* argument is always the first argument after the command itself.
+# The *action* argument, when present, is always the first argument after the command itself.
 # The legal forms are:
 #
 #   **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?

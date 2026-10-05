@@ -79,7 +79,11 @@
 # The event command provides several facilities for dealing with window system events, such as defining virtual events and synthesizing events.
 # The command has several different forms, determined by the first argument.
 #
-# The following forms are currently supported:
+#### COMMAND:
+#
+# The *event* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is the first argument after the command itself.
+# The legal forms are:
 #
 #   **event** **add** *virtual* *sequence* ?*sequence*? ... ?*sequence*?
 #      Associates the virtual event *virtual* with the physical event sequence(s) given by the *sequence* arguments,
