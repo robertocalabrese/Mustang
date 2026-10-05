@@ -62,6 +62,39 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## raise — Change a window's position in the stacking order.
+#
+#### SYNOPSIS:
+#
+# **raise** *window* *?aboveThis*?
+#
+# Note: *window* and *aboveThis* pathnames involved may be provided either as a short or as a real address.
+#
+#### DESCRIPTION:
+#
+# If the *aboveThis* argument is omitted then the command raises *window* so that it is above all of its siblings in the stacking order
+# (it will not be obscured by any siblings and will obscure any siblings that overlap it).
+# If *aboveThis* is specified then it must be the pathname of a window that is either a sibling of *window* or the descendant of a sibling of *window*.
+# In this case the raise command will insert *window* into the stacking order just above *aboveThis* (or the ancestor of *aboveThis* that is a
+# sibling of *window*); this could end up either raising or lowering window.
+#
+# All toplevel windows may be restacked with respect to each other, whatever their relative pathnames, but the window manager is not obligated
+# to strictly honor requests to restack.
+#
+# On **macOS** raising an iconified toplevel window causes it to be deiconified.
+#
+#### EXAMPLES:
+#
+# Make a button appear to be in a sibling frame that was created after it.
+# This is is often necessary when building **GUI**s in the style where you create your activity widgets first before laying them out on the display:
+#
+#   button .b -text "Hi there!"
+#   pack [frame .f -background blue]
+#   pack [label .f.l1 -text "This is above"]
+#   pack .b -in .f
+#   pack [label .f.l2 -text "This is below"]
+#   raise .b
 package provide ::ms::raise 0.1
 
 # Create the mustang **raise** package.
@@ -83,10 +116,57 @@ interp alias {} raise {} ::ms::raise::Command
 #
 # Return the empty string.
 proc ::ms::raise::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _raise {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+    # **raise** *window* ?*aboveThis*?
+
+    switch -- [llength $args] {
+        1   {
+            # Synopsis:
+            #
+            # **raise** *window*
+            set window $args
+
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Execute the command.
+            _raise $w
+
+            return ""
+        }
+        2   {
+            # Synopsis:
+            #
+            # **raise** *window* *aboveThis*
+            set window    [lindex $args 0]
+            set aboveThis [lindex $args 1]
+
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Check if 'aboveThis' is a valid address or not.
+            set above [::ms::Check_Pathname $aboveThis invalid]
+            switch -- $above {
+                invalid { ::ms::Error "Invalid address, '$aboveThis'." $caller_info }
+            }
+
+            # Execute the command.
+            _raise $w $above
+
+            return ""
+        }
+        default { ::ms::Error "Invalid number of arguments." $caller_info }
+    }
 }
 
 #*EOF*
