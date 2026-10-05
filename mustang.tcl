@@ -3205,10 +3205,17 @@ proc ::ms::Check_Measure { measure { fallback invalid } } {
 # Return the real address associated to *window* or the fallback value if the address
 # provided is invalid.
 proc ::ms::Check_Pathname { window { fallback invalid } } {
+    # Check if 'window' is an empty string.
+    switch -- $window {
+        ""  { return $fallback }
+    }
+
+    # Check if 'window' exists (meaning it's a real address).
     switch -- [_winfo exists $window] {
         0   {
-            # Find the real address related to 'window'.
+            # Check if 'window' is a short address.
             if { $window in $::ms::addr(shorts) } {
+                # Return the real address related to the 'window' short address.
                 return $::ms::addr($window,real)
             } else {
                 return $fallback
