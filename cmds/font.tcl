@@ -551,16 +551,16 @@ proc ::ms::font::Command { args } {
                     # Synopsis:
                     #
                     # **font** **families** **-displayof** *window*
+                    set option [lindex $args 0]
 
                     # Check that a '-displayof' option was provided.
-                    set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
                             # Check if the '-displayof' address provided is a valid address or not.
-                            set addr [lindex $args 1]
-                            set w    [::ms::Check_Pathname $addr invalid]
+                            set window [lindex $args 1]
+                            set w      [::ms::Check_Pathname $window invalid]
                             switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
                         }
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
