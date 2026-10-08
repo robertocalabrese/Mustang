@@ -164,7 +164,7 @@ proc ::ms::send::Command { args } {
     switch -- $index {
         -1      {}
         default {
-            # Check if the '-displayof' address provided is a short or long address.
+            # Check if the '-displayof' address provided is a short or real address.
             set addr [lindex $args $index+1]
 
             # Check if 'addr' is a valid address or not.

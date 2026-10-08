@@ -440,8 +440,8 @@ proc ::ms::font::Command { args } {
     }
 
     # Separate the 'action' from the actual 'args'.
-    set action [lindex   $args 0]
-    set args   [lreplace $args 0 0]
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
     switch -- $action {
         actual  -
         measure -
