@@ -1561,7 +1561,7 @@ _bind _Combobox <Activate>   { interp invokehidden {} %W state [list !background
 _bind _Combobox <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Allowing some modifiers combination.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua {
         _bind _Combobox <Option-KeyPress>         { # Enable binding }
         _bind _Combobox <Option-Shift-KeyPress>   { # Enable binding }
@@ -1660,7 +1660,7 @@ _bind _Combobox <KeyPress-KP_Enter> { ::ms::combobox::Return %W; break }
 # Tab/Shift-Tab keys
 _bind _Combobox <KeyPress-Tab> { ::tk::TabToWindow [::tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Combobox <Shift-Tab> { ::tk::TabToWindow [::tk_focusPrev %W]; break } }
     default {
         _bind _Combobox <ISO_Left_Tab>    { ::tk::TabToWindow [::tk_focusPrev %W]; break }
@@ -2324,7 +2324,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                 }
                 readonly {
                     # Check the windowing system.
-                    switch -- [_tk windowingsystem] {
+                    switch -- $::ms::data(windowingsystem) {
                         aqua    { set cursor hand1 }
                         default { set cursor arrow }
                     }
@@ -3443,7 +3443,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                 }
                                 readonly {
                                     # Check the windowing system.
-                                    switch -- [_tk windowingsystem] {
+                                    switch -- $::ms::data(windowingsystem) {
                                         aqua    { set cursor hand1 }
                                         default { set cursor arrow }
                                     }
@@ -4259,7 +4259,7 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             readonly {
                 # Check the windowing system.
-                switch -- [_tk windowingsystem] {
+                switch -- $::ms::data(windowingsystem) {
                     aqua    { set cursor hand1 }
                     default { set cursor arrow }
                 }
@@ -5108,7 +5108,7 @@ proc ::ms::combobox::Post { w } {
                                        -width 0;
 
     # Set the OS specific attributes.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         aqua    { _wm attributes $w.popdown -alpha 1.0 }
         win32   { _wm attributes $w.popdown -toolwindow 1 }
         default { _wm attributes $w.popdown -type combo }
@@ -5227,7 +5227,7 @@ proc ::ms::combobox::Post { w } {
     ##############################
 
     # ButtonRelease events outside of the popdown window.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         aqua    { _bind $w.popdown <ButtonPress-2> [list ::ms::External_Click $w %X %Y] }
         default { _bind $w.popdown <ButtonPress-3> [list ::ms::External_Click $w %X %Y] }
     }
@@ -5262,7 +5262,7 @@ proc ::ms::combobox::Post { w } {
 
     # FocusOut, *only* do this on Windows (see #1814778).
     # Dismiss the listbox when the user switches to a different application.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         win32 { _bind $w.popdown.f.lb <FocusOut> { set ::wait_for_user_response "Unpost"; break } }
     }
 
@@ -5280,7 +5280,7 @@ proc ::ms::combobox::Post { w } {
     _bind $w.popdown.f.lb <KeyPress-space>    { ::ms::combobox::Popdown_Select [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # Shift-Tab/Tab
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         win32   { _bind $w.popdown.f.lb <Shift-Tab> { ::ms::combobox::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break } }
         default {
             _bind $w.popdown.f.lb <ISO_Left_Tab>    { ::ms::combobox::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break }
@@ -5448,7 +5448,7 @@ proc ::ms::combobox::Post { w } {
     #       may be used by compositing managers and by EWMH-aware
     #       window managers (even though the older ICCCM spec says
     #       it's meaningless).
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         win32 -
         x11   { _wm transient $w.popdown $::ms::addr($w,toplevel) }
     }

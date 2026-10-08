@@ -2623,7 +2623,7 @@ package provide ::ms::text 0.1
 ###################################
 
 # Allowing some modifiers combination.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua {
         _bind _Simple_Text <Option-KeyPress>         { # Enable binding }
         _bind _Simple_Text <Option-Shift-KeyPress>   { # Enable binding }
@@ -2673,7 +2673,7 @@ _bind _Simple_Text <KeyPress-KP_Delete> { ::ms::text::Delete %W; break }
 _bind _Simple_Text <<DeleteChar>>       { ::ms::text::Delete %W; break }
 
 # Delete from the insertion cursor till the end of the line.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua    { _bind _Simple_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_LineEnd %W; break } }
     default { _bind _Simple_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_LineEnd %W; break } }
 }
@@ -2941,7 +2941,7 @@ _bind _Hull_Text <Control-TouchpadScroll> { ::ms::Touchpad_Parent %W %# %D pages
 #######################################
 
 # Allowing some modifiers combination.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua {
         _bind _Scrollable_Text <Option-KeyPress>         { # Enable binding }
         _bind _Scrollable_Text <Option-Shift-KeyPress>   { # Enable binding }
@@ -2994,7 +2994,7 @@ _bind _Scrollable_Text <KeyPress-KP_Delete> { ::ms::text::Delete [_winfo parent 
 _bind _Scrollable_Text <<DeleteChar>>       { ::ms::text::Delete [_winfo parent %W]; break }
 
 # Delete from the insertion cursor till the end of the line.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua    { _bind _Scrollable_Text <Option-KeyPress-d> { ::ms::text::Delete_Till_LineEnd [_winfo parent %W]; break } }
     default { _bind _Scrollable_Text <Alt-KeyPress-d>    { ::ms::text::Delete_Till_LineEnd [_winfo parent %W]; break } }
 }
@@ -7027,7 +7027,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
     switch -- $::ms::middleclick {
         drag {
             # Check the windowing system.
-            switch -- [_tk windowingsystem] {
+            switch -- $::ms::data(windowingsystem) {
                 aqua {
                     # Disable dragging on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
                     switch -- $event {
@@ -7048,7 +7048,7 @@ proc ::ms::text::Scan_Or_Paste { w x y event } {
         }
         paste {
             # Check the windowing system.
-            switch -- [_tk windowingsystem] {
+            switch -- $::ms::data(windowingsystem) {
                 aqua {
                     # Disable paste selection on ButtonPress-2 and enable it on ButtonPress-3 (macOS).
                     switch -- $event {

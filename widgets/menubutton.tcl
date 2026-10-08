@@ -993,7 +993,7 @@ _bind _Menubutton <Activate>   { interp invokehidden {} %W state [list !backgrou
 _bind _Menubutton <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Buttonpress
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     "x11" {
         _bind _Menubutton <ButtonPress-1>   { ::ms::menubutton::Pulldown      %W; break }
         _bind _Menubutton <ButtonRelease-1> { ::ms::menubutton::Transfer_Grab %W; break }
@@ -1027,7 +1027,7 @@ _bind _Menubutton <KeyPress-space>    { ::ms::menubutton::ButtonPress %W; break 
 # Tab/Shift-Tab keys
 _bind _Menubutton <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Menubutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Menubutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
@@ -1592,7 +1592,7 @@ proc ::ms::menubutton::Command { window { args "" } } {
                 }
                 active {
                     # Check the windowing system.
-                    switch -- [_tk windowingsystem] {
+                    switch -- $::ms::data(windowingsystem) {
                         aqua    { set cursor hand1 }
                         default { set cursor arrow }
                     }
@@ -2322,7 +2322,7 @@ proc ::ms::menubutton::Pathname_Cmd { w cmd args } {
                                 }
                                 active {
                                     # Check the windowing system.
-                                    switch -- [_tk windowingsystem] {
+                                    switch -- $::ms::data(windowingsystem) {
                                         aqua    { set cursor hand1 }
                                         default { set cursor arrow }
                                     }
@@ -2746,7 +2746,7 @@ proc ::ms::menubutton::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             active {
                 # Check the windowing system.
-                switch -- [_tk windowingsystem] {
+                switch -- $::ms::data(windowingsystem) {
                     aqua    { set cursor hand1 }
                     default { set cursor arrow }
                 }
@@ -3245,7 +3245,7 @@ proc ::ms::menubutton::Find_Menu_Index { w } {
 #   - An item index of the menu that needs to be posted (or an empty string if there is no such thing).
 proc ::ms::menubutton::Post_Position { w } {
     # Check the windowing system.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         aqua {
             # MacOS
             set menuPad   5
@@ -3305,7 +3305,7 @@ proc ::ms::menubutton::Post_Position { w } {
             set menubutton_width  [expr { [_winfo width  $w] }]
 
             # Check if the windowing system is Windows.
-            switch -- [_tk windowingsystem] {
+            switch -- $::ms::data(windowingsystem) {
                 win32 {
                     incr menubutton_height 6
                     incr menubutton_width  16

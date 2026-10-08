@@ -761,7 +761,7 @@ _bind _Scrollbar <FocusOut> { interp invokehidden {} %W state [list !focus]; bre
 # Tab/Shift-Tab keys
 _bind _Scrollbar <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Scrollbar <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Scrollbar <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }

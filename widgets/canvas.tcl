@@ -2381,7 +2381,7 @@ _bind _Simple_Canvas <FocusOut> { ::ms::canvas::FocusOut    %W; break }
 # Tab/Shift-Tab keys
 _bind _Simple_Canvas <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Simple_Canvas <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Simple_Canvas <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
@@ -2544,7 +2544,7 @@ _bind _Scrollable_Canvas <<ScanRelease>> { ::ms::ScanRelease; break }
 # Tab/Shift-Tab keys
 _bind _Scrollable_Canvas <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Scrollable_Canvas <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
         _bind _Scrollable_Canvas <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }

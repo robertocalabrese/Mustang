@@ -997,7 +997,7 @@ _bind _Indicator_Radiobutton <KP_Enter> { ::radiobutton::Pathname_Cmd [_winfo pa
 # Tab/Shift-Tab
 _bind _Indicator_Radiobutton <Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Indicator_Radiobutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
         _bind _Indicator_Radiobutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }

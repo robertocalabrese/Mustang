@@ -1478,7 +1478,7 @@ _bind _Entry <Activate>   { interp invokehidden {} %W state [list !background]; 
 _bind _Entry <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Allowing some modifiers combination.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua {
         _bind _Entry <Option-KeyPress>         { # Enable binding }
         _bind _Entry <Option-Shift-KeyPress>   { # Enable binding }
@@ -1506,7 +1506,7 @@ _bind _Entry <KeyPress-KP_Delete> { ::ttk::entry::Delete %W; break }
 _bind _Entry <<DeleteChar>>       { ::ttk::entry::Delete %W; break }
 
 # Delete from the insertion cursor till the end of the line.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua    { _bind _Entry <Option-KeyPress-d> { %W delete insert end; break } }
     default { _bind _Entry <Alt-KeyPress-d>    { %W delete insert end; break } }
 }
@@ -1574,7 +1574,7 @@ _bind _Entry <KeyPress-KP_Enter> { ::ms::entry::Return %W; break }
 # Tab/Shift-Tab keys
 _bind _Entry <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Entry <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Entry <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }

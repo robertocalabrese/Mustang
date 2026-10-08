@@ -846,7 +846,7 @@ _bind _Panedwindow <FocusOut> { interp invokehidden {} %W state [list !focus]; b
 # Tab/Shift-Tab keys
 _bind _Panedwindow <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Panedwindow <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Panedwindow <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }

@@ -1001,7 +1001,7 @@ _bind _Indicator_Checkbutton <KP_Enter> { ::ms::checkbutton::Pathname_Cmd [_winf
 # Tab/Shift-Tab
 _bind _Indicator_Checkbutton <Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Indicator_Checkbutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
         _bind _Indicator_Checkbutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }

@@ -555,7 +555,7 @@ _bind _Sizegrip <FocusOut> { ::ms::sizegrip::FocusOut %W; break }
 # Tab/Shift-Tab keys
 _bind _Sizegrip <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Sizegrip <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Sizegrip <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }

@@ -1525,7 +1525,7 @@ _bind _Simple_Treeview <KeyPress-space>    { ::ms::treeview::Return %W; break }
 # Tab/Shift-Tab keys
 _bind _Simple_Treeview <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Simple_Treeview <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Simple_Treeview <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
@@ -1726,7 +1726,7 @@ _bind _Scrollable_Treeview <KeyPress-space>    { ::ms::treeview::Return [_winfo 
 # Tab/Shift-Tab keys
 _bind _Scrollable_Treeview <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Scrollable_Treeview <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
         _bind _Scrollable_Treeview <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }

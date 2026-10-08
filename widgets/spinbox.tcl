@@ -1502,7 +1502,7 @@ _bind _Spinbox <Activate>   { interp invokehidden {} %W state [list !background]
 _bind _Spinbox <Deactivate> { interp invokehidden {} %W state [list  background]; break }
 
 # Allowing some modifiers combination.
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     aqua {
         _bind _Spinbox <Option-KeyPress>         { # Enable binding }
         _bind _Spinbox <Option-Shift-KeyPress>   { # Enable binding }
@@ -1611,7 +1611,7 @@ _bind _Spinbox <KeyPress-KP_Enter> { ::ms::spinbox::Return %W; break }
 # Tab/Shift-Tab keys
 _bind _Spinbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Spinbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Spinbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
@@ -2297,7 +2297,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                 }
                 readonly {
                     # Check the windowing system.
-                    switch -- [_tk windowingsystem] {
+                    switch -- $::ms::data(windowingsystem) {
                         aqua    { set cursor hand1 }
                         default { set cursor arrow }
                     }
@@ -3625,7 +3625,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                 }
                                 readonly {
                                     # Check the windowing system.
-                                    switch -- [_tk windowingsystem] {
+                                    switch -- $::ms::data(windowingsystem) {
                                         aqua    { set cursor hand1 }
                                         default { set cursor arrow }
                                     }
@@ -4712,7 +4712,7 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             readonly {
                 # Check the windowing system.
-                switch -- [_tk windowingsystem] {
+                switch -- $::ms::data(windowingsystem) {
                     aqua    { set cursor hand1 }
                     default { set cursor arrow }
                 }

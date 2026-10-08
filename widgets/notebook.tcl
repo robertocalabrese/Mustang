@@ -949,7 +949,7 @@ _bind _Notebook <FocusOut> { ::ms::notebook::FocusOut %W; break }
 # Tab/Shift-Tab keys
 _bind _Notebook <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Notebook <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Notebook <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
@@ -3331,7 +3331,7 @@ proc ::ms::notebook::Enable_Traversal { w } {
             _bind $::ms::addr($w,toplevel) <Destroy> [list +::ms::notebook::Traverse_Clean_Up %W]
 
             # Mnemonic key navigation.
-            switch -- [_tk windowingsystem] {
+            switch -- $::ms::data(windowingsystem) {
                 aqua    { _bind $::ms::addr($w,toplevel) <Option-KeyPress> [list +::ms::notebook::Mnemonic_Activation $::ms::addr($w,toplevel) %K] }
                 default { _bind $::ms::addr($w,toplevel) <Alt-KeyPress>    [list +::ms::notebook::Mnemonic_Activation $::ms::addr($w,toplevel) %K] }
             }
@@ -3339,7 +3339,7 @@ proc ::ms::notebook::Enable_Traversal { w } {
             # Tab navigation.
             _bind $::ms::addr($w,toplevel) <Control-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W +1]
 
-            switch -- [_tk windowingsystem] {
+            switch -- $::ms::data(windowingsystem) {
                 win32   { _bind $::ms::addr($w,toplevel) <Control-Shift-KeyPress-Tab> [list +::ms::notebook::Traverse_Cycle_Tab %W -1] }
                 default {
                     # Note: Some OS's define a goofy <Control-Shift-Tab> keysym.

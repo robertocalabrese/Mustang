@@ -555,7 +555,7 @@ _bind _Separator <FocusOut> { ::ms::separator::FocusOut %W; break }
 # Tab/Shift-Tab keys
 _bind _Separator <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Separator <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Separator <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }

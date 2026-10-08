@@ -972,7 +972,7 @@ _bind _Button <space>    { ::ms::button::Pathname_Cmd %W invoke; break }
 # Tab/Shift-Tab keys
 _bind _Button <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Button <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Button <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }

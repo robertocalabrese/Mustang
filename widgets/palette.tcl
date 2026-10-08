@@ -1602,7 +1602,7 @@ _bind _Palette <KeyPress-KP_Enter> { ::ms::palette::Return [_winfo parent %W]; b
 # Tab/Shift-Tab keys
 _bind _Palette <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Palette <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
         _bind _Palette <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
@@ -2257,7 +2257,7 @@ proc ::ms::palette::Command { window { args "" } } {
                 }
                 readonly {
                     # Check the windowing system.
-                    switch -- [_tk windowingsystem] {
+                    switch -- $::ms::data(windowingsystem) {
                         aqua    { set cursor hand1 }
                         default { set cursor arrow }
                     }
@@ -3363,7 +3363,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                 }
                                 readonly {
                                     # Check the windowing system.
-                                    switch -- [_tk windowingsystem] {
+                                    switch -- $::ms::data(windowingsystem) {
                                         aqua    { set cursor hand1 }
                                         default { set cursor arrow }
                                     }
@@ -4084,7 +4084,7 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
             disabled { set cursor arrow }
             readonly {
                 # Check the windowing system.
-                switch -- [_tk windowingsystem] {
+                switch -- $::ms::data(windowingsystem) {
                     aqua    { set cursor hand1 }
                     default { set cursor arrow }
                 }
@@ -4906,7 +4906,7 @@ proc ::ms::palette::Post { w } {
                                        -width 0;
 
     # OS specific attributes.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         aqua    { _wm attributes $w.popdown -alpha 1.0 }
         win32   { _wm attributes $w.popdown -toolwindow 1 }
         default { _wm attributes $w.popdown -type combo }
@@ -5022,7 +5022,7 @@ proc ::ms::palette::Post { w } {
     ##############################
 
     # ButtonRelease events outside of the popdown window.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         aqua    { _bind $w.popdown <ButtonPress-2> [list ::ms::External_Click $w %X %Y] }
         default { _bind $w.popdown <ButtonPress-3> [list ::ms::External_Click $w %X %Y] }
     }
@@ -5057,7 +5057,7 @@ proc ::ms::palette::Post { w } {
 
     # FocusOut, *only* do this on Windows (see #1814778).
     # Dismiss the listbox when the user switches to a different application.
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         win32 { _bind $w.popdown.f.lb <FocusOut> { set ::wait_for_user_response "Unpost"; break } }
     }
 
@@ -5075,7 +5075,7 @@ proc ::ms::palette::Post { w } {
     _bind $w.popdown.f.lb <KeyPress-space>    { ::ms::palette::Popdown_Select [_winfo parent [_winfo parent [_winfo parent %W]]]; break }
 
     # Shift-Tab/Tab
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         win32   { _bind $w.popdown.f.lb <Shift-Tab> { ::ms::palette::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break } }
         default {
             _bind $w.popdown.f.lb <ISO_Left_Tab>    { ::ms::palette::Popdown_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] previous; break }
@@ -5243,7 +5243,7 @@ proc ::ms::palette::Post { w } {
     #       may be used by compositing managers and by EWMH-aware
     #       window managers (even though the older ICCCM spec says
     #       it's meaningless).
-    switch -- [_tk windowingsystem] {
+    switch -- $::ms::data(windowingsystem) {
         win32 -
         x11   { _wm transient $w.popdown $::ms::addr($w,toplevel) }
     }

@@ -1322,7 +1322,7 @@ _bind _Simple_Listbox <<PrevWord>>             { break }
 # Tab/Shift-Tab keys
 _bind _Simple_Listbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Simple_Listbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
     default {
         _bind _Simple_Listbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
@@ -1564,7 +1564,7 @@ _bind _Scrollable_Listbox <<PrevWord>>             { break }
 # Tab/Shift-Tab keys
 _bind _Scrollable_Listbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
-switch -- [_tk windowingsystem] {
+switch -- $::ms::data(windowingsystem) {
     win32   { _bind _Scrollable_Listbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
     default {
         _bind _Scrollable_Listbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
