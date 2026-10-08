@@ -200,7 +200,7 @@
 # For a binding to match a given event, the modifiers in the event must include all of those specified in the event pattern.
 #
 # An event may also contain additional modifiers not specified in the binding.
-# For example, if **Button1** is pressed while the shift and control keys are down, the pattern *<Control-Button-1>* will match the event,
+# For example, if **Button1** is pressed while the shift and control keys are down, the pattern **Control-Button-1** will match the event,
 # but *<Mod1-Button-1>* will not.
 # If no modifiers are specified, then any combination of modifiers may be present in the event.
 #

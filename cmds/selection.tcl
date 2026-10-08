@@ -80,7 +80,7 @@
 # This command provides a Tcl interface to the X selection mechanism and implements the full selection functionality described
 # in the X Inter-Client Communication Conventions Manual (ICCCM).
 #
-# Note that for management of the **CLIPBOARD** selection (see below), the **clipboard** command may also be used.
+# Note that for management of the **CLIPBOARD** selection (see below), the [clipboard](/wiki/commands/clipboard.md) command may also be used.
 #
 #### COMMAND:
 #
