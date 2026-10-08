@@ -201,7 +201,7 @@
 #
 # An event may also contain additional modifiers not specified in the binding.
 # For example, if **Button1** is pressed while the shift and control keys are down, the pattern **Control-Button-1** will match the event,
-# but *<Mod1-Button-1>* will not.
+# but **Mod1-Button-1** will not.
 # If no modifiers are specified, then any combination of modifiers may be present in the event.
 #
 # **Meta** and **M** refer to whichever of the **M1** through **M5** modifiers is associated with the meta key(s)
@@ -381,7 +381,7 @@
 # Giving a specific button number is different than specifying a button modifier; in the first case, it refers to a button being pressed
 # or released, while in the second it refers to some other button that is already depressed when the matching event occurs.
 # If a button number is given then type may be omitted: if will default to **Button**.
-# For example, the specifier *<1>* is equivalent to *<Button-1>*.
+# For example, the specifier **1** is equivalent to **Button-1**.
 #
 # If the event type is **Key** or **KeyRelease**, then *detail* may be specified in the form of an X keysym.
 # Keysyms are textual specifications for particular keys on the keyboard; they include all the alphanumeric ASCII characters
@@ -392,7 +392,7 @@
 # The complete list of keysyms is not presented here; it is available in other X documentation and may vary from system to system.
 # If necessary, you can use the **%K** notation described below to print out the keysym name for a particular key.
 # If a keysym detail is given, then the type field may be omitted; it will default to **Key**.
-# For example, *<Control-comma>* is equivalent to *<Control-Key-comma>*.
+# For example, **Control-comma** is equivalent to **Control-Key-comma**.
 #
 #### BINDING SCRIPTS AND SUBSTITUTIONS
 #
@@ -654,8 +654,8 @@
 #   bind Entry <<Paste>>  {chan puts Paste}
 #   bind Entry <<Scroll>> {chan puts Scroll}
 #
-# If the user presses both the "Control" and "y" keys, the *<<Paste>>* binding will be invoked, but if the user presses
-# "button 2" then one of either the *<<Paste>>* or the *<<Scroll>>* bindings will be invoked, but exactly which one gets
+# If the user presses both the "Control" and "y" keys, the **Paste** binding will be invoked, but if the user presses
+# "button 2" then one of either the **Paste** or the **Scroll** bindings will be invoked, but exactly which one gets
 # invoked is undefined.
 #
 # If an X event does not match any of the existing bindings, then the event is ignored.
@@ -665,12 +665,12 @@
 #
 # When a *sequence* specified in a bind command contains more than one event pattern, then its *action* is executed whenever
 # the recent events (leading up to and including the current event) match the given sequence.
-# This means, for example, that if "button 1" is clicked repeatedly the sequence *<Double-Button-1>* will match each
+# This means, for example, that if "button 1" is clicked repeatedly the sequence **Double-Button-1** will match each
 # button press but the first.
 #
 # If extraneous events that would prevent a match occur in the middle of an event sequence then the extraneous events are ignored
 # unless they are **Key** or **Button** events.
-# For example, *<Double-Button-1>* will match a sequence of presses of "button 1", even though there will be **ButtonRelease** events
+# For example, **Double-Button-1** will match a sequence of presses of "button 1", even though there will be **ButtonRelease** events
 # (and possibly **Motion** events) between the **Button** events.
 #
 # Furthermore, a **Key** event may be preceded by any number of other **Key** events for modifier keys without the
@@ -689,21 +689,21 @@
 #
 #   bind .f                             --> Returns every bindings sequence upon the tag (.f) provided.
 #
-#   bind .f <FocusIn>                   --> Returns every bindings actions upon the tag (.f), for the sequence (<FocusIn>) provided.
+#   bind .f <FocusIn>                   --> Returns every bindings actions upon the tag (.f), for the sequence (**FocusIn**) provided.
 #
-#   bind .f <FocusIn> {}                --> Removes every binding ever applied for the tag (.f) and sequence (<FocusIn>) provided.
+#   bind .f <FocusIn> {}                --> Removes every binding ever applied for the tag (.f) and sequence (**FocusIn**) provided.
 #
-#   bind .f <FocusIn> [list  MyProc %W] --> Removes every binding ever applied for the tag (.f) and sequence (<FocusIn>) provided,
-#                                           and applies a new binding for the tag (.f), sequence (<FocusIn>)
+#   bind .f <FocusIn> [list  MyProc %W] --> Removes every binding ever applied for the tag (.f) and sequence (**FocusIn**) provided,
+#                                           and applies a new binding for the tag (.f), sequence (**FocusIn**)
 #                                           and action ([list MyProc %W]) provided.
 #
-#   bind .f <FocusIn> [list -MyProc %W] --> Removes the binding previously applied for the tag (.f), sequence (<FocusIn>)
+#   bind .f <FocusIn> [list -MyProc %W] --> Removes the binding previously applied for the tag (.f), sequence (**FocusIn**)
 #                                           and action ([list MyProc %W]) provided.
 #                                           If the binding is not found, then this command will be ignored.
 #
-#   bind .f <FocusIn> [list +MyProc %W] --> Appends a new binding with the tag (.f), sequence (<FocusIn>)
+#   bind .f <FocusIn> [list +MyProc %W] --> Appends a new binding with the tag (.f), sequence (**FocusIn**)
 #                                           and action ([list MyProc %W]) provided, to whatever binding that allready exists
-#                                           for the tag (.f) and sequence (<FocusIn>) provided.
+#                                           for the tag (.f) and sequence (**FocusIn**) provided.
 package provide ::ms::bind 0.1
 
 # Create the mustang **bind** package.

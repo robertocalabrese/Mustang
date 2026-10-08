@@ -103,7 +103,7 @@
 #   **grid** **anchor** *window* ?*anchor*?
 #      The anchor value controls how to place the grid within *window* when no row/column has any weight.
 #      See **THE GRID ALGORITHM** below for further details.
-#      The default *anchor* is nw.
+#      The default *anchor* is **nw**.
 #
 #   **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
 #      With no arguments, the bounding box (in pixels) of the grid is returned.
@@ -252,7 +252,7 @@
 #      by the grid geometry manager, the initial default settings are used.
 #
 #      If the last content window of the container becomes unmanaged, this will also send the virtual event
-#      **<<NoManagedChild>>** to the container: the container may choose to resize itself (or otherwise respond)
+#      **NoManagedChild** to the container: the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
 #   **grid** **info** ?**short**? *window*
@@ -289,7 +289,7 @@
 #      managed once more by the grid geometry manager, the previous values are retained.
 #
 #      If the last content window of the container becomes unmanaged, this will also send the virtual event
-#      **<<NoManagedChild>>** to the container; the container may choose to resize itself (or otherwise respond)
+#      **NoManagedChild** to the container; the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
 #   **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?

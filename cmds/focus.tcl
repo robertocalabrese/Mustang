@@ -778,7 +778,7 @@ proc ::tk_focusPrev { w } {
 
 ## clickToFocus (from the ttk 'utils.tcl' file)
 #
-# Utility routine, used in <Button-1> bindings.
+# Utility routine, used in **Button-1** bindings.
 # Assign keyboard focus to the specified widget if **-takefocus** is enabled.
 #
 # Where:

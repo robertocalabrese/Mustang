@@ -188,7 +188,7 @@
 #      The content will no longer be managed by the packer.
 #
 #      If the last content window of the container becomes unmanaged, this will also send the virtual event
-#      **<<NoManagedChild>>** to the container; the container may choose to resize itself (or otherwise respond)
+#      **NoManagedChild** to the container; the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
 #   **pack** **info** *window* ?*option*?
