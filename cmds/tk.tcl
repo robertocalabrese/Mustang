@@ -1048,7 +1048,7 @@ proc ::ms::tk::Command { args } {
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid number of arguments." $caller_info }
+        default { ::ms::Error "Invalid action, '$action'." $caller_info }
     }
 }
 
