@@ -62,6 +62,48 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
+
+## tkwait - Manipulate Bison internal state
+#
+#### SYNOPSIS:
+#
+# **tkwait** **variable** *varName*
+# **tkwait** **visibility** *window*
+# **tkwait** **window** *window*
+#
+# Note: Each *window* pathname involved may be provided either as a short or as a real address.
+#
+#### DESCRIPTION:
+#
+# The **tkwait** command waits for one of several things to happen, then it returns without taking any other actions.
+#
+# NOTE: While the **tkwait** command is waiting it processes events in the normal fashion, so the application will continue
+#       to respond to user interactions.
+#       If an event handler invokes tkwait again, the nested call to tkwait must complete before the outer call can complete.
+#
+#### COMMAND:
+#
+# The *tkwait* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is the first argument after the command itself.
+# The legal forms are:
+#
+#   **tkwait** **variable** *varName*
+#      *VarName* should be the name of a global variable.
+#      It waits for *varName* to be modified and then returns an empty string.
+#
+#   **tkwait** **visibility** *window*
+#      *Window* must be the pathname of a widget previously created.
+#      It waits for a change of visibility in *window* (as indicated by the arrival of a **VisibilityNotify** event) and
+#      then returns an empty string.
+#
+#      This form is typically used to wait for a newly-created window to appear on the screen before taking some action.
+#
+#   **tkwait** **window** *window*
+#      *Window* must be the pathname of a widget previously created.
+#      It waits for *window* to be destroyed and then returns an empty string.
+#
+#      This form is typically used to wait for a user to finish interacting with a dialog box before using the result of
+#      that interaction.
 package provide ::ms::tkwait 0.1
 
 # Create the mustang **tkwait** package.
@@ -83,10 +125,75 @@ interp alias {} tkwait {} ::ms::tkwait::Command
 #
 # Return the empty string.
 proc ::ms::tkwait::Command { args } {
-    # For the time being we launch the Tk original command with one caveat,
-    # the address provided must be a real address.
-    # Short addresses are not covered until the new command is written.
-    _tkwait {*}$args
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+    # **tkwait** **variable** *varName*
+    # **tkwait** **visibility** *window*
+    # **tkwait** **window** *window*
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        variable {
+            # Synopsis:
+            #
+            # **tkwait** **variable** *varName*
+            switch -- [llength $args] {
+                1   {
+                    set varName $args
+
+                    # Check if 'varName' exists.
+                    switch -- [info exists $::varName] {
+                        0   { ::ms::Error "Invalid varname, '$varName'." $caller_info }
+                        1   {
+                            # Execute the command.
+                            try {
+                                _tkwait variable $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        visibility -
+        window     {
+            # Synopsis:
+            #
+            # **tkwait** **visibility** *window*
+            # **tkwait** **window**     *window*
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _tkwait $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        default { ::ms::Error "Invalid action, '$action'." $caller_info }
+    }
 }
 
 #*EOF*
