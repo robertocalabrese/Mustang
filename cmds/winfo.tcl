@@ -70,10 +70,10 @@
 # **winfo** **atom** ?**-displayof** *window*? *name*
 # **winfo** **atomname** ?**-displayof** *window*? *id*
 # **winfo** **cells** *window*
-# **winfo** **children** *window*
+# **winfo** **children** ?**short**? *window*
 # **winfo** **class** *window*
 # **winfo** **colormapfull** *window*
-# **winfo** **containing** ?**-displayof** *window*? *rootX* *rootY*
+# **winfo** **containing** ?**short**? ?**-displayof** *window*? *rootX* *rootY*
 # **winfo** **depth** *window*
 # **winfo** **exists** *window*
 # **winfo** **fpixels** *window* *number*
@@ -84,8 +84,8 @@
 # **winfo** **ismapped** *window*
 # **winfo** **manager** *window*
 # **winfo** **name** *window*
-# **winfo** **parent** *window*
-# **winfo** **pathname** ?**-displayof** *window*? *id*
+# **winfo** **parent** ?**short**? *window*
+# **winfo** **pathname** ?**short**? ?**-displayof** *window*? *id*
 # **winfo** **pixels** *window* *number*
 # **winfo** **pointerx** *window*
 # **winfo** **pointerxy** *window*
@@ -118,18 +118,15 @@
 # **winfo** **y** *window*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
-#       *Action*s that gives as a result a window pathname (or more than one), will always return the address as:
-#          - A short address, if the *window* provided as input is a short address.
-#          - A real address, if the *window* provided as input is a real address.
-#       Unless stated differently.
-#       You can always convert a real address into a short address (and viceversa) through the **tk get short**
-#       and **tk get real** commands.
 #
 #### DESCRIPTION:
 #
 # The **winfo** command is used to retrieve information about windows managed by Tk.
-# The *winfo* command can have any of several forms, depending on the *action* argument.
-# The *action* argument is always the first argument after the command itself.
+#
+#### COMMAND:
+#
+# The *tkwait* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is the first argument after the command itself.
 # The legal forms are:
 #
 #   **winfo** **atom** ?**-displayof** *window*? *name*
@@ -151,7 +148,7 @@
 #   **winfo** **cells** *window*
 #      Returns a decimal string giving the number of cells in the color map for *window*.
 #
-#   **winfo** **children** *window*
+#   **winfo** **children** ?**short**? *window*
 #      Returns a list containing the pathnames of all the children of *window*.
 #
 #      Top-level windows are returned as children of their logical parents.
@@ -160,6 +157,9 @@
 #      which are not returned in stacking order.
 #
 #      Use the **wm stackorder** command to query the stacking order of Top-level windows.
+#
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *children* action.
 #
 #   **winfo** **class** *window*
 #      Returns the class name for *window*.
@@ -171,7 +171,7 @@
 #      on that window failed and this application has not freed any colors in the colormap since
 #      the failed allocation.
 #
-#   **winfo** **containing** ?**-displayof** *window*? *rootX* *rootY*
+#   **winfo** **containing** ?**short**? ?**-displayof** *window*? *rootX* *rootY*
 #      Returns the pathname for the window containing the point given by *rootX* and *rootY*.
 #
 #      *RootX* and *rootY* are specified in screen units (i.e. any form acceptable to [Tk_GetPixels](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html))
@@ -188,12 +188,8 @@
 #      In selecting the containing window, children are given higher priority than parents and among siblings
 #      the highest one in the stacking order is chosen.
 #
-#      ATTENTION! Differently than others mustang commands, the **winfo containing** command will **always**
-#                 return real addresses, even if a short address was provided as input.
-#
-#                 You can always ask if an address is a short or real address with **tk get addr**.
-#                 You can always translate a real address into a short address using the **tk get short**
-#                 command or a short address into a real address using the **tk get real** command.
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *containing* action.
 #
 #   **winfo** **depth** *window*
 #      Returns a decimal string giving the depth of *window* (number of bits per pixel).
@@ -252,11 +248,14 @@
 #      Returns *window*'s name (i.e. its name within its parent, as opposed to its full pathname).
 #      The command **winfo name .** will return the name of the application.
 #
-#   **winfo** **parent** *window*
+#   **winfo** **parent** ?**short**? *window*
 #      Returns the pathname of *pathname*'s parent, or an empty string if *pathname* is the main window
 #      of the application.
 #
-#   **winfo** **pathname** ?**-displayof** *window*? *id*
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *parent* action.
+#
+#   **winfo** **pathname** ?**short**? ?**-displayof** *window*? *id*
 #      Returns the pathname of the window whose X identifier is *id*.
 #
 #      *Id* must be a decimal, hexadecimal, or octal integer and must correspond to a window in the
@@ -265,12 +264,8 @@
 #      If the **-displayof** option is given then the identifier is looked up on the display of *window*;
 #      otherwise it is looked up on the display of the application's main window.
 #
-#      ATTENTION! Differently than others mustang commands, the **winfo pathname** command will **always**
-#                 return real addresses, even if a short address was provided as input.
-#
-#                 You can always ask if an address is a short or real address with **tk get addr**.
-#                 You can always translate a real address into a short address using the **tk get short**
-#                 command or a short address into a real address using the **tk get real** command.
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *pathname* action.
 #
 #   **winfo** **pixels** *window* *number*
 #      Returns the number of pixels in *window* corresponding to the distance given by *number*.
@@ -455,10 +450,10 @@ proc ::ms::winfo::Command { args } {
     # **winfo** **atom** ?**-displayof** *window*? *name*
     # **winfo** **atomname** ?**-displayof** *window*? *id*
     # **winfo** **cells** *window*
-    # **winfo** **children** *window*
+    # **winfo** **children** ?**short**? *window*
     # **winfo** **class** *window*
     # **winfo** **colormapfull** *window*
-    # **winfo** **containing** ?**-displayof** *window*? *rootX* *rootY*
+    # **winfo** **containing** ?**short**? ?**-displayof** *window*? *rootX* *rootY*
     # **winfo** **depth** *window*
     # **winfo** **exists** *window*
     # **winfo** **fpixels** *window* *number*
@@ -469,8 +464,8 @@ proc ::ms::winfo::Command { args } {
     # **winfo** **ismapped** *window*
     # **winfo** **manager** *window*
     # **winfo** **name** *window*
-    # **winfo** **parent** *window*
-    # **winfo** **pathname** ?**-displayof** *window*? *id*
+    # **winfo** **parent** ?**short**? *window*
+    # **winfo** **pathname** ?**short**? ?**-displayof** *window*? *id*
     # **winfo** **pixels** *window* *number*
     # **winfo** **pointerx** *window*
     # **winfo** **pointerxy** *window*
@@ -515,32 +510,46 @@ proc ::ms::winfo::Command { args } {
         atomname {
             # Synopsis:
             #
-            # **winfo** **atom** ?**-displayof** *window*? *name*
-            # **winfo** **atomname** ?**-displayof** *window*? *id*
+            # **winfo** **atom**     *name*
+            # **winfo** **atom**     **-displayof** *window* *name*
+            #
+            # **winfo** **atomname** *id*
+            # **winfo** **atomname** **-displayof** *window* *id*
             switch -- [llength $args] {
-                1   {}
+                1   {
+                    # Synopsis:
+                    #
+                    # **winfo** **atom** *name*
+                    # **winfo** **atomname** *id*
+
+                    # Execute the command.
+                    try {
+                        _winfo $action {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
                 3   {
-                    # '-displayof'
-                    switch -- [lindex $args 0] {
-                        "-displayof" {
-                            set window [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # **winfo** **atom**     **-displayof** *window* *name*
+                    # **winfo** **atomname** **-displayof** *window* *id*
 
-                            # Get the real address associated with 'window'.
-                            set result [::ms::Check_Pathname $window invalid]
-                            switch -- $result {
+                    # Check if a '-displayof' option was provided.
+                    set index [lsearch -exact $args "-displayof"]
+                    switch -- $index {
+                        -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
+                        default {
+                            # Check if the '-displayof' address provided is a short or real address.
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set type [lindex $result 1]
-
-                                    # Check the initial address type provided (short or real).
-                                    switch -- $type {
-                                        short {
-                                            # Substitute 'window' with its relative real address.
-                                            set args [lreplace $args 1 1 $w]
-                                        }
-                                    }
-                                }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
                         }
                     }
@@ -637,11 +646,10 @@ proc ::ms::winfo::Command { args } {
                 1   {
                     set window $args
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
@@ -660,30 +668,23 @@ proc ::ms::winfo::Command { args } {
             # Synopsis:
             #
             # **winfo** **children** *window*
+            # **winfo** **children** **short** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **winfo** **children** *window*
                     set window $args
 
-                    # Check if the address provided is a valid real or short address.
-                    switch -- [_winfo exists $window] {
-                        0   {
-                            if { $window in $::ms::addr(shorts) } {
-                                set w    $::ms::addr($window,real)
-                                set type short
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
 
-                                # Check if 'w' belongs to a megawidget container.
-                                # If so, change 'w' with it's content address.
-                                if { $w in $::ms::addr(megawidgets,containers) } {
-                                    set w $::ms::addr($w,widget)
-                                }
-                            } else {
-                                ::ms::Error "Invalid address, '$window'." $caller_info
-                            }
-                        }
-                        1   {
-                            set w    $window
-                            set type real
-                        }
+                    # Check if 'w' belongs to a megawidget container.
+                    if { $w in $::ms::addr(megawidgets,containers) } {
+                        set w $::ms::addr($w,widget)
                     }
 
                     # Execute the command.
@@ -692,89 +693,179 @@ proc ::ms::winfo::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { children } {
-                        switch -- $type {
-                            real  { return $children }
-                            short {
-                                # Trasform all the addresses returned into short addresses.
-                                set short_children [list ]
-                                foreach address $children {
-                                    set index [string last "." $address]
-                                    switch -- $index {
-                                        0       {}
-                                        default {
-                                            # Separate 'address' real address into it's parent real address and it's relative address.
-                                            set parent_real_addr [string range $address 0 $index-1]
-                                            set relative_addr    [string range $address $index end]
+                        return $children
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **winfo** **children** **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
 
-                                            # Trasform 'parent_real_addr' into it's equivalent short address.
-                                            set parent_short_addr $::ms::addr($parent_real_addr,short)
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
 
-                                            # Recompone the full address (this time in its short form).
-                                            set address [string cat $parent_short_addr $relative_addr]
-                                        }
-                                    }
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
 
-                                    # Append 'address' to the short children list.
-                                    lappend short_children $address
-                                }
+                    # Check if 'w' belongs to a megawidget container.
+                    if { $w in $::ms::addr(megawidgets,containers) } {
+                        set w $::ms::addr($w,widget)
+                    }
 
-                                return $short_children
+                    # Execute the command.
+                    try {
+                        _winfo children $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { children } {
+                        # Trasform all the addresses returned into short addresses.
+                        set result [list ]
+                        foreach w $children {
+                            # Check if exists a short address for 'w'.
+                            switch -- [info exists ::ms::addr($w,short)] {
+                                0   { lappend result $w }
+                                1   { lappend result $::ms::addr($w,short) }
                             }
                         }
+
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         containing {
-            # ATTENTION! Differently than others mustang commands, the **winfo containing** command will **always**
-            #            return real addresses, even if a short address was provided as input.
-            #
-            #            You can always ask if an address is a short or real address with **tk get addr**.
-            #            You can always translate a real address into a short address using the **tk get short**
-            #            command or a short address into a real address using the **tk get real** command.
-
             # Synopsis:
             #
-            # **winfo** **containing** ?**-displayof** *window*? *rootX* *rootY*
+            # **winfo** **containing** *rootX* *rootY*
+            # **winfo** **containing** **short** *rootX* *rootY*
+            # **winfo** **containing** **-displayof** *window* *rootX* *rootY*
+            # **winfo** **containing** **short** **-displayof** *window* *rootX* *rootY*
             switch -- [llength $args] {
-                2   {}
+                2   {
+                    # Synopsis:
+                    #
+                    # **winfo** **containing** *rootX* *rootY*
+
+                    # Execute the command.
+                    try {
+                        _winfo containing {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # **winfo** **containing** **short** *rootX* *rootY*
+
+                    set option [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo containing {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { return $w }
+                            1   { return $::ms::addr($w,short) }
+                        }
+                    }
+                }
                 4   {
-                    # '-displayof'
-                    switch -- [lindex $args 0] {
-                        "-displayof" {
-                            set window [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # **winfo** **containing** **-displayof** *window* *rootX* *rootY*
 
-                            # Get the real address associated with 'window'.
-                            set result [::ms::Check_Pathname $window invalid]
-                            switch -- $result {
+                    # Check if a '-displayof' option was provided.
+                    set index [lsearch -exact $args "-displayof"]
+                    switch -- $index {
+                        -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
+                        default {
+                            # Check if the '-displayof' address provided is a short or real address.
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set type [lindex $result 1]
-
-                                    # Check the initial address type provided (short or real).
-                                    switch -- $type {
-                                        short {
-                                            # Substitute 'window' with its relative real address.
-                                            set args [lreplace $args 1 1 $w]
-                                        }
-                                    }
-                                }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo containing {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                5   {
+                    # Synopsis:
+                    #
+                    # **winfo** **containing** **short** **-displayof** *window* *rootX* *rootY*
+                    set option [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check if a '-displayof' option was provided.
+                    set index [lsearch -exact $args "-displayof"]
+                    switch -- $index {
+                        -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
+                        default {
+                            # Check if the '-displayof' address provided is a short or real address.
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo containing {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { return $w }
+                            1   { return $::ms::addr($w,short) }
                         }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Execute the command.
-            try {
-                _winfo containing {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
             }
         }
         exists {
@@ -786,8 +877,8 @@ proc ::ms::winfo::Command { args } {
                     set window $args
 
                     # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { return 0 }
                         default { return 1 }
                     }
@@ -801,18 +892,17 @@ proc ::ms::winfo::Command { args } {
             # Synopsis:
             #
             # **winfo** **fpixels** *window* *number*
-            # **winfo** **pixels** *window* *number*
-            # **winfo** **rgb** *window* *color*
+            # **winfo** **pixels**  *window* *number*
+            # **winfo** **rgb**     *window* *color*
             switch -- [llength $args] {
                 2   {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
                     # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
@@ -830,9 +920,14 @@ proc ::ms::winfo::Command { args } {
         interps {
             # Synopsis:
             #
-            # **winfo** **interps** ?**-displayof** *window*?
+            # **winfo** **interps**
+            # **winfo** **interps** **-displayof** *window*
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # **winfo** **interps**
+
                     # Execute the command.
                     try {
                         _winfo interps
@@ -843,34 +938,27 @@ proc ::ms::winfo::Command { args } {
                     }
                 }
                 2   {
-                    # '-displayof'
-                    switch -- [lindex $args 0] {
-                        "-displayof" {
+                    # Synopsis:
+                    #
+                    # **winfo** **interps** **-displayof** *window*
+                    set option [lindex $args 0]
+
+                    # Check that a '-displayof' option was provided.
+                    switch -- $option {
+                        -displayof {
+                            # Check if the '-displayof' address provided is a valid address or not.
                             set window [lindex $args 1]
-
-                            # Get the real address associated with 'window'.
-                            set result [::ms::Check_Pathname $window invalid]
-                            switch -- $result {
+                            set w      [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set type [lindex $result 1]
-
-                                    # Check the initial address type provided (short or real).
-                                    switch -- $type {
-                                        short {
-                                            # Substitute 'window' with its relative real address.
-                                            set args [lreplace $args 1 1 $w]
-                                        }
-                                    }
-                                }
                             }
                         }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
                     # Execute the command.
                     try {
-                        _winfo interps {*}$args
+                        _winfo interps -displayof $w
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -884,30 +972,23 @@ proc ::ms::winfo::Command { args } {
             # Synopsis:
             #
             # **winfo** **parent** *window*
+            # **winfo** **parent** **short** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **winfo** **parent** *window*
                     set window $args
 
-                    # Check if the address provided is a valid real or short address.
-                    switch -- [_winfo exists $window] {
-                        0   {
-                            if { $window in $::ms::addr(shorts) } {
-                                set w    $::ms::addr($window,real)
-                                set type short
+                    # Get the real address associated with 'window'.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
 
-                                # Check if 'w' belongs to a megawidget container.
-                                # If so, change 'w' with it's content address.
-                                if { $w in $::ms::addr(megawidgets,containers) } {
-                                    set w $::ms::addr($w,widget)
-                                }
-                            } else {
-                                ::ms::Error "Invalid address, '$window'." $caller_info
-                            }
-                        }
-                        1   {
-                            set w    $window
-                            set type real
-                        }
+                    # Check if 'w' belongs to a megawidget container.
+                    if { $w in $::ms::addr(megawidgets,containers) } {
+                        set w $::ms::addr($w,widget)
                     }
 
                     # Execute the command.
@@ -916,99 +997,225 @@ proc ::ms::winfo::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { parent } {
-                        # Check the initial address type provided (short or real).
-                        switch -- $type {
-                            short {
-                                if { $parent in $::ms::addr(reals) } {
-                                    return $::ms::addr($parent,short)
-                                }
-                            }
-                        }
-
                         return $parent
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **winfo** **parent** **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Get the real address associated with 'window'.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Check if 'w' belongs to a megawidget container.
+                    if { $w in $::ms::addr(megawidgets,containers) } {
+                        set w $::ms::addr($w,widget)
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo parent $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { parent } {
+                        # Check if exists a short address for 'parent'.
+                        switch -- [info exists ::ms::addr($parent,short)] {
+                            0   { return $parent }
+                            1   { return $::ms::addr($parent,short) }
+                        }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         pathname {
-            # ATTENTION! Differently than others mustang commands, the **winfo pathname** command will **always**
-            #            return real addresses, even if a short address was provided as input.
-            #
-            #            You can always ask if an address is a short or real address with **tk get addr**.
-            #            You can always translate a real address into a short address using the **tk get short**
-            #            command or a short address into a real address using the **tk get real** command.
-
             # Synopsis:
             #
-            # **winfo** **pathname** ?**-displayof** *window*? *id*
+            # **winfo** **pathname** *id*
+            # **winfo** **pathname** **short** *id*
+            # **winfo** **pathname** **-displayof** *window* *id*
+            # **winfo** **pathname** **short** **-displayof** *window* *id*
             switch -- [llength $args] {
-                1   {}
+                1   {
+                    # Synopsis:
+                    #
+                    # **winfo** **pathname** *id*
+                    set id $args
+
+                    # Execute the command.
+                    try {
+                        _winfo pathname $id
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { w } {
+                        return $w
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **winfo** **pathname** **short** *id*
+                    set option [lindex $args 0]
+                    set id     [lindex $args 1]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo pathname $id
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { w } {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { return $w }
+                            1   { return $::ms::addr($w,short) }
+                        }
+                    }
+                }
                 3   {
-                    # '-displayof'
-                    switch -- [lindex $args 0] {
-                        "-displayof" {
-                            set window [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # **winfo** **pathname** **-displayof** *window* *id*
 
-                            # Get the real address associated with 'window'.
-                            set result [::ms::Check_Pathname $window invalid]
-                            switch -- $result {
+                    # Check if a '-displayof' option was provided.
+                    set index [lsearch -exact $args "-displayof"]
+                    switch -- $index {
+                        -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
+                        default {
+                            # Check if the '-displayof' address provided is a short or real address.
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                default {
-                                    set w    [lindex $result 0]
-                                    set type [lindex $result 1]
-
-                                    # Check the initial address type provided (short or real).
-                                    switch -- $type {
-                                        short {
-                                            # Substitute 'window' with its relative real address.
-                                            set args [lreplace $args 1 1 $w]
-                                        }
-                                    }
-                                }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo pathname {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { w } {
+                        return $w
+                    }
+                }
+                4   {
+                    # Synopsis:
+                    #
+                    # **winfo** **pathname** **short** **-displayof** *window* *id*
+                    set option [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check if a '-displayof' option was provided.
+                    set index [lsearch -exact $args "-displayof"]
+                    switch -- $index {
+                        -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
+                        default {
+                            # Check if the '-displayof' address provided is a short or real address.
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo pathname {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { w } {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { return $w }
+                            1   { return $::ms::addr($w,short) }
                         }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
-
-            # Execute the command.
-            try {
-                _winfo pathname {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
-            }
         }
         visualsavailable {
             # Synopsis:
             #
+            # **winfo** **visualsavailable** *window*
             # **winfo** **visualsavailable** *window* ?*includeids*?
             switch -- [llength $args] {
-                1   {}
+                1   {
+                    # Synopsis:
+                    #
+                    # **winfo** **visualsavailable** *window*
+                    set window $args
+
+                    # Get the real address associated with 'window'.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo visualsavailable $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
                 2   {
+                    # Synopsis:
+                    #
+                    # **winfo** **visualsavailable** *window* ?*includeids*?
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
                     # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _winfo visualsavailable $w $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Execute the command.
-            try {
-                _winfo visualsavailable $w $args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
             }
         }
         default { ::ms::Error "Invalid action, '$action'." $caller_info }
