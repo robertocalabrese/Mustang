@@ -72,7 +72,7 @@
 # **wm** **attributes** *window* ?*option*?
 # **wm** **attributes** *window* ?*option* *value*? ... ?*option* *value*?
 # **wm** **client** *window* ?*name*?
-# **wm** **colormapwindows** *window* ?*windowList*?
+# **wm** **colormapwindows** ?**short**? *window* ?*windowList*?
 # **wm** **command** *window* ?*value*?
 # **wm** **deiconify** *window*
 # **wm** **focusmodel** *window* ?**active**|**passive**?
@@ -80,7 +80,7 @@
 # **wm** **frame** *window*
 # **wm** **geometry** *window* ?*newGeometry*?
 # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
-# **wm** **group** *window* ?*pathname*?
+# **wm** **group** ?**short**? *window* ?*pathname*?
 # **wm** **iconbitmap** *window* ?*bitmap*?
 # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
 # **wm** **iconify** *window*
@@ -88,7 +88,7 @@
 # **wm** **iconname** *window* ?*newName*?
 # **wm** **iconphoto** *window* ?**-default**? *image1* ?*image2*? ... ?*imageN*? ?
 # **wm** **iconposition** *window* ?*x* *y*?
-# **wm** **iconwindow** *window* ?*pathname*?
+# **wm** **iconwindow** ?**short**? *window* ?*pathname*?
 # **wm** **manage** *window*
 # **wm** **maxsize** *window* ?*width* *height*?
 # **wm** **minsize** *window* ?*width* *height*?
@@ -97,24 +97,23 @@
 # **wm** **protocol** *window* ?*name*? ?*command*?
 # **wm** **resizable** *window* ?*width* *height*?
 # **wm** **sizefrom** *window* ?*who*?
-# **wm** **stackorder** *window* ?**isabove**|**isbelow** *window*?
+# **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *window*?
 # **wm** **state** *window* ?*newstate*?
 # **wm** **title** *window* ?*string*?
-# **wm** **transient** *window* ?*container*?
+# **wm** **transient** ?**short**? *window* ?*container*?
 # **wm** **withdraw** *window*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
-#       *Action*s that gives as a result a window pathname (or more than one), will always return the address as:
-#          - A short address, if the *window* provided as input is a short address.
-#          - A real address, if the *window* provided as input is a real address.
 #
 #### DESCRIPTION:
 #
 # The **wm** command is used to interact with window managers in order to control such things as the title for a window,
 # its geometry, or the increments in terms of which it may be resized.
+#
+#### COMMAND:
+#
 # The *wm* command can have any of several forms, depending on the *action* argument.
-# The *action* argument is always the first argument after the command itself.
-# All of the forms expect at least one additional argument, *window*, which must be the pathname of a top-level window.
+# The *action* argument is the first argument after the command itself.
 # The legal forms are:
 #
 #   **wm** **aspect** *window* ?*minNumer* *minDenom* *maxNumer* *maxDenom*?
@@ -141,7 +140,7 @@
 #
 #      The values are as follows:
 #
-#         All platforms support the following attributes (though X11 users should see the notes below):
+#         All platforms support the following attributes (though **X11** users should see the notes below):
 #
 #            **-alpha**
 #               Specifies the alpha transparency level of the toplevel.
@@ -156,7 +155,7 @@
 #            **-topmost**
 #               Specifies whether this is a topmost window (displays above all other windows).
 #
-#         On Windows, the following attributes may be set.
+#         On **Windows**, the following attributes may be set.
 #
 #            **-disabled**
 #               Specifies whether the window is in a disabled state.
@@ -172,14 +171,14 @@
 #
 #               This is supported on Windows 2000/XP+. Where not supported, the **-transparentcolor** value remains at **{}**.
 #
-#         On Mac OS X, the following attributes may be set.
+#         On **macOS**, the following attributes may be set.
 #
 #            **-appearance**
-#               Specifies whether the window is rendered in "dark mode". Allowed values are **auto**, **aqua** and **darkaqua**.
+#               Specifies whether the window is rendered in *dark mode*. Allowed values are **auto**, **aqua** and **darkaqua**.
 #               If the setting is auto then the appearance of the window is controlled by the System Settings.
 #
 #            **-class**
-#               Specifies whether the underlying Aqua window for a toplevel is an object of the NSWindow class or the NSPanel class.
+#               Specifies whether the underlying Aqua window for a toplevel is an object of the **NSWindow** class or the **NSPanel** class.
 #               The two allowed values for this option are **nswindow** and **nspanel**.
 #
 #               It is not possible to change the class of the underlying Aqua window once that window has been instantiated,
@@ -202,7 +201,7 @@
 #
 #            **-stylemask**
 #               Specifies an integer to be assigned as the styleMask of the underlying Aqua window.
-#               See the Apple documentation for styleMask property of the NSWindow class.
+#               See the Apple documentation for styleMask property of the **NSWindow** class.
 #
 #               The value of this option should be a list of bitnames.
 #               Each bit named in the list will be set to **1**, and all other bits will be set to **0**.
@@ -248,7 +247,7 @@
 #               For the transparency to be effective, the toplevel background needs to be set to a color with some alpha,
 #               e.g. "systemTransparent".
 #
-#         On X11, the following attributes may be set.
+#         On **X11**, the following attributes may be set.
 #         These are not supported by all window managers, and will have no effect under older WMs.
 #
 #            **-type**
@@ -277,7 +276,7 @@
 #                      as indicated with **wm transient**.
 #
 #                  **utility**
-#                      indicates a utility window (e.g., palette or toolbox) that should be acting on
+#                      indicates a utility window (e.g., *palette* or *toolbox*) that should be acting on
 #                      behalf of another window, as indicated with **wm transient**.
 #
 #                  **splash**
@@ -316,9 +315,9 @@
 #
 #            **-zoomed**
 #               Requests that the window should be maximized.
-#               This is the same as **wm state zoomed** on Windows and Mac OS X.
+#               This is the same as **wm state zoomed** on **Windows** and **macOS**.
 #
-#            On X11, changes to window attributes are performed asynchronously.
+#            On **X11**, changes to window attributes are performed asynchronously.
 #            Querying the value of an attribute returns the current state, which will not be the same as the value most
 #            recently set if the window manager has not yet processed the request or if it does not support the attribute.
 #
@@ -329,14 +328,14 @@
 #      The command returns an empty string in this case.
 #
 #      If *name* is not specified, the command returns the last name set in a **wm client** command for *window*.
-#      If *name* is specified as an empty string, the command deletes the WM_CLIENT_MACHINE property from *window*.
+#      If *name* is specified as an empty string, the command deletes the **WM_CLIENT_MACHINE** property from *window*.
 #
-#   **wm** **colormapwindows** *window* ?*windowList*?
+#   **wm** **colormapwindows** ?**short**? *window* ?*windowList*?
 #      This command is used to manipulate the **WM_COLORMAP_WINDOWS** property, which provides information to the
 #      window managers about windows that have private colormaps.
 #
 #      If *windowList* is not specified, the command returns a list whose elements are the names of the windows in
-#      the WM_COLORMAP_WINDOWS property.
+#      the **WM_COLORMAP_WINDOWS** property.
 #
 #      If *windowList* is specified, it consists of a list of window pathnames; the command overwrites the
 #      **WM_COLORMAP_WINDOWS** property with the given windows and returns an empty string.
@@ -354,7 +353,10 @@
 #      to all the internal windows whose colormaps differ from their parents, followed by the top-level itself;
 #      the order of the internal windows is undefined.
 #
-#      See the ICCCM documentation for more information on the **WM_COLORMAP_WINDOWS** property.
+#      See the **ICCCM** documentation for more information on the **WM_COLORMAP_WINDOWS** property.
+#
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *colormapwindows* action.
 #
 #   **wm** **command** *window* ?*value*?
 #      If *value* is specified, this command stores value in *window*'s **WM_COMMAND** property for use
@@ -368,10 +370,10 @@
 #   **wm** **deiconify** *window*
 #      Arrange for *window* to be displayed in normal (non-iconified) form. This is done by mapping the window.
 #
-#      If the window has never been mapped then this command will not map the window, but it will ensure that
-#      when the window is first mapped it will be displayed in de-iconified form.
+#      If *window* has never been mapped then this command will not map it, but it will ensure that when it's
+#      first mapped it will be displayed in de-iconified form.
 #
-#      On Windows, a deiconified window will also be raised and be given the focus (made the active window).
+#      On **Windows**, a deiconified window will also be raised and be given the focus (made the active window).
 #
 #      Returns an empty string.
 #
@@ -391,9 +393,9 @@
 #      The focus model defaults to **passive**, and Tk's focus command assumes a passive model of focusing.
 #
 #   **wm** **forget** *window*
-#      *Pathname* will be unmapped from the screen and will no longer be managed by wm.
+#      *Window* will be unmapped from the screen and will no longer be managed by the **WM**.
 #      Windows created with the toplevel command will be treated like frame windows once they are no longer
-#      managed by wm.
+#      managed by the **WM**.
 #
 #   **wm** **frame** *window*
 #      If *window* has been reparented by the window manager into a decorative frame, the command returns
@@ -461,7 +463,7 @@
 #      Note: This command should not be needed very often, since the [Tk_SetGrid](https://www.tcl-lang.org/man/tcl9.0/TkLib/SetGrid.html)
 #            library procedure and the **setGrid** option provide easier access to the same functionality.
 #
-#   **wm** **group** *window* ?*pathname*?
+#   **wm** **group** ?**short**? *window* ?*pathname*?
 #      If *pathname* is specified, it gives the pathname for the leader of a group of related windows.
 #
 #      The window manager may use this information, for example, to unmap all of the windows in a group when the
@@ -470,6 +472,9 @@
 #      *Pathname* may be specified as an empty string to remove *window* from any group association.
 #      If *pathname* is specified then the command returns an empty string; otherwise it returns the pathname of
 #      *window*'s current group leader, or an empty string if *window* is not part of any group.
+#
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *group* action.
 #
 #   **wm** **iconbitmap** *window* ?*bitmap*?
 #      If *bitmap* is specified, then it names a bitmap in the standard forms accepted by Tk (see the [Tk_GetBitmap](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetBitmap.html)
@@ -528,14 +533,14 @@
 #      Multiple images are accepted to allow different images sizes (e.g., 16x16 and 32x32) to be provided.
 #      The window manager may scale provided icons to an appropriate size.
 #
-#      On Windows, the images are packed into a Windows icon structure.
+#      On **Windows**, the images are packed into a Windows icon structure.
 #      This will override an ico specified to **wm iconbitmap**, and vice versa.
 #
-#      On X, the images are arranged into the **_NET_WM_ICON** X property, which most modern window managers support.
+#      On **X11**, the images are arranged into the **_NET_WM_ICON** X property, which most modern window managers support.
 #      A **wm iconbitmap** may exist simultaneously.
 #      It is recommended to use not more than 2 icons, placing the larger icon first.
 #
-#      On Macintosh, the first image called is loaded into an OSX-native icon format, and becomes the application icon
+#      On **macOS**, the first image called is loaded into an OSX-native icon format, and becomes the application icon
 #      in dialogs, the Dock, and other contexts.
 #      At the script level the command will accept only the first image passed in the parameters as support for multiple
 #      sizes/resolutions on macOS is outside Tk's scope.
@@ -550,7 +555,7 @@
 #      If neither *x* nor *y* is specified, then the command returns a Tcl list containing two values, which are the
 #      current icon position hints (if no hints are in effect then an empty string is returned).
 #
-#   **wm** **iconwindow** *window* ?*pathname*?
+#   **wm** **iconwindow** ?**short**? *window* ?*pathname*?
 #      If *pathname* is specified, it is the pathname for a window to use as icon for *window*: when *window* is iconified
 #      then *pathname* will be mapped to serve as icon, and when window is de-iconified then *pathname* will be unmapped again.
 #
@@ -566,11 +571,14 @@
 #      Note: Not all window managers support the notion of an icon window, and the concept is entirely meaningless
 #            on non-X11 platforms.
 #
-#   **wm** **manage** *widget*
-#      The *widget* pathname specified will become a stand alone top-level window.
-#      The window will be decorated with the window managers title bar, etc.
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *iconwindow* action.
 #
-#      Only frame, labelframe and toplevel widgets can be used with this command.
+#   **wm** **manage** *window*
+#      The *window* pathname specified will become a stand alone top-level window.
+#      **Window** will be decorated with the window managers title bar, etc.
+#
+#      Only *frame*, *labelframe* and *toplevel* widgets can be used with this command.
 #
 #      Attempting to pass any other widget type will raise an error.
 #      Attempting to manage a toplevel widget is benign and achieves nothing.
@@ -626,7 +634,7 @@
 #      Otherwise it returns **user** or **program** to indicate the source of the *window*'s current position,
 #      or an empty string if no source has been specified yet.
 #
-#      Most window managers interpret "no source" as equivalent to **program**.
+#      Most window managers interpret *no source* as equivalent to **program**.
 #      Tk will automatically set the position source to **user** when a **wm geometry** command is invoked, unless
 #      the source has been set explicitly to **program**.
 #
@@ -681,7 +689,7 @@
 #      Otherwise it returns **user** or **window** to indicate the source of the *window*'s current size, or an
 #      empty string if no source has been specified yet. Most window managers interpret "no source" as equivalent to **program**.
 #
-#   **wm** **stackorder** *window* ?**isabove**|**isbelow** *window*?
+#   **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *window*?
 #      The **stackorder** command returns a list of toplevel windows in stacking order, from lowest to highest.
 #
 #      When a single toplevel window is passed, the returned list recursively includes all of the *window*'s children
@@ -692,9 +700,12 @@
 #      When *window* is specified preceded by **isabove** or **isbelow**, a boolean result indicates whether or not
 #      *window* is currently above or below the *window* in the stacking order.
 #
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *stackorder* action.
+#
 #   **wm** **state** *window* ?*newstate*?
 #      If *newstate* is specified, the window will be set to the new state, otherwise it returns the current state
-#      of *window*: either **normal**, **iconic**, **withdrawn**, **icon**, or (Windows and Mac OS X only) **zoomed**.
+#      of *window*: either **normal**, **iconic**, **withdrawn**, **icon**, or (**Windows** and **macOS** only) **zoomed**.
 #
 #      The difference between **iconic** and **icon** is that **iconic** refers to a window that has been iconified
 #      (e.g., with the **wm iconify** command) while **icon** refers to a window whose only purpose is to serve as the icon
@@ -710,7 +721,7 @@
 #      If *string* is not specified then the command returns the current title for the *window*.
 #      The title for a window defaults to its name.
 #
-#   **wm** **transient** *window* ?*container*?
+#   **wm** **transient** ?**short**? *window* ?*container*?
 #      If *container* is specified, then the window manager is informed that *window* is a transient window
 #      (e.g. pull-down menu) working on behalf of *container* (where *container* is the pathname for a top-level window).
 #
@@ -724,6 +735,9 @@
 #
 #      The window manager may also decorate a transient window differently, removing some features normally present
 #      (e.g., minimize and maximize buttons) though this is entirely at the discretion of the window manager.
+#
+#      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *transient* action.
 #
 #   **wm** **withdraw** *window*
 #      Arranges for *window* to be withdrawn from the screen. This causes *window* to be unmapped and forgotten
@@ -862,7 +876,7 @@ proc ::ms::wm::Command { args } {
     # **wm** **attributes** *window* ?*option*?
     # **wm** **attributes** *window* ?*option* *value*? ... ?*option* *value*?
     # **wm** **client** *window* ?*name*?
-    # **wm** **colormapwindows** *window* ?*windowList*?
+    # **wm** **colormapwindows** ?**short**? *window* ?*windowList*?
     # **wm** **command** *window* ?*value*?
     # **wm** **deiconify** *window*
     # **wm** **focusmodel** *window* ?**active**|**passive**?
@@ -870,7 +884,7 @@ proc ::ms::wm::Command { args } {
     # **wm** **frame** *window*
     # **wm** **geometry** *window* ?*newGeometry*?
     # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
-    # **wm** **group** *window* ?*pathname*?
+    # **wm** **group** ?**short**? *window* ?*pathname*?
     # **wm** **iconbitmap** *window* ?*bitmap*?
     # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
     # **wm** **iconify** *window*
@@ -878,7 +892,7 @@ proc ::ms::wm::Command { args } {
     # **wm** **iconname** *window* ?*newName*?
     # **wm** **iconphoto** *window* ?**-default**? *image1* ?*image2*? ... ?*imageN*? ?
     # **wm** **iconposition** *window* ?*x* *y*?
-    # **wm** **iconwindow** *window* ?*pathname*?
+    # **wm** **iconwindow** ?**short**? *window* ?*pathname*?
     # **wm** **manage** *window*
     # **wm** **maxsize** *window* ?*width* *height*?
     # **wm** **minsize** *window* ?*width* *height*?
@@ -887,10 +901,10 @@ proc ::ms::wm::Command { args } {
     # **wm** **protocol** *window* ?*name*? ?*command*?
     # **wm** **resizable** *window* ?*width* *height*?
     # **wm** **sizefrom** *window* ?*who*?
-    # **wm** **stackorder** *window* ?**isabove**|**isbelow** *window*?
+    # **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *window*?
     # **wm** **state** *window* ?*newstate*?
     # **wm** **title** *window* ?*string*?
-    # **wm** **transient** *window* ?*container*?
+    # **wm** **transient** ?**short**? *window* ?*container*?
     # **wm** **withdraw** *window*
 
     # Check if 'args' is an empty string.
@@ -964,11 +978,10 @@ proc ::ms::wm::Command { args } {
             set window [lindex  $args 0]
             set args   [lremove $args 0]
 
-            # Get the real address associated with 'window'.
-            set result [::ms::Check_Pathname $window invalid]
-            switch -- $result {
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                default { set w [lindex $result 0] }
             }
 
             # Execute the command.
@@ -983,19 +996,20 @@ proc ::ms::wm::Command { args } {
         colormapwindows {
             # Synopsis:
             #
-            # **wm** **colormapwindows** *window* ?*windowList*?
+            # **wm** **colormapwindows** *window*
+            # **wm** **colormapwindows** **short** *window*
+            # **wm** **colormapwindows** *window* *windowList*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **wm** **colormapwindows** *window*
                     set window $args
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
@@ -1004,54 +1018,82 @@ proc ::ms::wm::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        # Check the initial address type provided (short or real).
-                        switch -- $type {
-                            short {
-                                set shorts_result [list ]
-                                foreach addr $result {
-                                    if { $addr in $::ms::addr(reals) } {
-                                        lappend shorts_result $::ms::addr($addr,short)
-                                    } else {
-                                        lappend shorts_result $addr
-                                    }
-                                }
-
-                                # Remove any doubles.
-                                return [lsort -unique $short_result]
-                            }
-                            default { return $result }
-                        }
+                        return $result
                     }
                 }
                 2   {
-                    set window     [lindex $args 0]
-                    set windowList [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # **wm** **colormapwindows** **short** *window*
+                    # **wm** **colormapwindows** *window* *windowList*
+                    set option [lindex  $args 0]
+                    set args   [lremove $args 0]
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
-                    }
+                    # Check if there is a 'short' option.
+                    switch -- $option {
+                        short {
+                            # Synopsis:
+                            #
+                            # **wm** **colormapwindows** **short** *window*
+                            set window $args
 
-                    # Iterate the 'windowList' list to substitute any window short address with their long counterpart.
-                    set real_windowList [list ]
-                    foreach window $windowList {
-                        # Get the real address associated with 'window'.
-                        set result [::ms::Check_Pathname $window invalid]
-                        switch -- $result {
-                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                            default { lappend real_windowList [lindex $result 0] }
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                _wm colormapwindows $w
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { addresses } {
+                                # Trasform all the addresses returned into short addresses.
+                                set result [list ]
+                                foreach w $addresses {
+                                    # Check if exists a short address for 'w'.
+                                    switch -- [info exists ::ms::addr($w,short)] {
+                                        0   { lappend result $w }
+                                        1   { lappend result $::ms::addr($w,short) }
+                                    }
+                                }
+
+                                return $result
+                            }
                         }
-                    }
+                        default {
+                            # Synopsis:
+                            #
+                            # **wm** **colormapwindows** *window* *windowList*
+                            set window $option
 
-                    # Execute the command.
-                    try {
-                        _wm colormapwindows $w $real_windowList
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return ""
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Check if every address in 'args' is a valid address.
+                            set windowList [list ]
+                            foreach window $args {
+                                # Check if 'window' is a valid address or not.
+                                set addr [::ms::Check_Pathname $window invalid]
+                                switch -- $addr {
+                                    invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                    default { lappend windowList $addr }
+                                }
+                            }
+
+                            # Execute the command.
+                            try {
+                                _wm colormapwindows $w $windowList
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -1062,76 +1104,101 @@ proc ::ms::wm::Command { args } {
         transient  {
             # Synopsis:
             #
+            # **wm** **group** *window*
+            # **wm** **group** **short** *window*
             # **wm** **group** *window* ?*pathname*?
+            #
+            # **wm** **iconwindow** *window*
+            # **wm** **iconwindow** **short** *window*
             # **wm** **iconwindow** *window* ?*pathname*?
+            #
+            # **wm** **transient** *window*
+            # **wm** **transient** **short** *window*
             # **wm** **transient** *window* ?*container*?
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **wm** **group** *window*
+                    # **wm** **iconwindow** *window*
+                    # **wm** **transient** *window*
                     set window $args
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
-                    try {
-                        _wm $action $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { pathname } {
-                        switch -- $pathname {
-                            ""      { return "" }
-                            default {
-                                # Check the initial address type provided (short or real).
-                                switch -- $type {
-                                    short {
-                                        if { $pathname in $::ms::addr(reals) } {
-                                            return $::ms::addr($pathname,short)
-                                        }
-                                    }
-                                }
-
-                                return $pathname
-                            }
-                        }
-                    }
+                    return [_wm $action $w]
                 }
                 2   {
-                    set window   [lindex $args 0]
-                    set pathname [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # **wm** **group** **short** *window*
+                    # **wm** **group** *window* *pathname*
+                    #
+                    # **wm** **iconwindow** **short** *window*
+                    # **wm** **iconwindow** *window* *pathname*
+                    #
+                    # **wm** **transient** **short** *window*
+                    # **wm** **transient** *window* *container*
+                    set option [lindex  $args 0]
+                    set args   [lremove $args 0]
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
-                    }
+                    # Check if there is a 'short' option.
+                    switch -- $option {
+                        short {
+                            # Synopsis:
+                            #
+                            # **wm** **group**      **short** *window*
+                            # **wm** **iconwindow** **short** *window*
+                            # **wm** **transient**  **short** *window*
+                            set window $args
 
-                    switch -- $pathname {
-                        ""      {}
-                        default {
-                            # Get the real address associated with 'pathname'.
-                            set result [::ms::Check_Pathname $pathname invalid]
-                            switch -- $result {
-                                invalid { ::ms::Error "Invalid address, '$pathname'." $caller_info }
-                                default { set pathname [lindex $result 0] }
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                _wm $action $w
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { addresses } {
+                                # Check if exists a short address for 'w'.
+                                switch -- [info exists ::ms::addr($w,short)] {
+                                    0   { return $w }
+                                    1   { return $::ms::addr($w,short) }
+                                }
                             }
                         }
-                    }
+                        default {
+                            # Synopsis:
+                            #
+                            # **wm** **group**      *window* *pathname*
+                            # **wm** **iconwindow** *window* *pathname*
+                            # **wm** **transient**  *window* *container*
+                            set window $option
 
-                    # Execute the command.
-                    try {
-                        _wm $action $w $pathname
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return ""
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                _wm $action $w $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -1145,11 +1212,10 @@ proc ::ms::wm::Command { args } {
                 1   {
                     set window $args
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
@@ -1163,85 +1229,91 @@ proc ::ms::wm::Command { args } {
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
-
-            # Execute the command.
-            try {
-                _wm manage {*}$args
-            } on error {} {
-                ::ms::Error "Invalid address, '$window'." $caller_info
-            } on ok { result } {
-                return $result
-            }
         }
         stackorder {
             # Synopsis:
             #
-            # **wm** **stackorder** *window* ?**isabove**|**isbelow** *window*?
+            # **wm** **stackorder** *window*
+            # **wm** **stackorder** **short** *window*
+            # **wm** **stackorder** *window* **isabove** *window*
+            # **wm** **stackorder** *window* **isbelow** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **wm** **stackorder** *window*
                     set window $args
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Execute the command.
-                    try {
-                        _wm stackorder $w
-                    } on error {} {
-                        ::ms::Error "Invalid address, '$window'." $caller_info
-                    } on ok { result } {
-                        return $result
+                    return [_wm stackorder $w]
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **wm** **stackorder** **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
+
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    set toplevels [_wm stackorder $w]
+
+                    set result [list ]
+                    foreach w $toplevels {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { lappend result $w }
+                            1   { lappend result $::ms::addr($w,short) }
+                        }
+                    }
+
+                    return $result
                 }
                 3   {
-                    set window [lindex  $args 0]
-                    set args   [lremove $args 0]
+                    set window   [lindex $args 0]
+                    set option   [lindex $args 1]
+                    set toplevel [lindex $args 2]
 
-                    # Get the real address associated with 'window'.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
-                    set option [lindex $args 0]
+                    # Check 'option'.
                     switch -- $option {
                         "isabove" -
                         "isbelow" {
-                            set toplevel [lindex $args 1]
-
-                            # Get the real address associated with 'toplevel'.
-                            set result [::ms::Check_Pathname $toplevel invalid]
-                            switch -- $result {
+                            # Check if 'toplevel' is a valid address or not.
+                            set addr [::ms::Check_Pathname $toplevel invalid]
+                            switch -- $addr {
                                 invalid { ::ms::Error "Invalid address, '$toplevel'." $caller_info }
-                                default { set args [lreplace $args 1 1 [lindex $result 0]] }
                             }
                         }
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
                     # Execute the command.
-                    try {
-                        _wm stackorder $w {*}$args
-                    } on error {} {
-                        ::ms::Error "Invalid address, '$window'." $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
+                    return [_wm stackorder $w $option $addr]
                 }
-            }
-
-            # Execute the command.
-            try {
-                _wm stackorder $w {*}$args
-            } on error {} {
-                ::ms::Error "Invalid address, '$widget' is not a frame, labelframe, or toplevel widget." $caller_info
-            } on ok { result } {
-                return $result
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         default { ::ms::Error "Invalid action, '$action'." $caller_info }
