@@ -1119,9 +1119,9 @@ proc ::ms::wm::Command { args } {
                 1   {
                     # Synopsis:
                     #
-                    # **wm** **group** *window*
+                    # **wm** **group**      *window*
                     # **wm** **iconwindow** *window*
-                    # **wm** **transient** *window*
+                    # **wm** **transient**  *window*
                     set window $args
 
                     # Check if 'window' is a valid address or not.
@@ -1287,6 +1287,12 @@ proc ::ms::wm::Command { args } {
                     return $result
                 }
                 3   {
+                    # Synopsis:
+                    #
+                    # **wm** **stackorder** *window*
+                    # **wm** **stackorder** **short** *window*
+                    # **wm** **stackorder** *window* **isabove** *window*
+                    # **wm** **stackorder** *window* **isbelow** *window*
                     set window   [lindex $args 0]
                     set option   [lindex $args 1]
                     set toplevel [lindex $args 2]
