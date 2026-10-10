@@ -180,7 +180,7 @@ proc ::ms::bell::Command { args } {
                 default    { ::ms::Error "Invalid option, '$option'." $caller_info }
             }
 
-            # Check if the '-displayof' address is a valid address or not.
+            # Check if 'window' is a valid address or not.
             set w [::ms::Check_Pathname $window invalid]
             switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -207,11 +207,12 @@ proc ::ms::bell::Command { args } {
             switch -- $index {
                 -1      { ::ms::Error "Invalid options, '$args'." $caller_info}
                 default {
-                    # Check if the '-displayof' address is a valid address or not.
-                    set addr [lindex $args $index+1]
-                    set w    [::ms::Check_Pathname $addr invalid]
+                    set window [lindex $args $index+1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
-                        invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
                 }
             }
