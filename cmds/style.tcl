@@ -255,10 +255,15 @@ proc ::ms::style::Command { args } {
         configure {
             # Synopsis:
             #
-            # **style** **configure** *style* ?**option**? ?*value*? ?**option** *value*? ... ?**option** *value*?
+            # **style** **configure** *style*
+            # **style** **configure** *style* *-option*
+            # **style** **configure** *style* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # **style** **configure** *style*
                     set style [lindex $args 0]
 
                     # Check if the style provided exists (in the current theme).
@@ -268,6 +273,9 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **style** **configure** *style* *-option*
                     set style  [lindex $args 0]
                     set option [string trimleft [lindex $args 1] "-"]
 
@@ -278,6 +286,9 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # **style** **configure** *style* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
                     set style [lindex  $args 0]
                     set args  [lremove $args 0]
 
@@ -329,7 +340,7 @@ proc ::ms::style::Command { args } {
         element {
             # Synopsis:
             #
-            # **style** **element** **create** *elementName* *type ?*arg* ... *arg*?
+            # **style** **element** **create** *elementName* *type* ?*arg* ... *arg*?
             # **style** **element** **names**
             # **style** **element** **options** *element*
 
@@ -338,6 +349,10 @@ proc ::ms::style::Command { args } {
             set args       [lremove $args 0]
             switch -- $subcommand {
                 create {
+                    # Synopsis:
+                    #
+                    # **style** **element** **create** *elementName* *type*
+                    # **style** **element** **create** *elementName* *type* ?*arg* ... *arg*?
                     switch -- [llength $args] {
                         0       -
                         1       { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -354,6 +369,9 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 names {
+                    # Synopsis:
+                    #
+                    # **style** **element** **names**
                     switch -- [llength $args] {
                         0   {
                             # Execute the command.
@@ -363,6 +381,9 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 options {
+                    # Synopsis:
+                    #
+                    # **style** **element** **options** *element*
                     switch -- [llength $args] {
                         1   {
                             # Execute the command.
@@ -388,10 +409,14 @@ proc ::ms::style::Command { args } {
 
             # Synopsis:
             #
-            # **style** **layout** *style*
+            # **style** **layout** *layoutName*
+            # **style** **layout** *layoutName* *layoutSpec*
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # **style** **layout** *layoutName*
                     set layout_name [lindex $args 0]
 
                     # Check if the layout name provided exists in the 'stylelayout' array for the current theme.
@@ -401,12 +426,15 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # **style** **layout** *layoutName* *layoutSpec*
                     set layout_name [lindex $args 0]
                     set layout_spec [string trim {*}[lremove $args 0]]
 
                     # Check the layout spec provided.
                     switch -- [::ms::style::Check_Layout $layout_spec] {
-                        invalid { ::ms::Error "Invalid layout spec." $caller_info }
+                        invalid { ::ms::Error "Invalid layout spec, '$layout_spec'." $caller_info }
                     }
 
                     # Register the layout into the style layout dictionary.
@@ -446,10 +474,15 @@ proc ::ms::style::Command { args } {
         map {
             # Synopsis:
             #
-            # **style** **map** *style* ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
+            # **style** **map** *style*
+            # **style** **map** *style* *option*
+            # **style** **map** *style* *option* {*statespec* *value* ... ?*statespec* *value*?} ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # **style** **map** *style*
                     set style [lindex $args 0]
 
                     # Check if exists a mapping for the style provided (in the current theme).
@@ -459,6 +492,9 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **style** **map** *style* *option*
                     set style  [lindex $args 0]
                     set option [string trimleft [lindex $args 1] "-"]
 
@@ -469,6 +505,9 @@ proc ::ms::style::Command { args } {
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # **style** **map** *style* *option* {*statespec* *value* ... ?*statespec* *value*?} ?*option* {*statespec* *value* ... ?*statespec* *value*?}? ... ?*option* {*statespec* *value* ... ?*statespec* *value*?}?
                     set style [lindex  $args 0]
                     set args  [lremove $args 0]
 
@@ -527,6 +566,11 @@ proc ::ms::style::Command { args } {
             switch -- $subcommand {
                 create   -
                 settings {
+                    # Synopsis:
+                    #
+                    # **style** **theme** **create**   *themeName* ?**-parent** *basedon*? ?**-settings** *script*?
+                    # **style** **theme** **settings** *themeName* *script*
+
                     # Execute the command.
                     try {
                         _ttk_style theme $subcommand {*}$args
@@ -536,25 +580,55 @@ proc ::ms::style::Command { args } {
                         return ""
                     }
                 }
-                names { return $::ms::themes }
+                names {
+                    # Synopsis:
+                    #
+                    # **style** **theme** **names**
+                    return $::ms::themes
+                }
                 styles {
+                    # Synopsis:
+                    #
+                    # **style** **theme** **styles**
                     switch -- [llength $args] {
                         0       { return $::ms::style($::ms::theme) }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
                 use {
+                    # Synopsis:
+                    #
+                    # **style** **theme** **use**
+                    # **style** **theme** **use** *themeName*
                     switch -- [llength $args] {
-                        0   { return $::ms::theme }
+                        0   {
+                            # Synopsis:
+                            #
+                            # **style** **theme** **use**
+                            return $::ms::theme
+                        }
                         1   {
-                            if { $args in $::ms::themes } {
+                            # Synopsis:
+                            #
+                            # **style** **theme** **use** *themeName*
+                            set themeName $args
+
+                            if { $themeName in $::ms::themes } {
                                 # Change the current theme.
-                                set ::ms::theme $args
+                                set ::ms::theme $themeName
 
                                 # Disable the user to iteract with the application while mustang is updating the theme.
                                 foreach w $::ms::addr(toplevel,classtype) {
                                     _tk busy hold $w
-                                    _tk busy configure $w -cursor watch
+
+                                    # Check the windowing system.
+                                    switch -- [_tk windowingsystem] {
+                                        win32   { set cursor wait }
+                                        default { set cursor watch }
+                                    }
+
+                                    # Change the Tk Busy cursor.
+                                    _tk busy configure $w -cursor $cursor
                                 }
 
                                 #########################
