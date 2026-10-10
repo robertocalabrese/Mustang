@@ -155,17 +155,18 @@
 #
 #          **-column** *n*
 #              Insert the window so that it occupies the *n*th column in the grid.
-#              Column numbers start with "0".
+#              Column numbers start with **0**.
 #
 #              If this option is not supplied, then the window is arranged just to the right of previous
-#              window specified on this call to **grid**, or column "0" if it is the first window.
+#              window specified on this call to **grid**, or column **0** if it is the first window.
 #
 #          **-columnspan** *n*
 #              Insert the window so that it occupies *n* columns in the grid.
 #              The default is one column.
 #
 #          **-in** *container*
-#              Insert the window in the container window given by *container*.
+#              *Container* must be the pathname of a container window (either as real or short address).
+#              Insert the window inside the *container*.
 #              The default is the first window's parent window.
 #
 #          **-ipadx** *amount*
@@ -173,15 +174,15 @@
 #              of the content.
 #
 #              This is space is added inside the content border.
-#              The *amount* must be a valid screen distance, such as 2 or .5c.
-#              It defaults to 0.
+#              The *amount* must be a valid screen distance, such as **2** or **.5c**.
+#              It defaults to **0**.
 #
 #          **-ipady** *amount*
 #              The *amount* specifies how much vertical internal padding to leave on the top and bottom
 #              of the content.
 #
 #              This space is added inside the content border.
-#              The *amount* defaults to 0.
+#              The *amount* defaults to **0**.
 #
 #          **-padx** *amount*
 #              The *amount* specifies how much horizontal external padding to leave on each side
@@ -190,7 +191,7 @@
 #              This space is added outside the content border.
 #
 #              *Amount* may be a list of two values to specify padding for left and right separately.
-#              The *amount* defaults to 0.
+#              The *amount* defaults to **0**.
 #
 #          **-pady** *amount*
 #              The *amount* specifies how much vertical external padding to leave on the top and bottom
@@ -199,11 +200,11 @@
 #              This space is added outside the content border.
 #
 #              *Amount* may be a list of two values to specify padding for top and bottom separately.
-#              The *amount* defaults to 0.
+#              The *amount* defaults to **0**.
 #
 #          **-row** *n*
 #              Insert the content so that it occupies the *n*th row in the grid.
-#              Row numbers start with "0".
+#              Row numbers start with **0**.
 #
 #              If this option is not supplied, then the content is arranged on the same row as the
 #              previous content specified on this call to **grid**, or the next row after the highest
@@ -258,8 +259,7 @@
 #   **grid** **info** ?**short**? *window*
 #      Returns a list whose elements are the current configuration state of the content given by *window* in the same
 #      option-value form that might be specified to **grid configure**.
-#      The first two elements of the list are "**-in** *container*" where *container* is the window's
-#      container window.
+#      The first two elements of the list are "**-in** *container*" where *container* is the window's container window.
 #
 #      If the *short* option is provided the '-in' address returned will be a short address, otherwise it will be a real address.
 #      If provided, the *short* option must be located just after the *info* action.
@@ -491,7 +491,7 @@ proc ::ms::grid::Command { args } {
                     # **grid** **propagate** *window*
                     set window $args
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -514,7 +514,7 @@ proc ::ms::grid::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -545,7 +545,7 @@ proc ::ms::grid::Command { args } {
                     # **grid** **bbox** *window*
                     set window $args
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -569,7 +569,7 @@ proc ::ms::grid::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -607,7 +607,7 @@ proc ::ms::grid::Command { args } {
                     set window  [lindex $args 0]
                     set indexes [lindex $args 1]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -636,7 +636,7 @@ proc ::ms::grid::Command { args } {
                     set indexes [lindex  $args 1]
                     set args    [lremove $args 0 1]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -673,11 +673,8 @@ proc ::ms::grid::Command { args } {
                                 }
                             }
 
-                            # Get the grid container real address.
-                            set in_addr_real [lindex [_grid info $w] 1]
-
-                            # Force the propagation inside the grid container real address.
-                            ::ms::Scrollable_Widgets_Propagation_Mechanism $in_addr_real
+                            # Force the propagation inside the grid container.
+                            ::ms::Scrollable_Widgets_Propagation_Mechanism $w
 
                             return ""
                         }
@@ -701,7 +698,7 @@ proc ::ms::grid::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -715,7 +712,7 @@ proc ::ms::grid::Command { args } {
                             "." {
                                 set window $arg
 
-                                # Get the 'window' real address.
+                                # Check if 'window' is a valid address or not.
                                 set w [::ms::Check_Pathname $window invalid]
                                 switch -- $w {
                                     invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -740,7 +737,7 @@ proc ::ms::grid::Command { args } {
                                 default {
                                     set in_addr [lindex $args $index+1]
 
-                                    # Get the real address associated with 'in_addr'.
+                                    # Check if 'in_addr' is a valid address or not.
                                     set in_addr_real [::ms::Check_Pathname $in_addr invalid]
                                     switch -- $in_addr_real {
                                         invalid { ::ms::Error "Invalid address, 'in_addr'." $caller_info }
@@ -775,8 +772,8 @@ proc ::ms::grid::Command { args } {
                                 }
                             }
 
-                            # Force the propagation inside the grid container ('in_addr_real').
-                            ::ms::Scrollable_Widgets_Propagation_Mechanism $in_addr_real
+                            # Force the propagation inside the grid container
+                            ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
 
                             return ""
                         }
@@ -806,7 +803,7 @@ proc ::ms::grid::Command { args } {
                     # **grid** **slaves**  *window*
                     set window $args
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -835,7 +832,7 @@ proc ::ms::grid::Command { args } {
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -846,17 +843,17 @@ proc ::ms::grid::Command { args } {
                         _grid $action $w
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        set short_result [list ]
-                        foreach w $result {
+                    } on ok { addresses } {
+                        set result [list ]
+                        foreach w $addresses {
                             # Check if exists a short address for 'w'.
                             switch -- [info exists ::ms::addr($w,short)] {
-                                0   { lappend short_result $w }
-                                1   { lappend short_result $::ms::addr($w,short) }
+                                0   { lappend result $w }
+                                1   { lappend result $::ms::addr($w,short) }
                             }
                         }
 
-                        return $short_result
+                        return $result
                     }
                 }
                 3   {
@@ -867,7 +864,7 @@ proc ::ms::grid::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -897,7 +894,7 @@ proc ::ms::grid::Command { args } {
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -937,7 +934,7 @@ proc ::ms::grid::Command { args } {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     foreach window $args {
-                        # Get the 'window' real address.
+                        # Check if 'window' is a valid address or not.
                         set w [::ms::Check_Pathname $window invalid]
                         switch -- $w {
                             invalid { break }
@@ -1009,14 +1006,12 @@ proc ::ms::grid::Command { args } {
                         switch -- $result {
                             ""      { return "" }
                             default {
-                                # Note: The 'grid info' command returns an option/value list that
-                                #       will always contain the '-in' option value at index '1'.
+                                # Get the '-in' address.
+                                set in_addr [lindex $result 1]
 
-                                set in_addr_real [lindex $result 1]
-
-                                # Check if exists a short address for 'in_addr_real'.
-                                switch -- [info exists ::ms::addr($in_addr_real,short)] {
-                                    1   { set result [lreplace $result 1 1 $::ms::addr($in_addr_real,short)] }
+                                # Check if exists a short address for 'in_addr'.
+                                switch -- [info exists ::ms::addr($in_addr,short)] {
+                                    1   { set result [lreplace $result 1 1 $::ms::addr($in_addr,short)] }
                                 }
 
                                 return $result
@@ -1036,7 +1031,7 @@ proc ::ms::grid::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1062,7 +1057,7 @@ proc ::ms::grid::Command { args } {
                 1   {
                     set window [lindex $args 0]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1089,7 +1084,7 @@ proc ::ms::grid::Command { args } {
             # **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
             set window $action
 
-            # Get the 'window' real address.
+            # Check if 'window' is a valid address or not.
             set w [::ms::Check_Pathname $window invalid]
             switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1103,7 +1098,7 @@ proc ::ms::grid::Command { args } {
                     "." {
                         set window $arg
 
-                        # Get the 'window' real address.
+                        # Check if 'window' is a valid address or not.
                         set w [::ms::Check_Pathname $window invalid]
                         switch -- $w {
                             invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1129,7 +1124,7 @@ proc ::ms::grid::Command { args } {
                             # '-in'
                             set in_addr [lindex $args $index+1]
 
-                            # Get the 'in_addr' real address.
+                            # Check if 'in_addr' is a valid address or not.
                             set in_addr_real [::ms::Check_Pathname $in_addr invalid]
                             switch -- $in_addr_real {
                                 invalid { ::ms::Error "Invalid address, '$in_addr'." $caller_info }
