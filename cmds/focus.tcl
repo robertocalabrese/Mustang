@@ -401,7 +401,7 @@ proc ::ms::focus::Command { args } {
                 next {
                     # Synopsis:
                     #
-                    # **focus** **next**  **-displayof** *window*
+                    # **focus** **next** **-displayof** *window*
                     set option [lindex $args 0]
 
                     # Check if a '-displayof' option was provided.
@@ -439,7 +439,7 @@ proc ::ms::focus::Command { args } {
                 prev {
                     # Synopsis:
                     #
-                    # **focus** **prev**  **-displayof** *window*
+                    # **focus** **prev** **-displayof** *window*
                     set option [lindex $args 0]
 
                     # Check if a '-displayof' option was provided.
