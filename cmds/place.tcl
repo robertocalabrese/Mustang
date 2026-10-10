@@ -68,17 +68,14 @@
 #### SYNOPSIS:
 #
 # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
-# **place** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-# **place** **content** *window*
+# **place** **configure** ?**short**? *window* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+# **place** **content** ?**short**? *window*
 # **place** **forget** *window* ?*window*? ... ?*window*?
-# **place** **info** *window*
+# **place** **info** ?**short**? *window*
 # **place** **remove** *window* ?*window*? ... ?*window*?
-# **place** **slaves** *window*
+# **place** **slaves** ?**short**? *window*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
-#       *Action*s that gives as a result a window pathname (or more than one), will always return the address as:
-#          - A short address, if the *window* provided as input is a short address.
-#          - A real address, if the *window* provided as input is a real address.
 #
 #### DESCRIPTION:
 #
@@ -98,13 +95,13 @@
 # The *action* argument, when present, is always the first argument after the command itself.
 # The legal forms are:
 #
-#   **place** *window* ?*option* *value*? ... ?*option* *value*?
+#   **place** *window* ?*-option* *value*? ... ?*-option* *value*?
 #      Arrange for the placer to manage the geometry of a content whose pathname is *window*.
 #      The remaining arguments consist of one or more option-value pairs that specify the way in which *window*'s
 #      geometry is managed.
 #      Option may have any of the values accepted by the place configure command.
 #
-#   **place** **configure** *window* ?*option* *value*? ... ?*option* *value*?
+#   **place** **configure** ?**short**? *window* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
 #      The arguments consist of a window pathname followed by pairs of arguments that specify how to manage
 #      the content. The following options are supported:
 #
@@ -213,6 +210,18 @@
 #         If the same value is specified separately with two different options, such as *-x* and *-relx*,
 #         then the most recent option is used and the older one is ignored.
 #
+#      If the *short* option is provided the '-in' address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *configure* action.
+#
+#   **place** **content** ?**short**? *window*
+#      Returns a list of all of the content windows in the packing order for *window*.
+#      The order of the content windows in the list is the same as their order in the packing order.
+#
+#      If *window* has no content then an empty string is returned.
+#
+#      If the *short* option is provided the addresses returned will be short address, otherwise they will be real address.
+#      If provided, the *short* option must be located just after the *content* action.
+#
 #   # **place** **forget** *window* ?*window*? ... ?*window*?
 #   # **place** **remove** *window* ?*window*? ... ?*window*?
 #      Causes the placer to stop managing the geometry of *window*.
@@ -220,19 +229,13 @@
 #      If *window* is not currently managed by the placer then the command has no effect.
 #      This command returns an empty string.
 #
-#   **place** **info** *window* ?*option*?
-#      If *option* is not provided, returns a list whose elements are the current configuration state of the
-#      content given by *pathname* in the same option-value form that might be specified to **place configure**.
-#      The first two elements of the list are "**-in** *container*" where *container* is the *window*'s
-#      container window.
+#   **place** **info** ?**short**? *window*
+#      Returns a list whose elements are the current configuration state of the content given by *window* in the same option-value form that
+#      might be specified to **place configure**.
+#      The first two elements of the list will always be "**-in** *container*" where *container* is the *window*'s container window.
 #
-#      If *option* is provided, returns the current value for *option*.
-#
-#   **place** **content** *window*
-#      Returns a list of all of the content windows in the packing order for *window*.
-#      The order of the content windows in the list is the same as their order in the packing order.
-#
-#      If *window* has no content then an empty string is returned.
+#      If the *short* option is provided the '-in' address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *info* action.
 #
 #   **place** **slaves** *window*
 #      Synonym for **place content**.
@@ -249,7 +252,7 @@
 # First, for complex window layouts it means you can create a hierarchy of subwindows whose only purpose is
 # to assist in the layout of the parent.
 #
-# The "long children" of the parent (i.e. the windows that are significant for the application's user interface)
+# The "real children" of the parent (i.e. the windows that are significant for the application's user interface)
 # can be children of the parent yet be placed inside the windows of the geometry-management hierarchy.
 # This means that the path names of the "long children" do not reflect the geometry-management hierarchy and users
 # can specify options for the long children without being aware of the structure of the geometry-management hierarchy.
@@ -258,7 +261,7 @@
 # For example, the placer can be used to force a window always to be positioned centered just below one of its
 # siblings by specifying the configuration
 #
-#    **-in** sibling **-relx** 0.5 **-rely** 1.0 **-anchor** n **-bordermode** outside
+#    -in sibling -relx 0.5 -rely 1.0 -anchor n -bordermode outside
 #
 # Whenever the sibling is repositioned in the future, the content will be repositioned as well.
 #
@@ -293,12 +296,12 @@ proc ::ms::place::Command { args } {
     # Synopsis:
     #
     # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
-    # **place** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-    # **place** **content** *container*
+    # **place** **configure** ?**short**? *window* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+    # **place** **content** ?**short**? *container*
     # **place** **forget** *window* ?*window*? ... ?*window*?
-    # **place** **info** *window*
+    # **place** **info** ?**short**? *window*
     # **place** **remove** *window* ?*window*? ... ?*window*?
-    # **place** **slaves** *container*
+    # **place** **slaves** ?**short**? *container*
 
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
@@ -307,20 +310,152 @@ proc ::ms::place::Command { args } {
         configure {
             # Synopsis:
             #
-            # **place** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-
+            # **place** **configure** *window*
+            # **place** **configure** *window* *-option*
+            # **place** **configure** *window* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+            #
+            # **place** **configure** **short** *window*
+            # **place** **configure** **short** *window* *-option*
+            # **place** **configure** **short** *window* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
-                0       { ::ms::Error "Invalid number of arguments." $caller_info }
-                1       { return "" }
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+                1   {
+                    # Synopsis:
+                    #
+                    # **place** **configure** *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    return [_place configure $w]
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **place** **configure** **short** *window*
+                    # **place** **configure** *window* *-option*
+                    set option [lindex $args 0]
+
+                    # Check if a 'short' option was provided.
+                    switch -- $option {
+                        short {
+                            # Synopsis:
+                            #
+                            # **place** **configure** **short** *window*
+                            set window [lindex $args 1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            set result [_place configure $w]
+
+                            # Get the '-in' address.
+                            set in_addr [lindex $result 1]
+
+                            # Check if exists a short address for 'in_addr'.
+                            switch -- [info exists ::ms::addr($in_addr,short)] {
+                                1   { lreplace $result 1 1 $::ms::addr($in_addr,short) }
+                            }
+
+                            return $result
+                        }
+                        default {
+                            # Synopsis:
+                            #
+                            # **place** **configure** *window* *-option*
+                            set window $option
+                            set args   [lremove $args 0]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            return [_place configure $w $args]
+                        }
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # **place** **configure** *window* *-option* *value*
+                    # **place** **configure** **short** *window* *option*
+                    set option [lindex $args 0]
+
+                    # Check if a 'short' option was provided.
+                    switch -- $option {
+                        short {
+                            # Synopsis:
+                            #
+                            # **place** **configure** **short** *window* *option*
+                            set window [lindex  $args 1]
+                            set args   [lremove $args 0 1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Check if 'args' is '-in'.
+                            switch -- $args {
+                                -in {
+                                    # Execute the command.
+                                    set w [_place configure $w $args]
+
+                                    # Check if exists a short address for 'w'.
+                                    switch -- [info exists ::ms::addr($w,short)] {
+                                        0   { return $w }
+                                        1   { return $::ms::addr($w,short) }
+                                    }
+                                }
+                                default {
+                                    # Execute the command.
+                                    return [_place configure $w $args]
+                                }
+                            }
+                        }
+                        default {
+                            # Synopsis:
+                            #
+                            # **place** **configure** *window* *-option* *value*
+                            set window $option
+                            set args   [lremove $args 0]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            _place configure $w $args
+
+                            return ""
+                        }
+                    }
+                }
                 default {
+                    # Synopsis:
+                    #
+                    # **place** **configure** *window* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
                     }
 
                     # Check the option/values in 'args'.
@@ -333,22 +468,11 @@ proc ::ms::place::Command { args } {
                                 default {
                                     set container [lindex $args $index+1]
 
-                                    # Get the 'container' real address.
-                                    set result [::ms::Check_Pathname $container invalid]
-                                    switch -- $result {
+                                    # Check if 'container' is a valid address or not.
+                                    set in_addr [::ms::Check_Pathname $container invalid]
+                                    switch -- $in_addr {
                                         invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
-                                        default {
-                                            set w    [lindex $result 0]
-                                            set type [lindex $result 1]
-
-                                            # Check the initial address type provided (short or real).
-                                            switch -- $type {
-                                                short {
-                                                    # Substitute 'container' with its relative real address.
-                                                    set args [lreplace $args $index+1 $index+1 $w]
-                                                }
-                                            }
-                                        }
+                                        default { set args [lreplace $args $index+1 $index+1 $in_addr] }
                                     }
                                 }
                             }
@@ -367,71 +491,89 @@ proc ::ms::place::Command { args } {
                 }
             }
         }
-        # Synopsis:
-        #
-        # **place** **content** *container*
-        # **place** **slaves** *container*
         content -
         slaves  {
+            # Synopsis:
+            #
+            # **place** **content** *window*
+            # **place** **content** **short** *window*
+            #
+            # **place** **slaves** *window*
+            # **place** **slaves** **short** *window*
             switch -- [llength $args] {
                 1   {
-                    set container [lindex $args 0]
+                    # Synopsis:
+                    #
+                    # **place** **content** *window*
+                    # **place** **slaves**  *window*
+                    set window $args
 
-                    # Get the 'container' real address.
-                    set result [::ms::Check_Pathname $container invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
                     # Execute the command.
-                    try {
-                        _grid $action $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        # Check the initial address type provided (short or real).
-                        switch -- $type {
-                            short {
-                                set shorts_result [list ]
-                                foreach addr $result {
-                                    if { $addr in $::ms::addr(reals) } {
-                                        lappend shorts_result $::ms::addr($addr,short)
-                                    } else {
-                                        lappend shorts_result $addr
-                                    }
-                                }
+                    return [_place $action $w]
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **place** **content** **short** *window*
+                    # **place** **slaves**  **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
 
-                                return $shorts_result
-                            }
-                            default { return $result }
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    set addresses [_place $action $w]
+
+                    set result [list ]
+                    foreach w $addresses {
+                        # Check if exists a short address for 'w'.
+                        switch -- [info exists ::ms::addr($w,short)] {
+                            0   { lappend $result $w }
+                            1   { lappend $result $::ms::addr($w,short) }
                         }
                     }
+
+                    return $result
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        # Synopsis:
-        #
-        # **place** **forget** *window* ?*window*? ... ?*window*?
-        # **place** **remove** *window* ?*window*? ... ?*window*?
         forget -
         remove {
+            # Synopsis:
+            #
+            # **place** **forget** *window*
+            # **place** **forget** *window* ?*window*? ... ?*window*?
+            #
+            # **place** **remove** *window*
+            # **place** **remove** *window* ?*window*? ... ?*window*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     foreach window $args {
-                        # Get the 'window' real address.
-                        set result [::ms::Check_Pathname $window invalid]
-                        switch -- $result {
+                        # Check if 'window' is a valid address or not.
+                        set w [::ms::Check_Pathname $window invalid]
+                        switch -- $w {
                             invalid { break }
-                            default { set w [lindex $result 0] }
                         }
 
-                        # Forget the real address.
+                        # Execute the command.
                         _place forget $w
                     }
 
@@ -443,99 +585,54 @@ proc ::ms::place::Command { args } {
             # Synopsis:
             #
             # **place** **info** *window*
+            # **place** **info** **short** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **place** **info** *window*
                     set window $args
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
-                    try {
-                        _place info $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        switch -- $result {
-                            ""      {}
-                            default {
-                                # Check the initial address type provided (short or real).
-                                switch -- $type {
-                                    short {
-                                        # Note: The 'place info' command returns an option/value list that
-                                        #       will always contain the '-in' option value at index '1'.
-
-                                        set w [lindex $result 1]
-                                        if { $w in $::ms::addr(reals) } {
-                                            set result [lreplace $result 1 1 $::ms::addr($w,short)]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        return $result
-                    }
+                    return [_place info $w]
                 }
                 2   {
-                    set window     [lindex $args 0]
-                    set optionName [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # **place** **info** **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
-                    try {
-                        _place info $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        switch -- $result {
-                            ""      { return "" }
-                            default {
-                                switch -- $optionName {
-                                    "-in" {
-                                        # Note: The 'place info' command returns an option/value list that
-                                        #       will always contain the '-in' option value at index '1'.
+                    set args [_place info $w]
 
-                                        set w [lindex $result 1]
+                    # Get the '-in' address.
+                    set in_addr [lindex $args 1]
 
-                                        # Check the initial address type provided (short or real).
-                                        switch -- $type {
-                                            short {
-                                                if { $w in $::ms::addr(reals) } {
-                                                    return $::ms::addr($w,short)
-                                                }
-                                            }
-                                        }
-
-                                        return $w
-                                    }
-                                    default {
-                                        set index [lsearch -exact $result $optionName]
-                                        switch -- $index {
-                                            -1      { ::ms::Error "Invalid option name, '$optionName'." $caller_info }
-                                            default { return [lindex $result $index+1] }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    # Check if exists a short address for 'in_addr'.
+                    switch -- [info exists ::ms::addr($in_addr,short)] {
+                        1   { lreplace $result 1 1 $::ms::addr($in_addr,short) }
                     }
+
+                    return $result
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -543,57 +640,70 @@ proc ::ms::place::Command { args } {
         default {
             # Synopsis:
             #
+            # **place** *window*
             # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
-            set window $action
-
-            # Get the 'window' real address.
-            set result [::ms::Check_Pathname $window invalid]
-            switch -- $result {
-                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                default { set w [lindex $result 0] }
-            }
-
-            # Check the option/values in 'args'.
-            switch -- [expr { [llength $args]%2 }] {
+            switch -- [llength $args] {
                 0   {
-                    # Check if the '-in' option was provided.
-                    set index [lsearch -exact $args "-in"]
-                    switch -- $index {
-                        -1      {}
-                        default {
-                            # '-in'
-                            set container [lindex $args $index+1]
+                    # Synopsis:
+                    #
+                    # **place** *window*
+                    set window $action
 
-                            # Get the 'container' real address.
-                            set result [::ms::Check_Pathname $container invalid]
-                            switch -- $result {
-                                invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    _place $w
+
+                    return ""
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # **place** *window* ?*-option* *value*? ... ?*-option* *value*?
+                    set window $action
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Check the option/values in 'args'.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Check if the '-in' option was provided.
+                            set index [lsearch -exact $args "-in"]
+                            switch -- $index {
+                                -1      {}
                                 default {
-                                    set w    [lindex $result 0]
-                                    set type [lindex $result 1]
+                                    # '-in'
+                                    set container [lindex $args $index+1]
 
-                                    # Check the initial address type provided (short or real).
-                                    switch -- $type {
-                                        short {
-                                            # Substitute 'container' with its relative real address.
-                                            set args [lreplace $args $index+1 $index+1 $w]
-                                        }
+                                    # Check if 'container' is a valid address or not.
+                                    set in_addr [::ms::Check_Pathname $container invalid]
+                                    switch -- $in_addr {
+                                        invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
+                                        default { set args [lreplace $args $index+1 $index+1 $in_addr] }
                                     }
                                 }
                             }
+
+                            # Execute the command.
+                            try {
+                                _place $w {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
                         }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Execute the command.
-            try {
-                _place $w {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok {} {
-                return ""
             }
         }
     }
