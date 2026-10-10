@@ -198,33 +198,46 @@ proc ::ms::clipboard::Command { args } {
         append {
             # Synopsis:
             #
+            # **clipboard** *append* *data*
             # **clipboard** *append* ?**-displayof** *window*? ?**-type** *type*? ?**-format** *format*? ?--? *data*
             switch -- [llength $args] {
                 0   { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
+                1   {
+                    # Synopsis:
+                    #
+                    # **clipboard** *append* *data*
+                    set data $args
 
-            # Check if a '-displayof' option was provided.
-            set index [lsearch -exact $args "-displayof"]
-            switch -- $index {
-                -1      {}
+                    # Execute the command.
+                    _clipboard append $data
+
+                    return ""
+                }
                 default {
-                    # Check if the '-displayof' address provided is a valid address or not.
-                    set addr [lindex $args $index+1]
-                    set w    [::ms::Check_Pathname $addr invalid]
-                    switch -- $w {
-                        invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                        default { set args [lreplace $args $index+1 $index+1 $w] }
+                    # Check if a '-displayof' option was provided.
+                    set index [lsearch -exact $args "-displayof"]
+                    switch -- $index {
+                        -1      {}
+                        default {
+                            # Check if the '-displayof' address provided is a valid address or not.
+                            set addr [lindex $args $index+1]
+                            set w    [::ms::Check_Pathname $addr invalid]
+                            switch -- $w {
+                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _clipboard append {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
                     }
                 }
-            }
-
-            # Execute the command.
-            try {
-                _clipboard append {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok {} {
-                return ""
             }
         }
         clear {
@@ -270,9 +283,9 @@ proc ::ms::clipboard::Command { args } {
             # Synopsis:
             #
             # **clipboard** *get*
-            # **clipboard** *get* ?**-displayof** *window*?
-            # **clipboard** *get* ?**-type** *type*?
-            # **clipboard** *get* ?**-displayof** *window*? ?**-type** *type*?
+            # **clipboard** *get* **-displayof** *window*
+            # **clipboard** *get* **-type** *type*
+            # **clipboard** *get* **-displayof** *window* **-type** *type*
             switch -- [llength $args] {
                 0   {
                     # Synopsis:
@@ -280,43 +293,15 @@ proc ::ms::clipboard::Command { args } {
                     # **clipboard** *get*
                     return [_clipboard get]
                 }
-                2   {
+                2   -
+                4   {
                     # Synopsis:
                     #
                     # **clipboard** *get* **-displayof** *window*
                     # **clipboard** *get* **-type** *type*
-
-                    # Check that a '-displayof' option was provided.
-                    set option [lindex $args 0]
-                    switch -- $option {
-                        -displayof {
-                            # Check if the '-displayof' address provided is a valid address or not.
-                            set addr [lindex $args $index+1]
-                            set w    [::ms::Check_Pathname $addr invalid]
-                            switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                                default { set args [lreplace $args 1 1 $w] }
-                            }
-                        }
-                        -type   {}
-                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
-                    }
-
-                    # Execute the command.
-                    try {
-                        _clipboard get {*}$args
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                4   {
-                    # Synopsis:
-                    #
                     # **clipboard** *get* **-displayof** *window* **-type** *type*
 
-                    # Check that a '-displayof' option was provided.
+                    # Check if a '-displayof' option was provided.
                     set index [lsearch -exact $args "-displayof"]
                     switch -- $index {
                         -1      {}
