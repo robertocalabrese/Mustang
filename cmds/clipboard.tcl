@@ -219,11 +219,12 @@ proc ::ms::clipboard::Command { args } {
                     switch -- $index {
                         -1      {}
                         default {
-                            # Check if the '-displayof' address provided is a valid address or not.
-                            set addr [lindex $args $index+1]
-                            set w    [::ms::Check_Pathname $addr invalid]
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                                 default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
                         }
@@ -261,11 +262,10 @@ proc ::ms::clipboard::Command { args } {
                     set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
-                            # Check if the '-displayof' address provided is a valid address or not.
-                            set addr [lindex $args $index+1]
-                            set w    [::ms::Check_Pathname $addr invalid]
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
                         }
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
@@ -306,11 +306,12 @@ proc ::ms::clipboard::Command { args } {
                     switch -- $index {
                         -1      {}
                         default {
-                            # Check if the '-displayof' address provided is a valid address or not.
-                            set addr [lindex $args $index+1]
-                            set w    [::ms::Check_Pathname $addr invalid]
+                            set window [lindex $args $index+1]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                                 default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
                         }
