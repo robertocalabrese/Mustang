@@ -70,15 +70,15 @@
 # **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **anchor** *window* ?*anchor*?
 # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
-# **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+# **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **content** ?**short**? *window* ?*-option* *value*?
 # **grid** **forget** *window* ?*window*? ... ?*window*?
 # **grid** **info** ?**short**? *window*
-# **grid** **location** *window* x y
+# **grid** **location** *window* *x* *y*
 # **grid** **propagate** *window* ?*boolean*?
 # **grid** **remove** *window* ?*window*? ... ?*window*?
-# **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+# **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
 # **grid** **size** *window*
 # **grid** **slaves** ?**short**? *window* ?*-option* *value*?
 #
@@ -117,7 +117,7 @@
 #      If both *column* and *row* arguments are specified, then the bounding box spanning the rows
 #      and columns indicated is returned.
 #
-#   **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+#   **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
 #      Query or set the column properties of the *index* column of the geometry container, *window*.
 #      The valid options are **-minsize**, **-weight**, **-uniform** and **-pad**.
 #
@@ -264,7 +264,7 @@
 #      If the *short* option is provided the '-in' address returned will be a short address, otherwise it will be a real address.
 #      If provided, the *short* option must be located just after the *info* action.
 #
-#   **grid** **location** *window* x y
+#   **grid** **location** *window* *x* *y*
 #      Given *x* and *y* values in screen units relative to *window*, the column and row number
 #      at that *x* and *y* location is returned.
 #
@@ -292,7 +292,7 @@
 #      **NoManagedChild** to the container; the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
-#   **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+#   **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
 #      Query or set the row properties of the index row of the geometry container, *window*.
 #      The valid options are **-minsize**, **-weight**, **-uniform** and **-pad**.
 #
@@ -458,15 +458,15 @@ proc ::ms::grid::Command { args } {
     # **grid** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
     # **grid** **anchor** *window* ?*anchor*?
     # **grid** **bbox** *window* ?*column* *row*? ?*column2* *row2*?
-    # **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **columnconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
     # **grid** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
     # **grid** **content** ?**short**? *window* ?*-option* *value*?
     # **grid** **forget** *window* ?*window*? ... ?*window*?
     # **grid** **info** ?**short**? *window*
-    # **grid** **location** *window* x y
+    # **grid** **location** *window* *x* *y*
     # **grid** **propagate** *window* ?*boolean*?
     # **grid** **remove** *window* ?*window*? ... ?*window*?
-    # **grid** **rowconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+    # **grid** **rowconfigure** *window* *index* ?*-option* *value*? ... ?*-option* *value*?
     # **grid** **size** *window*
     # **grid** **slaves** ?**short**? *window* ?*-option* *value*?
 
@@ -479,10 +479,10 @@ proc ::ms::grid::Command { args } {
             # Synopsis:
             #
             # **grid** **anchor**    *window*
-            # **grid** **anchor**    *window* ?*anchor*?
+            # **grid** **anchor**    *window* *anchor*
             #
             # **grid** **propagate** *window*
-            # **grid** **propagate** *window* ?*boolean*?
+            # **grid** **propagate** *window* *boolean*
             switch -- [llength $args] {
                 1   {
                     # Synopsis:
@@ -509,8 +509,8 @@ proc ::ms::grid::Command { args } {
                 2   {
                     # Synopsis:
                     #
-                    # **grid** **anchor**    *window* ?*anchor*?
-                    # **grid** **propagate** *window* ?*boolean*?
+                    # **grid** **anchor**    *window* *anchor*
+                    # **grid** **propagate** *window* *boolean*
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
@@ -592,10 +592,10 @@ proc ::ms::grid::Command { args } {
             # Synopsis:
             #
             # **grid** **columnconfigure** *window* *index*
-            # **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+            # **grid** **columnconfigure** *window* *index* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
             #
             # **grid** **rowconfigure**    *window* *index*
-            # **grid** **rowconfigure**    *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+            # **grid** **rowconfigure**    *window* *index* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0   -
                 1   { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -630,8 +630,8 @@ proc ::ms::grid::Command { args } {
                 default {
                     # Synopsis:
                     #
-                    # **grid** **columnconfigure** *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
-                    # **grid** **rowconfigure**    *window* *index* ?*-option*? ?*value*? ?*-option* *value*? ... ?*-option* *value*?
+                    # **grid** **columnconfigure** *window* *index* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+                    # **grid** **rowconfigure**    *window* *index* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
                     set window  [lindex  $args 0]
                     set indexes [lindex  $args 1]
                     set args    [lremove $args 0 1]
@@ -790,14 +790,14 @@ proc ::ms::grid::Command { args } {
             # Synopsis:
             #
             # **grid** **content** *window*
-            # **grid** **content** *window* ?*-option* *value*?
-            # **grid** **content** ?**short**? *window*
-            # **grid** **content** ?**short**? *window* ?*-option* *value*?
+            # **grid** **content** *window* *-option* *value*
+            # **grid** **content** **short** *window*
+            # **grid** **content** **short** *window* *-option* *value*
             #
             # **grid** **slaves**  *window*
-            # **grid** **slaves**  *window* ?*-option* *value*?
-            # **grid** **slaves**  ?**short**? *window*
-            # **grid** **slaves**  ?**short**? *window* ?*-option* *value*?
+            # **grid** **slaves**  *window* *-option* *value*
+            # **grid** **slaves**  **short** *window*
+            # **grid** **slaves**  **short** *window* *-option* *value*
             switch -- [llength $args] {
                 1   {
                     # Synopsis:
@@ -824,8 +824,8 @@ proc ::ms::grid::Command { args } {
                 2   {
                     # Synopsis:
                     #
-                    # **grid** **content** ?**short**? *window*
-                    # **grid** **slaves**  ?**short**? *window*
+                    # **grid** **content** **short** *window*
+                    # **grid** **slaves**  **short** *window*
                     set option [lindex $args 0]
                     set window [lindex $args 1]
 
@@ -862,8 +862,8 @@ proc ::ms::grid::Command { args } {
                 3   {
                     # Synopsis:
                     #
-                    # **grid** **content** *window* ?*-option* *value*?
-                    # **grid** **slaves**  *window* ?*-option* *value*?
+                    # **grid** **content** *window* *-option* *value*
+                    # **grid** **slaves**  *window* *-option* *value*
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
@@ -885,8 +885,8 @@ proc ::ms::grid::Command { args } {
                 4   {
                     # Synopsis:
                     #
-                    # **grid** **content** ?**short**? *window* ?*-option* *value*?
-                    # **grid** **slaves**  ?**short**? *window* ?*-option* *value*?
+                    # **grid** **content** **short** *window* *-option* *value*
+                    # **grid** **slaves**  **short** *window* *-option* *value*
                     set option [lindex $args 0]
                     set window [lindex $args 1]
                     set args   [lremove $args 0 1]
@@ -928,7 +928,10 @@ proc ::ms::grid::Command { args } {
         remove {
             # Synopsis:
             #
+            # **grid** **forget** *window*
             # **grid** **forget** *window* ?*window*? ... ?*window*?
+#
+            # **grid** **remove** *window*
             # **grid** **remove** *window* ?*window*? ... ?*window*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -954,9 +957,13 @@ proc ::ms::grid::Command { args } {
         info {
             # Synopsis:
             #
-            # **grid** **info** ?**short**? *window*
+            # **grid** **info** *window*
+            # **grid** **info** **short** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsis:
+                    #
+                    # **grid** **info** *window*
                     set window $args
 
                     # Get the 'window' real address and type.
@@ -975,6 +982,9 @@ proc ::ms::grid::Command { args } {
                     }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # **grid** **info** **short** *window*
                     set option [lindex $args 0]
                     set window [lindex $args 1]
 
@@ -1020,7 +1030,7 @@ proc ::ms::grid::Command { args } {
         location {
             # Synopsis:
             #
-            # **grid** **location** *window* x y
+            # **grid** **location** *window* *x* *y*
             switch -- [llength $args] {
                 3   {
                     set window [lindex  $args 0]
