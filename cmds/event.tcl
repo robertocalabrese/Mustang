@@ -539,28 +539,9 @@ proc ::ms::event::Command { args } {
             # **event** **add** *virtual* *sequence*
             # **event** **add** *virtual* *sequence* ?*sequence*? ... ?*sequence*?
             switch -- [llength $args] {
-                0   -
-                1   { ::ms::Error "Invalid number of arguments." $caller_info }
-                2   {
-                    # Synopsis:
-                    #
-                    # **event** **add** *virtual* *sequence*
-                    set virtual  [lindex $args 0]
-                    set sequence [lindex $args 1]
-
-                    # Execute the command.
-                    try {
-                        _event add $virtual $sequence
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return ""
-                    }
-                }
+                0       -
+                1       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
-                    # Synopsis:
-                    #
-                    # **event** **add** *virtual* *sequence* ?*sequence*? ... ?*sequence*?
                     set virtual  [lindex  $args 0]
                     set sequence [lindex  $args 1]
                     set args     [lremove $args 0 1]
@@ -582,26 +563,8 @@ proc ::ms::event::Command { args } {
             # **event** **delete** *virtual*
             # **event** **delete** *virtual* ?*sequence*? ... ?*sequence*?
             switch -- [llength $args] {
-                0   { ::ms::Error "Invalid number of arguments." $caller_info }
-                1   {
-                    # Synopsis:
-                    #
-                    # **event** **delete** *virtual*
-                    set virtual $args
-
-                    # Execute the command.
-                    try {
-                        _event delete $virtual
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return ""
-                    }
-                }
+                0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
-                    # Synopsis:
-                    #
-                    # **event** **delete** *virtual* ?*sequence*? ... ?*sequence*?
                     set virtual [lindex  $args 0]
                     set args    [lremove $args 0]
 
@@ -668,7 +631,7 @@ proc ::ms::event::Command { args } {
                     set window [lindex $args 0]
                     set event  [lindex $args 1]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -691,7 +654,7 @@ proc ::ms::event::Command { args } {
                     set event  [lindex  $args 1]
                     set args   [lremove $args 0 1]
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -703,12 +666,13 @@ proc ::ms::event::Command { args } {
                         switch -- $index {
                             -1      {}
                             default {
-                                # Get the 'addr' real address.
-                                set addr      [lindex $args $index+1]
-                                set real_addr [::ms::Check_Pathname $addr invalid]
-                                switch -- $real_addr {
-                                    invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
-                                    default { set args [lreplace $args $index+1 $index+1 $real_addr] }
+                                set window [lindex $args $index+1]
+
+                                # Check if 'window' is a valid address or not.
+                                set addr [::ms::Check_Pathname $window invalid]
+                                switch -- $addr {
+                                    invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                    default { set args [lreplace $args $index+1 $index+1 $addr] }
                                 }
                             }
                         }
