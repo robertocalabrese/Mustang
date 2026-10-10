@@ -112,9 +112,9 @@ proc ::ms::destroy::Command { args } {
     }
 
     # Destroy each address provided, interrupt the cycle if an error occurs.
-    foreach addr $args {
-        # Check if 'addr' is a valid address or not.
-        set w [::ms::Check_Pathname $addr invalid]
+    foreach window $args {
+        # Check if 'window' is a valid address or not.
+        set w [::ms::Check_Pathname $window invalid]
         switch -- $result {
             invalid { break }
         }
