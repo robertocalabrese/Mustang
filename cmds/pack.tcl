@@ -68,18 +68,15 @@
 #### SYNOPSYS:
 #
 # **pack** *window* ?*-option* *value*? ... ?*-option* *value*?
-# **pack** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-# **pack** **content** *window*
+# **pack** **configure** *window* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+# **pack** **content** ?**short**? *window*
 # **pack** **forget** *window* ?*window*? ... ?*window*?
-# **pack** **info** *window*
+# **pack** **info** ?**short**? *window*
 # **pack** **propagate** *window* ?*boolean*?
 # **pack** **remove** *window* ?*window*? ... ?*window*?
-# **pack** **slaves** *window*
+# **pack** **slaves** ?**short**? *window*
 #
 # Note: Each *window* pathname involved may be provided either as a short or as a real address.
-#       *Action*s that gives as a result a window pathname (or more than one), will always return the address as:
-#          - A short address, if the *window* provided as input is a short address.
-#          - A real address, if the *window* provided as input is a real address.
 #
 #### DESCRIPTION:
 #
@@ -96,14 +93,14 @@
 #      If the first argument to **pack** is a window name (any value starting with '.'), then the command
 #      is processed in the same way as **pack configure**.
 #
-#   **pack** **configure** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
+#   **pack** **configure** *window* ?*window*? ... ?*window*? *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
 #      The arguments consist of a window pathname followed by pairs of arguments that specify how to manage
 #      the content. See **THE PACKER ALGORITHM** below for details on how the options are used by the packer.
 #      The following options are supported:
 #
-#         **-after** *other*
-#            *Other* must be the pathname of another window.
-#            Use its container as the container for the content, and insert the content just after *other*
+#         **-after** *window*
+#            *window* must be the pathname of another window (either as real or short address).
+#            Use its container as the container for the content, and insert the content just after *window*
 #            in the packing order.
 #
 #         **-anchor** *anchor*
@@ -111,15 +108,15 @@
 #            each content in its parcel.
 #            Defaults to **center**.
 #
-#         **-before** *other*
-#            *Other* must be the pathname of another window.
-#            Use its container as the container for the content, and insert the content just before *other*
+#         **-before** *window*
+#            *window* must be the pathname of another window (either as real or short address).
+#            Use its container as the container for the content, and insert the content just before *window*
 #            in the packing order.
 #
 #         **-expand** *boolean*
 #            Specifies whether the content should be expanded to consume extra space in their container.
 #            *Boolean* may have any proper boolean value, such as **1** or **no**.
-#            Defaults to '0'.
+#            Defaults to **0**.
 #
 #         **-fill** *style*
 #            If a content's parcel is larger than its requested dimensions, this option may be used to
@@ -141,26 +138,28 @@
 #                  Stretch the content both horizontally and vertically.
 #
 #         **-in** *container*
-#            Insert the window at the end of the packing order for the container window given by *container*.
+#            *Container* must be the pathname of a container window (either as real or short address).
+#            Insert the window at the end of the packing order for *container*.
+#            The default is the first window's parent window.
 #
 #         **-ipadx** *amount*
 #            *Amount* specifies how much horizontal internal padding to leave on each side of the content.
-#            Amount must be a valid screen distance, such as 2 or .5c.
-#            It defaults to '0'.
+#            Amount must be a valid screen distance, such as **2** or **.5c**.
+#            It defaults to **0**.
 #
 #         **-ipady** *amount*
 #            *Amount* specifies how much vertical internal padding to leave on each side of the content.
-#            It defaults to '0'.
+#            It defaults to **0**.
 #
 #         **-padx** *amount*
 #            *Amount* specifies how much horizontal external padding to leave on each side of the content.
 #            *Amount* may be a list of two values to specify padding for **left** and **right** separately.
-#            *Amount* defaults to '0'.
+#            *Amount* defaults to **0**.
 #
 #         **-pady** *amount*
 #            *Amount* specifies how much vertical external padding to leave on each side of the content.
 #            *Amount* may be a list of two values to specify padding for **top** and **bottom** separately.
-#            *Amount* defaults to '0'.
+#            *Amount* defaults to **0**.
 #
 #         **-side** *side*
 #            Specifies which side of the container the content will be packed against.
@@ -176,11 +175,14 @@
 #      If any of the content are already managed by the geometry manager then any unspecified options for them
 #      retain their previous values rather than receiving default values.
 #
-#   **pack** **content** *window*
+#   **pack** **content** ?**short**? *window*
 #      Returns a list of all of the content windows in the packing order for *window*.
 #      The order of the content windows in the list is the same as their order in the packing order.
 #
 #      If *window* has no content then an empty string is returned.
+#
+#      If the *short* option is provided the addresses returned will be short address, otherwise they will be real address.
+#      If provided, the *short* option must be located just after the *content* action.
 #
 #   **pack** **forget** *window* ?*window*? ... ?*window*?
 #   **pack** **remove** *window* ?*window*? ... ?*window*?
@@ -191,11 +193,13 @@
 #      **NoManagedChild** to the container; the container may choose to resize itself (or otherwise respond)
 #      to such a change.
 #
-#   **pack** **info** *window* ?*option*?
-#      If *option* is not provided, returns a list whose elements are the current configuration state of the
-#      content given by *window* in the same option-value form that might be specified to **pack configure**.
-#      The first two elements of the list are "**-in** *window*" where *window* is the window's
-#      container window. If *option* is provided, returns the current value for *option*.
+#   **pack** **info** ?**short**? *window*
+#      Returns a list whose elements are the current configuration state of the content given by *window* in the same
+#      option-value form that might be specified to **pack configure**.
+#      The first two elements of the list are always "**-in** *container*" where *container* is the window's container window.
+#
+#      If the *short* option is provided the '-in' address returned will be a short address, otherwise it will be a real address.
+#      If provided, the *short* option must be located just after the *info* action.
 #
 #   **pack** **propagate** *window* ?*boolean*?
 #      If *boolean* has a true boolean value such as **1** or **on** then propagation is enabled for *window*,
@@ -208,7 +212,7 @@
 #
 #      Propagation is enabled by default.
 #
-#   **pack** **slaves** *window*
+#   **pack** **slaves** ?**short**? *window*
 #      Synonym for **pack content**.
 #
 #### THE PACKER ALGORITHM:
@@ -346,13 +350,13 @@ proc ::ms::pack::Command { args } {
     # Synopsys:
     #
     # **pack** *window* ?*-option* *value*? ... ?*-option* *value*?
-    # **pack** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
-    # **pack** **content** *window*
+    # **pack** **configure** *window* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
+    # **pack** **content** ?**short**? *window*
     # **pack** **forget** *window* ?*window*? ... ?*window*?
-    # **pack** **info** *window*
+    # **pack** **info** ?**short**? *window*
     # **pack** **propagate** *window* ?*boolean*?
     # **pack** **remove** *window* ?*window*? ... ?*window*?
-    # **pack** **slaves** *window*
+    # **pack** **slaves** ?**short**? *window*
 
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
@@ -361,7 +365,7 @@ proc ::ms::pack::Command { args } {
         configure {
             # Synopsys:
             #
-            # **pack** **configure** *window* ?*-option* *value*? ... ?*-option* *value*?
+            # **pack** **configure** *window* *-option* *value* ?*-option* *value*? ... ?*-option* *value*?
             switch -- [llength $args] {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 1       { return "" }
@@ -369,11 +373,11 @@ proc ::ms::pack::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set addresses [lindex $result 0] }
+                        default { set addresses [list $w] }
                     }
 
                     # Check if there are other addresses.
@@ -383,12 +387,12 @@ proc ::ms::pack::Command { args } {
                             "." {
                                 set window $arg
 
-                                # Get the 'window' real address.
-                                set result [::ms::Check_Pathname $window invalid]
-                                switch -- $result {
+                                # Check if 'window' is a valid address or not.
+                                set w [::ms::Check_Pathname $window invalid]
+                                switch -- $w {
                                     invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                                     default {
-                                        lappend addresses  [lindex  $result 0]
+                                        lappend addresses  $w
                                         set remaining_args [lremove $remaining_args 0]
                                     }
                                 }
@@ -409,27 +413,11 @@ proc ::ms::pack::Command { args } {
                                     default {
                                         set window [lindex $args $index+1]
 
-                                        switch -- $window {
-                                            ""      { ::ms::Error "Missing address for '$optionName'." $caller_info }
-                                            default {
-                                                # Get the real address associated with 'window'.
-                                                set result [::ms::Check_Pathname $window invalid]
-                                                switch -- $result {
-                                                    invalid { ::ms::Error "Invalid address for '$optionName', '$window'." $caller_info }
-                                                    default {
-                                                        set w    [lindex $result 0]
-                                                        set type [lindex $result 1]
-
-                                                        # Check the initial address type provided (short or real).
-                                                        switch -- $type {
-                                                            short {
-                                                                # Substitute 'window' with its relative real address.
-                                                                set args [lreplace $args $index+1 $index+1 $w]
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                        # Check if 'window' is a valid address or not.
+                                        set w [::ms::Check_Pathname $window invalid]
+                                        switch -- $w {
+                                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                                            default { set args [lreplace $args $index+1 $index+1 $w] }
                                         }
                                     }
                                 }
@@ -440,33 +428,31 @@ proc ::ms::pack::Command { args } {
                                 _pack configure {*}$addresses {*}$args
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
-                            } on ok { result } {
-                                # Note: The 'pack info' command returns an option/value list that
-                                #       will always contain the '-in' option at index '0'.
-
-                                foreach w $addresses {
-                                    # Check if 'w' is a scrollable widget.
-                                    if { $w in $::ms::addr(megawidgets,scrollable) } {
-                                        # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
-                                        # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
-                                        # the moment they are positioned on screen.
-                                        # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
-                                        # they normally don't contain any widgets.
-                                        switch -- $::ms::data($w,classtype) {
-                                            canvas    -
-                                            listbox   -
-                                            scrollbar -
-                                            text      -
-                                            treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
-                                        }
-                                    }
-
-                                    # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
-                                    ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_pack info $w] 1]
-                                }
-
-                                return ""
                             }
+
+                            # Check each address that has been configured.
+                            foreach w $addresses {
+                                # Check if 'w' is a scrollable widget.
+                                if { $w in $::ms::addr(megawidgets,scrollable) } {
+                                    # If its classtype is a canvas, listbox, scrollbar, text or treeview widgets, update its scrollbar if needed.
+                                    # The listbox, scrollbar and treeview widgets are not containers, their scrollbars update needs to be launched
+                                    # the moment they are positioned on screen.
+                                    # For safeguarding we will do the same for canvas and text widgets because even if they are containers,
+                                    # they normally don't contain any widgets.
+                                    switch -- $::ms::data($w,classtype) {
+                                        canvas    -
+                                        listbox   -
+                                        scrollbar -
+                                        text      -
+                                        treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
+                                    }
+                                }
+                            }
+
+                            # Force the propagation inside the pack container.
+                            ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
+
+                            return ""
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
@@ -478,19 +464,22 @@ proc ::ms::pack::Command { args } {
             # Synopsys:
             #
             # **pack** **content** *window*
-            # **pack** **slaves** *window*
+            # **pack** **content** **short** *window*
+            #
+            # **pack** **slaves**  *window*
+            # **pack** **slaves**  **short** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsys:
+                    #
+                    # **pack** **content** *window*
+                    # **pack** **slaves**  *window*
                     set window $args
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
@@ -499,22 +488,45 @@ proc ::ms::pack::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        # Check the initial address type provided (short or real).
-                        switch -- $type {
-                            short {
-                                set shorts_result [list ]
-                                foreach addr $result {
-                                    if { $addr in $::ms::addr(reals) } {
-                                        lappend shorts_result $::ms::addr($addr,short)
-                                    } else {
-                                        lappend shorts_result $addr
-                                    }
-                                }
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsys:
+                    #
+                    # **pack** **content** **short** *window*
+                    # **pack** **slaves**  **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
 
-                                return $shorts_result
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _pack $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { addresses } {
+                        set result [list ]
+                        foreach w $addresses {
+                            # Check if exists a short address for 'w'.
+                            switch -- [info exists ::ms::addr($w,short)] {
+                                0   { lappend result $w }
+                                1   { lappend result $::ms::addr($w,short) }
                             }
-                            default { return $result }
                         }
+
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -530,11 +542,10 @@ proc ::ms::pack::Command { args } {
                 0       { ::ms::Error "Invalid number of arguments." $caller_info }
                 default {
                     foreach window $args {
-                        # Get the 'window' real address.
-                        set result [::ms::Check_Pathname $window invalid]
-                        switch -- $result {
+                        # Check if 'window' is a valid address or not.
+                        set w [::ms::Check_Pathname $window invalid]
+                        switch -- $w {
                             invalid { break }
-                            default { set w [lindex $result 0] }
                         }
 
                         # Note: The 'pack info' command returns an option/value list that
@@ -546,7 +557,7 @@ proc ::ms::pack::Command { args } {
                         _pack forget $w
 
                         # Force the propagation inside any scrollable widget ancestor, if any.
-                        ::ms::Scrollable_Widgets_Propagation_Mechanism $window
+                        ::ms::Scrollable_Widgets_Propagation_Mechanism $w
                     }
 
                     return ""
@@ -557,60 +568,40 @@ proc ::ms::pack::Command { args } {
             # Synopsys:
             #
             # **pack** **info** *window*
+            # **pack** **info** **short** *window*
             switch -- [llength $args] {
                 1   {
+                    # Synopsys:
+                    #
+                    # **pack** **info** *window*
                     set window [lindex $args 0]
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
-                    try {
-                        _pack info $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        switch -- $result {
-                            ""      {}
-                            default {
-                                # Check the initial address type provided (short or real).
-                                switch -- $type {
-                                    short {
-                                        # Note: The 'pack info' command returns an option/value list that
-                                        #       will always contain the '-in' option value at index '1'.
-
-                                        set container [lindex $result 1]
-                                        if { $container in $::ms::addr(reals) } {
-                                            set result [lreplace $result 1 1 $::ms::addr($container,short)]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        return $result
-                    }
+                    return [_pack info $w]
                 }
                 2   {
-                    # Get the 'pathname' and 'optionName' provided.
-                    set window     [lindex $args 0]
-                    set optionName [lindex $args 1]
+                    # Synopsys:
+                    #
+                    # **pack** **info** **short** *window*
+                    set option [lindex $args 0]
+                    set window [lindex $args 1]
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check the 'short' option.
+                    switch -- $option {
+                        short   {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Get the 'window' real address and type.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default {
-                            set w    [lindex $result 0]
-                            set type [lindex $result 1]
-                        }
                     }
 
                     # Execute the command.
@@ -622,32 +613,15 @@ proc ::ms::pack::Command { args } {
                         switch -- $result {
                             ""      { return "" }
                             default {
-                                switch -- $optionName {
-                                    "-in" {
-                                        # Note: The 'pack info' command returns an option/value list that
-                                        #       will always contain the '-in' option value at index '1'.
+                                # Get the '-in' address.
+                                set in_addr [lindex $result 1]
 
-                                        set container [lindex $result 1]
-
-                                        # Check the initial address type provided (short or real).
-                                        switch -- $type {
-                                            short {
-                                                if { $container in $::ms::addr(reals) } {
-                                                    return $::ms::addr($container,short)
-                                                }
-                                            }
-                                        }
-
-                                        return $container
-                                    }
-                                    default {
-                                        set index [lsearch -exact $result $optionName]
-                                        switch -- $index {
-                                            -1      { ::ms::Error "Invalid option name, '$optionName'." $caller_info }
-                                            default { return [lindex $result $index+1] }
-                                        }
-                                    }
+                                # Check if exists a short address for 'in_addr'.
+                                switch -- [info exists ::ms::addr($in_addr,short)] {
+                                    1   { set result [lreplace $result 1 1 $::ms::addr($in_addr,short)] }
                                 }
+
+                                return $result
                             }
                         }
                     }
@@ -658,28 +632,44 @@ proc ::ms::pack::Command { args } {
         propagate {
             # Synopsys:
             #
-            # **pack** **propagate** *window* ?*boolean*?
+            # **pack** **propagate** *window*
+            # **pack** **propagate** *window* *boolean*
             switch -- [llength $args] {
-                1   -
-                2   {
-                    set window [lindex  $args 0]
-                    set args   [lremove $args 0]
+                1   {
+                    # Synopsys:
+                    #
+                    # **pack** **propagate** *window*
+                    set window $args
 
-                    # Get the 'window' real address.
-                    set result [::ms::Check_Pathname $window invalid]
-                    switch -- $result {
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                        default { set w [lindex $result 0] }
+                    }
+
+                    return [_pack propagate $w]
+                }
+                2   {
+                    # Synopsys:
+                    #
+                    # **pack** **propagate** *window* *boolean*
+                    set window  [lindex $args 0]
+                    set boolean [lindex $args 1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
                     # Execute the command.
                     try {
-                        _pack propagate $w {*}$args
+                        _pack propagate $w $boolean
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
                     }
+
+                    return ""
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -687,10 +677,10 @@ proc ::ms::pack::Command { args } {
         default {
             # Synopsys:
             #
-            # **pack** *window* ?*-option* *value*? ... ?*-option* *value*?
+            # **pack** *window* ?*window*? ... ?*window*? ?*-option* *value*? ... ?*-option* *value*?
             set window $action
 
-            # Get the 'window' real address.
+            # Check if 'window' is a valid address or not.
             set result [::ms::Check_Pathname $window invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -704,12 +694,12 @@ proc ::ms::pack::Command { args } {
                     "." {
                         set window $arg
 
-                        # Get the 'window' real address.
-                        set result [::ms::Check_Pathname $window invalid]
-                        switch -- $result {
+                        # Check if 'window' is a valid address or not.
+                        set w [::ms::Check_Pathname $window invalid]
+                        switch -- $w {
                             invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             default {
-                                lappend addresses  [lindex  $result 0]
+                                lappend addresses  $w
                                 set remaining_args [lremove $remaining_args 0]
                             }
                         }
@@ -728,28 +718,13 @@ proc ::ms::pack::Command { args } {
                         switch -- $index {
                             -1      {}
                             default {
-                                # Get the 'optionName' window provided.
                                 set window [lindex $args $index+1]
-                                switch -- $window {
-                                   ""  { ::ms::Error "Missing address for '$optionName'." $caller_info }
-                                }
 
-                                # Get the 'window' real address.
-                                set result [::ms::Check_Pathname $window invalid]
-                                switch -- $result {
+                                # Check if 'window' is a valid address or not.
+                                set w [::ms::Check_Pathname $window invalid]
+                                switch -- $w {
                                     invalid { ::ms::Error "Invalid address for '$optionName', '$window'." $caller_info }
-                                    default {
-                                        set w    [lindex $result 0]
-                                        set type [lindex $result 1]
-
-                                        # Check the initial address type provided (short or real).
-                                        switch -- $type {
-                                            short {
-                                                # Substitute 'window' with its relative real address.
-                                                set args [lreplace $args $index+1 $index+1 $w]
-                                            }
-                                        }
-                                    }
+                                    default { set args [lreplace $args $index+1 $index+1 $w] }
                                 }
                             }
                         }
@@ -783,10 +758,10 @@ proc ::ms::pack::Command { args } {
                             treeview  { [string cat "::ms::" $::ms::data($w,classtype) "::Scrollbar_Update"] $w }
                         }
                     }
-
-                    # Force the propagation inside any scrollable widget ancestor for each address provided, if any.
-                    ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex [_pack info $w] 1]
                 }
+
+                # Force the propagation inside the pack container.
+                ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
             }
 
             return ""
