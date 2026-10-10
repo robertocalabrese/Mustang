@@ -165,40 +165,35 @@ proc ::ms::bindtags::Command { args } {
             # Synopsis:
             #
             # **bindtags** *window*
-            # **bindtags** ?**short**? *window*
-            switch -- [llength $args] {
-                1   {
+            set window $args
+
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
+            # Check if 'w' is a megawidget address.
+            if { $w in $::ms::addr(megawidgets) } {
+                return [_bindtags $::ms::addr($w,widget)]
+            } else {
+                return [_bindtags $w]
+            }
+        }
+        2   {
+            # Synopsis:
+            #
+            # **bindtags** **short** *window*
+            # **bindtags** *window* *taglist*
+            set option [lindex $args 0]
+            set window [lindex $args 1]
+
+            # Check the 'short' option.
+            switch -- $option {
+                short {
                     # Synopsis:
                     #
-                    # **bindtags** *window*
-                    set window $args
-
-                    # Check if 'window' is a valid address or not.
-                    set w [::ms::Check_Pathname $window invalid]
-                    switch -- $w {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                    }
-
-                    # Check if 'w' is a megawidget address.
-                    if { $w in $::ms::addr(megawidgets) } {
-                        return [_bindtags $::ms::addr($w,widget)]
-                    } else {
-                        return [_bindtags $w]
-                    }
-                }
-                2   {
-                    # Synopsis:
-                    #
-                    # **bindtags** ?**short**? *window*
-                    set option [lindex $args 0]
-                    set window [lindex $args 1]
-
-                    # Check the 'short' option.
-                    switch -- $option {
-                        short   {}
-                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
-                    }
-
+                    # **bindtags** **short** *window*
                     # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
@@ -223,40 +218,39 @@ proc ::ms::bindtags::Command { args } {
 
                     return $result
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-        }
-        2   {
-            # Synopsis:
-            #
-            # **bindtags** *window* *taglist*
-            set window  [lindex $args 0]
-            set taglist [lindex $args 1]
+                default {
+                    # Synopsis:
+                    #
+                    # **bindtags** *window* *taglist*
+                    set window  [lindex $args 0]
+                    set taglist [lindex $args 1]
 
-            # Check if 'window' is a valid windowess or not.
-            set w [::ms::Check_Pathname $window invalid]
-            switch -- $w {
-                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-            }
+                    # Check if 'window' is a valid windowess or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
 
-            # Check if 'w' is a megawidget address.
-            if { $w in $::ms::addr(megawidgets) } {
-                set w $::ms::addr($w,widget)
-            }
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        set w $::ms::addr($w,widget)
+                    }
 
-            # Convert any short address present in 'taglist'.
-            set new_taglist [list ]
-            foreach tag $taglist {
-                # Check if 'tag' is a valid address or just a tag.
-                set addr [::ms::Check_Pathname $tag invalid]
-                switch -- $result {
-                    invalid { lappend new_taglist $tag }
-                    default { lappend new_taglist $addr }
+                    # Convert any short address present in 'taglist'.
+                    set new_taglist [list ]
+                    foreach tag $taglist {
+                        # Check if 'tag' is a valid address or just a tag.
+                        set addr [::ms::Check_Pathname $tag invalid]
+                        switch -- $result {
+                            invalid { lappend new_taglist $tag }
+                            default { lappend new_taglist $addr }
+                        }
+                    }
+
+                    # Execute the command.
+                    return [_bindtags $w $new_taglist]
                 }
             }
-
-            # Execute the command.
-            return [_bindtags $w $new_taglist]
         }
         default { ::ms::Error "Invalid number of arguments." $caller_info }
     }
