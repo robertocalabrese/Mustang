@@ -115,7 +115,7 @@ proc ::ms::destroy::Command { args } {
     foreach window $args {
         # Check if 'window' is a valid address or not.
         set w [::ms::Check_Pathname $window invalid]
-        switch -- $result {
+        switch -- $w {
             invalid { break }
         }
 
