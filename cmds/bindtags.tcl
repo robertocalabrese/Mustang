@@ -186,7 +186,6 @@ proc ::ms::bindtags::Command { args } {
             # **bindtags** **short** *window*
             # **bindtags** *window* *taglist*
             set option [lindex $args 0]
-            set window [lindex $args 1]
 
             # Check the 'short' option.
             switch -- $option {
@@ -194,6 +193,8 @@ proc ::ms::bindtags::Command { args } {
                     # Synopsis:
                     #
                     # **bindtags** **short** *window*
+                    set window [lindex $args 1]
+
                     # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
@@ -222,7 +223,7 @@ proc ::ms::bindtags::Command { args } {
                     # Synopsis:
                     #
                     # **bindtags** *window* *taglist*
-                    set window  [lindex $args 0]
+                    set window  $option
                     set taglist [lindex $args 1]
 
                     # Check if 'window' is a valid windowess or not.
