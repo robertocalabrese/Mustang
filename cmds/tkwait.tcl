@@ -144,21 +144,13 @@ proc ::ms::tkwait::Command { args } {
             # **tkwait** **variable** *varName*
             switch -- [llength $args] {
                 1   {
-                    set varName $args
-
-                    # Check if 'varName' exists.
-                    switch -- [info exists $::varName] {
-                        0   { ::ms::Error "Invalid varname, '$varName'." $caller_info }
-                        1   {
-                            # Execute the command.
-                            try {
-                                _tkwait variable $args
-                            } on error { errortext errorcode } {
-                                ::ms::Error "$errortext" $caller_info
-                            } on ok {} {
-                                return ""
-                            }
-                        }
+                    # Execute the command.
+                    try {
+                        _tkwait variable $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
