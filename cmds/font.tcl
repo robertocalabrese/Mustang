@@ -460,11 +460,12 @@ proc ::ms::font::Command { args } {
             switch -- $index {
                 -1      {}
                 default {
-                    # Check if the '-displayof' address provided is a valid address or not.
-                    set addr [lindex $args $index+1]
-                    set w    [::ms::Check_Pathname $addr invalid]
+                    set window [lindex $args $index+1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
-                        invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                         default { set args [lreplace $args $index+1 $index+1 $w] }
                     }
                 }
@@ -539,13 +540,7 @@ proc ::ms::font::Command { args } {
                     # **font** **families**
 
                     # Execute the command.
-                    try {
-                        _font families
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { results } {
-                        return $results
-                    }
+                    return [_font families]
                 }
                 2   {
                     # Synopsis:
@@ -556,9 +551,10 @@ proc ::ms::font::Command { args } {
                     # Check that a '-displayof' option was provided.
                     switch -- $option {
                         -displayof {
-                            # Check if the '-displayof' address provided is a valid address or not.
                             set window [lindex $args 1]
-                            set w      [::ms::Check_Pathname $window invalid]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
@@ -567,13 +563,7 @@ proc ::ms::font::Command { args } {
                     }
 
                     # Execute the command.
-                    try {
-                        _font families -displayof $w
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { results } {
-                        return $results
-                    }
+                    return [_font families -displayof $w]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
