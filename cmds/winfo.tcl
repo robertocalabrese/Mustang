@@ -542,7 +542,6 @@ proc ::ms::winfo::Command { args } {
                     switch -- $index {
                         -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
                         default {
-                            # Check if the '-displayof' address provided is a short or real address.
                             set window [lindex $args $index+1]
 
                             # Check if 'window' is a valid address or not.
@@ -801,7 +800,6 @@ proc ::ms::winfo::Command { args } {
                     switch -- $index {
                         -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
                         default {
-                            # Check if the '-displayof' address provided is a short or real address.
                             set window [lindex $args $index+1]
 
                             # Check if 'window' is a valid address or not.
@@ -840,7 +838,6 @@ proc ::ms::winfo::Command { args } {
                     switch -- $index {
                         -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
                         default {
-                            # Check if the '-displayof' address provided is a short or real address.
                             set window [lindex $args $index+1]
 
                             # Check if 'window' is a valid address or not.
@@ -876,7 +873,7 @@ proc ::ms::winfo::Command { args } {
                 1   {
                     set window $args
 
-                    # Get the 'window' real address.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { return 0 }
@@ -899,7 +896,7 @@ proc ::ms::winfo::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the real address associated with 'window'.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -946,9 +943,10 @@ proc ::ms::winfo::Command { args } {
                     # Check that a '-displayof' option was provided.
                     switch -- $option {
                         -displayof {
-                            # Check if the '-displayof' address provided is a valid address or not.
                             set window [lindex $args 1]
-                            set w      [::ms::Check_Pathname $window invalid]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
@@ -980,7 +978,7 @@ proc ::ms::winfo::Command { args } {
                     # **winfo** **parent** *window*
                     set window $args
 
-                    # Get the real address associated with 'window'.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1013,7 +1011,7 @@ proc ::ms::winfo::Command { args } {
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Get the real address associated with 'window'.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1099,7 +1097,6 @@ proc ::ms::winfo::Command { args } {
                     switch -- $index {
                         -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
                         default {
-                            # Check if the '-displayof' address provided is a short or real address.
                             set window [lindex $args $index+1]
 
                             # Check if 'window' is a valid address or not.
@@ -1138,7 +1135,6 @@ proc ::ms::winfo::Command { args } {
                     switch -- $index {
                         -1      { ::ms::Error "Invalid option, '$args'." $caller_info}
                         default {
-                            # Check if the '-displayof' address provided is a short or real address.
                             set window [lindex $args $index+1]
 
                             # Check if 'window' is a valid address or not.
@@ -1178,7 +1174,7 @@ proc ::ms::winfo::Command { args } {
                     # **winfo** **visualsavailable** *window*
                     set window $args
 
-                    # Get the real address associated with 'window'.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
@@ -1200,7 +1196,7 @@ proc ::ms::winfo::Command { args } {
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
-                    # Get the real address associated with 'window'.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
