@@ -389,12 +389,13 @@ proc ::ms::focus::Command { args } {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
-                            set addr [_focus $option $w]
+                            # Execute the command.
+                            set w [_focus $option $w]
 
-                            # Check if exists a short address for 'addr'.
-                            switch -- [info exists ::ms::addr($addr,short)] {
-                                0   { return $addr }
-                                1   { return $::ms::addr($addr,short) }
+                            # Check if exists a short address for 'w'.
+                            switch -- [info exists ::ms::addr($w,short)] {
+                                0   { return $w }
+                                1   { return $::ms::addr($w,short) }
                             }
                         }
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
@@ -426,10 +427,10 @@ proc ::ms::focus::Command { args } {
                                 }
                                 default {
                                     # Get the next address relative to 'current'.
-                                    set addr [::tk_focusNext $current]
+                                    set w [::tk_focusNext $current]
 
                                     # Focus the next address relative to 'current'.
-                                    _focus $::ms::addr($addr,widget)
+                                    _focus $::ms::addr($w,widget)
                                 }
                             }
 
@@ -464,10 +465,10 @@ proc ::ms::focus::Command { args } {
                                 }
                                 default {
                                     # Get the previous address relative to 'current'.
-                                    set addr [::tk_focusPrev $current]
+                                    set w [::tk_focusPrev $current]
 
                                     # Focus the previous address relative to 'current'.
-                                    _focus $::ms::addr($addr,widget)
+                                    _focus $::ms::addr($w,widget)
                                 }
                             }
 
@@ -500,44 +501,21 @@ proc ::ms::Check_Focussability { w } {
     try {
         $w cget -state
     } on error {} {
-        # Check if the variable '::ms::current($w,state)' exists.
-        switch -- [info exists ::ms::current($w,state)] {
-            1   {
-                # Check if the current state is disabled.
-                switch -- $::ms::current($w,state) {
-                    disabled { return 0 }
-                }
-            }
-        }
+        # Continue with the checks.
     } on ok { state } {
-        # Check if the current state is disabled.
+        # Check if the widget's state is disabled.
         switch -- $state {
             disabled { return 0 }
         }
     }
 
     # Check the widget's takefocus option.
-    try {
-        $w cget -takefocus
-    } on error {} {
-        # Check if the variable '::ms::current($w,takefocus)' exists.
-        switch -- [info exists ::ms::current($w,takefocus)] {
-            1   {
-                # Check if the widget allow the focus.
-                switch -- $::ms::current($w,takefocus) {
-                    0   { return 0 }
-                }
-            }
-        }
-    } on ok { takefocus } {
-        # Check if the widget allow the focus.
-        switch -- $takefocus {
-            0   { return 0 }
-        }
+    switch -- [$w cget -takefocus] {
+        0   { return 0 }
     }
 
-    # Check if the toplevel of 'w' is viewable.
-    return [_winfo viewable [_winfo toplevel $w]]
+    # Check if the widget is viewable.
+    return [_winfo viewable $w]
 }
 
 ###########################
@@ -612,7 +590,7 @@ proc ::tk_focusNext { window } {
 
     # Check if 'window' is a valid address or not.
     set current [::ms::Check_Pathname $window invalid]
-    switch -- $addr {
+    switch -- $current {
         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
@@ -711,7 +689,7 @@ proc ::tk_focusPrev { window } {
 
     # Check if 'window' is a valid address or not.
     set current [::ms::Check_Pathname $window invalid]
-    switch -- $addr {
+    switch -- $current {
         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
@@ -794,7 +772,7 @@ proc ::ttk::clickToFocus { window } {
 
     # Check if 'window' is a valid address or not.
     set w [::ms::Check_Pathname $window invalid]
-    switch -- $result {
+    switch -- $w {
         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
