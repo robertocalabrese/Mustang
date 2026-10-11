@@ -589,12 +589,13 @@ proc ::tk_focusNext { window } {
     set caller_info [info frame -1]
 
     # Check if 'window' is a valid address or not.
-    set current [::ms::Check_Pathname $window invalid]
-    switch -- $current {
+    set w [::ms::Check_Pathname $window invalid]
+    switch -- $w {
         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
     # Check if the widget is a megawidget or not.
+    set current $w
     if { $current in $::ms::addr(megawidgets) } {
         # Check if its a checkbutton, palette or radiobutton.
         switch -- $::ms::data($w,classtype) {
@@ -688,11 +689,12 @@ proc ::tk_focusPrev { window } {
     set caller_info [info frame -1]
 
     # Check if 'window' is a valid address or not.
-    set current [::ms::Check_Pathname $window invalid]
-    switch -- $current {
+    set w [::ms::Check_Pathname $window invalid]
+    switch -- $w {
         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
+    set current $w
     while { 1 } {
         # Collect information about the currentrent window's position
         # among its siblings.  Also, if the window is a top-level,
