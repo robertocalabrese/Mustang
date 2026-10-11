@@ -154,7 +154,7 @@
 #
 #   **tk** **busy** **current** ?*pattern*?
 #      Returns the pathnames of all widgets that are currently busy.
-#      If a *pattern* is given, only the path names of busy widgets matching pattern are returned.
+#      If a *pattern* is given, only the pathnames of busy widgets matching pattern are returned.
 #
 #   **tk** **busy** **forget** *window* ?*window*? ... ?*window*?
 #      Releases resources allocated by the **busy** command for *window*, including the transparent window.
@@ -394,15 +394,6 @@ proc ::ms::tk::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        windowingsystem {
-            # Synopsis:
-            #
-            # **tk** **windowingsystem**
-            switch -- [llength $args] {
-                0       { return $::ms::data(windowingsystem) }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-        }
         busy {
             # Synopsis:
             #
@@ -476,7 +467,14 @@ proc ::ms::tk::Command { args } {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
-                            return [_tk busy $subcommand $w]
+                            # Execute the command.
+                            try {
+                                _tk busy $subcommand $w
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
                         }
                         default {
                             # Synopsis:
@@ -521,7 +519,13 @@ proc ::ms::tk::Command { args } {
                             # **tk** **busy** **current**
 
                             # Execute the command.
-                            return [_tk busy current]
+                            try {
+                                _tk busy current
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
                         }
                         1   {
                             # Synopsis:
@@ -611,7 +615,14 @@ proc ::ms::tk::Command { args } {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
-                            return [_tk busy $w]
+                            # Execute the command.
+                            try {
+                                _tk busy $w
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
                         }
                         default {
                             # Synopsis:
@@ -664,6 +675,21 @@ proc ::ms::tk::Command { args } {
                     #
                     # **tk** **caret** *window*
                     set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _tk caret $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 3   -
                 5   -
@@ -957,7 +983,13 @@ proc ::ms::tk::Command { args } {
                             # **tk** **systray** **configure**
 
                             # Execute the command.
-                            return [_tk systray configure]
+                            try {
+                                _tk systray configure
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
                         }
                         1   {
                             # Synopsis:
@@ -1031,9 +1063,13 @@ proc ::ms::tk::Command { args } {
                     # **tk** **systray** **destroy**
                     switch -- [llength $args] {
                         0   {
-                            _tk systray destroy
-
-                            return ""
+                            try {
+                                _tk systray destroy
+                            } on error {} {
+                                # Do nothing.
+                            } on ok {} {
+                                return ""
+                            }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
@@ -1048,6 +1084,15 @@ proc ::ms::tk::Command { args } {
                     }
                 }
                 default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
+            }
+        }
+        windowingsystem {
+            # Synopsis:
+            #
+            # **tk** **windowingsystem**
+            switch -- [llength $args] {
+                0       { return $::ms::data(windowingsystem) }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         default { ::ms::Error "Invalid action, '$action'." $caller_info }
