@@ -539,9 +539,28 @@ proc ::ms::event::Command { args } {
             # **event** **add** *virtual* *sequence*
             # **event** **add** *virtual* *sequence* ?*sequence*? ... ?*sequence*?
             switch -- [llength $args] {
-                0       -
-                1       { ::ms::Error "Invalid number of arguments." $caller_info }
+                0   -
+                1   { ::ms::Error "Invalid number of arguments." $caller_info }
+                2   {
+                    # Synopsis:
+                    #
+                    # **event** **add** *virtual* *sequence*
+                    set virtual  [lindex  $args 0]
+                    set sequence [lindex  $args 1]
+
+                    # Execute the command.
+                    try {
+                        _event add $virtual $sequence
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
                 default {
+                    # Synopsis:
+                    #
+                    # **event** **add** *virtual* *sequence* ?*sequence*? ... ?*sequence*?
                     set virtual  [lindex  $args 0]
                     set sequence [lindex  $args 1]
                     set args     [lremove $args 0 1]
@@ -563,8 +582,26 @@ proc ::ms::event::Command { args } {
             # **event** **delete** *virtual*
             # **event** **delete** *virtual* ?*sequence*? ... ?*sequence*?
             switch -- [llength $args] {
-                0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+                1   {
+                    # Synopsis:
+                    #
+                    # **event** **delete** *virtual*
+                    set virtual $args
+
+                    # Execute the command.
+                    try {
+                        _event delete $virtual
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
                 default {
+                    # Synopsis:
+                    #
+                    # **event** **delete** *virtual* ?*sequence*? ... ?*sequence*?
                     set virtual [lindex  $args 0]
                     set args    [lremove $args 0]
 
@@ -591,13 +628,7 @@ proc ::ms::event::Command { args } {
                     # **event** **info**
 
                     # Execute the command.
-                    try {
-                        _event info
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
-                    }
+                    return [_event info]
                 }
                 1   {
                     # Synopsis:
