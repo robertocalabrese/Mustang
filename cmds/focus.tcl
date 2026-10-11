@@ -296,10 +296,11 @@ proc ::ms::focus::Command { args } {
                     # Check the widget's focussability.
                     switch -- [::ms::Check_Focussability $w] {
                         1   {
-                            # Check if exists '::ms::addr($w,widget)'.
-                            switch -- [info exists ::ms::addr($w,widget)] {
-                                0   { _focus $w }
-                                1   { _focus $::ms::addr($w,widget) }
+                            # Check if 'w' is a megawidget address.
+                            if { $w in $::ms::addr(megawidgets) } {
+                                _focus $::ms::addr($w,widget)
+                            } else {
+                                _focus $w
                             }
                         }
                     }
@@ -343,10 +344,11 @@ proc ::ms::focus::Command { args } {
                     # Check the widget's focussability.
                     switch -- [::ms::Check_Focussability $w] {
                         1   {
-                            # Check if exists '::ms::addr($w,widget)'.
-                            switch -- [info exists ::ms::addr($w,widget)] {
-                                0   { _focus -force $w }
-                                1   { _focus -force $::ms::addr($w,widget) }
+                            # Check if 'w' is a megawidget address.
+                            if { $w in $::ms::addr(megawidgets) } {
+                                _focus -force $::ms::addr($w,widget)
+                            } else {
+                                _focus -force $w
                             }
                         }
                     }
@@ -407,12 +409,12 @@ proc ::ms::focus::Command { args } {
                     # Check if a '-displayof' option was provided.
                     switch -- $option {
                         -displayof {
-                            set addr [lindex $args 1]
+                            set window [lindex $args 1]
 
-                            # Check if 'addr' is a valid address or not.
-                            set w [::ms::Check_Pathname $addr invalid]
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
                             # Get the current widget in focus in the same display as 'w'.
@@ -445,12 +447,12 @@ proc ::ms::focus::Command { args } {
                     # Check if a '-displayof' option was provided.
                     switch -- $option {
                         -displayof {
-                            set addr [lindex $args 1]
+                            set window [lindex $args 1]
 
-                            # Check if 'addr' is a valid address or not.
-                            set w [::ms::Check_Pathname $addr invalid]
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
-                                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
                             # Get the current widget in focus in the same display as 'w'.
@@ -534,8 +536,8 @@ proc ::ms::Check_Focussability { w } {
         }
     }
 
-    # Check if 'w' is viewable.
-    return [_winfo viewable $w]
+    # Check if the toplevel of 'w' is viewable.
+    return [_winfo viewable [_winfo toplevel $w]]
 }
 
 ###########################
@@ -577,10 +579,11 @@ proc ::ms::focus::Implicit { w detail } {
             # Check the widget's focussability.
             switch -- [::ms::Check_Focussability $w] {
                 1   {
-                    # Check if exists '::ms::addr($w,widget)'.
-                    switch -- [info exists ::ms::addr($w,widget)] {
-                        0   { _focus -force $w }
-                        1   { _focus -force $::ms::addr($w,widget) }
+                    # Check if 'w' is a megawidget address.
+                    if { $w in $::ms::addr(megawidgets) } {
+                        _focus $::ms::addr($w,widget)
+                    } else {
+                        _focus $w
                     }
                 }
             }
@@ -600,45 +603,43 @@ proc ::ms::focus::Implicit { w detail } {
 #
 # Where:
 #
-# w   Should be the widget short or real address involved.
+# window   Should be the widget short or real address involved.
 #
 # Return the real address of the 'next' window after 'w' that can take the keyboard focus.
-proc ::tk_focusNext { w } {
+proc ::tk_focusNext { window } {
     # Get the caller information.
     set caller_info [info frame -1]
 
-    # Check if 'w' is a valid address or not.
-    set addr [::ms::Check_Pathname $w invalid]
+    # Check if 'window' is a valid address or not.
+    set current [::ms::Check_Pathname $window invalid]
     switch -- $addr {
-        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
-        default { set w $addr }
+        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
     # Check if the widget is a megawidget or not.
-    if { $w in $::ms::addr(megawidgets) } {
+    if { $current in $::ms::addr(megawidgets) } {
         # Check if its a checkbutton, palette or radiobutton.
         switch -- $::ms::data($w,classtype) {
             checkbutton -
             palette     -
             radiobutton {
                 # Collect information about the current window's position among its siblings.
-                set parent   [_winfo parent $w]
+                set parent   [_winfo parent $current]
                 set children [_winfo children $parent]
-                set index    [lsearch -exact $children $w]
+                set index    [lsearch -exact $children $current]
 
                 # Substitute 'w' with the next widget in its parent children list or
                 # the widget's parent if there are no more child after 'w' in the children list.
                 set last_index [expr { [llength $children]-1 }]
                 if { $index < $last_index } {
-                    set w [lindex $children $index+1]
+                    set current [lindex $children $index+1]
                 } else {
-                    set w $parent
+                    set current $parent
                 }
             }
         }
     }
 
-    set current $w
     while { 1 } {
         # Descend to just before the first child of the currentrent widget.
         set parent   $current
@@ -701,18 +702,17 @@ proc ::tk_focusNext { w } {
 #
 # Where:
 #
-# w   Should be the widget short or real address involved.
+# window   Should be the widget short or real address involved.
 #
 # Return the the real address of the 'previous' window after 'w' that can take the keyboard focus.
-proc ::tk_focusPrev { w } {
+proc ::tk_focusPrev { window } {
     # Get the caller information.
     set caller_info [info frame -1]
 
-    # Get the 'w' real address.
-    set addr [::ms::Check_Pathname $w invalid]
+    # Check if 'window' is a valid address or not.
+    set current [::ms::Check_Pathname $window invalid]
     switch -- $addr {
-        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
-        default { set current $addr }
+        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
     while { 1 } {
@@ -785,26 +785,27 @@ proc ::tk_focusPrev { w } {
 #
 # Where:
 #
-# w   Should be the widget short or real address involved.
+# window   Should be the widget short or real address involved.
 #
 # It doesn't return anything.
-proc ::ttk::clickToFocus { w } {
+proc ::ttk::clickToFocus { window } {
     # Get the caller information.
     set caller_info [info frame -1]
 
-    # Get the 'w' real address.
-    set w [::ms::Check_Pathname $w invalid]
+    # Check if 'window' is a valid address or not.
+    set w [::ms::Check_Pathname $window invalid]
     switch -- $result {
-        invalid { ::ms::Error "Invalid address, '$w'." $caller_info }
+        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
     }
 
     # Check the widget's focussability.
     switch -- [::ms::Check_Focussability $w] {
         1   {
-            # Check if exists '::ms::addr($w,widget)'.
-            switch -- [info exists ::ms::addr($w,widget)] {
-                0   { _focus $w }
-                1   { _focus $::ms::addr($w,widget) }
+            # Check if 'w' is a megawidget address.
+            if { $w in $::ms::addr(megawidgets) } {
+                _focus $::ms::addr($w,widget)
+            } else {
+                _focus $w
             }
         }
     }
