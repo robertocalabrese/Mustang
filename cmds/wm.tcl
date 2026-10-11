@@ -1290,8 +1290,6 @@ proc ::ms::wm::Command { args } {
                 3   {
                     # Synopsis:
                     #
-                    # **wm** **stackorder** *window*
-                    # **wm** **stackorder** **short** *window*
                     # **wm** **stackorder** *window* **isabove** *toplevel*
                     # **wm** **stackorder** *window* **isbelow** *toplevel*
                     set window   [lindex $args 0]
