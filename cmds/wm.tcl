@@ -97,7 +97,7 @@
 # **wm** **protocol** *window* ?*name*? ?*command*?
 # **wm** **resizable** *window* ?*width* *height*?
 # **wm** **sizefrom** *window* ?*who*?
-# **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *window*?
+# **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *toplevel*?
 # **wm** **state** *window* ?*newstate*?
 # **wm** **title** *window* ?*string*?
 # **wm** **transient** ?**short**? *window* ?*container*?
@@ -689,11 +689,12 @@
 #      Otherwise it returns **user** or **window** to indicate the source of the *window*'s current size, or an
 #      empty string if no source has been specified yet. Most window managers interpret "no source" as equivalent to **program**.
 #
-#   **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *window*?
+#   **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *toplevel*?
 #      The **stackorder** command returns a list of toplevel windows in stacking order, from lowest to highest.
 #
-#      When a single toplevel window is passed, the returned list recursively includes all of the *window*'s children
-#      that are toplevels. Only those toplevels that are currently mapped to the screen are returned.
+#      *Window* must be a toplevel address.
+#      When *window* is passed, the returned list recursively includes all of the *window*'s children that are toplevels.
+#      Only those toplevels that are currently mapped to the screen are returned.
 #
 #      The **stackorder** command can also be used to determine if one toplevel is positioned above or below a second toplevel.
 #
@@ -901,7 +902,7 @@ proc ::ms::wm::Command { args } {
     # **wm** **protocol** *window* ?*name*? ?*command*?
     # **wm** **resizable** *window* ?*width* *height*?
     # **wm** **sizefrom** *window* ?*who*?
-    # **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *window*?
+    # **wm** **stackorder** ?**short**? *window* ?**isabove**|**isbelow** *toplevel*?
     # **wm** **state** *window* ?*newstate*?
     # **wm** **title** *window* ?*string*?
     # **wm** **transient** ?**short**? *window* ?*container*?
@@ -1235,8 +1236,8 @@ proc ::ms::wm::Command { args } {
             #
             # **wm** **stackorder** *window*
             # **wm** **stackorder** **short** *window*
-            # **wm** **stackorder** *window* **isabove** *window*
-            # **wm** **stackorder** *window* **isbelow** *window*
+            # **wm** **stackorder** *window* **isabove** *toplevel*
+            # **wm** **stackorder** *window* **isbelow** *toplevel*
             switch -- [llength $args] {
                 1   {
                     # Synopsis:
@@ -1291,8 +1292,8 @@ proc ::ms::wm::Command { args } {
                     #
                     # **wm** **stackorder** *window*
                     # **wm** **stackorder** **short** *window*
-                    # **wm** **stackorder** *window* **isabove** *window*
-                    # **wm** **stackorder** *window* **isbelow** *window*
+                    # **wm** **stackorder** *window* **isabove** *toplevel*
+                    # **wm** **stackorder** *window* **isbelow** *toplevel*
                     set window   [lindex $args 0]
                     set option   [lindex $args 1]
                     set toplevel [lindex $args 2]
