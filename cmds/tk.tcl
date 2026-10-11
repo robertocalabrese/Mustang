@@ -763,9 +763,10 @@ proc ::ms::tk::Command { args } {
                     set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
-                            # Check if the '-displayof' address provided is a valid address or not.
                             set window [lindex $args 1]
-                            set w    [::ms::Check_Pathname $window invalid]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
@@ -794,9 +795,10 @@ proc ::ms::tk::Command { args } {
                     switch -- $index {
                         -1      { ::ms::Error "Invalid option, '$args'." $caller_info }
                         default {
-                            # Check if the '-displayof' address provided is a short or real address.
                             set window [lindex $args $index+1]
-                            set w    [::ms::Check_Pathname $window invalid]
+
+                            # Check if 'window' is a valid address or not.
+                            set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                                 default { set args [lreplace $args $index+1 $index+1 $w] }
