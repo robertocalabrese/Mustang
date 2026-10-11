@@ -598,7 +598,7 @@ proc ::ms::pack::Command { args } {
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Get the 'window' real address and type.
+                    # Check if 'window' is a valid address or not.
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
