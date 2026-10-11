@@ -449,7 +449,7 @@ proc ::ms::pack::Command { args } {
                                 }
                             }
 
-                            # Force the propagation inside the pack container.
+                            # Force the propagation.
                             ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
 
                             return ""
@@ -548,15 +548,14 @@ proc ::ms::pack::Command { args } {
                             invalid { break }
                         }
 
-                        # Note: The 'pack info' command returns an option/value list that
-                        #       will always contain the '-in' option at index '0'.
+                        # Execute the command.
+                        try {
+                            _pack forget $w
+                        } on error { errortext errorcode } {
+                            break
+                        }
 
-                        set window [lindex [_pack info $w] 1]
-
-                        # Forget the real address.
-                        _pack forget $w
-
-                        # Force the propagation inside any scrollable widget ancestor, if any.
+                        # Force the propagation.
                         ::ms::Scrollable_Widgets_Propagation_Mechanism $w
                     }
 
@@ -583,7 +582,13 @@ proc ::ms::pack::Command { args } {
                     }
 
                     # Execute the command.
-                    return [_pack info $w]
+                    try {
+                        _pack info $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 2   {
                     # Synopsys:
@@ -610,20 +615,13 @@ proc ::ms::pack::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        switch -- $result {
-                            ""      { return "" }
-                            default {
-                                # Get the '-in' address.
-                                set in_addr [lindex $result 1]
-
-                                # Check if exists a short address for 'in_addr'.
-                                switch -- [info exists ::ms::addr($in_addr,short)] {
-                                    1   { set result [lreplace $result 1 1 $::ms::addr($in_addr,short)] }
-                                }
-
-                                return $result
-                            }
+                        # Check if exists a short address for the '-in' container.
+                        set container [lindex $result 1]
+                        switch -- [info exists ::ms::addr($container,short)] {
+                            1   { set result [lreplace $result 1 1 $::ms::addr($container,short)] }
                         }
+
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -647,7 +645,14 @@ proc ::ms::pack::Command { args } {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
-                    return [_pack propagate $w]
+                    # Execute the command.
+                    try {
+                        _pack propagate $w $boolean
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 2   {
                     # Synopsys:
@@ -681,10 +686,10 @@ proc ::ms::pack::Command { args } {
             set window $action
 
             # Check if 'window' is a valid address or not.
-            set result [::ms::Check_Pathname $window invalid]
-            switch -- $result {
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                default { set addresses [lindex $result 0] }
+                default { set addresses [list $w] }
             }
 
             # Check if there are other addresses.
@@ -760,7 +765,7 @@ proc ::ms::pack::Command { args } {
                     }
                 }
 
-                # Force the propagation inside the pack container.
+                # Force the propagation.
                 ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
             }
 
