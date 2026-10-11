@@ -519,12 +519,12 @@ proc ::ms::winfo::Command { args } {
                 1   {
                     # Synopsis:
                     #
-                    # **winfo** **atom** *name*
+                    # **winfo** **atom**     *name*
                     # **winfo** **atomname** *id*
 
                     # Execute the command.
                     try {
-                        _winfo $action {*}$args
+                        _winfo $action $args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -552,17 +552,17 @@ proc ::ms::winfo::Command { args } {
                             }
                         }
                     }
+
+                    # Execute the command.
+                    try {
+                        _winfo $action {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Execute the command.
-            try {
-                _winfo $action {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
             }
         }
         cells          -
@@ -604,43 +604,43 @@ proc ::ms::winfo::Command { args } {
         y              {
             # Synopsis:
             #
-            # **winfo** **cells** *window*
-            # **winfo** **class** *window*
-            # **winfo** **colormapfull** *window*
-            # **winfo** **depth** *window*
-            # **winfo** **geometry** *window*
-            # **winfo** **height** *window*
-            # **winfo** **id** *window*
-            # **winfo** **ismapped** *window*
-            # **winfo** **manager** *window*
-            # **winfo** **name** *window*
-            # **winfo** **pointerx** *window*
-            # **winfo** **pointerxy** *window*
-            # **winfo** **pointery** *window*
-            # **winfo** **reqheight** *window*
-            # **winfo** **reqwidth** *window*
-            # **winfo** **rootx** *window*
-            # **winfo** **rooty** *window*
-            # **winfo** **screen** *window*
-            # **winfo** **screencells** *window*
-            # **winfo** **screendepth** *window*
-            # **winfo** **screenheight** *window*
+            # **winfo** **cells**          *window*
+            # **winfo** **class**          *window*
+            # **winfo** **colormapfull**   *window*
+            # **winfo** **depth**          *window*
+            # **winfo** **geometry**       *window*
+            # **winfo** **height**         *window*
+            # **winfo** **id**             *window*
+            # **winfo** **ismapped**       *window*
+            # **winfo** **manager**        *window*
+            # **winfo** **name**           *window*
+            # **winfo** **pointerx**       *window*
+            # **winfo** **pointerxy**      *window*
+            # **winfo** **pointery**       *window*
+            # **winfo** **reqheight**      *window*
+            # **winfo** **reqwidth**       *window*
+            # **winfo** **rootx**          *window*
+            # **winfo** **rooty**          *window*
+            # **winfo** **screen**         *window*
+            # **winfo** **screencells**    *window*
+            # **winfo** **screendepth**    *window*
+            # **winfo** **screenheight**   *window*
             # **winfo** **screenmmheight** *window*
-            # **winfo** **screenmmwidth** *window*
-            # **winfo** **screenvisual** *window*
-            # **winfo** **screenwidth** *window*
-            # **winfo** **server** *window*
-            # **winfo** **toplevel** *window*
-            # **winfo** **viewable** *window*
-            # **winfo** **visual** *window*
-            # **winfo** **visualid** *window*
-            # **winfo** **vrootheight** *window*
-            # **winfo** **vrootwidth** *window*
-            # **winfo** **vrootx** *window*
-            # **winfo** **vrooty** *window*
-            # **winfo** **width** *window*
-            # **winfo** **x** *window*
-            # **winfo** **y** *window*
+            # **winfo** **screenmmwidth**  *window*
+            # **winfo** **screenvisual**   *window*
+            # **winfo** **screenwidth**    *window*
+            # **winfo** **server**         *window*
+            # **winfo** **toplevel**       *window*
+            # **winfo** **viewable**       *window*
+            # **winfo** **visual**         *window*
+            # **winfo** **visualid**       *window*
+            # **winfo** **vrootheight**    *window*
+            # **winfo** **vrootwidth**     *window*
+            # **winfo** **vrootx**         *window*
+            # **winfo** **vrooty**         *window*
+            # **winfo** **width**          *window*
+            # **winfo** **x**              *window*
+            # **winfo** **y**              *window*
             switch -- [llength $args] {
                 1   {
                     set window $args
@@ -681,11 +681,6 @@ proc ::ms::winfo::Command { args } {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
-                    # Check if 'w' belongs to a megawidget container.
-                    if { $w in $::ms::addr(megawidgets,containers) } {
-                        set w $::ms::addr($w,widget)
-                    }
-
                     # Execute the command.
                     try {
                         _winfo children $w
@@ -714,8 +709,8 @@ proc ::ms::winfo::Command { args } {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
-                    # Check if 'w' belongs to a megawidget container.
-                    if { $w in $::ms::addr(megawidgets,containers) } {
+                    # Check if 'w' belongs to a megawidget.
+                    if { $w in $::ms::addr(megawidgets) } {
                         set w $::ms::addr($w,widget)
                     }
 
@@ -984,11 +979,6 @@ proc ::ms::winfo::Command { args } {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
-                    # Check if 'w' belongs to a megawidget container.
-                    if { $w in $::ms::addr(megawidgets,containers) } {
-                        set w $::ms::addr($w,widget)
-                    }
-
                     # Execute the command.
                     try {
                         _winfo parent $w
@@ -1015,11 +1005,6 @@ proc ::ms::winfo::Command { args } {
                     set w [::ms::Check_Pathname $window invalid]
                     switch -- $w {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                    }
-
-                    # Check if 'w' belongs to a megawidget container.
-                    if { $w in $::ms::addr(megawidgets,containers) } {
-                        set w $::ms::addr($w,widget)
                     }
 
                     # Execute the command.
