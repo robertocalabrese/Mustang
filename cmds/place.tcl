@@ -332,7 +332,13 @@ proc ::ms::place::Command { args } {
                     }
 
                     # Execute the command.
-                    return [_place configure $w]
+                    try {
+                        _place configure $w $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 2   {
                     # Synopsis:
@@ -356,17 +362,19 @@ proc ::ms::place::Command { args } {
                             }
 
                             # Execute the command.
-                            set result [_place configure $w]
+                            try {
+                                _place configure $w $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                # Check if exists a short address for the '-in' container.
+                                set container [lindex $result 1]
+                                switch -- [info exists ::ms::addr($container,short)] {
+                                    1   { lreplace $result 1 1 $::ms::addr($container,short) }
+                                }
 
-                            # Get the '-in' address.
-                            set in_addr [lindex $result 1]
-
-                            # Check if exists a short address for 'in_addr'.
-                            switch -- [info exists ::ms::addr($in_addr,short)] {
-                                1   { lreplace $result 1 1 $::ms::addr($in_addr,short) }
+                                return $result
                             }
-
-                            return $result
                         }
                         default {
                             # Synopsis:
@@ -381,7 +389,14 @@ proc ::ms::place::Command { args } {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
-                            return [_place configure $w $args]
+                            # Execute the command.
+                            try {
+                                _place configure $w $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
                         }
                     }
                 }
@@ -398,8 +413,8 @@ proc ::ms::place::Command { args } {
                             # Synopsis:
                             #
                             # **place** **configure** **short** *window* *option*
-                            set window [lindex  $args 1]
-                            set args   [lremove $args 0 1]
+                            set window [lindex $args 1]
+                            set option [lindex $args 2]
 
                             # Check if 'window' is a valid address or not.
                             set w [::ms::Check_Pathname $window invalid]
@@ -407,21 +422,24 @@ proc ::ms::place::Command { args } {
                                 invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                             }
 
-                            # Check if 'args' is '-in'.
-                            switch -- $args {
-                                -in {
-                                    # Execute the command.
-                                    set w [_place configure $w $args]
+                            # Execute the command.
+                            try {
+                                _place configure $w $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                # Check the 'option' provided.
+                                switch -- $option {
+                                    -in {
+                                        set w $result
 
-                                    # Check if exists a short address for 'w'.
-                                    switch -- [info exists ::ms::addr($w,short)] {
-                                        0   { return $w }
-                                        1   { return $::ms::addr($w,short) }
+                                        # Check if exists a short address for 'w'.
+                                        switch -- [info exists ::ms::addr($w,short)] {
+                                            0   { return $w }
+                                            1   { return $::ms::addr($w,short) }
+                                        }
                                     }
-                                }
-                                default {
-                                    # Execute the command.
-                                    return [_place configure $w $args]
+                                    default { return $result }
                                 }
                             }
                         }
@@ -439,9 +457,13 @@ proc ::ms::place::Command { args } {
                             }
 
                             # Execute the command.
-                            _place configure $w $args
-
-                            return ""
+                            try {
+                                _place configure $w $args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
                         }
                     }
                 }
@@ -469,10 +491,10 @@ proc ::ms::place::Command { args } {
                                     set container [lindex $args $index+1]
 
                                     # Check if 'container' is a valid address or not.
-                                    set in_addr [::ms::Check_Pathname $container invalid]
-                                    switch -- $in_addr {
+                                    set addr [::ms::Check_Pathname $container invalid]
+                                    switch -- $addr {
                                         invalid { ::ms::Error "Invalid address, '$container'." $caller_info }
-                                        default { set args [lreplace $args $index+1 $index+1 $in_addr] }
+                                        default { set args [lreplace $args $index+1 $index+1 $addr] }
                                     }
                                 }
                             }
@@ -515,7 +537,13 @@ proc ::ms::place::Command { args } {
                     }
 
                     # Execute the command.
-                    return [_place $action $w]
+                    try {
+                        _place $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 2   {
                     # Synopsis:
@@ -538,18 +566,22 @@ proc ::ms::place::Command { args } {
                     }
 
                     # Execute the command.
-                    set addresses [_place $action $w]
-
-                    set result [list ]
-                    foreach w $addresses {
-                        # Check if exists a short address for 'w'.
-                        switch -- [info exists ::ms::addr($w,short)] {
-                            0   { lappend $result $w }
-                            1   { lappend $result $::ms::addr($w,short) }
+                    try {
+                        _place $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { addresses } {
+                        set result [list ]
+                        foreach w $addresses {
+                            # Check if exists a short address for 'w'.
+                            switch -- [info exists ::ms::addr($w,short)] {
+                                0   { lappend $result $w }
+                                1   { lappend $result $::ms::addr($w,short) }
+                            }
                         }
-                    }
 
-                    return $result
+                        return $result
+                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -574,7 +606,11 @@ proc ::ms::place::Command { args } {
                         }
 
                         # Execute the command.
-                        _place forget $w
+                        try {
+                            _place forget $w
+                        } on error { errortext errorcode } {
+                            break
+                        }
                     }
 
                     return ""
@@ -600,7 +636,13 @@ proc ::ms::place::Command { args } {
                     }
 
                     # Execute the command.
-                    return [_place info $w]
+                    try {
+                        _place info $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
                 }
                 2   {
                     # Synopsis:
@@ -622,17 +664,19 @@ proc ::ms::place::Command { args } {
                     }
 
                     # Execute the command.
-                    set args [_place info $w]
+                    try {
+                        _place info $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check if exists a short address for the '-in' container.
+                        set container [lindex $args 1]
+                        switch -- [info exists ::ms::addr($container,short)] {
+                            1   { lreplace $result 1 1 $::ms::addr($container,short) }
+                        }
 
-                    # Get the '-in' address.
-                    set in_addr [lindex $args 1]
-
-                    # Check if exists a short address for 'in_addr'.
-                    switch -- [info exists ::ms::addr($in_addr,short)] {
-                        1   { lreplace $result 1 1 $::ms::addr($in_addr,short) }
+                        return $result
                     }
-
-                    return $result
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -656,9 +700,13 @@ proc ::ms::place::Command { args } {
                     }
 
                     # Execute the command.
-                    _place $w
-
-                    return ""
+                    try {
+                        _place $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
                 }
                 default {
                     # Synopsis:
