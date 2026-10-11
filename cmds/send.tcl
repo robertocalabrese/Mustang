@@ -164,13 +164,12 @@ proc ::ms::send::Command { args } {
     switch -- $index {
         -1      {}
         default {
-            # Check if the '-displayof' address provided is a short or real address.
-            set addr [lindex $args $index+1]
+            set window [lindex $args $index+1]
 
-            # Check if 'addr' is a valid address or not.
-            set w [::ms::Check_Pathname $addr invalid]
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
             switch -- $w {
-                invalid { ::ms::Error "Invalid address, '$addr'." $caller_info }
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                 default { set args [lreplace $args $index+1 $index+1 $w] }
             }
         }
