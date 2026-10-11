@@ -766,7 +766,7 @@ proc ::ms::bind::Command { args } {
                 switch -- [string index $tag 0] {
                     "." {
                         set w [::ms::Check_Pathname $tag invalid]
-                        switch -- $result {
+                        switch -- $w {
                             invalid {
                                 # 'tag' could be an actual tag.
                                 set tags [list $tag]
@@ -838,7 +838,7 @@ proc ::ms::bind::Command { args } {
                 switch -- [string index $tag 0] {
                     "." {
                         set w [::ms::Check_Pathname $tag invalid]
-                        switch -- $result {
+                        switch -- $w {
                             invalid {
                                 # 'tag' could be an actual tag.
                                 set tags [list $tag]
@@ -936,7 +936,7 @@ proc ::ms::bind::Command { args } {
                 switch -- [string index $tag 0] {
                     "." {
                         set w [::ms::Check_Pathname $tag invalid]
-                        switch -- $result {
+                        switch -- $w {
                             invalid {
                                 # 'tag' could be an actual tag.
                                 set tags [list $tag]
