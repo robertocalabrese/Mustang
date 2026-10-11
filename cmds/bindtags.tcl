@@ -242,7 +242,7 @@ proc ::ms::bindtags::Command { args } {
                     foreach tag $taglist {
                         # Check if 'tag' is a valid address or just a tag.
                         set addr [::ms::Check_Pathname $tag invalid]
-                        switch -- $result {
+                        switch -- $addr {
                             invalid { lappend new_taglist $tag }
                             default { lappend new_taglist $addr }
                         }
