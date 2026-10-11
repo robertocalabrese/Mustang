@@ -673,7 +673,7 @@ proc ::ms::grid::Command { args } {
                                 }
                             }
 
-                            # Force the propagation inside the grid container.
+                            # Force the propagation.
                             ::ms::Scrollable_Widgets_Propagation_Mechanism $w
 
                             return ""
@@ -733,15 +733,15 @@ proc ::ms::grid::Command { args } {
                             # '-in'
                             set index [lsearch -exact $args "-in"]
                             switch -- $index {
-                                -1      { set in_addr_real [_winfo parent [lindex $addresses 0]] }
+                                -1      {}
                                 default {
-                                    set in_addr [lindex $args $index+1]
+                                    set container [lindex $args $index+1]
 
-                                    # Check if 'in_addr' is a valid address or not.
-                                    set in_addr_real [::ms::Check_Pathname $in_addr invalid]
-                                    switch -- $in_addr_real {
-                                        invalid { ::ms::Error "Invalid address, 'in_addr'." $caller_info }
-                                        default { set args [lreplace $args $index+1 $index+1 $in_addr_real] }
+                                    # Check if 'container' is a valid address or not.
+                                    set w [::ms::Check_Pathname $container invalid]
+                                    switch -- $w {
+                                        invalid { ::ms::Error "Invalid address, 'container'." $caller_info }
+                                        default { set args [lreplace $args $index+1 $index+1 $w] }
                                     }
                                 }
                             }
@@ -772,7 +772,7 @@ proc ::ms::grid::Command { args } {
                                 }
                             }
 
-                            # Force the propagation inside the grid container
+                            # Force the propagation.
                             ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
 
                             return ""
@@ -940,10 +940,14 @@ proc ::ms::grid::Command { args } {
                             invalid { break }
                         }
 
-                        # Forget/Remove the real address.
-                        _grid $action $w
+                        # Execute the command.
+                        try {
+                            _grid $action $w
+                        } on error { errortext errorcode } {
+                            break
+                        }
 
-                        # Force the propagation inside any scrollable 'w' ancestor, if any.
+                        # Force the propagation.
                         ::ms::Scrollable_Widgets_Propagation_Mechanism $w
                     }
 
@@ -1003,20 +1007,13 @@ proc ::ms::grid::Command { args } {
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        switch -- $result {
-                            ""      { return "" }
-                            default {
-                                # Get the '-in' address.
-                                set in_addr [lindex $result 1]
-
-                                # Check if exists a short address for 'in_addr'.
-                                switch -- [info exists ::ms::addr($in_addr,short)] {
-                                    1   { set result [lreplace $result 1 1 $::ms::addr($in_addr,short)] }
-                                }
-
-                                return $result
-                            }
+                        # Check if exists a short address for the '-in' container.
+                        set container [lindex $result 1]
+                        switch -- [info exists ::ms::addr($container,short)] {
+                            1   { set result [lreplace $result 1 1 $::ms::addr($container,short)] }
                         }
+
+                        return $result
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -1121,14 +1118,13 @@ proc ::ms::grid::Command { args } {
                     switch -- $index {
                         -1      {}
                         default {
-                            # '-in'
-                            set in_addr [lindex $args $index+1]
+                            set container [lindex $args $index+1]
 
-                            # Check if 'in_addr' is a valid address or not.
-                            set in_addr_real [::ms::Check_Pathname $in_addr invalid]
-                            switch -- $in_addr_real {
+                            # Check if 'container' is a valid address or not.
+                            set w [::ms::Check_Pathname $container invalid]
+                            switch -- $w {
                                 invalid { ::ms::Error "Invalid address, '$in_addr'." $caller_info }
-                                default { set args [lreplace $args $index+1 $index+1 $in_addr_real] }
+                                default { set args [lreplace $args $index+1 $index+1 $w] }
                             }
                         }
                     }
@@ -1162,7 +1158,7 @@ proc ::ms::grid::Command { args } {
                 }
             }
 
-            # Force the propagation inside the grid container ('in_addr_real').
+            # Force the propagation.
             ::ms::Scrollable_Widgets_Propagation_Mechanism [lindex $addresses 0]
 
             return ""
