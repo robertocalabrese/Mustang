@@ -81,6 +81,7 @@
 # **wm** **geometry** *window* ?*newGeometry*?
 # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
 # **wm** **group** ?**short**? *window* ?*pathname*?
+# **wm** **iconbadge** *window* *badge*
 # **wm** **iconbitmap** *window* ?*bitmap*?
 # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
 # **wm** **iconify** *window*
@@ -476,6 +477,26 @@
 #      If the *short* option is provided the address returned will be a short address, otherwise it will be a real address.
 #      If provided, the *short* option must be located just after the *group* action.
 #
+#   **wm** **iconbadge** *window* *badge*
+#      Sets a *badge* for the icon of the *window*.
+#      The *badge* can be a positive integer number, for instance the number of new or unread messages, or an exclamation point denoting attention needed.
+#      If the *badge* is an empty string, the badge image is removed from the application icon.
+#      Managing these changes through bindings, such as **FocusIn**, is the responsibility of the developer.
+#
+#      On **X11**, for this command to work, the variable **::tk::icons::base_icon($window)** must be set to the image that is being used for the
+#      window icon of *$window*.
+#      On **Windows** and **X11**, the iconphoto images work best at **32x32** or a similar dimension, as the badge images are provided by Tk and
+#      drawn to overlay the icon images using native (*Windows*) API's or Tk rendering.
+#      On **macOS**, the icon badge is rendered by a system API and is not provided by Tk.
+#      The icon image itself should be higher-resolution, preferably **512** pixels, to avoid being blurry.
+#
+#      The icon badge is intended for display in the *Dock* (**macOS**), *taskbar* (**Windows**) or *app panel* (**X11**).
+#      On **macOS**, the last badge called will be displayed in the *Dock*, regardless of how many different icon badges may be assigned to different windows.
+#      On **Windows**, the taskbar display depends on whether the taskbar buttons are combined or not (this is an OS setting available to the user):
+#      if combined, the behavior is the same as on **macOS**, otherwise each button in the taskbar shows the badge it was assigned.
+#      Badge display on **macOS** is configured in the system preferences.
+#      *App panel* display behavior on **X11** will depend on the window manager and/or desktop environment.
+#
 #   **wm** **iconbitmap** *window* ?*bitmap*?
 #      If *bitmap* is specified, then it names a bitmap in the standard forms accepted by Tk (see the [Tk_GetBitmap](https://www.tcl-lang.org/man/tcl9.0/TkLib/GetBitmap.html)
 #      manual entry for details).
@@ -562,7 +583,7 @@
 #      If *pathname* is specified as an empty string then any existing icon window association for *window* will be cancelled.
 #
 #      If the *pathname* argument is specified then an empty string is returned.
-#      Otherwise the command returns the path name of the current icon window for *window*, or an empty string if there is
+#      Otherwise the command returns the pathname of the current icon window for *window*, or an empty string if there is
 #      no icon window currently specified for *window*.
 #
 #      Button press events are disabled for *window* as long as it is an icon window; this is needed in order to allow
@@ -917,81 +938,250 @@ proc ::ms::wm::Command { args } {
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
-        aspect           -
-        attribute        -
-        attributes       -
-        client           -
-        command          -
-        deiconify        -
-        focusmodel       -
-        forget           -
-        frame            -
-        geometry         -
-        grid             -
-        iconbitmap       -
-        iconbitmap       -
-        iconify          -
-        iconmask         -
-        iconname         -
-        iconphoto        -
-        iconposition     -
-        maxsize          -
-        minsize          -
-        overrideredirect -
-        positionfrom     -
-        protocol         -
-        resizable        -
-        sizefrom         -
-        state            -
-        title            -
-        withdraw         {
+        aspect -
+        grid   {
             # Synopsis:
             #
-            # **wm** **aspect** *window* ?*minNumer* *minDenom* *maxNumer* *maxDenom*?
-            # **wm** **attributes** *window*
-            # **wm** **attributes** *window* ?*option*?
-            # **wm** **attributes** *window* ?*option* *value*? ... ?*option* *value*?
-            # **wm** **client** *window* ?*name*?
-            # **wm** **command** *window* ?*value*?
-            # **wm** **deiconify** *window*
-            # **wm** **focusmodel** *window* ?**active**|**passive**?
-            # **wm** **forget** *window*
-            # **wm** **frame** *window*
-            # **wm** **geometry** *window* ?*newGeometry*?
-            # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
-            # **wm** **iconbitmap** *window* ?*bitmap*?
-            # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
-            # **wm** **iconify** *window*
-            # **wm** **iconmask** *window* ?*bitmap*?
-            # **wm** **iconname** *window* ?*newName*?
-            # **wm** **iconphoto** *window* ?**-default**? *image1* ?*image2*? ... ?*imageN*? ?
-            # **wm** **iconposition** *window* ?*x* *y*?
-            # **wm** **maxsize** *window* ?*width* *height*?
-            # **wm** **minsize** *window* ?*width* *height*?
-            # **wm** **overrideredirect** *window* ?*boolean*?
-            # **wm** **positionfrom** *window* ?*who*?
-            # **wm** **protocol** *window* ?*name*? ?*command*?
-            # **wm** **resizable** *window* ?*width* *height*?
-            # **wm** **sizefrom** *window* ?*who*?
-            # **wm** **state** *window* ?*newstate*?
-            # **wm** **title** *window* ?*string*?
-            # **wm** **withdraw** *window*
-            set window [lindex  $args 0]
-            set args   [lremove $args 0]
+            # **wm** **aspect** *window*
+            # **wm** **aspect** *window* *minNumer* *minDenom* *maxNumer* *maxDenom*
+            #
+            # **wm** **grid**   *window*
+            # **wm** **grid**   *window* *baseWidth* *baseHeight* *widthInc* *heightInc*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **aspect** *window*
+                    # **wm** **grid**   *window*
+                    set window $args
 
-            # Check if 'window' is a valid address or not.
-            set w [::ms::Check_Pathname $window invalid]
-            switch -- $w {
-                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                5   {
+                    # Synopsis:
+                    #
+                    # **wm** **aspect** *window* *minNumer* *minDenom* *maxNumer* *maxDenom*
+                    # **wm** **grid**   *window* *baseWidth* *baseHeight* *widthInc* *heightInc*
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
+        }
+        attributes {
+            # Synopsis:
+            #
+            # **wm** **attributes** *window*
+            # **wm** **attributes** *window* *option*
+            # **wm** **attributes** *window* *option* *value* ?*option* *value*? ... ?*option* *value*?
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **attributes** *window*
+                    set window $args
 
-            # Execute the command.
-            try {
-                _wm $action $w {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm attributes $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **wm** **attributes** *window* *option*
+                    set window [lindex $args 0]
+                    set option [lindex $args 1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm attributes $w $option
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # **wm** **attributes** *window* *option* *value* ?*option* *value*? ... ?*option* *value*?
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                _wm attributes $w {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
+        client           -
+        command          -
+        focusmodel       -
+        geometry         -
+        iconmask         -
+        iconname         -
+        overrideredirect -
+        positionfrom     -
+        sizefrom         -
+        state            -
+        title            {
+            # Synopsis:
+            #
+            # **wm** **client**           *window*
+            # **wm** **client**           *window* *name*
+            #
+            # **wm** **command**          *window*
+            # **wm** **command**          *window* *value*
+            #
+            # **wm** **focusmodel**       *window*
+            # **wm** **focusmodel**       *window* **active**
+            # **wm** **focusmodel**       *window* **passive**
+            #
+            # **wm** **geometry**         *window*
+            # **wm** **geometry**         *window* *newGeometry*
+            #
+            # **wm** **iconmask**         *window*
+            # **wm** **iconmask**         *window* *bitmap*
+            #
+            # **wm** **iconname**         *window*
+            # **wm** **iconname**         *window* *newName*
+            #
+            # **wm** **overrideredirect** *window*
+            # **wm** **overrideredirect** *window* *boolean*
+            #
+            # **wm** **positionfrom**     *window*
+            # **wm** **positionfrom**     *window* *who*
+            #
+            # **wm** **sizefrom**         *window*
+            # **wm** **sizefrom**         *window* *who*
+            #
+            # **wm** **state**            *window*
+            # **wm** **state**            *window* *newstate*
+            #
+            # **wm** **title**            *window*
+            # **wm** **title**            *window* *string*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **client**           *window*
+                    # **wm** **command**          *window*
+                    # **wm** **focusmodel**       *window*
+                    # **wm** **geometry**         *window*
+                    # **wm** **iconmask**         *window*
+                    # **wm** **iconname**         *window*
+                    # **wm** **overrideredirect** *window*
+                    # **wm** **positionfrom**     *window*
+                    # **wm** **sizefrom**         *window*
+                    # **wm** **state**            *window*
+                    # **wm** **title**            *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    return [_wm $action $w]
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **wm** **client**           *window* *name*
+                    # **wm** **command**          *window* *value*
+                    # **wm** **focusmodel**       *window* **active**
+                    # **wm** **focusmodel**       *window* **passive**
+                    # **wm** **geometry**         *window* *newGeometry*
+                    # **wm** **iconmask**         *window* *bitmap*
+                    # **wm** **iconname**         *window* *newName*
+                    # **wm** **overrideredirect** *window* *boolean*
+                    # **wm** **positionfrom**     *window* *who*
+                    # **wm** **sizefrom**         *window* *who*
+                    # **wm** **state**            *window* *newstate*
+                    # **wm** **title**            *window* *string*
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         colormapwindows {
@@ -1100,6 +1290,282 @@ proc ::ms::wm::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        deiconify -
+        forget    -
+        iconify   -
+        withdraw  {
+            # Synopsis:
+            #
+            # **wm** **deiconify** *window*
+            # **wm** **forget**    *window*
+            # **wm** **iconify**   *window*
+            # **wm** **withdraw**  *window*
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        iconbadge {
+            # Synopsis:
+            #
+            # **wm** **iconbadge** *window* *badge*
+            switch -- [llength $args] {
+                2   {
+                    set window [lindex $args 0]
+                    set badge  [lindex $args 1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm iconbadge $w $badge
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        iconbitmap {
+            # Synopsis:
+            #
+            # **wm** **iconbitmap** *window*
+            # **wm** **iconbitmap** *window* *bitmap*
+            # **wm** **iconbitmap** *window* **-default** *image*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **iconbitmap** *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    return [_wm iconbitmap $w]
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **wm** **iconbitmap** *window* *bitmap*
+                    set window [lindex $args 0]
+                    set bitmap [lindex $args 1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm iconbitmap $w $bitmap
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # **wm** **iconbitmap** *window* **-default** *image*
+                    set window [lindex $args 0]
+                    set option [lindex $args 1]
+                    set image  [lindex $args 2]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -default {}
+                        default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm iconbitmap $w -default $image
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        iconphoto {
+            # Synopsis:
+            #
+            # **wm** **iconphoto** *window*
+            # **wm** **iconphoto** *window* **-default** *image1* ?*image2*? ... ?*imageN*? ?
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **iconphoto** *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm iconphoto $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # **wm** **iconphoto** *window* **-default** *image1* ?*image2*? ... ?*imageN*? ?
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm iconphoto $w {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+            }
+        }
+        iconposition     -
+        maxsize          -
+        minsize          -
+        resizable        {
+            # Synopsis:
+            #
+            # **wm** **iconposition** *window*
+            # **wm** **iconposition** *window* *x* *y*
+            #
+            # **wm** **maxsize**      *window*
+            # **wm** **maxsize**      *window* *width* *height*
+            #
+            # **wm** **minsize**      *window*
+            # **wm** **minsize**      *window* *width* *height*
+            #
+            # **wm** **resizable**    *window*
+            # **wm** **resizable**    *window* *width* *height*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **iconposition** *window*
+                    # **wm** **maxsize**      *window*
+                    # **wm** **minsize**      *window*
+                    # **wm** **resizable**    *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    return [_wm $action $w]
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # **wm** **iconposition** *window* *x* *y*
+                    # **wm** **maxsize**      *window* *width* *height*
+                    # **wm** **minsize**      *window* *width* *height*
+                    # **wm** **resizable**    *window* *width* *height*
+                    set window [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm $action $w {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        frame {
+            # Synopsis:
+            #
+            # **wm** **frame** *window*
+            switch -- [llength $args] {
+                1   {
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm frame $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         group      -
         iconwindow -
         transient  {
@@ -1145,8 +1611,7 @@ proc ::ms::wm::Command { args } {
                     #
                     # **wm** **transient** **short** *window*
                     # **wm** **transient** *window* *container*
-                    set option [lindex  $args 0]
-                    set args   [lremove $args 0]
+                    set option [lindex $args 0]
 
                     # Check if there is a 'short' option.
                     switch -- $option {
@@ -1156,7 +1621,7 @@ proc ::ms::wm::Command { args } {
                             # **wm** **group**      **short** *window*
                             # **wm** **iconwindow** **short** *window*
                             # **wm** **transient**  **short** *window*
-                            set window $args
+                            set window [lindex $args 1]
 
                             # Check if 'window' is a valid address or not.
                             set w [::ms::Check_Pathname $window invalid]
@@ -1184,6 +1649,7 @@ proc ::ms::wm::Command { args } {
                             # **wm** **iconwindow** *window* *pathname*
                             # **wm** **transient**  *window* *container*
                             set window $option
+                            set args   [lremove $args 0]
 
                             # Check if 'window' is a valid address or not.
                             set w [::ms::Check_Pathname $window invalid]
@@ -1231,6 +1697,81 @@ proc ::ms::wm::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        protocol {
+            # Synopsis:
+            #
+            # **wm** **protocol** *window*
+            # **wm** **protocol** *window* *name*
+            # **wm** **protocol** *window* *name* *command*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # **wm** **protocol** *window*
+                    set window $args
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm protocol $w
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # **wm** **protocol** *window* *name*
+                    set window [lindex $args 0]
+                    set name   [lindex $args 1]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm protocol $w $name
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # **wm** **protocol** *window* *name* *command*
+                    set window  [lindex $args 0]
+                    set name    [lindex $args 1]
+                    set command [lindex $args 2]
+
+                    # Check if 'window' is a valid address or not.
+                    set w [::ms::Check_Pathname $window invalid]
+                    switch -- $w {
+                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        _wm protocol $w $name $command
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+            }
+        }
         stackorder {
             # Synopsis:
             #
@@ -1276,6 +1817,7 @@ proc ::ms::wm::Command { args } {
                     # Execute the command.
                     set toplevels [_wm stackorder $w]
 
+                    # Trasform all the addresses returned into short addresses.
                     set result [list ]
                     foreach w $toplevels {
                         # Check if exists a short address for 'w'.
