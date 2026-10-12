@@ -907,6 +907,7 @@ proc ::ms::wm::Command { args } {
     # **wm** **geometry** *window* ?*newGeometry*?
     # **wm** **grid** *window* ?*baseWidth* *baseHeight* *widthInc* *heightInc*?
     # **wm** **group** ?**short**? *window* ?*pathname*?
+    # **wm** **iconbadge** *window* *badge*
     # **wm** **iconbitmap** *window* ?*bitmap*?
     # **wm** **iconbitmap** *window* ?**-default**? ?*image*?
     # **wm** **iconify** *window*
