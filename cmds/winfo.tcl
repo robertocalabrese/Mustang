@@ -1151,7 +1151,7 @@ proc ::ms::winfo::Command { args } {
             # Synopsis:
             #
             # **winfo** **visualsavailable** *window*
-            # **winfo** **visualsavailable** *window* ?*includeids*?
+            # **winfo** **visualsavailable** *window* *includeids*
             switch -- [llength $args] {
                 1   {
                     # Synopsis:
@@ -1177,7 +1177,7 @@ proc ::ms::winfo::Command { args } {
                 2   {
                     # Synopsis:
                     #
-                    # **winfo** **visualsavailable** *window* ?*includeids*?
+                    # **winfo** **visualsavailable** *window* *includeids*
                     set window [lindex  $args 0]
                     set args   [lremove $args 0]
 
