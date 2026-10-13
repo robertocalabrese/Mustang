@@ -282,7 +282,7 @@
 #                                 it isn't) and if a maxlength is not **0** a maxvalue/minvalue check will be performed on it (truncation will
 #                                 happen if the number reaches the maxvalue or minvalue specified).
 #
-#                              See also **-charwidth**, **-invalidcommand**, **-maxlength**, **-validate** and **-validatecommand**.
+#                              See also **-charwidth**, **-invalidcommand** and **-maxlength**.
 #
 # **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
 #                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
@@ -387,16 +387,6 @@
 #
 #                              See also **-background**, **-fieldbackground** and **-font**.
 #
-# **-invalidcommand**          A script template to evaluate whenever the **-validatecommand** returns **0**.
-#                              Providing an empty string will mean to not launch any script when the **-validatecommand** returns **0**.
-#
-#                              Note that every **-datatype** except **none** will force this value to an the empty string to perform
-#                              automatic validation.
-#
-#                              If not provided, defaults to the empty string.
-#
-#                              See also **-datatype**, **-validate** and **-validatecommand**.
-#
 # **-insertcolor**             It's a list that specifies the color to use for the combobox cursor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
 #
@@ -467,20 +457,15 @@
 #
 #                              See also **-darkcolor**.
 #
-# **-maxlength**               Specifies an integer that indicates the maximum number of characters that can be inserted inside a
-#                              combobox widget. If this value is **0**, then any amount of characters can be inserted inside the combobox
-#                              (that will be scrollable). Any other value will limit the possible characters that can be inserted.
+# **-maxlength**               Specifies a boolean value that indicates the maximum number of characters that can be inserted inside
+#                              the widget.
+#                              When **disabled** any amount of characters can be inserted inside the widget.
+#                              When **enabled** it will constrain the possible characters that can be inserted inside the widget to
+#                              the maximum number of characters of the longest item of **-values**.
 #
-#                              The maxlength value can influence the **-charwidth** of the widget, more precisely:
+#                              If not provided, defaults to **disabled**.
 #
-#                                 maxlength  = 0                    --> any charwidth value is accepted (even **0**).
-#                                 charwidth  = 0                    --> any maxlength value is accepeted (even **0**).
-#                                 maxlength != 0 and charwidth !=0  --> If the charwidth is lesser then the maxlength, the former will be
-#                                                                       set as the latter.
-#
-#                              If not provided, defaults to **0**.
-#
-#                              See also **-charwidth**, **-datatype**, **-validate** and **-xscrollcommand**.
+#                              See also **-charwidth**, **-datatype** and **-xscrollcommand**.
 #
 # **-padding**                 Specifies the internal padding for the widget.
 #                              The padding is a list of up to four length specifications.
@@ -638,46 +623,23 @@
 # **-validate**                Specifies the mode in which validation should operate.
 #                              There are two main validation modes:
 #
-#                                 *prevalidation* --> The **-validatecommand** is evaluated prior to each edit and the return value is
+#                                 *prevalidation* --> The mustang **validatecommand** is evaluated prior to each edit and the return value is
 #                                                     used to determine whether to accept or reject the change.
-#                                 *revalidation*  --> The **-validatecommand** is evaluated to determine whether the current value is valid.
+#                                 *revalidation*  --> The mustang **validatecommand** is evaluated to determine whether the current value is valid.
 #
 #                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
 #
-#                                 none     --> The validation will only occur when specifically requested by the validate widget command.
-#                                 focus    --> The combobox is revalidated when the combobox receives or loses focus.
-#                                 focusin  --> The combobox is revalidated when the combobox receives focus.
-#                                 focusout --> The combobox is revalidated when the combobox loses focus.
-#                                 key      --> The combobox will be prevalidated prior to each edit (specifically, whenever the insert or delete
-#                                              widget commands are called). If prevalidation fails, the edit is rejected.
+#                                 none     --> The validation will only occur when specifically requested by the **validate** command.
+#                                 focus    --> The entry is revalidated when the entry receives or loses focus.
+#                                 focusin  --> The entry is revalidated when the entry receives focus.
+#                                 focusout --> The entry is revalidated when the entry loses focus.
+#                                 key      --> The entry will be prevalidated prior to each edit (specifically, whenever the **insert**, **set**
+#                                              or **delete** commands are called). If prevalidation fails, the edit is rejected.
 #                                 all      --> Validation is performed for all above conditions.
 #
-#                              Note that every **-datatype** except **none** will force this value to **key** to perform automatic validation.
+#                              Note that the **none** datatype will default to **none** validation, while every other datatypes defaults to **key**.
 #
-#                              The **-invalidcommand** is evaluated whenever the **-validatecommand** returns a false value.
-#                              The **-validatecommand** and **-invalidcommand** may modify the combobox widget's value via the widget insert or
-#                              delete commands, or by setting the linked **-textvariable**.
-#                              If either does so during prevalidation, then the edit is rejected regardless of the value returned by the
-#                              **-validatecommand**. If **-validatecommand** is empty, validation always succeeds.
-#
-#                              If not provided, defaults to none.
-#
-#                              See also **-datatype**, **-invalidcommand** and **-validatecommand**.
-#
-# **-validatecommand**         A script template to evaluate whenever validation is triggered.
-#                              If set to the empty string, validation is disabled.
-#                              The script must return a boolean value.
-#
-#                              Note that every **-datatype** except **none** will force this value to an internal procedure to perform
-#                              automatic validation.
-#
-#                              Note that the mustang combobox widget only disables validation if one of the validation scripts raises an error,
-#                              or if **-validatecommand** does not return a valid boolean value. (Thus, it is not necessary to re-enable validation
-#                              after modifying the combobox value in a validation script).
-#
-#                              If not provided, defaults to the empty string.
-#
-#                              See also **-datatype**, **-invalidcommand** and **-validate**.
+#                              See also **-datatype**.
 #
 # **-values**                  Specifies the list of values to display in the popdown window.
 #                              These values needs to be coherent with the **datatype** specified.
@@ -823,8 +785,6 @@
 #     Returns **0** if validation fails, **1** if it succeeds.
 #     Sets or clears the invalid state accordingly.
 #
-#     See the **-validate** option for more info.
-#
 #   *window* **xview** ?args?
 #     *window* **xview**
 #         Returns a list containing two elements.
@@ -881,40 +841,10 @@
 # Indexes support the same simple interpretation as for the command string index, with simple integer index arithmetic
 # and indexing relative to end.
 #
-#### VALIDATION SCRIPT SUBSTITUTIONS:
-#
-# It is possible to perform percent substitutions on the **-validatecommand** and **-invalidcommand**, just as in a
-# bind script. The following substitutions are recognized:
-#
-#   **%d**
-#      Type of action: **1** for insert prevalidation, **0** for delete prevalidation, or **-1** for revalidation.
-#
-#   **%i**
-#      Index of character string to be inserted/deleted, if any, otherwise **-1**.
-#
-#   **%P**
-#      In prevalidation, the new value of the combobox if the edit is accepted.
-#      In revalidation, the current value of the combobox.
-#
-#   **%s**
-#      The current value of combobox prior to editing.
-#
-#   **%S**
-#      The text string being inserted/deleted, if any, an empty string otherwise.
-#
-#   **%v**
-#      The current value of the **-validate** option.
-#
-#   **%V**
-#      The validation condition that triggered the callback (*key*, *focusin*, *focusout* or *forced*).
-#
-#   **%W**
-#      The name of the combobox widget.
-#
 #### AUTOMATIC VALIDATIONS:
 #
-# As the entry widget, the combobox performs automatic validation of the value inserted by the user unless its **-datatype**
-# is **none**. But the combobox widget goes further (due to the fixed list of values that can be inserted) and uses two types
+# As the entry widget, the combobox performs automatic validation of the value inserted by the user.
+# But the combobox widget goes further (due to the fixed list of values that can be inserted) and uses two types
 # of validations (depending on its **-datatype**):
 #
 #    **alpha**      -
@@ -1734,7 +1664,6 @@ namespace eval ::ms::combobox {
                                                     command \
                                                     datatype \
                                                     exportselection \
-                                                    invalidcommand \
                                                     maxlength \
                                                     placeholder \
                                                     posthook \
@@ -1744,7 +1673,6 @@ namespace eval ::ms::combobox {
                                                     takefocus \
                                                     textvariable \
                                                     validate \
-                                                    validatecommand \
                                                     values \
                                                     xscrollcommand];
 
@@ -1778,8 +1706,7 @@ namespace eval ::ms::combobox {
     set ::ms::default(combobox,command)         {}
     set ::ms::default(combobox,datatype)        none
     set ::ms::default(combobox,exportselection) 1
-    set ::ms::default(combobox,invalidcommand)  {}
-    set ::ms::default(combobox,maxlength)       0
+    set ::ms::default(combobox,maxlength)       disabled
     set ::ms::default(combobox,placeholder)     {}
     set ::ms::default(combobox,posthook)        {}
     set ::ms::default(combobox,prehook)         {}
@@ -1787,8 +1714,7 @@ namespace eval ::ms::combobox {
     set ::ms::default(combobox,style)           TCombobox
     set ::ms::default(combobox,takefocus)       1
     set ::ms::default(combobox,textvariable)    {}
-    set ::ms::default(combobox,validate)        none
-    set ::ms::default(combobox,validatecommand) {}
+    set ::ms::default(combobox,validate)        {}
     set ::ms::default(combobox,values)          {}
     set ::ms::default(combobox,xscrollcommand)  {}
 
@@ -1851,7 +1777,6 @@ proc ::ms::combobox::Command { window { args "" } } {
             set ::ms::default($w,command)         $::ms::default(combobox,command)
             set ::ms::default($w,datatype)        $::ms::default(combobox,datatype)
             set ::ms::default($w,exportselection) $::ms::default(combobox,exportselection)
-            set ::ms::default($w,invalidcommand)  $::ms::default(combobox,invalidcommand)
             set ::ms::default($w,maxlength)       $::ms::default(combobox,maxlength)
             set ::ms::default($w,placeholder)     $::ms::default(combobox,placeholder)
             set ::ms::default($w,posthook)        $::ms::default(combobox,posthook)
@@ -1861,7 +1786,6 @@ proc ::ms::combobox::Command { window { args "" } } {
             set ::ms::default($w,takefocus)       $::ms::default(combobox,takefocus)
             set ::ms::default($w,textvariable)    $::ms::default(combobox,textvariable)
             set ::ms::default($w,validate)        $::ms::default(combobox,validate)
-            set ::ms::default($w,validatecommand) $::ms::default(combobox,validatecommand)
             set ::ms::default($w,values)          $::ms::default(combobox,values)
             set ::ms::default($w,xscrollcommand)  $::ms::default(combobox,xscrollcommand)
 
@@ -1871,7 +1795,6 @@ proc ::ms::combobox::Command { window { args "" } } {
             set ::ms::current($w,command)         $::ms::default(combobox,command)
             set ::ms::current($w,datatype)        $::ms::default(combobox,datatype)
             set ::ms::current($w,exportselection) $::ms::default(combobox,exportselection)
-            set ::ms::current($w,invalidcommand)  $::ms::default(combobox,invalidcommand)
             set ::ms::current($w,maxlength)       $::ms::default(combobox,maxlength)
             set ::ms::current($w,placeholder)     $::ms::default(combobox,placeholder)
             set ::ms::current($w,posthook)        $::ms::default(combobox,posthook)
@@ -1881,7 +1804,6 @@ proc ::ms::combobox::Command { window { args "" } } {
             set ::ms::current($w,takefocus)       $::ms::default(combobox,takefocus)
             set ::ms::current($w,textvariable)    $::ms::default(combobox,textvariable)
             set ::ms::current($w,validate)        $::ms::default(combobox,validate)
-            set ::ms::current($w,validatecommand) $::ms::default(combobox,validatecommand)
             set ::ms::current($w,values)          $::ms::default(combobox,values)
             set ::ms::current($w,xscrollcommand)  $::ms::default(combobox,xscrollcommand)
 
@@ -2093,7 +2015,6 @@ proc ::ms::combobox::Command { window { args "" } } {
                         set ::ms::current($w,insertwidth)    $value
                         set ::ms::managed_by($w,insertwidth) developer
                     }
-                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
                     -justify {
                         set value [string tolower $value]
                         switch -- $value {
@@ -2115,12 +2036,17 @@ proc ::ms::combobox::Command { window { args "" } } {
                         set ::ms::managed_by($w,lightcolor) developer
                     }
                     -maxlength {
-                        switch -- [string is integer -strict $value] {
-                            1   {
-                                if { $value >= 0 } {
-                                    set ::ms::current($w,maxlength) $value
-                                }
-                            }
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,maxlength) disabled }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,maxlength) enabled }
                         }
                     }
                     -padding {
@@ -2296,7 +2222,6 @@ proc ::ms::combobox::Command { window { args "" } } {
                             all      { set ::ms::current($w,validate) all }
                         }
                     }
-                    -validatecommand { set ::ms::current($w,validatecommand) $value }
                     -values { set ::ms::current($w,values) $value }
                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                 }
@@ -2336,8 +2261,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                 }
             }
 
-            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
-            # relative to the datatype option provided.
+            # Check the 'datatype' option provided.
             switch -- $::ms::current($w,datatype) {
                 alnum      -
                 alpha      -
@@ -2345,16 +2269,15 @@ proc ::ms::combobox::Command { window { args "" } } {
                 posinteger -
                 posreal    -
                 real       {
-                    set ::ms::current($w,invalidcommand)  {}
-                    set ::ms::current($w,validate)        key
-                    set ::ms::current($w,validatecommand) [list ::ms::combobox::Validate_KeyPress %W %P]
-
-                    switch -- $::ms::current($w,maxlength) {
-                        0       {}
-                        default {
-                            # Ignore the xscrollcommand provided, if any.
-                            set ::ms::current($w,xscrollcommand) {}
-                        }
+                    # Check if a validation was provided.
+                    switch -- $::ms::current($w,validate) {
+                        ""  { set ::ms::current($w,validate) key }
+                    }
+                }
+                none {
+                    # Check if a validation was provided.
+                    switch -- $::ms::current($w,validate) {
+                        ""  { set ::ms::current($w,validate) none }
                     }
                 }
             }
@@ -2377,6 +2300,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 7
                         }
                         integer {
                             # Create a default list of integer values.
@@ -2388,6 +2314,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Set the current index as the index of the item **0**.
                             set ::ms::data($w,current_index) 25
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 3
                         }
                         posinteger {
                             # Create a default list of positive integer values.
@@ -2399,6 +2328,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Set the current index as the index of the item **0**.
                             set ::ms::data($w,current_index) 0
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 3
                         }
                         posreal {
                             # Create a default list of positive real values.
@@ -2410,6 +2342,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Set the current index as the index of the item **0**.
                             set ::ms::data($w,current_index) 0
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 4
                         }
                         real {
                             # Create a default list of real values.
@@ -2421,6 +2356,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Set the current index as the index of the item **0**.
                             set ::ms::data($w,current_index) 25
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 5
                         }
                         default {
                             # Create a default list of alphabetic values.
@@ -2439,6 +2377,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 13
                         }
                     }
 
@@ -2482,6 +2423,18 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                            # Set the maxlength.
+                            set maxlength 0
+                            foreach item $::ms::data($w,values) {
+                                set item_length [string length $item]
+                                if { $item_length > $maxlength } {
+                                    set maxlength $item_length
+                                }
+                            }
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) $maxlength
                         }
                         alpha {
                             # Check every value in '::ms::current($w,values)'.
@@ -2508,6 +2461,18 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                            # Set the maxlength.
+                            set maxlength 0
+                            foreach item $::ms::data($w,values) {
+                                set item_length [string length $item]
+                                if { $item_length > $maxlength } {
+                                    set maxlength $item_length
+                                }
+                            }
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) $maxlength
                         }
                         integer {
                             # Check every value in '::ms::current($w,values)'.
@@ -2519,6 +2484,17 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+
+                            # Get the maxlength of the first and last item.
+                            set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                            set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                            # Set the 'maxlength' internal value.
+                            if { $maxlength_from > $maxlength_to } {
+                                set ::ms::data($w,maxlength) $maxlength_from
+                            } else {
+                                set ::ms::data($w,maxlength) $maxlength_to
+                            }
                         }
                         posinteger {
                             # Check every value in '::ms::current($w,values)'.
@@ -2535,6 +2511,9 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) [string length [lindex $::ms::data($w,values) end]]
                         }
                         posreal {
                             # Check every value in '::ms::current($w,values)'.
@@ -2551,6 +2530,17 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+
+                             # Get the maxlength of the first and last item.
+                            set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                            set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                            # Set the 'maxlength' internal value.
+                            if { $maxlength_from > $maxlength_to } {
+                                set ::ms::data($w,maxlength) $maxlength_from
+                            } else {
+                                set ::ms::data($w,maxlength) $maxlength_to
+                            }
                         }
                         real {
                             # Check every value in '::ms::current($w,values)'.
@@ -2562,6 +2552,17 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+
+                            # Get the maxlength of the first and last item.
+                            set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                            set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                            # Set the 'maxlength' internal value.
+                            if { $maxlength_from > $maxlength_to } {
+                                set ::ms::data($w,maxlength) $maxlength_from
+                            } else {
+                                set ::ms::data($w,maxlength) $maxlength_to
+                            }
                         }
                         none {
                             # Register the sorted values.
@@ -2569,6 +2570,18 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                            # Set the maxlength.
+                            set maxlength 0
+                            foreach item $::ms::data($w,values) {
+                                set item_length [string length $item]
+                                if { $item_length > $maxlength } {
+                                    set maxlength $item_length
+                                }
+                            }
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) $maxlength
                         }
                     }
 
@@ -2578,16 +2591,6 @@ proc ::ms::combobox::Command { window { args "" } } {
 
                     # Compute the index of the last available item in '::ms::data($w,values)'.
                     set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,values)]-1 }]
-                }
-            }
-
-            # If the maxlength is not zero check that the charwidth is not less of it.
-            switch -- $::ms::current($w,maxlength) {
-                0       {}
-                default {
-                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                    }
                 }
             }
 
@@ -2791,7 +2794,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                                       -cursor $cursor \
                              -exportselection $::ms::current($w,exportselection) \
                                         -font $::ms::current($w,font) \
-                              -invalidcommand $::ms::current($w,invalidcommand) \
+                              -invalidcommand {} \
                                       -height $::ms::current($w,rows) \
                                      -justify $::ms::current($w,justify) \
                                  -placeholder $::ms::current($w,placeholder) \
@@ -2802,7 +2805,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                                    -takefocus $takefocus \
                                 -textvariable $::ms::current($w,textvariable) \
                                     -validate $::ms::current($w,validate) \
-                             -validatecommand $::ms::current($w,validatecommand) \
+                             -validatecommand [list ::ms::combobox::Validate_KeyPress %W %P] \
                                       -values $::ms::data($w,values) \
                                        -width $::ms::current($w,charwidth) \
                               -xscrollcommand $::ms::current($w,xscrollcommand);
@@ -2995,9 +2998,8 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
 
-                            # Set a variable that indicates if new values or a new datatype have been provided or not.
-                            set new_datatype false
-                            set new_values   false
+                            # Set a variable that indicates if new values have been provided or not.
+                            set new_values false
 
                             ##################################################
                             ##                                              ##
@@ -3085,10 +3087,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                             posinteger -
                                             posreal    -
                                             real       -
-                                            none       {
-                                                set ::ms::current($w,datatype) $value
-                                                set new_datatype true
-                                            }
+                                            none       { set ::ms::current($w,datatype) $value }
                                         }
                                     }
                                     -exportselection {
@@ -3147,7 +3146,6 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::current($w,foreground)    $value
                                         set ::ms::managed_by($w,foreground) developer
                                     }
-                                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
                                     -insertcolor {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -3187,12 +3185,17 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         set ::ms::managed_by($w,lightcolor) developer
                                     }
                                     -maxlength {
-                                        switch -- [string is integer -strict $value] {
-                                            1   {
-                                                if { $value >= 0 } {
-                                                    set ::ms::current($w,maxlength) $value
-                                                }
-                                            }
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,maxlength) disabled }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,maxlength) enabled }
                                         }
                                     }
                                     -padding {
@@ -3407,15 +3410,9 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                             all      { set ::ms::current($w,validate) all }
                                         }
                                     }
-                                    -validatecommand { set ::ms::current($w,validatecommand) $value }
                                     -values {
-                                        switch -- [llength $value] {
-                                            0       { ::ms::Error "An empty list was assigned to '$w'." $caller_info }
-                                            default {
-                                                set ::ms::current($w,values) $value
-                                                set new_values true
-                                            }
-                                        }
+                                        set ::ms::current($w,values) $value
+                                        set new_values true
                                     }
                                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                                 }
@@ -3455,158 +3452,327 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # If the maxlength is not zero check that the charwidth is not less of it.
-                            switch -- $::ms::current($w,maxlength) {
-                                0       {}
-                                default {
-                                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                                    }
-                                }
-                            }
+                            # Check if a new list of values has been provided.
+                            switch -- $new_value {
+                                true {
+                                    # Check if a list of values was provided.
+                                    switch -- [llength $::ms::current($w,values)] {
+                                        0   {
+                                            # Check the datatype.
+                                            switch -- $::ms::current($w,datatype) {
+                                                alnum {
+                                                    # Create a default list of alphanumeric values.
+                                                    set number 1
+                                                    while { $number < 51 } {
+                                                        lappend ::ms::current($w,values) [string cat "Item-" $number]
+                                                        incr number
+                                                    }
 
-                            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
-                            # relative to the datatype option provided.
-                            switch -- $::ms::current($w,datatype) {
-                                alnum      -
-                                alpha      -
-                                integer    -
-                                posinteger -
-                                posreal    -
-                                real       {
-                                    set ::ms::current($w,invalidcommand)  {}
-                                    set ::ms::current($w,validate)        key
-                                    set ::ms::current($w,validatecommand) [list ::ms::combobox::Validate_KeyPress %W %P]
+                                                    # Set the current index as the index of the item **Item-0**.
+                                                    set ::ms::data($w,current_index) 0
 
-                                    switch -- $::ms::current($w,maxlength) {
-                                        0       {}
+                                                    # Register the sorted values in lowercase characters.
+                                                    set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) 7
+                                                }
+                                                integer {
+                                                    # Create a default list of integer values.
+                                                    set number -25
+                                                    while { $number < 26 } {
+                                                        lappend ::ms::current($w,values) $number
+                                                        incr number
+                                                    }
+
+                                                    # Set the current index as the index of the item **0**.
+                                                    set ::ms::data($w,current_index) 25
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) 3
+                                                }
+                                                posinteger {
+                                                    # Create a default list of positive integer values.
+                                                    set number 0
+                                                    while { $number < 51 } {
+                                                        lappend ::ms::current($w,values) $number
+                                                        incr number
+                                                    }
+
+                                                    # Set the current index as the index of the item **0**.
+                                                    set ::ms::data($w,current_index) 0
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) 3
+                                                }
+                                                posreal {
+                                                    # Create a default list of positive real values.
+                                                    set number 0
+                                                    while { $number < 51.0 } {
+                                                        lappend ::ms::current($w,values) $number
+                                                        set number [expr { $number+1.0 } ]
+                                                    }
+
+                                                    # Set the current index as the index of the item **0**.
+                                                    set ::ms::data($w,current_index) 0
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) 4
+                                                }
+                                                real {
+                                                    # Create a default list of real values.
+                                                    set number -25.0
+                                                    while { $number < 26.0 } {
+                                                        lappend ::ms::current($w,values) $number
+                                                        set number [expr { $number+1.0 } ]
+                                                    }
+
+                                                    # Set the current index as the index of the item **0**.
+                                                    set ::ms::data($w,current_index) 25
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) 5
+                                                }
+                                                default {
+                                                    # Create a default list of alphabetic values.
+                                                    lappend ::ms::current($w,values) Amsterdam Beijing        Cairo           Dublin    Freetown      Gibraltar \
+                                                                                     Hanoi     Havana         Helsinki        Islamabad Jerusalem     Kabul \
+                                                                                     Kingston  "Kuala Lumpur" "La Paz"        Lima      Lisbon        London \
+                                                                                     Madrid    Manila         "Mexico City"   Minx      Monaco        Montevideo \
+                                                                                     Moscow    Nairobi        "New Delhi"     Oslo      "Panama City" Paris \
+                                                                                     Praga     Quito          Reykjavík       Riga      Rome          "San José" \
+                                                                                     San Juan  "San Salvador" "Santo Domingo" Sarajevo  Seoul         Singapore \
+                                                                                     Sofia     Stockholm      Taipei          Tallin    Tirana        Tokyo \
+                                                                                     Tunis     Valletta       Vienna          Warsaw    Washigton     Zagreb;
+
+                                                    # Set the current index as the index of the item **Amsterdam**.
+                                                    set ::ms::data($w,current_index) 0
+
+                                                    # Register the sorted values in lowercase characters.
+                                                    set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) 13
+                                                }
+                                            }
+
+                                            # Register the sorted values
+                                            set ::ms::data($w,values) $::ms::current($w,values)
+
+                                            # Set the current value as the value corresponding to the '::ms::data($w,current_index)' in '::ms::current($w,values)'.
+                                            set ::ms::data($w,current_value) [lindex $::ms::current($w,values) $::ms::data($w,current_index)]
+
+                                            # Compute the index of the last available item in '::ms::current($w,values)'.
+                                            set ::ms::data($w,last_available_index) [expr { [llength $::ms::current($w,values)]-1 }]
+                                        }
                                         default {
-                                            # Ignore the xscrollcommand provided, if any.
-                                            set ::ms::current($w,xscrollcommand) {}
-                                        }
-                                    }
-                                }
-                            }
+                                            # Check the datatype.
+                                            switch -- $::ms::current($w,datatype) {
+                                                alnum {
+                                                    # Check every value in '::ms::current($w,values)'.
+                                                    foreach value $::ms::current($w,values) {
+                                                        # Check every character in value.
+                                                        set i 0
+                                                        while { $i < [string length $value] } {
+                                                            set char [string index $value $i]
+                                                            switch -- $char {
+                                                                " "     -
+                                                                "."     -
+                                                                ","     -
+                                                                "-"     {}
+                                                                default {
+                                                                    switch -- [string is alnum $char] {
+                                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                                                    }
+                                                                }
+                                                            }
 
-                            # Check if a new list of values or a new datatype has been provided.
-                            if { ($new_value eq "true") || ($new_datatype eq "true") } {
-                                # Check the list of values against the datatype.
-                                switch -- $::ms::current($w,datatype) {
-                                    alnum {
-                                        # Check every value in '::ms::current($w,values)'.
-                                        foreach value $::ms::current($w,values) {
-                                            # Check every character in value.
-                                            set i 0
-                                            while { $i < [string length $value] } {
-                                                set char [string index $value $i]
-                                                switch -- $char {
-                                                    " "     -
-                                                    "."     -
-                                                    ","     -
-                                                    "-"     {}
-                                                    default {
-                                                        switch -- [string is alnum $char] {
-                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                                            incr i
                                                         }
                                                     }
-                                                }
 
-                                                incr i
-                                            }
-                                        }
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
 
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+                                                    # Register the sorted values in lowercase characters.
+                                                    set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
 
-                                        # Register the sorted values in lowercase characters.
-                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
-                                    }
-                                    alpha {
-                                        # Check every value in '::ms::current($w,values)'.
-                                        foreach value $::ms::current($w,values) {
-                                            # Check every character in value.
-                                            set i 0
-                                            while { $i < [string length $value] } {
-                                                set char [string index $value $i]
-                                                switch -- $char {
-                                                    " "     {}
-                                                    default {
-                                                        switch -- [string is alpha $char] {
-                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                                    # Set the maxlength.
+                                                    set maxlength 0
+                                                    foreach item $::ms::data($w,values) {
+                                                        set item_length [string length $item]
+                                                        if { $item_length > $maxlength } {
+                                                            set maxlength $item_length
                                                         }
                                                     }
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) $maxlength
                                                 }
+                                                alpha {
+                                                    # Check every value in '::ms::current($w,values)'.
+                                                    foreach value $::ms::current($w,values) {
+                                                        # Check every character in value.
+                                                        set i 0
+                                                        while { $i < [string length $value] } {
+                                                            set char [string index $value $i]
+                                                            switch -- $char {
+                                                                " "     {}
+                                                                default {
+                                                                    switch -- [string is alpha $char] {
+                                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                                                    }
+                                                                }
+                                                            }
 
-                                                incr i
-                                            }
-                                        }
+                                                            incr i
+                                                        }
+                                                    }
 
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -ascii $::ms::current($w,values)]
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -ascii $::ms::current($w,values)]
 
-                                        # Register the sorted values in lowercase characters.
-                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
-                                    }
-                                    integer {
-                                        # Check every value in '::ms::current($w,values)'.
-                                        foreach value $::ms::current($w,values) {
-                                            switch -- [string is integer -strict $value] {
-                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
-                                            }
-                                        }
+                                                    # Register the sorted values in lowercase characters.
+                                                    set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
 
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
-                                    }
-                                    posinteger {
-                                        # Check every value in '::ms::current($w,values)'.
-                                        foreach value $::ms::current($w,values) {
-                                            switch -- [string is integer -strict $value] {
-                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
-                                                1   {
-                                                    if { $value < 0 } {
-                                                        ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
+                                                    # Set the maxlength.
+                                                    set maxlength 0
+                                                    foreach item $::ms::data($w,values) {
+                                                        set item_length [string length $item]
+                                                        if { $item_length > $maxlength } {
+                                                            set maxlength $item_length
+                                                        }
+                                                    }
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) $maxlength
+                                                }
+                                                integer {
+                                                    # Check every value in '::ms::current($w,values)'.
+                                                    foreach value $::ms::current($w,values) {
+                                                        switch -- [string is integer -strict $value] {
+                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
+                                                        }
+                                                    }
+
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+
+                                                     # Get the maxlength of the first and last item.
+                                                    set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                    set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                    # Set the 'maxlength' internal value.
+                                                    if { $maxlength_from > $maxlength_to } {
+                                                        set ::ms::data($w,maxlength) $maxlength_from
+                                                    } else {
+                                                        set ::ms::data($w,maxlength) $maxlength_to
                                                     }
                                                 }
-                                            }
-                                        }
+                                                posinteger {
+                                                    # Check every value in '::ms::current($w,values)'.
+                                                    foreach value $::ms::current($w,values) {
+                                                        switch -- [string is integer -strict $value] {
+                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
+                                                            1   {
+                                                                if { $value < 0 } {
+                                                                    ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
+                                                                }
+                                                            }
+                                                        }
+                                                    }
 
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
-                                    }
-                                    posreal {
-                                        # Check every value in '::ms::current($w,values)'.
-                                        foreach value $::ms::current($w,values) {
-                                            switch -- [string is double -strict $value] {
-                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
-                                                1   {
-                                                    if { $value < 0 } {
-                                                        ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+
+                                                     # Get the maxlength of the first and last item.
+                                                    set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                    set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                    # Set the 'maxlength' internal value.
+                                                    if { $maxlength_from > $maxlength_to } {
+                                                        set ::ms::data($w,maxlength) $maxlength_from
+                                                    } else {
+                                                        set ::ms::data($w,maxlength) $maxlength_to
                                                     }
                                                 }
+                                                posreal {
+                                                    # Check every value in '::ms::current($w,values)'.
+                                                    foreach value $::ms::current($w,values) {
+                                                        switch -- [string is double -strict $value] {
+                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
+                                                            1   {
+                                                                if { $value < 0 } {
+                                                                    ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+
+                                                     # Get the maxlength of the first and last item.
+                                                    set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                    set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                    # Set the 'maxlength' internal value.
+                                                    if { $maxlength_from > $maxlength_to } {
+                                                        set ::ms::data($w,maxlength) $maxlength_from
+                                                    } else {
+                                                        set ::ms::data($w,maxlength) $maxlength_to
+                                                    }
+                                                }
+                                                real {
+                                                    # Check every value in '::ms::current($w,values)'.
+                                                    foreach value $::ms::current($w,values) {
+                                                        switch -- [string is double -strict $value] {
+                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
+                                                        }
+                                                    }
+
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+
+                                                    # Get the maxlength of the first and last item.
+                                                    set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                    set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                    # Set the 'maxlength' internal value.
+                                                    if { $maxlength_from > $maxlength_to } {
+                                                        set ::ms::data($w,maxlength) $maxlength_from
+                                                    } else {
+                                                        set ::ms::data($w,maxlength) $maxlength_to
+                                                    }
+                                                }
+                                                none {
+                                                    # Register the sorted values.
+                                                    set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+
+                                                    # Register the sorted values in lowercase characters.
+                                                    set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                                                    # Set the maxlength.
+                                                    set maxlength 0
+                                                    foreach item $::ms::data($w,values) {
+                                                        set item_length [string length $item]
+                                                        if { $item_length > $maxlength } {
+                                                            set maxlength $item_length
+                                                        }
+                                                    }
+
+                                                    # Set the 'maxlength' internal value.
+                                                    set ::ms::data($w,maxlength) $maxlength
+                                                }
                                             }
+
+                                            # Set the current index as the first one of '::ms::data($w,values)', and get the relative value.
+                                            set ::ms::data($w,current_index) 0
+                                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $::ms::data($w,current_index)]
+
+                                            # Compute the index of the last available item in '::ms::data($w,values)'.
+                                            set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,values)]-1 }]
                                         }
-
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
-                                    }
-                                    real {
-                                        # Check every value in '::ms::current($w,values)'.
-                                        foreach value $::ms::current($w,values) {
-                                            switch -- [string is double -strict $value] {
-                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
-                                            }
-                                        }
-
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
-                                    }
-                                    none {
-                                        # Register the sorted values.
-                                        set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
-
-                                        # Register the sorted values in lowercase characters.
-                                        set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
                                     }
                                 }
                             }
@@ -3815,7 +3981,6 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             interp invokehidden {} $w configure          -cursor $cursor \
                                                                 -exportselection $::ms::current($w,exportselection) \
                                                                            -font $::ms::current($w,font) \
-                                                                 -invalidcommand $::ms::current($w,invalidcommand) \
                                                                         -justify $::ms::current($w,justify) \
                                                                     -placeholder $::ms::current($w,placeholder) \
                                                                           -state $::ms::current($w,state) \
@@ -3823,27 +3988,20 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                                       -takefocus $takefocus \
                                                                    -textvariable $::ms::current($w,textvariable) \
                                                                        -validate $::ms::current($w,validate) \
-                                                                -validatecommand $::ms::current($w,validatecommand) \
+                                                                         -values $::ms::data($w,values) \
                                                                           -width $::ms::current($w,charwidth) \
                                                                  -xscrollcommand $::ms::current($w,xscrollcommand);
 
                             # Check if a new list of values was provided.
-                            if { ($new_values eq "true") || ($new_datatype eq "true") } {
-                                interp invokehidden {} $w configure -values $::ms::current($w,values)
+                            switch -- $new_values {
+                                true {
+                                    # Clear the widget's textarea.
+                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w selection clear
 
-                                # Set the current index as the first one of '::ms::data($w,values)', and get the relative value.
-                                set ::ms::data($w,current_index) 0
-                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $::ms::data($w,current_index)]
-
-                                # Compute the index of the last available item in '::ms::data($w,values)'.
-                                set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,values)]-1 }]
-
-                                # Clear the widget's textarea.
-                                interp invokehidden {} $w delete 0 end
-                                interp invokehidden {} $w selection clear
-
-                                # Set the current index in the combobox entry.
-                                interp invokehidden {} $w current $::ms::data($w,current_index)
+                                    # Set the current index in the combobox entry.
+                                    interp invokehidden {} $w current $::ms::data($w,current_index)
+                                }
                             }
 
                             return ""
@@ -4265,16 +4423,6 @@ proc ::ms::combobox::Style_Update { stylename caller_info } {
                 }
             }
             normal { set cursor $::ms::current($w,cursor) }
-        }
-
-        # If the maxlength is not zero check that the charwidth is not less of it.
-        switch -- $::ms::current($w,maxlength) {
-            0       {}
-            default {
-                if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                    set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                }
-            }
         }
 
         #######################################
@@ -4715,7 +4863,6 @@ proc ::ms::combobox::Destroy { w } {
                          ::ms::current($w,focuswidth) \
                          ::ms::current($w,font) \
                          ::ms::current($w,foreground) \
-                         ::ms::current($w,invalidcommand) \
                          ::ms::current($w,insertcolor) \
                          ::ms::current($w,insertwidth) \
                          ::ms::current($w,justify) \
@@ -4735,7 +4882,6 @@ proc ::ms::combobox::Destroy { w } {
                          ::ms::current($w,takefocus) \
                          ::ms::current($w,textvariable) \
                          ::ms::current($w,validate) \
-                         ::ms::current($w,validatecommand) \
                          ::ms::current($w,values) \
                          ::ms::current($w,xscrollcommand);
 
@@ -4743,6 +4889,7 @@ proc ::ms::combobox::Destroy { w } {
                          ::ms::data($w,current_index) \
                          ::ms::data($w,current_value) \
                          ::ms::data($w,last_available_index) \
+                         ::ms::data($w,maxlength) \
                          ::ms::data($w,token) \
                          ::ms::data($w,values) \
                          ::ms::data($w,values,lowercase);
@@ -4763,7 +4910,6 @@ proc ::ms::combobox::Destroy { w } {
                          ::ms::default($w,focuswidth) \
                          ::ms::default($w,font) \
                          ::ms::default($w,foreground) \
-                         ::ms::default($w,invalidcommand) \
                          ::ms::default($w,insertcolor) \
                          ::ms::default($w,insertwidth) \
                          ::ms::default($w,justify) \
@@ -4783,7 +4929,6 @@ proc ::ms::combobox::Destroy { w } {
                          ::ms::default($w,takefocus) \
                          ::ms::default($w,textvariable) \
                          ::ms::default($w,validate) \
-                         ::ms::default($w,validatecommand) \
                          ::ms::default($w,values) \
                          ::ms::default($w,xscrollcommand);
 
@@ -5628,12 +5773,12 @@ proc ::ms::combobox::Unpost { w } {
 # It returns a boolean value ['0' or '1'] indicating if the string provided
 # reached it's length limit or not.
 proc ::ms::combobox::Validate_KeyPress { w string } {
-    # Check if the character is allowed to be displayed or not.
+    # Check if a 'maxlength' is in place.
     switch -- $::ms::current($w,maxlength) {
-        0       {}
-        default {
-            # Check if the length of 'string' is bigger than the maxlength allowed.
-            if { [string length $string] > $::ms::current($w,maxlength) } {
+        disabled {}
+        enabled  {
+            # Check if the character is allowed to be displayed or not.
+            if { [string length $string] > $::ms::data($w,maxlength) } {
                 # The character will not be inserted.
                 return 0
             }
@@ -6059,8 +6204,14 @@ proc ::ms::combobox::Validate_String { w } {
                 posinteger -
                 posreal    -
                 real       {
+                    # Check if a 'maxlength' is in place.
+                    switch -- $::ms::current($w,maxlength) {
+                        disabled { set maxlength 0 }
+                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                    }
+
                     # Beautify and correct 'value' depending on the datatype specified.
-                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                     switch -- [string is double -strict $value] {
                         0   { set index $::ms::data($w,current_index) }
@@ -6460,8 +6611,14 @@ proc ::ms::combobox::Popdown_Autoselection { w } {
                 posinteger -
                 posreal    -
                 real       {
+                    # Check if a 'maxlength' is in place.
+                    switch -- $::ms::current($w,maxlength) {
+                        disabled { set maxlength 0 }
+                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                    }
+
                     # Beautify and correct 'value' depending on its datatype.
-                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                     # Get the first and last elements of the ordered list.
                     set first [lindex $::ms::data($w,values) 0]
