@@ -3443,8 +3443,8 @@ proc ::ms::Copy { w } {
     } on error {} {
         # Do nothing.
     } on ok { selection } {
-        clipboard clear  -displayof $w
-        clipboard append -displayof $w $selection
+        _clipboard clear  -displayof $w
+        _clipboard append -displayof $w $selection
     }
 
     return ""
