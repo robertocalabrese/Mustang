@@ -262,6 +262,8 @@ proc ::ms::clipboard::Command { args } {
                     set option [lindex $args 0]
                     switch -- $option {
                         -displayof {
+                            set window [lindex $args 1]
+
                             # Check if 'window' is a valid address or not.
                             set w [::ms::Check_Pathname $window invalid]
                             switch -- $w {
