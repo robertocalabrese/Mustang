@@ -1364,8 +1364,7 @@
 #   # Create a palette.
 #   palette .palette -charwidth 15 \
 #                      -command [list ::AfterValidate] \
-#                     -datatype alnum \
-#                    -maxlength 15 \
+#                    -maxlength enabled \
 #                  -placeholder "Prova" \
 #                     -posthook [list ::Posthook] \
 #                      -prehook [list ::Prehook] \
