@@ -848,13 +848,21 @@ proc ::ms::tk::Command { args } {
             # Synopsis:
             #
             # **tk** **fontchooser**
-            chan puts stdout "The 'tk fontchooser' command has been deprecated by Mustang."
-            chan puts stdout "Please use 'dialog font' instead."
-            chan puts stdout ""
-            chan puts stdout "Additional infos:"
-            chan puts stdout ""
-            chan puts stdout "$caller_info"
-            chan puts stdout ""
+            switch -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled {
+                    chan puts stdout "The 'tk fontchooser' command has been deprecated by Mustang."
+                    chan puts stdout "Please use 'dialog font' instead."
+                    chan puts stdout ""
+                    chan puts stdout "Additional infos:"
+                    chan puts stdout ""
+                    chan puts stdout "$caller_info"
+                    chan puts stdout ""
+                }
+            }
 
             return ""
         }
@@ -930,13 +938,21 @@ proc ::ms::tk::Command { args } {
             # Synopsis:
             #
             # **tk** **print**
-            chan puts stdout "The 'tk print' command has been deprecated by Mustang."
-            chan puts stdout "Please use 'dialog print' instead."
-            chan puts stdout ""
-            chan puts stdout "Additional infos:"
-            chan puts stdout ""
-            chan puts stdout "$caller_info"
-            chan puts stdout ""
+            switch -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled {
+                    chan puts stdout "The 'tk print' command has been deprecated by Mustang."
+                    chan puts stdout "Please use 'dialog print' instead."
+                    chan puts stdout ""
+                    chan puts stdout "Additional infos:"
+                    chan puts stdout ""
+                    chan puts stdout "$caller_info"
+                    chan puts stdout ""
+                }
+            }
 
             return ""
         }
