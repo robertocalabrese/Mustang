@@ -1343,7 +1343,7 @@
 #   combobox .cb1 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype alnum \
-#                 -maxlength 11 \
+#                 -maxlength enabled1 \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1354,7 +1354,7 @@
 #   combobox .cb2 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype integer \
-#                 -maxlength 4 \
+#                 -maxlength enabled \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1365,7 +1365,7 @@
 #   combobox .cb3 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype none \
-#                 -maxlength 8 \
+#                 -maxlength enabled \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1376,7 +1376,7 @@
 #   combobox .cb4 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype alnum \
-#                 -maxlength 11 \
+#                 -maxlength enabled1 \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1387,7 +1387,7 @@
 #   combobox .cb5 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype integer \
-#                 -maxlength 4 \
+#                 -maxlength enabled \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1398,7 +1398,7 @@
 #   combobox .cb6 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype none \
-#                 -maxlength 8 \
+#                 -maxlength enabled \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1409,7 +1409,7 @@
 #   combobox .cb7 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype alnum \
-#                 -maxlength 11 \
+#                 -maxlength enabled1 \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1420,7 +1420,7 @@
 #   combobox .cb8 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype integer \
-#                 -maxlength 4 \
+#                 -maxlength enabled \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
@@ -1431,7 +1431,7 @@
 #   combobox .cb9 -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype none \
-#                 -maxlength 8 \
+#                 -maxlength enabled \
 #                  -posthook [list ::Posthook] \
 #                   -prehook [list ::Prehook] \
 #                      -rows 4 \
