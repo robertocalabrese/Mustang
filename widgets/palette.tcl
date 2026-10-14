@@ -433,18 +433,13 @@
 #
 #                              See also **-darkcolor**.
 #
-# **-maxlength**               Specifies an integer that indicates the maximum number of characters that can be inserted inside a
-#                              palette widget. If this value is **0**, then any amount of characters can be inserted inside the palette
-#                              (that will be scrollable). Any other value will limit the possible characters that can be inserted.
+# **-maxlength**               Specifies a boolean value that indicates the maximum number of characters that can be inserted inside
+#                              the widget.
+#                              When **disabled** any amount of characters can be inserted inside the widget.
+#                              When **enabled** it will constrain the possible characters that can be inserted inside the widget to
+#                              the maximum number of characters of the longest item of **-values**.
 #
-#                              The maxlength value can influence the **-charwidth** of the widget, more precisely:
-#
-#                                 maxlength  = 0                    --> any charwidth value is accepted (even **0**).
-#                                 charwidth  = 0                    --> any maxlength value is accepeted (even **0**).
-#                                 maxlength != 0 and charwidth !=0  --> If the charwidth is lesser then the maxlength, the former will be
-#                                                                       set as the latter.
-#
-#                              If not provided, defaults to **0**.
+#                              If not provided, defaults to **disabled**.
 #
 #                              See also **-charwidth** and **-xscrollcommand**.
 #
@@ -619,6 +614,25 @@
 #                              Whenever the variable changes value, the widget's contents are updated, and vice versa.
 #
 #                              If not provided, defaults to the empty string.
+#
+# **-validate**                Specifies the mode in which validation should operate.
+#                              There are two main validation modes:
+#
+#                                 *prevalidation* --> The mustang **validatecommand** is evaluated prior to each edit and the return value is
+#                                                     used to determine whether to accept or reject the change.
+#                                 *revalidation*  --> The mustang **validatecommand** is evaluated to determine whether the current value is valid.
+#
+#                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
+#
+#                                 none     --> The validation will only occur when specifically requested by the **validate** command.
+#                                 focus    --> The entry is revalidated when the entry receives or loses focus.
+#                                 focusin  --> The entry is revalidated when the entry receives focus.
+#                                 focusout --> The entry is revalidated when the entry loses focus.
+#                                 key      --> The entry will be prevalidated prior to each edit (specifically, whenever the **insert**, **set**
+#                                              or **delete** commands are called). If prevalidation fails, the edit is rejected.
+#                                 all      --> Validation is performed for all above conditions.
+#
+#                              If not provided, defaults to **key**.
 #
 # **-values**                  Specifies the list of colornames to display in the popdown window and their relative hexadecimals values
 #                              to display in the preview object.
@@ -1694,6 +1708,7 @@ namespace eval ::ms::palette {
                                                    style \
                                                    takefocus \
                                                    textvariable \
+                                                   validate \
                                                    values \
                                                    xscrollcommand];
 
@@ -1727,7 +1742,7 @@ namespace eval ::ms::palette {
     set ::ms::default(palette,cmenu)           {}
     set ::ms::default(palette,command)         {}
     set ::ms::default(palette,exportselection) 1
-    set ::ms::default(palette,maxlength)       0
+    set ::ms::default(palette,maxlength)       disabled
     set ::ms::default(palette,placeholder)     {}
     set ::ms::default(palette,posthook)        {}
     set ::ms::default(palette,prehook)         {}
@@ -1735,6 +1750,7 @@ namespace eval ::ms::palette {
     set ::ms::default(palette,style)           TPalette
     set ::ms::default(palette,takefocus)       1
     set ::ms::default(palette,textvariable)    {}
+    set ::ms::default(palette,validate)        key
     set ::ms::default(palette,values)          [list Azure       #0080ff \
                                                      Blue        #0000ff \
                                                      Brown       #964b00 \
@@ -1811,6 +1827,7 @@ proc ::ms::palette::Command { window { args "" } } {
             set ::ms::default($w,style)           $::ms::default(palette,style)
             set ::ms::default($w,takefocus)       $::ms::default(palette,takefocus)
             set ::ms::default($w,textvariable)    $::ms::default(palette,textvariable)
+            set ::ms::default($w,validate)        $::ms::default(palette,validate)
             set ::ms::default($w,values)          $::ms::default(palette,values)
             set ::ms::default($w,xscrollcommand)  $::ms::default(palette,xscrollcommand)
 
@@ -1827,6 +1844,7 @@ proc ::ms::palette::Command { window { args "" } } {
             set ::ms::current($w,style)           $::ms::default(palette,style)
             set ::ms::current($w,takefocus)       $::ms::default(palette,takefocus)
             set ::ms::current($w,textvariable)    $::ms::default(palette,textvariable)
+            set ::ms::current($w,validate)        $::ms::default(palette,validate)
             set ::ms::current($w,values)          $::ms::default(palette,values)
             set ::ms::current($w,xscrollcommand)  $::ms::default(palette,xscrollcommand)
 
@@ -2050,12 +2068,17 @@ proc ::ms::palette::Command { window { args "" } } {
                         set ::ms::managed_by($w,lightcolor) developer
                     }
                     -maxlength {
-                        switch -- [string is integer -strict $value] {
-                            1   {
-                                if { $value >= 0 } {
-                                    set ::ms::current($w,maxlength) $value
-                                }
-                            }
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,maxlength) disabled }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,maxlength) enabled }
                         }
                     }
                     -padding {
@@ -2230,7 +2253,23 @@ proc ::ms::palette::Command { window { args "" } } {
                             }
                         }
                     }
-                    -values { set ::ms::current($w,values) $value }
+                    -validate {
+                        switch -nocase $value {
+                            none     { set ::ms::current($w,validate) none }
+                            focus    { set ::ms::current($w,validate) focus }
+                            focusin  { set ::ms::current($w,validate) focusin }
+                            focusout { set ::ms::current($w,validate) focusout }
+                            key      { set ::ms::current($w,validate) key }
+                            all      { set ::ms::current($w,validate) all }
+                        }
+                    }
+                    -values {
+                        # Check that the values provided forms a valid list of values (they must be divisible by two).
+                        set value_length [llength $value]
+                        switch -- [expr { $value_length%2 }] {
+                            0   { set ::ms::current($w,values) $value }
+                        }
+                    }
                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                 }
             }
@@ -2269,94 +2308,86 @@ proc ::ms::palette::Command { window { args "" } } {
                 }
             }
 
-            # If the maxlength is not zero check that the charwidth is not less of it.
-            switch -- $::ms::current($w,maxlength) {
-                0       {}
-                default {
-                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                    }
-
-                    # Ignore the xscrollcommand provided, if any.
-                    set ::ms::current($w,xscrollcommand) {}
-                }
-            }
-
-            # Check that the values provided forms a valid list of values (they must be divisible by two).
-            set value_length [llength $::ms::current($w,values)]
-            switch -- [expr { $value_length%2 }] {
+            # Check if an empty list was provided.
+            switch -- [llength $::ms::current($w,values)] {
                 0   {
-                    # Check if an empty list was provided.
-                    switch -- $value_length {
-                        0   {
-                            set ::ms::current($w,values) $::ms::default(palette,values)
+                    set ::ms::current($w,values) $::ms::default(palette,values)
 
-                            # Initialize the colornames and hexadecimal lists.
-                            set ::ms::data($w,colornames)   [list ]
-                            set ::ms::data($w,hexadecimals) [list ]
+                    # Initialize the colornames and hexadecimal lists.
+                    set ::ms::data($w,colornames)   [list ]
+                    set ::ms::data($w,hexadecimals) [list ]
 
-                            # Add the colorname and its hexadecimal value in their relative lists.
-                            foreach { colorname hex } $values {
-                                lappend ::ms::data($w,colornames)   $colorname
-                                lappend ::ms::data($w,hexadecimals) $hex
-                            }
-                        }
-                        default {
-                            # Sort the values.
-                            set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
+                    # Add the colorname and its hexadecimal value in their relative lists.
+                    foreach { colorname hex } $values {
+                        lappend ::ms::data($w,colornames)   $colorname
+                        lappend ::ms::data($w,hexadecimals) $hex
+                    }
 
-                            # Initialize the colornames and hexadecimal lists.
-                            set ::ms::data($w,colornames)   [list ]
-                            set ::ms::data($w,hexadecimals) [list ]
+                    set ::ms::data($w,maxlength) 9
+                }
+                default {
+                    # Sort the values.
+                    set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
 
-                            # Check the value list.
-                            foreach { colorname hex } $values {
-                                # Check every character in colorname.
-                                set i 0
-                                while { $i < [string length $colorname] } {
-                                    set char [string index $colorname $i]
-                                    switch -- $char {
-                                        " "     -
-                                        "-"     {}
-                                        default {
-                                            switch -- [string is alnum $char] {
-                                                0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
-                                            }
-                                        }
+                    # Initialize the colornames and hexadecimal lists.
+                    set ::ms::data($w,colornames)   [list ]
+                    set ::ms::data($w,hexadecimals) [list ]
+
+                    # Check the value list.
+                    set maxlength 0
+                    foreach { colorname hex } $values {
+                        # Check every character in colorname.
+                        set i 0
+                        while { $i < [string length $colorname] } {
+                            set char [string index $colorname $i]
+                            switch -- $char {
+                                " "     -
+                                "-"     {}
+                                default {
+                                    switch -- [string is alnum $char] {
+                                        0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
                                     }
-
-                                    incr i
                                 }
-
-                                # Check the hexadecimal color value.
-                                set hex [::ms::Check_Color $hex invalid]
-                                switch -- $hex {
-                                    invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
-                                }
-
-                                # Add the colorname and its hexadecimal value in their relative lists.
-                                lappend ::ms::data($w,colornames)   $colorname
-                                lappend ::ms::data($w,hexadecimals) $hex
                             }
+
+                            incr i
+                        }
+
+                        # Check the hexadecimal color value.
+                        set hex [::ms::Check_Color $hex invalid]
+                        switch -- $hex {
+                            invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
+                        }
+
+                        # Add the colorname and its hexadecimal value in their relative lists.
+                        lappend ::ms::data($w,colornames)   $colorname
+                        lappend ::ms::data($w,hexadecimals) $hex
+
+                        set colorname_length [string length $colorname]
+                        if { $colorname_length > $maxlength } {
+                            set maxlength $colorname_length
                         }
                     }
 
-                    # Set the current index as the first one of the colorname list.
-                    set ::ms::data($w,current_index) 0
-
-                    # Set the current colorname value.
-                    set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
-
-                    # Set the current hexadecimal value.
-                    set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
-
-                    # Set the last available index.
-                    set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
-
-                    # Set the lowercase '::ms::data($w,colornames)' list.
-                    set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
+                    # Set the 'maxlength' internal value.
+                    set ::ms::data($w,maxlength) $maxlength
                 }
             }
+
+            # Set the current index as the first one of the colorname list.
+            set ::ms::data($w,current_index) 0
+
+            # Set the current colorname value.
+            set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
+
+            # Set the current hexadecimal value.
+            set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
+
+            # Set the last available index.
+            set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
+
+            # Set the lowercase '::ms::data($w,colornames)' list.
+            set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
 
             ###############################
             ##                           ##
@@ -2623,7 +2654,7 @@ proc ::ms::palette::Command { window { args "" } } {
                                                 -style $::ms::style($w,widget) \
                                             -takefocus $takefocus \
                                          -textvariable $::ms::current($w,textvariable) \
-                                             -validate key \
+                                             -validate $::ms::current($w,validate) \
                                       -validatecommand [list ::ms::palette::Validate_KeyPress $w %P] \
                                                -values $::ms::data($w,colornames) \
                                                 -width $::ms::current($w,charwidth) \
@@ -3047,12 +3078,17 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                         set ::ms::managed_by($w,lightcolor) developer
                                     }
                                     -maxlength {
-                                        switch -- [string is integer -strict $value] {
-                                            1   {
-                                                if { $value >= 0 } {
-                                                    set ::ms::current($w,maxlength) $value
-                                                }
-                                            }
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,maxlength) disabled }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,maxlength) enabled }
                                         }
                                     }
                                     -padding {
@@ -3266,74 +3302,23 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                             }
                                         }
                                     }
+                                    -validate {
+                                        switch -nocase $value {
+                                            none     { set ::ms::current($w,validate) none }
+                                            focus    { set ::ms::current($w,validate) focus }
+                                            focusin  { set ::ms::current($w,validate) focusin }
+                                            focusout { set ::ms::current($w,validate) focusout }
+                                            key      { set ::ms::current($w,validate) key }
+                                            all      { set ::ms::current($w,validate) all }
+                                        }
+                                    }
                                     -values {
-                                        switch -- [llength $value] {
-                                            0       { ::ms::Error "An empty list of values was assigned to '$w'." $caller_info }
-                                            default {
-                                                # Check that the values provided forms a valid list of values (they must be divisible by two).
-                                                set value_length [llength $value]
-                                                switch -- [expr { $value_length%2 }] {
-                                                    0   {
-                                                        # Set the new current list of values.
-                                                        set ::ms::current($w,values) $value
-
-                                                        # Sort the values.
-                                                        set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
-
-                                                        # Initialize the colornames and hexadecimal lists.
-                                                        set ::ms::data($w,colornames)   [list ]
-                                                        set ::ms::data($w,hexadecimals) [list ]
-
-                                                        # Check the value list.
-                                                        foreach { colorname hex } $values {
-                                                            # Check every character in colorname.
-                                                            set i 0
-                                                            while { $i < [string length $colorname] } {
-                                                                set char [string index $colorname $i]
-                                                                switch -- $char {
-                                                                    " "     -
-                                                                    "-"     {}
-                                                                    default {
-                                                                        switch -- [string is alnum $char] {
-                                                                            0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                                incr i
-                                                            }
-
-                                                            # Check the hexadecimal color value.
-                                                            set hex [::ms::Check_Color $hex invalid]
-                                                            switch -- $hex {
-                                                                invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
-                                                            }
-
-                                                            # Add the colorname and its hexadecimal value in their relative lists.
-                                                            lappend ::ms::data($w,colornames)   $colorname
-                                                            lappend ::ms::data($w,hexadecimals) $hex
-                                                        }
-
-                                                        # Set the current index as the first one of the colorname list.
-                                                        set ::ms::data($w,current_index) 0
-
-                                                        # Set the current colorname value.
-                                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
-
-                                                        # Set the current hexadecimal value.
-                                                        set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
-
-                                                        # Set the last available index.
-                                                        set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
-
-                                                        # Set the lowercase '::ms::data($w,colornames)' list.
-                                                        set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
-
-                                                        # Register the fact that a new valid list of values was provided.
-                                                        set new_values true
-                                                    }
-                                                    default { ::ms::Error "An invalid list of values was assigned to '$w', '$value'." $caller_info }
-                                                }
+                                        # Check that the values provided forms a valid list of values (they must be divisible by two).
+                                        set value_length [llength $value]
+                                        switch -- [expr { $value_length%2 }] {
+                                            0   {
+                                                set ::ms::current($w,values) $value
+                                                set new_values true
                                             }
                                         }
                                     }
@@ -3375,16 +3360,89 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # If the maxlength is not zero check that the charwidth is not less of it.
-                            switch -- $::ms::current($w,maxlength) {
-                                0       {}
-                                default {
-                                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                            # Check if a new list of values has been provided.
+                            switch -- $new_values {
+                                true {
+                                    # Check if an empty list was provided.
+                                    switch -- [llength $::ms::current($w,values)] {
+                                        0   {
+                                            set ::ms::current($w,values) $::ms::default(palette,values)
+
+                                            # Initialize the colornames and hexadecimal lists.
+                                            set ::ms::data($w,colornames)   [list ]
+                                            set ::ms::data($w,hexadecimals) [list ]
+
+                                            # Add the colorname and its hexadecimal value in their relative lists.
+                                            foreach { colorname hex } $values {
+                                                lappend ::ms::data($w,colornames)   $colorname
+                                                lappend ::ms::data($w,hexadecimals) $hex
+                                            }
+
+                                            set ::ms::data($w,maxlength) 9
+                                        }
+                                        default {
+                                            # Sort the values.
+                                            set values [lsort -dictionary -stride 2 -index 0 $::ms::current($w,values)]
+
+                                            # Initialize the colornames and hexadecimal lists.
+                                            set ::ms::data($w,colornames)   [list ]
+                                            set ::ms::data($w,hexadecimals) [list ]
+
+                                            # Check the value list.
+                                            set maxlength 0
+                                            foreach { colorname hex } $values {
+                                                # Check every character in colorname.
+                                                set i 0
+                                                while { $i < [string length $colorname] } {
+                                                    set char [string index $colorname $i]
+                                                    switch -- $char {
+                                                        " "     -
+                                                        "-"     {}
+                                                        default {
+                                                            switch -- [string is alnum $char] {
+                                                                0   { ::ms::Error "'$colorname' is not a valid colorname." $caller_info }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    incr i
+                                                }
+
+                                                # Check the hexadecimal color value.
+                                                set hex [::ms::Check_Color $hex invalid]
+                                                switch -- $hex {
+                                                    invalid { ::ms::Error "'$hex' is not a valid hexadecimal color." $caller_info }
+                                                }
+
+                                                # Add the colorname and its hexadecimal value in their relative lists.
+                                                lappend ::ms::data($w,colornames)   $colorname
+                                                lappend ::ms::data($w,hexadecimals) $hex
+
+                                                set colorname_length [string length $colorname]
+                                                if { $colorname_length > $maxlength } {
+                                                    set maxlength $colorname_length
+                                                }
+                                            }
+
+                                            # Set the 'maxlength' internal value.
+                                            set ::ms::data($w,maxlength) $maxlength
+                                        }
                                     }
 
-                                    # Ignore the xscrollcommand provided, if any.
-                                    set ::ms::current($w,xscrollcommand) {}
+                                    # Set the current index as the first one of the colorname list.
+                                    set ::ms::data($w,current_index) 0
+
+                                    # Set the current colorname value.
+                                    set ::ms::data($w,current_value) [lindex $::ms::data($w,colornames) $::ms::data($w,current_index)]
+
+                                    # Set the current hexadecimal value.
+                                    set ::ms::data($w,current_hex) [lindex $::ms::data($w,hexadecimals) $::ms::data($w,current_index)]
+
+                                    # Set the last available index.
+                                    set ::ms::data($w,last_available_index) [expr { [llength $::ms::data($w,colornames)]-1 }]
+
+                                    # Set the lowercase '::ms::data($w,colornames)' list.
+                                    set ::ms::data($w,colornames,lowercase) [string tolower $::ms::data($w,colornames)]
                                 }
                             }
 
@@ -3637,6 +3695,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                                                             -style $::ms::style($w,widget) \
                                                         -takefocus $takefocus \
                                                      -textvariable $::ms::current($w,textvariable) \
+                                                         -validate $::ms::current($w,validate) \
                                                            -values $::ms::data($w,colornames) \
                                                             -width $::ms::current($w,charwidth) \
                                                    -xscrollcommand $::ms::current($w,xscrollcommand);
@@ -3650,6 +3709,10 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                             # Check if a new list of values was provided.
                             switch -- $new_values {
                                 true {
+                                    # Clear the widget's textarea.
+                                    $w.combobox delete 0 end
+                                    $w.combobox selection clear
+
                                     # Apply the changes to the combobox object.
                                     $w.combobox current $::ms::data($w,current_index)
 
@@ -4090,16 +4153,6 @@ proc ::ms::palette::Style_Update { stylename caller_info } {
                 }
             }
             normal { set cursor $::ms::current($w,cursor) }
-        }
-
-        # If the maxlength is not zero check that the charwidth is not less of it.
-        switch -- $::ms::current($w,maxlength) {
-            0       {}
-            default {
-                if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                    set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                }
-            }
         }
 
         #######################################
@@ -4588,6 +4641,7 @@ proc ::ms::palette::Destroy { w } {
                          ::ms::current($w,style) \
                          ::ms::current($w,takefocus) \
                          ::ms::current($w,textvariable) \
+                         ::ms::current($w,validate) \
                          ::ms::current($w,values) \
                          ::ms::current($w,xscrollcommand);
 
@@ -4632,6 +4686,7 @@ proc ::ms::palette::Destroy { w } {
                          ::ms::default($w,style) \
                          ::ms::default($w,takefocus) \
                          ::ms::default($w,textvariable) \
+                         ::ms::default($w,validate) \
                          ::ms::default($w,values) \
                          ::ms::default($w,xscrollcommand);
 
@@ -5477,12 +5532,12 @@ proc ::ms::palette::Unpost { w } {
 # It returns a boolean value ['0' or '1'] indicating if the string provided
 # reached it's length limit or not.
 proc ::ms::palette::Validate_KeyPress { w string } {
-    # Check if the character is allowed to be displayed or not.
+    # Check if a 'maxlength' is in place.
     switch -- $::ms::current($w,maxlength) {
-        0       {}
-        default {
-            # Check if the length of 'string' is bigger than the maxlength allowed.
-            if { [string length $string] > $::ms::current($w,maxlength) } {
+        disabled {}
+        enabled  {
+            # Check if the character is allowed to be displayed or not.
+            if { [string length $string] > $::ms::data($w,maxlength) } {
                 # The character will not be inserted.
                 return 0
             }
