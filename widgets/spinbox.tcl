@@ -1340,7 +1340,7 @@
 #   spinbox .sp1  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype alnum \
-#                 -maxlength 11 \
+#                 -maxlength enabled1 \
 #                     -state normal \
 #                     -style TSpinbox \
 #                    -values $alnum_values;
@@ -1348,7 +1348,7 @@
 #   spinbox .sp2  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype integer \
-#                 -maxlength 4 \
+#                 -maxlength enabled \
 #                     -state normal \
 #                     -style TSpinbox \
 #                    -values $integer_values;
@@ -1356,7 +1356,7 @@
 #   spinbox .sp3  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype none \
-#                 -maxlength 8 \
+#                 -maxlength enabled \
 #                     -state normal \
 #                     -style TSpinbox \
 #                    -values $none_values;
@@ -1364,7 +1364,7 @@
 #   spinbox .sp4  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype alnum \
-#                 -maxlength 11 \
+#                 -maxlength enabled1 \
 #                     -state readonly \
 #                     -style TSpinbox \
 #                    -values $alnum_values;
@@ -1372,7 +1372,7 @@
 #   spinbox .sp5  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype integer \
-#                 -maxlength 4 \
+#                 -maxlength enabled \
 #                     -state readonly \
 #                     -style TSpinbox \
 #                    -values $integer_values;
@@ -1380,7 +1380,7 @@
 #   spinbox .sp6  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype none \
-#                 -maxlength 8 \
+#                 -maxlength enabled \
 #                     -state readonly \
 #                     -style TSpinbox \
 #                    -values $none_values;
@@ -1388,7 +1388,7 @@
 #   spinbox .sp7  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype alnum \
-#                 -maxlength 11 \
+#                 -maxlength enabled1 \
 #                     -state disabled \
 #                     -style TSpinbox \
 #                    -values $alnum_values;
@@ -1396,7 +1396,7 @@
 #   spinbox .sp8  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype integer \
-#                 -maxlength 4 \
+#                 -maxlength enabled \
 #                     -state disabled \
 #                     -style TSpinbox \
 #                    -values $integer_values;
@@ -1404,7 +1404,7 @@
 #   spinbox .sp9  -charwidth 11 \
 #                   -command [list ::AfterValidate] \
 #                  -datatype none \
-#                 -maxlength 8 \
+#                 -maxlength enabled \
 #                     -state disabled \
 #                     -style TSpinbox \
 #                    -values $none_values;
