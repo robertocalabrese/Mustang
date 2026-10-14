@@ -318,6 +318,12 @@ proc ::ms::focus::Command { args } {
             set action [lindex $args 0]
             set window [lindex $args 1]
 
+            # Check if 'window' is a valid address or not.
+            set w [::ms::Check_Pathname $window invalid]
+            switch -- $w {
+                invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
+            }
+
             # Check the 'action' value.
             switch -- $action {
                 -displayof -
@@ -326,12 +332,6 @@ proc ::ms::focus::Command { args } {
                     #
                     # **focus** **-displayof** *window*
                     # **focus** **-lastfor** *window*
-
-                    # Check if 'window' is a valid address or not.
-                    set w [::ms::Check_Pathname $window invalid]
-                    switch -- $w {
-                        invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                    }
 
                     # Execute the command.
                     return [_focus $action $w]
