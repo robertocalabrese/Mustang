@@ -3542,12 +3542,15 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
 
     # Check the maxlength.
     switch -- $::ms::current($w,maxlength) {
-        0   {
+        disabled {
             # Insert the 'clipboard_data' string at the 'insert' point.
             {*}$address insert $insert $clipboard_data
 
-            # Set the cursor index at the end of the 'clipboard_data' string.
-            {*}$address icursor [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
+            # Set the index at the end of the 'clipboard_data' string.
+            set clipboard_data_end [string length [string cat [string range $value 0 $insert-1] "$clipboard_data"]]
+
+            # Set the cursor index at the 'clipboard_data_end' index.
+            {*}$address icursor $clipboard_data_end
 
             # Make the 'clipboard_data_end' character visible.
             switch -- $::ms::data($w,classtype) {
@@ -3555,16 +3558,16 @@ proc ::ms::Paste { w { clipboard_type CLIPBOARD } } {
                 default { ::ttk::entry::See $w $clipboard_data_end }
             }
         }
-        default {
+        enabled {
             # Construct the new value with the 'clipboard_data' inserted at the insert point.
             set new_value [string cat [string range $value 0 $insert-1] "$clipboard_data" [string range $value $insert end]]
 
             # Check if 'new_value' list length fits the widget maxlength.
-            if { [string length $new_value] > $::ms::current($w,maxlength) } {
+            if { [string length $new_value] > $::ms::data($w,maxlength) } {
                 # It doesn't fit 😕.
                 # Clear the widget field, insert the truncated new value and position the cursor at the end.
                 {*}$address delete 0 end
-                {*}$address insert 0 [string range $new_value 0 $::ms::current($w,maxlength)-1]
+                {*}$address insert 0 [string range $new_value 0 $::ms::data($w,maxlength)-1]
                 {*}$address icursor end
             } else {
                 # It fit 😄.
