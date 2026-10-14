@@ -3427,25 +3427,44 @@ proc ::ms::Copy { w } {
     switch -- $::ms::data($w,classtype) {
         palette {
             set string [$w.combobox get]
-            set index1 [$w.combobox index sel.first]
+
+            # Try to retrive the first character index selected, if any.
+            try {
+                $w.combobox index sel.first
+            } on error {} {
+                # The widget doesn't have any selection.
+                return ""
+            } on ok { result } {
+                set index1 $result
+            }
+
+            # Get the last character index selected.
             set index2 [expr { [$w.combobox index sel.last]-1 }]
         }
         default {
             set string [interp invokehidden {} $w get]
-            set index1 [interp invokehidden {} $w index sel.first]
+
+            # Try to retrive the first character index selected, if any.
+            try {
+                interp invokehidden {} $w index sel.first
+            } on error {} {
+                # The widget doesn't have any selection.
+                return ""
+            } on ok { result } {
+                set index1 $result
+            }
+
+            # Get the last character index selected.
             set index2 [expr { [interp invokehidden {} $w index sel.last]-1 }]
         }
     }
 
     # Execute the command.
-    try {
-        string range $string $index1 $index2
-    } on error {} {
-        # Do nothing.
-    } on ok { selection } {
-        _clipboard clear  -displayof $w
-        _clipboard append -displayof $w $selection
-    }
+    set selection [string range $string $index1 $index2]
+
+    # Copy the selection to the clipboard.
+    _clipboard clear  -displayof $w
+    _clipboard append -displayof $w $selection
 
     return ""
 }
