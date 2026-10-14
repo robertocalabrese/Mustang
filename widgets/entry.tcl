@@ -260,13 +260,6 @@
 #                              See also **-charwidth**, **-invalidcommand**, **-maxlength**, **-from**, **-to**, **-validate**
 #                              and **-validatecommand**.
 #
-# **-decimals**                Should be an integer that indicates how many decimal digits should be enforced.
-#
-#                              Note: This option is only meaningfull for **posreal** and **real** datatypes and will be ignored for any other
-#                                    datatypes.
-#
-#                              If not provided, defaults to **1**.
-#
 # **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
 #                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
 #                              selecting outside the widget deselects any widget's selection, and the widget will respond to selection retrieval
@@ -391,7 +384,7 @@
 #                                 - **-9.9** for real datatypes.
 #                                 - **0**    for posinteger and posreal datatypes.
 #
-#                              See also **-datatype**, **-decimals**, **-maxlength** and **-to**.
+#                              See also **-datatype**, **-maxlength** and **-to**.
 #
 # **-hash**                    Specifies a boolean value that indicates if the hash sign '#' will be available inside the entry or not.
 #                              It's only valid for hexadecimal datatypes and will be ignore in any other case.
@@ -400,19 +393,9 @@
 #                                    Attempts to change this value after the widget is created by using the **configure** command,
 #                                    will be ignored by mustang.
 #
-#                              If not provided, defaults to **yes**.
+#                              If not provided, defaults to **enabled**.
 #
 #                              See also **-datatype**.
-#
-# **-invalidcommand**          A script template to evaluate whenever the **-validatecommand** returns **0**.
-#                              Providing an empty string will mean to not launch any script when the **-validatecommand** returns **0**.
-#
-#                              Note that every **-datatype** except **none** will force this value to an the empty string to perform
-#                              automatic validation.
-#
-#                              If not provided, defaults to the empty string.
-#
-#                              See also **-datatype**, **-validate** and **-validatecommand**.
 #
 # **-insertcolor**             It's a list that specifies the color to use for the entry cursor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -484,31 +467,36 @@
 #
 #                              See also **-darkcolor**.
 #
-# **-maxlength**               Specifies an integer that indicates the maximum number of characters that can be inserted inside an entry widget.
-#                              If this value is **0**, then any amount of characters can be inserted inside the entry (that will be scrollable).
-#                              Any other value will limit the possible characters that can be inserted.
+# **-maxlength**               Specifies a boolean value that indicates the maximum number of characters that can be inserted inside
+#                              the widget.
+#                              When **disabled**, any amount of characters can be inserted inside the widget.
+#                              When **enabled**, it will constrain the possible characters that can be inserted inside the widget to
+#                              a specific amount of characters, more precisely:
 #
-#                              Note that hexadecimal and numerical datatypes will always force their relative maxlength no matter if a
-#                              different value is provided, more precisely:
+#                                 If the datatype is **alnum**, **alpha** or **none**:
+#                                    If charwidth is **0**, the maximum amount of characters allowed is **12**.
+#                                    If charwidth is **1**, the maximum amount of characters allowed is **1**.
+#                                    For any other values of charwidth, the maximum amount of characters allowed is **charwidth-1**.
 #
-#                                 hex8       --> the maxlength will be forced to **6**  if the hash sign is disabled or **7**  if it's enabled.
-#                                 hex12      --> the maxlength will be forced to **9**  if the hash sign is disabled or **10** if it's enabled.
-#                                 hex16      --> the maxlength will be forced to **12** if the hash sign is disabled or **13** if it's enabled.
-#                                 integer    -
-#                                 posinteger -
-#                                 posreal    -
-#                                 real       --> the maxlength will be forced to whichever between the *from* and *to* values, have the greater
-#                                                number of digits (point, sign and decimals included for the datatypes that allows them).
+#                                 If the datatype is **hex8**:
+#                                    The maximum amount of characters allowed is **6** if the **-hash** option is **disabled**
+#                                    or **7** if the **-hash** option is **enabled**.
 #
-#                              The maxlength value can influence the **-charwidth** of the widget, more precisely:
+#                                 If the datatype is **hex12**:
+#                                    The maximum amount of characters allowed is **9** if the **-hash** option is **disabled**
+#                                    or **10** if the **-hash** option is **enabled**.
 #
-#                                 maxlength  = 0                    --> any valid charwidth value is accepted (even **0**).
-#                                 maxlength != 0 and charwidth !=0  --> If the charwidth is lesser then the maxlength, the former will be
-#                                                                       set as the latter.
+#                                 If the datatype is **hex16**:
+#                                    The maximum amount of characters allowed is **12** if the **-hash** option is **disabled**
+#                                    or **13** if the **-hash** option is **enabled**.
 #
-#                              If not provided, defaults to **0**.
+#                                 If the datatype is **integer**, **posinteger**, **posreal** or **real**:
+#                                    The maximum amount of characters allowed depends on who's bigger (in term of number of characters)
+#                                    between the **-from** and the **-to** option.
 #
-#                              See also **-charwidth**, **-datatype**, **-decimals**, **-from**, **-to** and **-xscrollcommand**.
+#                              If not provided, defaults to **disabled**.
+#
+#                              See also **-charwidth**, **-datatype**, **-from**, **-hash**, **-to** and **-xscrollcommand**.
 #
 # **-padding**                 Specifies the internal padding for the widget.
 #                              The padding is a list of up to four length specifications.
@@ -673,47 +661,28 @@
 #                                 - **9**   for integer and posinteger datatypes.
 #                                 - **9.9** for posreal and real datatypes.
 #
-#                              See also **-datatype**, **-decimals**, **-from** and **-maxlength**.
+#                              See also **-datatype**, **-from** and **-maxlength**.
 #
 # **-validate**                Specifies the mode in which validation should operate.
 #                              There are two main validation modes:
 #
-#                                 *prevalidation* --> The **-validatecommand** is evaluated prior to each edit and the return value is
+#                                 *prevalidation* --> The mustang **validatecommand** is evaluated prior to each edit and the return value is
 #                                                     used to determine whether to accept or reject the change.
-#                                 *revalidation*  --> The **-validatecommand** is evaluated to determine whether the current value is valid.
+#                                 *revalidation*  --> The mustang **validatecommand** is evaluated to determine whether the current value is valid.
 #
 #                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
 #
-#                                 none     --> The validation will only occur when specifically requested by the validate widget's command.
+#                                 none     --> The validation will only occur when specifically requested by the **validate** command.
 #                                 focus    --> The entry is revalidated when the entry receives or loses focus.
 #                                 focusin  --> The entry is revalidated when the entry receives focus.
 #                                 focusout --> The entry is revalidated when the entry loses focus.
-#                                 key      --> The entry will be prevalidated prior to each edit (specifically, whenever the insert or delete
-#                                              widget's commands are called). If prevalidation fails, the edit is rejected.
+#                                 key      --> The entry will be prevalidated prior to each edit (specifically, whenever the **insert**, **set**
+#                                              or **delete** commands are called). If prevalidation fails, the edit is rejected.
 #                                 all      --> Validation is performed for all above conditions.
 #
-#                              Note that every **-datatype** except **none** will force this value to **key** to perform automatic validation.
+#                              Note that the **none** datatype will default to **none** validation, while every other datatypes defaults to **key**.
 #
-#                              The **-invalidcommand** is evaluated whenever the **-validatecommand** returns a false value.
-#                              The **-validatecommand** and **-invalidcommand** may modify the entry widget's value via the widget's insert or
-#                              delete commands, or by setting the linked **-textvariable**.
-#                              If either does so during prevalidation, then the edit is rejected regardless of the value returned by the
-#                              **-validatecommand**. If **-validatecommand** is empty, validation always succeeds.
-#
-#                              If not provided, defaults to none.
-#
-#                              See also **-datatype**, **-invalidcommand** and **-validatecommand**.
-#
-# **-validatecommand**         A script template to evaluate whenever validation is triggered.
-#                              If set to the empty string, validation is disabled.
-#                              The script must return a boolean value.
-#
-#                              Note that every **-datatype** except **none** will force this value to an internal procedure to perform
-#                              automatic validation.
-#
-#                              If not provided, defaults to the empty string.
-#
-#                              See also **-datatype**, **-invalidcommand** and **-validate**.
+#                              See also **-datatype**.
 #
 # **-xscrollcommand**          Specifies a command prefix, used to communicate with horizontal scrollbars.
 #                              When the view in the widget's window changes, the widget will generate a Tcl command by concatenating the
@@ -819,7 +788,7 @@
 #         If *end* refers to the same character as *start* or an earlier one, then the entry's selection is cleared.
 #
 #   *window* **set* *value*
-#     Sets the value of the combobox to *value*.
+#     Sets the value of the entry to *value*.
 #     Returns the empty string.
 #
 #   *window* **state** ?*statespec*?
@@ -898,36 +867,6 @@
 # In general, out-of-range indices are automatically rounded to the nearest legal value.
 # Indexes support the same simple interpretation as for the command string index, with simple integer index arithmetic
 # and indexing relative to end.
-#
-#### VALIDATION SCRIPT SUBSTITUTIONS:
-#
-# It is possible to perform percent substitutions on the **-validatecommand** and **-invalidcommand**, just as in a
-# bind script. The following substitutions are recognized:
-#
-#   **%d**
-#      Type of action: **1** for insert prevalidation, **0** for delete prevalidation, or **-1** for revalidation.
-#
-#   **%i**
-#      Index of character string to be inserted/deleted, if any, otherwise **-1**.
-#
-#   **%P**
-#      In prevalidation, the new value of the entry if the edit is accepted.
-#      In revalidation, the current value of the entry.
-#
-#   **%s**
-#      The current value of entry prior to editing.
-#
-#   **%S**
-#      The text string being inserted/deleted, if any, an empty string otherwise.
-#
-#   **%v**
-#      The current value of the **-validate** option.
-#
-#   **%V**
-#      The validation condition that triggered the callback (*key*, *focusin*, *focusout* or *forced*).
-#
-#   **%W**
-#      The name of the entry widget.
 #
 #### STATES:
 #
@@ -1118,17 +1057,6 @@
 # Check the [event](/wiki/commands/event.md) wiki page to see alternative keystrokes in case some keys are not present in the user
 # keyboard like the *Delete*, *Arrows*, *Home*, *End*, *PageUp* or *PageDown* keys.
 #
-#### DIFFERENCES FROM Tk ENTRY WIDGET VALIDATION:
-#
-# The standard Tk entry widget automatically disables validation (by setting **-validate** to **none**) if the **-validatecommand**
-# or **-invalidcommand** modifies the entry's value.
-# The Tk themed entry widget (the one used internally by mustang) only disables validation if one of the validation scripts raises
-# an error, or if **-validatecommand** does not return a valid boolean value. (Thus, it is not necessary to re-enable validation
-# after modifying the entry value in a validation script).
-#
-# In addition, the standard entry widget invokes validation whenever the linked **-textvariable** is modified; the Tk themed entry
-# widget does not.
-#
 #### COLOR OPTIONS:
 #
 # Each color option accepts colors provided in one of the following forms:
@@ -1288,9 +1216,9 @@
 #                    -datatype integer \
 #             -exportselection 1 \
 #                        -from -999 \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify right \
-#                   -maxlength 4 \
+#                   -maxlength enabled \
 #                 -placeholder integer \
 #                       -state normal \
 #                       -style TEntry \
@@ -1302,9 +1230,9 @@
 #                    -datatype posinteger \
 #             -exportselection 1 \
 #                        -from -999 \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify right \
-#                   -maxlength 4 \
+#                   -maxlength enabled \
 #                 -placeholder posinteger \
 #                       -state normal \
 #                       -style TEntry \
@@ -1316,9 +1244,9 @@
 #                    -datatype posreal \
 #             -exportselection 1 \
 #                        -from -100.0 \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify right \
-#                   -maxlength 6 \
+#                   -maxlength enabled \
 #                 -placeholder posreal \
 #                       -state normal \
 #                       -style TEntry \
@@ -1330,9 +1258,9 @@
 #                    -datatype real \
 #             -exportselection 1 \
 #                        -from -100.0 \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify right \
-#                   -maxlength 7 \
+#                   -maxlength enabled \
 #                 -placeholder real \
 #                       -state normal \
 #                       -style TEntry \
@@ -1344,9 +1272,9 @@
 #                    -datatype hex8 \
 #             -exportselection 1 \
 #                        -from "" \
-#                        -hash yes \
+#                        -hash enabled \
 #                     -justify right \
-#                   -maxlength 10 \
+#                   -maxlength enabled \
 #                 -placeholder "hex8 with #" \
 #                       -state normal \
 #                       -style TEntry \
@@ -1358,9 +1286,9 @@
 #                    -datatype hex8 \
 #             -exportselection 1 \
 #                        -from "" \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify right \
-#                   -maxlength 10 \
+#                   -maxlength enabled \
 #                 -placeholder "hex8 without #" \
 #                       -state normal \
 #                       -style TEntry \
@@ -1372,9 +1300,9 @@
 #                    -datatype alnum \
 #             -exportselection 1 \
 #                        -from "" \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify left \
-#                   -maxlength 0 \
+#                   -maxlength disabled \
 #                 -placeholder alnum \
 #                       -state normal \
 #                       -style TEntry \
@@ -1386,9 +1314,9 @@
 #                    -datatype alpha \
 #             -exportselection 1 \
 #                        -from "" \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify left \
-#                   -maxlength 0 \
+#                   -maxlength disabled \
 #                 -placeholder alpha \
 #                       -state normal \
 #                       -style TEntry \
@@ -1400,9 +1328,9 @@
 #                    -datatype none \
 #             -exportselection 1 \
 #                        -from "" \
-#                        -hash no \
+#                        -hash disabled \
 #                     -justify left \
-#                   -maxlength 0 \
+#                   -maxlength disabled \
 #                 -placeholder none \
 #                       -state normal \
 #                       -style TEntry \
@@ -1646,11 +1574,9 @@ namespace eval ::ms::entry {
                                                  cmenu \
                                                  command \
                                                  datatype \
-                                                 decimals \
                                                  exportselection \
                                                  from \
                                                  hash \
-                                                 invalidcommand \
                                                  maxlength \
                                                  placeholder \
                                                  show \
@@ -1660,7 +1586,6 @@ namespace eval ::ms::entry {
                                                  textvariable \
                                                  to \
                                                  validate \
-                                                 validatecommand \
                                                  xscrollcommand];
 
     # Set the 'styleable' entry option list.
@@ -1689,12 +1614,10 @@ namespace eval ::ms::entry {
     set ::ms::default(entry,cmenu)           {}
     set ::ms::default(entry,command)         {}
     set ::ms::default(entry,datatype)        none
-    set ::ms::default(entry,decimals)        1
     set ::ms::default(entry,exportselection) 1
     set ::ms::default(entry,from)            0
-    set ::ms::default(entry,hash)            yes
-    set ::ms::default(entry,invalidcommand)  {}
-    set ::ms::default(entry,maxlength)       0
+    set ::ms::default(entry,hash)            enabled
+    set ::ms::default(entry,maxlength)       disabled
     set ::ms::default(entry,placeholder)     {}
     set ::ms::default(entry,show)            {}
     set ::ms::default(entry,state)           normal
@@ -1702,8 +1625,7 @@ namespace eval ::ms::entry {
     set ::ms::default(entry,takefocus)       1
     set ::ms::default(entry,textvariable)    {}
     set ::ms::default(entry,to)              0
-    set ::ms::default(entry,validate)        none
-    set ::ms::default(entry,validatecommand) {}
+    set ::ms::default(entry,validate)        {}
     set ::ms::default(entry,xscrollcommand)  {}
 
     # Note: The default 'styleable' entry options values are always defined inside the current theme.
@@ -1765,11 +1687,9 @@ proc ::ms::entry::Command { window { args "" } } {
             set ::ms::default($w,cmenu)           $::ms::default(entry,cmenu)
             set ::ms::default($w,command)         $::ms::default(entry,command)
             set ::ms::default($w,datatype)        $::ms::default(entry,datatype)
-            set ::ms::default($w,decimals)        $::ms::default(entry,decimals)
             set ::ms::default($w,exportselection) $::ms::default(entry,exportselection)
             set ::ms::default($w,from)            $::ms::default(entry,from)
             set ::ms::default($w,hash)            $::ms::default(entry,hash)
-            set ::ms::default($w,invalidcommand)  $::ms::default(entry,invalidcommand)
             set ::ms::default($w,maxlength)       $::ms::default(entry,maxlength)
             set ::ms::default($w,placeholder)     $::ms::default(entry,placeholder)
             set ::ms::default($w,show)            $::ms::default(entry,show)
@@ -1779,7 +1699,6 @@ proc ::ms::entry::Command { window { args "" } } {
             set ::ms::default($w,textvariable)    $::ms::default(entry,textvariable)
             set ::ms::default($w,to)              $::ms::default(entry,to)
             set ::ms::default($w,validate)        $::ms::default(entry,validate)
-            set ::ms::default($w,validatecommand) $::ms::default(entry,validatecommand)
             set ::ms::default($w,xscrollcommand)  $::ms::default(entry,xscrollcommand)
 
             # Set the current widget's (not styleable) options.
@@ -1787,11 +1706,9 @@ proc ::ms::entry::Command { window { args "" } } {
             set ::ms::current($w,cmenu)           $::ms::default(entry,cmenu)
             set ::ms::current($w,command)         $::ms::default(entry,command)
             set ::ms::current($w,datatype)        $::ms::default(entry,datatype)
-            set ::ms::current($w,decimals)        $::ms::default(entry,decimals)
             set ::ms::current($w,exportselection) $::ms::default(entry,exportselection)
             set ::ms::current($w,from)            $::ms::default(entry,from)
             set ::ms::current($w,hash)            $::ms::default(entry,hash)
-            set ::ms::current($w,invalidcommand)  $::ms::default(entry,invalidcommand)
             set ::ms::current($w,maxlength)       $::ms::default(entry,maxlength)
             set ::ms::current($w,placeholder)     $::ms::default(entry,placeholder)
             set ::ms::current($w,show)            $::ms::default(entry,show)
@@ -1801,13 +1718,11 @@ proc ::ms::entry::Command { window { args "" } } {
             set ::ms::current($w,textvariable)    $::ms::default(entry,textvariable)
             set ::ms::current($w,to)              $::ms::default(entry,to)
             set ::ms::current($w,validate)        $::ms::default(entry,validate)
-            set ::ms::current($w,validatecommand) $::ms::default(entry,validatecommand)
             set ::ms::current($w,xscrollcommand)  $::ms::default(entry,xscrollcommand)
 
             # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype)     entry
             set ::ms::data($w,current_value) ""
-            set ::ms::data($w,format)        "%.1f"
 
             # Set each styleable option to be managed by Tk.
             #
@@ -1925,14 +1840,6 @@ proc ::ms::entry::Command { window { args "" } } {
                             hex        { set ::ms::current($w,datatype) hex8 }
                         }
                     }
-                    -decimals {
-                        switch -- [string is integer -strict $value] {
-                            1   {
-                                set ::ms::current($w,decimals) $value
-                                set ::ms::data($w,format) "%.${value}f"
-                            }
-                        }
-                    }
                     -exportselection {
                         switch -nocase -- $value {
                             0        -
@@ -2000,12 +1907,12 @@ proc ::ms::entry::Command { window { args "" } } {
                             no       -
                             off      -
                             false    -
-                            disabled { set ::ms::current($w,hash) no }
+                            disabled { set ::ms::current($w,hash) disabled }
                             1        -
                             yes      -
                             on       -
                             true     -
-                            enabled  { set ::ms::current($w,hash) yes }
+                            enabled  { set ::ms::current($w,hash) enabled }
                         }
                     }
                     -insertcolor {
@@ -2026,7 +1933,6 @@ proc ::ms::entry::Command { window { args "" } } {
                         set ::ms::current($w,insertwidth)    $value
                         set ::ms::managed_by($w,insertwidth) developer
                     }
-                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
                     -justify {
                         set value [string tolower $value]
                         switch -- $value {
@@ -2048,12 +1954,17 @@ proc ::ms::entry::Command { window { args "" } } {
                         set ::ms::managed_by($w,lightcolor) developer
                     }
                     -maxlength {
-                        switch -- [string is integer -strict $value] {
-                            1   {
-                                if { $value >= 0 } {
-                                    set ::ms::current($w,maxlength) $value
-                                }
-                            }
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,maxlength) disabled }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,maxlength) enabled }
                         }
                     }
                     -padding {
@@ -2220,7 +2131,6 @@ proc ::ms::entry::Command { window { args "" } } {
                             all      { set ::ms::current($w,validate) all }
                         }
                     }
-                    -validatecommand { set ::ms::current($w,validatecommand) $value }
                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                 }
             }
@@ -2255,8 +2165,7 @@ proc ::ms::entry::Command { window { args "" } } {
                 }
             }
 
-            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
-            # relative to the datatype option provided.
+            # Check the 'datatype' option provided.
             switch -- $::ms::current($w,datatype) {
                 alnum      -
                 alpha      -
@@ -2267,13 +2176,15 @@ proc ::ms::entry::Command { window { args "" } } {
                 posinteger -
                 posreal    -
                 real       {
-                    set ::ms::current($w,invalidcommand)  {}
-                    set ::ms::current($w,validate)        key
-                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_KeyPress %W %P]
-
-                    switch -- $::ms::current($w,maxlength) {
-                        0       {}
-                        default { set ::ms::current($w,xscrollcommand) {} }
+                    # Check if a validation was provided.
+                    switch -- $::ms::current($w,validate) {
+                        ""  { set ::ms::current($w,validate) key }
+                    }
+                }
+                none {
+                    # Check if a validation was provided.
+                    switch -- $::ms::current($w,validate) {
+                        ""  { set ::ms::current($w,validate) none }
                     }
                 }
             }
@@ -2281,25 +2192,35 @@ proc ::ms::entry::Command { window { args "" } } {
             # Depending on the datatype provided override the maxlength option and, if needed,
             # check the 'from' and 'to' values.
             switch -- $::ms::current($w,datatype) {
+                alnum -
+                alpha -
+                none  {
+                    # Set the 'maxlength' internal value.
+                    switch -- $::ms::current($w,charwidth) {
+                        0       { set ::ms::data($w,maxlength) 12 }
+                        1       { set ::ms::data($w,maxlength) 1 }
+                        default { set ::ms::data($w,maxlength) [expr { $::ms::current($w,charwidth)-1 } ]}
+                    }
+                }
                 hex8 {
-                    # Override any 'maxlength' provided.
+                    # Set the 'maxlength' internal value.
                     switch -- $::ms::current($w,hash) {
-                        no  { set ::ms::current($w,maxlength) 6 }
-                        yes { set ::ms::current($w,maxlength) 7 }
+                        disabled { set ::ms::data($w,maxlength) 6 }
+                        enabled  { set ::ms::data($w,maxlength) 7 }
                     }
                 }
                 hex12 {
-                    # Override any 'maxlength' provided.
+                    # Set the 'maxlength' internal value.
                     switch -- $::ms::current($w,hash) {
-                        no  { set ::ms::current($w,maxlength) 9 }
-                        yes { set ::ms::current($w,maxlength) 10 }
+                        disabled { set ::ms::data($w,maxlength) 9 }
+                        enabled  { set ::ms::data($w,maxlength) 10 }
                     }
                 }
                 hex16 {
-                    # Override any 'maxlength' provided.
+                    # Set the 'maxlength' internal value.
                     switch -- $::ms::current($w,hash) {
-                        no  { set ::ms::current($w,maxlength) 12 }
-                        yes { set ::ms::current($w,maxlength) 13 }
+                        disabled { set ::ms::data($w,maxlength) 12 }
+                        enabled  { set ::ms::data($w,maxlength) 13 }
                     }
                 }
                 integer {
@@ -2316,13 +2237,15 @@ proc ::ms::entry::Command { window { args "" } } {
                         set ::ms::current($w,to)    9
                     }
 
-                    # Override any 'maxlength' provided.
+                    # Get the maxlength of the first and last item.
                     set maxlength_from [string length $::ms::current($w,from)]
                     set maxlength_to   [string length $::ms::current($w,to)]
+
+                    # Set the 'maxlength' internal value.
                     if { $maxlength_from > $maxlength_to } {
-                        set ::ms::current($w,maxlength) $maxlength_from
+                        set ::ms::data($w,maxlength) $maxlength_from
                     } else {
-                        set ::ms::current($w,maxlength) $maxlength_to
+                        set ::ms::data($w,maxlength) $maxlength_to
                     }
                 }
                 posinteger {
@@ -2347,24 +2270,10 @@ proc ::ms::entry::Command { window { args "" } } {
                         set ::ms::current($w,to)   9
                     }
 
-                    # Override any 'maxlength' provided.
-                    set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
+                    # Set the 'maxlength' internal value.
+                    set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
                 }
                 posreal {
-                    # Safeguard.
-                    # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
-                    if { $::ms::current($w,from) != 0 } {
-                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                    } else {
-                        set ::ms::current($w,from) 0
-                    }
-
-                    if { $::ms::current($w,to) != 0 } {
-                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                    } else {
-                        set ::ms::current($w,to) 0
-                    }
-
                     # Safeguard.
                     # Make sure that the 'from' and 'to' value are both greater or equal to zero.
                     if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
@@ -2380,24 +2289,10 @@ proc ::ms::entry::Command { window { args "" } } {
                         set ::ms::current($w,to)   9.9
                     }
 
-                    # Override any 'maxlength' provided.
-                    set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
+                    # Set the 'maxlength' internal value.
+                    set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
                 }
                 real {
-                    # Safeguard.
-                    # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
-                    if { $::ms::current($w,from) != 0 } {
-                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                    } else {
-                        set ::ms::current($w,from) 0
-                    }
-
-                    if { $::ms::current($w,to) != 0 } {
-                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                    } else {
-                        set ::ms::current($w,to) 0
-                    }
-
                     # Safeguard.
                     # Make sure that the 'from' value is not greater than the 'to' value.
                     if { $::ms::current($w,from) > $::ms::current($w,to) } {
@@ -2406,25 +2301,15 @@ proc ::ms::entry::Command { window { args "" } } {
                         set ::ms::current($w,to)    9.9
                     }
 
-                    # Override any 'maxlength' provided.
+                    # Get the maxlength of the first and last item.
                     set maxlength_from [string length $::ms::current($w,from)]
                     set maxlength_to   [string length $::ms::current($w,to)]
-                    if { $maxlength_from > $maxlength_to } {
-                        set ::ms::current($w,maxlength) $maxlength_from
-                    } else {
-                        set ::ms::current($w,maxlength) $maxlength_to
-                    }
-                }
-            }
 
-            # Check the 'maxlength'.
-            switch -- $::ms::current($w,maxlength) {
-                0       {}
-                default {
-                    # Safeguard.
-                    # Check that 'charwidth' is not inferior to 'maxlength'.
-                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                    # Set the 'maxlength' internal value.
+                    if { $maxlength_from > $maxlength_to } {
+                        set ::ms::data($w,maxlength) $maxlength_from
+                    } else {
+                        set ::ms::data($w,maxlength) $maxlength_to
                     }
                 }
             }
@@ -2614,7 +2499,7 @@ proc ::ms::entry::Command { window { args "" } } {
                                    -cursor $cursor \
                           -exportselection $::ms::current($w,exportselection) \
                                      -font $::ms::current($w,font) \
-                           -invalidcommand $::ms::current($w,invalidcommand) \
+                           -invalidcommand {} \
                                   -justify $::ms::current($w,justify) \
                               -placeholder $::ms::current($w,placeholder) \
                                      -show $::ms::current($w,show) \
@@ -2623,7 +2508,7 @@ proc ::ms::entry::Command { window { args "" } } {
                                 -takefocus $takefocus \
                              -textvariable $::ms::current($w,textvariable) \
                                  -validate $::ms::current($w,validate) \
-                          -validatecommand $::ms::current($w,validatecommand) \
+                          -validatecommand [list ::ms::entry::Validate_KeyPress %W %P] \
                                     -width $::ms::current($w,charwidth) \
                            -xscrollcommand $::ms::current($w,xscrollcommand);
 
@@ -2903,14 +2788,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                             }
                                         }
                                     }
-                                    -decimals {
-                                        switch -- [string is integer -strict $value] {
-                                            1   {
-                                                set ::ms::current($w,decimals) $value
-                                                set ::ms::data($w,format) "%.${value}f"
-                                            }
-                                        }
-                                    }
                                     -exportselection {
                                         switch -nocase -- $value {
                                             0        -
@@ -2991,7 +2868,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                         set ::ms::current($w,insertwidth)    $value
                                         set ::ms::managed_by($w,insertwidth) developer
                                     }
-                                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
                                     -justify {
                                         set value [string tolower $value]
                                         switch -- $value {
@@ -3013,12 +2889,17 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                         set ::ms::managed_by($w,lightcolor) developer
                                     }
                                     -maxlength {
-                                        switch -- [string is integer -strict $value] {
-                                            1   {
-                                                if { $value >= 0 } {
-                                                    set ::ms::current($w,maxlength) $value
-                                                }
-                                            }
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,maxlength) disabled }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,maxlength) enabled }
                                         }
                                     }
                                     -padding {
@@ -3214,7 +3095,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                             all      { set ::ms::current($w,validate) all }
                                         }
                                     }
-                                    -validatecommand { set ::ms::current($w,validatecommand) $value }
                                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                                 }
                             }
@@ -3252,186 +3132,129 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             # Check if a new datatype was provided.
                             switch -- $new_datatype {
                                 true {
-                                    # Remove any previously displayed value.
-                                    interp invokehidden {} $w delete 0 end
-                                    interp invokehidden {} $w selection clear
-                                    interp invokehidden {} $w icursor 0
+                                    # Depending on the datatype provided override the maxlength option and, if needed,
+                                    # check the 'from' and 'to' values.
+                                    switch -- $::ms::current($w,datatype) {
+                                        alnum -
+                                        alpha -
+                                        none  {
+                                            # Set the 'maxlength' internal value.
+                                            switch -- $::ms::current($w,charwidth) {
+                                                0       { set ::ms::data($w,maxlength) 12 }
+                                                1       { set ::ms::data($w,maxlength) 1 }
+                                                default { set ::ms::data($w,maxlength) [expr { $::ms::current($w,charwidth)-1 } ]}
+                                            }
+                                        }
+                                        hex8 {
+                                            # Set the 'maxlength' internal value.
+                                            switch -- $::ms::current($w,hash) {
+                                                disabled { set ::ms::data($w,maxlength) 6 }
+                                                enabled  { set ::ms::data($w,maxlength) 7 }
+                                            }
+                                        }
+                                        hex12 {
+                                            # Set the 'maxlength' internal value.
+                                            switch -- $::ms::current($w,hash) {
+                                                disabled { set ::ms::data($w,maxlength) 9 }
+                                                enabled  { set ::ms::data($w,maxlength) 10 }
+                                            }
+                                        }
+                                        hex16 {
+                                            # Set the 'maxlength' internal value.
+                                            switch -- $::ms::current($w,hash) {
+                                                disabled { set ::ms::data($w,maxlength) 12 }
+                                                enabled  { set ::ms::data($w,maxlength) 13 }
+                                            }
+                                        }
+                                        integer {
+                                            # Safeguard.
+                                            # Make sure that the 'from' and 'to' values are integers.
+                                            set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }]
+                                            set ::ms::current($w,to)   [expr { int($::ms::current($w,to)) }]
 
-                                    # Set the new current value to the empty string.
-                                    set ::ms::data($w,current_value) ""
-                                }
-                            }
+                                            # Safeguard.
+                                            # Make sure that the 'from' value is not greater than the 'to' value.
+                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                set ::ms::current($w,from) -9
+                                                set ::ms::current($w,to)    9
+                                            }
 
-                            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
-                            # relative to the datatype option provided.
-                            switch -- $::ms::current($w,datatype) {
-                                alnum      -
-                                alpha      -
-                                hex8       -
-                                hex12      -
-                                hex16      -
-                                integer    -
-                                posinteger -
-                                posreal    -
-                                real       {
-                                    set ::ms::current($w,invalidcommand)  {}
-                                    set ::ms::current($w,validate)        key
-                                    set ::ms::current($w,validatecommand) [list ::ms::entry::Validate_KeyPress %W %P]
+                                            # Get the maxlength of the first and last item.
+                                            set maxlength_from [string length $::ms::current($w,from)]
+                                            set maxlength_to   [string length $::ms::current($w,to)]
 
-                                    switch -- $::ms::current($w,maxlength) {
-                                        0       {}
-                                        default { set ::ms::current($w,xscrollcommand) {} }
-                                    }
-                                }
-                            }
+                                            # Set the 'maxlength' internal value.
+                                            if { $maxlength_from > $maxlength_to } {
+                                                set ::ms::data($w,maxlength) $maxlength_from
+                                            } else {
+                                                set ::ms::data($w,maxlength) $maxlength_to
+                                            }
+                                        }
+                                        posinteger {
+                                            # Safeguard.
+                                            # Make sure that the 'from' and 'to' values are integers.
+                                            set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }]
+                                            set ::ms::current($w,to)   [expr { int($::ms::current($w,to)) }]
 
-                            # Depending on the datatype provided override the maxlength option and, if needed,
-                            # check the 'from' and 'to' values.
-                            switch -- $::ms::current($w,datatype) {
-                                hex8 {
-                                    # Override any 'maxlength' provided.
-                                    switch -- $::ms::current($w,hash) {
-                                        no  { set ::ms::current($w,maxlength) 6 }
-                                        yes { set ::ms::current($w,maxlength) 7 }
-                                    }
-                                }
-                                hex12 {
-                                    # Override any 'maxlength' provided.
-                                    switch -- $::ms::current($w,hash) {
-                                        no  { set ::ms::current($w,maxlength) 9 }
-                                        yes { set ::ms::current($w,maxlength) 10 }
-                                    }
-                                }
-                                hex16 {
-                                    # Override any 'maxlength' provided.
-                                    switch -- $::ms::current($w,hash) {
-                                        no  { set ::ms::current($w,maxlength) 12 }
-                                        yes { set ::ms::current($w,maxlength) 13 }
-                                    }
-                                }
-                                integer {
-                                    # Safeguard.
-                                    # Make sure that the 'from' and 'to' values are integers.
-                                    set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }]
-                                    set ::ms::current($w,to)   [expr { int($::ms::current($w,to)) }]
+                                            # Safeguard.
+                                            # Make sure that the 'from' and 'to' values are both greater or equal to zero.
+                                            if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
+                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                set ::ms::current($w,from) 0
+                                                set ::ms::current($w,to)   9
+                                            }
 
-                                    # Safeguard.
-                                    # Make sure that the 'from' value is not greater than the 'to' value.
-                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                        set ::ms::current($w,from) -9
-                                        set ::ms::current($w,to)    9
-                                    }
+                                            # Safeguard.
+                                            # Make sure that the 'from' value is not greater than the 'to' value.
+                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                set ::ms::current($w,from) 0
+                                                set ::ms::current($w,to)   9
+                                            }
 
-                                    # Override any 'maxlength' provided.
-                                    set maxlength_from [string length $::ms::current($w,from)]
-                                    set maxlength_to   [string length $::ms::current($w,to)]
-                                    if { $maxlength_from > $maxlength_to } {
-                                        set ::ms::current($w,maxlength) $maxlength_from
-                                    } else {
-                                        set ::ms::current($w,maxlength) $maxlength_to
-                                    }
-                                }
-                                posinteger {
-                                    # Safeguard.
-                                    # Make sure that the 'from' and 'to' values are integers.
-                                    set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }]
-                                    set ::ms::current($w,to)   [expr { int($::ms::current($w,to)) }]
+                                            # Set the 'maxlength' internal value.
+                                            set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
+                                        }
+                                        posreal {
+                                            # Safeguard.
+                                            # Make sure that the 'from' and 'to' values are both greater or equal to zero.
+                                            if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
+                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                set ::ms::current($w,from) 0
+                                                set ::ms::current($w,to)   9.9
+                                            }
 
-                                    # Safeguard.
-                                    # Make sure that the 'from' and 'to' value are both greater or equal to zero.
-                                    if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
-                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                        set ::ms::current($w,from) 0
-                                        set ::ms::current($w,to)   9
-                                    }
+                                            # Make sure that the 'from' value is not greater than the 'to' value.
+                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                set ::ms::current($w,from) 0
+                                                set ::ms::current($w,to)   9.9
+                                            }
 
-                                    # Safeguard.
-                                    # Make sure that the 'from' value is not greater than the 'to' value.
-                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                        set ::ms::current($w,from) 0
-                                        set ::ms::current($w,to)   9
-                                    }
+                                            # Set the 'maxlength' internal value.
+                                            set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
+                                        }
+                                        real {
+                                            # Safeguard.
+                                            # Make sure that the 'from' value is not greater than the 'to' value.
+                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                set ::ms::current($w,from) -9.9
+                                                set ::ms::current($w,to)    9.9
+                                            }
 
-                                    # Override any 'maxlength' provided.
-                                    set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
-                                }
-                                posreal {
-                                    # Safeguard.
-                                    # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
-                                    if { $::ms::current($w,from) != 0 } {
-                                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                                    } else {
-                                        set ::ms::current($w,from) 0
-                                    }
+                                            # Get the maxlength of the first and last item.
+                                            set maxlength_from [string length $::ms::current($w,from)]
+                                            set maxlength_to   [string length $::ms::current($w,to)]
 
-                                    if { $::ms::current($w,to) != 0 } {
-                                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                                    } else {
-                                        set ::ms::current($w,to) 0
-                                    }
-
-                                    # Safeguard.
-                                    # Make sure that the 'from' and 'to' value are both greater or equal to zero.
-                                    if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
-                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                        set ::ms::current($w,from) 0
-                                        set ::ms::current($w,to)   9.9
-                                    }
-
-                                    # Make sure that the 'from' value is not greater than the 'to' value.
-                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                        set ::ms::current($w,from) 0
-                                        set ::ms::current($w,to)   9.9
-                                    }
-
-                                    # Override any 'maxlength' provided.
-                                    set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
-                                }
-                                real {
-                                    # Safeguard.
-                                    # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
-                                    if { $::ms::current($w,from) != 0 } {
-                                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                                    } else {
-                                        set ::ms::current($w,from) 0
-                                    }
-
-                                    if { $::ms::current($w,to) != 0 } {
-                                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                                    } else {
-                                        set ::ms::current($w,to) 0
-                                    }
-
-                                    # Safeguard.
-                                    # Make sure that the 'from' value is not greater than the 'to' value.
-                                    if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                        # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                        set ::ms::current($w,from) -9.9
-                                        set ::ms::current($w,to)    9.9
-                                    }
-
-                                    # Override any 'maxlength' provided.
-                                    set maxlength_from [string length $::ms::current($w,from)]
-                                    set maxlength_to   [string length $::ms::current($w,to)]
-                                    if { $maxlength_from > $maxlength_to } {
-                                        set ::ms::current($w,maxlength) $maxlength_from
-                                    } else {
-                                        set ::ms::current($w,maxlength) $maxlength_to
-                                    }
-                                }
-                            }
-
-                            # Check the 'maxlength'.
-                            switch -- $::ms::current($w,maxlength) {
-                                0       {}
-                                default {
-                                    # Safeguard.
-                                    # Check that 'charwidth' is not inferior to 'maxlength'.
-                                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                                            # Set the 'maxlength' internal value.
+                                            if { $maxlength_from > $maxlength_to } {
+                                                set ::ms::data($w,maxlength) $maxlength_from
+                                            } else {
+                                                set ::ms::data($w,maxlength) $maxlength_to
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -3620,7 +3443,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                             interp invokehidden {} $w configure          -cursor $cursor \
                                                                 -exportselection $::ms::current($w,exportselection) \
                                                                            -font $::ms::current($w,font) \
-                                                                 -invalidcommand $::ms::current($w,invalidcommand) \
                                                                         -justify $::ms::current($w,justify) \
                                                                     -placeholder $::ms::current($w,placeholder) \
                                                                            -show $::ms::current($w,show) \
@@ -3629,9 +3451,21 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                                       -takefocus $takefocus \
                                                                    -textvariable $::ms::current($w,textvariable) \
                                                                        -validate $::ms::current($w,validate) \
-                                                                -validatecommand $::ms::current($w,validatecommand) \
                                                                           -width $::ms::current($w,charwidth) \
                                                                  -xscrollcommand $::ms::current($w,xscrollcommand);
+
+                            # Check if a new datatype was provided.
+                            switch -- $new_datatype {
+                                true {
+                                    # Remove any previously displayed value.
+                                    interp invokehidden {} $w delete 0 end
+                                    interp invokehidden {} $w selection clear
+                                    interp invokehidden {} $w icursor 0
+
+                                    # Set the new current value to the empty string.
+                                    set ::ms::data($w,current_value) ""
+                                }
+                            }
 
                             return ""
                         }
@@ -3702,7 +3536,15 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                 on      -
                 true    -
                 active  -
-                enabled { chan puts stdout "'insert' is a deprecated entry command. Use 'set' instead." }
+                enabled {
+                    chan puts stdout "The 'insert' entry command has been deprecated by Mustang."
+                    chan puts stdout "Please use the 'set' entry command instead."
+                    chan puts stdout ""
+                    chan puts stdout "Additional infos:"
+                    chan puts stdout ""
+                    chan puts stdout "$caller_info"
+                    chan puts stdout ""
+                }
             }
 
             switch -- [llength $args] {
@@ -3715,32 +3557,14 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                     set index  [lindex $args 0]
                     set string [lindex $args 1]
 
-                    # Check the index value.
-                    switch -- [string is integer -strict $index] {
-                        0   {
-                            # Check if index is one of the allowed keyword for indexes.
-                            switch -- $index {
-                                insert    -
-                                end       -
-                                sel.first -
-                                sel.last  { set index [interp invokehidden {} $w index $index] }
-                                default   { ::ms::Error "Invalid index, '$index'." $caller_info }
-                            }
-                        }
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w insert $index $string
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        ::ttk::entry::See $w $index
                     }
-
-                    # Construct the new value that should be displayed inside the widget.
-                    set value [interp invokehidden {} $w get]
-                    if { $index < 1 } {
-                        set value [string cat $string $value]
-                    } elseif { $index >= [string length $value] } {
-                        set value [string cat $value $string]
-                    } else {
-                        set value [string cat [string range $value 0 $index-1] $string [string range $value $index end]]
-                    }
-
-                    # Launch the 'set' command.
-                    ::ms::entry::Pathname_Cmd $w set $value
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -3841,7 +3665,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                         default {
                                             # Check if the hash sign '#' should be included or not.
                                             switch -- $::ms::current($w,hash) {
-                                                no  { set value [string trimleft $value "#"] }
+                                                disabled { set value [string trimleft $value "#"] }
                                             }
                                         }
                                     }
@@ -3867,8 +3691,14 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     interp invokehidden {} $w selection clear
                                 }
                                 default {
+                                    # Check if a 'maxlength' is in place.
+                                    switch -- $::ms::current($w,maxlength) {
+                                        disabled { set maxlength 0 }
+                                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                                    }
+
                                     # Beautify 'value'.
-                                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                                     # Check if 'value' is an integer.
                                     switch -- [string is integer -strict $value] {
@@ -3911,8 +3741,14 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                     interp invokehidden {} $w selection clear
                                 }
                                 default {
+                                    # Check if a 'maxlength' is in place.
+                                    switch -- $::ms::current($w,maxlength) {
+                                        disabled { set maxlength 0 }
+                                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                                    }
+
                                     # Beautify 'value'.
-                                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                                     # Check if 'value' is a double.
                                     switch -- [string is double -strict $value] {
@@ -3930,8 +3766,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                 set value $::ms::current($w,from)
                                             } elseif { $value > $::ms::current($w,to) } {
                                                 set value $::ms::current($w,to)
-                                            } else {
-                                                set value [format $::ms::data($w,format) $value]
                                             }
 
                                             # If the corrected value is different than the current value,
@@ -4083,16 +3917,6 @@ proc ::ms::entry::Style_Update { stylename caller_info } {
             disabled -
             readonly { set cursor arrow }
             normal   { set cursor $::ms::current($w,cursor) }
-        }
-
-        # If the maxlength is not zero check that the charwidth is not less of it.
-        switch -- $::ms::current($w,maxlength) {
-            0       {}
-            default {
-                if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                    set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                }
-            }
         }
 
         #######################################
@@ -4438,7 +4262,6 @@ proc ::ms::entry::Destroy { w } {
                          ::ms::current($w,cursor) \
                          ::ms::current($w,darkcolor) \
                          ::ms::current($w,datatype) \
-                         ::ms::current($w,decimals) \
                          ::ms::current($w,exportselection) \
                          ::ms::current($w,fieldbackground) \
                          ::ms::current($w,focuscolor) \
@@ -4447,7 +4270,6 @@ proc ::ms::entry::Destroy { w } {
                          ::ms::current($w,foreground) \
                          ::ms::current($w,from) \
                          ::ms::current($w,hash) \
-                         ::ms::current($w,invalidcommand) \
                          ::ms::current($w,insertcolor) \
                          ::ms::current($w,insertwidth) \
                          ::ms::current($w,justify) \
@@ -4466,12 +4288,11 @@ proc ::ms::entry::Destroy { w } {
                          ::ms::current($w,textvariable) \
                          ::ms::current($w,to) \
                          ::ms::current($w,validate) \
-                         ::ms::current($w,validatecommand) \
                          ::ms::current($w,xscrollcommand);
 
     unset -nocomplain -- ::ms::data($w,classtype) \
                          ::ms::data($w,current_value) \
-                         ::ms::data($w,format) \
+                         ::ms::data($w,maxlength) \
                          ::ms::data($w,token);
 
     unset -nocomplain -- ::ms::default($w,background) \
@@ -4482,7 +4303,6 @@ proc ::ms::entry::Destroy { w } {
                          ::ms::default($w,cursor) \
                          ::ms::default($w,darkcolor) \
                          ::ms::default($w,datatype) \
-                         ::ms::default($w,decimals) \
                          ::ms::default($w,exportselection) \
                          ::ms::default($w,fieldbackground) \
                          ::ms::default($w,focuscolor) \
@@ -4491,7 +4311,6 @@ proc ::ms::entry::Destroy { w } {
                          ::ms::default($w,foreground) \
                          ::ms::default($w,from) \
                          ::ms::default($w,hash) \
-                         ::ms::default($w,invalidcommand) \
                          ::ms::default($w,insertcolor) \
                          ::ms::default($w,insertwidth) \
                          ::ms::default($w,justify) \
@@ -4510,7 +4329,6 @@ proc ::ms::entry::Destroy { w } {
                          ::ms::default($w,textvariable) \
                          ::ms::default($w,to) \
                          ::ms::default($w,validate) \
-                         ::ms::default($w,validatecommand) \
                          ::ms::default($w,xscrollcommand);
 
     unset -nocomplain -- ::ms::managed_by($w,background) \
@@ -4668,7 +4486,7 @@ proc ::ms::entry::KeyPress { w key } {
                 "#" {
                     # Check if hash are allowed for the widget.
                     switch -- $::ms::current($w,hash) {
-                        no  {
+                        disabled {
                             # 😕 Do not insert the key.
                             return -code break
                         }
@@ -4735,7 +4553,8 @@ proc ::ms::entry::KeyPress { w key } {
     }
 
     # 😀 Insert the key.
-    ::ttk::entry::Insert $w $key
+    interp invokehidden {} $w insert insert $key
+    ::ttk::entry::See $w insert
 
     return ""
 }
@@ -4962,10 +4781,10 @@ proc ::ms::entry::Touchpad { w counter amount } {
 proc ::ms::entry::Validate_KeyPress { w string } {
     # Check if the character is allowed to be displayed or not
     switch -- $::ms::current($w,maxlength) {
-        0       {}
-        default {
+        disabled {}
+        enabled  {
             # Check if the length of string is bigger than the maxlength allowed.
-            if { [string length $string] > $::ms::current($w,maxlength) } {
+            if { [string length $string] > $::ms::data($w,maxlength) } {
                 return 0
             }
         }
@@ -5042,7 +4861,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                         "#" {
                             # Check if hash are allowed for the widget.
                             switch -- $::ms::current($w,hash) {
-                                no  {
+                                disabled {
                                     # Change the widget's dynamic state to 'invalid'.
                                     interp invokehidden {} $w state [list invalid]
 
@@ -5261,8 +5080,8 @@ proc ::ms::entry::Validate_String { w } {
                 "#" {
                     # Check if the hash sign '#' should be included or not.
                     switch -- $::ms::current($w,hash) {
-                        no  { set i 0 }
-                        yes {
+                        disabled { set i 0 }
+                        enabled  {
                             # Add '#' to the corrected value.
                             append corrected_value "#"
 
@@ -5426,7 +5245,7 @@ proc ::ms::entry::Validate_String { w } {
                         default {
                             # Check if the hash sign '#' should be included or not.
                             switch -- $::ms::current($w,hash) {
-                                no  { set value [string trimleft $value "#"] }
+                                disabled { set value [string trimleft $value "#"] }
                             }
                         }
                     }
@@ -5439,8 +5258,14 @@ proc ::ms::entry::Validate_String { w } {
             switch -- $value {
                 ""      {}
                 default {
+                    # Check if a 'maxlength' is in place.
+                    switch -- $::ms::current($w,maxlength) {
+                        disabled { set maxlength 0 }
+                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                    }
+
                     # Beautify 'value'.
-                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                     # Check if 'value' is a valid number.
                     switch -- [string is integer -strict $value] {
@@ -5463,8 +5288,14 @@ proc ::ms::entry::Validate_String { w } {
             switch -- $value {
                 ""      {}
                 default {
+                    # Check if a 'maxlength' is in place.
+                    switch -- $::ms::current($w,maxlength) {
+                        disabled { set maxlength 0 }
+                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                    }
+
                     # Beautify 'value'.
-                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                     # Check if 'value' is a valid number.
                     switch -- [string is double -strict $value] {
@@ -5475,8 +5306,6 @@ proc ::ms::entry::Validate_String { w } {
                                 set value $::ms::current($w,from)
                             } elseif { $value >= $::ms::current($w,to) } {
                                 set value $::ms::current($w,to)
-                            } else {
-                                set value [format $::ms::data($w,format) $value]
                             }
                         }
                     }
