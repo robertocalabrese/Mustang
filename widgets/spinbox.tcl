@@ -295,14 +295,7 @@
 #                                    Attempts to change this value after the widget is created by using the **configure** command,
 #                                    will be ignored by mustang.
 #
-#                              See also **-charwidth**, **-invalidcommand**, **-maxlength**, **-validate** and **-validatecommand**.
-#
-# **-decimals**                Should be an integer that indicates how many decimal digits should be enforced.
-#
-#                              Note: This option is only meaningfull for **posreal** and **real** datatypes and will be ignored for any other
-#                                    datatypes.
-#
-#                              If not provided, defaults to **1**.
+#                              See also **-charwidth**, **-invalidcommand** and **-maxlength**.
 #
 # **-exportselection**         Specifies a boolean value that indicates whether or not a selection in the widget should be linked to the X
 #                              selection. If the selection is exported, then selecting in the widget deselects the current X selection,
@@ -426,7 +419,7 @@
 #                                 - **-9.9** for real datatypes.
 #                                 - **0**    for posinteger and posreal datatypes.
 #
-#                              See also **-datatype**, **-decimals**, **-increment**, **-maxlength** and **-to**.
+#                              See also **-datatype**, **-increment**, **-maxlength** and **-to**.
 #
 # **-increment**               Should be a positive number (an integer or a floating-point value depending on the datatype specified for
 #                              the widget) specifying the change in value to be applied each time one of the widget's spin buttons is pressed.
@@ -436,7 +429,7 @@
 #                                 - **1**   for integer and posinteger datatypes.
 #                                 - **1.0** for real and posreal datatypes.
 #
-#                              See also **-datatype**, **-decimals**, **-from**, **-maxlength** and **-to**.
+#                              See also **-datatype**, **-from**, **-maxlength** and **-to**.
 #
 # **-insertcolor**             It's a list that specifies the color to use for the spinbox cursor.
 #                              See the **COLOR OPTION** section to know how this list should be composed.
@@ -470,16 +463,6 @@
 #                                                             It is not supposed to change when the widget's dynamic state changes.
 #
 #                              See also **-insertcolor**.
-#
-# **-invalidcommand**          A script template to evaluate whenever the **-validatecommand** returns **0**.
-#                              Providing an empty string will mean to not launch any script when the **-validatecommand** returns **0**.
-#
-#                              Note that every **-datatype** except **none** will force this value to an the empty string to perform
-#                              automatic validation.
-#
-#                              If not provided, defaults to the empty string.
-#
-#                              See also **-datatype**, **-validate** and **-validatecommand**.
 #
 # **-justify**                 If there are multiple lines of text, specifies how the lines are laid out relative to one another.
 #                              Allowed values:
@@ -518,23 +501,16 @@
 #
 #                              See also **-darkcolor**.
 #
-# **-maxlength**               Specifies an integer that indicates the maximum number of characters that can be inserted inside a
-#                              spinbox widget. If this value is **0**, then any amount of characters can be inserted inside the spinbox
-#                              (that will be scrollable). Any other value will limit the possible characters that can be inserted.
+# **-maxlength**               Specifies a boolean value that indicates the maximum number of characters that can be inserted inside
+#                              the widget.
+#                              When **disabled** any amount of characters can be inserted inside the widget.
+#                              When **enabled** it will constrain the possible characters that can be inserted inside the widget to
+#                              the maximum number of characters of the longest item of **-values**.
 #
-#                              Note that numerical datatypes will always force their relative maxlength no matter if a different value
-#                              is provided, but rather it will be forced to whichever between the *from* and *to* values, have the
-#                              greater number of digits (point, sign and decimals included for the datatypes that allows them).
+#                              Note that numerical datatypes will always force the maxlength to **enabled** no matter if a different value
+#                              is provided.
 #
-#                              The maxlength value can influence the **-charwidth** of the widget, more precisely:
-#
-#                                 maxlength  = 0                    --> any valid charwidth value is accepted (even **0**).
-#                                 maxlength != 0 and charwidth !=0  --> If the charwidth is lesser then the maxlength, the former will be
-#                                                                       set as the latter.
-#
-#                              If not provided, defaults to **0**.
-#
-#                              See also **-charwidth**, **-datatype**, **-validate** and **-xscrollcommand**.
+#                              If not provided, defaults to **disabled**.
 #
 # **-padding**                 Specifies the internal padding for the widget.
 #                              The padding is a list of up to four length specifications.
@@ -691,51 +667,28 @@
 #                                 - **9**   for integer and posinteger datatypes.
 #                                 - **9.9** for posreal and real datatypes.
 #
-#                              See also **-datatype**, **-decimals**, **-from**, **-increment** and **-maxlength**.
+#                              See also **-datatype**, **-from**, **-increment** and **-maxlength**.
 #
 # **-validate**                Specifies the mode in which validation should operate.
 #                              There are two main validation modes:
 #
-#                                 *prevalidation* --> The **-validatecommand** is evaluated prior to each edit and the return value is
+#                                 *prevalidation* --> The mustang **validatecommand** is evaluated prior to each edit and the return value is
 #                                                     used to determine whether to accept or reject the change.
-#                                 *revalidation*  --> The **-validatecommand** is evaluated to determine whether the current value is valid.
+#                                 *revalidation*  --> The mustang **validatecommand** is evaluated to determine whether the current value is valid.
 #
 #                              The **-validate** option determines when validation occurs; it may be set to any of the following values:
 #
-#                                 none     --> The validation will only occur when specifically requested by the validate widget's command.
-#                                 focus    --> The spinbox is revalidated when the spinbox receives or loses focus.
-#                                 focusin  --> The spinbox is revalidated when the spinbox receives focus.
-#                                 focusout --> The spinbox is revalidated when the spinbox loses focus.
-#                                 key      --> The spinbox will be prevalidated prior to each edit (specifically, whenever the insert or delete
-#                                              widget's commands are called). If prevalidation fails, the edit is rejected.
+#                                 none     --> The validation will only occur when specifically requested by the **validate** command.
+#                                 focus    --> The entry is revalidated when the entry receives or loses focus.
+#                                 focusin  --> The entry is revalidated when the entry receives focus.
+#                                 focusout --> The entry is revalidated when the entry loses focus.
+#                                 key      --> The entry will be prevalidated prior to each edit (specifically, whenever the **insert**, **set**
+#                                              or **delete** commands are called). If prevalidation fails, the edit is rejected.
 #                                 all      --> Validation is performed for all above conditions.
 #
-#                              Note that every **-datatype** except **none** will force this value to **key** to perform automatic validation.
+#                              Note that the **none** datatype will default to **none** validation, while every other datatypes defaults to **key**.
 #
-#                              The **-invalidcommand** is evaluated whenever the **-validatecommand** returns a false value.
-#                              The **-validatecommand** and **-invalidcommand** may modify the spinbox widget's value via the widget's insert or
-#                              delete commands, or by setting the linked **-textvariable**.
-#                              If either does so during prevalidation, then the edit is rejected regardless of the value returned by the
-#                              **-validatecommand**. If **-validatecommand** is empty, validation always succeeds.
-#
-#                              If not provided, defaults to none.
-#
-#                              See also **-datatype**, **-invalidcommand** and **-validatecommand**.
-#
-# **-validatecommand**         A script template to evaluate whenever validation is triggered.
-#                              If set to the empty string, validation is disabled.
-#                              The script must return a boolean value.
-#
-#                              Note that every **-datatype** except **none** will force this value to an internal procedure to perform
-#                              automatic validation.
-#
-#                              Note that the mustang spinbox widget only disables validation if one of the validation scripts raises an error,
-#                              or if **-validatecommand** does not return a valid boolean value. (Thus, it is not necessary to re-enable validation
-#                              after modifying the spinbox value in a validation script).
-#
-#                              If not provided, defaults to the empty string.
-#
-#                              See also **-datatype**, **-invalidcommand** and **-validate**.
+#                              See also **-datatype**.
 #
 # **-values**                  Specifies the list of values to display in the popdown window.
 #                              These values needs to be coherent with the **datatype** specified.
@@ -873,8 +826,6 @@
 #     Force revalidation, independent of the conditions specified by the **-validate** option.
 #     Returns **0** if validation fails, **1** if it succeeds.
 #     Sets or clears the invalid state accordingly.
-#
-#     See the **-validate** option for more info.
 #
 #   *window* **xview** ?args?
 #     *window* **xview**
@@ -1684,11 +1635,9 @@ namespace eval ::ms::spinbox {
                                                    cmenu \
                                                    command \
                                                    datatype \
-                                                   decimals \
                                                    exportselection \
                                                    from \
                                                    increment \
-                                                   invalidcommand \
                                                    maxlength \
                                                    placeholder \
                                                    state \
@@ -1697,7 +1646,6 @@ namespace eval ::ms::spinbox {
                                                    textvariable \
                                                    to \
                                                    validate \
-                                                   validatecommand \
                                                    values \
                                                    xscrollcommand];
 
@@ -1729,20 +1677,17 @@ namespace eval ::ms::spinbox {
     set ::ms::default(spinbox,cmenu)           {}
     set ::ms::default(spinbox,command)         {}
     set ::ms::default(spinbox,datatype)        none
-    set ::ms::default(spinbox,decimals)        1
     set ::ms::default(spinbox,exportselection) 1
     set ::ms::default(spinbox,from)            0
     set ::ms::default(spinbox,increment)       1
-    set ::ms::default(spinbox,invalidcommand)  {}
-    set ::ms::default(spinbox,maxlength)       0
+    set ::ms::default(spinbox,maxlength)       disabled
     set ::ms::default(spinbox,placeholder)     {}
     set ::ms::default(spinbox,state)           normal
     set ::ms::default(spinbox,style)           TSpinbox
     set ::ms::default(spinbox,takefocus)       1
     set ::ms::default(spinbox,textvariable)    {}
     set ::ms::default(spinbox,to)              0
-    set ::ms::default(spinbox,validate)        none
-    set ::ms::default(spinbox,validatecommand) {}
+    set ::ms::default(spinbox,validate)        {}
     set ::ms::default(spinbox,values)          {}
     set ::ms::default(spinbox,xscrollcommand)  {}
 
@@ -1804,11 +1749,9 @@ proc ::ms::spinbox::Command { window { args "" } } {
             set ::ms::default($w,cmenu)           $::ms::default(spinbox,cmenu)
             set ::ms::default($w,command)         $::ms::default(spinbox,command)
             set ::ms::default($w,datatype)        $::ms::default(spinbox,datatype)
-            set ::ms::default($w,decimals)        $::ms::default(spinbox,decimals)
             set ::ms::default($w,exportselection) $::ms::default(spinbox,exportselection)
             set ::ms::default($w,from)            $::ms::default(spinbox,from)
             set ::ms::default($w,increment)       $::ms::default(spinbox,increment)
-            set ::ms::default($w,invalidcommand)  $::ms::default(spinbox,invalidcommand)
             set ::ms::default($w,maxlength)       $::ms::default(spinbox,maxlength)
             set ::ms::default($w,placeholder)     $::ms::default(spinbox,placeholder)
             set ::ms::default($w,state)           $::ms::default(spinbox,state)
@@ -1817,7 +1760,6 @@ proc ::ms::spinbox::Command { window { args "" } } {
             set ::ms::default($w,textvariable)    $::ms::default(spinbox,textvariable)
             set ::ms::default($w,to)              $::ms::default(spinbox,to)
             set ::ms::default($w,validate)        $::ms::default(spinbox,validate)
-            set ::ms::default($w,validatecommand) $::ms::default(spinbox,validatecommand)
             set ::ms::default($w,values)          $::ms::default(spinbox,values)
             set ::ms::default($w,xscrollcommand)  $::ms::default(spinbox,xscrollcommand)
 
@@ -1826,11 +1768,9 @@ proc ::ms::spinbox::Command { window { args "" } } {
             set ::ms::current($w,cmenu)           $::ms::default(spinbox,cmenu)
             set ::ms::current($w,command)         $::ms::default(spinbox,command)
             set ::ms::current($w,datatype)        $::ms::default(spinbox,datatype)
-            set ::ms::current($w,decimals)        $::ms::default(spinbox,decimals)
             set ::ms::current($w,exportselection) $::ms::default(spinbox,exportselection)
             set ::ms::current($w,from)            $::ms::default(spinbox,from)
             set ::ms::current($w,increment)       $::ms::default(spinbox,increment)
-            set ::ms::current($w,invalidcommand)  $::ms::default(spinbox,invalidcommand)
             set ::ms::current($w,maxlength)       $::ms::default(spinbox,maxlength)
             set ::ms::current($w,placeholder)     $::ms::default(spinbox,placeholder)
             set ::ms::current($w,state)           $::ms::default(spinbox,state)
@@ -1839,13 +1779,11 @@ proc ::ms::spinbox::Command { window { args "" } } {
             set ::ms::current($w,textvariable)    $::ms::default(spinbox,textvariable)
             set ::ms::current($w,to)              $::ms::default(spinbox,to)
             set ::ms::current($w,validate)        $::ms::default(spinbox,validate)
-            set ::ms::current($w,validatecommand) $::ms::default(spinbox,validatecommand)
             set ::ms::current($w,values)          $::ms::default(spinbox,values)
             set ::ms::current($w,xscrollcommand)  $::ms::default(spinbox,xscrollcommand)
 
             # Set the widget's variables needed for internal mechanisms.
             set ::ms::data($w,classtype) spinbox
-            set ::ms::data($w,format)    "%.1f"
 
             # Set each styleable option to be managed by Tk.
             #
@@ -1977,14 +1915,6 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             none       { set ::ms::current($w,datatype) $value }
                         }
                     }
-                    -decimals {
-                        switch -- [string is integer -strict $value] {
-                            1   {
-                                set ::ms::current($w,decimals) $value
-                                set ::ms::data($w,format) "%.${value}f"
-                            }
-                        }
-                    }
                     -exportselection {
                         switch -nocase -- $value {
                             0        -
@@ -2073,7 +2003,6 @@ proc ::ms::spinbox::Command { window { args "" } } {
                         set ::ms::current($w,insertwidth)    $value
                         set ::ms::managed_by($w,insertwidth) developer
                     }
-                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
                     -justify {
                         set value [string tolower $value]
                         switch -- $value {
@@ -2095,12 +2024,17 @@ proc ::ms::spinbox::Command { window { args "" } } {
                         set ::ms::managed_by($w,lightcolor) developer
                     }
                     -maxlength {
-                        switch -- [string is integer -strict $value] {
-                            1   {
-                                if { $value >= 0 } {
-                                    set ::ms::current($w,maxlength) $value
-                                }
-                            }
+                        switch -nocase -- $value {
+                            0        -
+                            no       -
+                            off      -
+                            false    -
+                            disabled { set ::ms::current($w,maxlength) disabled }
+                            1        -
+                            yes      -
+                            on       -
+                            true     -
+                            enabled  { set ::ms::current($w,maxlength) enabled }
                         }
                     }
                     -padding {
@@ -2269,7 +2203,6 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             all      { set ::ms::current($w,validate) all }
                         }
                     }
-                    -validatecommand { set ::ms::current($w,validatecommand) $value }
                     -values { set ::ms::current($w,values) $value }
                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                 }
@@ -2309,8 +2242,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                 }
             }
 
-            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
-            # relative to the datatype option provided.
+            # Check the 'datatype' option provided.
             switch -- $::ms::current($w,datatype) {
                 alnum      -
                 alpha      -
@@ -2318,16 +2250,15 @@ proc ::ms::spinbox::Command { window { args "" } } {
                 posinteger -
                 posreal    -
                 real       {
-                    set ::ms::current($w,invalidcommand)  {}
-                    set ::ms::current($w,validate)        key
-                    set ::ms::current($w,validatecommand) [list ::ms::spinbox::Validate_KeyPress %W %P]
-
-                    switch -- $::ms::current($w,maxlength) {
-                        0       {}
-                        default {
-                            # Ignore the xscrollcommand provided, if any.
-                            set ::ms::current($w,xscrollcommand) {}
-                        }
+                    # Check if a validation was provided.
+                    switch -- $::ms::current($w,validate) {
+                        ""  { set ::ms::current($w,validate) key }
+                    }
+                }
+                none {
+                    # Check if a validation was provided.
+                    switch -- $::ms::current($w,validate) {
+                        ""  { set ::ms::current($w,validate) none }
                     }
                 }
             }
@@ -2357,13 +2288,13 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
                             set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
 
-                            # Ignore any 'decimals', from', 'increment' and 'to' values eventually provided.
-                            set ::ms::current($w,decimals)  1
+                            # Ignore any 'from', 'increment' and 'to' values eventually provided.
                             set ::ms::current($w,from)      0
                             set ::ms::current($w,increment) 1
                             set ::ms::current($w,to)        0
 
-                            set ::ms::data($w,format) "%.1f"
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 7
                         }
                         integer {
                             # Set the spinbox type to 'incremental'.
@@ -2372,27 +2303,10 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Set the list of values to the empty string.
                             set ::ms::data($w,values) [list ]
 
-                            # Ignore any 'decimals' value provided.
-                            set ::ms::current($w,decimals) 1
-                            set ::ms::data($w,format)      "%.1f"
-
-                            # Check the 'from' value.
-                            switch -- $::ms::current($w,from) {
-                                ""      { set ::ms::current($w,from) -9 }
-                                default { set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }] }
-                            }
-
-                            # Check the 'to' value.
-                            switch -- $::ms::current($w,to) {
-                                ""      { set ::ms::current($w,to) 9 }
-                                default { set ::ms::current($w,to) [expr { int($::ms::current($w,to)) }] }
-                            }
-
-                            # Check the 'increment' value.
-                            switch -- $::ms::current($w,increment) {
-                                ""      { set ::ms::current($w,increment) 1 }
-                                default { set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }] }
-                            }
+                            # Transform the 'from', 'increment' and 'to' values into integers.
+                            set ::ms::current($w,from)      [expr { int($::ms::current($w,from)) }]
+                            set ::ms::current($w,to)        [expr { int($::ms::current($w,to)) }]
+                            set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }]
 
                             # Safeguard.
                             # Make sure that the 'from' value is not greater than the 'to' value.
@@ -2402,13 +2316,15 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                 set ::ms::current($w,to)    9
                             }
 
-                            # Override any 'maxlength' provided.
+                            # Get the maxlength of the first and last item.
                             set maxlength_from [string length $::ms::current($w,from)]
                             set maxlength_to   [string length $::ms::current($w,to)]
+
+                            # Set the 'maxlength' internal value.
                             if { $maxlength_from > $maxlength_to } {
-                                set ::ms::current($w,maxlength) $maxlength_from
+                                set ::ms::data($w,maxlength) $maxlength_from
                             } else {
-                                set ::ms::current($w,maxlength) $maxlength_to
+                                set ::ms::data($w,maxlength) $maxlength_to
                             }
 
                             # Set the current value with the from value.
@@ -2421,27 +2337,10 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Set the list of values to the empty string.
                             set ::ms::data($w,values) [list ]
 
-                            # Ignore any 'decimals' value provided.
-                            set ::ms::current($w,decimals) 1
-                            set ::ms::data($w,format)      "%.1f"
-
-                            # Check the 'from' value.
-                            switch -- $::ms::current($w,from) {
-                                ""      { set ::ms::current($w,from) 0 }
-                                default { set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }] }
-                            }
-
-                            # Check the 'to' value.
-                            switch -- $::ms::current($w,to) {
-                                ""      { set ::ms::current($w,to) 9 }
-                                default { set ::ms::current($w,to) [expr { int($::ms::current($w,to)) }] }
-                            }
-
-                            # Check the 'increment' value.
-                            switch -- $::ms::current($w,increment) {
-                                ""      { set ::ms::current($w,increment) 1 }
-                                default { set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }] }
-                            }
+                            # Transform the 'from', 'increment' and 'to' values into integers.
+                            set ::ms::current($w,from)      [expr { int($::ms::current($w,from)) }]
+                            set ::ms::current($w,to)        [expr { int($::ms::current($w,to)) }]
+                            set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }]
 
                             # Safeguard.
                             # Make sure that the 'from' and 'to' value are both greater or equal to zero.
@@ -2459,8 +2358,8 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                 set ::ms::current($w,to)   9
                             }
 
-                            # Override any 'maxlength' provided.
-                            set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
 
                             # Set the current value with the from value.
                             set ::ms::data($w,current_value) $::ms::current($w,from)
@@ -2471,30 +2370,6 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
                             # Set the list of values to the empty string.
                             set ::ms::data($w,values) [list ]
-
-                            # Check the 'from' value.
-                            switch -- $::ms::current($w,from) {
-                                ""      { set ::ms::current($w,from) 0 }
-                                default {
-                                    if { $::ms::current($w,from) != 0 } {
-                                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                                    } else {
-                                        set ::ms::current($w,from) 0
-                                    }
-                                }
-                            }
-
-                            # Check the 'to' value.
-                            switch -- $::ms::current($w,to) {
-                                ""      { set ::ms::current($w,to) 9.9 }
-                                default {
-                                    if { $::ms::current($w,to) != 0 } {
-                                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                                    } else {
-                                        set ::ms::current($w,to) 0
-                                    }
-                                }
-                            }
 
                             # Safeguard.
                             # Make sure that the 'increment' value is a double.
@@ -2515,8 +2390,8 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                 set ::ms::current($w,to)   9.9
                             }
 
-                            # Override any 'maxlength' provided.
-                            set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
 
                             # Set the current value with the 'from' value.
                             set ::ms::data($w,current_value) $::ms::current($w,from)
@@ -2527,20 +2402,6 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
                             # Set the list of values to the empty string.
                             set ::ms::data($w,values) [list ]
-
-                            # Safeguard.
-                            # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
-                            if { $::ms::current($w,from) != 0 } {
-                                set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                            } else {
-                                set ::ms::current($w,from) 0
-                            }
-
-                            if { $::ms::current($w,to) != 0 } {
-                                set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                            } else {
-                                set ::ms::current($w,to) 0
-                            }
 
                             # Safeguard.
                             # Make sure that the 'increment' value is a double.
@@ -2554,13 +2415,15 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                 set ::ms::current($w,to)    9.9
                             }
 
-                            # Override any 'maxlength' provided.
+                            # Get the maxlength of the first and last item.
                             set maxlength_from [string length $::ms::current($w,from)]
                             set maxlength_to   [string length $::ms::current($w,to)]
+
+                            # Set the 'maxlength' internal value.
                             if { $maxlength_from > $maxlength_to } {
-                                set ::ms::current($w,maxlength) $maxlength_from
+                                set ::ms::data($w,maxlength) $maxlength_from
                             } else {
-                                set ::ms::current($w,maxlength) $maxlength_to
+                                set ::ms::data($w,maxlength) $maxlength_to
                             }
 
                             # Set the current value with the 'from' value.
@@ -2590,13 +2453,13 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
                             set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
 
-                            # Ignore any 'decimals', from', 'increment' and 'to' values eventually provided.
-                            set ::ms::current($w,decimals)  1
+                            # Ignore any 'from', 'increment' and 'to' values eventually provided.
                             set ::ms::current($w,from)      0
                             set ::ms::current($w,increment) 1
                             set ::ms::current($w,to)        0
 
-                            set ::ms::data($w,format) "%.1f"
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) 13
                         }
                     }
                 }
@@ -2604,13 +2467,10 @@ proc ::ms::spinbox::Command { window { args "" } } {
                     # Set the spinbox type to 'list'.
                     set ::ms::data($w,type) list
 
-                    # Ignore any 'decimals', from', 'increment' and 'to' values eventually provided.
-                    set ::ms::current($w,decimals)  1
+                    # Ignore any 'from', 'increment' and 'to' values eventually provided.
                     set ::ms::current($w,from)      0
                     set ::ms::current($w,increment) 1
                     set ::ms::current($w,to)        0
-
-                    set ::ms::data($w,format) "%.1f"
 
                     # Check the datatype.
                     switch -- $::ms::current($w,datatype) {
@@ -2641,6 +2501,18 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                            # Set the maxlength.
+                            set maxlength 0
+                            foreach item $::ms::data($w,values) {
+                                set item_length [string length $item]
+                                if { $item_length > $maxlength } {
+                                    set maxlength $item_length
+                                }
+                            }
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) $maxlength
                         }
                         alpha {
                             # Check every characters in value.
@@ -2666,6 +2538,18 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                            # Set the maxlength.
+                            set maxlength 0
+                            foreach item $::ms::data($w,values) {
+                                set item_length [string length $item]
+                                if { $item_length > $maxlength } {
+                                    set maxlength $item_length
+                                }
+                            }
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) $maxlength
                         }
                         integer {
                             # Check every numbers in value.
@@ -2678,14 +2562,15 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
 
-                            # Set the maxlength.
+                            # Get the maxlength of the first and last item.
                             set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
                             set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
 
+                            # Set the 'maxlength' internal value.
                             if { $maxlength_from > $maxlength_to } {
-                                set ::ms::current($w,maxlength) $maxlength_from
+                                set ::ms::data($w,maxlength) $maxlength_from
                             } else {
-                                set ::ms::current($w,maxlength) $maxlength_to
+                                set ::ms::data($w,maxlength) $maxlength_to
                             }
                         }
                         posinteger {
@@ -2704,8 +2589,8 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
 
-                            # Set the maxlength.
-                            set ::ms::current($w,maxlength) [string length [lindex $::ms::data($w,values) end]]
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) [string length [lindex $::ms::data($w,values) end]]
                         }
                         posreal {
                             # Check every numbers in value.
@@ -2723,16 +2608,16 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
 
-                            # Set the maxlength.
-                            set maxlength 0
-                            foreach number $::ms::data($w,values) {
-                                set number_length [string length $number]
-                                if { $number_length > $maxlength } {
-                                    set maxlength $number_length
-                                }
-                            }
+                             # Get the maxlength of the first and last item.
+                            set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                            set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
 
-                            set ::ms::current($w,maxlength) $maxlength
+                            # Set the 'maxlength' internal value.
+                            if { $maxlength_from > $maxlength_to } {
+                                set ::ms::data($w,maxlength) $maxlength_from
+                            } else {
+                                set ::ms::data($w,maxlength) $maxlength_to
+                            }
                         }
                         real {
                             # Check every numbers in value.
@@ -2745,16 +2630,16 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Register the sorted values.
                             set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
 
-                            # Set the maxlength.
-                            set maxlength 0
-                            foreach number $::ms::data($w,values) {
-                                set number_length [string length $number]
-                                if { $number_length > $maxlength } {
-                                    set maxlength $number_length
-                                }
-                            }
+                             # Get the maxlength of the first and last item.
+                            set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                            set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
 
-                            set ::ms::current($w,maxlength) $maxlength
+                            # Set the 'maxlength' internal value.
+                            if { $maxlength_from > $maxlength_to } {
+                                set ::ms::data($w,maxlength) $maxlength_from
+                            } else {
+                                set ::ms::data($w,maxlength) $maxlength_to
+                            }
                         }
                         none {
                             # Register the sorted values.
@@ -2762,21 +2647,23 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                            # Set the maxlength.
+                            set maxlength 0
+                            foreach item $::ms::data($w,values) {
+                                set item_length [string length $item]
+                                if { $item_length > $maxlength } {
+                                    set maxlength $item_length
+                                }
+                            }
+
+                            # Set the 'maxlength' internal value.
+                            set ::ms::data($w,maxlength) $maxlength
                         }
                     }
 
                     # Set the current value as the first one of '::ms::data($w,values)'.
                     set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
-                }
-            }
-
-            # If the maxlength is not zero check that the charwidth is not less of it.
-            switch -- $::ms::current($w,maxlength) {
-                0       {}
-                default {
-                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                    }
                 }
             }
 
@@ -2981,10 +2868,10 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                      -cursor $cursor \
                             -exportselection $::ms::current($w,exportselection) \
                                        -font $::ms::current($w,font) \
-                                     -format $::ms::data($w,format) \
+                                     -format {} \
                                        -from $::ms::current($w,from) \
                                   -increment $::ms::current($w,increment) \
-                             -invalidcommand $::ms::current($w,invalidcommand) \
+                             -invalidcommand {} \
                                     -justify $::ms::current($w,justify) \
                                 -placeholder $::ms::current($w,placeholder) \
                                        -show "" \
@@ -2994,7 +2881,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                -textvariable $::ms::current($w,textvariable) \
                                          -to $::ms::current($w,to) \
                                    -validate $::ms::current($w,validate) \
-                            -validatecommand $::ms::current($w,validatecommand) \
+                            -validatecommand [list ::ms::spinbox::Validate_KeyPress %W %P] \
                                      -values $::ms::data($w,values) \
                                       -width $::ms::current($w,charwidth) \
                                        -wrap 0 \
@@ -3188,6 +3075,10 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             # Remove any duplicated options (retain only the last ones).
                             set args [lsort -increasing -stride 2 -index 0 -unique $args]
 
+                            # Set a variable that indicates if new values or a new datatype have been provided or not.
+                            set new_datatype false
+                            set new_values   false
+
                             ##################################################
                             ##                                              ##
                             ##     CHECK THE CONFIGURE OPTIONS PROVIDED     ##
@@ -3265,12 +3156,18 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                         set ::ms::current($w,darkcolor)    $value
                                         set ::ms::managed_by($w,darkcolor) developer
                                     }
-                                    -datatype {}
-                                    -decimals {
-                                        switch -- [string is integer -strict $value] {
-                                            1   {
-                                                set ::ms::current($w,decimals) $value
-                                                set ::ms::data($w,format) "%.${value}f"
+                                    -datatype {
+                                        set value [string tolower $value]
+                                        switch -- $value {
+                                            alnum      -
+                                            alpha      -
+                                            integer    -
+                                            posinteger -
+                                            posreal    -
+                                            real       -
+                                            none       {
+                                                set ::ms::current($w,datatype) $value
+                                                set new_datatype true
                                             }
                                         }
                                     }
@@ -3344,7 +3241,6 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                             }
                                         }
                                     }
-                                    -invalidcommand { set ::ms::current($w,invalidcommand) $value }
                                     -insertcolor {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -3384,12 +3280,17 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                         set ::ms::managed_by($w,lightcolor) developer
                                     }
                                     -maxlength {
-                                        switch -- [string is integer -strict $value] {
-                                            1   {
-                                                if { $value >= 0 } {
-                                                    set ::ms::current($w,maxlength) $value
-                                                }
-                                            }
+                                        switch -nocase -- $value {
+                                            0        -
+                                            no       -
+                                            off      -
+                                            false    -
+                                            disabled { set ::ms::current($w,maxlength) disabled }
+                                            1        -
+                                            yes      -
+                                            on       -
+                                            true     -
+                                            enabled  { set ::ms::current($w,maxlength) enabled }
                                         }
                                     }
                                     -padding {
@@ -3597,8 +3498,10 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                             all      { set ::ms::current($w,validate) all }
                                         }
                                     }
-                                    -validatecommand { set ::ms::current($w,validatecommand) $value }
-                                    -values { set ::ms::current($w,values) $value }
+                                    -values {
+                                        set ::ms::current($w,values) $value
+                                        set new_values true
+                                    }
                                     -xscrollcommand { set ::ms::current($w,xscrollcommand) $value }
                                 }
                             }
@@ -3637,480 +3540,411 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                 }
                             }
 
-                            # Check the invalidcommand, validate, validatecommand and xscrollcommand options
-                            # relative to the datatype option provided.
-                            switch -- $::ms::current($w,datatype) {
-                                alnum      -
-                                alpha      -
-                                integer    -
-                                posinteger -
-                                posreal    -
-                                real       {
-                                    set ::ms::current($w,invalidcommand)  {}
-                                    set ::ms::current($w,validate)        key
-                                    set ::ms::current($w,validatecommand) [list ::ms::spinbox::Validate_KeyPress %W %P]
+                            # Check if a new list of values or a new datatype has been provided.
+                            if { ($new_value eq "true") || ($new_datatype eq "true") } {
+                                # Check if a list of values was provided.
+                                switch -- [llength $::ms::current($w,values)] {
+                                    0   {
+                                        # Check the datatype.
+                                        switch -- $::ms::current($w,datatype) {
+                                            alnum {
+                                                # Set the spinbox type to 'list'.
+                                                set ::ms::data($w,type) list
 
-                                    switch -- $::ms::current($w,maxlength) {
-                                        0       {}
-                                        default {
-                                            # Ignore the xscrollcommand provided, if any.
-                                            set ::ms::current($w,xscrollcommand) {}
+                                                # Create a fictional list of alphanumeric values.
+                                                set number 1
+                                                while { $number < 51 } {
+                                                    lappend ::ms::current($w,values) [string cat "Item-" $number]
+                                                    incr number
+                                                }
+
+                                                # Register the sorted values
+                                                set ::ms::data($w,values) $::ms::current($w,values)
+
+                                                # Register the sorted values in lowercase characters.
+                                                set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+
+                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+
+                                                # Ignore any 'from', 'increment' and 'to' values eventually provided.
+                                                set ::ms::current($w,from)      0
+                                                set ::ms::current($w,increment) 1
+                                                set ::ms::current($w,to)        0
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) 7
+                                            }
+                                            integer {
+                                                # Set the spinbox type to 'incremental'.
+                                                set ::ms::data($w,type) incremental
+
+                                                # Set the list of values to the empty string.
+                                                set ::ms::data($w,values) [list ]
+
+                                                # Transform the 'from', 'increment' and 'to' values into integers.
+                                                set ::ms::current($w,from)      [expr { int($::ms::current($w,from)) }]
+                                                set ::ms::current($w,to)        [expr { int($::ms::current($w,to)) }]
+                                                set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }]
+
+                                                # Safeguard.
+                                                # Make sure that the 'from' value is not greater than the 'to' value.
+                                                if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                    # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                    set ::ms::current($w,from) -9
+                                                    set ::ms::current($w,to)    9
+                                                }
+
+                                                # Get the maxlength of the first and last item.
+                                                set maxlength_from [string length $::ms::current($w,from)]
+                                                set maxlength_to   [string length $::ms::current($w,to)]
+
+                                                # Set the 'maxlength' internal value.
+                                                if { $maxlength_from > $maxlength_to } {
+                                                    set ::ms::data($w,maxlength) $maxlength_from
+                                                } else {
+                                                    set ::ms::data($w,maxlength) $maxlength_to
+                                                }
+
+                                                # Set the current value with the from value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            }
+                                            posinteger {
+                                                # Set the spinbox type to 'incremental'.
+                                                set ::ms::data($w,type) incremental
+
+                                                # Set the list of values to the empty string.
+                                                set ::ms::data($w,values) [list ]
+
+                                                # Transform the 'from', 'increment' and 'to' values into integers.
+                                                set ::ms::current($w,from)      [expr { int($::ms::current($w,from)) }]
+                                                set ::ms::current($w,to)        [expr { int($::ms::current($w,to)) }]
+                                                set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }]
+
+                                                # Safeguard.
+                                                # Make sure that the 'from' and 'to' value are both greater or equal to zero.
+                                                if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
+                                                    # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                    set ::ms::current($w,from) 0
+                                                    set ::ms::current($w,to)   9
+                                                }
+
+                                                # Safeguard.
+                                                # Make sure that the 'from' value is not greater than the 'to' value.
+                                                if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                    # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                    set ::ms::current($w,from) 0
+                                                    set ::ms::current($w,to)   9
+                                                }
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
+
+                                                # Set the current value with the from value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            }
+                                            posreal {
+                                                # Set the spinbox type to 'incremental'.
+                                                set ::ms::data($w,type) incremental
+
+                                                # Set the list of values to the empty string.
+                                                set ::ms::data($w,values) [list ]
+
+                                                # Safeguard.
+                                                # Make sure that the 'increment' value is a double.
+                                                set ::ms::current($w,increment) [expr { double($::ms::current($w,increment)) }]
+
+                                                # Safeguard.
+                                                # Make sure that the 'from' and 'to' value are both greater or equal to zero.
+                                                if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
+                                                    # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                    set ::ms::current($w,from) 0
+                                                    set ::ms::current($w,to)   9.9
+                                                }
+
+                                                # Make sure that the 'from' value is not greater than the 'to' value.
+                                                if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                    # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                    set ::ms::current($w,from) 0
+                                                    set ::ms::current($w,to)   9.9
+                                                }
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
+
+                                                # Set the current value with the 'from' value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            }
+                                            real {
+                                                # Set the spinbox type to 'incremental'.
+                                                set ::ms::data($w,type) incremental
+
+                                                # Set the list of values to the empty string.
+                                                set ::ms::data($w,values) [list ]
+
+                                                # Safeguard.
+                                                # Make sure that the 'increment' value is a double.
+                                                set ::ms::current($w,increment) [expr { double($::ms::current($w,increment)) }]
+
+                                                # Safeguard.
+                                                # Make sure that the 'from' value is not greater than the 'to' value.
+                                                if { $::ms::current($w,from) > $::ms::current($w,to) } {
+                                                    # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
+                                                    set ::ms::current($w,from) -9.9
+                                                    set ::ms::current($w,to)    9.9
+                                                }
+
+                                                # Get the maxlength of the first and last item.
+                                                set maxlength_from [string length $::ms::current($w,from)]
+                                                set maxlength_to   [string length $::ms::current($w,to)]
+
+                                                # Set the 'maxlength' internal value.
+                                                if { $maxlength_from > $maxlength_to } {
+                                                    set ::ms::data($w,maxlength) $maxlength_from
+                                                } else {
+                                                    set ::ms::data($w,maxlength) $maxlength_to
+                                                }
+
+                                                # Set the current value with the 'from' value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            }
+                                            default {
+                                                # Set the spinbox type to 'list'.
+                                                set ::ms::data($w,type) list
+
+                                                # Create a fictional list of alphabetic values.
+                                                lappend ::ms::current($w,values) Amsterdam Beijing        Cairo           Dublin    Freetown      Gibraltar \
+                                                                                 Hanoi     Havana         Helsinki        Islamabad Jerusalem     Kabul \
+                                                                                 Kingston  "Kuala Lumpur" "La Paz"        Lima      Lisbon        London \
+                                                                                 Madrid    Manila         "Mexico City"   Minx      Monaco        Montevideo \
+                                                                                 Moscow    Nairobi        "New Delhi"     Oslo      "Panama City" Paris \
+                                                                                 Praga     Quito          Reykjavík       Riga      Rome          "San José" \
+                                                                                 San Juan  "San Salvador" "Santo Domingo" Sarajevo  Seoul         Singapore \
+                                                                                 Sofia     Stockholm      Taipei          Tallin    Tirana        Tokyo \
+                                                                                 Tunis     Valletta       Vienna          Warsaw    Washigton     Zagreb;
+
+                                                # Register the sorted values
+                                                set ::ms::data($w,values) $::ms::current($w,values)
+
+                                                # Register the sorted values in lowercase characters.
+                                                set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
+
+                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+
+                                                # Ignore any 'from', 'increment' and 'to' values eventually provided.
+                                                set ::ms::current($w,from)      0
+                                                set ::ms::current($w,increment) 1
+                                                set ::ms::current($w,to)        0
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) 13
+                                            }
                                         }
                                     }
-                                }
-                            }
+                                    default {
+                                        # Set the spinbox type to 'list'.
+                                        set ::ms::data($w,type) list
 
-                            # Check if a list of values was provided.
-                            switch -- [llength $::ms::current($w,values)] {
-                                0   {
-                                    # Check the datatype.
-                                    switch -- $::ms::current($w,datatype) {
-                                        alnum {
-                                            # Set the spinbox type to 'list'.
-                                            set ::ms::data($w,type) list
+                                        # Ignore any 'from', 'increment' and 'to' values eventually provided.
+                                        set ::ms::current($w,from)      0
+                                        set ::ms::current($w,increment) 1
+                                        set ::ms::current($w,to)        0
 
-                                            # Create a fictional list of alphanumeric values.
-                                            set number 1
-                                            while { $number < 51 } {
-                                                lappend ::ms::current($w,values) [string cat "Item-" $number]
-                                                incr number
-                                            }
+                                        # Check the datatype.
+                                        switch -- $::ms::current($w,datatype) {
+                                            alnum {
+                                                # Check every characters in value.
+                                                foreach value $::ms::current($w,values) {
+                                                    set i 0
+                                                    while { $i < [string length $value] } {
+                                                        set char [string index $value $i]
+                                                        switch -- $char {
+                                                            " "     -
+                                                            "."     -
+                                                            ","     -
+                                                            "-"     {}
+                                                            default {
+                                                                switch -- [string is alnum $char] {
+                                                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                                                }
+                                                            }
+                                                        }
 
-                                            # Register the sorted values
-                                            set ::ms::data($w,values) $::ms::current($w,values)
-
-                                            # Register the sorted values in lowercase characters.
-                                            set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
-
-                                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
-                                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
-
-                                            # Ignore any 'decimals', from', 'increment' and 'to' values eventually provided.
-                                            set ::ms::current($w,decimals)  1
-                                            set ::ms::current($w,from)      0
-                                            set ::ms::current($w,increment) 1
-                                            set ::ms::current($w,to)        0
-
-                                            set ::ms::data($w,format) "%.1f"
-                                        }
-                                        integer {
-                                            # Set the spinbox type to 'incremental'.
-                                            set ::ms::data($w,type) incremental
-
-                                            # Set the list of values to the empty string.
-                                            set ::ms::data($w,values) [list ]
-
-                                            # Ignore any 'decimals' value provided.
-                                            set ::ms::current($w,decimals) 1
-                                            set ::ms::data($w,format)      "%.1f"
-
-                                            # Check the 'from' value.
-                                            switch -- $::ms::current($w,from) {
-                                                ""      { set ::ms::current($w,from) -9 }
-                                                default { set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }] }
-                                            }
-
-                                            # Check the 'to' value.
-                                            switch -- $::ms::current($w,to) {
-                                                ""      { set ::ms::current($w,to) 9 }
-                                                default { set ::ms::current($w,to) [expr { int($::ms::current($w,to)) }] }
-                                            }
-
-                                            # Check the 'increment' value.
-                                            switch -- $::ms::current($w,increment) {
-                                                ""      { set ::ms::current($w,increment) 1 }
-                                                default { set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }] }
-                                            }
-
-                                            # Safeguard.
-                                            # Make sure that the 'from' value is not greater than the 'to' value.
-                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                                set ::ms::current($w,from) -9
-                                                set ::ms::current($w,to)    9
-                                            }
-
-                                            # Override any 'maxlength' provided.
-                                            set maxlength_from [string length $::ms::current($w,from)]
-                                            set maxlength_to   [string length $::ms::current($w,to)]
-                                            if { $maxlength_from > $maxlength_to } {
-                                                set ::ms::current($w,maxlength) $maxlength_from
-                                            } else {
-                                                set ::ms::current($w,maxlength) $maxlength_to
-                                            }
-
-                                            # Set the current value with the from value.
-                                            set ::ms::data($w,current_value) $::ms::current($w,from)
-                                        }
-                                        posinteger {
-                                            # Set the spinbox type to 'incremental'.
-                                            set ::ms::data($w,type) incremental
-
-                                            # Set the list of values to the empty string.
-                                            set ::ms::data($w,values) [list ]
-
-                                            # Ignore any 'decimals' value provided.
-                                            set ::ms::current($w,decimals) 1
-                                            set ::ms::data($w,format)      "%.1f"
-
-                                            # Check the 'from' value.
-                                            switch -- $::ms::current($w,from) {
-                                                ""      { set ::ms::current($w,from) 0 }
-                                                default { set ::ms::current($w,from) [expr { int($::ms::current($w,from)) }] }
-                                            }
-
-                                            # Check the 'to' value.
-                                            switch -- $::ms::current($w,to) {
-                                                ""      { set ::ms::current($w,to) 9 }
-                                                default { set ::ms::current($w,to) [expr { int($::ms::current($w,to)) }] }
-                                            }
-
-                                            # Check the 'increment' value.
-                                            switch -- $::ms::current($w,increment) {
-                                                ""      { set ::ms::current($w,increment) 1 }
-                                                default { set ::ms::current($w,increment) [expr { int($::ms::current($w,increment)) }] }
-                                            }
-
-                                            # Safeguard.
-                                            # Make sure that the 'from' and 'to' value are both greater or equal to zero.
-                                            if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
-                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                                set ::ms::current($w,from) 0
-                                                set ::ms::current($w,to)   9
-                                            }
-
-                                            # Safeguard.
-                                            # Make sure that the 'from' value is not greater than the 'to' value.
-                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                                set ::ms::current($w,from) 0
-                                                set ::ms::current($w,to)   9
-                                            }
-
-                                            # Override any 'maxlength' provided.
-                                            set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
-
-                                            # Set the current value with the from value.
-                                            set ::ms::data($w,current_value) $::ms::current($w,from)
-                                        }
-                                        posreal {
-                                            # Set the spinbox type to 'incremental'.
-                                            set ::ms::data($w,type) incremental
-
-                                            # Set the list of values to the empty string.
-                                            set ::ms::data($w,values) [list ]
-
-                                            # Check the 'from' value.
-                                            switch -- $::ms::current($w,from) {
-                                                ""      { set ::ms::current($w,from) 0 }
-                                                default {
-                                                    if { $::ms::current($w,from) != 0 } {
-                                                        set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                                                    } else {
-                                                        set ::ms::current($w,from) 0
+                                                        incr i
                                                     }
                                                 }
-                                            }
 
-                                            # Check the 'to' value.
-                                            switch -- $::ms::current($w,to) {
-                                                ""      { set ::ms::current($w,to) 9.9 }
-                                                default {
-                                                    if { $::ms::current($w,to) != 0 } {
-                                                        set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                                                    } else {
-                                                        set ::ms::current($w,to) 0
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
+
+                                                # Register the sorted values in lowercase characters.
+                                                set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                                                # Set the maxlength.
+                                                set maxlength 0
+                                                foreach item $::ms::data($w,values) {
+                                                    set item_length [string length $item]
+                                                    if { $item_length > $maxlength } {
+                                                        set maxlength $item_length
                                                     }
                                                 }
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) $maxlength
                                             }
+                                            alpha {
+                                                # Check every characters in value.
+                                                foreach value $::ms::current($w,values) {
+                                                    set i 0
+                                                    while { $i < [string length $value] } {
+                                                        set char [string index $value $i]
+                                                        switch -- $char {
+                                                            " "     {}
+                                                            default {
+                                                                switch -- [string is alpha $char] {
+                                                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                                                }
+                                                            }
+                                                        }
 
-                                            # Safeguard.
-                                            # Make sure that the 'increment' value is a double.
-                                            set ::ms::current($w,increment) [expr { double($::ms::current($w,increment)) }]
+                                                        incr i
+                                                    }
+                                                }
 
-                                            # Safeguard.
-                                            # Make sure that the 'from' and 'to' value are both greater or equal to zero.
-                                            if { ($::ms::current($w,from) < 0) || ($::ms::current($w,to) < 0) } {
-                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                                set ::ms::current($w,from) 0
-                                                set ::ms::current($w,to)   9.9
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -ascii $::ms::current($w,values)]
+
+                                                # Register the sorted values in lowercase characters.
+                                                set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
+
+                                                # Set the maxlength.
+                                                set maxlength 0
+                                                foreach item $::ms::data($w,values) {
+                                                    set item_length [string length $item]
+                                                    if { $item_length > $maxlength } {
+                                                        set maxlength $item_length
+                                                    }
+                                                }
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) $maxlength
                                             }
+                                            integer {
+                                                # Check every numbers in value.
+                                                foreach value $::ms::current($w,values) {
+                                                    switch -- [string is integer -strict $value] {
+                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
+                                                    }
+                                                }
 
-                                            # Make sure that the 'from' value is not greater than the 'to' value.
-                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                                set ::ms::current($w,from) 0
-                                                set ::ms::current($w,to)   9.9
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+
+                                                # Get the maxlength of the first and last item.
+                                                set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                # Set the 'maxlength' internal value.
+                                                if { $maxlength_from > $maxlength_to } {
+                                                    set ::ms::data($w,maxlength) $maxlength_from
+                                                } else {
+                                                    set ::ms::data($w,maxlength) $maxlength_to
+                                                }
                                             }
-
-                                            # Override any 'maxlength' provided.
-                                            set ::ms::current($w,maxlength) [string length $::ms::current($w,to)]
-
-                                            # Set the current value with the 'from' value.
-                                            set ::ms::data($w,current_value) $::ms::current($w,from)
-                                        }
-                                        real {
-                                            # Set the spinbox type to 'incremental'.
-                                            set ::ms::data($w,type) incremental
-
-                                            # Set the list of values to the empty string.
-                                            set ::ms::data($w,values) [list ]
-
-                                            # Safeguard.
-                                            # Make sure that the 'from' and 'to' values respects the 'decimals' provided, if any.
-                                            if { $::ms::current($w,from) != 0 } {
-                                                set ::ms::current($w,from) [format $::ms::data($w,format) $::ms::current($w,from)]
-                                            } else {
-                                                set ::ms::current($w,from) 0
-                                            }
-
-                                            if { $::ms::current($w,to) != 0 } {
-                                                set ::ms::current($w,to) [format $::ms::data($w,format) $::ms::current($w,to)]
-                                            } else {
-                                                set ::ms::current($w,to) 0
-                                            }
-
-                                            # Safeguard.
-                                            # Make sure that the 'increment' value is a double.
-                                            set ::ms::current($w,increment) [expr { double($::ms::current($w,increment)) }]
-
-                                            # Safeguard.
-                                            # Make sure that the 'from' value is not greater than the 'to' value.
-                                            if { $::ms::current($w,from) > $::ms::current($w,to) } {
-                                                # Override the 'from' and 'to' values provided, and use the default ones for this datatype.
-                                                set ::ms::current($w,from) -9.9
-                                                set ::ms::current($w,to)    9.9
-                                            }
-
-                                            # Override any 'maxlength' provided.
-                                            set maxlength_from [string length $::ms::current($w,from)]
-                                            set maxlength_to   [string length $::ms::current($w,to)]
-                                            if { $maxlength_from > $maxlength_to } {
-                                                set ::ms::current($w,maxlength) $maxlength_from
-                                            } else {
-                                                set ::ms::current($w,maxlength) $maxlength_to
-                                            }
-
-                                            # Set the current value with the 'from' value.
-                                            set ::ms::data($w,current_value) $::ms::current($w,from)
-                                        }
-                                        default {
-                                            # Set the spinbox type to 'list'.
-                                            set ::ms::data($w,type) list
-
-                                            # Create a fictional list of alphabetic values.
-                                            lappend ::ms::current($w,values) Amsterdam Beijing        Cairo           Dublin    Freetown      Gibraltar \
-                                                                             Hanoi     Havana         Helsinki        Islamabad Jerusalem     Kabul \
-                                                                             Kingston  "Kuala Lumpur" "La Paz"        Lima      Lisbon        London \
-                                                                             Madrid    Manila         "Mexico City"   Minx      Monaco        Montevideo \
-                                                                             Moscow    Nairobi        "New Delhi"     Oslo      "Panama City" Paris \
-                                                                             Praga     Quito          Reykjavík       Riga      Rome          "San José" \
-                                                                             San Juan  "San Salvador" "Santo Domingo" Sarajevo  Seoul         Singapore \
-                                                                             Sofia     Stockholm      Taipei          Tallin    Tirana        Tokyo \
-                                                                             Tunis     Valletta       Vienna          Warsaw    Washigton     Zagreb;
-
-                                            # Register the sorted values
-                                            set ::ms::data($w,values) $::ms::current($w,values)
-
-                                            # Register the sorted values in lowercase characters.
-                                            set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
-
-                                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
-                                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
-
-                                            # Ignore any 'decimals', from', 'increment' and 'to' values eventually provided.
-                                            set ::ms::current($w,decimals)  1
-                                            set ::ms::current($w,from)      0
-                                            set ::ms::current($w,increment) 1
-                                            set ::ms::current($w,to)        0
-
-                                            set ::ms::data($w,format) "%.1f"
-                                        }
-                                    }
-                                }
-                                default {
-                                    # Set the spinbox type to 'list'.
-                                    set ::ms::data($w,type) list
-
-                                    # Ignore any 'decimals', from', 'increment' and 'to' values eventually provided.
-                                    set ::ms::current($w,decimals)  1
-                                    set ::ms::current($w,from)      0
-                                    set ::ms::current($w,increment) 1
-                                    set ::ms::current($w,to)        0
-
-                                    set ::ms::data($w,format) "%.1f"
-
-                                    # Check the datatype.
-                                    switch -- $::ms::current($w,datatype) {
-                                        alnum {
-                                            # Check every characters in value.
-                                            foreach value $::ms::current($w,values) {
-                                                set i 0
-                                                while { $i < [string length $value] } {
-                                                    set char [string index $value $i]
-                                                    switch -- $char {
-                                                        " "     -
-                                                        "."     -
-                                                        ","     -
-                                                        "-"     {}
-                                                        default {
-                                                            switch -- [string is alnum $char] {
-                                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                            posinteger {
+                                                # Check every numbers in value.
+                                                foreach value $::ms::current($w,values) {
+                                                    switch -- [string is integer -strict $value] {
+                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
+                                                        1   {
+                                                            if { $value < 0 } {
+                                                                ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
                                                             }
                                                         }
                                                     }
-
-                                                    incr i
                                                 }
+
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) [string length [lindex $::ms::data($w,values) end]]
                                             }
-
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
-
-                                            # Register the sorted values in lowercase characters.
-                                            set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
-                                        }
-                                        alpha {
-                                            # Check every characters in value.
-                                            foreach value $::ms::current($w,values) {
-                                                set i 0
-                                                while { $i < [string length $value] } {
-                                                    set char [string index $value $i]
-                                                    switch -- $char {
-                                                        " "     {}
-                                                        default {
-                                                            switch -- [string is alpha $char] {
-                                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                            posreal {
+                                                # Check every numbers in value.
+                                                foreach value $::ms::current($w,values) {
+                                                    switch -- [string is double -strict $value] {
+                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
+                                                        1   {
+                                                            if { $value < 0 } {
+                                                                ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
                                                             }
                                                         }
                                                     }
+                                                }
 
-                                                    incr i
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+
+                                                 # Get the maxlength of the first and last item.
+                                                set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                # Set the 'maxlength' internal value.
+                                                if { $maxlength_from > $maxlength_to } {
+                                                    set ::ms::data($w,maxlength) $maxlength_from
+                                                } else {
+                                                    set ::ms::data($w,maxlength) $maxlength_to
                                                 }
                                             }
-
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -ascii $::ms::current($w,values)]
-
-                                            # Register the sorted values in lowercase characters.
-                                            set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
-                                        }
-                                        integer {
-                                            # Check every numbers in value.
-                                            foreach value $::ms::current($w,values) {
-                                                switch -- [string is integer -strict $value] {
-                                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
-                                                }
-                                            }
-
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
-
-                                            # Set the maxlength.
-                                            set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
-                                            set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
-
-                                            if { $maxlength_from > $maxlength_to } {
-                                                set ::ms::current($w,maxlength) $maxlength_from
-                                            } else {
-                                                set ::ms::current($w,maxlength) $maxlength_to
-                                            }
-                                        }
-                                        posinteger {
-                                            # Check every numbers in value.
-                                            foreach value $::ms::current($w,values) {
-                                                switch -- [string is integer -strict $value] {
-                                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
-                                                    1   {
-                                                        if { $value < 0 } {
-                                                            ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
-                                                        }
+                                            real {
+                                                # Check every numbers in value.
+                                                foreach value $::ms::current($w,values) {
+                                                    switch -- [string is double -strict $value] {
+                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
                                                     }
                                                 }
+
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
+
+                                                 # Get the maxlength of the first and last item.
+                                                set maxlength_from [string length [lindex $::ms::data($w,values) 0]]
+                                                set maxlength_to   [string length [lindex $::ms::data($w,values) end]]
+
+                                                # Set the 'maxlength' internal value.
+                                                if { $maxlength_from > $maxlength_to } {
+                                                    set ::ms::data($w,maxlength) $maxlength_from
+                                                } else {
+                                                    set ::ms::data($w,maxlength) $maxlength_to
+                                                }
                                             }
+                                            none {
+                                                # Register the sorted values.
+                                                set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
 
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -integer $::ms::current($w,values)]
+                                                # Register the sorted values in lowercase characters.
+                                                set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
 
-                                            # Set the maxlength.
-                                            set ::ms::current($w,maxlength) [string length [lindex $::ms::data($w,values) end]]
-                                        }
-                                        posreal {
-                                            # Check every numbers in value.
-                                            foreach value $::ms::current($w,values) {
-                                                switch -- [string is double -strict $value] {
-                                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
-                                                    1   {
-                                                        if { $value < 0 } {
-                                                            ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
-                                                        }
+                                                # Set the maxlength.
+                                                set maxlength 0
+                                                foreach item $::ms::data($w,values) {
+                                                    set item_length [string length $item]
+                                                    if { $item_length > $maxlength } {
+                                                        set maxlength $item_length
                                                     }
                                                 }
+
+                                                # Set the 'maxlength' internal value.
+                                                set ::ms::data($w,maxlength) $maxlength
                                             }
-
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
-
-                                            # Set the maxlength.
-                                            set maxlength 0
-                                            foreach number $::ms::data($w,values) {
-                                                set number_length [string length $number]
-                                                if { $number_length > $maxlength } {
-                                                    set maxlength $number_length
-                                                }
-                                            }
-
-                                            set ::ms::current($w,maxlength) $maxlength
                                         }
-                                        real {
-                                            # Check every numbers in value.
-                                            foreach value $::ms::current($w,values) {
-                                                switch -- [string is double -strict $value] {
-                                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
-                                                }
-                                            }
 
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -real $::ms::current($w,values)]
-
-                                            # Set the maxlength.
-                                            set maxlength 0
-                                            foreach number $::ms::data($w,values) {
-                                                set number_length [string length $number]
-                                                if { $number_length > $maxlength } {
-                                                    set maxlength $number_length
-                                                }
-                                            }
-
-                                            set ::ms::current($w,maxlength) $maxlength
-                                        }
-                                        none {
-                                            # Register the sorted values.
-                                            set ::ms::data($w,values) [lsort -dictionary $::ms::current($w,values)]
-
-                                            # Register the sorted values in lowercase characters.
-                                            set ::ms::data($w,values,lowercase) [string tolower $::ms::data($w,values)]
-                                        }
-                                    }
-
-                                    # Set the current value as the first one of '::ms::data($w,values)'.
-                                    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
-                                }
-                            }
-
-                            # If the maxlength is not zero check that the charwidth is not less of it.
-                            switch -- $::ms::current($w,maxlength) {
-                                0       {}
-                                default {
-                                    if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                                        set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
+                                        # Set the current value as the first one of '::ms::data($w,values)'.
+                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
                                     }
                                 }
-                            }
-
-                            # If the spinbox popdown is currently displayed, release the grab.
-                            switch -- [_winfo exists $w.popdown] {
-                                1   { set ::wait_for_user_response "Unpost" }
                             }
 
                             ##################################
@@ -4312,10 +4146,8 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             interp invokehidden {} $w configure          -cursor $cursor \
                                                                 -exportselection $::ms::current($w,exportselection) \
                                                                            -font $::ms::current($w,font) \
-                                                                         -format $::ms::data($w,format) \
                                                                            -from $::ms::current($w,from) \
                                                                       -increment $::ms::current($w,increment) \
-                                                                 -invalidcommand $::ms::current($w,invalidcommand) \
                                                                         -justify $::ms::current($w,justify) \
                                                                     -placeholder $::ms::current($w,placeholder) \
                                                                           -state $::ms::current($w,state) \
@@ -4324,10 +4156,19 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                                    -textvariable $::ms::current($w,textvariable) \
                                                                              -to $::ms::current($w,to) \
                                                                        -validate $::ms::current($w,validate) \
-                                                                -validatecommand $::ms::current($w,validatecommand) \
                                                                          -values $::ms::data($w,values) \
                                                                           -width $::ms::current($w,charwidth) \
                                                                  -xscrollcommand $::ms::current($w,xscrollcommand);
+
+                            # Check the spinbox type.
+                            switch -- $::ms::data($w,type) {
+                                # Clear the widget's textarea.
+                                interp invokehidden {} $w delete 0 end
+                                interp invokehidden {} $w selection clear
+
+                                # Set the current index in the combobox entry.
+                                interp invokehidden {} $w set $::ms::data($w,current_value)
+                            }
 
                             return ""
                         }
@@ -4540,10 +4381,21 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             switch -- $::ms::current($w,datatype) {
                                 integer    -
                                 posinteger {
+                                    # Check that the 'value' provided is an integer.
                                     switch -- [string is integer -strict $value] {
                                         0   { return "" }
                                     }
 
+                                    # Check if a 'maxlength' is in place.
+                                    switch -- $::ms::current($w,maxlength) {
+                                        disabled { set maxlength 0 }
+                                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                                    }
+
+                                    # Beautify and correct 'value' depending on the datatype specified.
+                                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
+
+                                    # Check the 'value' beautified is between the allowed limits.
                                     if { ($value >= $::ms::current($w,from)) && ($value <= $::ms::current($w,to)) } {
                                         set ::ms::data($w,current_value) $value
                                     } else {
@@ -4552,12 +4404,23 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                 }
                                 posreal    -
                                 real       {
+                                    # Check that the 'value' provided is a double.
                                     switch -- [string is double -strict $value] {
                                         0   { return "" }
                                     }
 
+                                    # Check if a 'maxlength' is in place.
+                                    switch -- $::ms::current($w,maxlength) {
+                                        disabled { set maxlength 0 }
+                                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                                    }
+
+                                    # Beautify and correct 'value' depending on the datatype specified.
+                                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
+
+                                    # Check the 'value' beautified is between the allowed limits.
                                     if { ($value >= $::ms::current($w,from)) && ($value <= $::ms::current($w,to)) } {
-                                        set ::ms::data($w,current_value) [format $::ms::data($w,format) $value]
+                                        set ::ms::data($w,current_value) $value
                                     } else {
                                         return ""
                                     }
@@ -4718,21 +4581,6 @@ proc ::ms::spinbox::Style_Update { stylename caller_info } {
                 }
             }
             normal { set cursor $::ms::current($w,cursor) }
-        }
-
-        # If the maxlength is not zero check that the charwidth is not less of it.
-        switch -- $::ms::current($w,maxlength) {
-            0       {}
-            default {
-                if { $::ms::current($w,charwidth) < $::ms::current($w,maxlength) } {
-                    set ::ms::current($w,charwidth) $::ms::current($w,maxlength)
-                }
-            }
-        }
-
-        # If the spinbox popdown is currently displayed, release the grab.
-        switch -- [_winfo exists $w.popdown] {
-            1   { set ::wait_for_user_response "Unpost" }
         }
 
         #######################################
@@ -5133,6 +4981,15 @@ proc ::ms::spinbox::Decrement { w value amount } {
             # Get the decremented value.
             set value [expr { $value-$increment }]
 
+            # Check if a 'maxlength' is in place.
+            switch -- $::ms::current($w,maxlength) {
+                disabled { set maxlength 0 }
+                enabled  { set maxlength $::ms::data($w,maxlength) }
+            }
+
+            # Beautify and correct 'value' depending on the datatype specified.
+            set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
+
             # Check the scrollstopper value ('disabled' or 'enabled').
             switch -- $::ms::scrollstopper {
                 disabled {
@@ -5147,12 +5004,6 @@ proc ::ms::spinbox::Decrement { w value amount } {
                         set value $::ms::current($w,from)
                     }
                 }
-            }
-
-            # Check the widget's datatype.
-            switch --$::ms::current($w,datatype) {
-                posreal -
-                real    { set value [format $::ms::data($w,format) $value] }
             }
         }
         default {
@@ -5219,11 +5070,6 @@ proc ::ms::spinbox::Decrement { w value amount } {
 #
 # It doesn't return anything.
 proc ::ms::spinbox::Destroy { w } {
-    # If the spinbox popdown is currently displayed, release the grab.
-    switch -- [_winfo exists $w.popdown] {
-        1   { set ::wait_for_user_response "Unpost" }
-    }
-
     # Get the short address related to the widget's real address.
     set short_addr $::ms::addr($w,short)
 
@@ -5306,7 +5152,6 @@ proc ::ms::spinbox::Destroy { w } {
                          ::ms::current($w,cursor) \
                          ::ms::current($w,darkcolor) \
                          ::ms::current($w,datatype) \
-                         ::ms::current($w,decimals) \
                          ::ms::current($w,exportselection) \
                          ::ms::current($w,fieldbackground) \
                          ::ms::current($w,focuscolor) \
@@ -5315,7 +5160,6 @@ proc ::ms::spinbox::Destroy { w } {
                          ::ms::current($w,foreground) \
                          ::ms::current($w,from) \
                          ::ms::current($w,increment) \
-                         ::ms::current($w,invalidcommand) \
                          ::ms::current($w,insertcolor) \
                          ::ms::current($w,insertwidth) \
                          ::ms::current($w,justify) \
@@ -5333,13 +5177,12 @@ proc ::ms::spinbox::Destroy { w } {
                          ::ms::current($w,textvariable) \
                          ::ms::current($w,to) \
                          ::ms::current($w,validate) \
-                         ::ms::current($w,validatecommand) \
                          ::ms::current($w,values) \
                          ::ms::current($w,xscrollcommand);
 
     unset -nocomplain -- ::ms::data($w,classtype) \
                          ::ms::data($w,current_value) \
-                         ::ms::data($w,format) \
+                         ::ms::data($w,maxlength) \
                          ::ms::data($w,token) \
                          ::ms::data($w,type) \
                          ::ms::data($w,values) \
@@ -5361,10 +5204,8 @@ proc ::ms::spinbox::Destroy { w } {
                          ::ms::default($w,focuswidth) \
                          ::ms::default($w,font) \
                          ::ms::default($w,foreground) \
-                         ::ms::default($w,format) \
                          ::ms::default($w,from) \
                          ::ms::default($w,increment) \
-                         ::ms::default($w,invalidcommand) \
                          ::ms::default($w,insertcolor) \
                          ::ms::default($w,insertwidth) \
                          ::ms::default($w,justify) \
@@ -5382,7 +5223,6 @@ proc ::ms::spinbox::Destroy { w } {
                          ::ms::default($w,textvariable) \
                          ::ms::default($w,to) \
                          ::ms::default($w,validate) \
-                         ::ms::default($w,validatecommand) \
                          ::ms::default($w,values) \
                          ::ms::default($w,xscrollcommand);
 
@@ -5578,6 +5418,15 @@ proc ::ms::spinbox::Increment { w value amount } {
             # Get the incremented value.
             set value [expr { $value+$increment }]
 
+            # Check if a 'maxlength' is in place.
+            switch -- $::ms::current($w,maxlength) {
+                disabled { set maxlength 0 }
+                enabled  { set maxlength $::ms::data($w,maxlength) }
+            }
+
+            # Beautify and correct 'value' depending on the datatype specified.
+            set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
+
             # Check the scrollstopper value ('disabled' or 'enabled').
             switch -- $::ms::scrollstopper {
                 disabled {
@@ -5592,12 +5441,6 @@ proc ::ms::spinbox::Increment { w value amount } {
                         set value $::ms::current($w,to)
                     }
                 }
-            }
-
-            # Check the widget's datatype.
-            switch --$::ms::current($w,datatype) {
-                posreal -
-                real    { set value [format $::ms::data($w,format) $value] }
             }
         }
         default {
@@ -5863,12 +5706,12 @@ proc ::ms::spinbox::Return { w } {
 # It returns a boolean value ['0' or '1'] indicating if the string provided
 # reached it's length limit or not.
 proc ::ms::spinbox::Validate_KeyPress { w string } {
-    # Check if the character is allowed to be displayed or not.
+    # Check if a 'maxlength' is in place.
     switch -- $::ms::current($w,maxlength) {
-        0       {}
-        default {
-            # Check if the length of 'string' is bigger than the maxlength allowed.
-            if { [string length $string] > $::ms::current($w,maxlength) } {
+        disabled {}
+        enabled  {
+            # Check if the character is allowed to be displayed or not.
+            if { [string length $string] > $::ms::data($w,maxlength) } {
                 # The character will not be inserted.
                 return 0
             }
@@ -6333,8 +6176,14 @@ proc ::ms::spinbox::Validate_String { w } {
                 posinteger -
                 posreal    -
                 real       {
+                    # Check if a 'maxlength' is in place.
+                    switch -- $::ms::current($w,maxlength) {
+                        disabled { set maxlength 0 }
+                        enabled  { set maxlength $::ms::data($w,maxlength) }
+                    }
+
                     # Beautify and correct 'value' depending on the datatype specified.
-                    set value [::ms::Beautify_Input_Number $value $::ms::current($w,maxlength) $::ms::current($w,datatype)]
+                    set value [::ms::Beautify_Input_Number $value $maxlength $::ms::current($w,datatype)]
 
                     # Check that 'value' is a valid number (double or integer).
                     switch -- [string is double -strict $value] {
