@@ -3531,22 +3531,6 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **insert** *index* *string*
-            switch -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled {
-                    chan puts stdout "The 'insert' entry command has been deprecated by Mustang."
-                    chan puts stdout "Please use the 'set' entry command instead."
-                    chan puts stdout ""
-                    chan puts stdout "Additional infos:"
-                    chan puts stdout ""
-                    chan puts stdout "$caller_info"
-                    chan puts stdout ""
-                }
-            }
-
             switch -- [llength $args] {
                 2   {
                     # Check the widget's physical state.
