@@ -4536,6 +4536,9 @@ proc ::ms::entry::KeyPress { w key } {
         }
     }
 
+    # If a selection is present, remove the characters selected.
+    ::ttk::entry::PendingDelete $w
+
     # 😀 Insert the key.
     interp invokehidden {} $w insert insert $key
     ::ttk::entry::See $w insert
