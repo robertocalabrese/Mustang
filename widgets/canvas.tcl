@@ -5695,16 +5695,18 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Check the 'fraction' provided.
+                    # Check that the 'fraction' provided is a double.
                     switch -- [string is double -strict $fraction] {
-                        0   { return "" }
-                    }
-
-                    # Check that 'fraction' is inside its limits [0,1.0].
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
+                        0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                        1   {
+                            # Check that the 'fraction' provided is in the range [0,1.0].
+                            # Truncate if necessary.
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+                        }
                     }
 
                     # Execute the command.
@@ -5729,6 +5731,11 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     switch -- $option {
                         scroll  {}
                         default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'number' provided.
+                    switch -- [string is double -strict $number] {
+                        0   { ::ms::Error "Invalid value, '$number'." $caller_info }
                     }
 
                     # Check the 'what' provided.
