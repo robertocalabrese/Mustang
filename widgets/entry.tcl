@@ -2719,7 +2719,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                         # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
