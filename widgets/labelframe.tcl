@@ -3425,6 +3425,22 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **see** *widget*
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+    # *window* **xview**
+    # *window* **xview** **moveto** *fraction*
+    # *window* **xview** **scroll** *number* *what*
+    # *window* **yview**
+    # *window* **yview** **moveto** *fraction*
+    # *window* **yview** **scroll** *number* *what*
+
     # Check the command provided.
     switch -nocase -- $cmd {
         cget {
@@ -3434,9 +3450,11 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::labelframe(non_styleable,options)) || ($option in $::ms::labelframe(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
@@ -3450,10 +3468,13 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::labelframe(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -3464,17 +3485,28 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
-                    set option [string range $args 1 end]
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
+                    set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::labelframe(non_styleable,options)) || ($option in $::ms::labelframe(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -4497,18 +4529,25 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
                     set x [lindex $args 0]
                     set y [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
-                    switch -- [lindex $args 0] {
+                    # Synopsis:
+                    #
+                    # *window* **identify** **element** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
                         element {}
                         default { ::ms::Error "Invalid option, '$args'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -4591,10 +4630,13 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4614,6 +4656,9 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                     return [$::ms::addr($w,widget) instate $statespec]
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -4840,10 +4885,21 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [$::ms::addr($w,widget) state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [$::ms::addr($w,widget) state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4895,7 +4951,10 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
@@ -4909,25 +4968,34 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             # Check if the widget has an active horizontal scrollbar.
             switch -- $::ms::data($w,scrollx) {
                 on  {
-                    set subcommand [lindex  $args 0]
-                    set args       [lremove $args 0]
+                    switch -- [llength $args] {
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **xview**
 
-                    switch -nocase -- $subcommand {
-                        ""     { return [list $::ms::data($w,xview1) $::ms::data($w,xview2)] }
-                        moveto {
-                            # Check the number of arguments provided (after the 'moveto' word).
-                            switch -- [llength $args] {
-                                1       {}
-                                default { return "" }
+                            # Execute the command.
+                            return [list $::ms::data($w,xview1) $::ms::data($w,xview2)]
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **xview** **moveto** *fraction*
+                            set option   [lindex $args 0]
+                            set fraction [lindex $args 1]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                moveto  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
                             }
 
-                            # Check the fraction provided.
-                            set fraction $args
+                            # Check the 'fraction' provided.
                             switch -- [string is double -strict $fraction] {
                                 0   { return "" }
                             }
 
-                            # Check that fraction is inside its limits [0,1.0].
+                            # Check that 'fraction' is inside its limits [0,1.0].
                             if { $fraction < 0 } {
                                 set fraction 0
                             } elseif { $fraction > 1.0 } {
@@ -4972,24 +5040,28 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
                             # Update the horizontal scrollbar thumb position.
                             $w.container.x set $::ms::data($w,xview1) $::ms::data($w,xview2)
-
-                            return ""
                         }
-                        scroll {
-                            # Check the number of arguments provided (after the 'scroll' word).
-                            switch -- [llength $args] {
-                                2       {}
-                                default { return "" }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **xview** **scroll** *number* *what*
+                            set option [lindex $args 0]
+                            set number [lindex $args 1]
+                            set what   [lindex $args 2]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                scroll  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
                             }
 
-                            # Check the 'number'.
-                            set number [lindex $args 0]
+                            # Check the 'number' provided.
                             switch -- [string is double -strict $number] {
                                 0   { return "" }
                             }
 
-                            # Check the 'what'.
-                            switch -nocase -- [lindex $args 1] {
+                            # Check the 'what' provided.
+                            switch -nocase -- $what {
                                 pages {
                                     # Note: A 'page' is 9/10 of the viewport width.
                                     set page   [expr { $::ms::data($w,width)*0.9 }]
@@ -5048,10 +5120,8 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
                             # Update the horizontal scrollbar thumb position.
                             $w.container.x set $::ms::data($w,xview1) $::ms::data($w,xview2)
-
-                            return ""
                         }
-                        default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
             }
@@ -5068,25 +5138,34 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             # Check if the widget has an active vertical scrollbar.
             switch -- $::ms::data($w,scrolly) {
                 on  {
-                    set subcommand [lindex  $args 0]
-                    set args       [lremove $args 0]
+                    switch -- [llength $args] {
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **yview**
 
-                    switch -nocase -- $subcommand {
-                        ""     { return [list $::ms::data($w,yview1) $::ms::data($w,yview2)] }
-                        moveto {
-                            # Check the number of arguments provided (after the 'moveto' word).
-                            switch -- [llength $args] {
-                                1       {}
-                                default { return "" }
+                            # Execute the command.
+                            return [list $::ms::data($w,yview1) $::ms::data($w,yview2)]
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **yview** **moveto** *fraction*
+                            set option   [lindex $args 0]
+                            set fraction [lindex $args 1]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                moveto  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
                             }
 
-                            # Check the fraction provided.
-                            set fraction $args
+                            # Check the 'fraction' provided.
                             switch -- [string is double -strict $fraction] {
                                 0   { return "" }
                             }
 
-                            # Check that fraction is inside its limits [0,1.0].
+                            # Check that 'fraction' is inside its limits [0,1.0].
                             if { $fraction < 0 } {
                                 set fraction 0
                             } elseif { $fraction > 1.0 } {
@@ -5131,37 +5210,41 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
                             # Update the vertical scrollbar thumb position.
                             $w.container.y set $::ms::data($w,yview1) $::ms::data($w,yview2)
-
-                            return ""
                         }
-                        scroll {
-                            # Check the number of arguments provided (after the 'scroll' word).
-                            switch -- [llength $args] {
-                                2       {}
-                                default { return "" }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **yview** **scroll** *number* *what*
+                            set option [lindex $args 0]
+                            set number [lindex $args 1]
+                            set what   [lindex $args 2]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                scroll  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
                             }
 
-                            # Check the 'number'.
-                            set number [lindex $args 0]
+                            # Check the 'number' provided.
                             switch -- [string is double -strict $number] {
                                 0   { return "" }
                             }
 
-                            # Check the 'what'.
-                            switch -nocase -- [lindex $args 1] {
+                            # Check the 'what' provided.
+                            switch -nocase -- $what {
                                 pages {
-                                    # Note: A 'page' is 9/10 of the viewport height.
-                                    set page   [expr { $::ms::data($w,height)*0.9 }]
+                                    # Note: A 'page' is 9/10 of the viewport width.
+                                    set page   [expr { $::ms::data($w,width)*0.9 }]
                                     set amount [expr { $number*$page }]
                                 }
                                 units {
-                                    if { $::ms::current($w,yscrollincrement) > 0 } {
-                                        # Note: A 'unit' is '::ms::current($w,yscrollincrement)'.
-                                        set unit   $::ms::current($w,yscrollincrement)
+                                    if { $::ms::current($w,xscrollincrement) > 0 } {
+                                        # Note: A 'unit' is '::ms::current($w,xscrollincrement)'.
+                                        set unit   $::ms::current($w,xscrollincrement)
                                         set amount [expr { $number*$unit }]
                                     } else {
-                                        # Note: A 'unit' is 1/10 of the viewport height.
-                                        set unit   [expr { $::ms::data($w,height)*0.1 }]
+                                        # Note: A 'unit' is 1/10 of the viewport width.
+                                        set unit   [expr { $::ms::data($w,width)*0.1 }]
                                         set amount [expr { $number*$unit }]
                                     }
                                 }
@@ -5207,8 +5290,6 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
                             # Update the vertical scrollbar thumb position.
                             $w.container.y set $::ms::data($w,yview1) $::ms::data($w,yview2)
-
-                            return ""
                         }
                         default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
                     }
@@ -5217,7 +5298,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
 
             return ""
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
