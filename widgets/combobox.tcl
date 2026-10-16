@@ -4590,7 +4590,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                     set what   [lindex $args 2]
 
                     # Check that the 'number' provided is a integer.
-                    switch -- [string is integer -strict $fraction] {
+                    switch -- [string is integer -strict $number] {
                         0   { ::ms::Error "Invalid value, '$number'." $caller_info }
                     }
 
