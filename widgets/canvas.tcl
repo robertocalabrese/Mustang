@@ -3779,90 +3779,157 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **addtag** *tag* ?*searchSpec*? ?*arg*? ... ?*arg*?
+    # *window* **bbox** *tagOrId* ?*tagOrId*? ... ?*tagOrId*?
+    # *window* **bind** *tagOrId* ?*sequence*? ?*command*?
+    # *window* **canvasx** *screenx* ?*gridspacing*?
+    # *window* **canvasy** *screeny* ?*gridspacing*?
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **coords** *tagOrId* ?*coordList*?
+    # *window* **coords** *tagOrId* *x0* *y0* ... *xn* *yn*
+    # *window* **create** *type* *x* *y* ?*x* *y* ... *x* *y*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **dchars** *tagOrId* *first* ?*last*?
+    # *window* **delete** *tagOrId* ?*tagOrId*? ... ?*tagOrId*?
+    # *window* **dtag** *tagOrId* ?*tagToDelete*?
+    # *window* **find** *searchCommand* ?*arg*? ... ?*arg*?
+    # *window* **focus** ?*tagOrId*?
+    # *window* **gettags** *tagOrId*
+    # *window* **icursor** *tagOrId* *index*
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **image** *imagename* ?*subsample*? ?*zoom*?
+    # *window* **index** *tagOrId* *index*
+    # *window* **itemcget** *tagOrId* *option*
+    # *window* **insert** *tagOrId* *beforeThis* *string*
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **itemconfigure** *tagOrId* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **lower** *tagOrId* ?*belowThis*?
+    # *window* **move**   *tagOrId* *xAmount* *yAmount*
+    # *window* **moveto** *tagOrId* *xPos* *yPos*
+    # *window* **postscript** *option* *value* ?*option value*? ... ?*option value*?
+    # *window* **raise** *tagOrId* ?*aboveThis*?
+    # *window* **rchars** *tagOrId* *first* *last* *string*
+    # *window* **rotate** *tagOrId* *xOrigin* *yOrigin* *angle*
+    # *window* **scale** *tagOrId* *xOrigin* *yOrigin* *xScale* *yScale*
+    # *window* **scan** **mark** *x* *y*
+    # *window* **scan** **dragto** *x* *y* ?*gain*?
+    # *window* **select** **adjust** *tagOrId* *index*
+    # *window* **select** **clear**
+    # *window* **select** **from** *tagOrId* *index*
+    # *window* **select** **item**
+    # *window* **select** **to** *tagOrId* *index*
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+    # *window* **type** *tagOrId*
+    # *window* **xview**
+    # *window* **xview** **moveto** *fraction*
+    # *window* **xview** **scroll** *number* *what*
+    # *window* **yview**
+    # *window* **yview** **moveto** *fraction*
+    # *window* **yview** **scroll** *number* *what*
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.canvas] }
+    }
+
     # Check the command provided.
     switch -nocase -- $cmd {
-        addtag        -
-        bbox          -
-        bind          -
-        canvasx       -
-        canvasy       -
-        coords        -
-        dchars        -
-        delete        -
-        dtag          -
-        find          -
-        focus         -
-        gettags       -
-        icursor       -
-        image         -
-        imove         -
-        index         -
-        insert        -
-        itemcget      -
-        itemconfigure -
-        lower         -
-        move          -
-        moveto        -
-        postscript    -
-        raise         -
-        rchars        -
-        rotate        -
-        scale         -
-        scan          -
-        select        -
-        type          {
+        addtag {
             # Synopsis:
             #
-            # *window* **addtag** *tag* *searchSpec* ?*arg* ... *arg*?
-            # *window* **bbox** *tagOrId* ?*tagOrId* *tagOrId* ...?
-            # *window* **bind** *tagOrId* ?*sequence*? ?*command*?
-            # *window* **canvasx** *screenx* ?*gridspacing*?
-            # *window* **canvasy** *screeny* ?*gridspacing*?
-            # *window* **coords** *tagOrId* ?*x0* *y0* ...?
-            # *window* **coords** *tagOrId* ?*coordList*?
-            # *window* **dchars** *tagOrId* *first* ?*last*?
-            # *window* **delete** ?*tagOrId* *tagOrId* ...?
-            # *window* **dtag** *tagOrId* ?*tagToDelete*?
-            # *window* **find** *searchCommand* ?*arg* ... *arg*?
-            # *window* **focus** ?*tagOrId*?
-            # *window* **gettags** *tagOrId*
-            # *window* **icursor** *tagOrId* *index*
-            # *window* **image** *imagename* ?*subsample*? ?*zoom*?
-            # *window* **imove** *tagOrId* *index* *x* *y*
-            # *window* **index** *tagOrId* *index*
-            # *window* **insert** *tagOrId* *beforeThis* *string*
-            # *window* **itemcget** *tagOrId* *option*
-            # *window* **itemconfigure** *tagOrId* ?*option*? ?*value*? ?*option value* ... *option value*?
-            # *window* **lower** *tagOrId* ?*belowThis*?
-            # *window* **move** *tagOrId* *xAmount* *yAmount*
-            # *window* **moveto** *tagOrId* *xPos* *yPos*
-            # *window* **postscript** ?*option value* ... *option value*?
-            # *window* **raise** *tagOrId* ?*aboveThis*?
-            # *window* **rchars** *tagOrId* *first* *last* *string*
-            # *window* **rotate** *tagOrId* *xOrigin* *yOrigin* *angle*
-            # *window* **scale** *tagOrId* *xOrigin* *yOrigin* *xScale* *yScale*
-            # *window* **scan** **mark** *x* *y*
-            # *window* **scan** **dragto** *x* *y* ?*gain*?
-            # *window* **select** **adjust** *tagOrId* *index*
-            # *window* **select** **clear**
-            # *window* **select** **from** *tagOrId* *index*
-            # *window* **select** **item**
-            # *window* **select** **to** *tagOrId* *index*
-            # *window* **type** *tagOrId*
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.canvas] }
-            }
+            # *window* **addtag** *tag*
+            # *window* **addtag** *tag* *searchSpec*
+            # *window* **addtag** *tag* *searchSpec* ?*arg*? ... ?*arg*?
 
             # Execute the command.
             try {
-                {*}$address $cmd {*}$args
+                {*}$address addtag {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
+        bbox {
+            # Synopsis:
+            #
+            # *window* **bbox** *tagOrId* ?*tagOrId*? ... ?*tagOrId*?
+
+            # Execute the command.
+            try {
+                {*}$address bbox {*}$args
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
                 return $result
+            }
+        }
+        bind {
+            # Synopsis:
+            #
+            # *window* **bind** *tagOrId*
+            # *window* **bind** *tagOrId* *sequence*
+            # *window* **bind** *tagOrId* *sequence* *command*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **bind** *tagOrId*
+                    # *window* **bind** *tagOrId* *sequence*
+
+                    # Execute the command.
+                    try {
+                        {*}$address bind {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **bind** *tagOrId* *sequence* *command*
+
+                    # Execute the command.
+                    try {
+                        {*}$address bind {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        canvasx -
+        canvasy {
+            # Synopsis:
+            #
+            # *window* **canvasx** *screenx*
+            # *window* **canvasx** *screenx* *gridspacing*
+            #
+            # *window* **canvasy** *screeny*
+            # *window* **canvasy** *screeny* *gridspacing*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         cget {
@@ -3870,17 +3937,18 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::canvas(non_styleable,options)) || ($option in $::ms::canvas(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
@@ -3888,10 +3956,13 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::canvas(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -3902,17 +3973,28 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
-                    set option [string range $args 1 end]
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
+                    set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::canvas(non_styleable,options)) || ($option in $::ms::canvas(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
                         ::ms::Error "Invalid configure option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -4502,10 +4584,75 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        coords {
+            # Synopsis:
+            #
+            # *window* **coords** *tagOrId*
+            # *window* **coords** *tagOrId* *coordList*
+            # *window* **coords** *tagOrId* *x0* *y0* ... *xn* *yn*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **coords** *tagOrId*
+
+                    # Execute the command.
+                    try {
+                        {*}$address coord $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **coords** *tagOrId* *coordList*
+
+                    # Execute the command.
+                    try {
+                        {*}$address coord {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # *window* **coords** *tagOrId* *x0* *y0* ... *xn* *yn*
+                    set tagOrId [lindex  $args 0]
+                    set args    [lremove $args 0]
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.canvas] }
+                    }
+
+                    # Check that 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                {*}$address coord $tagOrId {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
         create {
             # Synopsis:
             #
-            # *window* **create** *type* *x* *y* ?*x* *y* ... *x* *y*? ?*option* *value* ... *option* *value*?
+            # *window* **create** *type* *x* *y* ?*x* *y* ... *x* *y*? ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0       -
                 1       -
@@ -4583,10 +4730,10 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     switch -- [expr { [llength $coords]%2 }] {
                         0   {
                             if { [llength $coords] < 2 } {
-                                ::ms::Error "Invalid set of coordinates, '$coords'." $caller_info
+                                ::ms::Error "Invalid option, '$coords'." $caller_info
                             }
                         }
-                        default { ::ms::Error "Invalid set of coordinates, '$coords'." $caller_info }
+                        default { ::ms::Error "Invalid option, '$coords'." $caller_info }
                     }
 
                     # Check that the remaining 'args' forms a valid 'option/value' list.
@@ -4670,28 +4817,141 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                             default { lappend new_args -window [lindex $result 0] }
                                         }
                                     }
-                                    default { ::ms::Error "Invalid create option, '$option'." $caller_info }
+                                    default { ::ms::Error "Invalid option, '$option'." $caller_info }
                                 }
                             }
                         }
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false { set address [list interp invokehidden {} $w] }
-                        true  { set address [list $w.canvas] }
-                    }
-
                     # Execute the command.
                     try {
-                        {*}$address $cmd $type {*}$coords {*}$new_args
+                        {*}$address create $type {*}$coords {*}$new_args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
                         return $result
                     }
                 }
+            }
+        }
+        dchars {
+            # Synopsis:
+            #
+            # *window* **dchars** *tagOrId* *first*
+            # *window* **dchars** *tagOrId* *first* *last*
+            switch -- [llength $args] {
+                2
+                3   {
+                    # Execute the command.
+                    try {
+                        {*}$address dchars {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        delete {
+            # Synopsis:
+            #
+            # *window* **delete** *tagOrId* ?*tagOrId*? ... ?*tagOrId*?
+
+            # Execute the command.
+            try {
+                {*}$address delete {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
+        dtag {
+            # Synopsis:
+            #
+            # *window* **dtag** *tagOrId*
+            # *window* **dtag** *tagOrId* *tagToDelete*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    try {
+                        {*}$address dtag {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        find {
+            # Synopsis:
+            #
+            # *window* **find** *searchCommand* ?*arg*? ... ?*arg*?
+
+            # Execute the command.
+            try {
+                {*}$address find {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
+        focus {
+            # Synopsis:
+            #
+            # *window* **focus**
+            # *window* **focus** *tagOrId*
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    return [{*}$address focus]
+                }
+                1   {
+                    # Execute the command.
+                    {*}$address focus $args
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        gettags -
+        type    {
+            # Synopsis:
+            #
+            # *window* **gettags** *tagOrId*
+            # *window* **type**    *tagOrId*
+            switch -- [llength $args] {
+                1   {
+                    # Execute the command.
+                    return [{*}$address $cmd $args]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        icursor {
+            # Synopsis:
+            #
+            # *window* **icursor** *tagOrId* *index*
+            switch -- [llength $args] {
+                2   {
+                    # Execute the command.
+                    try {
+                        {*}$address icursor {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         identify {
@@ -4701,18 +4961,22 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
                     set x [lindex $args 0]
                     set y [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
-                    switch -- [lindex $args 0] {
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
                         element {}
                         default { ::ms::Error "Invalid option, '$args'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -4781,13 +5045,94 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        image {
+            # Synopsis:
+            #
+            # *window* **image** *imagename*
+            # *window* **image** *imagename* *subsample*
+            # *window* **image** *imagename* *subsample* *zoom*
+            switch -- [llength $args] {
+                1   -
+                2   -
+                3   {
+                    # Execute the command.
+                    try {
+                        {*}$address image {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        imove {
+            # Synopsis:
+            #
+            # *window* **imove** *tagOrId* *index* *x* *y*
+            switch -- [llength $args] {
+                4   {
+                    # Execute the command.
+                    try {
+                        {*}$address imove {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        index    -
+        itemcget {
+            # Synopsis:
+            #
+            # *window* **index**    *tagOrId* *index*
+            # *window* **itemcget** *tagOrId* *option*
+            switch -- [llength $args] {
+                2   {
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        insert {
+            # Synopsis:
+            #
+            # *window* **insert** *tagOrId* *beforeThis* *string*
+            switch -- [llength $args] {
+                3   {
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4815,6 +5160,9 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     return $boolean
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -4850,17 +5198,313 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        itemconfigure {
+            # Synopsis:
+            #
+            # *window* **itemconfigure** *tagOrId*
+            # *window* **itemconfigure** *tagOrId* *option*
+            # *window* **itemconfigure** *tagOrId* *option* *value* ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **itemconfigure** *tagOrId*
+
+                    # Execute the command.
+                    try {
+                        {*}$address itemconfigure $args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **itemconfigure** *tagOrId* *option*
+
+                    # Execute the command.
+                    try {
+                        {*}$address itemconfigure {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # *window* **itemconfigure** *tagOrId* *option* *value* ?*option value*? ... ?*option value*?
+                    set tagOrId [lindex  $args 0]
+                    set args    [lremove $args 0]
+
+                    # Check if the widget is scrollable or not.
+                    switch -- $::ms::current($w,scrollable) {
+                        false { set address [list interp invokehidden {} $w] }
+                        true  { set address [list $w.canvas] }
+                    }
+
+                    # Check that 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                {*}$address itemconfigure $tagOrId {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
+        lower -
+        raise {
+            # Synopsis:
+            #
+            # *window* **lower** *tagOrId*
+            # *window* **lower** *tagOrId* *belowThis*
+            #
+            # *window* **raise** *tagOrId*
+            # *window* **raise** *tagOrId* *aboveThis*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    {*}$address $cmd {*}$args
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        move   -
+        moveto {
+            # Synopsis:
+            #
+            # *window* **move**   *tagOrId* *xAmount* *yAmount*
+            # *window* **moveto** *tagOrId* *xPos* *yPos*
+            switch -- [llength $args] {
+                3   {
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        postscript {
+            # Synopsis:
+            #
+            # *window* **postscript** *option* *value* ?*option value*? ... ?*option value*?
+
+            # Check that 'args' forms a valid 'option/value' list.
+            switch -- [expr { [llength $args]%2 }] {
+                0   {
+                    # Execute the command.
+                    try {
+                        {*}$address postscript {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        rchars -
+        rotate {
+            # Synopsis:
+            #
+            # *window* **rchars** *tagOrId* *first* *last* *string*
+            # *window* **rotate** *tagOrId* *xOrigin* *yOrigin* *angle*
+            switch -- [llength $args] {
+                4   {
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        scale {
+            # Synopsis:
+            #
+            # *window* **scale** *tagOrId* *xOrigin* *yOrigin* *xScale* *yScale*
+            switch -- [llength $args] {
+                5   {
+                    # Execute the command.
+                    try {
+                        {*}$address scale {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        scan {
+            # Synopsis:
+            #
+            # *window* **scan** **mark**   *x* *y*
+            # *window* **scan** **dragto** *x* *y*
+            # *window* **scan** **dragto** *x* *y* *gain*
+            switch -- [llength $args] {
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **scan** **mark**   *x* *y*
+                    # *window* **scan** **dragto** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        mark    -
+                        dragto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address scan $option $x $y
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                4   {
+                    # Synopsis:
+                    #
+                    # *window* **scan** **dragto** *x* *y* *gain*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+                    set gain   [lindex $args 3]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        dragto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address scan dragto $x $y $gain
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        select {
+            # Synopsis:
+            #
+            # *window* **select** **adjust** *tagOrId* *index*
+            # *window* **select** **clear**
+            # *window* **select** **from** *tagOrId* *index*
+            # *window* **select** **item**
+            # *window* **select** **to** *tagOrId* *index*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **select** **clear**
+                    # *window* **select** **item**
+                    set option $args
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        clear   -
+                        item    {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address select $option
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **select** **adjust** *tagOrId* *index*
+                    # *window* **select** **from**   *tagOrId* *index*
+                    # *window* **select** **to**     *tagOrId* *index*
+                    set option  [lindex $args 0]
+                    set tagOrId [lindex $args 1]
+                    set index   [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        adjust  -
+                        from    -
+                        to      {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address select $option $tagOrId $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [lsort -increasing -dictionary $::ms::data($w,statespec)]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
+
                     # Check the widget's physical state.
                     switch -- $::ms::current($w,state) {
                         disabled { set statespec disabled }
-                        normal {
+                        normal   {
                             # Check the 'statespec' provided.
                             set statespec $args
                             switch -- $statespec {
@@ -5003,139 +5647,60 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        xview {
+        xview -
+        yview {
             # Synopsis:
             #
             # *window* **xview**
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
-            set subcommand [lindex $args 0]
-            set args       [lremove $args 0 0]
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.canvas] }
-            }
-
-            # Check the subcommand.
-            switch -nocase -- $subcommand {
-                ""  {
-                    # Execute the command.
-                    try {
-                        {*}$address xview
-                    } on error {} {
-                        return ""
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                moveto {
-                    # Check the number of arguments provided (after the 'moveto' word).
-                    switch -- [llength $args] {
-                        1       {}
-                        default { return "" }
-                    }
-
-                    # Check the fraction provided.
-                    set fraction $args
-                    switch -- [string is double -strict $fraction] {
-                        0   { return "" }
-                    }
-
-                    # Check that fraction is inside its limits [0,1.0].
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
-                    }
-
-                    # Execute the command.
-                    try {
-                        {*}$address xview moveto $fraction
-                    } on error {} {
-                        # Do nothing.
-                    }
-
-                    return ""
-                }
-                scroll {
-                    # Check the number of arguments provided (after the 'scroll' word).
-                    switch -- [llength $args] {
-                        2       {}
-                        default { return "" }
-                    }
-
-                    # Check the 'number'.
-                    set number [lindex $args 0]
-                    switch -- [string is double -strict $number] {
-                        0   { return "" }
-                    }
-
-                    # Check the 'what'.
-                    switch -nocase -- [lindex $args 1] {
-                        pages   { set what "pages" }
-                        units   { set what "units" }
-                        default { return "" }
-                    }
-
-                    # Execute the command.
-                    try {
-                        {*}$address xview scroll $number $what
-                    } on error {} {
-                        # Do nothing.
-                    }
-
-                    return ""
-                }
-                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
-            }
-        }
-        yview {
-            # Synopsis:
             #
             # *window* **yview**
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
-            set subcommand [lindex $args 0]
-            set args       [lremove $args 0 0]
+            switch -- [llength $args] {
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **xview**
+                    # *window* **yview**
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.canvas] }
-            }
-
-            # Check the subcommand.
-            switch -nocase -- $subcommand {
-                ""  {
                     # Execute the command.
                     try {
-                        {*}$address yview
+                        {*}$address $cmd
                     } on error {} {
                         return ""
                     } on ok { result } {
                         return $result
                     }
                 }
-                moveto {
-                    # Check the number of arguments provided (after the 'moveto' word).
-                    switch -- [llength $args] {
-                        1       {}
-                        default { return "" }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** **moveto** *fraction*
+                    # *window* **yview** **moveto** *fraction*
+                    set option   [lindex $args 0]
+                    set fraction [lindex $args 1]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        moveto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Check the fraction provided.
-                    set fraction $args
+                    # Check the 'fraction' provided.
                     switch -- [string is double -strict $fraction] {
                         0   { return "" }
                     }
 
-                    # Check that fraction is inside its limits [0,1.0].
+                    # Check that 'fraction' is inside its limits [0,1.0].
                     if { $fraction < 0 } {
                         set fraction 0
                     } elseif { $fraction > 1.0 } {
@@ -5144,46 +5709,48 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                     # Execute the command.
                     try {
-                        {*}$address yview moveto $fraction
+                        {*}$address $cmd moveto $fraction
                     } on error {} {
                         # Do nothing.
                     }
 
                     return ""
                 }
-                scroll {
-                    # Check the number of arguments provided (after the 'scroll' word).
-                    switch -- [llength $args] {
-                        2       {}
-                        default { return "" }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** **scroll** *number* *what*
+                    # *window* **yview** **scroll** *number* *what*
+                    set option [lindex $args 0]
+                    set number [lindex $args 1]
+                    set what   [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        scroll  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Check the 'number'.
-                    set number [lindex $args 0]
-                    switch -- [string is double -strict $number] {
-                        0   { return "" }
-                    }
-
-                    # Check the 'what'.
-                    switch -nocase -- [lindex $args 1] {
-                        pages   { set what "pages" }
-                        units   { set what "units" }
-                        default { return "" }
+                    # Check the 'what' provided.
+                    switch -- $what {
+                        units   -
+                        pages   {}
+                        default { ::ms::Error "Invalid option, '$what'." $caller_info }
                     }
 
                     # Execute the command.
                     try {
-                        {*}$address yview scroll $number $what
+                        {*}$address $cmd scroll $number $what
                     } on error {} {
                         # Do nothing.
                     }
 
                     return ""
                 }
-                default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
