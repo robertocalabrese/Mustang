@@ -2873,7 +2873,7 @@ proc ::ms::frame::Command { window { args "" } } {
 #
 # Returned values depends on the 'cmd' provided.
 proc ::ms::frame::Pathname_Cmd { w cmd args } {
-        # Get the caller information.
+    # Get the caller information.
     set caller_info [info frame -1]
 
     # Synopsis:
