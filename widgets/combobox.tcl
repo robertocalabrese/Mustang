@@ -1860,7 +1860,7 @@ proc ::ms::combobox::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -arrowcolor {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -2213,7 +2213,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                         }
                     }
                     -validate {
-                        switch -nocase $value {
+                        switch -- $value {
                             none     { set ::ms::current($w,validate) none }
                             focus    { set ::ms::current($w,validate) focus }
                             focusin  { set ::ms::current($w,validate) focusin }
@@ -2946,7 +2946,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
     # *window* **xview** **scroll** *number* *what*
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         bbox  -
         index {
             # Synopsis:
@@ -3049,7 +3049,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
 
                             # Check the widget's options provided.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -arrowcolor {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -3441,7 +3441,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                         }
                                     }
                                     -validate {
-                                        switch -nocase $value {
+                                        switch -- $value {
                                             none     { set ::ms::current($w,validate) none }
                                             focus    { set ::ms::current($w,validate) focus }
                                             focusin  { set ::ms::current($w,validate) focusin }
@@ -4240,7 +4240,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
-                switch -nocase -- $result {
+                switch -- $result {
                     downarrow { return "Combobox.downarrow" }
                     default   {
                         # Check the widget's physical state.
