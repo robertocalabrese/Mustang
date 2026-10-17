@@ -1007,7 +1007,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -background {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -1049,7 +1049,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
                         }
                     }
                     -colormap {
-                        switch -nocase -- $value {
+                        switch -- $value {
                             ""      -
                             "new"   {}
                             default {
@@ -1499,7 +1499,7 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         cget {
             # Synopsis:
             #
@@ -1569,7 +1569,7 @@ proc ::ms::toplevel::Pathname_Cmd { w cmd args } {
 
                             # Check the widget's options provided.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -background {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
