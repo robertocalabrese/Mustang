@@ -2082,6 +2082,16 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **invoke**
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+
     # Check the command provided.
     switch -- $cmd {
         cget {
@@ -2089,17 +2099,18 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::radiobutton(non_styleable,options)) || ($option in $::ms::radiobutton(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
@@ -2107,10 +2118,13 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::radiobutton(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -2121,17 +2135,28 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
-                    set option [string range $args 1 end]
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
+                    set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::radiobutton(non_styleable,options)) || ($option in $::ms::radiobutton(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
                         ::ms::Error "Invalid configure option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -2726,18 +2751,26 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
                     set x [lindex $args 0]
                     set y [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
-                    switch -- [lindex $args 0] {
-                        element {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
-                    }
-
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
+                    # *window* **identify** **element** *x* *y*
+                    set option [lindex $args 0]
                     set x [lindex $args 1]
                     set y [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- option {
+                        element {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -2803,10 +2836,13 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2832,6 +2868,9 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                     }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -2886,10 +2925,22 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2905,14 +2956,7 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #######################################
-                    ##                                   ##
-                    ##     UPDATE THE WIDGET'S STATE     ##
-                    ##                                   ##
-                    #######################################
-
-                    # Propagate the new statespec to the hull, label, highlight and indicator objects of
-                    # the radiobutton.
+                    # Execute the command.
                     interp invokehidden {} $w state $statespec
                     $w.label state $statespec
                     $w.highlight state $statespec
@@ -2927,11 +2971,14 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
