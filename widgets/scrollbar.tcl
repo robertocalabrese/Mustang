@@ -953,7 +953,7 @@ proc ::ms::scrollbar::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -arrowcolor {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -1180,7 +1180,7 @@ proc ::ms::scrollbar::Command { window { args "" } } {
                     } else {
                         set parent_style $orient
                         foreach word $children {
-                            switch -nocase -- $word {
+                            switch -- $word {
                                 Horizontal -
                                 Vertical   { ::ms::Error "Invalid style name, '$::ms::current($w,style)'." $caller_info }
                                 default    { set parent_style [string cat $parent_style "." $word] }
@@ -1445,7 +1445,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         activate {
             # Synopsis:
             #
@@ -1522,7 +1522,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
 
                             # Check the remaining options, if any.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -arrowcolor {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -1752,7 +1752,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                                     } else {
                                         set parent_style $orient
                                         foreach word $children {
-                                            switch -nocase -- $word {
+                                            switch -- $word {
                                                 Horizontal -
                                                 Vertical   { ::ms::Error "Invalid style name, '$::ms::current($w,style)'." $caller_info }
                                                 default    { set parent_style [string cat $parent_style "." $word] }
@@ -2234,7 +2234,7 @@ proc ::ms::scrollbar::Style_Update { stylename caller_info } {
                 } else {
                     set parent_style($orient) $dir
                     foreach word $children {
-                        switch -nocase -- $word {
+                        switch -- $word {
                             Horizontal -
                             Vertical   { ::ms::Error "Invalid style name, '$stylename'." $caller_info }
                             default    { set parent_style($orient) [string cat $parent_style($orient) "." $word] }
@@ -2427,7 +2427,7 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
     set view2 [lindex $views 1]
 
     # Check the element under the mouse pointer.
-    switch -nocase -glob -- [interp invokehidden {} $w identify $x $y] {
+    switch -glob -- [interp invokehidden {} $w identify $x $y] {
         "*uparrow"   -
         "*leftarrow" {
             # Scroll the thumb by one page towards the top or towards the left (depending on the widget's orientation).
@@ -2454,7 +2454,7 @@ proc ::ms::scrollbar::ButtonPress1 { w x y }  {
             set ::ms::temp(fraction) [interp invokehidden {} $w fraction $x $y]
 
             # Check the clickaction variable.
-            switch -nocase -- $::ms::clickaction {
+            switch -- $::ms::clickaction {
                 jump {
                     # Jump to the location on the scrollbar that was clicked.
                     ::ms::scrollbar::Pathname_Cmd $w moveto $::ms::temp(fraction)
@@ -2506,7 +2506,7 @@ proc ::ms::scrollbar::ButtonPress2 { w x y }  {
     set view1 [lindex $views 0]
     set view2 [lindex $views 1]
 
-    switch -nocase -glob -- [interp invokehidden {} $w identify $x $y] {
+    switch -glob -- [interp invokehidden {} $w identify $x $y] {
         "*trough" {
             # Get the fraction for the center of the thumb.
             set ::ms::temp(fraction) [interp invokehidden {} $w fraction $x $y]
