@@ -3674,7 +3674,7 @@ proc ::ms::text::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -autoseparators {
                         switch -nocase -- $value {
                             0        -
@@ -4086,7 +4086,7 @@ proc ::ms::text::Command { window { args "" } } {
                     -tabs {
                         set invalid false
                         foreach tabstop $value {
-                            switch -nocase -- $tabstop {
+                            switch -- $tabstop {
                                 left    -
                                 right   -
                                 center  -
@@ -4668,7 +4668,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         bbox        -
         compare     -
         count       -
@@ -4801,7 +4801,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
 
                             # Check the remaining widget's options, if any.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -autoseparators {
                                         switch -nocase -- $value {
                                             0        -
@@ -4977,7 +4977,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                         }
                                     }
                                     -insertunfocussed {
-                                        switch -nocase -- $value {
+                                        switch -- $value {
                                             none   { set ::ms::current($w,insertunfocussed) none }
                                             hollow { set ::ms::current($w,insertunfocussed) hollow }
                                             solid  { set ::ms::current($w,insertunfocussed) solid }
@@ -5228,7 +5228,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     -tabs {
                                         set invalid false
                                         foreach tabstop $value {
-                                            switch -nocase -- $tabstop {
+                                            switch -- $tabstop {
                                                 left    -
                                                 right   -
                                                 center  -
@@ -6028,7 +6028,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                             # Check the remaining widget's options, if any.
                                             set new_args [list ]
                                             foreach { option value } $args {
-                                                switch -nocase -- $option {
+                                                switch -- $option {
                                                     -background       -
                                                     -foreground       -
                                                     -lmargincolor     -
@@ -6139,13 +6139,13 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                             # Check the remaining widget's options, if any.
                                             set new_args [list ]
                                             foreach { option value } $args {
-                                                switch -nocase -- $option {
+                                                switch -- $option {
                                                     -window {
                                                         # Get the 'window' real address.
                                                         set result [::ms::Check_Pathname $window invalid]
                                                         switch -- $result {
                                                             invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                                            default { lappend new_args -window [lindex $result 0] }
+                                                            default { lappend new_args -window $result }
                                                         }
                                                     }
                                                     -align   -
@@ -6201,7 +6201,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             }
 
             # Check the subcommand.
-            switch -nocase -- $subcommand {
+            switch -- $subcommand {
                 ""  {
                     # Execute the command.
                     try {
@@ -6255,7 +6255,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                     }
 
                     # Check the 'what'.
-                    switch -nocase -- [lindex $args 1] {
+                    switch -- [lindex $args 1] {
                         pages   { set what "pages" }
                         pixels  { set what "pixels" }
                         units   { set what "units" }
@@ -6290,7 +6290,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             }
 
             # Check the subcommand.
-            switch -nocase -- $subcommand {
+            switch -- $subcommand {
                 ""  {
                     # Execute the command.
                     try {
@@ -6344,7 +6344,7 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                     }
 
                     # Check the 'what'.
-                    switch -nocase -- [lindex $args 1] {
+                    switch -- [lindex $args 1] {
                         pages   { set what "pages" }
                         pixels  { set what "pixels" }
                         units   { set what "units" }
@@ -7105,9 +7105,9 @@ proc ::ms::text::Scrollbar_ButtonPress { w orient x y }  {
     set ::ms::temp(xpress) $x
     set ::ms::temp(ypress) $y
 
-    switch -nocase -- $orient {
+    switch -- $orient {
         horizontal {
-            switch -nocase -glob -- [$w.x identify $x $y] {
+            switch -glob -- [$w.x identify $x $y] {
                 "*leftarrow"  { ::ms::Scroll_Widget_X $w +120 units }
                 "*rightarrow" { ::ms::Scroll_Widget_X $w -120 units }
                 "*grip"  -
@@ -7128,7 +7128,7 @@ proc ::ms::text::Scrollbar_ButtonPress { w orient x y }  {
                     # Check if 'parent' has an active horizontal scrollbar linked to it.
                     switch -- $::ms::data($w,scrollx) {
                         on  {
-                            switch -nocase -- $::ms::clickaction {
+                            switch -- $::ms::clickaction {
                                 jump {
                                     # Jump to the location on the scrollbar that was clicked.
                                     ::ms::text::Pathname_Cmd $w xview moveto $::ms::temp(fraction)
@@ -7165,7 +7165,7 @@ proc ::ms::text::Scrollbar_ButtonPress { w orient x y }  {
             }
         }
         vertical {
-            switch -nocase -glob -- [$w.y identify $x $y] {
+            switch -glob -- [$w.y identify $x $y] {
                 "*uparrow"   { ::ms::Scroll_Widget_Y $w +120 units }
                 "*downarrow" { ::ms::Scroll_Widget_Y $w -120 units }
                 "*grip"  -
@@ -7186,7 +7186,7 @@ proc ::ms::text::Scrollbar_ButtonPress { w orient x y }  {
                     # Check if 'parent' has an active vertical scrollbar linked to it.
                     switch -- $::ms::data($w,scrolly) {
                         on  {
-                            switch -nocase -- $::ms::clickaction {
+                            switch -- $::ms::clickaction {
                                 jump {
                                     # Jump to the location on the scrollbar that was clicked.
                                     ::ms::text::Pathname_Cmd $w yview moveto $::ms::temp(fraction)
@@ -7272,7 +7272,7 @@ proc ::ms::text::Scrollbar_Drag { w orient x y } {
     set delta_y [expr { $y-$::ms::temp(ypress) }]
 
     # Check the orientation.
-    switch -nocase -- $orient {
+    switch -- $orient {
         horizontal {
             # Compute the 'fraction' after the drag movement.
             set delta    [$w.x delta $delta_x $delta_y]
