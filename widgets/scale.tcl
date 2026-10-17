@@ -1156,7 +1156,7 @@ proc ::ms::scale::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -background {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -1410,7 +1410,7 @@ proc ::ms::scale::Command { window { args "" } } {
                     } else {
                         set parent_style $orient
                         foreach word $children {
-                            switch -nocase -- $word {
+                            switch -- $word {
                                 Horizontal -
                                 Vertical   { ::ms::Error "Invalid style name, '$::ms::current($w,style)'." $caller_info }
                                 default    { set parent_style [string cat $parent_style "." $word] }
@@ -1693,7 +1693,7 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         cget {
             # Synopsis:
             #
@@ -1756,7 +1756,7 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
 
                             # Check the widget's options provided.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -background {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -2031,7 +2031,7 @@ proc ::ms::scale::Pathname_Cmd { w cmd args } {
                                     } else {
                                         set parent_style $orient
                                         foreach word $children {
-                                            switch -nocase -- $word {
+                                            switch -- $word {
                                                 Horizontal -
                                                 Vertical   { ::ms::Error "Invalid style name, '$::ms::current($w,style)'." $caller_info }
                                                 default    { set parent_style [string cat $parent_style "." $word] }
@@ -2457,7 +2457,7 @@ proc ::ms::scale::Style_Update { stylename caller_info } {
                 } else {
                     set parent_style($orient) $dir
                     foreach word $children {
-                        switch -nocase -- $word {
+                        switch -- $word {
                             Horizontal -
                             Vertical   { ::ms::Error "Invalid style name, '$stylename'." $caller_info }
                             default    { set parent_style($orient) [string cat $parent_style($orient) "." $word] }
