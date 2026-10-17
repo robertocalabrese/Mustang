@@ -1228,7 +1228,7 @@ proc ::ms::toolbutton::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -anchor {
                         set value [string tolower $value]
                         switch -- $value {
@@ -1825,7 +1825,7 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         cget {
             # Synopsis:
             #
@@ -1888,7 +1888,7 @@ proc ::ms::toolbutton::Pathname_Cmd { w cmd args } {
 
                             # Check the widget's options provided.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -anchor {
                                         set value [string tolower $value]
                                         switch -- $value {
