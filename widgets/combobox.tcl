@@ -4589,6 +4589,12 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                     set number [lindex $args 1]
                     set what   [lindex $args 2]
 
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        scroll  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
                     # Check that the 'number' provided is a integer.
                     switch -- [string is integer -strict $number] {
                         0   { ::ms::Error "Invalid value, '$number'." $caller_info }
