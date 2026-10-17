@@ -1573,6 +1573,24 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **add** *subwindow* ?*option value*? ... ?*option value*?
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*?... ?*option* *value*?
+    # *window* **forget** *tabid*
+    # *window* **hide** *tabid*
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **identify** **tab** *x* *y*
+    # *window* **index** *tabid*
+    # *window* **insert** *pos* *subwindow* ?*option value*? ... ?*option value*?
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **select** ?*tabid*?
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+    # *window* **tab** *tabid* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **tabs**
+
     # Check the command provided.
     switch -nocase -- $cmd {
         add {
@@ -1632,17 +1650,18 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::notebook(non_styleable,options)) || ($option in $::ms::notebook(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
@@ -1650,10 +1669,13 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*?... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::notebook(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -1664,17 +1686,28 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
-                    set option [string range $args 1 end]
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
+                    set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::notebook(non_styleable,options)) || ($option in $::ms::notebook(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*?... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -2159,21 +2192,28 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **identify** **tab** *x* *y*
             switch -- [llength $args] {
                 2   {
-                    set subcommand element
-                    set x          [lindex $args 0]
-                    set y          [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
+                    set option element
+                    set x      [lindex $args 0]
+                    set y      [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element" or 'sash'.
-                    set subcommand [lindex $args 0]
-                    switch -- $subcommand {
-                        element -
-                        sash    {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
-                    }
+                    # Synopsis:
+                    #
+                    # *window* **identify** **element** *x* *y*
+                    # *window* **identify** **tab** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
 
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        element -
+                        tab     {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -2201,12 +2241,12 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
 
             # Check if the coordinates provided falls upon the widget's sash.
             try {
-                interp invokehidden {} $w identify $subcommand $x $y
+                interp invokehidden {} $w identify $option $x $y
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
-                # Check the subcommand provided.
-                switch -- $subcommand {
+                # Check the 'option' provided.
+                switch -- $option {
                     element {
                         switch -- $result {
                             label   { set result "Notebook.tab" }
@@ -2358,7 +2398,8 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
                 0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
@@ -2412,10 +2453,22 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
         select {
             # Synopsis:
             #
-            # *window* **select** ?*tabid*?
+            # *window* **select**
+            # *window* **select** *tabid*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w select] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **select**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w select]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **select** *tabid*
+
                     # Check if the 'tabid' provided is a tab index.
                     switch -- [string is integer -strict $args] {
                         0   {
@@ -2465,10 +2518,21 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2484,12 +2548,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #######################################
-                    ##                                   ##
-                    ##     UPDATE THE WIDGET'S STATE     ##
-                    ##                                   ##
-                    #######################################
-
+                    # Execute the command.
                     return [interp invokehidden {} $w state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -2500,14 +2559,19 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         tab {
             # Synopsis:
             #
-            # *window* **tab** *tabid* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+            # *window* **tab** *tabid*
+            # *window* **tab** *tabid* *option*
+            # *window* **tab** *tabid* *option* *value* ?*option value*? ... ?*option value*?
             set tabid [lindex  $args 0]
             set args  [lremove $args 0]
 
@@ -2548,7 +2612,9 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
 
             switch -- [llength $args] {
                 0   {
-                    # case: Return all the tabid options/values.
+                    # Synopsis:
+                    #
+                    # *window* **tab** *tabid*
 
                     try {
                         interp invokehidden {} $w tab $tabid
@@ -2564,14 +2630,19 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                     }
                 }
                 1   {
-                    # case: Return the tabid option value requested.
+                    # Synopsis:
+                    #
+                    # *window* **tab** *tabid* *option*
+                    set option $args
 
-                    switch -nocase -- $args {
+                    # Check the 'option' provided.
+                    switch -- $option {
                         -posthook { return $::ms::data($tabid_addr,posthook) }
                         -prehook  { return $::ms::data($tabid_addr,prehook) }
                         default {
+                            # Execute the command.
                             try {
-                                interp invokehidden {} $w tab $tabid $args
+                                interp invokehidden {} $w tab $tabid $option
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
@@ -2581,7 +2652,9 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                     }
                 }
                 default {
-                    # case: Set all the tabid options/values provided.
+                    # Synopsis:
+                    #
+                    # *window* **tab** *tabid* *option* *value* ?*option value*? ... ?*option value*?
 
                     # Check that the command 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
@@ -2603,7 +2676,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    # Set the other Tk tab options provided.
+                    # Execute the command.
                     try {
                         interp invokehidden {} $w tab $tabid {*}$args
                     } on error { errortext errorcode } {
@@ -2632,7 +2705,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
