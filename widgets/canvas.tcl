@@ -3008,7 +3008,7 @@ proc ::ms::canvas::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -background {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -3837,7 +3837,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
     }
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         addtag {
             # Synopsis:
             #
@@ -4016,7 +4016,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
 
                             # Check the remaining widget's options, if any.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -background {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -4751,7 +4751,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                             # Check the remaining widget's options, if any.
                             set new_args [list ]
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -activebackground   -
                                     -activefill         -
                                     -activeforeground   -
@@ -4814,7 +4814,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                                         set result [::ms::Check_Pathname $window invalid]
                                         switch -- $result {
                                             invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                            default { lappend new_args -window [lindex $result 0] }
+                                            default { lappend new_args -window $result }
                                         }
                                     }
                                     default { ::ms::Error "Invalid option, '$option'." $caller_info }
@@ -6264,9 +6264,9 @@ proc ::ms::canvas::Scrollbar_ButtonPress { w orient x y }  {
     set ::ms::temp(xpress) $x
     set ::ms::temp(ypress) $y
 
-    switch -nocase -- $orient {
+    switch -- $orient {
         horizontal {
-            switch -nocase -glob -- [$w.x identify $x $y] {
+            switch -glob -- [$w.x identify $x $y] {
                 "*leftarrow"  { ::ms::Scroll_Widget_X $w -1 units }
                 "*rightarrow" { ::ms::Scroll_Widget_X $w +1 units }
                 "*grip"  -
@@ -6287,7 +6287,7 @@ proc ::ms::canvas::Scrollbar_ButtonPress { w orient x y }  {
                     # Check if 'parent' has an active horizontal scrollbar linked to it.
                     switch -- $::ms::data($w,scrollx) {
                         on  {
-                            switch -nocase -- $::ms::clickaction {
+                            switch -- $::ms::clickaction {
                                 jump {
                                     # Jump to the location on the scrollbar that was clicked.
                                     ::ms::canvas::Pathname_Cmd $w xview moveto $::ms::temp(fraction)
@@ -6324,7 +6324,7 @@ proc ::ms::canvas::Scrollbar_ButtonPress { w orient x y }  {
             }
         }
         vertical {
-            switch -nocase -glob -- [$w.y identify $x $y] {
+            switch -glob -- [$w.y identify $x $y] {
                 "*uparrow"   { ::ms::Scroll_Widget_Y $w -1 units }
                 "*downarrow" { ::ms::Scroll_Widget_Y $w +1 units }
                 "*grip"  -
@@ -6345,7 +6345,7 @@ proc ::ms::canvas::Scrollbar_ButtonPress { w orient x y }  {
                     # Check if 'parent' has an active vertical scrollbar linked to it.
                     switch -- $::ms::data($w,scrolly) {
                         on  {
-                            switch -nocase -- $::ms::clickaction {
+                            switch -- $::ms::clickaction {
                                 jump {
                                     # Jump to the location on the scrollbar that was clicked.
                                     ::ms::canvas::Pathname_Cmd $w yview moveto $::ms::temp(fraction)
@@ -6431,7 +6431,7 @@ proc ::ms::canvas::Scrollbar_Drag { w orient x y } {
     set delta_y [expr { $y-$::ms::temp(ypress) }]
 
     # Check the orientation.
-    switch -nocase -- $orient {
+    switch -- $orient {
         horizontal {
             # Compute the 'fraction' after the drag movement.
             set delta    [$w.x delta $delta_x $delta_y]
