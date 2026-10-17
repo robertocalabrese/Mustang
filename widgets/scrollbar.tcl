@@ -1444,12 +1444,29 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **activate** ?*element*?
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **delta** *deltaX* *deltaY*
+    # *window* **fraction** *x* *y*
+    # *window* **get**
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **moveto** *fraction*
+    # *window* **set** *first* *last*
+    # *window* **scroll** *number* *what*
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+
     # Check the command provided.
     switch -- $cmd {
         activate {
             # Synopsis:
             #
-            # *window* **activate** ?*element*?
+            # *window* **activate**
+            # *window* **activate** *element*
 
             # Note: This command does nothing.
             #       It's here only to avoid an error in case a classic scrollbar was created.
@@ -1465,11 +1482,12 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::scrollbar(non_styleable,options)) || ($option in $::ms::scrollbar(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
@@ -1483,10 +1501,13 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::scrollbar(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -1497,17 +1518,28 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
-                    set option [string range $args 1 end]
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
+                    set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::scrollbar(non_styleable,options)) || ($option in $::ms::scrollbar(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
                         ::ms::Error "Invalid configure option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -1909,7 +1941,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
         fraction {
             # Synopsis:
             #
-            # *window* **delta** *deltaX* *deltaY*
+            # *window* **delta**    *deltaX* *deltaY*
             # *window* **fraction** *x* *y*
             switch -- [llength $args] {
                 2   {
@@ -1930,7 +1962,10 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             #
             # *window* **get**
             switch -- [llength $args] {
-                0       { return [interp invokehidden {} $w get] }
+                0   {
+                    # Execute the command.
+                    return [interp invokehidden {} $w get]
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
@@ -1941,38 +1976,48 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
                     set x [lindex $args 0]
                     set y [lindex $args 1]
-
-                    # Check that the coordinates provided are valid.
-                    switch -- [string is integer -strict $x] {
-                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
-                    }
-
-                    switch -- [string is integer -strict $y] {
-                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
-                    }
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
-                    switch -- [lindex $args 0] {
+                    # Synopsis:
+                    #
+                    # *window* **identify** **element** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
                         element {}
                         default { ::ms::Error "Invalid option, '$args'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
-
-                    # Check that the coordinates provided are valid.
-                    switch -- [string is integer -strict $x] {
-                        0   { ::ms::Error "Invalid coordinate, '$x'." $caller_info }
-                    }
-
-                    switch -- [string is integer -strict $y] {
-                        0   { ::ms::Error "Invalid coordinate, '$y'." $caller_info }
-                    }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check that the (x,y) relative coordinates provided are valid.
+            switch -- [string is integer -strict $x] {
+                0   { return "" }
+                1   {
+                    # Check that the 'x' coordinate is a positive integer ('0' included).
+                    if { $x < 0 } {
+                        return ""
+                    }
+                }
+            }
+
+            switch -- [string is integer -strict $y] {
+                0   { return "" }
+                1   {
+                    # Check that the 'y' coordinate is a positive integer ('0' included).
+                    if { $y < 0 } {
+                        return ""
+                    }
+                }
             }
 
             # Execute the command.
@@ -1996,10 +2041,13 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2019,6 +2067,9 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                     return [interp invokehidden {} $w instate $statespec]
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -2053,12 +2104,20 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             # *window* **moveto** *fraction*
             switch -- [llength $args] {
                 1   {
-                    # Check the argument provided (fraction).
                     set fraction $args
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
+
+                    # Check that the 'fraction' provided is a double.
+                    switch -- [string is double -strict $fraction] {
+                        0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                        1   {
+                            # Check that the 'fraction' provided is in the range [0,1.0].
+                            # Truncate if necessary.
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+                        }
                     }
 
                     # Check the command associated with the widget.
@@ -2106,16 +2165,16 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                     set number [lindex $args 0]
                     set what   [lindex $args 1]
 
-                    # Check 'number'.
+                    # Check the 'number' provided.
                     switch -- [string is integer -strict $number] {
-                        0   { ::ms::Error "Invalid option, '$args'." $caller_info }
+                        0   { ::ms::Error "Invalid option, '$number'." $caller_info }
                     }
 
-                    # Check 'what'.
+                    # Check the 'what' provided.
                     switch -- $what {
                         units   -
                         pages   {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                        default { ::ms::Error "Invalid option, '$what'." $caller_info }
                     }
 
                     # If 'number' has been provided by a binding event, trasform it into
@@ -2153,10 +2212,21 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2172,12 +2242,7 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #######################################
-                    ##                                   ##
-                    ##     UPDATE THE WIDGET'S STATE     ##
-                    ##                                   ##
-                    #######################################
-
+                    # Execute the command.
                     return [interp invokehidden {} $w state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -2190,14 +2255,20 @@ proc ::ms::scrollbar::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   {
                     switch -- [string last "." $::ms::current($w,style)] {
-                        -1      { return [string cat [string totitle $::ms::current($w,orient)] "." $::ms::current($w,style)] }
-                        default { return $::ms::current($w,style) }
+                        -1  {
+                            # Execute the command.
+                            return [string cat [string totitle $::ms::current($w,orient)] "." $::ms::current($w,style)]
+                        }
+                        default {
+                            # Execute the command.
+                            return $::ms::current($w,style)
+                        }
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
