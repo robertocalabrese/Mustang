@@ -1497,7 +1497,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             # *window* **cget** *option*
             switch -- [llength $args] {
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::panedwindow(non_styleable,options)) || ($option in $::ms::panedwindow(styleable,options)) } {
@@ -1539,7 +1539,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::panedwindow(non_styleable,options)) || ($option in $::ms::panedwindow(styleable,options)) } {
@@ -1903,7 +1903,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                                 default {
                                     # Check if the pane real address is an already managed subwindow.
                                     if { $result ni [interp invokehidden {} $w panes] } {
-                                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                        ::ms::Error "Invalid value, '$pane'." $caller_info
                                     } else {
                                         set pane $result
                                     }
@@ -1912,7 +1912,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                         }
                         1   {
                             if { $pane < 0 } {
-                                ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                ::ms::Error "Invalid value, '$pane'." $caller_info
                             }
                         }
                     }
@@ -2026,11 +2026,11 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                             # Check if the 'pos' provided is a short address.
                             set result [::ms::Check_Pathname $pos invalid]
                             switch -- $result {
-                                invalid { ::ms::Error "Invalid pane option, '$pos'." $caller_info }
+                                invalid { ::ms::Error "Invalid value, '$pos'." $caller_info }
                                 default {
                                     # Check if the pos real address is an already managed subwindow.
                                     if { $result ni [interp invokehidden {} $w panes] } {
-                                        ::ms::Error "Invalid pane option, '$pos'." $caller_info
+                                        ::ms::Error "Invalid value, '$pos'." $caller_info
                                     } else {
                                         set pos $result
                                     }
@@ -2041,7 +2041,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                 }
                 1   {
                     if { $pos < 0 } {
-                        ::ms::Error "Invalid pane option, '$pos'." $caller_info
+                        ::ms::Error "Invalid value, '$pos'." $caller_info
                     }
                 }
             }
@@ -2156,7 +2156,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                                 default {
                                     # Check if the pane real address is an already managed subwindow.
                                     if { $result ni [interp invokehidden {} $w panes] } {
-                                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                        ::ms::Error "Invalid value, '$pane'." $caller_info
                                     } else {
                                         set pane $result
                                     }
@@ -2165,7 +2165,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                         }
                         1   {
                             if { $pane < 0 } {
-                                ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                ::ms::Error "Invalid value, '$pane'." $caller_info
                             }
                         }
                     }
@@ -2197,7 +2197,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                                 default {
                                     # Check if the pane real address is an already managed subwindow.
                                     if { $result ni [interp invokehidden {} $w panes] } {
-                                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                        ::ms::Error "Invalid value, '$pane'." $caller_info
                                     } else {
                                         set pane $result
                                     }
@@ -2206,7 +2206,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                         }
                         1   {
                             if { $pane < 0 } {
-                                ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                ::ms::Error "Invalid value, '$pane'." $caller_info
                             }
                         }
                     }

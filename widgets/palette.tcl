@@ -2880,7 +2880,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
             # *window* **cget** *option*
             switch -- [llength $args] {
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::palette(non_styleable,options)) || ($option in $::ms::palette(styleable,options)) } {
@@ -2922,7 +2922,7 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::palette(non_styleable,options)) || ($option in $::ms::palette(styleable,options)) } {
@@ -3799,15 +3799,16 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **current** *newIndex*
+                    set newIndex $args
 
                     # Check that the argument provided is an integer.
-                    switch -- [string is integer $args] {
-                        0   { ::ms::Error "The argument provided is not an index, '$args'" $caller_info }
+                    switch -- [string is integer $newIndex] {
+                        0   { ::ms::Error "Invalid value, '$newIndex'" $caller_info }
                     }
 
                     # Find the index in '::ms::data($w,colornames)' that corrisponds to the index provided
                     # for '::ms::current($w,values)'.
-                    set value [lindex $::ms::current($w,values) $args]
+                    set value [lindex $::ms::current($w,values) $newIndex]
                     switch -- $value {
                         ""      {}
                         default {

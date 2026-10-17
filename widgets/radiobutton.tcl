@@ -2100,7 +2100,7 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
             # *window* **cget** *option*
             switch -- [llength $args] {
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::radiobutton(non_styleable,options)) || ($option in $::ms::radiobutton(styleable,options)) } {
@@ -2142,14 +2142,14 @@ proc ::ms::radiobutton::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::radiobutton(non_styleable,options)) || ($option in $::ms::radiobutton(styleable,options)) } {
                         # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {

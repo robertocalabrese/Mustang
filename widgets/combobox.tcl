@@ -2409,7 +2409,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                                         "-"     {}
                                         default {
                                             switch -- [string is alnum $char] {
-                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                                0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                             }
                                         }
                                     }
@@ -2447,7 +2447,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                                         " "     {}
                                         default {
                                             switch -- [string is alpha $char] {
-                                                0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                                0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                             }
                                         }
                                     }
@@ -2478,7 +2478,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is integer -strict $value] {
-                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                 }
                             }
 
@@ -2500,10 +2500,10 @@ proc ::ms::combobox::Command { window { args "" } } {
                             # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is integer -strict $value] {
-                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                     1   {
                                         if { $value < 0 } {
-                                            ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
+                                            ::ms::Error "Invalid value, '$value'." $caller_info
                                         }
                                     }
                                 }
@@ -2519,10 +2519,10 @@ proc ::ms::combobox::Command { window { args "" } } {
                             # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is double -strict $value] {
-                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                     1   {
                                         if { $value < 0 } {
-                                            ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
+                                            ::ms::Error "Invalid value, '$value'." $caller_info
                                         }
                                     }
                                 }
@@ -2546,7 +2546,7 @@ proc ::ms::combobox::Command { window { args "" } } {
                             # Check every value in '::ms::current($w,values)'.
                             foreach value $::ms::current($w,values) {
                                 switch -- [string is double -strict $value] {
-                                    0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                 }
                             }
 
@@ -2975,7 +2975,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             # *window* **cget** *option*
             switch -- [llength $args] {
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::combobox(non_styleable,options)) || ($option in $::ms::combobox(styleable,options)) } {
@@ -3017,7 +3017,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::combobox(non_styleable,options)) || ($option in $::ms::combobox(styleable,options)) } {
@@ -3622,7 +3622,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                                 "-"     {}
                                                                 default {
                                                                     switch -- [string is alnum $char] {
-                                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphanumeric value, 'value: $value'." $caller_info }
+                                                                        0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                                                     }
                                                                 }
                                                             }
@@ -3660,7 +3660,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                                 " "     {}
                                                                 default {
                                                                     switch -- [string is alpha $char] {
-                                                                        0   { ::ms::Error "One of the values assigned to '$w' is not a valid alphabetic value, 'value: $value'." $caller_info }
+                                                                        0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                                                     }
                                                                 }
                                                             }
@@ -3691,7 +3691,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                     # Check every value in '::ms::current($w,values)'.
                                                     foreach value $::ms::current($w,values) {
                                                         switch -- [string is integer -strict $value] {
-                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid integer value, 'value: $value'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                                         }
                                                     }
 
@@ -3713,10 +3713,10 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                     # Check every value in '::ms::current($w,values)'.
                                                     foreach value $::ms::current($w,values) {
                                                         switch -- [string is integer -strict $value] {
-                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                                             1   {
                                                                 if { $value < 0 } {
-                                                                    ::ms::Error "One of the values assigned to '$w' is not a valid posinteger value, 'value: $value'." $caller_info
+                                                                    ::ms::Error "Invalid value, '$value'." $caller_info
                                                                 }
                                                             }
                                                         }
@@ -3740,10 +3740,10 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                     # Check every value in '::ms::current($w,values)'.
                                                     foreach value $::ms::current($w,values) {
                                                         switch -- [string is double -strict $value] {
-                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                                             1   {
                                                                 if { $value < 0 } {
-                                                                    ::ms::Error "One of the values assigned to '$w' is not a valid posreal value, 'value: $value'." $caller_info
+                                                                    ::ms::Error "Invalid value, '$value'." $caller_info
                                                                 }
                                                             }
                                                         }
@@ -3767,7 +3767,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                                                     # Check every value in '::ms::current($w,values)'.
                                                     foreach value $::ms::current($w,values) {
                                                         switch -- [string is double -strict $value] {
-                                                            0   { ::ms::Error "One of the values assigned to '$w' is not a valid real value, 'value: $value'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$value'." $caller_info }
                                                         }
                                                     }
 
@@ -4087,7 +4087,7 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
                             # Check if 'newIndex' is the word 'end'.
                             switch -- $newIndex {
                                 end     { set newIndex [interp invokehidden {} $w index end] }
-                                default { ::ms::Error "Invalid index, '$newIndex'" $caller_info }
+                                default { ::ms::Error "Invalid value, '$newIndex'" $caller_info }
                             }
                         }
                     }

@@ -1786,7 +1786,7 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
             # *window* **cget** *option*
             switch -- [llength $args] {
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::button(non_styleable,options)) || ($option in $::ms::button(styleable,options)) } {
@@ -1828,7 +1828,7 @@ proc ::ms::button::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::button(non_styleable,options)) || ($option in $::ms::button(styleable,options)) } {

@@ -1651,7 +1651,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **cget** *option*
             switch -- [llength $args] {
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::notebook(non_styleable,options)) || ($option in $::ms::notebook(styleable,options)) } {
@@ -1693,7 +1693,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::notebook(non_styleable,options)) || ($option in $::ms::notebook(styleable,options)) } {
@@ -2097,11 +2097,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                     set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                                         }
                                                     }
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                default { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                             }
                                         }
                                         default { set tabid $result }
@@ -2156,11 +2156,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                     set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                                         }
                                                     }
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                default { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                             }
                                         }
                                         default { set tabid $result }
@@ -2282,11 +2282,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                     set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                                         }
                                                     }
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                default { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                             }
                                         }
                                         default { set tabid $result }
@@ -2331,11 +2331,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                             # Check if the 'pos' provided is a short address.
                             set pos [::ms::Check_Pathname $pos invalid]
                             switch -- $result {
-                                invalid { ::ms::Error "Invalid tab option, '$pos'." $caller_info }
+                                invalid { ::ms::Error "Invalid value, '$pos'." $caller_info }
                                 default {
                                     # Check if the pos real address is an already managed subwindow.
                                     if { $pos ni [interp invokehidden {} $w tabs] } {
-                                        ::ms::Error "Invalid tab option, '$pos'." $caller_info
+                                        ::ms::Error "Invalid value, '$pos'." $caller_info
                                     }
                                 }
                             }
@@ -2344,7 +2344,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                 }
                 1   {
                     if { $pos < 0 } {
-                        ::ms::Error "Invalid tab option, '$pos'." $caller_info
+                        ::ms::Error "Invalid value, '$pos'." $caller_info
                     }
                 }
             }
@@ -2396,7 +2396,6 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **instate** *statespec*
             # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
                     set statespec $args
 
@@ -2482,11 +2481,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                                     set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                            0   { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                                         }
                                                     }
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                default { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                             }
                                         }
                                         default { set tabid $result }
@@ -2585,11 +2584,11 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                             set position [split [string range $tabid 1 end] ","]
                                             foreach coordinate $position {
                                                 switch -- [string is integer -strict $coordinate] {
-                                                    0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
+                                                    0   { ::ms::Error "Invalid value, '$tabid'." $caller_info }
                                                 }
                                             }
                                         }
-                                        default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                        default { ::ms::Error "Invalid value, '$args'." $caller_info }
                                     }
                                 }
                                 default { set tabid $result }

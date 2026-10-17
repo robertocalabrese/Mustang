@@ -3450,7 +3450,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::labelframe(non_styleable,options)) || ($option in $::ms::labelframe(styleable,options)) } {
@@ -3492,7 +3492,7 @@ proc ::ms::labelframe::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **configure** *option*
-                    set option [string tolower [string range $args 1 end]]
+                    set option [string range $args 1 end]
 
                     # Check the 'option' provided.
                     if { ($option in $::ms::labelframe(non_styleable,options)) || ($option in $::ms::labelframe(styleable,options)) } {
