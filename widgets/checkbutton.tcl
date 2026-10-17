@@ -1364,7 +1364,7 @@ proc ::ms::checkbutton::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -background {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -2095,7 +2095,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         cget {
             # Synopsis:
             #
@@ -2173,7 +2173,7 @@ proc ::ms::checkbutton::Pathname_Cmd { w cmd args } {
 
                             # Check the widget's options provided.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -background {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
