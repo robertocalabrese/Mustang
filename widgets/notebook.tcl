@@ -1148,7 +1148,7 @@ proc ::ms::notebook::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -background {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -1592,7 +1592,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
     # *window* **tabs**
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         add {
             # Synopsis:
             #
@@ -1608,7 +1608,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             set result [::ms::Check_Pathname $subwindow invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
-                default { set subwindow [lindex $result 0] }
+                default { set subwindow $result }
             }
 
             # Check that the 'subwindow' provided is a direct child of the notebook widget.
@@ -1729,7 +1729,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
 
                             # Check the remaining options, if any.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -background {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -2078,38 +2078,37 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **forget** *tabid*
             switch -- [llength $args] {
                 1   {
+                    set tabid $args
+
                     # Check if the 'tabid' provided is a tab index.
-                    switch -- [string is integer -strict $args] {
+                    switch -- [string is integer -strict $tabid] {
                         0   {
                             # Check if the 'tabid' provided is the word 'current'.
-                            switch -nocase -- $args {
-                                current { set tabid "current" }
+                            switch -- $tabid {
+                                current {}
                                 default {
                                     # Check if the 'tabid' provided is a short address.
-                                    set result [::ms::Check_Pathname $args invalid]
+                                    set result [::ms::Check_Pathname $tabid invalid]
                                     switch -- $result {
                                         invalid {
                                             # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
-                                            switch -- [lindex $args 0] {
+                                            switch -- [string index $tabid 0] {
                                                 "@" {
-                                                    set position [split [string range $args 1 end] ","]
+                                                    set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                                         }
                                                     }
-
-                                                    set tabid $args
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                             }
                                         }
-                                        default { set tabid [lindex $result 0] }
+                                        default { set tabid $result }
                                     }
                                 }
                             }
                         }
-                        1   { set tabid $args }
                     }
 
                     # Get the tabid address.
@@ -2138,38 +2137,37 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **hide** *tabid*
             switch -- [llength $args] {
                 1   {
+                    set tabid $args
+
                     # Check if the 'tabid' provided is a tab index.
-                    switch -- [string is integer -strict $args] {
+                    switch -- [string is integer -strict $tabid] {
                         0   {
                             # Check if the 'tabid' provided is the word 'current'.
-                            switch -nocase -- $args {
-                                current { set tabid "current" }
+                            switch -- $tabid {
+                                current {}
                                 default {
                                     # Check if the 'tabid' provided is a short address.
-                                    set result [::ms::Check_Pathname $args invalid]
+                                    set result [::ms::Check_Pathname $tabid invalid]
                                     switch -- $result {
                                         invalid {
                                             # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
-                                            switch -- [lindex $args 0] {
+                                            switch -- [string index $tabid 0] {
                                                 "@" {
-                                                    set position [split [string range $args 1 end] ","]
+                                                    set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                                         }
                                                     }
-
-                                                    set tabid $args
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                             }
                                         }
-                                        default { set tabid [lindex $result 0] }
+                                        default { set tabid $result }
                                     }
                                 }
                             }
                         }
-                        1   { set tabid $args }
                     }
 
                     # Execute the command.
@@ -2264,39 +2262,38 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             # *window* **index** *tabid*
             switch -- [llength $args] {
                 1   {
+                    set tabid $args
+
                     # Check if the 'tabid' provided is a tab index.
-                    switch -- [string is integer -strict $args] {
+                    switch -- [string is integer -strict $tabid] {
                         0   {
                             # Check if the 'tabid' provided is the word 'end' or 'current'.
-                            switch -nocase -- $args {
-                                end     { set tabid "end" }
-                                current { set tabid "current" }
+                            switch -- $tabid {
+                                end     -
+                                current {}
                                 default {
                                     # Check if the 'tabid' provided is a short address.
-                                    set result [::ms::Check_Pathname $args invalid]
+                                    set result [::ms::Check_Pathname $tabid invalid]
                                     switch -- $result {
                                         invalid {
                                             # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
-                                            switch -- [lindex $args 0] {
+                                            switch -- [lindex $tabid 0] {
                                                 "@" {
-                                                    set position [split [string range $args 1 end] ","]
+                                                    set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                                         }
                                                     }
-
-                                                    set tabid $args
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                             }
                                         }
-                                        default { set tabid [lindex $result 0] }
+                                        default { set tabid $result }
                                     }
                                 }
                             }
                         }
-                        1   { set tabid $args }
                     }
 
                     # Execute the command.
@@ -2328,19 +2325,17 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             switch -- [string is integer -strict $pos] {
                 0   {
                     # Check if the 'pos' provided is the word 'end'.
-                    switch -nocase -- $pos {
-                        end     { set pos "end" }
+                    switch -- $pos {
+                        end     {}
                         default {
                             # Check if the 'pos' provided is a short address.
-                            set result [::ms::Check_Pathname $pos invalid]
+                            set pos [::ms::Check_Pathname $pos invalid]
                             switch -- $result {
                                 invalid { ::ms::Error "Invalid tab option, '$pos'." $caller_info }
                                 default {
                                     # Check if the pos real address is an already managed subwindow.
-                                    if { [lindex $result 0] ni [interp invokehidden {} $w tabs] } {
+                                    if { $pos ni [interp invokehidden {} $w tabs] } {
                                         ::ms::Error "Invalid tab option, '$pos'." $caller_info
-                                    } else {
-                                        set pos [lindex $result 0]
                                     }
                                 }
                             }
@@ -2355,10 +2350,10 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             }
 
             # Get the 'subwindow' real address.
-            set result [::ms::Check_Pathname $subwindow invalid]
+            set window [::ms::Check_Pathname $subwindow invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
-                default { set subwindow [lindex $result 0] }
+                default { set subwindow $window }
             }
 
             # Check that the 'subwindow' provided is a direct child of the notebook widget.
@@ -2468,39 +2463,37 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **select** *tabid*
+                    set tabid $args
 
                     # Check if the 'tabid' provided is a tab index.
-                    switch -- [string is integer -strict $args] {
+                    switch -- [string is integer -strict $tabid] {
                         0   {
                             # Check if the 'tabid' provided is the word 'current'.
-                            switch -nocase -- $args {
-                                current { set tabid "current" }
+                            switch -- $tabid {
+                                current {}
                                 default {
                                     # Check if the 'tabid' provided is a short address.
-                                    set result [::ms::Check_Pathname $args invalid]
+                                    set result [::ms::Check_Pathname $tabid invalid]
                                     switch -- $result {
                                         invalid {
                                             # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
-                                            switch -- [lindex $args 0] {
+                                            switch -- [string index $tabid 0] {
                                                 "@" {
-                                                    set position [split [string range $args 1 end] ","]
+                                                    set position [split [string range $tabid 1 end] ","]
                                                     foreach coordinate $position {
                                                         switch -- [string is integer -strict $coordinate] {
-                                                            0   { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                            0   { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                                         }
                                                     }
-
-                                                    set tabid $args
                                                 }
-                                                default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
+                                                default { ::ms::Error "Invalid tabid, '$tabid'." $caller_info }
                                             }
                                         }
-                                        default { set tabid [lindex $result 0] }
+                                        default { set tabid $result }
                                     }
                                 }
                             }
                         }
-                        1   { set tabid $args }
                     }
 
                     # Execute the command.
@@ -2579,15 +2572,15 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
             switch -- [string is integer -strict $tabid] {
                 0   {
                     # Check if the 'tabid' provided is the word 'current'.
-                    switch -nocase -- $tabid {
-                        current { set tabid "current" }
+                    switch -- $tabid {
+                        current {}
                         default {
                             # Check if the 'tabid' provided is a short address.
                             set result [::ms::Check_Pathname $tabid invalid]
                             switch -- $result {
                                 invalid {
                                     # Check if the 'tabid' provided is a positional specification of the form '@x,y'.
-                                    switch -- [lindex $tabid 0] {
+                                    switch -- [string index $tabid 0] {
                                         "@" {
                                             set position [split [string range $tabid 1 end] ","]
                                             foreach coordinate $position {
@@ -2599,7 +2592,7 @@ proc ::ms::notebook::Pathname_Cmd { w cmd args } {
                                         default { ::ms::Error "Invalid tabid, '$args'." $caller_info }
                                     }
                                 }
-                                default { set tabid [lindex $result 0] }
+                                default { set tabid $result }
                             }
                         }
                     }
