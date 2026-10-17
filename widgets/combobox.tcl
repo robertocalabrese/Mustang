@@ -4129,32 +4129,11 @@ proc ::ms::combobox::Pathname_Cmd { w cmd args } {
             # *window* **delete** *first*
             # *window* **delete** *first* *last*
             switch -- [llength $args] {
-                0   { ::ms::Error "Invalid number of arguments." $caller_info }
-                1   {
-                    # Synopsis:
-                    #
-                    # *window* **delete** *first*
-                    set first $args
-
-                    # Execute the command.
-                    try {
-                        interp invokehidden {} $w delete $first
-                    } on error { errortext errorcode } {
-                        ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return ""
-                    }
-                }
+                1   -
                 2   {
-                    # Synopsis:
-                    #
-                    # *window* **delete** *first* *last*
-                    set first [lindex $args 0]
-                    set last  [lindex $args 1]
-
                     # Execute the command.
                     try {
-                        interp invokehidden {} $w delete $first $last
+                        interp invokehidden {} $w delete {*}$args
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok {} {
