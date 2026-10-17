@@ -1834,7 +1834,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -arrowcolor {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -2194,7 +2194,7 @@ proc ::ms::spinbox::Command { window { args "" } } {
                         }
                     }
                     -validate {
-                        switch -nocase $value {
+                        switch -- $value {
                             none     { set ::ms::current($w,validate) none }
                             focus    { set ::ms::current($w,validate) focus }
                             focusin  { set ::ms::current($w,validate) focusin }
@@ -2998,7 +2998,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
     set caller_info [info frame -1]
 
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         bbox    -
         icursor -
         index   {
@@ -3087,7 +3087,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
 
                             # Check the widget's options provided.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -arrowcolor {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -3489,7 +3489,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                         }
                                     }
                                     -validate {
-                                        switch -nocase $value {
+                                        switch -- $value {
                                             none     { set ::ms::current($w,validate) none }
                                             focus    { set ::ms::current($w,validate) focus }
                                             focusin  { set ::ms::current($w,validate) focusin }
