@@ -5734,7 +5734,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     }
 
                     # Check the 'number' provided.
-                    switch -- [string is double -strict $number] {
+                    switch -- [string is integer -strict $number] {
                         0   { ::ms::Error "Invalid value, '$number'." $caller_info }
                     }
 
