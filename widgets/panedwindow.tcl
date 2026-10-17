@@ -1047,7 +1047,7 @@ proc ::ms::panedwindow::Command { window { args "" } } {
 
             # Check the remaining options, if any.
             foreach { option value } $args {
-                switch -nocase -- $option {
+                switch -- $option {
                     -background {
                         set value [::ms::Check_Color $value invalid]
                         switch -- $value {
@@ -1439,8 +1439,24 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **add** *subwindow* ?*option value*? ... ?*option value*?
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **forget** *pane*
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **identify** **sash** *x* *y*
+    # *window* **insert** *pos* *subwindow* ?*option value*? ... ?*option value*?
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **pane** *pane* *option* ?*value*?
+    # *window* **panes**
+    # *window* **sashpos** *index* ?*newpos*?
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+
     # Check the command provided.
-    switch -nocase -- $cmd {
+    switch -- $cmd {
         add {
             # Synopsis:
             #
@@ -1452,7 +1468,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             set result [::ms::Check_Pathname $subwindow invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
-                default { set subwindow [lindex $result 0] }
+                default { set subwindow $result }
             }
 
             # Check that the 'subwindow' provided is a direct child of the panedwindow widget.
@@ -1480,11 +1496,12 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::panedwindow(non_styleable,options)) || ($option in $::ms::panedwindow(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
@@ -1498,10 +1515,13 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::panedwindow(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -1512,17 +1532,28 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
-                    set option [string range $args 1 end]
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
+                    set option [string tolower [string range $args 1 end]]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::panedwindow(non_styleable,options)) || ($option in $::ms::panedwindow(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -1544,7 +1575,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
 
                             # Check the remaining widget's options, if any.
                             foreach { option value } $args {
-                                switch -nocase -- $option {
+                                switch -- $option {
                                     -background {
                                         set value [::ms::Check_Color $value invalid]
                                         switch -- $value {
@@ -1860,28 +1891,28 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             # *window* **forget** *pane*
             switch -- [llength $args] {
                 1   {
+                    set pane $args
+
                     # Check the 'pane' provided.
-                    switch -- [string is integer -strict $args] {
+                    switch -- [string is integer -strict $pane] {
                         0   {
                             # Get the 'pane' real address.
-                            set result [::ms::Check_Pathname $args invalid]
+                            set result [::ms::Check_Pathname $pane invalid]
                             switch -- $result {
-                                invalid { ::ms::Error "Invalid address, '$args'." $caller_info }
+                                invalid { ::ms::Error "Invalid address, '$pane'." $caller_info }
                                 default {
                                     # Check if the pane real address is an already managed subwindow.
-                                    if { [lindex $result 0] ni [interp invokehidden {} $w panes] } {
-                                        ::ms::Error "Invalid pane option, '$args'." $caller_info
+                                    if { $result ni [interp invokehidden {} $w panes] } {
+                                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
                                     } else {
-                                        set pane [lindex $result 0]
+                                        set pane $result
                                     }
                                 }
                             }
                         }
                         1   {
-                            if { $args < 0 } {
-                                ::ms::Error "Invalid pane option, '$args'." $caller_info
-                            } else {
-                                set pane $args
+                            if { $pane < 0 } {
+                                ::ms::Error "Invalid pane option, '$pane'." $caller_info
                             }
                         }
                     }
@@ -1906,21 +1937,28 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             # *window* **identify** **sash** *x* *y*
             switch -- [llength $args] {
                 2   {
-                    set subcommand element
-                    set x          [lindex $args 0]
-                    set y          [lindex $args 1]
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
+                    set option element
+                    set x      [lindex $args 0]
+                    set y      [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element" or 'sash'.
-                    set subcommand [lindex $args 0]
-                    switch -- $subcommand {
+                    # Synopsis:
+                    #
+                    # *window* **identify** **element** *x* *y*
+                    # *window* **identify** **sash** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
                         element -
                         sash    {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -1969,6 +2007,11 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **insert** *pos* *subwindow* ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                0   -
+                1   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
             set pos       [lindex  $args 0]
             set subwindow [lindex  $args 1]
             set args      [lremove $args 0 1]
@@ -1977,8 +2020,8 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             switch -- [string is integer -strict $pos] {
                 0   {
                     # Check if the 'pos' provided is the word 'end'.
-                    switch -nocase -- $pos {
-                        end     { set pos "end" }
+                    switch -- $pos {
+                        end     {}
                         default {
                             # Check if the 'pos' provided is a short address.
                             set result [::ms::Check_Pathname $pos invalid]
@@ -1986,8 +2029,10 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                                 invalid { ::ms::Error "Invalid pane option, '$pos'." $caller_info }
                                 default {
                                     # Check if the pos real address is an already managed subwindow.
-                                    if { [lindex $result 0] ni [interp invokehidden {} $w panes] } {
+                                    if { $result ni [interp invokehidden {} $w panes] } {
                                         ::ms::Error "Invalid pane option, '$pos'." $caller_info
+                                    } else {
+                                        set pos $result
                                     }
                                 }
                             }
@@ -2005,7 +2050,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             set result [::ms::Check_Pathname $subwindow invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid address, '$subwindow'." $caller_info }
-                default { set subwindow [lindex $result 0] }
+                default { set subwindow $result }
             }
 
             # Check that the 'subwindow' provided is a direct child of the panedwindow widget.
@@ -2031,10 +2076,13 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2054,6 +2102,9 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                     return [interp invokehidden {} $w instate $statespec]
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -2085,41 +2136,91 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
         pane {
             # Synopsis:
             #
-            # *window* **pane** *pane* *option* ?*value*?
-            set pane [lindex  $args 0]
-            set args [lremove $args 0]
+            # *window* **pane** *pane* *option*
+            # *window* **pane** *pane* *option* *value*
+            switch -- [llength $args] {
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **pane** *pane* *option*
+                    set pane   [lindex $args 0]
+                    set option [lindex $args 1]
 
-            # Check the 'pane' provided.
-            switch -- [string is integer -strict $pane] {
-                0   {
-                    # Get the 'pane' real address.
-                    set result [::ms::Check_Pathname $pane invalid]
-                    switch -- $result {
-                        invalid { ::ms::Error "Invalid address, '$pane'." $caller_info }
-                        default {
-                            # Check if the pane real address is an already managed subwindow.
-                            if { [lindex $result 0] ni [interp invokehidden {} $w panes] } {
+                    # Check the 'pane' provided.
+                    switch -- [string is integer -strict $pane] {
+                        0   {
+                            # Get the 'pane' real address.
+                            set result [::ms::Check_Pathname $pane invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$pane'." $caller_info }
+                                default {
+                                    # Check if the pane real address is an already managed subwindow.
+                                    if { $result ni [interp invokehidden {} $w panes] } {
+                                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                    } else {
+                                        set pane $result
+                                    }
+                                }
+                            }
+                        }
+                        1   {
+                            if { $pane < 0 } {
                                 ::ms::Error "Invalid pane option, '$pane'." $caller_info
-                            } else {
-                                set pane [lindex $result 0]
                             }
                         }
                     }
-                }
-                1   {
-                    if { $pane < 0 } {
-                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w pane $pane $option
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
                     }
                 }
-            }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **pane** *pane* *option* *value*
+                    set pane   [lindex $args 0]
+                    set option [lindex $args 1]
+                    set value  [lindex $args 2]
 
-            # Execute the command.
-            try {
-                interp invokehidden {} $w pane $pane {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+                    # Check the 'pane' provided.
+                    switch -- [string is integer -strict $pane] {
+                        0   {
+                            # Get the 'pane' real address.
+                            set result [::ms::Check_Pathname $pane invalid]
+                            switch -- $result {
+                                invalid { ::ms::Error "Invalid address, '$pane'." $caller_info }
+                                default {
+                                    # Check if the pane real address is an already managed subwindow.
+                                    if { $result ni [interp invokehidden {} $w panes] } {
+                                        ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                                    } else {
+                                        set pane $result
+                                    }
+                                }
+                            }
+                        }
+                        1   {
+                            if { $pane < 0 } {
+                                ::ms::Error "Invalid pane option, '$pane'." $caller_info
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w pane $pane $option $value
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         panes {
@@ -2127,24 +2228,42 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             #
             # *window* **panes**
             switch -- [llength $args] {
-                0       { return [interp invokehidden {} $w panes] }
+                0   {
+                    # Execute the command.
+                    return [interp invokehidden {} $w panes]
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         sashpos {
             # Synopsis:
             #
-            # *window* **sashpos** *index* ?*newpos*?
+            # *window* **sashpos** *index*
+            # *window* **sashpos** *index* *newpos*
             switch -- [llength $args] {
-                1   -
-                2   {
+                1   {
+                    set index $args
+
                     # Execute the command.
                     try {
-                        interp invokehidden {} $w $cmd {*}$args
+                        interp invokehidden {} $w sashpos $index
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
                         return $result
+                    }
+                }
+                2   {
+                    set index  [lindex $args 0]
+                    set newpos [lindex $args 1]
+
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w sashpos $index $newpos
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
                     }
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -2153,10 +2272,21 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -2172,12 +2302,7 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #######################################
-                    ##                                   ##
-                    ##     UPDATE THE WIDGET'S STATE     ##
-                    ##                                   ##
-                    #######################################
-
+                    # Execute the command.
                     return [interp invokehidden {} $w state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -2188,11 +2313,14 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
