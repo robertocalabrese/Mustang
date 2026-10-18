@@ -2997,21 +2997,45 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **bbox** *index*
+    # *window* **cget** *option*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **delete** *first* ?*last*?
+    # *window* **get**
+    # *window* **icursor** *index*
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **index** *index*
+    # *window* **insert** *index* *string*
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **selection** **clear**
+    # *window* **selection** **present**
+    # *window* **selection** **range** *start* *end*
+    # *window* **set** *value*
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+    # *window* **validate**
+    # *window* **xview**
+    # *window* **xview** *index*
+    # *window* **xview** **moveto** *fraction*
+    # *window* **xview** **scroll** *number* *what*
+
     # Check the command provided.
     switch -- $cmd {
-        bbox    -
-        icursor -
-        index   {
+        bbox  -
+        index {
             # Synopsis:
             #
-            # *window* **bbox** *index*
-            # *window* **icursor** *index*
+            # *window* **bbox**  *index*
             # *window* **index** *index*
             switch -- [llength $args] {
                 1   {
+                    set index $args
+
                     # Execute the command.
                     try {
-                        interp invokehidden {} $w $cmd $args
+                        interp invokehidden {} $w $cmd $index
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
@@ -3026,17 +3050,18 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string range $args 1 end]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::spinbox(non_styleable,options)) || ($option in $::ms::spinbox(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
@@ -3044,10 +3069,13 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::spinbox(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -3058,17 +3086,28 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
                     set option [string range $args 1 end]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::spinbox(non_styleable,options)) || ($option in $::ms::spinbox(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -4177,27 +4216,64 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 }
             }
         }
-        delete    -
-        selection {
+        delete {
             # Synopsis:
             #
-            # *window* **delete** *first* ?*last*?
-            # *window* **selection** *option* *arg*
-            #    *window* **selection** **clear**
-            #    *window* **selection** **present**
-            #    *window* **selection** **range** *start* *end*
+            # *window* **delete** *first*
+            # *window* **delete** *first* *last*
             switch -- [llength $args] {
-                0       { ::ms::Error "Invalid number of arguments." $caller_info }
-                default {
+                1   -
+                2   {
                     # Execute the command.
                     try {
-                        interp invokehidden {} $w $cmd {*}$args
+                        interp invokehidden {} $w delete {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        get      -
+        validate {
+            # Synopsis:
+            #
+            # *window* **get**
+            # *window* **validate**
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
                         return $result
                     }
                 }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        icursor {
+            # Synopsis:
+            #
+            # *window* **icursor** *index*
+            switch -- [llength $args] {
+                1   {
+                    set index $args
+
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w icursor $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         identify {
@@ -4207,18 +4283,25 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
                     set x [lindex $args 0]
                     set y [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
+                    # Synopsis:
+                    #
+                    # *window* **identify** **element** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
                     switch -- [lindex $args 0] {
                         element {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -4269,52 +4352,38 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
             # Synopsis:
             #
             # *window* **insert** *index* *string*
-            switch -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { chan puts stdout "'insert' is a deprecated mustang spinbox command. Use 'set' instead." }
-            }
-
-            # Check the widget's physical state.
-            switch -- $::ms::current($w,state) {
-                disabled { return "" }
-            }
-
-            # Check the number of arguments provided.
             switch -- [llength $args] {
                 2   {
+                    set index  [lindex $args 0]
+                    set string [lindex $args 1]
+
+                    # Check the widget's physical state.
+                    switch -- $::ms::current($w,state) {
+                        disabled { return "" }
+                    }
+
                     # Execute the command.
                     try {
-                        interp invokehidden {} $w insert {*}$args
+                        interp invokehidden {} $w insert $index $string
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
-                    } on ok {} {
-                        return ""
+                    } on ok { result } {
+                        ::ttk::entry::See $w $index
                     }
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-        }
-        get      -
-        validate {
-            # Synopsis:
-            #
-            # *window* **get**
-            # *window* **validate**
-            switch -- [llength $args] {
-                0       { return [interp invokehidden {} $w $cmd] }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4340,6 +4409,9 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                     }
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -4368,6 +4440,68 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        selection {
+            # Synopsis:
+            #
+            # *window* **selection** **clear**
+            # *window* **selection** **present**
+            # *window* **selection** **range** *start* *end*
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **selection** **clear**
+                    # *window* **selection** **present**
+                    set option $args
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        clear {
+                            # Synopsis:
+                            #
+                            # *window* **selection** **clear**
+
+                            # Execute the command.
+                            interp invokehidden {} $w selection clear
+
+                            return ""
+                        }
+                        present {
+                            # Synopsis:
+                            #
+                            # *window* **selection** **present**
+
+                            # Execute the command.
+                            return [interp invokehidden {} $w selection present]
+                        }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **selection** **range** *start* *end*
+                    set option [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        range {
+                            # Execute the command.
+                            try {
+                                interp invokehidden {} $w selection range {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         set {
             # Synopsis:
             #
@@ -4376,6 +4510,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                 1   {
                     set value $args
 
+                    # Check the spinbox type.
                     switch -- $::ms::data($w,type) {
                         incremental {
                             switch -- $::ms::current($w,datatype) {
@@ -4456,10 +4591,21 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4475,12 +4621,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #######################################
-                    ##                                   ##
-                    ##     UPDATE THE WIDGET'S STATE     ##
-                    ##                                   ##
-                    #######################################
-
+                    # Execute the command.
                     return [interp invokehidden {} $w state $statespec]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
@@ -4491,35 +4632,110 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         xview {
             # Synopsis:
             #
-            # *window* **xview** *option* *args*
-            #    *window* **xview**
-            #    *window* **xview** *index*
-            #    *window* **xview** **moveto** *fraction*
-            #    *window* **xview** **scroll** *number* *what*
+            # *window* **xview**
+            # *window* **xview** *index*
+            # *window* **xview** **moveto** *fraction*
+            # *window* **xview** **scroll** *number* *what*
             switch -- [llength $args] {
-                0   { return [interp invokehidden {} $w xview] }
-                1   -
-                2   -
-                3   {
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **xview**
+
+                    # Execute the command.
+                    return [interp invokehidden {} $w xview]
+                }
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** *index*
+                    set index $args
+
                     try {
-                        interp invokehidden {} $w $cmd {*}$args
+                        interp invokehidden {} $w xview $index
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
-                    } on ok { result } {
-                        return $result
+                    } on ok {} {
+                        return ""
                     }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** **moveto** *fraction*
+                    set option   [lindex $args 0]
+                    set fraction [lindex $args 1]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        moveto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check that the 'fraction' provided is a double.
+                    switch -- [string is double -strict $fraction] {
+                        0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                        1   {
+                            # Check that the 'fraction' provided is in the range [0,1.0].
+                            # Truncate if necessary.
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+                        }
+                    }
+
+                    # Execute the command.
+                    interp invokehidden {} $w xview moveto $fraction
+
+                    return ""
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** **scroll** *number* *what*
+                    set option [lindex $args 0]
+                    set number [lindex $args 1]
+                    set what   [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        scroll  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check that the 'number' provided is a integer.
+                    switch -- [string is integer -strict $number] {
+                        0   { ::ms::Error "Invalid value, '$number'." $caller_info }
+                    }
+
+                    # Check the 'what' provided.
+                    switch -- $what {
+                        units   -
+                        pages   {}
+                        default { ::ms::Error "Invalid value, '$what'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    interp invokehidden {} $w xview scroll $number $what
+
+                    return ""
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
