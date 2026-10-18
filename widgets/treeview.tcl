@@ -3233,95 +3233,135 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **bbox** *item* ?*column*?
+    # *window* **cellselection** **add* *cellList*
+    # *window* **cellselection** **add* *firstCell* *lastCell*
+    # *window* **cellselection** **remove* *cellList*
+    # *window* **cellselection** **remove* *firstCell* *lastCell*
+    # *window* **cellselection** **set* *cellList*
+    # *window* **cellselection** **set* *firstCell* *lastCell*
+    # *window* **cellselection** **toggle* *cellList*
+    # *window* **cellselection** **toggle* *firstCell* *lastCell*
+    # *window* **cget** *option*
+    # *window* **children** *item* ?*newchildren*?
+    # *window* **column** *column* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **delete** *itemList*
+    # *window* **detach** *itemList*
+    # *window* **detached** ?*item*?
+    # *window* **exists** *item*
+    # *window* **focus** ?*item*?
+    # *window* **heading** *column* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **identify** **cell** *x* *y*
+    # *window* **identify** **column** *x* *y*
+    # *window* **identify** **element** *x* *y*
+    # *window* **identify** **item** *x* *y*
+    # *window* **identify** **region** *x* *y*
+    # *window* **identify** **row** *x* *y*
+    # *window* **index** *item*
+    # *window* **insert** *parent* *index* ?*-id id*? ?*option value*? ... ?*option value*?
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **item** *item* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **move** *item* *parent* *index*
+    # *window* **next** *item*
+    # *window* **parent** *item*
+    # *window* **prev** *item*
+    # *window* **see** *item*
+    # *window* **selection** **set** *itemList*
+    # *window* **selection** **add** *itemList*
+    # *window* **selection** **remove** *itemList*
+    # *window* **selection** **toggle** *itemList*
+    # *window* **set** *item* ?*column*? ?*value*?
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+    # *window* **tag** **add** *tag* *items*
+    # *window* **tag** **bind** *tagName* ?*sequence*? ?*script*?
+    # *window* **tag** **cell** **add** *tag* *cellList*
+    # *window* **tag** **cell** **has** *tagName* ?*cell*?
+    # *window* **tag** **cell** **remove** *tag* ?*cellList*?
+    # *window* **tag** **configure** *tagName* ?*option*? ?*value*? ?*option value* ... *option value*?
+    # *window* **tag** **delete** *tagName*
+    # *window* **tag** **has** *tagName* ?*item*?
+    # *window* **tag** **names**
+    # *window* **tag** **remove** *tag* ?*items*?
+    # *window* **xview**
+    # *window* **xview** **moveto** *fraction*
+    # *window* **xview** **scroll** *number* *what*
+    # *window* **yview**
+    # *window* **yview** **moveto** *fraction*
+    # *window* **yview** **scroll** *number* *what*
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.treeview] }
+    }
+
     # Check the command provided.
     switch -- $cmd {
-        bbox     -
-        detached -
-        drag     -
-        drop     -
-        exists   -
-        index    -
-        move     -
-        next     -
-        parent   -
-        prev     -
-        tag      {
+        bbox {
             # Synopsis:
             #
-            # *window* **bbox** *item* ?*column*?
-            # *window* **detached** ?*item*?
-            # *window* **exists** *item*
-            # *window* **focus** ?*item*?
-            # *window* **index** *item*
-            # *window* **move** *item* *parent* *index*
-            # *window* **next** *item*
-            # *window* **parent** *item*
-            # *window* **prev** *item*
-            # *window* **tag** **add** *tag* *items*
-            # *window* **tag** **bind** *tagName* ?*sequence*? ?*script*?
-            # *window* **tag** **cell** **add** *tag* *cellList*
-            # *window* **tag** **cell** **has** *tagName* ?*cell*?
-            # *window* **tag** **cell** **remove** *tag* ?*cellList*?
-            # *window* **tag** **configure** *tagName* ?*option*? ?*value*? ?*option value* ... *option value*?
-            # *window* **tag** **delete** *tagName*
-            # *window* **tag** **has** *tagName* ?*item*?
-            # *window* **tag** **names**
-            # *window* **tag** **remove** *tag* ?*items*?
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
-            # Execute the command.
-            try {
-                {*}$address $cmd {*}$args
-            } on error {} {
-                ::ms::Error "Invalid command." $caller_info
-            } on ok { result } {
-                return $result
+            # *window* **bbox** *item*
+            # *window* **bbox** *item* *column*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    try {
+                        {*}$address bbox {*}$args
+                    } on error {} {
+                        ::ms::Error "Invalid command." $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
             }
         }
         cellselection {
             # Synopsis:
             #
-            # *window* **cellselection** **set* *cellList*
-            # *window* **cellselection** **set* *firstCell* *lastCell*
-            # *window* **cellselection** **add* *cellList*
-            # *window* **cellselection** **add* *firstCell* *lastCell*
+            # *window* **cellselection** **add*    *cellList*
+            # *window* **cellselection** **add*    *firstCell* *lastCell*
             # *window* **cellselection** **remove* *cellList*
             # *window* **cellselection** **remove* *firstCell* *lastCell*
+            # *window* **cellselection** **set*    *cellList*
+            # *window* **cellselection** **set*    *firstCell* *lastCell*
             # *window* **cellselection** **toggle* *cellList*
             # *window* **cellselection** **toggle* *firstCell* *lastCell*
             switch -- [llength $args] {
-                2       -
-                3       {}
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the subcommand.
-            switch -- [lindex $args 0] {
+            # Separate the 'subcommand' from the args.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+
+            # Check the 'subcommand' provided.
+            switch -- $subcommand {
                 add     -
                 remove  -
                 set     -
-                toggle  {}
-                default { ::ms::Error "Invalid cellselection command, '$subcommand'." $caller_info }
-            }
+                toggle  {
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
+                            # Execute the command.
+                            try {
+                                {*}$address cellselection $subcommand {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
-            # Execute the command.
-            try {
-                {*}$address cellselection {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
         cget {
@@ -3329,64 +3369,122 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string range $args 1 end]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::treeview(non_styleable,options)) || ($option in $::ms::treeview(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
-        children -
-        column   -
-        delete   -
-        detach   -
-        heading  -
-        insert   -
-        item     -
-        see      -
-        set      {
+        children {
             # Synopsis:
             #
-            # *window* **children** *item* ?*newchildren*?
-            # *window* **column** *column* ?*option*? ?*value*? ?*option value* ... *option value*?
-            # *window* **delete** *itemList*
-            # *window* **detach** *itemList*
-            # *window* **heading** *column* ?*option*? ?*value*? ?*option value* ... *option value*?
-            # *window* **insert** *parent* *index* ?*-id id*? options...
-            # *window* **item** *item* ?*option*? ?*value*? ?*option value* ... *option value*?
-            # *window* **see** *item*
-            # *window* **set** *item* ?*column*? ?*value*?
+            # *window* **children** *item*
+            # *window* **children** *item* *newchildren*
             switch -- [llength $args] {
-                0   { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **children** *item*
+                    set item $args
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
-            # Execute the command.
-            try {
-                {*}$address $cmd {*}$args
-            } on error {} {
-                ::ms::Error "Invalid script." $caller_info
-            } on ok { result } {
-                # Check if the widget is scrollable or not.
-                switch -- $::ms::current($w,scrollable) {
-                    true {
-                        # If needed, update the scrollbar/s.
-                        ::ms::treeview::Scrollbar_Update $w
+                    # Execute the command.
+                    try {
+                        {*}$address children $item
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
                     }
                 }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **children** *item* *newchildren*
+                    set item        [lindex $args 0]
+                    set newchildren [lindex $args 1]
 
-                return $result
+                    # Execute the command.
+                    try {
+                        {*}$address children $item $newchildren
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        # Check if the widget is scrollable or not.
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # If needed, update the scrollbar/s.
+                                ::ms::treeview::Scrollbar_Update $w
+                            }
+                        }
+
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        column {
+            # Synopsis:
+            #
+            # *window* **column** *column*
+            # *window* **column** *column* *option*
+            # *window* **column** *column* *option* *value* ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **column** *column*
+                    # *window* **column** *column* *option*
+
+                    # Execute the command.
+                    try {
+                        {*}$address column {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **column** *column* *option* *value* ?*option value*? ... ?*option value*?
+                    set column [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                {*}$address column $column {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                # Check if the widget is scrollable or not.
+                                switch -- $::ms::current($w,scrollable) {
+                                    true {
+                                        # If needed, update the scrollbar/s.
+                                        ::ms::treeview::Scrollbar_Update $w
+                                    }
+                                }
+
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
@@ -3394,10 +3492,13 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::treeview(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -3408,17 +3509,29 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+                    # *window* **configure** *option*
                     set option [string range $args 1 end]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::treeview(non_styleable,options)) || ($option in $::ms::treeview(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -4258,20 +4371,102 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        delete -
+        detach {
+            # Synopsis:
+            #
+            # *window* **delete** *itemList*
+            # *window* **detach** *itemList*
+            switch -- [llength $args] {
+                1   {
+                    set itemList $args
+
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd $itemList
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        # Check if the widget is scrollable or not.
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # If needed, update the scrollbar/s.
+                                ::ms::treeview::Scrollbar_Update $w
+                            }
+                        }
+
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        detached {
+            # Synopsis:
+            #
+            # *window* **detached**
+            # *window* **detached** *item*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Execute the command.
+                    try {
+                        {*}$address detached {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        exists -
+        index  -
+        next   -
+        parent -
+        prev   {
+            # Synopsis:
+            #
+            # *window* **exists** *item*
+            # *window* **index**  *item*
+            # *window* **next**   *item*
+            # *window* **parent** *item*
+            # *window* **prev**   *item*
+            switch -- [llength $args] {
+                1   {
+                    set item $args
+
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd $item
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         focus {
             # Synopsis:
             #
-            # *window* **focus** ?*item*?
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
+            # *window* **focus**
+            # *window* **focus** *item*
             switch -- [llength $args] {
-                0   { return [{*}$address focus] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **focus**
+
+                    # Execute the command.
+                    return [{*}$address focus]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **focus** *item*
                     set item $args
 
                     # Execute the command.
@@ -4299,10 +4494,56 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        heading {
+            # Synopsis:
+            #
+            # *window* **heading** *column*
+            # *window* **heading** *column* *option*
+            # *window* **heading** *column* *option* *value* ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **heading** *column*
+                    # *window* **heading** *column* *option*
+
+                    # Execute the command.
+                    try {
+                        {*}$address heading {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # *window* **heading** *column* *option* *value* ?*option value*? ... ?*option value*?
+                    set column [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                {*}$address heading $column {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
         identify {
             # Synopsis:
             #
-            # *window* **identify**             *x* *y*
             # *window* **identify** **cell**    *x* *y*
             # *window* **identify** **column**  *x* *y*
             # *window* **identify** **element** *x* *y*
@@ -4310,26 +4551,21 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             # *window* **identify** **region**  *x* *y*
             # *window* **identify** **row**     *x* *y*
             switch -- [llength $args] {
-                2   {
-                    set subcommand region
-                    set x          [lindex $args 0]
-                    set y          [lindex $args 1]
-                }
                 3   {
-                    # Check that the first argument of 'args' is the word "element" or 'sash'.
-                    set subcommand [lindex $args 0]
-                    switch -- $subcommand {
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
                         cell    -
                         column  -
                         element -
                         item    -
                         region  -
                         row     {}
-                        default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -4357,20 +4593,14 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
 
             # Check if the widget is scrollable or not.
             switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
                 false {
                     # Execute the command.
                     try {
-                        {*}$address identify $subcommand $x $y
+                        {*}$address identify $option $x $y
                     } on error { errortext errorcode } {
                         ::ms::Error "$errortext" $caller_info
                     } on ok { result } {
-                        switch -- $subcommand {
+                        switch -- $option {
                             region {
                                 switch -- $result {
                                     heading   { return "Treeview.heading" }
@@ -4403,8 +4633,8 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                     # Get the widget's real address containing the point given by the root coordinates calculated.
                     set widget [_winfo containing -display $w $X $Y]
 
-                    # Check the 'subcommand'.
-                    switch -- $subcommand {
+                    # Check the 'option' provided.
+                    switch -- $option {
                         element {
                             # Execute the command.
                             if { $widget eq $w } {
@@ -4457,7 +4687,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                             if { $widget eq "$w.treeview" } {
                                 # Go deeper...
                                 try {
-                                    {*}$address identify $subcommand $x $y
+                                    {*}$address identify $option $x $y
                                 } on error { errortext errorcode } {
                                     ::ms::Error "$errortext" $caller_info
                                 } on ok { result } {
@@ -4471,20 +4701,95 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        insert {
+            # Synopsis:
+            #
+            # *window* **insert** *parent* *index*
+            # *window* **insert** *parent* *index* ?*-id id*? ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **insert** *parent* *index*
+                    set parent [lindex $args 0]
+                    set index  [lindex $args 1]
+
+                    # Execute the command.
+                    try {
+                        {*}$address insert $parent $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        # Check if the widget is scrollable or not.
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # If needed, update the scrollbar/s.
+                                ::ms::treeview::Scrollbar_Update $w
+                            }
+                        }
+
+                        return $result
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # *window* **insert** *parent* *index* ?*-id id*? ?*option value*? ... ?*option value*?
+                    set parent [lindex  $args 0]
+                    set index  [lindex  $args 1]
+                    set args   [lremove $args 0 1]
+
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Check the option names provided.
+                            foreach { option value } $args {
+                                switch -- $option {
+                                    -id          -
+                                    -text        -
+                                    -height      -
+                                    -image       -
+                                    -imageanchor -
+                                    -values      -
+                                    -hidden      -
+                                    -open        -
+                                    -tags        {}
+                                    default      { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address insert $parent $index {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                # Check if the widget is scrollable or not.
+                                switch -- $::ms::current($w,scrollable) {
+                                    true {
+                                        # If needed, update the scrollbar/s.
+                                        ::ms::treeview::Scrollbar_Update $w
+                                    }
+                                }
+
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4504,6 +4809,9 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                     return [{*}$address instate $statespec]
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -4532,11 +4840,140 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        item {
+            # Synopsis:
+            #
+            # *window* **item** *item*
+            # *window* **item** *item* *option*
+            # *window* **item** *item* *option* *value* ?*option value*? ... ?*option value*?
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **item** *item*
+                    # *window* **item** *item* *option*
+
+                    # Execute the command.
+                    try {
+                        {*}$address item {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **item** *item* *option* *value* ?*option value*? ... ?*option value*?
+                    set item [lindex  $args 0]
+                    set args [lremove $args 0]
+
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            # Check the option names provided.
+                            foreach { option value } $args {
+                                switch -- $option {
+                                    -id          -
+                                    -text        -
+                                    -height      -
+                                    -image       -
+                                    -imageanchor -
+                                    -values      -
+                                    -hidden      -
+                                    -open        -
+                                    -tags        {}
+                                    default      { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address item $item {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                # Check if the widget is scrollable or not.
+                                switch -- $::ms::current($w,scrollable) {
+                                    true {
+                                        # If needed, update the scrollbar/s.
+                                        ::ms::treeview::Scrollbar_Update $w
+                                    }
+                                }
+
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        move {
+            # Synopsis:
+            #
+            # *window* **move** *item* *parent* *index*
+            switch -- [llength $args] {
+                3   {
+                    set item   [lindex $args 0]
+                    set parent [lindex $args 1]
+                    set index  [lindex $args 2]
+
+                    # Execute the command.
+                    try {
+                        {*}$address move $item $parent $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        # Check if the widget is scrollable or not.
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # If needed, update the scrollbar/s.
+                                ::ms::treeview::Scrollbar_Update $w
+                            }
+                        }
+
+                        return ""
+                    }
+                }
+            }
+        }
+        see {
+            # Synopsis:
+            #
+            # *window* **see** *item*
+            switch -- [llength $args] {
+                1   {
+                    set item $args
+
+                    # Execute the command.
+                    try {
+                        {*}$address see $item
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        # Check if the widget is scrollable or not.
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # If needed, update the scrollbar/s.
+                                ::ms::treeview::Scrollbar_Update $w
+                            }
+                        }
+
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         selection {
             # Synopsis:
             #
-            # *window* **selection** **set** *itemList*
-            # *window* **selection** **add** *itemList*
+            # *window* **selection** **set**    *itemList*
+            # *window* **selection** **add**    *itemList*
             # *window* **selection** **remove** *itemList*
             # *window* **selection** **toggle** *itemList*
             switch -- [llength $args] {
@@ -4568,20 +5005,75 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        set {
+            # Synopsis:
+            #
+            # *window* **set** *item*
+            # *window* **set** *item* *column*
+            # *window* **set** *item* *column* *value*
+            switch -- [llength $args] {
+                1   -
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **set** *item*
+                    # *window* **set** *item* column
+
+                    # Execute the command.
+                    try {
+                        {*}$address set {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **set** *item* column value
+                    set item   [lindex $args 0]
+                    set column [lindex $args 1]
+                    set value  [lindex $args 2]
+
+                    # Execute the command.
+                    try {
+                        {*}$address set $item $column $value
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        # Check if the widget is scrollable or not.
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # If needed, update the scrollbar/s.
+                                ::ms::treeview::Scrollbar_Update $w
+                            }
+                        }
+
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.treeview] }
-            }
-
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [{*}$address state] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [{*}$address state]
+                }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -4597,13 +5089,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         }
                     }
 
-                    #######################################
-                    ##                                   ##
-                    ##     UPDATE THE WIDGET'S STATE     ##
-                    ##                                   ##
-                    #######################################
-
-                    # Check if the widget is scrollable or not.
+                    # Execute the command.
                     switch -- $::ms::current($w,scrollable) {
                         false { return [interp invokehidden {} $w state $statespec] }
                         true  {
@@ -4622,8 +5108,313 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        tag {
+            # Synopsis:
+            #
+            # *window* **tag** **add**       *tag* *items*
+            # *window* **tag** **bind**      *tagName*
+            # *window* **tag** **bind**      *tagName* *sequence*
+            # *window* **tag** **bind**      *tagName* *sequence* *script*
+            # *window* **tag** **cell**      **add** *tag* *cellList*
+            # *window* **tag** **cell**      **has** *tagName*
+            # *window* **tag** **cell**      **has** *tagName* *cell*
+            # *window* **tag** **cell**      **remove** *tag*
+            # *window* **tag** **cell**      **remove** *tag* *cellList*
+            # *window* **tag** **configure** *tagName*
+            # *window* **tag** **configure** *tagName* *option*
+            # *window* **tag** **configure** *tagName* *option* *value* ?*option value*? ... ?*option value*?
+            # *window* **tag** **delete**    *tagName*
+            # *window* **tag** **has**       *tagName*
+            # *window* **tag** **has**       *tagName* *item*
+            # *window* **tag** **names**
+            # *window* **tag** **remove**    *tag*
+            # *window* **tag** **remove**    *tag* *items*
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Separate the 'subcommand' from the args.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+
+            # Check the 'subcommand' provided.
+            switch -- $subcommand {
+                add {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **add** *tag* *items*
+                    switch -- [llength $args] {
+                        2   {
+                            set tag   [lindex $args 0]
+                            set items [lindex $args 1]
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag add $tag $item
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                bind {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **bind** *tagName*
+                    # *window* **tag** **bind** *tagName* *sequence*
+                    # *window* **tag** **bind** *tagName* *sequence* *script*
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **bind** *tagName*
+                            # *window* **tag** **bind** *tagName* *sequence*
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag bind {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **bind** *tagName* *sequence* *script*
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag bind {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                cell {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **cell** **add**    *tag* *cellList*
+                    # *window* **tag** **cell** **has**    *tagName*
+                    # *window* **tag** **cell** **has**    *tagName* *cell*
+                    # *window* **tag** **cell** **remove** *tag*
+                    # *window* **tag** **cell** **remove** *tag* *cellList*
+                    switch -- [llength $args] {
+                        2   -
+                        3   {
+                            # Separate the 'subsubcommand' from the args.
+                            set subsubcommand [lindex  $args 0]
+                            set args          [lremove $args 0]
+
+                            # Check the 'subsubcommand' provided.
+                            switch -- $subsubcommand {
+                                add {
+                                    # Synopsis:
+                                    #
+                                    # *window* **tag** **cell** **add** *tag* *cellList*
+                                    switch -- [llength $args] {
+                                        2   {
+                                            set tag      [lindex $args 0]
+                                            set cellList [lindex $args 1]
+
+                                            # Execute the command.
+                                            try {
+                                                {*}$address tag cell add $tag $cellList
+                                            } on error { errortext errorcode } {
+                                                ::ms::Error "$errortext" $caller_info
+                                            } on ok {} {
+                                                return ""
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    }
+                                }
+                                remove {
+                                    # Synopsis:
+                                    #
+                                    # *window* **tag** **cell** **remove** *tag*
+                                    # *window* **tag** **cell** **remove** *tag* *cellList*
+                                    switch -- [llength $args] {
+                                        1   -
+                                        2   {
+                                            # Execute the command.
+                                            try {
+                                                {*}$address tag cell remove {*}$args
+                                            } on error { errortext errorcode } {
+                                                ::ms::Error "$errortext" $caller_info
+                                            } on ok {} {
+                                                return ""
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    }
+                                }
+                                has {
+                                    # Synopsis:
+                                    #
+                                    # *window* **tag** **cell** **has** *tagName*
+                                    # *window* **tag** **cell** **has** *tagName* *cell*
+                                    switch -- [llength $args] {
+                                        1   -
+                                        2   {
+                                            # Execute the command.
+                                            try {
+                                                {*}$address tag cell has {*}$args
+                                            } on error { errortext errorcode } {
+                                                ::ms::Error "$errortext" $caller_info
+                                            } on ok { result } {
+                                                return $result
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    }
+                                }
+                                default { ::ms::Error "Invalid option, '$subsubcommand'." $caller_info }
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                configure {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **configure** *tagName*
+                    # *window* **tag** **configure** *tagName* *option*
+                    # *window* **tag** **configure** *tagName* *option* *value* ?*option value*? ... ?*option value*?
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **configure** *tagName*
+                            # *window* **tag** **configure** *tagName* *option*
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag configure {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **configure** *tagName* *option* *value* ?*option value*? ... ?*option value*?
+
+                            # Check that the command's 'args' forms a valid 'option/value' list.
+                            switch -- [expr { [llength $args]%2 }] {
+                                0   {
+                                    # Execute the command.
+                                    try {
+                                        {*}$address tag configure {*}$args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok {} {
+                                        return ""
+                                    }
+                                }
+                                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                            }
+                        }
+                    }
+                }
+                delete {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **delete** *tagName*
+                    switch -- [llength $args] {
+                        1   {
+                            set tagName $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag delete $tagName
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                has {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **has** *tagName*
+                    # *window* **tag** **has** *tagName* *item*
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
+                            # Execute the command.
+                            try {
+                                {*}$address tag has {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                names {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **names**
+                    switch -- [llength $args] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                {*}$address tag names
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                remove {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **remove** *tag*
+                    # *window* **tag** **remove** *tag* *items*
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
+                            # Execute the command.
+                            try {
+                                {*}$address tag remove {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
         xview {
@@ -4632,92 +5423,87 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             # *window* **xview**
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
-            set subcommand [lindex  $args 0]
-            set args       [lremove $args 0]
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  {
-                    # Check if the widget has an active horizontal scrollbar.
-                    switch -- $::ms::data($w,scrollx) {
-                        off { return "" }
-                        on  { set address [list $w.treeview] }
-                    }
-                }
-            }
-
-            # Check the subcommand.
-            switch -- $subcommand {
-                ""  {
-                    # Execute the command.
-                    try {
-                        {*}$address xview
-                    } on error {} {
-                        return ""
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                moveto {
-                    # Check the number of arguments provided (after the 'moveto' word).
+            # Check if the widget has an active horizontal scrollbar.
+            switch -- $::ms::data($w,scrollx) {
+                on  {
                     switch -- [llength $args] {
-                        1       {}
-                        default { return "" }
-                    }
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **xview**
 
-                    # Check the fraction provided.
-                    set fraction $args
-                    switch -- [string is double -strict $fraction] {
-                        0   { return "" }
-                    }
+                            # Execute the command.
+                            return [{*}$address xview]
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **xview** **moveto** *fraction*
 
-                    # Check that fraction is inside its limits [0,1.0].
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
-                    }
+                            set option   [lindex $args 0]
+                            set fraction [lindex $args 1]
 
-                    # Execute the command.
-                    try {
-                        {*}$address xview moveto $fraction
-                    } on error {} {
-                        # Do nothing.
-                    }
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                moveto  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
 
-                    return ""
+                            # Check that the 'fraction' provided is a double.
+                            switch -- [string is double -strict $fraction] {
+                                0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                                1   {
+                                    # Check that the 'fraction' provided is in the range [0,1.0].
+                                    # Truncate if necessary.
+                                    if { $fraction < 0 } {
+                                        set fraction 0
+                                    } elseif { $fraction > 1.0 } {
+                                        set fraction 1.0
+                                    }
+                                }
+                            }
+
+                            # Execute the command.
+                            {*}$address xview moveto $fraction
+
+                            return ""
+                        }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **xview** **scroll** *number* *what*
+                            set option [lindex $args 0]
+                            set number [lindex $args 1]
+                            set what   [lindex $args 2]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                scroll  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Check the 'number' provided.
+                            switch -- [string is integer -strict $number] {
+                                0   { ::ms::Error "Invalid value, '$number'." $caller_info }
+                            }
+
+                            # Check the 'what' provided.
+                            switch -- $what {
+                                pages   -
+                                units   {}
+                                default { return "" }
+                            }
+
+                            # Execute the command.
+                            {*}$address xview scroll $number $what
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
                 }
-                scroll {
-                    # Check the number of arguments provided (after the 'scroll' word).
-                    switch -- [llength $args] {
-                        2       {}
-                        default { return "" }
-                    }
-
-                    # Check the 'number'.
-                    set number [lindex $args 0]
-                    switch -- [string is double -strict $number] {
-                        0   { return "" }
-                    }
-
-                    # Check the 'what'.
-                    switch -- [lindex $args 1] {
-                        pages   { set what "pages" }
-                        units   { set what "units" }
-                        default { return "" }
-                    }
-
-                    # Execute the command.
-                    try {
-                        {*}$address xview scroll $number $what
-                    } on error {} {
-                        # Do nothing.
-                    }
-
-                    return ""
-                }
-                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+                default { return "" }
             }
         }
         yview {
@@ -4726,95 +5512,90 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
             # *window* **yview**
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
-            set subcommand [lindex  $args 0]
-            set args       [lremove $args 0]
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  {
-                    # Check if the widget has an active vertical scrollbar.
-                    switch -- $::ms::data($w,scrolly) {
-                        off { return "" }
-                        on  { set address [list $w.treeview] }
-                    }
-                }
-            }
-
-            # Check the subcommand.
-            switch -- $subcommand {
-                ""  {
-                    # Execute the command.
-                    try {
-                        {*}$address yview
-                    } on error {} {
-                        return ""
-                    } on ok { result } {
-                        return $result
-                    }
-                }
-                moveto {
-                    # Check the number of arguments provided (after the 'moveto' word).
+            # Check if the widget has an active vertical scrollbar.
+            switch -- $::ms::data($w,scrolly) {
+                on  {
                     switch -- [llength $args] {
-                        1       {}
-                        default { return "" }
-                    }
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **yview**
 
-                    # Check the fraction provided.
-                    set fraction $args
-                    switch -- [string is double -strict $fraction] {
-                        0   { return "" }
-                    }
+                            # Execute the command.
+                            return [{*}$address yview]
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **yview** **moveto** *fraction*
 
-                    # Check that fraction is inside its limits [0,1.0].
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
-                    }
+                            set option   [lindex $args 0]
+                            set fraction [lindex $args 1]
 
-                    # Execute the command.
-                    try {
-                        {*}$address yview moveto $fraction
-                    } on error {} {
-                        # Do nothing.
-                    }
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                moveto  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
 
-                    return ""
+                            # Check that the 'fraction' provided is a double.
+                            switch -- [string is double -strict $fraction] {
+                                0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                                1   {
+                                    # Check that the 'fraction' provided is in the range [0,1.0].
+                                    # Truncate if necessary.
+                                    if { $fraction < 0 } {
+                                        set fraction 0
+                                    } elseif { $fraction > 1.0 } {
+                                        set fraction 1.0
+                                    }
+                                }
+                            }
+
+                            # Execute the command.
+                            {*}$address yview moveto $fraction
+
+                            return ""
+                        }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **yview** **scroll** *number* *what*
+                            set option [lindex $args 0]
+                            set number [lindex $args 1]
+                            set what   [lindex $args 2]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                scroll  {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Check the 'number' provided.
+                            switch -- [string is integer -strict $number] {
+                                0   { ::ms::Error "Invalid value, '$number'." $caller_info }
+                            }
+
+                            # Check the 'what' provided.
+                            switch -- $what {
+                                pages   -
+                                units   {}
+                                default { return "" }
+                            }
+
+                            # Execute the command.
+                            {*}$address yview scroll $number $what
+
+                            return ""
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
                 }
-                scroll {
-                    # Check the number of arguments provided (after the 'scroll' word).
-                    switch -- [llength $args] {
-                        2       {}
-                        default { return "" }
-                    }
-
-                    # Check the 'number'.
-                    set number [lindex $args 0]
-                    switch -- [string is double -strict $number] {
-                        0   { return "" }
-                    }
-
-                    # Check the 'what'.
-                    switch -- [lindex $args 1] {
-                        pages   { set what "pages" }
-                        units   { set what "units" }
-                        default { return "" }
-                    }
-
-                    # Execute the command.
-                    try {
-                        {*}$address yview scroll $number $what
-                    } on error {} {
-                        # Do nothing.
-                    }
-
-                    return ""
-                }
-                default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
+                default { return "" }
             }
         }
-        default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
+        default { ::ms::Error "Invalid widget's option, '$cmd'." $caller_info }
     }
 }
 
