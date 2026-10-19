@@ -5133,7 +5133,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **instate** *statespec*
-                    set statespec $args
+                    set statespec [lindex $args 0]
 
                     # Check the 'statespec' provided.
                     switch -- $statespec {
@@ -5506,7 +5506,7 @@ proc ::ms::canvas::Pathname_Cmd { w cmd args } {
                         disabled { set statespec disabled }
                         normal   {
                             # Check the 'statespec' provided.
-                            set statespec $args
+                            set statespec [lindex $args 0]
                             switch -- $statespec {
                                 ""      -
                                 normal  { set statespec $::ms::data(statespec,normal) }

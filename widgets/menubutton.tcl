@@ -2595,7 +2595,7 @@ proc ::ms::menubutton::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
-                    set statespec $args
+                    set statespec [lindex $args 0]
 
                     # Check the 'statespec' provided.
                     switch -- $statespec {
@@ -2655,7 +2655,7 @@ proc ::ms::menubutton::Pathname_Cmd { w cmd args } {
             switch -- [llength $args] {
                 0   { return [interp invokehidden {} $w state] }
                 1   {
-                    set statespec $args
+                    set statespec [lindex $args 0]
 
                     # Check the 'statespec' provided.
                     switch -- $statespec {

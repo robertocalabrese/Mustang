@@ -1232,7 +1232,7 @@ proc ::ms::sizegrip::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **instate** *statespec*
-                    set statespec $args
+                    set statespec [lindex $args 0]
 
                     # Check the 'statespec' provided.
                     switch -- $statespec {
@@ -1306,7 +1306,7 @@ proc ::ms::sizegrip::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **state** *statespec*
-                    set statespec $args
+                    set statespec [lindex $args 0]
 
                     # Check the 'statespec' provided.
                     switch -- $statespec {

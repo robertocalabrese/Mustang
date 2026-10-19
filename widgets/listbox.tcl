@@ -3682,7 +3682,7 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **instate** *statespec*
-                    set statespec $args
+                    set statespec [lindex $args 0]
 
                     # Check the 'statespec' provided.
                     switch -- $statespec {
@@ -4031,13 +4031,16 @@ proc ::ms::listbox::Pathname_Cmd { w cmd args } {
                     # Synopsis:
                     #
                     # *window* **state** *statespec*
-                    set statespec $args
+                    set statespec [lindex $args 0]
+
+                    puts "statespec: $statespec"
 
                     switch -- $statespec {
                         ""      -
                         normal  { set statespec $::ms::data(statespec,normal) }
                         default {
                             foreach state $statespec {
+                                puts "state: $state"
                                 switch -- [::ms::Check_State $state] {
                                     invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
                                 }
