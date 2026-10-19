@@ -1863,7 +1863,6 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
                             # Apply the changes.
                             interp invokehidden {} $w configure    -cursor $cursor \
                                                                    -height $::ms::temp($w,height) \
-                                                                   -orient $::ms::current($w,orient) \
                                                                     -style $::ms::style($w,widget) \
                                                                 -takefocus $takefocus \
                                                                     -width $::ms::temp($w,width);
@@ -1986,12 +1985,12 @@ proc ::ms::panedwindow::Pathname_Cmd { w cmd args } {
 
             # Check if the coordinates provided falls upon the widget's sash.
             try {
-                interp invokehidden {} $w identify $subcommand $x $y
+                interp invokehidden {} $w identify $option $x $y
             } on error { errortext errorcode } {
                 ::ms::Error "$errortext" $caller_info
             } on ok { result } {
-                # Check the subcommand provided.
-                switch -- $subcommand {
+                # Check the option provided.
+                switch -- $option {
                     element {
                         switch -- $result {
                             sash    { set result "Panedwindow.sash" }
