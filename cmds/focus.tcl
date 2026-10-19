@@ -293,6 +293,8 @@ proc ::ms::focus::Command { args } {
                         invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
                     }
 
+                    update idletasks
+
                     # Check the widget's focussability.
                     switch -- [::ms::Check_Focussability $w] {
                         1   {
