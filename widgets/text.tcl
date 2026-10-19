@@ -4667,76 +4667,98 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
     # Get the caller information.
     set caller_info [info frame -1]
 
+    # Synopsis:
+    #
+    # *window* **bbox** *index*
+    # *window* **cget** *option*
+    # *window* **compare** *index1* *op* *index2*
+    # *window* **configure** ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+    # *window* **count** *option* ?*option*? ... ?*option*? *index1* *index2*
+    # *window* **debug** ?*boolean*?
+    # *window* **delete** *index1* ?*index2* ... *indexn*?
+    # *window* **dlineinfo** *index*
+    # *window* **dump** ?*switches*? *index1* ?*index2*?
+    # *window* **edit** **canredo**
+    # *window* **edit** **canundo**
+    # *window* **edit** **modified** ?*boolean*?
+    # *window* **edit** **redo**
+    # *window* **edit** **reset**
+    # *window* **edit** **separator**
+    # *window* **edit** **undo**
+    # *window* **get** ?**-displaychars**? ?**--**? *index1* ?*index2* ... *indexn*?
+    # *window* **identify** ?**element**? *x* *y*
+    # *window* **image** **cget** *index* *option*
+    # *window* **image** **configure** *index* ?*option* *value* ... *option* *value*?
+    # *window* **image** **create** *index* ?*option* *value* ... *option* *value*?
+    # *window* **image** **names**
+    # *window* **index** *index*
+    # *window* **insert** *index* *chars* ?*tagList*? ?*chars* *tagList*? ... ?*chars* *tagList*?
+    # *window* **instate** *statespec* ?*script*?
+    # *window* **mark** **gravity** *markName* ?*direction*?
+    # *window* **mark** **names**
+    # *window* **mark** **next** *index*
+    # *window* **mark** **previous** *index*
+    # *window* **mark** **set** *markName* *index*
+    # *window* **mark** **unset** *markName* ?*markName* ... *markName*?
+    # *window* **peer** **create** *window* ?*options*?
+    # *window* **peer** **names** *window* *pendingsync*
+    # *window* **pendingsync**
+    # *window* **scan** **mark** *x* *y*
+    # *window* **scan** **dragto** *x* *y*
+    # *window* **search** ?switches? *pattern* *index* ?*stopIndex*?
+    # *window* **see** *index*
+    # *window* **state** ?*statespec*?
+    # *window* **style**
+    # *window* **sync** ?**-command** *command*?
+    # *window* **tag** **add** *tagname* *index1* ?*index2*? ?*index1* *index2*? ... ?*index1* *index2*?
+    # *window* **tag** **bind** *tagname* ?*sequence*? ?*script*?
+    # *window* **tag** **cget** *tagname* *option*
+    # *window* **tag** **configure** *tagname* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **tag** **delete** *tagname* ?*tagname* ...?
+    # *window* **tag** **lower** *tagname* ?*belowThis*?
+    # *window* **tag** **names** ?*index*?
+    # *window* **tag** **nextrange** *tagname* *index1* ?*index2*?
+    # *window* **tag** **prevrange** *tagname* *index1* ?*index2*?
+    # *window* **tag** **raise** *tagname* ?*aboveThis*?
+    # *window* **tag** **ranges** *tagname*
+    # *window* **tag** **remove** *tagname* *index1* ?*index2*? ?*index1* *index2*? ... ?*index1* *index2*?
+    # *window* **window** **cget** ?**short**? *index* *option*
+    # *window* **window** **configure** ?**short**? *index* ?*option*? ?*value*? ?*option value*? ... ?*option value*?
+    # *window* **window** **create** *index* ?*option value*? ... ?*option value*?
+    # *window* **window** **names**
+    # *window* **xview**
+    # *window* **xview** **moveto** *fraction*
+    # *window* **xview** **scroll** *number* *what*
+    # *window* **yview**
+    # *window* **yview** **moveto** *fraction*
+    # *window* **yview** **scroll** *number* *what*
+
+    # Check if the widget is scrollable or not.
+    switch -- $::ms::current($w,scrollable) {
+        false { set address [list interp invokehidden {} $w] }
+        true  { set address [list $w.text] }
+    }
+
     # Check the command provided.
     switch -- $cmd {
-        bbox        -
-        compare     -
-        count       -
-        debug       -
-        delete      -
-        dlineinfo   -
-        dump        -
-        edit        -
-        get         -
-        image       -
-        index       -
-        mark        -
-        peer        -
-        pendingsync -
-        scan        -
-        search      -
-        see         -
-        sync        {
+        bbox {
             # Synopsis:
             #
             # *window* **bbox** *index*
-            # *window* **compare** *index1* *op* *index2*
-            # *window* **count** ?*options*? *index1* *index2*
-            # *window* **debug** ?*boolean*?
-            # *window* **delete** *index1* ?*index2* ... *indexn*?
-            # *window* **dlineinfo** *index*
-            # *window* **dump** ?*switches*? *index1* ?*index2*?
-            # *window* **edit** **canredo**
-            # *window* **edit** **canundo**
-            # *window* **edit** **modified** ?*boolean*?
-            # *window* **edit** **redo**
-            # *window* **edit** **reset**
-            # *window* **edit** **separator**
-            # *window* **edit** **undo**
-            # *window* **get** ?**-displaychars**? ?**--**? *index1* ?*index2* ... *indexn*?
-            # *window* **image** **cget** *index* *option*
-            # *window* **image** **configure** *index* ?*option* *value* ... *option* *value*?
-            # *window* **image** **create** *index* ?*option* *value* ... *option* *value*?
-            # *window* **image** **names**
-            # *window* **index** *index*
-            # *window* **mark** **gravity** *markName* ?*direction*?
-            # *window* **mark** **names**
-            # *window* **mark** **next** *index*
-            # *window* **mark** **previous** *index*
-            # *window* **mark** **set** *markName* *index*
-            # *window* **mark** **unset** *markName* ?*markName* ... *markName*?
-            # *window* **peer** **create** *window* ?*options*?
-            # *window* **peer** **names** *window* *pendingsync*
-            # *window* **scan** **mark** *x* *y*
-            # *window* **scan** **dragto** *x* *y*
-            # *window* **search** ?switches? *pattern* *index* ?*stopIndex*?
-            # *window* **see** *index*
-            # *window* **sync**
-            # *window* **sync** **-command** *command*
+            switch -- [llength $args] {
+                1   {
+                    set index $args
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
-            }
-
-            # Execute the command.
-            try {
-                {*}$address $cmd {*}$args
-            } on error { errortext errorcode } {
-                ::ms::Error "$errortext" $caller_info
-            } on ok { result } {
-                return $result
+                    # Execute the command.
+                    try {
+                        {*}$address bbox $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         cget {
@@ -4744,17 +4766,40 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             #
             # *window* **cget** *option*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing cget option." $caller_info }
                 1   {
-                    # Check if the option provided is a valid 'styleable' or 'non-styleable' option.
                     set option [string range $args 1 end]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::text(non_styleable,options)) || ($option in $::ms::text(styleable,options)) } {
+                        # Execute the command.
                         return $::ms::current($w,$option)
                     } else {
                         ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
-                default { ::ms::Error "Invalid option, '$args'." $caller_info }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        compare {
+            # Synopsis:
+            #
+            # *window* **compare** *index1* *op* *index2*
+            switch -- [llength $args] {
+                3   {
+                    set index1 [lindex $args 0]
+                    set op     [lindex $args 1]
+                    set index2 [lindex $args 2]
+
+                    # Execute the command.
+                    try {
+                        {*}$address compare $index1 $op $index2
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
@@ -4762,10 +4807,13 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             #
             # *window* **configure**
             # *window* **configure** *option*
-            # *window* **configure** *option* *value*
-            # *window* **configure** *option* *value* ... ?*option* *value*?
+            # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
             switch -- [llength $args] {
                 0   {
+                    # Synopsis:
+                    #
+                    # *window* **configure**
+
                     # 'non-styleable' options.
                     foreach option $::ms::text(non_styleable,options) {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
@@ -4776,17 +4824,28 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                         lappend result [list $option $::ms::default($w,$option) $::ms::current($w,$option)]
                     }
 
+                    # Execute the command.
                     return [lsort -dictionary -increasing -index 0 $result]
                 }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option*
                     set option [string range $args 1 end]
+
+                    # Check the 'option' provided.
                     if { ($option in $::ms::text(non_styleable,options)) || ($option in $::ms::text(styleable,options)) } {
+                        # Execute the command.
                         return [list $::ms::default($w,$option) $::ms::current($w,$option)]
                     } else {
-                        ::ms::Error "Invalid configure option, '$args'." $caller_info
+                        ::ms::Error "Invalid option, '$args'." $caller_info
                     }
                 }
                 default {
+                    # Synopsis:
+                    #
+                    # *window* **configure** *option* *value* ?*option* *value*? ... ?*option* *value*?
+
                     # Check that the command's 'args' forms a valid 'option/value' list.
                     switch -- [expr { [llength $args]%2 }] {
                         0   {
@@ -5592,6 +5651,273 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        count {
+            # Synopsis:
+            #
+            # *window* **count** *index1* *index2*
+            # *window* **count** *option* ?*option*? ... ?*option*? *index1* *index2*
+            switch -- [llength $args] {
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **count** *index1* *index2*
+                    set index1 [lindex $args 0]
+                    set index2 [lindex $args 1]
+
+                    # Execute the command.
+                    try {
+                        {*}$address count $index1 $index2
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default {
+                    # Synopsis:
+                    #
+                    # *window* **count** *option* ?*option*? ... ?*option*? *index1* *index2*
+                    set index1  [lindex  $args end-1]
+                    set index2  [lindex  $args end]
+                    set options [lremove $args end-1 end]
+
+                    # Check the 'options' provided.
+                    foreach option $options {
+                        switch -- $option {
+                            -chars          -
+                            -displaychars   -
+                            -displayindices -
+                            -displaylines   -
+                            -indices        -
+                            -lines          -
+                            -xpixels        -
+                            -ypixels        -
+                            -update         {}
+                            default         { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address count {*}$options $index1 $index2
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+            }
+        }
+        debug {
+            # Synopsis:
+            #
+            # *window* **debug**
+            # *window* **debug** *boolean*
+            switch -- [llength $args] {
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **debug**
+
+                    # Execute the command.
+                    return [{*}$address debug]
+                }
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **debug** *boolean*
+                    set boolean $args
+
+                    # Check the 'boolean' provided.
+                    switch -nocase -- $boolean {
+                        0        -
+                        no       -
+                        off      -
+                        false    -
+                        disabled {}
+                        1        -
+                        yes      -
+                        on       -
+                        true     -
+                        enabled  {}
+                        default  { ::ms::Error "Invalid value, '$boolean'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    {*}$address debug $boolean
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        delete {
+            # Synopsis:
+            #
+            # *window* **delete** *index1* ?*index2*? ... ?*indexn*?
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address delete {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok {} {
+                return ""
+            }
+        }
+        dlineinfo -
+        index     {
+            # Synopsis:
+            #
+            # *window* **dlineinfo** *index*
+            # *window* **index**     *index*
+            switch -- [llength $args] {
+                1   {
+                    set index $args
+
+                    # Execute the command.
+                    try {
+                        {*}$address $cmd $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok { result } {
+                        return $result
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        dump {
+            # Synopsis:
+            #
+            # *window* **dump** ?*switches*? *index1* ?*index2*?
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address dump {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
+        edit {
+            # Synopsis:
+            #
+            # *window* **edit** **canredo**
+            # *window* **edit** **canundo**
+            # *window* **edit** **modified**
+            # *window* **edit** **modified** *boolean*
+            # *window* **edit** **redo**
+            # *window* **edit** **reset**
+            # *window* **edit** **separator**
+            # *window* **edit** **undo**
+            switch -- [llength $args] {
+                1   {
+                    # Synopsis:
+                    #
+                    # *window* **edit** **canredo**
+                    # *window* **edit** **canundo**
+                    # *window* **edit** **modified**
+                    # *window* **edit** **redo**
+                    # *window* **edit** **reset**
+                    # *window* **edit** **separator**
+                    # *window* **edit** **undo**
+                    set option $args
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        canredo   -
+                        canundo   -
+                        modified  -
+                        redo      -
+                        undo      {
+                            # Execute the command.
+                            try {
+                                {*}$address edit $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        reset     -
+                        separator {
+                            # Execute the command.
+                            try {
+                                {*}$address edit $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+                }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **edit** **modified** *boolean*
+                    set option  [lindex $args 0]
+                    set boolean [lindex $args 1]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        modified {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'boolean' provided.
+                    switch -nocase -- $boolean {
+                        0        -
+                        no       -
+                        off      -
+                        false    -
+                        disabled {}
+                        1        -
+                        yes      -
+                        on       -
+                        true     -
+                        enabled  {}
+                        default  { ::ms::Error "Invalid value, '$boolean'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address edit modified $boolean
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        get {
+            # Synopsis:
+            #
+            # *window* **get** ?**-displaychars**? ?**--**? *index1* ?*index2* ... *indexn*?
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address get {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
         identify {
             # Synopsis:
             #
@@ -5599,18 +5925,25 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             # *window* **identify** **element** *x* *y*
             switch -- [llength $args] {
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **identify** *x* *y*
                     set x [lindex $args 0]
                     set y [lindex $args 1]
                 }
                 3   {
-                    # Check that the first argument of 'args' is the word "element".
-                    switch -- [lindex $args 0] {
+                    # Synopsis:
+                    #
+                    # *window* **identify** **element** *x* *y*
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
                         element {}
                         default { ::ms::Error "Invalid option, '$args'." $caller_info }
                     }
-
-                    set x [lindex $args 1]
-                    set y [lindex $args 2]
                 }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
@@ -5679,19 +6012,210 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 }
             }
         }
+        image {
+            # Synopsis:
+            #
+            # *window* **image** **cget**      *index* *option*
+            # *window* **image** **configure** *index* ?*option*? ?*value*? ?*option* *value*? ... ?*option* *value*?
+            # *window* **image** **create**    *index*
+            # *window* **image** **create**    *index* *option* *value* ?*option* *value*? ... ?*option* *value*?
+            # *window* **image** **names**
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Separate the 'subcommand' from the actual 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                cget {
+                    switch -- [llength $args] {
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **image** **cget** *index* *option*
+                            set index  [lindex $args 0]
+                            set option [lindex $args 1]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                -align  -
+                                -image  -
+                                -name   -
+                                -padx   -
+                                -pady   {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address image cget $index $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                configure {
+                    # Synopsis:
+                    #
+                    # *window* **image** **configure** *index*
+                    # *window* **image** **configure** *index* *option*
+                    # *window* **image** **configure** *index* *option* *value* ?*option* *value*? ... ?*option* *value*?
+                    switch -- [llength $args] {
+                        1   {
+                            # Synopsis:
+                            #
+                            # *window* **image** **configure** *index*
+                            set index $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address image configure $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **image** **configure** *index* *option*
+                            set index  [lindex $args 0]
+                            set option [lindex $args 1]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                -align  -
+                                -image  -
+                                -name   -
+                                -padx   -
+                                -pady   {}
+                                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address image configure $index $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default {
+                            # Synopsis:
+                            #
+                            # *window* **image** **configure** *index* *option* *value* ?*option* *value*? ... ?*option* *value*?
+                            set index   [lindex  $args 0]
+                            set options [lremove $args 0]
+
+                            # Check that the command's 'args' forms a valid 'option/value' list.
+                            switch -- [expr { [llength $options]%2 }] {
+                                0   {
+                                    foreach { option value } $options {
+                                        # Check the 'option' provided.
+                                        switch -- $option {
+                                            -align  -
+                                            -image  -
+                                            -name   -
+                                            -padx   -
+                                            -pady   {}
+                                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                        }
+                                    }
+
+                                    # Execute the command.
+                                    try {
+                                        {*}$address image configure $index {*}$options
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok {} {
+                                        return ""
+                                    }
+                                }
+                                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                            }
+                        }
+                    }
+                }
+                create {
+                    # Synopsis:
+                    #
+                    # *window* **image** **create** *index*
+                    # *window* **image** **create** *index* *option* *value* ?*option* *value*? ... ?*option* *value*?
+                    switch -- [llength $args] {
+                        1   {
+                            set index $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address image create $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default {
+                            set index   [lindex  $args 0]
+                            set options [lremove $args 0]
+
+                            # Check that the 'options' provided forms a valid 'option/value' list.
+                            switch -- [expr { [llength $options]%2 }] {
+                                0   {
+                                    foreach { option value } $options {
+                                        # Check the 'option' provided.
+                                        switch -- $option {
+                                            -align  -
+                                            -image  -
+                                            -name   -
+                                            -padx   -
+                                            -pady   {}
+                                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                        }
+                                    }
+
+                                    # Execute the command.
+                                    try {
+                                        {*}$address image create $index {*}$options
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok { result } {
+                                        return $result
+                                    }
+                                }
+                                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                            }
+                        }
+                    }
+                }
+                names {
+                    switch -- [llength $args] {
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **image** **names**
+
+                            # Execute the command.
+                            return [{*}$address image names]
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+            }
+        }
         insert {
             # Synopsis:
             #
-            # *window* **insert** *index* *chars* ?*tagList* *chars* *tagList* ...?
+            # *window* **insert** *index* *chars* ?*tagList*? ?*chars* *tagList*? ... ?*chars* *tagList*?
             switch -- [llength $args] {
                 0   -
                 1   { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
             }
 
             # Execute the command.
@@ -5713,10 +6237,13 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
         instate {
             # Synopsis:
             #
-            # *window* **instate** *statespec* ?*script*?
+            # *window* **instate** *statespec*
+            # *window* **instate** *statespec* *script*
             switch -- [llength $args] {
-                0   { ::ms::Error "Missing statespec." $caller_info }
                 1   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec*
                     set statespec $args
 
                     # Check the 'statespec' provided.
@@ -5744,6 +6271,9 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                     return $boolean
                 }
                 2   {
+                    # Synopsis:
+                    #
+                    # *window* **instate** *statespec* *script*
                     set statespec [lindex $args 0]
                     set script    [lindex $args 1]
 
@@ -5779,6 +6309,221 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
+        mark {
+            # Synopsis:
+            #
+            # *window* **mark** **gravity**  *markName*
+            # *window* **mark** **gravity**  *markName* *direction*
+            # *window* **mark** **names**
+            # *window* **mark** **next**     *index*
+            # *window* **mark** **previous** *index*
+            # *window* **mark** **set**      *markName* *index*
+            # *window* **mark** **unset**    *markName* ?*markName* ... *markName*?
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Separate the 'subcommand' from the actual 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                gravity {
+                    # Synopsis:
+                    #
+                    # *window* **mark** **gravity** *markName*
+                    # *window* **mark** **gravity** *markName* *direction*
+                    switch -- [llength $args] {
+                        1   {
+                            # Synopsis:
+                            #
+                            # *window* **mark** **gravity** *markName*
+                            set markName $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address mark gravity $markName
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **mark** **gravity** *markName* *direction*
+                            set markName  [lindex $args 0]
+                            set direction [lindex $args 1]
+
+                            # Execute the command.
+                            try {
+                                {*}$address mark gravity $markName $direction
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info}
+                    }
+                }
+                names {
+                    # Synopsis:
+                    #
+                    # *window* **mark** **names**
+
+                    # Execute the command.
+                    return [{*}$address mark names]
+                }
+                next     -
+                previous {
+                    # Synopsis:
+                    #
+                    # *window* **mark** **next** *index*
+                    switch -- [llength $args] {
+                        1   {
+                            set index $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address mark $cmd $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info}
+                    }
+                }
+                set {
+                    # Synopsis:
+                    #
+                    # *window* **mark** **set** *markName* *index*
+                    switch -- [llength $args] {
+                        2   {
+                            set markName [lindex $args 0]
+                            set index    [lindex $args 1]
+
+                            # Execute the command.
+                            try {
+                                {*}$address mark set $markName $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info}
+                    }
+                }
+                unset {
+                    # Synopsis:
+                    #
+                    # *window* **mark** **unset** *markName* ?*markName* ... *markName*?
+
+                    # Execute the command.
+                    try {
+                        {*}$address mark unset {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$option'." $caller_info }
+            }
+        }
+        peer {
+            # Synopsis:
+            #
+            # *window* **peer** **create** *window*
+            # *window* **peer** **create** *window* *options*
+            # *window* **peer** **names**  *window* *pendingsync*
+            switch -- [llength $args] {
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Separate the 'subcommand' from the actual 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                create {
+                    # Synopsis:
+                    #
+                    # *window* **peer** **create** *window*
+                    # *window* **peer** **create** *window* *options*
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **peer** **create** *window*
+                            # *window* **peer** **create** *window* *options*
+
+                            # Execute the command.
+                            try {
+                                {*}$address peer create {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                names {
+                    # Synopsis:
+                    #
+                    # *window* **peer** **names** *newwindow* *pendingsync*
+                    switch -- [llength $args] {
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **peer** **names** *newwindow* *pendingsync*
+                            set newwindow [lindex $args 0]
+                            set option    [lindex $args 1]
+
+                            # Get the 'newwindow' real address.
+                            set window [::ms::Check_Pathname $newwindow invalid]
+                            switch -- $window {
+                                invalid { ::ms::Error "Invalid address, '$newwindow'." $caller_info }
+                            }
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                pendingsync {}
+                                default     { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address peer names $window $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        pendingsync {
+            # Synopsis:
+            #
+            # *window* **pendingsync**
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    return [{*}$address pendingsync]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         replace {
             # Synopsis:
             #
@@ -5787,12 +6532,6 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 0   -
                 1   -
                 2   { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
             }
 
             # Execute the command.
@@ -5811,28 +6550,102 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                 return ""
             }
         }
+        scan {
+            # Synopsis:
+            #
+            # *window* **scan** **mark**   *x* *y*
+            # *window* **scan** **dragto** *x* *y*
+            switch -- [llength $args] {
+                3   {
+                    set option [lindex $args 0]
+                    set x      [lindex $args 1]
+                    set y      [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        mark    -
+                        dragto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address scan $option $x $y
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        search {
+            # Synopsis:
+            #
+            # *window* **search** ?switches? *pattern* *index* ?*stopIndex*?
+            switch -- [llength $args] {
+                0   -
+                1   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            try {
+                {*}$address search {*}$args
+            } on error { errortext errorcode } {
+                ::ms::Error "$errortext" $caller_info
+            } on ok { result } {
+                return $result
+            }
+        }
+        see {
+            # Synopsis:
+            #
+            # *window* **see** *index*
+            switch -- [llength $args] {
+                1   {
+                    set index $args
+
+                    # Execute the command.
+                    try {
+                        {*}$address see $index
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
         state {
             # Synopsis:
             #
-            # *window* **state** ?*statespec*?
+            # *window* **state**
+            # *window* **state** *statespec*
             switch -- [llength $args] {
-                0   { return [lsort -increasing -dictionary $::ms::data($w,statespec)] }
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **state**
+
+                    # Execute the command.
+                    return [lsort -increasing -dictionary $::ms::data($w,statespec)]
+                }
                 1   {
-                    # Check the widget's physical state.
-                    switch -- $::ms::current($w,state) {
-                        disabled { set statespec disabled }
-                        normal {
-                            # Check the 'statespec' provided.
-                            set statespec $args
-                            switch -- $statespec {
-                                ""      -
-                                normal  { set statespec $::ms::data(statespec,normal) }
-                                default {
-                                    foreach state $statespec {
-                                        switch -- [::ms::Check_State $state] {
-                                            invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
-                                        }
-                                    }
+                    # Synopsis:
+                    #
+                    # *window* **state** *statespec*
+                    set statespec $args
+
+                    # Check the 'statespec' provided.
+                    switch -- $statespec {
+                        ""      -
+                        normal  { set statespec $::ms::data(statespec,normal) }
+                        default {
+                            foreach state $statespec {
+                                switch -- [::ms::Check_State $state] {
+                                    invalid { ::ms::Error "Invalid statespec, '$state'." $caller_info }
                                 }
                             }
                         }
@@ -5972,160 +6785,693 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             #
             # *window* **style**
             switch -- [llength $args] {
-                0       { return $::ms::current($w,style) }
+                0   {
+                    # Execute the command.
+                    return $::ms::current($w,style)
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        sync {
+            # Synopsis:
+            #
+            # *window* **sync**
+            # *window* **sync** **-command** *command*
+            switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    {*}$address sync
+
+                    return ""
+                }
+                2   {
+                    set option [lindex $args 0]
+                    set value  [lindex $args 1]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -command {}
+                        default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address sync -command $value
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        switch -- $::ms::current($w,scrollable) {
+                            true {
+                                # Update the scrollbars.
+                                ::ms::text::Scrollbar_Update $w
+                            }
+                        }
+
+                        return ""
+                    }
+                }
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         tag {
             # Synopsis:
             #
-            # *window* **tag** **add** *tagname* *index1* ?*index2* *index1* *index2* ...?
-            # *window* **tag** **bind** *tagname* ?*sequence*? ?*script*?
-            # *window* **tag** **cget** *tagname* *option*
-            # *window* **tag** **configure** *tagname* ?*option*? ?*value*? ?*option value* ... *option value*?
-            # *window* **tag** **delete** *tagname* ?*tagname* ...?
-            # *window* **tag** **lower** *tagname* ?*belowThis*?
-            # *window* **tag** **names** ?*index*?
-            # *window* **tag** **nextrange** *tagname* *index1* ?*index2*?
-            # *window* **tag** **prevrange** *tagname* *index1* ?*index2*?
-            # *window* **tag** **raise** *tagname* ?*aboveThis*?
-            # *window* **tag** **ranges** *tagname*
-            # *window* **tag** **remove** *tagname* *index1* ?*index2* *index1* *index2* ...?
+            # *window* **tag** **add**       *tagname* *index1*
+            # *window* **tag** **add**       *tagname* *index1* *index2* ?*index1* *index2*? ... ?*index1* *index2*?
+            # *window* **tag** **bind**      *tagname*
+            # *window* **tag** **bind**      *tagname* *sequence*
+            # *window* **tag** **bind**      *tagname* *sequence* *script*
+            # *window* **tag** **cget**      *tagname* *option*
+            # *window* **tag** **configure** *tagname*
+            # *window* **tag** **configure** *tagname* *option*
+            # *window* **tag** **configure** *tagname* *option* *value* ?*option value*? ... ?*option value*?
+            # *window* **tag** **delete**    *tagname* ?*tagname* ...?
+            # *window* **tag** **lower**     *tagname*
+            # *window* **tag** **lower**     *tagname* *belowThis*
+            # *window* **tag** **names**
+            # *window* **tag** **names**     *index*
+            # *window* **tag** **nextrange** *tagname* *index1*
+            # *window* **tag** **nextrange** *tagname* *index1* *index2*
+            # *window* **tag** **prevrange** *tagname* *index1*
+            # *window* **tag** **prevrange** *tagname* *index1* *index2*
+            # *window* **tag** **raise**     *tagname*
+            # *window* **tag** **raise**     *tagname* *aboveThis*
+            # *window* **tag** **ranges**    *tagname*
+            # *window* **tag** **remove**    *tagname* *index1*
+            # *window* **tag** **remove**    *tagname* *index1* *index2* ?*index1* *index2*? ... ?*index1* *index2*?
             switch -- [llength $args] {
-                0       { ::ms::Error "Invalid number of arguments." $caller_info }
-                default {
-                    set subcommand [lindex  $args 0]
-                    set args       [lremove $args 0]
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false { set address [list interp invokehidden {} $w] }
-                        true  { set address [list $w.text] }
-                    }
+            # Separate the 'subcommand' from the actual 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                add {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **add** *tagname* *index1*
+                    # *window* **tag** **add** *tagname* *index1* *index2* ?*index1* *index2*? ... ?*index1* *index2*?
+                    switch -- [llength $args] {
+                        0   -
+                        1   { ::ms::Error "Invalid number of arguments." $caller_info }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **add** *tagname* *index1*
+                            set tagname [lindex $args 0]
+                            set index1  [lindex $args 1]
 
-                    # Check the 'subcommand'.
-                    switch -- $subcommand {
-                        configure {
-                            set tagname [lindex  $args 0]
-                            set args    [lremove $args 0]
-
-                            switch -- [llength $args] {
-                                0   -
-                                1   {
-                                    # Execute the command.
-                                    try {
-                                        {*}$address tag configure $tagname {*}$args
-                                    } on error { errortext errorcode } {
-                                        ::ms::Error "$errortext" $caller_info
-                                    } on ok { result } {
-                                        return $result
-                                    }
-                                }
-                                default {
-                                    # Check that the command's 'args' forms a valid 'option/value' list.
-                                    switch -- [expr { [llength $args]%2 }] {
-                                        0   {
-                                            # Check the remaining widget's options, if any.
-                                            set new_args [list ]
-                                            foreach { option value } $args {
-                                                switch -- $option {
-                                                    -background       -
-                                                    -foreground       -
-                                                    -lmargincolor     -
-                                                    -overstrikefg     -
-                                                    -rmargincolor     -
-                                                    -selectbackground -
-                                                    -selectforeground -
-                                                    -underlinefg      {
-                                                        set value [::ms::Check_Color $value invalid]
-                                                        switch -- $value {
-                                                            invalid { continue }
-                                                            default { lappend new_args $option $value }
-                                                        }
-                                                    }
-                                                    -bgstipple   -
-                                                    -borderwidth -
-                                                    -elide       -
-                                                    -fgstipple   -
-                                                    -font        -
-                                                    -justify     -
-                                                    -lmargin1    -
-                                                    -lmargin2    -
-                                                    -offset      -
-                                                    -overstrike  -
-                                                    -relief      -
-                                                    -rmargin     -
-                                                    -spacing1    -
-                                                    -spacing2    -
-                                                    -spacing3    -
-                                                    -tabs        -
-                                                    -tabstyle    -
-                                                    -underline   -
-                                                    -wrap        { lappend new_args $option $value }
-                                                    default      { ::ms::Error "Invalid tag option, '$option'." $caller_info }
-                                                }
-                                            }
-                                        }
-                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
-                                    }
-
-                                    # Execute the command.
-                                    try {
-                                        {*}$address tag configure $tagname {*}$new_args
-                                    } on error { errortext errorcode } {
-                                        ::ms::Error "$errortext" $caller_info
-                                    } on ok { result } {
-                                        return ""
-                                    }
-                                }
+                            # Execute the command.
+                            try {
+                                {*}$address tag add $tagname $index1
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
                             }
                         }
                         default {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **add** *tagname* *index1* *index2* ?*index1* *index2*? ... ?*index1* *index2*?
+                            set tagname [lindex  $args 0]
+                            set args    [lremove $args 0]
+
+                            # Check that the command's 'args' forms a valid 'option/value' list.
+                            switch -- [expr { [llength $args]%2 }] {
+                                0   {
+                                    # Execute the command.
+                                    try {
+                                        {*}$address tag add $tagname {*}$args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok {} {
+                                        return ""
+                                    }
+                                }
+                                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                            }
+                        }
+                    }
+                }
+                bind {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **bind** *tagname*
+                    # *window* **tag** **bind** *tagname* *sequence*
+                    # *window* **tag** **bind** *tagname* *sequence* *script*
+                    switch -- [llength $args] {
+                        1   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **bind** *tagname*
+                            set tagname $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag bind $tagname
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **bind** *tagname* *sequence*
+                            set tagname  [lindex $args 0]
+                            set sequence [lindex $args 1]
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag bind $tagname $sequence
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **bind** *tagname* *sequence* *script*
+                            set tagname  [lindex $args 0]
+                            set sequence [lindex $args 1]
+                            set script   [lindex $args 2]
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag bind $tagname $sequence $script
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                cget {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **cget** *tagname* *option*
+                    switch -- [llength $args] {
+                        2   {
+                            set tagname [lindex $args 0]
+                            set option  [lindex $args 1]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                -background       -
+                                -bgstipple        -
+                                -borderwidth      -
+                                -elide            -
+                                -fgstipple        -
+                                -font             -
+                                -foreground       -
+                                -justify          -
+                                -lmargin1         -
+                                -lmargin2         -
+                                -lmargincolor     -
+                                -offset           -
+                                -overstrike       -
+                                -overstrikefg     -
+                                -relief           -
+                                -rmargin          -
+                                -rmargincolor     -
+                                -selectbackground -
+                                -selectforeground -
+                                -spacing1         -
+                                -spacing2         -
+                                -spacing3         -
+                                -tabs             -
+                                -tabstyle         -
+                                -underline        -
+                                -underlinefg      -
+                                -wrap             {}
+                                default           { ::ms::Error "Invalid tag option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag cget $tagname $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                configure {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **configure** *tagname*
+                    # *window* **tag** **configure** *tagname* *option*
+                    # *window* **tag** **configure** *tagname* *option* *value* ?*option value*? ... ?*option value*?
+                    set tagname [lindex  $args 0]
+                    set args    [lremove $args 0]
+
+                    switch -- [llength $args] {
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **configure** *tagname*
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag configure $tagname
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        1   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **configure** *tagname* *option*
+                            set option $args
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                -background       -
+                                -bgstipple        -
+                                -borderwidth      -
+                                -elide            -
+                                -fgstipple        -
+                                -font             -
+                                -foreground       -
+                                -justify          -
+                                -lmargin1         -
+                                -lmargin2         -
+                                -lmargincolor     -
+                                -offset           -
+                                -overstrike       -
+                                -overstrikefg     -
+                                -relief           -
+                                -rmargin          -
+                                -rmargincolor     -
+                                -selectbackground -
+                                -selectforeground -
+                                -spacing1         -
+                                -spacing2         -
+                                -spacing3         -
+                                -tabs             -
+                                -tabstyle         -
+                                -underline        -
+                                -underlinefg      -
+                                -wrap             {}
+                                default           { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag configure $tagname $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **configure** *tagname*
+                            # *window* **tag** **configure** *tagname* *option*
+                            # *window* **tag** **configure** *tagname* *option* *value* ?*option value*? ... ?*option value*?
+
+                            # Check that the command's 'args' forms a valid 'option/value' list.
+                            switch -- [expr { [llength $args]%2 }] {
+                                0   {
+                                    # Check the remaining widget's options, if any.
+                                    foreach { option value } $args {
+                                        switch -- $option {
+                                            -background       -
+                                            -foreground       -
+                                            -lmargincolor     -
+                                            -overstrikefg     -
+                                            -rmargincolor     -
+                                            -selectbackground -
+                                            -selectforeground -
+                                            -underlinefg      {
+                                                set value [::ms::Check_Color $value invalid]
+                                                switch -- $value {
+                                                    invalid { ::ms::Error "Invalid color, '$value'." $caller_info }
+                                                }
+                                            }
+                                            -bgstipple   -
+                                            -borderwidth -
+                                            -elide       -
+                                            -fgstipple   -
+                                            -font        -
+                                            -justify     -
+                                            -lmargin1    -
+                                            -lmargin2    -
+                                            -offset      -
+                                            -overstrike  -
+                                            -relief      -
+                                            -rmargin     -
+                                            -spacing1    -
+                                            -spacing2    -
+                                            -spacing3    -
+                                            -tabs        -
+                                            -tabstyle    -
+                                            -underline   -
+                                            -wrap        {}
+                                            default      { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                        }
+                                    }
+                                }
+                                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag configure $tagname {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                    }
+                }
+                delete {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **delete** *tagname* ?*tagname* ...?
+                    switch -- [llength $args] {
+                        0       { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+
+                    # Execute the command.
+                    try {
+                        {*}$address tag delete {*}$args
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
+                lower -
+                raise {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **lower** *tagname*
+                    # *window* **tag** **lower** *tagname* *belowThis*
+                    #
+                    # *window* **tag** **raise** *tagname*
+                    # *window* **tag** **raise** *tagname* *aboveThis*
+                    switch -- [llength $args] {
+                        1   -
+                        2   {
                             # Execute the command.
                             try {
                                 {*}$address tag $subcommand {*}$args
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                names {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **names**
+                    # *window* **tag** **names** *index*
+                    switch -- [llength $args] {
+                        0   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **names**
+
+                            # Execute the command.
+                            return [{*}$address tag names]
+                        }
+                        1   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **names** *index*
+                            set index $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag names $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
                                 return $result
                             }
                         }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
+                nextrange -
+                prevrange {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **nextrange** *tagname* *index1*
+                    # *window* **tag** **nextrange** *tagname* *index1* *index2*
+                    #
+                    # *window* **tag** **prevrange** *tagname* *index1*
+                    # *window* **tag** **prevrange** *tagname* *index1* *index2*
+                    switch -- [llength $args] {
+                        2   -
+                        3   {
+                            set tagname [lindex  $args 0]
+                            set args    [lremove $args 0]
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag $subcommand $tagname {*}$args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                ranges {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **ranges** *tagname*
+                    switch -- [llength $args] {
+                        1   {
+                            set tagname $args
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag ranges $tagname
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                remove {
+                    # Synopsis:
+                    #
+                    # *window* **tag** **remove** *tagname* *index1*
+                    # *window* **tag** **remove** *tagname* *index1* *index2* ?*index1* *index2*? ... ?*index1* *index2*?
+                    switch -- [llength $args] {
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **remove** *tagname* *index1*
+                            set tagname [lindex $args 0]
+                            set index1  [lindex $args 1]
+
+                            # Execute the command.
+                            try {
+                                {*}$address tag remove $tagname $index1
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default {
+                            # Synopsis:
+                            #
+                            # *window* **tag** **remove** *tagname* *index1* *index2* ?*index1* *index2*? ... ?*index1* *index2*?
+                            set tagname [lindex  $args 0]
+                            set args    [lremove $args 0]
+
+                            # Check that the command's 'args' forms a valid 'option/value' list.
+                            switch -- [expr { [llength $args]%2 }] {
+                                0   {
+                                    # Execute the command.
+                                    try {
+                                        {*}$address tag remove $tagname {*}$args
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok {} {
+                                        return ""
+                                    }
+                                }
+                                default { ::ms::Error "Invalid number of arguments." $caller_info }
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
         window {
             # Synopsis:
             #
-            # *window* **window** **cget** *index* *option*
-            # *window* **window** **configure** *index* ?*option value* ... *option value*?
-            # *window* **window** **create** *index* ?*option value* ... *option value*?
+            # *window* **window** **cget**      *index* *option*
+            # *window* **window** **cget**      **short** *index* *option*
+            # *window* **window** **configure** *index*
+            # *window* **window** **configure** **short** *index*
+            # *window* **window** **configure** *index* *option*
+            # *window* **window** **configure** **short** *index* *option*
+            # *window* **window** **configure** *index* *option* *value* ?*option value*? ... ?*option value*?
+            # *window* **window** **create**    *index* ?*option value*? ... ?*option value*?
             # *window* **window** **names**
             switch -- [llength $args] {
-                0       { ::ms::Error "Invalid number of arguments." $caller_info }
-                default {
-                    set subcommand [lindex  $args 0]
-                    set args       [lremove $args 0]
+                0   { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
-                    # Check if the widget is scrollable or not.
-                    switch -- $::ms::current($w,scrollable) {
-                        false { set address [list interp invokehidden {} $w] }
-                        true  { set address [list $w.text] }
+            # Separate the 'subcommand' from the actual 'args'.
+            set subcommand [lindex  $args 0]
+            set args       [lremove $args 0]
+            switch -- $subcommand {
+                cget {
+                    # Synopsis:
+                    #
+                    # *window* **window** **cget** *index* *option*
+                    # *window* **window** **cget** **short** *index* *option*
+                    switch -- [llength $args] {
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **window** **cget** *index* *option*
+                            set index  [lindex $args 0]
+                            set option [lindex $args 1]
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                -align   -
+                                -create  -
+                                -padx    -
+                                -pady    -
+                                -stretch -
+                                -window  {}
+                                default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address window cget $index $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        3   {
+                            # Synopsis:
+                            #
+                            # *window* **window** **cget** **short** *index* *option*
+                            set short  [lindex $args 0]
+                            set index  [lindex $args 0]
+                            set option [lindex $args 1]
+
+                            # Check the 'short' option provided.
+                            switch -- $short {
+                                short   {}
+                                default { ::ms::Error "Invalid option, '$short'." $caller_info }
+                            }
+
+                            # Check the 'option' provided.
+                            switch -- $option {
+                                -align   -
+                                -create  -
+                                -padx    -
+                                -pady    -
+                                -stretch -
+                                -window  {}
+                                default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                            }
+
+                            # Execute the command.
+                            try {
+                                {*}$address window cget $index $option
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                # Check if the 'option' provided is '-window'.
+                                switch -- $option {
+                                    -window {
+                                        set w $result
+
+                                        # Check if exists a short address for 'w'.
+                                        switch -- [info exists ::ms::addr($w,short)] {
+                                            0   { return $w }
+                                            1   { return $::ms::addr($w,short) }
+                                        }
+                                    }
+                                    default { return $result }
+                                }
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
+                }
+                configure {
+                    # Synopsis:
+                    #
+                    # *window* **window** **configure** *index*
+                    # *window* **window** **configure** **short** *index*
+                    # *window* **window** **configure** *index* *option*
+                    # *window* **window** **configure** **short** *index* *option*
+                    # *window* **window** **configure** *index* *option* *value* ?*option value*? ... ?*option value*?
+                    switch -- [llength $args] {
+                        1   {
+                            # Synopsis:
+                            #
+                            # *window* **window** **configure** *index*
+                            set index $args
 
-                    # Check the 'subcommand'.
-                    switch -- $subcommand {
-                        create    -
-                        configure {
-                            set index [lindex  $args 0]
-                            set args  [lremove $args 0]
+                            # Execute the command.
+                            try {
+                                {*}$address window configure $index
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok { result } {
+                                return $result
+                            }
+                        }
+                        2   {
+                            # Synopsis:
+                            #
+                            # *window* **window** **configure** **short** *index*
+                            # *window* **window** **configure** *index* *option*
 
-                            switch -- [llength $args] {
-                                0   -
-                                1   {
+                            # Check the first agrument provided.
+                            switch -- [lindex $args 0] {
+                                short {
+                                    # Synopsis:
+                                    #
+                                    # *window* **window** **configure** **short** *index*
+                                    set index [lindex $args 1]
+
                                     # Execute the command.
                                     try {
-                                        {*}$address window $subcommand $index {*}$args
+                                        {*}$address window configure $index
                                     } on error { errortext errorcode } {
                                         ::ms::Error "$errortext" $caller_info
                                     } on ok { result } {
@@ -6133,56 +7479,204 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
                                     }
                                 }
                                 default {
-                                    # Check that the command's 'args' forms a valid 'option/value' list.
-                                    switch -- [expr { [llength $args]%2 }] {
-                                        0   {
-                                            # Check the remaining widget's options, if any.
-                                            set new_args [list ]
-                                            foreach { option value } $args {
-                                                switch -- $option {
-                                                    -window {
-                                                        # Get the 'window' real address.
-                                                        set result [::ms::Check_Pathname $window invalid]
-                                                        switch -- $result {
-                                                            invalid { ::ms::Error "Invalid address, '$window'." $caller_info }
-                                                            default { lappend new_args -window $result }
-                                                        }
-                                                    }
-                                                    -align   -
-                                                    -create  -
-                                                    -padx    -
-                                                    -pady    -
-                                                    -stretch { lappend new_args $option $value }
-                                                    default  { ::ms::Error "Invalid window option, '$option'." $caller_info }
-                                                }
-                                            }
-                                        }
-                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    # Synopsis:
+                                    #
+                                    # *window* **window** **configure** *index* *option*
+                                    set index  [lindex $args 0]
+                                    set option [lindex $args 1]
+
+                                    # Check the 'option' provided.
+                                    switch -- $option {
+                                        -align   -
+                                        -create  -
+                                        -padx    -
+                                        -pady    -
+                                        -stretch -
+                                        -window  {}
+                                        default  { ::ms::Error "Invalid option, '$option'." $caller_info }
                                     }
 
                                     # Execute the command.
                                     try {
-                                        {*}$address window $subcommand $index {*}$new_args
+                                        {*}$address window configure $index $option
                                     } on error { errortext errorcode } {
                                         ::ms::Error "$errortext" $caller_info
                                     } on ok { result } {
-                                        return ""
+                                        # Check if the 'option' provided is '-window'.
+                                        switch -- $option {
+                                            -window {
+                                                set w $result
+
+                                                # Check if exists a short address for 'w'.
+                                                switch -- [info exists ::ms::addr($w,short)] {
+                                                    0   { return $w }
+                                                    1   { return $::ms::addr($w,short) }
+                                                }
+                                            }
+                                            default { return $result }
+                                        }
                                     }
                                 }
                             }
                         }
                         default {
+                            # Synopsis:
+                            #
+                            # *window* **window** **configure** **short** *index* *option*
+                            # *window* **window** **configure** *index* *option* *value* ?*option value*? ... ?*option value*?
+
+                            # Check the first agrument provided.
+                            switch -- [lindex $args 0] {
+                                short {
+                                    # Synopsis:
+                                    #
+                                    # *window* **window** **configure** **short** *index* *option*
+                                    set index  [lindex $args 1]
+                                    set option [lindex $args 2]
+
+                                    # Check the 'option' provided.
+                                    switch -- $option {
+                                        -align   -
+                                        -create  -
+                                        -padx    -
+                                        -pady    -
+                                        -stretch -
+                                        -window  {}
+                                        default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                    }
+
+                                    # Execute the command.
+                                    try {
+                                        {*}$address window configure $index $option
+                                    } on error { errortext errorcode } {
+                                        ::ms::Error "$errortext" $caller_info
+                                    } on ok { result } {
+                                        # Check if the 'option' provided is '-window'.
+                                        switch -- $option {
+                                            -window {
+                                                set w $result
+
+                                                # Check if exists a short address for 'w'.
+                                                switch -- [info exists ::ms::addr($w,short)] {
+                                                    0   { return $w }
+                                                    1   { return $::ms::addr($w,short) }
+                                                }
+                                            }
+                                            default { return $result }
+                                        }
+                                    }
+                                }
+                                default {
+                                    # Synopsis:
+                                    #
+                                    # *window* **window** **configure** *index* *option* *value* ?*option value*? ... ?*option value*?
+                                    set index [lindex  $args 0]
+                                    set args  [lremove $args 0]
+
+                                    # Check that the command's 'args' forms a valid 'option/value' list.
+                                    switch -- [expr { [llength $args]%2 }] {
+                                        0   {
+                                            set new_args [list ]
+                                            foreach { option value } $args {
+                                                switch -- $option {
+                                                    -align   -
+                                                    -create  -
+                                                    -padx    -
+                                                    -pady    -
+                                                    -stretch { lappend new_args $option $value }
+                                                    -window  {
+                                                        # Check if 'value' is a valid address or not.
+                                                        set address [::ms::Check_Pathname $value invalid]
+                                                        switch -- $address {
+                                                            invalid { ::ms::Error "Invalid address, '$value'." $caller_info }
+                                                            default { lappend new_args $option $address }
+                                                        }
+                                                    }
+                                                    default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                                }
+                                            }
+
+                                            # Execute the command.
+                                            try {
+                                                {*}$address window configure $index {*}$new_args
+                                            } on error { errortext errorcode } {
+                                                ::ms::Error "$errortext" $caller_info
+                                            } on ok {} {
+                                                return ""
+                                            }
+                                        }
+                                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                create {
+                    # Synopsis:
+                    #
+                    # *window* **window** **create** *index* ?*option value*? ... ?*option value*?
+                    switch -- [llength $args] {
+                        0   { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+
+                    set index [lindex  $args 0]
+                    set args  [lremove $args 0]
+
+                    # Check that the command's 'args' forms a valid 'option/value' list.
+                    switch -- [expr { [llength $args]%2 }] {
+                        0   {
+                            set new_args [list ]
+                            foreach { option value } $args {
+                                switch -- $option {
+                                    -align   -
+                                    -create  -
+                                    -padx    -
+                                    -pady    -
+                                    -stretch { lappend new_args $option $value }
+                                    -window  {
+                                        # Check if 'value' is a valid address or not.
+                                        set address [::ms::Check_Pathname $value invalid]
+                                        switch -- $address {
+                                            invalid { ::ms::Error "Invalid address, '$value'." $caller_info }
+                                            default { lappend new_args $option $address }
+                                        }
+                                    }
+                                    default  { ::ms::Error "Invalid option, '$option'." $caller_info }
+                                }
+                            }
+
                             # Execute the command.
                             try {
-                                {*}$address window $subcommand {*}$args
+                                {*}$address window create $index {*}$new_args
+                            } on error { errortext errorcode } {
+                                ::ms::Error "$errortext" $caller_info
+                            } on ok {} {
+                                return ""
+                            }
+                        }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
+                    }
+                }
+                names {
+                    # Synopsis:
+                    #
+                    # *window* **window** **names**
+                    switch -- [llength $args] {
+                        0   {
+                            # Execute the command.
+                            try {
+                                {*}$address window names
                             } on error { errortext errorcode } {
                                 ::ms::Error "$errortext" $caller_info
                             } on ok { result } {
                                 return $result
                             }
                         }
+                        default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
+                default { ::ms::Error "Invalid option, '$subcommand'." $caller_info }
             }
         }
         xview {
@@ -6191,87 +7685,80 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             # *window* **xview**
             # *window* **xview** **moveto** *fraction*
             # *window* **xview** **scroll** *number* *what*
-            set subcommand [lindex  $args 0]
-            set args       [lremove $args 0]
+            switch -- [llength $args] {
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **xview**
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
-            }
-
-            # Check the subcommand.
-            switch -- $subcommand {
-                ""  {
                     # Execute the command.
-                    try {
-                        {*}$address xview
-                    } on error {} {
-                        return ""
-                    } on ok { result } {
-                        return $result
-                    }
+                    return [{*}$address xview]
                 }
-                moveto {
-                    # Check the number of arguments provided (after the 'moveto' word).
-                    switch -- [llength $args] {
-                        1       {}
-                        default { return "" }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** **moveto** *fraction*
+                    set option   [lindex $args 0]
+                    set fraction [lindex $args 1]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        moveto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Check the fraction provided.
-                    set fraction $args
+                    # Check that the 'fraction' provided is a double.
                     switch -- [string is double -strict $fraction] {
-                        0   { return "" }
-                    }
-
-                    # Check that fraction is inside its limits [0,1.0].
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
-                    }
-
-                    # Execute the command.
-                    try {
-                        {*}$address xview moveto $fraction
-                    } on error {} {
-                        return ""
-                    }
-
-                    return ""
-                }
-                scroll {
-                    # Check the number of arguments provided (after the 'scroll' word).
-                    switch -- [llength $args] {
-                        2       {}
-                        default { return "" }
-                    }
-
-                    # Check the 'number'.
-                    set number [lindex $args 0]
-                    switch -- [string is double -strict $number] {
-                        0   { return "" }
-                    }
-
-                    # Check the 'what'.
-                    switch -- [lindex $args 1] {
-                        pages   { set what "pages" }
-                        pixels  { set what "pixels" }
-                        units   { set what "units" }
-                        default { return "" }
+                        0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                        1   {
+                            # Check that the 'fraction' provided is in the range [0,1.0].
+                            # Truncate if necessary.
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+                        }
                     }
 
                     # Execute the command.
-                    try {
-                        {*}$address xview scroll $number $what
-                    } on error {} {
-                        return ""
-                    }
+                    {*}$address xview moveto $fraction
 
                     return ""
                 }
-                default { ::ms::Error "Invalid xview option, '$subcommand'." $caller_info }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **xview** **scroll** *number* *what*
+                    set option [lindex $args 0]
+                    set number [lindex $args 1]
+                    set what   [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        scroll  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'number' provided.
+                    switch -- [string is integer -strict $number] {
+                        0   { ::ms::Error "Invalid value, '$number'." $caller_info }
+                    }
+
+                    # Check the 'what' provided.
+                    switch -- $what {
+                        pages   -
+                        pixels  -
+                        units   {}
+                        default { ::ms::Error "Invalid value, '$what'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    {*}$address xview scroll $number $what
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         yview {
@@ -6280,87 +7767,80 @@ proc ::ms::text::Pathname_Cmd { w cmd args } {
             # *window* **yview**
             # *window* **yview** **moveto** *fraction*
             # *window* **yview** **scroll** *number* *what*
-            set subcommand [lindex  $args 0]
-            set args       [lremove $args 0]
+            switch -- [llength $args] {
+                0   {
+                    # Synopsis:
+                    #
+                    # *window* **yview**
 
-            # Check if the widget is scrollable or not.
-            switch -- $::ms::current($w,scrollable) {
-                false { set address [list interp invokehidden {} $w] }
-                true  { set address [list $w.text] }
-            }
-
-            # Check the subcommand.
-            switch -- $subcommand {
-                ""  {
                     # Execute the command.
-                    try {
-                        {*}$address yview
-                    } on error {} {
-                        return ""
-                    } on ok { result } {
-                        return $result
-                    }
+                    return [{*}$address yview]
                 }
-                moveto {
-                    # Check the number of arguments provided (after the 'moveto' word).
-                    switch -- [llength $args] {
-                        1       {}
-                        default { return "" }
+                2   {
+                    # Synopsis:
+                    #
+                    # *window* **yview** **moveto** *fraction*
+                    set option   [lindex $args 0]
+                    set fraction [lindex $args 1]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        moveto  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
                     }
 
-                    # Check the fraction provided.
-                    set fraction $args
+                    # Check that the 'fraction' provided is a double.
                     switch -- [string is double -strict $fraction] {
-                        0   { return "" }
-                    }
-
-                    # Check that fraction is inside its limits [0,1.0].
-                    if { $fraction < 0 } {
-                        set fraction 0
-                    } elseif { $fraction > 1.0 } {
-                        set fraction 1.0
-                    }
-
-                    # Execute the command.
-                    try {
-                        {*}$address yview moveto $fraction
-                    } on error {} {
-                        return ""
-                    }
-
-                    return ""
-                }
-                scroll {
-                    # Check the number of arguments provided (after the 'scroll' word).
-                    switch -- [llength $args] {
-                        2       {}
-                        default { return "" }
-                    }
-
-                    # Check the 'number'.
-                    set number [lindex $args 0]
-                    switch -- [string is double -strict $number] {
-                        0   { return "" }
-                    }
-
-                    # Check the 'what'.
-                    switch -- [lindex $args 1] {
-                        pages   { set what "pages" }
-                        pixels  { set what "pixels" }
-                        units   { set what "units" }
-                        default { return "" }
+                        0   { ::ms::Error "Invalid value, '$fraction'." $caller_info }
+                        1   {
+                            # Check that the 'fraction' provided is in the range [0,1.0].
+                            # Truncate if necessary.
+                            if { $fraction < 0 } {
+                                set fraction 0
+                            } elseif { $fraction > 1.0 } {
+                                set fraction 1.0
+                            }
+                        }
                     }
 
                     # Execute the command.
-                    try {
-                        {*}$address yview scroll $number $what
-                    } on error {} {
-                        return ""
-                    }
+                    {*}$address yview moveto $fraction
 
                     return ""
                 }
-                default { ::ms::Error "Invalid yview option, '$subcommand'." $caller_info }
+                3   {
+                    # Synopsis:
+                    #
+                    # *window* **yview** **scroll** *number* *what*
+                    set option [lindex $args 0]
+                    set number [lindex $args 1]
+                    set what   [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        scroll  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'number' provided.
+                    switch -- [string is integer -strict $number] {
+                        0   { ::ms::Error "Invalid value, '$number'." $caller_info }
+                    }
+
+                    # Check the 'what' provided.
+                    switch -- $what {
+                        pages   -
+                        pixels  -
+                        units   {}
+                        default { ::ms::Error "Invalid value, '$what'." $caller_info }
+                    }
+
+                    # Execute the command.
+                    {*}$address yview scroll $number $what
+
+                    return ""
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         default { ::ms::Error "Invalid option, '$cmd'." $caller_info }
