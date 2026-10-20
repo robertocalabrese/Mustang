@@ -343,6 +343,8 @@ proc ::ms::focus::Command { args } {
                     #
                     # **focus** **-force** *window*
 
+                    update idletasks
+
                     # Check the widget's focussability.
                     switch -- [::ms::Check_Focussability $w] {
                         1   {
@@ -556,6 +558,8 @@ proc ::ms::focus::Implicit { w detail } {
         NotifyAncestor  -
         NotifyNonlinear -
         NotifyInferior  {
+            update idletasks
+
             # Check the widget's focussability.
             switch -- [::ms::Check_Focussability $w] {
                 1   {
@@ -661,6 +665,8 @@ proc ::tk_focusNext { window } {
             return $current
         }
 
+        update idletasks
+
         # Check the widget's focussability.
         switch -- [::ms::Check_Focussability $current] {
             1   {
@@ -737,6 +743,8 @@ proc ::tk_focusPrev { window } {
         if { $w eq $current } {
             return $current
         }
+
+        update idletasks
 
         # Check the widget's focussability.
         switch -- [::ms::Check_Focussability $current] {
