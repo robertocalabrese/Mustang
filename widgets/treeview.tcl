@@ -3474,7 +3474,7 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         return $result
                     }
                 }
-                3   {
+                default {
                     # Synopsis:
                     #
                     # *window* **column** *column* *option* *value* ?*option value*? ... ?*option value*?
@@ -3504,7 +3504,6 @@ proc ::ms::treeview::Pathname_Cmd { w cmd args } {
                         default { ::ms::Error "Invalid number of arguments." $caller_info }
                     }
                 }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
         }
         configure {
