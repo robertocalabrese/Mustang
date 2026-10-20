@@ -1588,18 +1588,28 @@ _bind _Combobox <KeyPress-Return>   { ::ms::combobox::Return %W; break }
 _bind _Combobox <KeyPress-KP_Enter> { ::ms::combobox::Return %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Combobox <KeyPress-Tab> { ::tk::TabToWindow [::tk_focusNext %W]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Combobox <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Combobox <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Combobox <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab %W +1; break }
+_bind _Combobox <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Combobox <Shift-Tab> { ::tk::TabToWindow [::tk_focusPrev %W]; break } }
-    default {
-        _bind _Combobox <ISO_Left_Tab>    { ::tk::TabToWindow [::tk_focusPrev %W]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Combobox <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Combobox <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
 
-        try {
-            _bind _Combobox <hpBackTab>   { ::tk::TabToWindow [::tk_focusPrev %W]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Combobox <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Combobox <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
     }
 }
 
