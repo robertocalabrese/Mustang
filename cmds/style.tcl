@@ -617,20 +617,6 @@ proc ::ms::style::Command { args } {
                                 # Change the current theme.
                                 set ::ms::theme $themeName
 
-                                # Disable the user to iteract with the application while mustang is updating the theme.
-                                foreach w $::ms::addr(toplevel,classtype) {
-                                    _tk busy hold $w
-
-                                    # Check the windowing system.
-                                    switch -- [_tk windowingsystem] {
-                                        win32   { set cursor wait }
-                                        default { set cursor watch }
-                                    }
-
-                                    # Change the Tk Busy cursor.
-                                    _tk busy configure $w -cursor $cursor
-                                }
-
                                 #########################
                                 ##                     ##
                                 ##     UPDATE THEME    ##
@@ -704,11 +690,6 @@ proc ::ms::style::Command { args } {
                                     foreach style $::ms::style($classtype,classtype) {
                                         [string cat "::ms::" $classtype "::Style_Update"] $style $caller_info
                                     }
-                                }
-
-                                # Enable the user to iteract again with the application.
-                                foreach w $::ms::addr(toplevel,classtype) {
-                                    _tk busy forget $w
                                 }
 
                                 update
