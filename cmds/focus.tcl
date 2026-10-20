@@ -622,11 +622,12 @@ proc ::tk_focusNext { window } {
                     set current $parent
                 }
             }
+            default { set current $::ms::addr($w,widget) }
         }
     }
 
     while { 1 } {
-        # Descend to just before the first child of the currentrent widget.
+        # Descend to just before the first child of the current widget.
         set parent   $current
         set children [_winfo children $current]
 
@@ -645,7 +646,7 @@ proc ::tk_focusNext { window } {
                 }
             }
 
-            # No more siblings, so go to the currentrent widget's parent.
+            # No more siblings, so go to the current widget's parent.
             # If it's a top-level, break out of the loop, otherwise
             # look for its next sibling.
 
@@ -654,6 +655,7 @@ proc ::tk_focusNext { window } {
             if { [_winfo toplevel $current] eq $current } {
                 break
             }
+
             set parent   [_winfo parent $parent]
             set children [_winfo children $parent]
 
