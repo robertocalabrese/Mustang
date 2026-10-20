@@ -2336,6 +2336,16 @@ proc ::ms::progressbar::Pathname_Cmd { w cmd args } {
             # *window* **step**
             # *window* **step** *amount*
             switch -- [llength $args] {
+                0   {
+                    # Execute the command.
+                    try {
+                        interp invokehidden {} $w $cmd
+                    } on error { errortext errorcode } {
+                        ::ms::Error "$errortext" $caller_info
+                    } on ok {} {
+                        return ""
+                    }
+                }
                 1   {
                     # Execute the command.
                     try {
