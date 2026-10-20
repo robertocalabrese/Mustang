@@ -992,18 +992,28 @@ _bind _Toolbutton <KP_Enter> { ::ms::toolbutton::ButtonRelease %W; break }
 _bind _Toolbutton <space>    { ::ms::toolbutton::ButtonRelease %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Toolbutton <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Toolbutton <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Toolbutton <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Toolbutton <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab %W +1; break }
+_bind _Toolbutton <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Toolbutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
-    default {
-        _bind _Toolbutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Toolbutton <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Toolbutton <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
 
-        try {
-            _bind _Toolbutton <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Toolbutton <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Toolbutton <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
     }
 }
 
