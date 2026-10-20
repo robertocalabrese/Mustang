@@ -1399,18 +1399,28 @@ _bind _Simple_Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo par
 _bind _Simple_Labelframe <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent %W]; break }
 
 # Tab/Shift-Tab keys
-_bind _Simple_labelframe <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Simple_Labelframe <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+_bind _Simple_Labelframe <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Simple_Labelframe <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] +1; break }
+_bind _Simple_Labelframe <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Simple_labelframe <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
-    default {
-        _bind _Simple_labelframe <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Simple_Labelframe <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Simple_Labelframe <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
 
-        try {
-            _bind _Simple_labelframe <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Simple_Labelframe <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Simple_Labelframe <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
     }
 }
 
@@ -1629,18 +1639,28 @@ _bind _Scrollable_Labelframe <FocusIn>  { ::ms::labelframe::Pathname_Cmd [_winfo
 _bind _Scrollable_Labelframe <FocusOut> { ::ms::labelframe::FocusOut     [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
 
 # Tab/Shift-Tab keys
-_bind _Scrollable_Labelframe <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Scrollable_Labelframe <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+_bind _Scrollable_Labelframe <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Scrollable_Labelframe <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] +1; break }
+_bind _Scrollable_Labelframe <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Scrollable_Labelframe <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break } }
-    default {
-        _bind _Scrollable_Labelframe <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Scrollable_Labelframe <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+        _bind _Scrollable_Labelframe <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] -1; break }
 
-        try {
-            _bind _Scrollable_Labelframe <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Scrollable_Labelframe <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]]]; break }
+        _bind _Scrollable_Labelframe <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent [_winfo parent %W]]]] -1; break }
     }
 }
 
