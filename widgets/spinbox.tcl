@@ -1560,18 +1560,28 @@ _bind _Spinbox <KeyPress-Return>   { ::ms::spinbox::Return %W; break }
 _bind _Spinbox <KeyPress-KP_Enter> { ::ms::spinbox::Return %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Spinbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Spinbox <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Spinbox <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Spinbox <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab %W +1; break }
+_bind _Spinbox <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Spinbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
-    default {
-        _bind _Spinbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Spinbox <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Spinbox <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
 
-        try {
-            _bind _Spinbox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Spinbox <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Spinbox <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
     }
 }
 
