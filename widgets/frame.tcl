@@ -1483,12 +1483,12 @@ _bind _Scrollable_Frame <FocusOut> { ::ms::frame::FocusOut     [_winfo parent [_
 # Tab/Shift-Tab keys
 
 # For cycling widgets (forward and backward).
-_bind _Scrollable_Frame <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
-_bind _Scrollable_Frame <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+_bind _Scrollable_Frame <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+_bind _Scrollable_Frame <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
 
 # For cycling notebook tabs (forward and backward).
-_bind _Scrollable_Frame <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] +1; break }
-_bind _Scrollable_Frame <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+_bind _Scrollable_Frame <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] +1; break }
+_bind _Scrollable_Frame <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] -1; break }
 
 # Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
 
@@ -1497,12 +1497,12 @@ switch -- $::ms::data(windowingsystem) {
     aqua -
     x11  {
         # This is needed for XFree86 systems and macOS.
-        _bind _Scrollable_Frame <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        _bind _Scrollable_Frame <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+        _bind _Scrollable_Frame <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+        _bind _Scrollable_Frame <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] -1; break }
 
         # This seems to be correct on *some* HP systems.
-        _bind _Scrollable_Frame <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        _bind _Scrollable_Frame <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+        _bind _Scrollable_Frame <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent [_winfo parent [_winfo parent %W]]]]; break }
+        _bind _Scrollable_Frame <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent [_winfo parent [_winfo parent %W]]] -1; break }
     }
 }
 
