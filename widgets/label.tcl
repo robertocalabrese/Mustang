@@ -899,18 +899,28 @@ _bind _Label <FocusIn>  { interp invokehidden {} %W state [list focus]; break }
 _bind _Label <FocusOut> { ::ms::label::FocusOut %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Label <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Label <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Label <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Label <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab %W +1; break }
+_bind _Label <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Label <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
-    default {
-        _bind _Label <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Label <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Label <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
 
-        try {
-            _bind _Label <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Label <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Label <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
     }
 }
 
