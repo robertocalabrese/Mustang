@@ -994,19 +994,29 @@ _bind _Indicator_Radiobutton <FocusOut> { ::ms::radiobutton::FocusOut     [_winf
 _bind _Indicator_Radiobutton <Return>   { ::radiobutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 _bind _Indicator_Radiobutton <KP_Enter> { ::radiobutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 
-# Tab/Shift-Tab
-_bind _Indicator_Radiobutton <Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+# Tab/Shift-Tab keys
 
+# For cycling widgets (forward and backward).
+_bind _Indicator_Radiobutton <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+_bind _Indicator_Radiobutton <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Indicator_Radiobutton <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] +1; break }
+_bind _Indicator_Radiobutton <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Indicator_Radiobutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
-    default {
-        _bind _Indicator_Radiobutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Indicator_Radiobutton <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Indicator_Radiobutton <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
 
-        try {
-            _bind _Indicator_Radiobutton <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Indicator_Radiobutton <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Indicator_Radiobutton <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
     }
 }
 
