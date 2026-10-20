@@ -1320,18 +1320,28 @@ _bind _Simple_Listbox <<NextWord>>             { break }
 _bind _Simple_Listbox <<PrevWord>>             { break }
 
 # Tab/Shift-Tab keys
-_bind _Simple_Listbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Listbox <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Listbox <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Listbox <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab %W +1; break }
+_bind _Listbox <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Simple_Listbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
-    default {
-        _bind _Simple_Listbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Listbox <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Listbox <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
 
-        try {
-            _bind _Simple_Listbox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Listbox <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Listbox <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
     }
 }
 
@@ -1562,18 +1572,28 @@ _bind _Scrollable_Listbox <<NextWord>>             { break }
 _bind _Scrollable_Listbox <<PrevWord>>             { break }
 
 # Tab/Shift-Tab keys
-_bind _Scrollable_Listbox <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Scrollable_Listbox <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+_bind _Scrollable_Listbox <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Scrollable_Listbox <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] +1; break }
+_bind _Scrollable_Listbox <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Scrollable_Listbox <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
-    default {
-        _bind _Scrollable_Listbox <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Scrollable_Listbox <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Scrollable_Listbox <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
 
-        try {
-            _bind _Scrollable_Listbox <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Scrollable_Listbox <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Scrollable_Listbox <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
     }
 }
 
