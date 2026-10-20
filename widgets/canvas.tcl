@@ -2379,18 +2379,28 @@ _bind _Simple_Canvas <FocusIn>  { ::ms::canvas::Pathname_Cmd %W state [list focu
 _bind _Simple_Canvas <FocusOut> { ::ms::canvas::FocusOut    %W; break }
 
 # Tab/Shift-Tab keys
-_bind _Simple_Canvas <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext %W]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Simple_Canvas <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext %W]; break }
+_bind _Simple_Canvas <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Simple_Canvas <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab %W +1; break }
+_bind _Simple_Canvas <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Simple_Canvas <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev %W]; break } }
-    default {
-        _bind _Simple_Canvas <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev %W]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Simple_Canvas <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Simple_Canvas <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
 
-        try {
-            _bind _Simple_Canvas <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev %W]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Simple_Canvas <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev %W]; break }
+        _bind _Simple_Canvas <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab %W -1; break }
     }
 }
 
@@ -2542,18 +2552,28 @@ _bind _Scrollable_Canvas <<ScanDrag>>    { ::ms::ScanDrag [_winfo parent %W] %x 
 _bind _Scrollable_Canvas <<ScanRelease>> { ::ms::ScanRelease; break }
 
 # Tab/Shift-Tab keys
-_bind _Scrollable_Canvas <KeyPress-Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
 
+# For cycling widgets (forward and backward).
+_bind _Scrollable_Canvas <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+_bind _Scrollable_Canvas <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Scrollable_Canvas <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] +1; break }
+_bind _Scrollable_Canvas <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Scrollable_Canvas <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
-    default {
-        _bind _Scrollable_Canvas <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Scrollable_Canvas <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Scrollable_Canvas <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
 
-        try {
-            _bind _Scrollable_Canvas <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Scrollable_Canvas <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Scrollable_Canvas <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
     }
 }
 
