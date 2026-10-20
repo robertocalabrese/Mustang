@@ -998,19 +998,29 @@ _bind _Indicator_Checkbutton <FocusOut> { ::ms::checkbutton::FocusOut     [_winf
 _bind _Indicator_Checkbutton <Return>   { ::ms::checkbutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 _bind _Indicator_Checkbutton <KP_Enter> { ::ms::checkbutton::Pathname_Cmd [_winfo parent %W] invoke; break }
 
-# Tab/Shift-Tab
-_bind _Indicator_Checkbutton <Tab> { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+# Tab/Shift-Tab keys
 
+# For cycling widgets (forward and backward).
+_bind _Indicator_Checkbutton <KeyPress-Tab>       { ::tk::TabToWindow [tk_focusNext [_winfo parent %W]]; break }
+_bind _Indicator_Checkbutton <Shift-KeyPress-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+
+# For cycling notebook tabs (forward and backward).
+_bind _Indicator_Checkbutton <Control-KeyPress-Tab>       { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] +1; break }
+_bind _Indicator_Checkbutton <Control-Shift-KeyPress-Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
+
+# Note: Some OS's define a goofy <Shift-Tab>/<Control-Shift-Tab> keysym.
+
+# Check the windowing system.
 switch -- $::ms::data(windowingsystem) {
-    win32   { _bind _Indicator_Checkbutton <Shift-Tab> { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break } }
-    default {
-        _bind _Indicator_Checkbutton <ISO_Left_Tab>    { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+    aqua -
+    x11  {
+        # This is needed for XFree86 systems and macOS.
+        _bind _Indicator_Checkbutton <ISO_Left_Tab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Indicator_Checkbutton <Control-ISO_Left_Tab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
 
-        try {
-            _bind _Indicator_Checkbutton <hpBackTab>   { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
-        } on error {} {
-            # Do nothing.
-        }
+        # This seems to be correct on *some* HP systems.
+        _bind _Indicator_Checkbutton <hpBackTab>         { ::tk::TabToWindow [tk_focusPrev [_winfo parent %W]]; break }
+        _bind _Indicator_Checkbutton <Control-hpBackTab> { ::ms::notebook::Traverse_Cycle_Tab [_winfo parent %W] -1; break }
     }
 }
 
