@@ -4821,6 +4821,12 @@ proc ::ms::entry::KeyPress { w key } {
                 }
             }
         }
+        none {
+            # Check if 'key' is a modifier.
+            switch -- $key {
+                "" { return -code break }
+            }
+        }
     }
 
     # If a selection is present, remove the characters selected.
