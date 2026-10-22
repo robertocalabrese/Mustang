@@ -316,6 +316,12 @@ proc ::ms::Init {} {
         default { set ::ms::colorscheme "light" }
     }
 
+    # It's an integer that specifies the color depth.
+    # The default color depth is '8' bit.
+    #
+    # ['8', '12', '16']
+    set ::ms::colordepth 8
+
     # Set the default focus model to 'explicit'.
     #
     # In an **explicit** focus model the focus changes only when a widget decides
@@ -1528,6 +1534,13 @@ proc ::ms::Init {} {
             chan puts $channel "Colorscheme: $::ms::colorscheme"
             chan puts $channel ""
 
+            chan puts $channel "# It's an integer that specifies the color depth."
+            chan puts $channel "# The default color depth is '8' bit."
+            chan puts $channel "#"
+            chan puts $channel "# \['8', '12' or '16'\]"
+            chan puts $channel "Colordepth: $::ms::colordepth"
+            chan puts $channel ""
+
             chan puts $channel "# Focus Model"
             chan puts $channel "#"
             chan puts $channel "# It's a string that specifies the focus model to use."
@@ -1762,6 +1775,13 @@ proc ::ms::Init {} {
                             switch -- $value {
                                 jump   -
                                 scroll { set ::ms::clickaction $value }
+                            }
+                        }
+                        "Colordepth:" {
+                            switch -- $value {
+                                8   -
+                                12  -
+                                16  { set ::ms::colordepth $value }
                             }
                         }
                         "Colorscheme:" {
@@ -2306,6 +2326,7 @@ proc ::ms::Init {} {
     # Register the current values of the mustang special variables as their last valid one.
     set ::ms::temp(accent,last)        $::ms::accent
     set ::ms::temp(clickaction,last)   $::ms::clickaction
+    set ::ms::temp(colordepth,last)    $::ms::colordepth
     set ::ms::temp(colorscheme,last)   $::ms::colorscheme
     set ::ms::temp(focusmodel,last)    $::ms::focusmodel
     set ::ms::temp(language,last)      $::ms::language
@@ -2327,6 +2348,9 @@ proc ::ms::Init {} {
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::clickaction \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::colordepth \
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::colorscheme \
@@ -2401,6 +2425,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
             switch -- $varName {
                 "::ms::accent"      { set ::ms::accent      $::ms::temp(accent,last) }
                 "::ms::clickaction" { set ::ms::clickaction $::ms::temp(clickaction,last) }
+                "::ms::colordepth"  { set ::ms::colordepth  $::ms::temp(colordepth,last) }
                 "::ms::colorscheme" { set ::ms::colorscheme $::ms::temp(colorscheme,last) }
                 "::ms::focusmodel"  { set ::ms::focusmodel  $::ms::temp(focusmodel,last) }
                 "::ms::language"    { set ::ms::language    $::ms::temp(language,last) }
@@ -2469,7 +2494,23 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         }
                         default {
                             # Restore the last valid 'clickaction' value.
-                            set ::ms::clickaction $::ms::temp(clickaction,last) }
+                            set ::ms::clickaction $::ms::temp(clickaction,last)
+                        }
+                    }
+                }
+                ::ms::colordepth {
+                    # Check that the new 'colordepth' value is a valid one.
+                    switch -- $::ms::colordepth {
+                        8   -
+                        12  -
+                        16  {
+                            # Register the last valid 'colordepth' value.
+                            set ::ms::temp(colordepth,last) $::ms::colordepth
+                        }
+                        default {
+                            # Restore the last valid 'colordepth' value.
+                            set ::ms::colordepth $::ms::temp(colordepth,last)
+                        }
                     }
                 }
                 ::ms::colorscheme {
@@ -2642,7 +2683,8 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         }
                         default {
                             # Restore the last valid 'scrollmode' value.
-                            set ::ms::scrollmode $::ms::temp(scrollmode,last) }
+                            set ::ms::scrollmode $::ms::temp(scrollmode,last)
+                        }
                     }
                 }
                 ::ms::scrollstopper {
