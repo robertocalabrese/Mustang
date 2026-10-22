@@ -2963,7 +2963,7 @@ proc ::ms::Check_Color { value { fallback invalid } } {
             }
 
             # Check if 'colorname' is known by 'palette'.
-            if { $colorname in $::ms::palette($palette,all_families,colornames) } {
+            if { $colorname in $::ms::palette($palette,all,colornames) } {
                 # Return the colorname hexadecimal longform expressed in the hexadecimal color model provided.
                 switch -nocase -- $colormodel {
                     HEX8  { return $::ms::palette($palette,$colorname,hex8) }
@@ -5767,7 +5767,7 @@ proc ::ms::Load_Palette { filepath } {
         chan close $channel
 
         # Initialize the list of available colornames for 'palette'.
-        set ::ms::palette($palette,all_families,colornames) [list ]
+        set ::ms::palette($palette,all,colornames) [list ]
 
         # Scan the file content line by line.
         foreach line $file_content {
@@ -5786,7 +5786,7 @@ proc ::ms::Load_Palette { filepath } {
                     }
 
                     # Check that 'colorname' is not already registered for this palette.
-                    if { $colorname in $::ms::palette($palette,all_families,colornames) } {
+                    if { $colorname in $::ms::palette($palette,all,colornames) } {
                         # Skip the entire line.
                         continue
                     }
@@ -5814,8 +5814,8 @@ proc ::ms::Load_Palette { filepath } {
                     # Register the 'colorname' data.
                     set ::ms::palette($palette,$colorname,hex8) $hexcolor
 
-                    lappend ::ms::palette($palette,$family,colornames)      $colorname
-                    lappend ::ms::palette($palette,all_families,colornames) $colorname
+                    lappend ::ms::palette($palette,$family,colornames) $colorname
+                    lappend ::ms::palette($palette,all,colornames)     $colorname
                 }
             }
         }
@@ -5823,10 +5823,10 @@ proc ::ms::Load_Palette { filepath } {
 
     # Safeguard.
     # Check the number of colornames registered for 'palette'.
-    switch -- [llength ::ms::palette($palette,all_families,colornames)] {
+    switch -- [llength ::ms::palette($palette,all,colornames)] {
         0   {
             # All the colornames specified in the palette file were ignored.
-            unset -nocomplain -- ::ms::palette($palette,all_families,colornames)
+            unset -nocomplain -- ::ms::palette($palette,all,colornames)
             return ""
         }
     }
