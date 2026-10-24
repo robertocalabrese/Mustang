@@ -132,10 +132,21 @@ proc ::ms::rgb_XYZ::Conversion { channels } {
         #   | Y | = | 0.2224884033203125  0.7169036865234375  0.06060791015625   | * | g |
         #   | Z |   | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | b |
 
+        # Retrieve the sRGB D65 RGB_XYZ coefficients.
+        set a1 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 0]
+        set a2 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 1]
+        set a3 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 2]
+        set a4 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 3]
+        set a5 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 4]
+        set a6 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 5]
+        set a7 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 6]
+        set a8 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 7]
+        set a9 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 8]
+
         # Transform the *linear* rgb values into XYZ values.
-        set X [expr { (0.43603515625*$r)+(0.3851165771484375*$g)+(0.1430511474609375*$b) }]
-        set Y [expr { (0.2224884033203125*$r)+(0.7169036865234375*$g)+(0.06060791015625*$b) }]
-        set Z [expr { (0.013916015625*$r)+(0.0970611572265625*$g)+(0.7139129638671875*$b) }]
+        set X [expr { ($a1*$r)+($a2*$g)+($a3*$b) }]
+        set Y [expr { ($a4*$r)+($a5*$g)+($a6*$b) }]
+        set Z [expr { ($a7*$r)+($a8*$g)+($a9*$b) }]
 
         lappend results $X $Y $Z
     }

@@ -720,7 +720,7 @@ proc ::ms::color::BW { hexadecimals { depth ""} } {
         set b_linear [::ms::companding::Operation $b inverse]
 
         # Compute the luma of the rgb *linear* color.
-        set luma [expr { ($::ms::data(sRGB,Yr)*$r_linear)+($::ms::data(sRGB,Yg)*$g_linear)+($::ms::data(sRGB,Yb)*$b_linear) }]
+        set luma [expr { ($::ms::data(sRGB_D65,Yr)*$r_linear)+($::ms::data(sRGB_D65,Yg)*$g_linear)+($::ms::data(sRGB_D65,Yb)*$b_linear) }]
 
         # Confront the rgb *linear* color contrast values (against 'black' and 'white').
         if { [expr { ($luma+0.05)*20.0 }] > [expr { 1.05/($luma+0.05) }] } {
@@ -1493,11 +1493,39 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
 
 
 # sRGB D65 Unadapted values.
-set ::ms::data(sRGB,Yr) 0.212656
-set ::ms::data(sRGB,Yg) 0.715158
-set ::ms::data(sRGB,Yb) 0.072186
+set ::ms::data(sRGB_D65,Yr) 0.212656
+set ::ms::data(sRGB_D65,Yg) 0.715158
+set ::ms::data(sRGB_D65,Yb) 0.072186
 
+# sRGB D65 RGB_XYZ matrix.
+#
+# | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 a2 a3 |
+# | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a4 a5 a6 |
+# | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | a7 a8 a9 |
+set ::ms::data(sRGB_D65,RGB_XYZ) [list 0.43603515625 \
+                                       0.3851165771484375 \
+                                       0.1430511474609375 \
+                                       0.2224884033203125 \
+                                       0.7169036865234375 \
+                                       0.06060791015625 \
+                                       0.013916015625 \
+                                       0.0970611572265625 \
+                                       0.7139129638671875];
 
+# sRGB D65 XYZ_RGB matrix.
+#
+# | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | a1 a2 a3 |
+# | -0.978795574325203  1.916161596468483    0.03345405023031962 | = | a4 a5 a6 |
+# | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | a7 a8 a9 |
+set ::ms::data(sRGB_D65,XYZ_RGB) [list 3.134274306471669 \
+                                       -1.617274016967423 \
+                                       -0.4907348029960735 \
+                                       -0.978795574325203 \
+                                       1.916161596468483 \
+                                       0.03345405023031962 \
+                                       0.071978551323668 \
+                                       -0.2289898906034097 \
+                                       1.4057483687096277];
 
 # Note:  CVD matrix for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
 #           | a1 b1 c1 |
