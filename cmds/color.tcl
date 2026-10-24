@@ -719,10 +719,10 @@ proc ::ms::color::BW { hexadecimals { depth ""} } {
         set g_linear [::ms::companding::Operation $g inverse]
         set b_linear [::ms::companding::Operation $b inverse]
 
-        # Compute the luma of the rgb linear color.
+        # Compute the luma of the rgb *linear* color.
         set luma [expr { ($::ms::data(sRGB,Yr)*$r_linear)+($::ms::data(sRGB,Yg)*$g_linear)+($::ms::data(sRGB,Yb)*$b_linear) }]
 
-        # Confront the contrast value against black with the contrast value against white.
+        # Confront the rgb *linear* color contrast values (against 'black' and 'white').
         if { [expr { ($luma+0.05)*20.0 }] > [expr { 1.05/($luma+0.05) }] } {
             lappend results black
         } else {
