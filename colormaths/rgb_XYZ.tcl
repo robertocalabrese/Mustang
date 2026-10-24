@@ -121,10 +121,10 @@ interp alias {} ::rgb_XYZ {} ::ms::rgb_XYZ::Conversion
 #   and so on and so forth...
 proc ::ms::rgb_XYZ::Conversion { channels } {
     foreach { r g b } $channels {
-        # Trasform the non-linear rgb values into linear rgb values.
-        set r [inverse_companding $r]
-        set g [inverse_companding $g]
-        set b [inverse_companding $b]
+        # Trasform the *non-linear* rgb value into a *linear* rgb one.
+        set r [::ms::companding::Operation $r inverse]
+        set g [::ms::companding::Operation $g inverse]
+        set b [::ms::companding::Operation $b inverse]
 
         # XYZ = sRGB D65 RGB_XYZ matrix (allready chromatically adapted from D65 to D50) * rgb
         #
@@ -132,7 +132,7 @@ proc ::ms::rgb_XYZ::Conversion { channels } {
         #   | Y | = | 0.2224884033203125  0.7169036865234375  0.06060791015625   | * | g |
         #   | Z |   | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | b |
 
-        # Transform the linear rgb values into XYZ values.
+        # Transform the *linear* rgb values into XYZ values.
         set X [expr { (0.43603515625*$r)+(0.3851165771484375*$g)+(0.1430511474609375*$b) }]
         set Y [expr { (0.2224884033203125*$r)+(0.7169036865234375*$g)+(0.06060791015625*$b) }]
         set Z [expr { (0.013916015625*$r)+(0.0970611572265625*$g)+(0.7139129638671875*$b) }]

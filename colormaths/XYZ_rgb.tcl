@@ -125,14 +125,14 @@ proc ::ms::XYZ_rgb::Conversion { channels } {
         #   | g | = | -0.978795574325203  1.916161596468483    0.03345405023031962 | * | Y |
         #   | b |   | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | Z |
 
-        # Transform the XYZ values into linear rgb values.
+        # Transform the XYZ values into *non-linear* rgb values.
         set r [expr { (3.134274306471669*$X)+(-1.617274016967423*$Y)+(-0.4907348029960735*$Z) }]
         set g [expr { (-0.978795574325203*$X)+(1.916161596468483*$Y)+(0.03345405023031962*$Z) }]
         set b [expr { (0.071978551323668*$X)+(-0.2289898906034097*$Y)+(1.4057483687096277*$Z) }]
 
-        # Trasform the linear rgb values into non-linear rgb values [0,1.0].
+        # Trasform the *non-linear* rgb values into *linear* rgb values [0,1.0].
         foreach channel [list $r $g $b] {
-            lappend results [companding $channel]
+            lappend results [::ms::companding::Operation $channel normal]
         }
     }
 
