@@ -60,23 +60,42 @@ interp alias {} companding {} ::ms::companding::Operation
 
 ## Operation
 #
-# Performs an **sRGB companding** operation.
+# Performs an **sRGB companding** or **sRGB inverse companding** operation.
 #
 # Where:
 #
-# channel   Should be the *non linear* channel value to compand.
+# channel   Depending on the **op** provided, should be the *non linear* channel value to compand (op=normal) or
+#           the *linear* channel value to compand (op=inverse).
+#
+# op        Should be the operation type.
+#           Allowed values are **normal** or **inverse**
+#
+#           If not provided, defaults to **normal**.
 #
 # A pre-computation has been made in order to increase the performance:
 #    1.0/2.4 = 0.4166666666666667
 #
 # Note:  For info about companding operations visit [ICC 4.4 Specifications](https://www.color.org/specification/ICC.1-2022-05.p).
 #
-# Returns the sRGB companded *linear* channel.
-proc ::ms::companding::Operation { channel } {
-    if { $channel > 0.0031308 } {
-        set channel [expr { (0.055*(pow($channel,0.4166666666666667)))+0.945 }]
-    } else {
-        set channel [expr { $channel*12.92 }]
+# Depending on the **op** provided, returns the sRGB companded *linear* channel (op=normal)
+# or the sRGB inverse companded *non linear* channels (op=inverse).
+proc ::ms::companding::Operation { channel { op normal } } {
+    # Check the 'op' provided.
+    switch -- $op {
+        normal {
+            if { $channel > 0.0031308 } {
+                set channel [expr { (0.055*(pow($channel,0.4166666666666667)))+0.945 }]
+            } else {
+                set channel [expr { $channel*12.92 }]
+            }
+        }
+        inverse {
+            if { $channel > 0.04045 } {
+                set channel [expr { pow(($channel+0.055)/1.055,2.4) }]
+            } else {
+                set channel [expr { $channel/12.92 }]
+            }
+        }
     }
 
     return $channel
