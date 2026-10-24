@@ -568,6 +568,7 @@ proc ::ms::Init {} {
     # Check that at least one palette file was loaded.
     switch -- [llength $::ms::palette(names)] {
         0   {
+            # If the debug variable is active, signal the problem in the stderr channel.
             switch -nocase -- $::DEBUG {
                 1       -
                 on      -
@@ -1481,6 +1482,7 @@ proc ::ms::Init {} {
         try {
             open $filepath w
         } on error {} {
+            # If the debug variable is active, signal the problem in the stderr channel.
             switch -nocase -- $::DEBUG {
                 1       -
                 on      -
@@ -2005,8 +2007,7 @@ proc ::ms::Init {} {
         try {
             source -encoding utf-8 [file join $::ms_library themes $::ms::theme "theme.tcl"]
         } on error { errortext errorcode } {
-            # If the '::DEBUG' variable is enabled, display on the standard output channel
-            # that the current theme examined was ignored.
+            # If the debug variable is active, signal the problem in the stderr channel.
             switch -nocase -- $::DEBUG {
                 1       -
                 on      -
@@ -2089,6 +2090,7 @@ proc ::ms::Init {} {
         1   {
             # Check if the current theme is one of the actual themes known by mustang.
             if { $::ms::theme ni $::ms::themes } {
+                # If the debug variable is active, signal the problem in the stderr channel.
                 switch -nocase -- $::DEBUG {
                     1       -
                     on      -
@@ -2195,7 +2197,7 @@ proc ::ms::Init {} {
         1   { set ::ms::data(.,padding) [list $::ms::current(.,padding) $::ms::current(.,padding)] }
         2   { set ::ms::data(.,padding) $::ms::current(.,padding) }
         3   {
-            # If the '::DEBUG' variable is enabled, display the notificafion for the padding value ignored.
+            # If the debug variable is active, signal the problem in the stderr channel.
             switch -nocase -- $::DEBUG {
                 1       -
                 on      -
@@ -2207,7 +2209,7 @@ proc ::ms::Init {} {
             set ::ms::data(.,padding) [list [lindex $::ms::current(.,padding) 0] [lindex $::ms::current(.,padding) 1]]
         }
         4   {
-            # If the '::DEBUG' variable is enabled, display the notificafion for the padding values ignored.
+            # If the debug variable is active, signal the problem in the stderr channel.
             switch -nocase -- $::DEBUG {
                 1       -
                 on      -
@@ -5754,6 +5756,7 @@ proc ::ms::Load_Palette { filepath } {
     try {
         open [file nativename $filepath] r
     } on error {} {
+        # If the debug variable is active, signal the problem in the stderr channel.
         switch -nocase -- $::DEBUG {
             1       -
             on      -
