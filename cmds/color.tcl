@@ -641,25 +641,170 @@ proc ::ms::color::Command { args } {
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
-        balance      { return [::ms::color::Balance.tcl      $args] }
-        bw           { return [::ms::color::Bw.tcl           $args] }
-        complement   { return [::ms::color::Complement.tcl   $args] }
-        contrast     { return [::ms::color::Contrast.tcl     $args] }
-        convert      { return [::ms::color::Convert.tcl      $args] }
-        cooldown     { return [::ms::color::Cooldown.tcl     $args] }
-        darken       { return [::ms::color::Darken.tcl       $args] }
-        deficiency   { return [::ms::color::Deficiency.tcl   $args] }
-        desaturation { return [::ms::color::Desaturation.tcl $args] }
-        family       { return [::ms::color::Family.tcl       $args] }
-        gray         -
-        grey         { return [::ms::color::Gray.tcl         $args] }
-        inverse      { return [::ms::color::Inverse.tcl      $args] }
-        lighten      { return [::ms::color::Lighten.tcl      $args] }
-        list         { return [::ms::color::Colorlist.tcl    $args] }
-        saturation   { return [::ms::color::Saturation.tcl   $args] }
-        warmup       { return [::ms::color::Warmup.tcl       $args] }
-        websafe      { return [::ms::color::Websafe.tcl      $args] }
-        default      { ::ms::Error "Invalid action, '$action'." $caller_info }
+        balance    { return [::ms::color::Balance.tcl    $args] }
+        bw         { return [::ms::color::Bw.tcl         $args] }
+        complement { return [::ms::color::Complement.tcl $args] }
+        contrast   { return [::ms::color::Contrast.tcl   $args] }
+        convert    { return [::ms::color::Convert.tcl    $args] }
+        cooldown   { return [::ms::color::Cooldown.tcl   $args] }
+        darken     { return [::ms::color::Darken.tcl     $args] }
+        deficiency { return [::ms::color::Deficiency.tcl $args] }
+        desaturate { return [::ms::color::Desaturate.tcl $args] }
+        family     { return [::ms::color::Family.tcl     $args] }
+        gray       -
+        grey       { return [::ms::color::Gray.tcl       $args] }
+        inverse    { return [::ms::color::Inverse.tcl    $args] }
+        lighten    { return [::ms::color::Lighten.tcl    $args] }
+        list       { return [::ms::color::Colorlist.tcl  $args] }
+        saturate   { return [::ms::color::Saturate.tcl   $args] }
+        warmup     { return [::ms::color::Warmup.tcl     $args] }
+        wcga2.0    { return [::ms::color::WCGA_2.0.tcl   $args] }
+        websafe    { return [::ms::color::Websafe.tcl    $args] }
+        default    { ::ms::Error "Invalid action, '$action'." $caller_info }
+    }
+}
+
+## Balance
+#
+# Compute the balanced color/s (for the temperature provided) equivalent to the color/s provided.
+#
+# Where:
+#
+# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+#
+# tempK          Should be an integer [1000-27000] indicating the balancing temperature.
+#                *tempK* must be provided in Kelvins.
+#
+# depth          Optional, should be an integer specifing the color depth of the colors provided.
+#                Allowed values are **8**, **12** or **16**.
+#
+#                If not provided, defaults to the '::ms::colordepth' value.
+#
+# Returns a list containing the words **black** or **white**, depending which one has more contrast with the relative color provided.
+proc ::ms::color::Balance { hexadecimals tempK { depth "" } } {
+    # Check the 'depth' provided, if any.
+    switch -- $depth {
+        ""  {
+            # Set the 'colormodel'.
+            switch -- $::ms::colordepth {
+                8   { set colormodel HEX8 }
+                12  { set colormodel HEX12 }
+                16  { set colormodel HEX16 }
+            }
+        }
+        8       { set colormodel HEX8 }
+        12      { set colormodel HEX12 }
+        16      { set colormodel HEX16 }
+        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
+    }
+
+    # Check the 'tempK' provided.
+    switch -- [string is integer -strict $tempK] {
+        0   { ::ms::Error "Invalid value, '$tempK'." $caller_info }
+        1   {
+            # Truncate it if exceeds its limits [1000,27000].
+            if { $tempK < 1000.0 } {
+                set tempK 1000.0
+            } elseif { $tempK > 27000.0 } {
+                set tempK 27000.0
+            }
+        }
+    }
+
+    # Check the 'hexadecimals' provided.
+    set HEXs [list ]
+    foreach hexadecimal $hexadecimals {
+        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
+        switch -- $result {
+            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+            default { lappend HEXs $hexadecimal }
+        }
+    }
+
+    # Transform the hexadecimal color/s (at whichever depth provided) into RGB color/s at 8 bit.
+    switch -- $depth {
+        8  { set channels [::HEX8_RGB8  $HEXs] }
+        12 { set channels [::RGB12_RGB8 [::HEX12_RGB12 $HEXs]] }
+        16 { set channels [::RGB16_RGB8 [::HEX16_RGB16 $HEXs]] }
+    }
+
+    # Get the RGB channels equivalent for the temperature provided.
+    set tempK [expr {$tempK*0.01}]
+    if { $tempK <= 66.0 } {
+        set temp_red 255
+    } else {
+        set temp_red [expr { 329.698727446*(pow(($tempK-60.0),-0.1332047592)) }]
+    }
+
+    if { $tempK <= 66.0 } {
+        set temp_green [expr { -161.1195681661+(99.4708025861*log($tempK)) }]
+    } else {
+        set temp_green [expr { 288.1221695283*(pow(($tempK-60.0),-0.0755148492)) }]
+    }
+
+    if { $tempK <= 19.0 } {
+        set temp_blue 0
+    } elseif { $tempK < 66.0 } {
+        set temp_blue [expr { -305.0447927307+(138.5177312231*log($tempK-10.0)) }]
+    } else {
+        set temp_blue 255
+    }
+
+    # Note:  In theory instead of '1' we should use '0' but then,
+    #        when we will divide for the temp_channel, we will have a problem.
+
+    # Adjust the temperature RGB value if exceeds its limits [1,255].
+    if { $temp_red < 1 } {
+        set temp_red 1
+    } elseif { $temp_red > 255 } {
+        set temp_red 255
+    }
+
+    if { $temp_green < 1 } {
+        set temp_green 1
+    } elseif { $temp_green > 255 } {
+        set temp_green 255
+    }
+
+    if { $temp_blue < 1 } {
+        set temp_blue 1
+    } elseif { $temp_blue > 255 } {
+        set temp_blue 255
+    }
+
+    # Execute the command.
+    set results [list ]
+    foreach { red green blue } $channels {
+        # | 255.0/temp_red  0                 0               |   | red   |   | balanced_red   |
+        # | 0               255.0/temp_green  0               | * | green | = | balanced_green |
+        # | 0               0                 255.0/temp_blue |   | blue  |   | balanced_blue  |
+
+        set balanced_red   [expr { round(($red*255.0)/$temp_red)     }]
+        set balanced_green [expr { round(($green*255.0)/$temp_green) }]
+        set balanced_blue  [expr { round(($blue*255.0)/$temp_blue)   }]
+
+        # Adjust the balanced RGB channels if they exceeds their limits [0,255].
+        if { $balanced_red > 255 } {
+            set balanced_red 255
+        }
+
+        if { $balanced_green > 255 } {
+            set balanced_green 255
+        }
+
+        if { $balanced_blue > 255 } {
+            set balanced_blue 255
+        }
+
+        lappend results $balanced_red $balanced_green $balanced_blue
+    }
+
+    # Transform the balanced RGB channel/s at 8 bit back into hexadecimal color/s
+    # with the same depth as the color/s provided.
+    switch -- $depth {
+        8  { return [::RGB8_HEX8   $results] }
+        12 { return [::RGB12_HEX12 [::RGB8_RGB12 $results]] }
+        16 { return [::RGB16_HEX16 [::RGB8_RGB16 $results]] }
     }
 }
 
@@ -866,6 +1011,94 @@ proc ::ms::color::Complement { hexadecimals { depth ""} } {
         8  { return [::RGB8_HEX8   $results] }
         12 { return [::RGB12_HEX12 $results] }
         16 { return [::RGB16_HEX16 $results] }
+    }
+}
+
+## Contrast
+#
+# Compute the contrast value [0,21] between the two colors provided.
+#
+# Where:
+#
+# color1   Should be the first hexadecimal color that will be involved in the process.
+#          This color will be processed as the 'background' color.
+#
+# color2   Should be the second hexadecimal color that will be involved in the process.
+#          This color will be processed as the 'foreground' color.
+#
+# depth    Optional, should be an integer specifing the color depth of the colors provided.
+#          Allowed values are **8**, **12** or **16**.
+#
+#          If not provided, defaults to the '::ms::colordepth' value.
+#
+# Returns the contrast value [0,21] between the two colors provided.
+proc ::ms::color::Contrast { color1 color2 {depth ""} } {
+    # Check the 'depth' provided, if any.
+    switch -- $depth {
+        ""  {
+            # Set the 'colormodel'.
+            switch -- $::ms::colordepth {
+                8   { set colormodel HEX8 }
+                12  { set colormodel HEX12 }
+                16  { set colormodel HEX16 }
+            }
+        }
+        8       { set colormodel HEX8 }
+        12      { set colormodel HEX12 }
+        16      { set colormodel HEX16 }
+        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
+    }
+
+    # Check the 'hexadecimals' provided.
+    set hex1 [::ms::Check_Hex $color1 $colormodel invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
+    }
+
+    set hex2 [::ms::Check_Hex $color2 $colormodel invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
+    }
+
+    # Transform the hexadecimal color/s into rgb colors [0,1.0].
+    switch -- $depth {
+        8   {
+            set rgb1 [::RGB8_rgb  [::HEX8_RGB8   $hex1]]
+            set rgb2 [::RGB8_rgb  [::HEX8_RGB8   $hex2]]
+        }
+        12  {
+            set rgb1 [::RGB12_rgb [::HEX12_RGB12 $hex1]]
+            set rgb2 [::RGB12_rgb [::HEX12_RGB12 $hex2]]
+        }
+        16  {
+            set rgb1 [::RGB16_rgb [::HEX16_RGB16 $hex1]]
+            set rgb2 [::RGB16_rgb [::HEX16_RGB16 $hex2]]
+        }
+    }
+
+    # Compute the luma of the first color.
+    # Trasform the *non-linear* rgb values into a *linear* rgb ones.
+    foreach { r1 g1 b1 } $rgb1 {
+        set r1_linear [::ms::companding::Operation $r1 inverse]
+        set g1_linear [::ms::companding::Operation $g1 inverse]
+        set b1_linear [::ms::companding::Operation $b1 inverse]
+    }
+
+    foreach { r2 g2 b2 } $rgb2 {
+        set r2_linear [::ms::companding::Operation $r2 inverse]
+        set g2_linear [::ms::companding::Operation $g2 inverse]
+        set b2_linear [::ms::companding::Operation $b2 inverse]
+    }
+
+    # Compute the two colors lumas.
+    set luma1 [expr { ($::ms::data(sRGB_D65,Yr)*$r1_linear)+($::ms::data(sRGB_D65,Yg)*$g1_linear)+($::ms::data(sRGB_D65,Yb)*$b1_linear) }]
+    set luma2 [expr { ($::ms::data(sRGB_D65,Yr)*$r2_linear)+($::ms::data(sRGB_D65,Yg)*$g2_linear)+($::ms::data(sRGB_D65,Yb)*$b2_linear) }]
+
+    # Compute the contrast value.
+    if { $luma1 > $luma2 } {
+        return [expr { ($luma1+0.05)/($luma2+0.05) }]
+    } else {
+        return [expr { ($luma2+0.05)/($luma1+0.05) }]
     }
 }
 
@@ -1116,6 +1349,172 @@ proc ::ms::color::Family { hexadecimals { depth "" } } {
     return $results
 }
 
+## Gray
+#
+# Compute the gray equivalent/s of the color/s provided.
+#
+# Where:
+#
+# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+#
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
+#
+#                   **average**
+#                   **desaturation**
+#                   **hevc**
+#                   **max**
+#                   **min**
+#                   **red**
+#                   **green**
+#                   **blue**
+#
+# depth          Optional, should be an integer specifing the color depth of the colors provided.
+#                Allowed values are **8**, **12** or **16**.
+#
+#                If not provided, defaults to the '::ms::colordepth' value.
+#
+# Returns a list containing the family of the color/s provided.
+proc ::ms::color::Gray { hexadecimals via { depth "" } } {
+    # Check the 'depth' provided, if any.
+    switch -- $depth {
+        ""  {
+            # Set the 'colormodel'.
+            switch -- $::ms::colordepth {
+                8   { set colormodel HEX8 }
+                12  { set colormodel HEX12 }
+                16  { set colormodel HEX16 }
+            }
+        }
+        8       { set colormodel HEX8 }
+        12      { set colormodel HEX12 }
+        16      { set colormodel HEX16 }
+        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
+    }
+
+    # Check the 'via' provided.
+    switch -- $via {
+        average      -
+        desaturation -
+        hevc         -
+        max          -
+        min          -
+        red          -
+        green        -
+        blue         {}
+        default      { ::ms::Error "Invalid value, '$via'." $caller_info }
+    }
+
+    # Check the 'hexadecimals' provided.
+    set HEXs [list ]
+    foreach hexadecimal $hexadecimals {
+        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
+        switch -- $result {
+            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+            default { lappend HEXs $hexadecimal }
+        }
+    }
+
+    # Transform the hexadecimal color/s provided into RGB color/s.
+    switch -- $depth {
+        8  { set channels [::HEX8_RGB8   $HEXs] }
+        12 { set channels [::HEX12_RGB12 $HEXs] }
+        16 { set channels [::HEX16_RGB16 $HEXs] }
+    }
+
+    # Execute the command.
+    set results [list ]
+    switch -- $via {
+        average {
+            # Note that for performance reasons instead of diving the sum by '3', we multiply it by '0.33333333333333333'.
+            foreach { red green blue } $channels {
+                set gray [expr { round(($red+$green+$blue)*0.33333333333333333) }]
+
+                lappend results $gray $gray $gray
+            }
+        }
+        blue {
+            foreach { red green blue } $channels {
+                lappend results $blue $blue $blue
+            }
+        }
+        desaturation {
+            # Note that for performance reasons instead of diving the sum by '2', we multiply it by '0.5'.
+            foreach { red green blue } $channels {
+                set min  [expr { min($red,$green,$blue) }]
+                set max  [expr { max($red,$green,$blue) }]
+                set gray [expr { round(($max+$min)*0.5) }]
+
+                lappend results $gray $gray $gray
+            }
+        }
+        green {
+            foreach { red green blue } $channels {
+                lappend results $green $green $green
+            }
+        }
+        hevc {
+            # HEVC --> Human Eye Vision Corrected gray.
+
+            # Transform the RGB color/s into rgb color/s.
+            switch -- $depth {
+                8  { set rgbs [::RGB8_rgb  $channels] }
+                12 { set rgbs [::RGB12_rgb $channels] }
+                16 { set rgbs [::RGB16_rgb $channels] }
+            }
+
+            # Compute the gray rgb *linear* color/s.
+            set gray [list ]
+            foreach { r g b } $rgbs {
+                set r_linear [::ms::companding::Operation $r inverse]
+                set g_linear [::ms::companding::Operation $g inverse]
+                set b_linear [::ms::companding::Operation $b inverse]
+
+                # Compute the *linear* gray.
+                set gray_linear [expr { ($::ms::data(sRGB_D65,Yr)*$r_linear)+($::ms::data(sRGB_D65,Yg)*$g_linear)+($::ms::data(sRGB_D65,Yb)*$b_linear) }]
+
+                # Trasform the *linear* gray into *non-linear* gray.
+                set gray [::ms::companding::Operation $gray_linear normal]
+
+                lappend grays $gray $gray $gray
+            }
+
+            # Transform the gray rgb *non linear* color/s back into RGB color/s.
+            switch -- $depth {
+                8  { set results [::rgb_RGB8  $grays] }
+                12 { set results [::rgb_RGB12 $grays] }
+                16 { set results [::rgb_RGB16 $grays] }
+            }
+        }
+        max {
+            foreach { red green blue } $channels {
+                set gray [expr { max($red,$green,$blue) }]
+
+                lappend results $gray $gray $gray
+            }
+        }
+        min {
+            foreach { red green blue } $channels {
+                set gray [expr { min($red,$green,$blue) }]
+
+                lappend results $gray $gray $gray
+            }
+        }
+        red {
+            foreach { red green blue } $channels {
+                lappend results $red $red $red
+            }
+        }
+    }
+
+    # Transform the resulting RGB color/s back into hexadecimal color/s.
+    switch -- $depth {
+        8  { return [::RGB8_HEX8   $results] }
+        12 { return [::RGB12_HEX12 $results] }
+        16 { return [::RGB16_HEX16 $results] }
+    }
+}
+
 ## Inverse
 #
 # Compute the inverse of the color/s provided.
@@ -1353,6 +1752,133 @@ proc ::ms::color::Warmup { hexadecimals amount { depth "" } } {
     }
 }
 
+## WCGA_2.0
+#
+# Compute the WCGA 2.0 scenarios between the two colors provided.
+#
+# WCGA 2.0 scenarios explained:
+#
+#   AA1  --> The text is a paragraph with a large font (> 14 points).
+#               OK   --> for contrast >= 3.0,
+#               FAIL --> in any other cases.
+#   AA2  --> The text is a paragraph with a small font.
+#               OK   --> for contrast >= 4.5,
+#               FAIL --> in any other cases.
+#   AAA1 --> The text is a title with a large font (> 14 points).
+#               OK   --> for contrast >= 4.5,
+#               FAIL --> in any other cases.
+#   AAA2 --> The text is a title with a small font.
+#               OK   --> for contrast >= 7.0,
+#               FAIL --> in any other cases.
+#
+# Where:
+#
+# color1   Should be the first hexadecimal color that will be involved in the process.
+#          This color will be processed as the 'background' color.
+#
+# color2   Should be the second hexadecimal color that will be involved in the process.
+#          This color will be processed as the 'foreground' color.
+#
+# depth    Optional, should be an integer specifing the color depth of the colors provided.
+#          Allowed values are **8**, **12** or **16**.
+#
+#          If not provided, defaults to the '::ms::colordepth' value.
+#
+# Returns a list containing the WCGA 2.0 scenarios results of the contrast between the two colors provided.
+proc ::ms::color::WCGA_2.0 { color1 color2 { depth "" } } {
+    # Check the 'depth' provided, if any.
+    switch -- $depth {
+        ""  {
+            # Set the 'colormodel'.
+            switch -- $::ms::colordepth {
+                8   { set colormodel HEX8 }
+                12  { set colormodel HEX12 }
+                16  { set colormodel HEX16 }
+            }
+        }
+        8       { set colormodel HEX8 }
+        12      { set colormodel HEX12 }
+        16      { set colormodel HEX16 }
+        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
+    }
+
+    # Check the 'hexadecimals' provided.
+    set hex1 [::ms::Check_Hex $color1 $colormodel invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
+    }
+
+    set hex2 [::ms::Check_Hex $color2 $colormodel invalid]
+    switch -- $result {
+        invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
+    }
+
+    # Transform the hexadecimal color/s into rgb colors [0,1.0].
+    switch -- $depth {
+        8   {
+            set rgb1 [::RGB8_rgb  [::HEX8_RGB8   $hex1]]
+            set rgb2 [::RGB8_rgb  [::HEX8_RGB8   $hex2]]
+        }
+        12  {
+            set rgb1 [::RGB12_rgb [::HEX12_RGB12 $hex1]]
+            set rgb2 [::RGB12_rgb [::HEX12_RGB12 $hex2]]
+        }
+        16  {
+            set rgb1 [::RGB16_rgb [::HEX16_RGB16 $hex1]]
+            set rgb2 [::RGB16_rgb [::HEX16_RGB16 $hex2]]
+        }
+    }
+
+    # Compute the luma of the first color.
+    # Trasform the *non-linear* rgb values into a *linear* rgb ones.
+    foreach { r1 g1 b1 } $rgb1 {
+        set r1_linear [::ms::companding::Operation $r1 inverse]
+        set g1_linear [::ms::companding::Operation $g1 inverse]
+        set b1_linear [::ms::companding::Operation $b1 inverse]
+    }
+
+    foreach { r2 g2 b2 } $rgb2 {
+        set r2_linear [::ms::companding::Operation $r2 inverse]
+        set g2_linear [::ms::companding::Operation $g2 inverse]
+        set b2_linear [::ms::companding::Operation $b2 inverse]
+    }
+
+    # Compute the two colors lumas.
+    set luma1 [expr { ($::ms::data(sRGB_D65,Yr)*$r1_linear)+($::ms::data(sRGB_D65,Yg)*$g1_linear)+($::ms::data(sRGB_D65,Yb)*$b1_linear) }]
+    set luma2 [expr { ($::ms::data(sRGB_D65,Yr)*$r2_linear)+($::ms::data(sRGB_D65,Yg)*$g2_linear)+($::ms::data(sRGB_D65,Yb)*$b2_linear) }]
+
+    # Compute the contrast value.
+    if { $luma1 > $luma2 } {
+        set contrast [expr { ($luma1+0.05)/($luma2+0.05) }]
+    } else {
+        set contrast [expr { ($luma2+0.05)/($luma1+0.05) }]
+    }
+
+    # Compute if there is enough contrast between the first color (the 'background') and
+    # the second color (the 'foreground') provided, in the four WCGA 2.0 scenarios:
+    #   AA1  --> The text is a paragraph with a large font (> 14 points).
+    #               OK   --> for contrast >= 3.0,
+    #               FAIL --> in any other cases.
+    #   AA2  --> The text is a paragraph with a small font.
+    #               OK   --> for contrast >= 4.5,
+    #               FAIL --> in any other cases.
+    #   AAA1 --> The text is a title with a large font (> 14 points).
+    #               OK   --> for contrast >= 4.5,
+    #               FAIL --> in any other cases.
+    #   AAA2 --> The text is a title with a small font.
+    #               OK   --> for contrast >= 7.0,
+    #               FAIL --> in any other cases.
+    if { $contrast < 3.0 } {
+        return [list AA1 "FAIL" AA2 "FAIL" AAA1 "FAIL" AAA2 "FAIL"]
+    } elseif { $contrast < 4.5 } {
+        return [list AA1 "OK" AA2 "FAIL" AAA1 "FAIL" AAA2 "FAIL"]
+    } elseif { $contrast < 7 } {
+        return [list AA1 "OK" AA2 "OK" AAA1 "OK" AAA2 "FAIL"]
+    } else {
+        return [list AA1 "OK" AA2 "OK" AAA1 "OK" AAA2 "OK"]
+    }
+}
+
 ## Websafe
 #
 # Compute the websafe version of the color/s provided.
@@ -1499,35 +2025,35 @@ set ::ms::data(sRGB_D65,Yb) 0.072186
 
 # sRGB D65 RGB_XYZ matrix.
 #
-# | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 a2 a3 |
-# | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a4 a5 a6 |
-# | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | a7 a8 a9 |
+# | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 b1 c1 |
+# | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+# | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | a3 b3 c3 |
 set ::ms::data(sRGB_D65,RGB_XYZ) [list 0.43603515625 \
-                                       0.3851165771484375 \
-                                       0.1430511474609375 \
                                        0.2224884033203125 \
-                                       0.7169036865234375 \
-                                       0.06060791015625 \
                                        0.013916015625 \
+                                       0.3851165771484375 \
+                                       0.7169036865234375 \
                                        0.0970611572265625 \
+                                       0.1430511474609375 \
+                                       0.06060791015625 \
                                        0.7139129638671875];
 
 # sRGB D65 XYZ_RGB matrix.
 #
-# | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | a1 a2 a3 |
-# | -0.978795574325203  1.916161596468483    0.03345405023031962 | = | a4 a5 a6 |
-# | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | a7 a8 a9 |
+# | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | a1 b1 c1 |
+# | -0.978795574325203  1.916161596468483    0.03345405023031962 | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+# | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | a3 b3 c3 |
 set ::ms::data(sRGB_D65,XYZ_RGB) [list 3.134274306471669 \
-                                       -1.617274016967423 \
-                                       -0.4907348029960735 \
                                        -0.978795574325203 \
-                                       1.916161596468483 \
-                                       0.03345405023031962 \
                                        0.071978551323668 \
+                                       -1.617274016967423 \
+                                       1.916161596468483 \
                                        -0.2289898906034097 \
+                                       -0.4907348029960735 \
+                                       0.03345405023031962 \
                                        1.4057483687096277];
 
-# Note:  CVD matrix for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
+# Note:  CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
 #           | a1 b1 c1 |
 #           | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
 #           | a3 b3 c3 |

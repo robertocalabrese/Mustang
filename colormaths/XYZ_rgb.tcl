@@ -121,25 +121,29 @@ proc ::ms::XYZ_rgb::Conversion { channels } {
     foreach { X Y Z } $channels {
         # rgb = sRGB D65 XYZ_RGB matrix (allready chromatically adapted from D50 to D65) * XYZ
         #
-        #   | r |   | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | X |
-        #   | g | = | -0.978795574325203  1.916161596468483    0.03345405023031962 | * | Y |
-        #   | b |   | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | Z |
+        #             | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | a1 b1 c1 |
+        #   XYZ_RGB = | -0.978795574325203  1.916161596468483    0.03345405023031962 | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+        #             | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | a3 b3 c3 |
+        #
+        #   | r |   | a1 b1 c1 |   | X |
+        #   | g | = | a2 b2 c2 | * | Y |
+        #   | b |   | a3 b3 c3 |   | Z |
 
         # Retrieve the sRGB D65 XYZ_RGB coefficients.
         set a1 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 0]
-        set a2 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 1]
-        set a3 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 2]
-        set a4 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 3]
-        set a5 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 4]
-        set a6 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 5]
-        set a7 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 6]
-        set a8 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 7]
-        set a9 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 8]
+        set b1 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 1]
+        set c1 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 2]
+        set b1 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 3]
+        set b2 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 4]
+        set b3 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 5]
+        set c1 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 6]
+        set c2 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 7]
+        set c3 [lindex $::ms::data(sRGB_D65,XYZ_RGB) 8]
 
         # Transform the XYZ values into *non-linear* rgb values.
-        set r [expr { ($a1*$X)+($a2*$Y)+($a3*$Z) }]
-        set g [expr { ($a4*$X)+($a5*$Y)+($a6*$Z) }]
-        set b [expr { ($a7*$X)+($a8*$Y)+($a9*$Z) }]
+        set r [expr { ($a1*$X)+($b1*$Y)+($c1*$Z) }]
+        set g [expr { ($a2*$X)+($b2*$Y)+($c2*$Z) }]
+        set b [expr { ($a3*$X)+($b3*$Y)+($c3*$Z) }]
 
         # Trasform the *non-linear* rgb values into *linear* rgb values [0,1.0].
         foreach channel [list $r $g $b] {
