@@ -6137,7 +6137,7 @@ proc ::ms::Load_Colorspace { filepath } {
     # | red_Y  green_Y  blue_Y |   = | red_Y_inverse  green_Y_inverse  blue_Y_inverse |
     # | red_Z  green_Z  blue_Z |     | red_Z_inverse  green_Z_inverse  blue_Z_inverse |
     set chromaticity_XYZ_inverse [::inverse_matrix {*}$chromaticity_XYZ]
-    switch -- $chromaticity_XYZ_inverse
+    switch -- $chromaticity_XYZ_inverse {
         invalid {
             switch -nocase -- $::DEBUG {
                 1       -
