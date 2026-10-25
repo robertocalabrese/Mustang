@@ -860,12 +860,12 @@ proc ::ms::color::BW { hexadecimals { depth "" } } {
     set results [list ]
     foreach { r g b } $channels {
         # Trasform the *non-linear* rgb value into a *linear* rgb one.
-        set r_linear [::ms::companding::Operation $r inverse]
-        set g_linear [::ms::companding::Operation $g inverse]
-        set b_linear [::ms::companding::Operation $b inverse]
+        set r_linear [::companding $r inverse]
+        set g_linear [::companding $g inverse]
+        set b_linear [::companding $b inverse]
 
         # Compute the luma of the rgb *linear* color.
-        set luma [expr { ($::ms::data(sRGB_D65,Yr)*$r_linear)+($::ms::data(sRGB_D65,Yg)*$g_linear)+($::ms::data(sRGB_D65,Yb)*$b_linear) }]
+        set luma [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear) }]
 
         # Confront the rgb *linear* color contrast values (against 'black' and 'white').
         if { [expr { ($luma+0.05)*20.0 }] > [expr { 1.05/($luma+0.05) }] } {
@@ -1079,20 +1079,20 @@ proc ::ms::color::Contrast { color1 color2 {depth "" } } {
     # Compute the luma of the first color.
     # Trasform the *non-linear* rgb values into a *linear* rgb ones.
     foreach { r1 g1 b1 } $rgb1 {
-        set r1_linear [::ms::companding::Operation $r1 inverse]
-        set g1_linear [::ms::companding::Operation $g1 inverse]
-        set b1_linear [::ms::companding::Operation $b1 inverse]
+        set r1_linear [::companding $r1 inverse]
+        set g1_linear [::companding $g1 inverse]
+        set b1_linear [::companding $b1 inverse]
     }
 
     foreach { r2 g2 b2 } $rgb2 {
-        set r2_linear [::ms::companding::Operation $r2 inverse]
-        set g2_linear [::ms::companding::Operation $g2 inverse]
-        set b2_linear [::ms::companding::Operation $b2 inverse]
+        set r2_linear [::companding $r2 inverse]
+        set g2_linear [::companding $g2 inverse]
+        set b2_linear [::companding $b2 inverse]
     }
 
     # Compute the two colors lumas.
-    set luma1 [expr { ($::ms::data(sRGB_D65,Yr)*$r1_linear)+($::ms::data(sRGB_D65,Yg)*$g1_linear)+($::ms::data(sRGB_D65,Yb)*$b1_linear) }]
-    set luma2 [expr { ($::ms::data(sRGB_D65,Yr)*$r2_linear)+($::ms::data(sRGB_D65,Yg)*$g2_linear)+($::ms::data(sRGB_D65,Yb)*$b2_linear) }]
+    set luma1 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b1_linear) }]
+    set luma2 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b2_linear) }]
 
     # Compute the contrast value.
     if { $luma1 > $luma2 } {
@@ -1466,15 +1466,15 @@ proc ::ms::color::Gray { hexadecimals via { depth "" } } {
             # Compute the gray rgb *linear* color/s.
             set gray [list ]
             foreach { r g b } $rgbs {
-                set r_linear [::ms::companding::Operation $r inverse]
-                set g_linear [::ms::companding::Operation $g inverse]
-                set b_linear [::ms::companding::Operation $b inverse]
+                set r_linear [::companding $r inverse]
+                set g_linear [::companding $g inverse]
+                set b_linear [::companding $b inverse]
 
                 # Compute the *linear* gray.
-                set gray_linear [expr { ($::ms::data(sRGB_D65,Yr)*$r_linear)+($::ms::data(sRGB_D65,Yg)*$g_linear)+($::ms::data(sRGB_D65,Yb)*$b_linear) }]
+                set gray_linear [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear) }]
 
                 # Trasform the *linear* gray into *non-linear* gray.
-                set gray [::ms::companding::Operation $gray_linear normal]
+                set gray [::companding $gray_linear normal]
 
                 lappend grays $gray $gray $gray
             }
@@ -1832,20 +1832,20 @@ proc ::ms::color::WCGA_2.0 { color1 color2 { depth "" } } {
     # Compute the luma of the first color.
     # Trasform the *non-linear* rgb values into a *linear* rgb ones.
     foreach { r1 g1 b1 } $rgb1 {
-        set r1_linear [::ms::companding::Operation $r1 inverse]
-        set g1_linear [::ms::companding::Operation $g1 inverse]
-        set b1_linear [::ms::companding::Operation $b1 inverse]
+        set r1_linear [::companding $r1 inverse]
+        set g1_linear [::companding $g1 inverse]
+        set b1_linear [::companding $b1 inverse]
     }
 
     foreach { r2 g2 b2 } $rgb2 {
-        set r2_linear [::ms::companding::Operation $r2 inverse]
-        set g2_linear [::ms::companding::Operation $g2 inverse]
-        set b2_linear [::ms::companding::Operation $b2 inverse]
+        set r2_linear [::companding $r2 inverse]
+        set g2_linear [::companding $g2 inverse]
+        set b2_linear [::companding $b2 inverse]
     }
 
     # Compute the two colors lumas.
-    set luma1 [expr { ($::ms::data(sRGB_D65,Yr)*$r1_linear)+($::ms::data(sRGB_D65,Yg)*$g1_linear)+($::ms::data(sRGB_D65,Yb)*$b1_linear) }]
-    set luma2 [expr { ($::ms::data(sRGB_D65,Yr)*$r2_linear)+($::ms::data(sRGB_D65,Yg)*$g2_linear)+($::ms::data(sRGB_D65,Yb)*$b2_linear) }]
+    set luma1 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b1_linear) }]
+    set luma2 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b2_linear) }]
 
     # Compute the contrast value.
     if { $luma1 > $luma2 } {
@@ -2016,46 +2016,6 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
 
 
 
-# Set the current colorspace (sRGB) and illuminant (D65).
-set ::ms::data(colorspace) sRGB
-set ::ms::data(illuminant) D65
-
-# Set the Unadapted values.
-set ::ms::data($::ms::data(colorspace),$::ms::data(illuminant),Yr) 0.212656
-set ::ms::data($::ms::data(colorspace),$::ms::data(illuminant),Yg) 0.715158
-set ::ms::data($::ms::data(colorspace),$::ms::data(illuminant),Yb) 0.072186
-
-# RGB_XYZ matrix.
-# It must be allready adapted to the illuminant of the PCS colorspace (D50).
-#
-# | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 b1 c1 |
-# | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
-# | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | a3 b3 c3 |
-set ::ms::data($::ms::data(colorspace),D50,RGB_XYZ) [list 0.43603515625 \
-                                                          0.2224884033203125 \
-                                                          0.013916015625 \
-                                                          0.3851165771484375 \
-                                                          0.7169036865234375 \
-                                                          0.0970611572265625 \
-                                                          0.1430511474609375 \
-                                                          0.06060791015625 \
-                                                          0.7139129638671875];
-
-# XYZ_RGB matrix.
-# It must be allready adapted to the illuminant of the PCS colorspace (D50).
-#
-# | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | a1 b1 c1 |
-# | -0.978795574325203  1.916161596468483    0.03345405023031962 | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
-# | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | a3 b3 c3 |
-set ::ms::data($::ms::data(colorspace),D50,XYZ_RGB) [list 3.134274306471669 \
-                                                          -0.978795574325203 \
-                                                          0.071978551323668 \
-                                                          -1.617274016967423 \
-                                                          1.916161596468483 \
-                                                          -0.2289898906034097 \
-                                                          -0.4907348029960735 \
-                                                          0.03345405023031962 \
-                                                          1.4057483687096277];
 
 # Note:  CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
 #           | a1 b1 c1 |
