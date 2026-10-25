@@ -123,8 +123,9 @@ package ifneeded mustang $::ms_version {
     }
 
     # Mustang colormaths.
+    package require ::ms::chad
     package require ::ms::companding
-    package require ::ms::inverse_companding
+    package require ::ms::matrix
     package require ::ms::HEX8_HEX12
     package require ::ms::HEX8_HEX16
     package require ::ms::HEX8_RGB8
@@ -268,8 +269,9 @@ switch -nocase -glob -- $::tcl_platform(os) {
 }
 
 # Mustang colormaths.
+package ifneeded ::ms::chad               0.1 [list source [file join $::ms_library colormaths "chad.tcl"]]
 package ifneeded ::ms::companding         0.1 [list source [file join $::ms_library colormaths "companding.tcl"]]
-package ifneeded ::ms::inverse_companding 0.1 [list source [file join $::ms_library colormaths "inverse_companding.tcl"]]
+package ifneeded ::ms::matrix             0.1 [list source [file join $::ms_library colormaths "matrix.tcl"]]
 package ifneeded ::ms::HEX8_HEX12         0.1 [list source [file join $::ms_library colormaths "HEX8_HEX12.tcl"]]
 package ifneeded ::ms::HEX8_HEX16         0.1 [list source [file join $::ms_library colormaths "HEX8_HEX16.tcl"]]
 package ifneeded ::ms::HEX8_RGB8          0.1 [list source [file join $::ms_library colormaths "HEX8_RGB8.tcl"]]

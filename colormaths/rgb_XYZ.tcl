@@ -126,7 +126,7 @@ proc ::ms::rgb_XYZ::Conversion { channels } {
         set g [::ms::companding::Operation $g inverse]
         set b [::ms::companding::Operation $b inverse]
 
-        # XYZ = sRGB D65 RGB_XYZ matrix (allready chromatically adapted from D65 to D50) * rgb
+        # XYZ = RGB_XYZ matrix (allready chromatically adapted to D50) * rgb
         #
         #             | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 b1 c1 |
         #   RGB_XYZ = | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
@@ -136,16 +136,16 @@ proc ::ms::rgb_XYZ::Conversion { channels } {
         #   | Y | = | a2 b2 c2 | * | g |
         #   | Z |   | a3 b3 c3 |   | b |
 
-        # Retrieve the sRGB D65 RGB_XYZ coefficients.
-        set a1 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 0]
-        set b1 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 1]
-        set c1 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 2]
-        set b1 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 3]
-        set b2 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 4]
-        set b3 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 5]
-        set c1 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 6]
-        set c2 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 7]
-        set c3 [lindex $::ms::data(sRGB_D65,RGB_XYZ) 8]
+        # Retrieve the RGB_XYZ coefficients for the current colorspace and the D50 illuminat.
+        set a1 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 0]
+        set a2 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 1]
+        set a3 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 2]
+        set b1 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 3]
+        set b2 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 4]
+        set b3 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 5]
+        set c1 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 6]
+        set c2 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 7]
+        set c3 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 8]
 
         # Transform the *linear* rgb values into XYZ values.
         set X [expr { ($a1*$r)+($b1*$g)+($c1*$b) }]

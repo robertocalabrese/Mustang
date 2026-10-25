@@ -464,11 +464,15 @@ proc ::ms::Init {} {
     }
 
     # Set the mustang subfolders.
-    set ::ms::folder(mustang,palettes) [file join $::ms::folder(mustang,data)  palettes]
-    set ::ms::folder(mustang,svgs)     [file join $::ms::folder(mustang,cache) svgs]
+    set ::ms::folder(mustang,colorspaces) [file join $::ms::folder(mustang,data)  colorspaces]
+    set ::ms::folder(mustang,palettes)    [file join $::ms::folder(mustang,data)  palettes]
+    set ::ms::folder(mustang,svgs)        [file join $::ms::folder(mustang,cache) svgs]
 
     # If needed, create the mustang folders and subfolders.
+    file mkdir $::ms::folder(mustang,cache)
     file mkdir $::ms::folder(mustang,config)
+    file mkdir $::ms::folder(mustang,data)
+    file mkdir $::ms::folder(mustang,colorspaces)
     file mkdir $::ms::folder(mustang,palettes)
     file mkdir $::ms::folder(mustang,svgs)
 
@@ -583,6 +587,57 @@ proc ::ms::Init {} {
             # Order the list of all known palette names alphabetically.
             set ::ms::palette(names) [lsort -increasing -dictionary $::ms::palette(names)]
         }
+    }
+
+    ################################################
+    ##                                            ##
+    ##     LOAD ALL THE AVAILABLE COLORSPACES     ##
+    ##                                            ##
+    ################################################
+
+    # Set the PCS D50 XYZ value.
+    set ::ms::PCS_XYZ [list 0.96419999999999995 1.0 0.82489999999999997]
+    set ::ms::PCS_X   [list $::ms::PCS_XYZ 0]
+    set ::ms::PCS_Y   [list $::ms::PCS_XYZ 1]
+    set ::ms::PCS_Z   [list $::ms::PCS_XYZ 2]
+
+    # Initialize the list of all known colorspace models.
+    set ::ms::colorspaces [list ]
+
+    # Load any default colorspace files.
+    foreach colorspace [glob -type f -directory [file join $::ms_library colorspaces] -- *.txt] {
+        ::ms::Load_Colorspace $colorspace
+    }
+
+    # Load any program, developer or user colorspace files.
+    foreach colorspace [glob -type f -directory $::ms::folder(mustang,colorspaces) -- *.txt] {
+        ::ms::Load_Colorspace $colorspace
+    }
+
+    # Check that at least one colorspace file was loaded.
+    switch -- [llength $::ms::colorspace] {
+        0   {
+            # If the debug variable is active, signal the problem in the stderr channel.
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts stdout "Warning, no colorspaces found." }
+            }
+
+            return ""
+        }
+    }
+
+    # Order the list of all known colorspace names alphabetically.
+    set ::ms::colorspace [lsort -increasing -dictionary $::ms::colorspace]
+
+    # Set the default colorspace.
+    if { "sRGB D65" in $::ms::colorspace } {
+        set ::ms::colorspace "sRGB D65"
+    } else {
+        set ::ms::colorspace [lindex $::ms::colorspace 0]
     }
 
     ######################################
@@ -1527,6 +1582,13 @@ proc ::ms::Init {} {
             chan puts $channel "ClickAction: $::ms::clickaction"
             chan puts $channel ""
 
+            chan puts $channel "# It's an integer that specifies the color depth."
+            chan puts $channel "# The default color depth is '8' bit."
+            chan puts $channel "#"
+            chan puts $channel "# \['8', '12' or '16'\]"
+            chan puts $channel "Colordepth: $::ms::colordepth"
+            chan puts $channel ""
+
             chan puts $channel "# Colorscheme"
             chan puts $channel "#"
             chan puts $channel "# It's a string that specifies the colorscheme to use."
@@ -1536,11 +1598,12 @@ proc ::ms::Init {} {
             chan puts $channel "Colorscheme: $::ms::colorscheme"
             chan puts $channel ""
 
-            chan puts $channel "# It's an integer that specifies the color depth."
-            chan puts $channel "# The default color depth is '8' bit."
+            chan puts $channel "# Colorspace Model"
             chan puts $channel "#"
-            chan puts $channel "# \['8', '12' or '16'\]"
-            chan puts $channel "Colordepth: $::ms::colordepth"
+            chan puts $channel "# It's a string that specifies the colorspace model to use."
+            chan puts $channel "# Colorspace models are case sensitive."
+            chan puts $channel "# The default colorspace model is 'sRGB D65'."
+            chan puts $channel "ColorspaceModel: $::ms::colorspace"
             chan puts $channel ""
 
             chan puts $channel "# Focus Model"
@@ -1791,6 +1854,12 @@ proc ::ms::Init {} {
                             switch -- $value {
                                 dark  -
                                 light { set ::ms::colorscheme $value }
+                            }
+                        }
+                        "ColorspaceModel:" {
+                            set value [string trim $value]
+                            if { $value in $::ms::colorspaces } {
+                                set ::ms::colorspace $value
                             }
                         }
                         "DefaultFont:" {
@@ -2330,6 +2399,7 @@ proc ::ms::Init {} {
     set ::ms::temp(clickaction,last)   $::ms::clickaction
     set ::ms::temp(colordepth,last)    $::ms::colordepth
     set ::ms::temp(colorscheme,last)   $::ms::colorscheme
+    set ::ms::temp(colorspace,last)    $::ms::colorspace
     set ::ms::temp(focusmodel,last)    $::ms::focusmodel
     set ::ms::temp(language,last)      $::ms::language
     set ::ms::temp(middleclick,last)   $::ms::middleclick
@@ -2356,6 +2426,9 @@ proc ::ms::Init {} {
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::colorscheme \
+              [list unset write] [list ::ms::Check_And_React];
+
+    trace add variable           ::ms::colorspace \
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::focusmodel \
@@ -2429,6 +2502,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                 "::ms::clickaction" { set ::ms::clickaction $::ms::temp(clickaction,last) }
                 "::ms::colordepth"  { set ::ms::colordepth  $::ms::temp(colordepth,last) }
                 "::ms::colorscheme" { set ::ms::colorscheme $::ms::temp(colorscheme,last) }
+                "::ms::colorspace"  { set ::ms::colorspace  $::ms::temp(colorspace,last) }
                 "::ms::focusmodel"  { set ::ms::focusmodel  $::ms::temp(focusmodel,last) }
                 "::ms::language"    { set ::ms::language    $::ms::temp(language,last) }
                 "::ms::middleclick" { set ::ms::middleclick $::ms::temp(middleclick,last) }
@@ -2464,7 +2538,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         yellow {
                             # Check that the new 'accent' color is not the same as the one currently registered.
                             if { $::ms::accent ne $::ms::temp(accent,last) } {
-                                # Register the last valid 'accent' color.
+                                # Update the last valid 'accent' color.
                                 set ::ms::temp(accent,last) $::ms::accent
 
                                 # Note: Some mustang special variables requires to refresh the theme after their validation.
@@ -2473,8 +2547,8 @@ proc ::ms::Check_And_React { name1 name2 op } {
                                 #       This timer will be resetted if, while active, another command asks to refresh the theme.
 
                                 if { [info exists ::ms::temp(pending,refresh)] } {
-                                 after cancel $::ms::temp(pending,refresh)
-                                 unset -nocomplain -- ::ms::temp(pending,refresh)
+                                    after cancel $::ms::temp(pending,refresh)
+                                    unset -nocomplain -- ::ms::temp(pending,refresh)
                                 }
                                 set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
                             }
@@ -2491,7 +2565,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     switch -- $::ms::clickaction {
                         jump   -
                         scroll {
-                            # Register the last valid 'clickaction' value.
+                            # Update the last valid 'clickaction' value.
                             set ::ms::temp(clickaction,last) $::ms::clickaction
                         }
                         default {
@@ -2506,7 +2580,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         8   -
                         12  -
                         16  {
-                            # Register the last valid 'colordepth' value.
+                            # Update the last valid 'colordepth' value.
                             set ::ms::temp(colordepth,last) $::ms::colordepth
                         }
                         default {
@@ -2523,7 +2597,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         light {
                             # Check that the new 'colorscheme' value is not the same as the one currently registered.
                             if { $::ms::colorscheme ne $::ms::temp(colorscheme,last) } {
-                                # Register the last valid 'colorscheme' value.
+                                # Update the last valid 'colorscheme' value.
                                 set ::ms::temp(colorscheme,last) $::ms::colorscheme
 
                                 # Note: Some mustang special variables requires to refresh the theme after their validation.
@@ -2532,8 +2606,8 @@ proc ::ms::Check_And_React { name1 name2 op } {
                                 #       This timer will be resetted if, while active, another command asks to refresh the theme.
 
                                 if { [info exists ::ms::temp(pending,refresh)] } {
-                                 after cancel $::ms::temp(pending,refresh)
-                                 unset -nocomplain -- ::ms::temp(pending,refresh)
+                                    after cancel $::ms::temp(pending,refresh)
+                                    unset -nocomplain -- ::ms::temp(pending,refresh)
                                 }
                                 set ::ms::temp(pending,refresh) [after 50 [list style theme use $::ms::theme]]
                             }
@@ -2544,13 +2618,23 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         }
                     }
                 }
+                ::ms::colorspace {
+                    # Check that the new 'colorspace' provided is a valid value.
+                    if { $::ms::colorspace in $::ms::colorspaces } {
+                        # Update the last valid 'colorspace' value.
+                        set ::ms::temp(colorspace,last) $::ms::colorspace
+                    } else {
+                        # Restore the last valid 'colorspace' value.
+                        set ::ms::colorspace $::ms::temp(colorspace,last)
+                    }
+                }
                 ::ms::focusmodel {
                     # Check that the new 'focusmodel' provided is a valid value.
                     set ::ms::focusmodel [string tolower $::ms::focusmodel]
                     switch -- $::ms::focusmodel {
                         implicit {
                             if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
-                                # Register the last valid 'focusmodel' value as 'implicit'.
+                                # Update the last valid 'focusmodel' value as 'implicit'.
                                 set ::ms::temp(focusmodel,last) implicit
 
                                 # Apply the 'implicit' bindings.
@@ -2559,7 +2643,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         }
                         explicit {
                             if { $::ms::focusmodel ne $::ms::temp(focusmodel,last) } {
-                                # Register the last valid 'focusmodel' value as 'explicit'.
+                                # Update the last valid 'focusmodel' value as 'explicit'.
                                 set ::ms::temp(focusmodel,last) explicit
 
                                 # Remove the 'implicit' bindings.
@@ -2576,7 +2660,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     # Check that the new 'language' provided is a valid value.
                     set ::ms::language [string tolower $::ms::language]
                     if { $::ms::language in $::ms::languages } {
-                        # Register the last valid 'language' value.
+                        # Update the last valid 'language' value.
                         set ::ms::temp(language,last) $::ms::language
 
                         # Change the mustang language.
@@ -2592,7 +2676,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     switch -- $::ms::middleclick {
                         drag  -
                         paste {
-                            # Register the last valid 'middleclick' value.
+                            # Update the last valid 'middleclick' value.
                             set ::ms::temp(middleclick,last) $::ms::middleclick
                         }
                         default {
@@ -2622,7 +2706,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                                     } else {
                                         # Check that the new 'scale' value is not the same as the one currently registered.
                                         if { $::ms::scalefactor ne $::ms::temp(scalefactor,last) } {
-                                            # Register the last valid 'scale' value.
+                                            # Update the last valid 'scale' value.
                                             set ::ms::temp(scalefactor,last) $::ms::scalefactor
 
                                             # Note: Some mustang special variables requires to refresh the theme after their validation.
@@ -2654,7 +2738,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                             # Set the 'scrollbox' value to 'disabled'.
                             set ::ms::scrollbox disabled
 
-                            # Register the last valid 'scrollbox' value.
+                            # Update the last valid 'scrollbox' value.
                             set ::ms::temp(scrollbox,last) disabled
                         }
                         1        -
@@ -2665,7 +2749,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                             # Set the 'scrollbox' value to 'enabled'.
                             set ::ms::scrollbox enable
 
-                            # Register the last valid 'scrollbox' value.
+                            # Update the last valid 'scrollbox' value.
                             set ::ms::temp(scrollbox,last) enabled
                         }
                         default {
@@ -2680,7 +2764,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     switch -- $::ms::scrollmode {
                         classic -
                         natural {
-                            # Register the last valid 'scrollmode' value.
+                            # Update the last valid 'scrollmode' value.
                             set ::ms::temp(scrollmode,last) $::ms::scrollmode
                         }
                         default {
@@ -2701,7 +2785,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                             # Set the 'scrollstopper' value to 'disabled'.
                             set ::ms::scrollstopper disabled
 
-                            # Register the last valid 'scrollstopper' value.
+                            # Update the last valid 'scrollstopper' value.
                             set ::ms::temp(scrollstopper,last) disabled
                         }
                         1        -
@@ -2712,7 +2796,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                             # Set the 'scrollstopper' value to 'enabled'.
                             set ::ms::scrollstopper enable
 
-                            # Register the last valid 'scrollstopper' value.
+                            # Update the last valid 'scrollstopper' value.
                             set ::ms::temp(scrollstopper,last) enabled
                         }
                         default {
@@ -2726,7 +2810,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
                     if { $::ms::theme in $::ms::themes } {
                         # Check that the new 'theme' value is not the same as the one currently registered.
                         if { $::ms::theme ne $::ms::temp(theme,last) } {
-                            # Register the last valid 'theme' value.
+                            # Update the last valid 'theme' value.
                             set ::ms::temp(theme,last) $::ms::theme
 
                             # Note: Some mustang special variables requires to refresh the theme after their validation.
@@ -5735,6 +5819,422 @@ proc ::ms::Hover { w X Y } {
         # Change the widget dynamic state to 'hover'.
         [string cat "::ms::" $::ms::data($w,classtype) "::Pathname_Cmd"] $w state [list  hover]
     }
+
+    return ""
+}
+
+# Load_Colorspace
+#
+# Load a colorspace model file.
+#
+# Where:
+#
+# pathname   Should be the absolute pathname of the colorspace model to load.
+#
+# It doesn't return anything.
+proc ::ms::Load_Colorspace { filepath } {
+    ###############################################
+    ##                                           ##
+    ##     LOAD THE COLORSPACE FILE PROVIDED     ##
+    ##                                           ##
+    ###############################################
+
+    set model_name      ""
+    set chromaticity_xy [list ]
+    set whitepoint_XYZ  [list ]
+
+    try {
+        open $filepath "r"
+    } on error { errortext errorcode } {
+        # If the debug variable is active, signal the problem in the stderr channel.
+        switch -nocase -- $::DEBUG {
+            1       -
+            on      -
+            true    -
+            active  -
+            enabled { chan puts "Unable to read '[file tail $filepath]'. Ignoring." }
+        }
+
+        return ""
+    } on ok { channel } {
+        # Read the entire file.
+        set file_content [split [chan read $channel] "\n"]
+        chan close $channel
+
+        # Scan the file content line by line.
+        foreach line $file_content {
+            set line [split $line ":"]
+            set linestart [lindex $line 0]
+            set linevalue [lindex $line 1]
+
+            # Check if the line starts with the word 'Chromaticity', 'Model Name' or 'Reference White'.
+            # If not, skip the line.
+            switch -nocase -- $linestart {
+                "Chromaticity" {
+                    switch -- [llength $linevalue] {
+                        6   {
+                            # Check each chromaticity value.
+                            foreach value $linevalue {
+                                switch -- [string is double -strict $value] {
+                                    1   {
+                                        if { ($value >= 0) || ($value <= 1.0) } {
+                                            lappend chromaticity_xy $value
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                "Model Name" {
+                    set value [string trim $linevalue]
+                    switch -- $value {
+                        ""      {}
+                        default { set model_name "$value" }
+                    }
+                }
+                "Reference White" {
+                    switch -- [llength $linevalue] {
+                        3   {
+                            # Check each whitepoint value.
+                            foreach value $linevalue {
+                                switch -- [string is double -strict $value] {
+                                    1   {
+                                        if { ($value >= 0) || ($value <= 1.999969482421875) } {
+                                            lappend whitepoint_XYZ $value
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # Check if a model name was provided.
+    switch -- $model_name {
+        ""  {
+            # If the debug variable is active, signal the problem in the stderr channel.
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts "The '[file tail $filepath]' model name is invalid or missing. Ignoring." }
+            }
+
+            return ""
+        }
+        default {
+            # If the model name is already known by mustang, ignore the file.
+            if { $model_name in $::ms::colorspaces } {
+                switch -nocase -- $::DEBUG {
+                    1       -
+                    on      -
+                    true    -
+                    active  -
+                    enabled { chan puts "The '[file tail $filepath]' model name is already known. Ignoring." }
+                }
+
+                return ""
+            }
+        }
+    }
+
+    # Check if a chromaticity was provided (it must have 6 valid elements).
+    switch -- [llength $chromaticity_xy] {
+        6   {
+            # Let's break down the chromaticity xy matrix into its single components.
+            #
+            # | red_x  green_x  blue_x |
+            # | red_y  green_y  blue_y | = [list red_x red_y green_x green_y blue_x blue_y]
+            set red_x   [lindex $chromaticity_xy 0]
+            set red_y   [lindex $chromaticity_xy 1]
+            set green_x [lindex $chromaticity_xy 2]
+            set green_y [lindex $chromaticity_xy 3]
+            set blue_x  [lindex $chromaticity_xy 4]
+            set blue_y  [lindex $chromaticity_xy 5]
+        }
+        default {
+            # If the debug variable is active, signal the problem in the stderr channel.
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts "The '[file tail $filepath]' chromaticity values are invalid or some values are missing. Ignoring." }
+            }
+
+            return ""
+        }
+    }
+
+    # Check if a reference white was provided.
+    switch -- [llength $whitepoint_XYZ] {
+        3   {
+            # Let's break down the reference white XYZ into its single components.
+            set whitepoint_X [lindex $whitepoint_XYZ 0]
+            set whitepoint_Y [lindex $whitepoint_XYZ 1]
+            set whitepoint_Z [lindex $whitepoint_XYZ 2]
+        }
+        default {
+            # If the debug variable is active, signal the problem in the stderr channel.
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { chan puts "The '[file tail $filepath]' whitepoint values are invalid or some values are missing. Ignoring." }
+            }
+
+            return ""
+        }
+    }
+
+    #############################################################
+    ##                                                         ##
+    ##     SET THE CHROMATICITY xyz VALUES AND ITS INVERSE     ##
+    ##                                                         ##
+    #############################################################
+
+    # Compute the chromaticity missing 'z' values.
+    set red_z   [expr { 1.0-$red_x-$red_y     }]
+    set green_z [expr { 1.0-$green_x-$green_y }]
+    set blue_z  [expr { 1.0-$blue_x-$blue_y   }]
+
+    # Set the xyz chromaticity matrix.
+    #
+    # | red_x  green_x  blue_x |
+    # | red_y  green_y  blue_y | = [list red_x red_y red_z green_x green_y green_z blue_x blue_y blue_z]
+    # | red_z  green_z  blue_z |
+    set chromaticity_xyz [list $red_x $red_y $red_z $green_x $green_y $green_z $blue_x $blue_y $blue_z]
+
+    # Compute the inverse xyz chromaticity matrix.
+    #
+    # | red_x  green_x  blue_x |-1
+    # | red_y  green_y  blue_y |   --> [list red_x_inverse red_y_inverse red_z_inverse green_x_inverse green_y_inverse green_z_inverse blue_x_inverse blue_y_inverse blue_z_inverse]
+    # | red_z  green_z  blue_z |
+    set chromaticity_xyz_inverse [::inverse_matrix {*}$chromaticity_xyz]
+    switch -- $chromaticity_xyz_inverse {
+        invalid {
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { puts stdout "Ignoring '[file tail $filepath]'." }
+            }
+
+            return ""
+        }
+    }
+
+    # Let's break down the inverse xyz chromaticity matrix into its single components.
+    set red_x_inverse   [lindex $chromaticity_xyz_inverse 0]
+    set red_y_inverse   [lindex $chromaticity_xyz_inverse 1]
+    set red_z_inverse   [lindex $chromaticity_xyz_inverse 2]
+    set green_x_inverse [lindex $chromaticity_xyz_inverse 3]
+    set green_y_inverse [lindex $chromaticity_xyz_inverse 4]
+    set green_z_inverse [lindex $chromaticity_xyz_inverse 5]
+    set blue_x_inverse  [lindex $chromaticity_xyz_inverse 6]
+    set blue_y_inverse  [lindex $chromaticity_xyz_inverse 7]
+    set blue_z_inverse  [lindex $chromaticity_xyz_inverse 8]
+
+    #####################################################################
+    ##                                                                 ##
+    ##     COMPUTE THE CHROMATIC ADAPTATION MATRIX AND ITS INVERSE     ##
+    ##                                                                 ##
+    #####################################################################
+
+    # Set the tolerance to 16 bits.
+    set tolerance [expr { 1.0/65535.0 }]
+
+    # Compute the tolerance for the whitespace X coordinate.
+    set max         [expr { max($::ms::PCS_X,$whitepoint_X) }]
+    set min         [expr { min($::ms::PCS_X,$whitepoint_X) }]
+    set tolerance_X [expr { $max-$min }]
+
+    # Compute the tolerance for the whitespace Z coordinate.
+    set max         [expr { max($::ms::PCS_Z,$whitepoint_Z) }]
+    set min         [expr { min($::ms::PCS_Z,$whitepoint_Z) }]
+    set tolerance_Z [expr { $max-$min }]
+
+    # Check if we need to compute the chromatic adaptation matrix ('chad') or not.
+    if { ($tolerance_X >= $tolerance) || ($tolerance_Z >= $tolerance) } {
+        # Compute the chromatic adaptation matrix.
+        set chad [::chad $whitepoint_XYZ $::ms::PCS_XYZ]
+
+        # Compute the chromatic adaptation inverse matrix.
+        set chad_inverse [::inverse_matrix {*}$chad]
+        switch -- $chad_inverse {
+            invalid {
+                switch -nocase -- $::DEBUG {
+                    1       -
+                    on      -
+                    true    -
+                    active  -
+                    enabled { puts stdout "Ignoring '[file tail $filepath]'." }
+                }
+
+                return ""
+            }
+        }
+    } else {
+        # No need of a chromatic adaptation matrix.
+        set chad         [list 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
+        set chad_inverse [list 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
+    }
+
+    ############################################
+    ##                                        ##
+    ##     COMPUTE THE UNADAPTED Y VALUES     ##
+    ##                                        ##
+    ############################################
+
+    # Compute the XYZ chromaticity values.
+    if { $red_y == 0 } {
+        set red_X    0
+        set red_Y    0
+        set red_Z    0
+    } else {
+        set red_X    [expr { $red_x/$red_y }]
+        set red_Y    1.0
+        set red_Z    [expr { $red_z/$red_y }]
+    }
+
+    if { $green_y == 0 } {
+        set green_X  0
+        set green_Y  0
+        set green_Z  0
+    } else {
+        set green_X  [expr { $green_x/$green_y }]
+        set green_Y  1.0
+        set green_Z  [expr { $green_z/$green_y }]
+    }
+
+    if { $blue_y == 0 } {
+        set blue_X   0
+        set blue_Y   0
+        set blue_Z   0
+    } else {
+        set blue_X   [expr { $blue_x/$blue_y }]
+        set blue_Y   1.0
+        set blue_Z   [expr { $blue_z/$blue_y }]
+    }
+
+    # Create the XYZ chromaticity matrix.
+    #
+    # | red_X  green_X  blue_X |
+    # | red_Y  green_Y  blue_Y | = [list red_X red_Y red_Z green_X green_Y green_Z blue_X blue_Y blue_Z]
+    # | red_Z  green_Z  blue_Z |
+    set chromaticity_XYZ [list $red_X $red_Y $red_Z $green_X $green_Y $green_Z $blue_X $blue_Y $blue_Z]
+
+    # Compute the inverse XYZ chromaticity matrix.
+    #
+    # | red_X  green_X  blue_X |-1   | red_X_inverse  green_X_inverse  blue_X_inverse |
+    # | red_Y  green_Y  blue_Y |   = | red_Y_inverse  green_Y_inverse  blue_Y_inverse |
+    # | red_Z  green_Z  blue_Z |     | red_Z_inverse  green_Z_inverse  blue_Z_inverse |
+    set chromaticity_XYZ_inverse [::inverse_matrix {*}$chromaticity_XYZ]
+    switch -- $chromaticity_XYZ_inverse
+        invalid {
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { puts stdout "Ignoring '[file tail $filepath]'." }
+            }
+
+            return ""
+        }
+    }
+
+    # Let's break down the inverse XYZ chromaticity matrix into its single components.
+    set red_X_inverse   [lindex $chromaticity_XYZ_inverse 0]
+    set red_Y_inverse   [lindex $chromaticity_XYZ_inverse 1]
+    set red_Z_inverse   [lindex $chromaticity_XYZ_inverse 2]
+    set green_X_inverse [lindex $chromaticity_XYZ_inverse 3]
+    set green_Y_inverse [lindex $chromaticity_XYZ_inverse 4]
+    set green_Z_inverse [lindex $chromaticity_XYZ_inverse 5]
+    set blue_X_inverse  [lindex $chromaticity_XYZ_inverse 6]
+    set blue_Y_inverse  [lindex $chromaticity_XYZ_inverse 7]
+    set blue_Z_inverse  [lindex $chromaticity_XYZ_inverse 8]
+
+    # Compute the unadapted Y values.
+    #
+    # | red_X_inverse  green_X_inverse  blue_X_inverse |   | whitepoint_X |     | Unadapted_redY   |
+    # | red_Y_inverse  green_Y_inverse  blue_Y_inverse | * | whitepoint_Y | --> | Unadapted_greenY |
+    # | red_Z_inverse  green_Z_inverse  blue_Z_inverse |   | whitepoint_Z |     | Unadapted_blueY  |
+    #
+    # Note: whitepoint_Y = 1.0
+    set unadapted_Y [list [expr { ($red_X_inverse*$whitepoint_X) + $green_X_inverse + ($blue_X_inverse*$whitepoint_Z) }] \
+                          [expr { ($red_Y_inverse*$whitepoint_X) + $green_Y_inverse + ($blue_Y_inverse*$whitepoint_Z) }] \
+                          [expr { ($red_Z_inverse*$whitepoint_X) + $green_Z_inverse + ($blue_Z_inverse*$whitepoint_Z) }]];
+
+    ########################################################
+    ##                                                    ##
+    ##     COMPUTE THE RGB_XYZ MATRIX AND ITS INVERSE     ##
+    ##                                                    ##
+    ########################################################
+
+    # First step.
+    #
+    # | red_x_inverse  green_x_inverse  blue_x_inverse |   | whitepoint_X |     | sum_r |
+    # | red_y_inverse  green_y_inverse  blue_y_inverse | * | whitepoint_Y | --> | sum_g |
+    # | red_z_inverse  green_z_inverse  blue_z_inverse |   | whitepoint_Z |     | sum_b |
+    #
+    # Note:  Whitepoint_Y = 1.0
+    set sum_r [expr { ($red_x_inverse*$whitepoint_X) + $green_x_inverse + ($blue_x_inverse*$whitepoint_Z) }]
+    set sum_g [expr { ($red_y_inverse*$whitepoint_X) + $green_y_inverse + ($blue_y_inverse*$whitepoint_Z) }]
+    set sum_b [expr { ($red_z_inverse*$whitepoint_X) + $green_z_inverse + ($blue_z_inverse*$whitepoint_Z) }]
+
+    # Final step.
+    #
+    # | red_x  green_x  blue_x |   | sum_r]     | a1  b1  c1 |
+    # | red_y  green_y  blue_y | * | sum_g] --> | a2  b2  c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+    # | red_z  green_z  blue_z |   | sum_b]     | a3  b3  c3 |
+    set RGB_XYZ [list [expr { $red_x*$sum_r   }] \
+                      [expr { $red_y*$sum_r   }] \
+                      [expr { $red_z*$sum_r   }] \
+                      [expr { $green_x*$sum_g }] \
+                      [expr { $green_y*$sum_g }] \
+                      [expr { $green_z*$sum_g }] \
+                      [expr { $blue_x*$sum_b  }] \
+                      [expr { $blue_y*$sum_b  }] \
+                      [expr { $blue_z*$sum_b  }]];
+
+    # Compute the inverse RGB_XYZ matrix.
+    set XYZ_RGB [::inverse_matrix {*}$RGB_XYZ]
+    switch -- $XYZ_RGB {
+        invalid {
+            switch -nocase -- $::DEBUG {
+                1       -
+                on      -
+                true    -
+                active  -
+                enabled { puts stdout "Ignoring '[file tail $filepath]'." }
+            }
+
+            return ""
+        }
+    }
+
+    # Append 'model_name' to the known colorspaces list.
+    set ::ms::colorspaces [lappend ::ms::colorspaces $model_name]
+
+    # Register the values.
+    set ::ms::data(colorspace,$model_name,chromaticity,xyz) $chromaticity_xyz
+    set ::ms::data(colorspace,$model_name,whitepoint,XYZ)   $whitepoint_XYZ
+    set ::ms::data(colorspace,$model_name,Yr)               [lindex $unadapted_Y 0]
+    set ::ms::data(colorspace,$model_name,Yg)               [lindex $unadapted_Y 1]
+    set ::ms::data(colorspace,$model_name,Yb)               [lindex $unadapted_Y 2]
+    set ::ms::data(colorspace,$model_name,chad)             $chad
+    set ::ms::data(colorspace,$model_name,chad_inverse)     $chad_inverse
+    set ::ms::data(colorspace,$model_name,RGB_XYZ)          $RGB_XYZ
+    set ::ms::data(colorspace,$model_name,XYZ_RGB)          $XYZ_RGB
+    set ::ms::data(colorspace,$model_name,companding)       sRGB
 
     return ""
 }

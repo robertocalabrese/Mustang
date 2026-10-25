@@ -822,7 +822,7 @@ proc ::ms::color::Balance { hexadecimals tempK { depth "" } } {
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
 # Returns a list containing the words **black** or **white**, depending which one has more contrast with the relative color provided.
-proc ::ms::color::BW { hexadecimals { depth ""} } {
+proc ::ms::color::BW { hexadecimals { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
         ""  {
@@ -958,7 +958,7 @@ proc ::ms::color::Colorlist { family { palette "" } } {
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
 # Returns a list containing the complements of the color/s provided.
-proc ::ms::color::Complement { hexadecimals { depth ""} } {
+proc ::ms::color::Complement { hexadecimals { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
         ""  {
@@ -1032,7 +1032,7 @@ proc ::ms::color::Complement { hexadecimals { depth ""} } {
 #          If not provided, defaults to the '::ms::colordepth' value.
 #
 # Returns the contrast value [0,21] between the two colors provided.
-proc ::ms::color::Contrast { color1 color2 {depth ""} } {
+proc ::ms::color::Contrast { color1 color2 {depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
         ""  {
@@ -1529,7 +1529,7 @@ proc ::ms::color::Gray { hexadecimals via { depth "" } } {
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
 # Returns a list containing the inverse of the color/s provided.
-proc ::ms::color::Inverse { hexadecimals { depth ""} } {
+proc ::ms::color::Inverse { hexadecimals { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
         ""  {
@@ -2016,42 +2016,46 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
 
 
 
+# Set the current colorspace (sRGB) and illuminant (D65).
+set ::ms::data(colorspace) sRGB
+set ::ms::data(illuminant) D65
 
+# Set the Unadapted values.
+set ::ms::data($::ms::data(colorspace),$::ms::data(illuminant),Yr) 0.212656
+set ::ms::data($::ms::data(colorspace),$::ms::data(illuminant),Yg) 0.715158
+set ::ms::data($::ms::data(colorspace),$::ms::data(illuminant),Yb) 0.072186
 
-# sRGB D65 Unadapted values.
-set ::ms::data(sRGB_D65,Yr) 0.212656
-set ::ms::data(sRGB_D65,Yg) 0.715158
-set ::ms::data(sRGB_D65,Yb) 0.072186
-
-# sRGB D65 RGB_XYZ matrix.
+# RGB_XYZ matrix.
+# It must be allready adapted to the illuminant of the PCS colorspace (D50).
 #
 # | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 b1 c1 |
 # | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
 # | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | a3 b3 c3 |
-set ::ms::data(sRGB_D65,RGB_XYZ) [list 0.43603515625 \
-                                       0.2224884033203125 \
-                                       0.013916015625 \
-                                       0.3851165771484375 \
-                                       0.7169036865234375 \
-                                       0.0970611572265625 \
-                                       0.1430511474609375 \
-                                       0.06060791015625 \
-                                       0.7139129638671875];
+set ::ms::data($::ms::data(colorspace),D50,RGB_XYZ) [list 0.43603515625 \
+                                                          0.2224884033203125 \
+                                                          0.013916015625 \
+                                                          0.3851165771484375 \
+                                                          0.7169036865234375 \
+                                                          0.0970611572265625 \
+                                                          0.1430511474609375 \
+                                                          0.06060791015625 \
+                                                          0.7139129638671875];
 
-# sRGB D65 XYZ_RGB matrix.
+# XYZ_RGB matrix.
+# It must be allready adapted to the illuminant of the PCS colorspace (D50).
 #
 # | 3.134274306471669   -1.617274016967423   -0.4907348029960735 |   | a1 b1 c1 |
 # | -0.978795574325203  1.916161596468483    0.03345405023031962 | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
 # | 0.071978551323668   -0.2289898906034097  1.4057483687096277  |   | a3 b3 c3 |
-set ::ms::data(sRGB_D65,XYZ_RGB) [list 3.134274306471669 \
-                                       -0.978795574325203 \
-                                       0.071978551323668 \
-                                       -1.617274016967423 \
-                                       1.916161596468483 \
-                                       -0.2289898906034097 \
-                                       -0.4907348029960735 \
-                                       0.03345405023031962 \
-                                       1.4057483687096277];
+set ::ms::data($::ms::data(colorspace),D50,XYZ_RGB) [list 3.134274306471669 \
+                                                          -0.978795574325203 \
+                                                          0.071978551323668 \
+                                                          -1.617274016967423 \
+                                                          1.916161596468483 \
+                                                          -0.2289898906034097 \
+                                                          -0.4907348029960735 \
+                                                          0.03345405023031962 \
+                                                          1.4057483687096277];
 
 # Note:  CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
 #           | a1 b1 c1 |
