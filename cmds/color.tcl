@@ -680,7 +680,7 @@ proc ::ms::color::Command { args } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the words **black** or **white**, depending which one has more contrast with the relative color provided.
+# Returns a list containing the hexadecimals balanced color/s relative to the color/s provided.
 proc ::ms::color::Balance { hexadecimals tempK { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
@@ -957,7 +957,7 @@ proc ::ms::color::Colorlist { family { palette "" } } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the complements of the color/s provided.
+# Returns a list containing the hexadecimals complements relative to the color/s provided.
 proc ::ms::color::Complement { hexadecimals { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
@@ -1118,7 +1118,7 @@ proc ::ms::color::Contrast { color1 color2 {depth "" } } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the cooled down color/s equivalent to the color/s provided.
+# Returns a list containing the hexadecimal cooler color/s relative to the color/s provided.
 proc ::ms::color::Cooldown { hexadecimals amount { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
@@ -1374,7 +1374,7 @@ proc ::ms::color::Family { hexadecimals { depth "" } } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the family of the color/s provided.
+# Returns a list containing the hexadecimals gray relative to the color/s provided.
 proc ::ms::color::Gray { hexadecimals via { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
@@ -1528,7 +1528,7 @@ proc ::ms::color::Gray { hexadecimals via { depth "" } } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the inverse of the color/s provided.
+# Returns a list containing the hexadecimals inverse color/s relative to the color/s provided.
 proc ::ms::color::Inverse { hexadecimals { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
@@ -1626,7 +1626,7 @@ proc ::ms::color::Inverse { hexadecimals { depth "" } } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the warmup color/s equivalent to the color/s provided.
+# Returns a list containing the hexadecimal warmer color/s relative to the color/s provided.
 proc ::ms::color::Warmup { hexadecimals amount { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
@@ -1892,7 +1892,7 @@ proc ::ms::color::WCGA_2.0 { color1 color2 { depth "" } } {
 #
 #                If not provided, defaults to the '::ms::colordepth' value.
 #
-# Returns a list containing the websafe color/s equivalent to the color/s provided.
+# Returns a list containing the hexadecimals websafe color/s relative to the color/s provided.
 proc ::ms::color::Websafe { hexadecimals { depth "" } } {
     # Check the 'depth' provided, if any.
     switch -- $depth {
