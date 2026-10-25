@@ -65,6 +65,7 @@ package ifneeded mustang $::ms_version {
     package require ::ms::grab
     package require ::ms::grid
     package require ::ms::image
+    package require ::ms::lerp
     package require ::ms::lower
     package require ::ms::option
     package require ::ms::pack
@@ -215,6 +216,7 @@ package ifneeded ::ms::font      0.1 [list source [file join $::ms_library cmds 
 package ifneeded ::ms::grab      0.1 [list source [file join $::ms_library cmds "grab.tcl"]]
 package ifneeded ::ms::grid      0.1 [list source [file join $::ms_library cmds "grid.tcl"]]
 package ifneeded ::ms::image     0.1 [list source [file join $::ms_library cmds "image.tcl"]]
+package ifneeded ::ms::lerp      0.1 [list source [file join $::ms_library cmds "lerp.tcl"]]
 package ifneeded ::ms::lower     0.1 [list source [file join $::ms_library cmds "lower.tcl"]]
 package ifneeded ::ms::option    0.1 [list source [file join $::ms_library cmds "option.tcl"]]
 package ifneeded ::ms::pack      0.1 [list source [file join $::ms_library cmds "pack.tcl"]]
