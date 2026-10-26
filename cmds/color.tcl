@@ -3477,7 +3477,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 16 { return [::RGB16_HEX16 $results] }
             }
         }
-        Protanopia {
+        protanopia {
             # Note: The green and blue cone are present and working, while the red cone is missing or completely damaged.
 
             # Transform the hexadecimal color/s provided into rgb non linear color/s.
@@ -3499,7 +3499,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 16 { return [::RGB16_HEX16 $results] }
             }
         }
-        Deuteranopia {
+        deuteranopia {
             # Note: The red and blue cone are present and working, while the green cone is missing or completely damaged.
 
             # Transform the hexadecimal color/s provided into rgb non linear color/s.
@@ -3521,7 +3521,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 16 { return [::RGB16_HEX16 $results] }
             }
         }
-        Tritanopia {
+        tritanopia {
             # Note: The red and green cone are present and working, while the red cone is missing or completely damaged.
 
             # Transform the hexadecimal color/s provided into rgb non linear color/s.
@@ -3543,9 +3543,9 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 16 { return [::RGB16_HEX16 $results] }
             }
         }
-        Protanomaly   -
-        Deuteranomaly -
-        Tritanomaly   {
+        protanomaly   -
+        deuteranomaly -
+        tritanomaly   {
             # Note: Protanomaly   --> The cones are all present but the red cone is damaged by a certain severity degrees.
             #       Deuteranomaly --> The cones are all present but the green cone is damaged by a certain severity degrees.
             #       Tritanomaly   --> The cones are all present but the blue cone is damaged by a certain severity degrees.
@@ -3571,7 +3571,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                     ##                  ##
                     ######################
 
-                    set cvd [dict get $::ms::table(cvd) $severity $via]
+                    set cvd [dict get $::ms::table(cvd) $via $severity]
                     set a1  [lindex $cvd 0]
                     set a2  [lindex $cvd 1]
                     set a3  [lindex $cvd 2]
@@ -3601,7 +3601,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                             set inferior_severity [expr { $superior_severity-10.0 }]
 
                             # Get the matrix from the cvd table, for the severity immediately inferior to the severity provided.
-                            set cvd_inferior [dict get $::ms::table(cvd) $inferior_severity $via]
+                            set cvd_inferior [dict get $::ms::table(cvd) $via $inferior_severity]
                             set a1_inferior  [lindex $cvd_inferior 0]
                             set a2_inferior  [lindex $cvd_inferior 1]
                             set a3_inferior  [lindex $cvd_inferior 2]
@@ -3628,7 +3628,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                             ######################
 
                             # Get the matrix from the cvd table, for the severity immediately superior to the severity provided.
-                            set cvd_superior [dict get $::ms::table(cvd) $superior_severity $via]
+                            set cvd_superior [dict get $::ms::table(cvd) $via $superior_severity]
                             set a1_superior  [lindex $cvd_superior 0]
                             set a2_superior  [lindex $cvd_superior 1]
                             set a3_superior  [lindex $cvd_superior 2]
@@ -4798,49 +4798,49 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
     }
 }
 
-# CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
+# CVD matrix coefficients for 'protanomaly', 'deuteranomaly' and 'tritanomaly' (ordered by severity [0,100%]):
 #
 # | a1  b1  c1 |
 # | a2  b2  c2 | = [list a1  a2  a3  b1  b2  b3  c1  c2  c3]
 # | a3  b3  c3 |
 
 # Protanomaly CVD matrices                        a1        a2         a3        b1        b2         b3         c1        c2        c3
-dict set ::ms::table(cvd) 0     Protanomaly [list 1.0       0          0         0         1.0        0          0         0         1.0]
-dict set ::ms::table(cvd) 10.0  Protanomaly [list 0.856167  0.029342  -0.002880  0.182038  0.955115  -0.001563  -0.038205  0.015544  1.004443]
-dict set ::ms::table(cvd) 20.0  Protanomaly [list 0.734766  0.051840  -0.004928  0.334872  0.919198  -0.004209  -0.069637  0.028963  1.009137]
-dict set ::ms::table(cvd) 30.0  Protanomaly [list 0.630323  0.069181  -0.006308  0.465641  0.890046  -0.007724  -0.095964  0.040773  1.014032]
-dict set ::ms::table(cvd) 40.0  Protanomaly [list 0.539009  0.082546  -0.007136  0.579343  0.866121  -0.011959  -0.118352  0.051332  1.019095]
-dict set ::ms::table(cvd) 50.0  Protanomaly [list 0.458064  0.092785  -0.007494  0.679578  0.846313  -0.016807  -0.137642  0.060902  1.024301]
-dict set ::ms::table(cvd) 60.0  Protanomaly [list 0.385450  0.100526  -0.007442  0.769005  0.829802  -0.022190  -0.154455  0.069673  1.029632]
-dict set ::ms::table(cvd) 70.0  Protanomaly [list 0.319627  0.106241  -0.007025  0.849633  0.815969  -0.028051  -0.169261  0.077790  1.035076]
-dict set ::ms::table(cvd) 80.0  Protanomaly [list 0.259411  0.110296  -0.006276  0.923008  0.804340  -0.034346  -0.182420  0.085364  1.040622]
-dict set ::ms::table(cvd) 90.0  Protanomaly [list 0.203876  0.112975  -0.005222  0.990338  0.794542  -0.041043  -0.194214  0.092483  1.046265]
-dict set ::ms::table(cvd) 100.0 Protanomaly [list 0.152286  0.114503  -0.003882  1.052583  0.786281  -0.048116  -0.204868  0.099216  1.051998]
+dict set ::ms::table(cvd) protanomaly 0     [list 1.0       0          0         0         1.0        0          0         0         1.0]
+dict set ::ms::table(cvd) protanomaly 10.0  [list 0.856167  0.029342  -0.002880  0.182038  0.955115  -0.001563  -0.038205  0.015544  1.004443]
+dict set ::ms::table(cvd) protanomaly 20.0  [list 0.734766  0.051840  -0.004928  0.334872  0.919198  -0.004209  -0.069637  0.028963  1.009137]
+dict set ::ms::table(cvd) protanomaly 30.0  [list 0.630323  0.069181  -0.006308  0.465641  0.890046  -0.007724  -0.095964  0.040773  1.014032]
+dict set ::ms::table(cvd) protanomaly 40.0  [list 0.539009  0.082546  -0.007136  0.579343  0.866121  -0.011959  -0.118352  0.051332  1.019095]
+dict set ::ms::table(cvd) protanomaly 50.0  [list 0.458064  0.092785  -0.007494  0.679578  0.846313  -0.016807  -0.137642  0.060902  1.024301]
+dict set ::ms::table(cvd) protanomaly 60.0  [list 0.385450  0.100526  -0.007442  0.769005  0.829802  -0.022190  -0.154455  0.069673  1.029632]
+dict set ::ms::table(cvd) protanomaly 70.0  [list 0.319627  0.106241  -0.007025  0.849633  0.815969  -0.028051  -0.169261  0.077790  1.035076]
+dict set ::ms::table(cvd) protanomaly 80.0  [list 0.259411  0.110296  -0.006276  0.923008  0.804340  -0.034346  -0.182420  0.085364  1.040622]
+dict set ::ms::table(cvd) protanomaly 90.0  [list 0.203876  0.112975  -0.005222  0.990338  0.794542  -0.041043  -0.194214  0.092483  1.046265]
+dict set ::ms::table(cvd) protanomaly 100.0 [list 0.152286  0.114503  -0.003882  1.052583  0.786281  -0.048116  -0.204868  0.099216  1.051998]
 
 # Deuteranomaly CVD matrices                        a1        a2         a3        b1        b2        b3         c1        c2        c3
-dict set ::ms::table(cvd) 0     Deuteranomaly [list 1.0       0          0         0         1.0       0          0         0         1.0]
-dict set ::ms::table(cvd) 10.0  Deuteranomaly [list 0.866435  0.049567  -0.003453  0.177704  0.939063  0.007233  -0.044139  0.011370  0.996220]
-dict set ::ms::table(cvd) 20.0  Deuteranomaly [list 0.760729  0.090568  -0.006027  0.319078  0.889315  0.013325  -0.079807  0.020117  0.992702]
-dict set ::ms::table(cvd) 30.0  Deuteranomaly [list 0.675425  0.125303  -0.007950  0.433850  0.847755  0.018572  -0.109275  0.026942  0.989378]
-dict set ::ms::table(cvd) 40.0  Deuteranomaly [list 0.605511  0.155318  -0.009376  0.528560  0.812366  0.023176  -0.134071  0.032316  0.986200]
-dict set ::ms::table(cvd) 50.0  Deuteranomaly [list 0.547494  0.181692  -0.010410  0.607765  0.781742  0.027275  -0.155259  0.036566  0.983136]
-dict set ::ms::table(cvd) 60.0  Deuteranomaly [list 0.498864  0.205199  -0.011131  0.674741  0.754872  0.030969  -0.173604  0.039929  0.980162]
-dict set ::ms::table(cvd) 70.0  Deuteranomaly [list 0.457771  0.226409  -0.011595  0.731899  0.731012  0.034333  -0.189670  0.042579  0.977261]
-dict set ::ms::table(cvd) 80.0  Deuteranomaly [list 0.422823  0.245752  -0.011843  0.781057  0.709602  0.037423  -0.203881  0.044646  0.974421]
-dict set ::ms::table(cvd) 90.0  Deuteranomaly [list 0.392952  0.263559  -0.011910  0.823610  0.690210  0.040281  -0.216562  0.046232  0.971630]
-dict set ::ms::table(cvd) 100.0 Deuteranomaly [list 0.367322  0.280085  -0.011820  0.860646  0.672501  0.042940  -0.227968  0.047413  0.968881]
+dict set ::ms::table(cvd) deuteranomaly 0     [list 1.0       0          0         0         1.0       0          0         0         1.0]
+dict set ::ms::table(cvd) deuteranomaly 10.0  [list 0.866435  0.049567  -0.003453  0.177704  0.939063  0.007233  -0.044139  0.011370  0.996220]
+dict set ::ms::table(cvd) deuteranomaly 20.0  [list 0.760729  0.090568  -0.006027  0.319078  0.889315  0.013325  -0.079807  0.020117  0.992702]
+dict set ::ms::table(cvd) deuteranomaly 30.0  [list 0.675425  0.125303  -0.007950  0.433850  0.847755  0.018572  -0.109275  0.026942  0.989378]
+dict set ::ms::table(cvd) deuteranomaly 40.0  [list 0.605511  0.155318  -0.009376  0.528560  0.812366  0.023176  -0.134071  0.032316  0.986200]
+dict set ::ms::table(cvd) deuteranomaly 50.0  [list 0.547494  0.181692  -0.010410  0.607765  0.781742  0.027275  -0.155259  0.036566  0.983136]
+dict set ::ms::table(cvd) deuteranomaly 60.0  [list 0.498864  0.205199  -0.011131  0.674741  0.754872  0.030969  -0.173604  0.039929  0.980162]
+dict set ::ms::table(cvd) deuteranomaly 70.0  [list 0.457771  0.226409  -0.011595  0.731899  0.731012  0.034333  -0.189670  0.042579  0.977261]
+dict set ::ms::table(cvd) deuteranomaly 80.0  [list 0.422823  0.245752  -0.011843  0.781057  0.709602  0.037423  -0.203881  0.044646  0.974421]
+dict set ::ms::table(cvd) deuteranomaly 90.0  [list 0.392952  0.263559  -0.011910  0.823610  0.690210  0.040281  -0.216562  0.046232  0.971630]
+dict set ::ms::table(cvd) deuteranomaly 100.0 [list 0.367322  0.280085  -0.011820  0.860646  0.672501  0.042940  -0.227968  0.047413  0.968881]
 
 # Tritanomaly CVD matrices                        a1         a2         a3         b1        b2        b3         c1        c2        c3
-dict set ::ms::table(cvd) 0     Tritanomaly [list 1.0        0          0          0         1.0       0          0         0         1.0]
-dict set ::ms::table(cvd) 10.0  Tritanomaly [list 0.926670   0.021191   0.008437   0.092514  0.964503  0.054813  -0.019184  0.014306  0.936750]
-dict set ::ms::table(cvd) 20.0  Tritanomaly [list 0.895720   0.029997   0.013027   0.133330  0.945400  0.104707  -0.029050  0.024603  0.882266]
-dict set ::ms::table(cvd) 30.0  Tritanomaly [list 0.905871   0.026856   0.013410   0.127791  0.941251  0.148296  -0.033662  0.031893  0.838294]
-dict set ::ms::table(cvd) 40.0  Tritanomaly [list 0.948035   0.014364   0.010853   0.089490  0.946792  0.193991  -0.037526  0.038844  0.795156]
-dict set ::ms::table(cvd) 50.0  Tritanomaly [list 1.017277  -0.006113   0.006379   0.027029  0.958479  0.248708  -0.044306  0.047634  0.744913]
-dict set ::ms::table(cvd) 60.0  Tritanomaly [list 1.104996  -0.032137   0.001336  -0.046633  0.971635  0.317922  -0.058363  0.060503  0.680742]
-dict set ::ms::table(cvd) 70.0  Tritanomaly [list 1.193214  -0.058496  -0.002346  -0.109812  0.979410  0.403492  -0.083402  0.079086  0.598854]
-dict set ::ms::table(cvd) 80.0  Tritanomaly [list 1.257728  -0.078003  -0.003316  -0.139648  0.975409  0.501214  -0.118081  0.102594  0.502102]
-dict set ::ms::table(cvd) 90.0  Tritanomaly [list 1.278864  -0.084748  -0.000989  -0.125333  0.957674  0.601151  -0.153531  0.127074  0.399838]
-dict set ::ms::table(cvd) 100.0 Tritanomaly [list 1.255528  -0.078411   0.004733  -0.076749  0.930809  0.691367  -0.178779  0.147602  0.303900]
+dict set ::ms::table(cvd) tritanomaly 0     [list 1.0        0          0          0         1.0       0          0         0         1.0]
+dict set ::ms::table(cvd) tritanomaly 10.0  [list 0.926670   0.021191   0.008437   0.092514  0.964503  0.054813  -0.019184  0.014306  0.936750]
+dict set ::ms::table(cvd) tritanomaly 20.0  [list 0.895720   0.029997   0.013027   0.133330  0.945400  0.104707  -0.029050  0.024603  0.882266]
+dict set ::ms::table(cvd) tritanomaly 30.0  [list 0.905871   0.026856   0.013410   0.127791  0.941251  0.148296  -0.033662  0.031893  0.838294]
+dict set ::ms::table(cvd) tritanomaly 40.0  [list 0.948035   0.014364   0.010853   0.089490  0.946792  0.193991  -0.037526  0.038844  0.795156]
+dict set ::ms::table(cvd) tritanomaly 50.0  [list 1.017277  -0.006113   0.006379   0.027029  0.958479  0.248708  -0.044306  0.047634  0.744913]
+dict set ::ms::table(cvd) tritanomaly 60.0  [list 1.104996  -0.032137   0.001336  -0.046633  0.971635  0.317922  -0.058363  0.060503  0.680742]
+dict set ::ms::table(cvd) tritanomaly 70.0  [list 1.193214  -0.058496  -0.002346  -0.109812  0.979410  0.403492  -0.083402  0.079086  0.598854]
+dict set ::ms::table(cvd) tritanomaly 80.0  [list 1.257728  -0.078003  -0.003316  -0.139648  0.975409  0.501214  -0.118081  0.102594  0.502102]
+dict set ::ms::table(cvd) tritanomaly 90.0  [list 1.278864  -0.084748  -0.000989  -0.125333  0.957674  0.601151  -0.153531  0.127074  0.399838]
+dict set ::ms::table(cvd) tritanomaly 100.0 [list 1.255528  -0.078411   0.004733  -0.076749  0.930809  0.691367  -0.178779  0.147602  0.303900]
 
 #*EOF*
