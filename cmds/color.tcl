@@ -825,14 +825,68 @@ proc ::ms::color::Command { args } {
             return [::ms::color::Contrast $hex1 $hex2 $depth]
         }
         convert {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                5   {
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -from {
+                                switch -- $value {
+                                    HEX8    -
+                                    HEX12   -
+                                    HEX16   -
+                                    RGB8    -
+                                    RGB12   -
+                                    RGB16   -
+                                    rgb     -
+                                    HSB     -
+                                    HSI     -
+                                    HSL     -
+                                    HSP     -
+                                    XYZ     -
+                                    xyY     -
+                                    Lab     -
+                                    Luv     -
+                                    LCHab   -
+                                    LCHuv   { set from $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -to {
+                                switch -- $value {
+                                    HEX8    -
+                                    HEX12   -
+                                    HEX16   -
+                                    RGB8    -
+                                    RGB12   -
+                                    RGB16   -
+                                    rgb     -
+                                    HSB     -
+                                    HSI     -
+                                    HSL     -
+                                    HSP     -
+                                    XYZ     -
+                                    xyY     -
+                                    Lab     -
+                                    Luv     -
+                                    LCHab   -
+                                    LCHuv   { set to $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
 
-
-
-
-
-
-            return [::ms::color::Convert    $args]
+            # Execute the command.
+            return [::ms::color::Convert $colors $from $to $caller_info]
         }
         cooldown {
             # Check the number of 'args' provided.
@@ -1811,6 +1865,1105 @@ proc ::ms::color::Contrast { color1 color2 depth } {
         return [expr { ($luma1+0.05)/($luma2+0.05) }]
     } else {
         return [expr { ($luma2+0.05)/($luma1+0.05) }]
+    }
+}
+
+## Convert
+#
+# Covert the color/s provided from one colormodel to another.
+#
+# Where:
+#
+# colors        Should be a list containing all the colors to process, exspressed in the 'from' colormodel format.
+#
+# from          Should be a string indicating the colormodel format of the 'colors' provided.
+#               Allowed colormodels are:
+#
+#                  **HEX8**
+#                  **HEX12**
+#                  **HEX16**
+#                  **RGB8**
+#                  **RGB12**
+#                  **RGB16**
+#                  **rgb**
+#                  **HSB**
+#                  **HSI**
+#                  **HSL**
+#                  **HSP**
+#                  **HWB**
+#                  **XYZ**
+#                  **xyY**
+#                  **Lab**
+#                  **Luv**
+#                  **LCHab**
+#                  **LCHuv**
+#
+# to            Should be a string indicating the colormodel format of the resulting colors.
+#               Allowed colormodels are:
+#
+#                  **HEX8**
+#                  **HEX12**
+#                  **HEX16**
+#                  **RGB8**
+#                  **RGB12**
+#                  **RGB16**
+#                  **rgb**
+#                  **HSB**
+#                  **HSI**
+#                  **HSL**
+#                  **HSP**
+#                  **HWB**
+#                  **XYZ**
+#                  **xyY**
+#                  **Lab**
+#                  **Luv**
+#                  **LCHab**
+#                  **LCHuv**
+#
+# caller_info   Optional, should be the information upon the location of the command that generated the error.
+#
+#               If not provided, defaults to an empty string, meaning it will not provided any information
+#               on the command that generated the error.
+#
+# Returns a list containing the resulting colors expressed in the 'to' colormodel format.
+proc ::ms::color::Convert { colors from to { caller_info "" } } {
+    # Check the 'from' option.
+    switch -- $from {
+        HEX8 {
+            # Check the 'colors' provided.
+            set HEXs [list ]
+            foreach hexadecimal $colors {
+                set result [::ms::Check_Hex $hexadecimal HEX8 invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return $HEXs }
+                HEX12 { return [::HEX8_HEX12 $HEXs] }
+                HEX16 { return [::HEX8_HEX16 $HEXs] }
+                RGB8  { return [::HEX8_RGB8  $HEXs] }
+                RGB12 { return [::RGB8_RGB12 [::HEX8_RGB8 $HEXs]] }
+                RGB16 { return [::RGB8_RGB16 [::HEX8_RGB8 $HEXs]] }
+                rgb   { return [::RGB8_rgb   [::HEX8_RGB8 $HEXs]] }
+                HSB   { return [::rgb_HSB    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
+                HSI   { return [::rgb_HSI    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
+                HSL   { return [::rgb_HSL    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
+                HSP   { return [::rgb_HSP    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
+                HWB   { return [::rgb_HWB    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
+                XYZ   { return [::rgb_XYZ    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
+                xyY   { return [::XYZ_xyY    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]] }
+                Lab   { return [::XYZ_Lab    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]] }
+                Luv   { return [::XYZ_Luv    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]] }
+                LCHab { return [::Lab_LCHab  [::XYZ_Lab   [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]]] }
+                LCHuv { return [::Luv_LCHuv  [::XYZ_Luv   [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]]] }
+            }
+        }
+        HEX12 {
+            # Check the 'colors' provided.
+            set HEXs [list ]
+            foreach hexadecimal $colors {
+                set result [::ms::Check_Hex $hexadecimal HEX12 invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::HEX12_HEX8  $HEXs] }
+                HEX12 { return $HEXs }
+                HEX16 { return [::HEX12_HEX16 $HEXs] }
+                RGB8  { return [::RGB12_RGB8  [::HEX12_RGB12 $HEXs]] }
+                RGB12 { return [::HEX12_RGB12 $HEXs] }
+                RGB16 { return [::RGB12_RGB16 [::HEX12_RGB12 $HEXs]] }
+                rgb   { return [::RGB12_rgb   [::HEX12_RGB12 $HEXs]] }
+                HSB   { return [::rgb_HSB     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
+                HSI   { return [::rgb_HSI     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
+                HSL   { return [::rgb_HSL     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
+                HSP   { return [::rgb_HSP     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
+                HWB   { return [::rgb_HWB     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
+                XYZ   { return [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]]] }
+            }
+        }
+        HEX16 {
+            # Check the 'colors' provided.
+            set HEXs [list ]
+            foreach hexadecimal $colors {
+                set result [::ms::Check_Hex $hexadecimal HEX16 invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::HEX16_HEX8  $HEXs] }
+                HEX12 { return [::HEX16_HEX12 $HEXs] }
+                HEX16 { return $HEXs }
+                RGB8  { return [::RGB16_RGB8  [::HEX16_RGB16 $HEXs]] }
+                RGB12 { return [::RGB16_RGB12 [::HEX16_RGB16 $HEXs]] }
+                RGB16 { return [::HEX16_RGB16 $HEXs] }
+                rgb   { return [::RGB16_rgb   [::HEX16_RGB16 $HEXs]] }
+                HSB   { return [::rgb_HSB     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
+                HSI   { return [::rgb_HSI     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
+                HSL   { return [::rgb_HSL     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
+                HSP   { return [::rgb_HSP     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
+                HWB   { return [::rgb_HWB     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
+                XYZ   { return [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]]] }
+            }
+        }
+        RGB8 {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach channel $colors {
+                        switch -- [string is integer -strict $channel] {
+                            0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
+                            default {
+                                if { $channel < 0 } {
+                                    set channel 0
+                                } else if { $channel > 255 } {
+                                    set channel 255
+                                }
+
+                                lappend channels $channel
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   $channels] }
+                HEX12 { return [::RGB12_HEX12 [::RGB8_RGB12 $channels]] }
+                HEX16 { return [::RGB16_HEX16 [::RGB8_RGB16 $channels]] }
+                RGB8  { return $channels }
+                RGB12 { return [::RGB8_RGB12  $channels] }
+                RGB16 { return [::RGB8_RGB16  $channels] }
+                rgb   { return [::RGB8_rgb    $channels] }
+                HSB   { return [::rgb_HSB     [::RGB8_rgb   $channels]] }
+                HSI   { return [::rgb_HSI     [::RGB8_rgb   $channels]] }
+                HSL   { return [::rgb_HSL     [::RGB8_rgb   $channels]] }
+                HSP   { return [::rgb_HSP     [::RGB8_rgb   $channels]] }
+                HWB   { return [::rgb_HWB     [::RGB8_rgb   $channels]] }
+                XYZ   { return [::rgb_XYZ     [::RGB8_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ    [::RGB8_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ    [::RGB8_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ    [::RGB8_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab    [::rgb_XYZ  [::RGB8_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv    [::rgb_XYZ  [::RGB8_rgb $channels]]]] }
+            }
+        }
+        RGB12 {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach channel $colors {
+                        switch -- [string is integer -strict $channel] {
+                            0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
+                            default {
+                                if { $channel < 0 } {
+                                    set channel 0
+                                } else if { $channel > 4095 } {
+                                    set channel 4095
+                                }
+
+                                lappend channels $channel
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::RGB12_RGB8  $channels]] }
+                HEX12 { return [::RGB12_HEX12 $channels] }
+                HEX16 { return [::RGB16_HEX16 [::RGB12_RGB16 $channels]] }
+                RGB8  { return [::RGB12_RGB8  $channels] }
+                RGB12 { return $channels }
+                RGB16 { return [::RGB12_RGB16 $channels] }
+                rgb   { return [::RGB12_rgb   $channels] }
+                HSB   { return [::rgb_HSB     [::RGB12_rgb   $channels]] }
+                HSI   { return [::rgb_HSI     [::RGB12_rgb   $channels]] }
+                HSL   { return [::rgb_HSL     [::RGB12_rgb   $channels]] }
+                HSP   { return [::rgb_HSP     [::RGB12_rgb   $channels]] }
+                HWB   { return [::rgb_HWB     [::RGB12_rgb   $channels]] }
+                XYZ   { return [::rgb_XYZ     [::RGB12_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB12_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ   [::RGB12_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ   [::RGB12_rgb $channels]]]] }
+            }
+        }
+        RGB16 {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach channel $colors {
+                        switch -- [string is integer -strict $channel] {
+                            0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
+                            default {
+                                if { $channel < 0 } {
+                                    set channel 0
+                                } else if { $channel > 65535 } {
+                                    set channel 65535
+                                }
+
+                                lappend channels $channel
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::RGB16_RGB8  $channels]] }
+                HEX12 { return [::RGB12_HEX12 [::RGB16_RGB12 $channels]] }
+                HEX16 { return [::RGB16_HEX16 $channels] }
+                RGB8  { return [::RGB16_RGB8  $channels] }
+                RGB12 { return [::RGB16_RGB12 $channels] }
+                RGB16 { return $channels }
+                rgb   { return [::RGB16_rgb   $channels] }
+                HSB   { return [::rgb_HSB     [::RGB16_rgb   $channels]] }
+                HSI   { return [::rgb_HSI     [::RGB16_rgb   $channels]] }
+                HSL   { return [::rgb_HSL     [::RGB16_rgb   $channels]] }
+                HSP   { return [::rgb_HSP     [::RGB16_rgb   $channels]] }
+                HWB   { return [::rgb_HWB     [::RGB16_rgb   $channels]] }
+                XYZ   { return [::rgb_XYZ     [::RGB16_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB16_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ   [::RGB16_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ   [::RGB16_rgb $channels]]]] }
+            }
+        }
+        rgb {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach channel $colors {
+                        switch -- [string is integer -strict $channel] {
+                            0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
+                            default {
+                                if { $channel < 0 } {
+                                    set channel 0
+                                } else if { $channel > 1.0 } {
+                                    set channel 1.0
+                                }
+
+                                lappend channels $channel
+                            }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  $channels]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 $channels]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 $channels]] }
+                RGB8  { return [::rgb_RGB8    $channels] }
+                RGB12 { return [::rgb_RGB12   $channels] }
+                RGB16 { return [::rgb_RGB16   $channels] }
+                rgb   { return $channels }
+                HSB   { return [::rgb_HSB     $channels] }
+                HSI   { return [::rgb_HSI     $channels] }
+                HSL   { return [::rgb_HSL     $channels] }
+                HSP   { return [::rgb_HSP     $channels] }
+                HWB   { return [::rgb_HWB     $channels] }
+                XYZ   { return [::rgb_XYZ     $channels] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   $channels]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   $channels]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   $channels]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ $channels]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ $channels]]] }
+            }
+        }
+        HSB {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { hue saturation brightness } $colors {
+                        # Check the 'hue'.
+                        switch -- [string is double -strict $hue] {
+                            0       { ::ms::Error "Invalid color hue, '$hue'." $caller_info }
+                            default {
+                                if { ($hue < 0) || ($hue >= 360.0) } {
+                                    set hue 0
+                                }
+                            }
+                        }
+
+                        # Check the 'saturation'.
+                        switch -- [string is double -strict $saturation] {
+                            0       { ::ms::Error "Invalid color saturation, '$saturation'." $caller_info }
+                            default {
+                                if { $saturation < 0 } {
+                                    set saturation 0
+                                } elseif { $saturation > 100.0 } {
+                                    set saturation 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'brightness'.
+                        switch -- [string is double -strict $brightness] {
+                            0       { ::ms::Error "Invalid color brightness, '$brightness'." $caller_info }
+                            default {
+                                if { $brightness < 0 } {
+                                    set brightness 0
+                                } elseif { $brightness > 100.0 } {
+                                    set brightness 100.0
+                                }
+                            }
+                        }
+
+                        lappend channels $hue $saturation $brightness
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $channels]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $channels]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSB_rgb $channels]]] }
+                RGB8  { return [::rgb_RGB8    [::HSB_rgb   $channels]] }
+                RGB12 { return [::rgb_RGB12   [::HSB_rgb   $channels]] }
+                RGB16 { return [::rgb_RGB16   [::HSB_rgb   $channels]] }
+                rgb   { return [::HSB_rgb     $channels] }
+                HSB   { return $channels }
+                HSI   { return [::HSB_HSI     $channels] }
+                HSL   { return [::HSB_HSL     $channels] }
+                HSP   { return [::HSB_HSP     $channels] }
+                HWB   { return [::HSB_HWB     $channels] }
+                XYZ   { return [::rgb_XYZ     [::HSB_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSB_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSB_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSB_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSB_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSB_rgb $channels]]]] }
+            }
+        }
+        HSI {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { hue saturation intensity } $colors {
+                        # Check the 'hue'.
+                        switch -- [string is double -strict $hue] {
+                            0       { ::ms::Error "Invalid color hue, '$hue'." $caller_info }
+                            default {
+                                if { ($hue < 0) || ($hue >= 360.0) } {
+                                    set hue 0
+                                }
+                            }
+                        }
+
+                        # Check the 'saturation'.
+                        switch -- [string is double -strict $saturation] {
+                            0       { ::ms::Error "Invalid color saturation, '$saturation'." $caller_info }
+                            default {
+                                if { $saturation < 0 } {
+                                    set saturation 0
+                                } elseif { $saturation > 100.0 } {
+                                    set saturation 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'intensity'.
+                        switch -- [string is double -strict $intensity] {
+                            0       { ::ms::Error "Invalid color intensity, '$intensity'." $caller_info }
+                            default {
+                                if { $intensity < 0 } {
+                                    set intensity 0
+                                } elseif { $intensity > 100.0 } {
+                                    set intensity 100.0
+                                }
+                            }
+                        }
+
+                        lappend channels $hue $saturation $intensity
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $channels]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $channels]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSI_rgb $channels]]] }
+                RGB8  { return [::rgb_RGB8    [::HSI_rgb   $channels]] }
+                RGB12 { return [::rgb_RGB12   [::HSI_rgb   $channels]] }
+                RGB16 { return [::rgb_RGB16   [::HSI_rgb   $channels]] }
+                rgb   { return [::HSI_rgb     $channels] }
+                HSB   { return [::HSI_HSB     $channels] }
+                HSI   { return $channels }
+                HSL   { return [::HSI_HSL     $channels] }
+                HSP   { return [::HSI_HSP     $channels] }
+                HWB   { return [::HSI_HWB     $channels] }
+                XYZ   { return [::rgb_XYZ     [::HSI_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSI_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSI_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSI_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSI_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSI_rgb $channels]]]] }
+            }
+        }
+        HSL {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { hue saturation lightness } $colors {
+                        # Check the 'hue'.
+                        switch -- [string is double -strict $hue] {
+                            0       { ::ms::Error "Invalid color hue, '$hue'." $caller_info }
+                            default {
+                                if { ($hue < 0) || ($hue >= 360.0) } {
+                                    set hue 0
+                                }
+                            }
+                        }
+
+                        # Check the 'saturation'.
+                        switch -- [string is double -strict $saturation] {
+                            0       { ::ms::Error "Invalid color saturation, '$saturation'." $caller_info }
+                            default {
+                                if { $saturation < 0 } {
+                                    set saturation 0
+                                } elseif { $saturation > 100.0 } {
+                                    set saturation 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'lightness'.
+                        switch -- [string is double -strict $lightness] {
+                            0       { ::ms::Error "Invalid color lightness, '$lightness'." $caller_info }
+                            default {
+                                if { $lightness < 0 } {
+                                    set lightness 0
+                                } elseif { $lightness > 100.0 } {
+                                    set lightness 100.0
+                                }
+                            }
+                        }
+
+                        lappend channels $hue $saturation $lightness
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $channels]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $channels]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSL_rgb $channels]]] }
+                RGB8  { return [::rgb_RGB8    [::HSL_rgb   $channels]] }
+                RGB12 { return [::rgb_RGB12   [::HSL_rgb   $channels]] }
+                RGB16 { return [::rgb_RGB16   [::HSL_rgb   $channels]] }
+                rgb   { return [::HSL_rgb     $channels] }
+                HSB   { return [::HSL_HSB     $channels] }
+                HSI   { return [::HSL_HSI     $channels] }
+                HSL   { return $channels }
+                HSP   { return [::HSL_HSP     $channels] }
+                HWB   { return [::HSL_HWB     $channels] }
+                XYZ   { return [::rgb_XYZ     [::HSL_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSL_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSL_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSL_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSL_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSL_rgb $channels]]]] }
+            }
+        }
+        HSP {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { hue saturation perceived_brightness } $colors {
+                        # Check the 'hue'.
+                        switch -- [string is double -strict $hue] {
+                            0       { ::ms::Error "Invalid color hue, '$hue'." $caller_info }
+                            default {
+                                if { ($hue < 0) || ($hue >= 360.0) } {
+                                    set hue 0
+                                }
+                            }
+                        }
+
+                        # Check the 'saturation'.
+                        switch -- [string is double -strict $saturation] {
+                            0       { ::ms::Error "Invalid color saturation, '$saturation'." $caller_info }
+                            default {
+                                if { $saturation < 0 } {
+                                    set saturation 0
+                                } elseif { $saturation > 100.0 } {
+                                    set saturation 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'perceived_brightness'.
+                        switch -- [string is double -strict $perceived_brightness] {
+                            0       { ::ms::Error "Invalid color perceived_brightness, '$perceived_brightness'." $caller_info }
+                            default {
+                                if { $perceived_brightness < 0 } {
+                                    set perceived_brightness 0
+                                } elseif { $perceived_brightness > 100.0 } {
+                                    set perceived_brightness 100.0
+                                }
+                            }
+                        }
+
+                        lappend channels $hue $saturation $perceived_brightness
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $channels]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $channels]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSP_rgb $channels]]] }
+                RGB8  { return [::rgb_RGB8    [::HSP_rgb   $channels]] }
+                RGB12 { return [::rgb_RGB12   [::HSP_rgb   $channels]] }
+                RGB16 { return [::rgb_RGB16   [::HSP_rgb   $channels]] }
+                rgb   { return [::HSP_rgb     $channels] }
+                HSB   { return [::HSP_HSB     $channels] }
+                HSI   { return [::HSP_HSI     $channels] }
+                HSL   { return [::HSP_HSL     $channels] }
+                HSP   { return $channels }
+                HWB   { return [::HSP_HWB     $channels] }
+                XYZ   { return [::rgb_XYZ     [::HSP_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSP_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSP_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSP_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSP_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSP_rgb $channels]]]] }
+            }
+        }
+        HWB {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { hue whiteness blackness } $colors {
+                        # Check the 'hue'.
+                        switch -- [string is double -strict $hue] {
+                            0       { ::ms::Error "Invalid color hue, '$hue'." $caller_info }
+                            default {
+                                if { ($hue < 0) || ($hue >= 360.0) } {
+                                    set hue 0
+                                }
+                            }
+                        }
+
+                        # Check the 'whiteness'.
+                        switch -- [string is double -strict $whiteness] {
+                            0       { ::ms::Error "Invalid color whiteness, '$whiteness'." $caller_info }
+                            default {
+                                if { $whiteness < 0 } {
+                                    set whiteness 0
+                                } elseif { $whiteness > 100.0 } {
+                                    set whiteness 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'blackness'.
+                        switch -- [string is double -strict $blackness] {
+                            0       { ::ms::Error "Invalid color blackness, '$blackness'." $caller_info }
+                            default {
+                                if { $blackness < 0 } {
+                                    set blackness 0
+                                } elseif { $blackness > 100.0 } {
+                                    set blackness 100.0
+                                }
+                            }
+                        }
+
+                        lappend channels $hue $whiteness $blackness
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HWB_rgb $channels]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HWB_rgb $channels]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HWB_rgb $channels]]] }
+                RGB8  { return [::rgb_RGB8    [::HWB_rgb   $channels]] }
+                RGB12 { return [::rgb_RGB12   [::HWB_rgb   $channels]] }
+                RGB16 { return [::rgb_RGB16   [::HWB_rgb   $channels]] }
+                rgb   { return [::HWB_rgb     $channels] }
+                HSB   { return [::HWB_HSB     $channels] }
+                HSI   { return [::HWB_HSI     $channels] }
+                HSL   { return [::HWB_HSL     $channels] }
+                HSP   { return [::HWB_HSP     $channels] }
+                HWB   { return $channels }
+                XYZ   { return [::rgb_XYZ     [::HWB_rgb   $channels]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HWB_rgb $channels]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HWB_rgb $channels]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HWB_rgb $channels]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HWB_rgb $channels]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HWB_rgb $channels]]]] }
+            }
+        }
+        XYZ {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { X Y Z } $colors {
+                        # Check the 'X'.
+                        switch -- [string is double -strict $X] {
+                            0       { ::ms::Error "Invalid color channel, '$X'." $caller_info }
+                            default {
+                                if { $X < 0 } {
+                                    set X 0
+                                } elseif { $X > 1.999969482421875 } {
+                                    set X 1.999969482421875
+                                }
+                            }
+                        }
+
+                        # Check the 'Y'.
+                        switch -- [string is double -strict $Y] {
+                            0       { ::ms::Error "Invalid color channel, '$Y'." $caller_info }
+                            default {
+                                if { $Y < 0 } {
+                                    set Y 0
+                                } elseif { $Y > 1.0 } {
+                                    set Y 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'Z'.
+                        switch -- [string is double -strict $Z] {
+                            0       { ::ms::Error "Invalid color channel, '$Z'." $caller_info }
+                            default {
+                                if { $Z < 0 } {
+                                    set Z 0
+                                } elseif { $Z > 1.999969482421875 } {
+                                    set Z 1.999969482421875
+                                }
+                            }
+                        }
+
+                        lappend channels $X $Y $Z
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb $channels]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb $channels]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb $channels]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   $channels]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   $channels]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   $channels]] }
+                rgb   { return [::XYZ_rgb     $channels] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   $channels]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   $channels]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   $channels]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   $channels]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   $channels]] }
+                XYZ   { return $channels }
+                xyY   { return [::XYZ_xyY     $channels] }
+                Lab   { return [::XYZ_Lab     $channels] }
+                Luv   { return [::XYZ_Luv     $channels] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   $channels]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   $channels]] }
+            }
+        }
+        xyY {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { x y Y } $colors {
+                        # Check the 'x'.
+                        switch -- [string is double -strict $x] {
+                            0       { ::ms::Error "Invalid color channel, '$x'." $caller_info }
+                            default {
+                                if { $x < 0 } {
+                                    set x 0
+                                } elseif { $x > 1.0 } {
+                                    set x 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'y'.
+                        switch -- [string is double -strict $y] {
+                            0       { ::ms::Error "Invalid color channel, '$y'." $caller_info }
+                            default {
+                                if { $y < 0 } {
+                                    set y 0
+                                } elseif { $y > 1.0 } {
+                                    set y 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'Y'.
+                        switch -- [string is double -strict $Y] {
+                            0       { ::ms::Error "Invalid color channel, '$Y'." $caller_info }
+                            default {
+                                if { $Y < 0 } {
+                                    set Y 0
+                                } elseif { $Y > 1.0 } {
+                                    set Y 1.0
+                                }
+                            }
+                        }
+
+                        lappend channels $x $y $Y
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::xyY_XYZ $channels]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::xyY_XYZ $channels]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::xyY_XYZ $channels]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                rgb   { return [::XYZ_rgb     [::xyY_XYZ   $channels]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
+                XYZ   { return [::xyY_XYZ     $channels] }
+                xyY   { return $channels }
+                Lab   { return [::XYZ_Lab     [::xyY_XYZ   $channels]] }
+                Luv   { return [::XYZ_Luv     [::xyY_XYZ   $channels]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::xyY_XYZ $channels]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::xyY_XYZ $channels]]] }
+            }
+        }
+        Lab {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { L a b } $colors {
+                        # Check the 'L'.
+                        switch -- [string is double -strict $L] {
+                            0       { ::ms::Error "Invalid color channel, '$L'." $caller_info }
+                            default {
+                                if { $L < 0 } {
+                                    set L 0
+                                } elseif { $L > 1.0 } {
+                                    set L 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'a'.
+                        switch -- [string is double -strict $a] {
+                            0       { ::ms::Error "Invalid color channel, '$a'." $caller_info }
+                            default {
+                                if { $a < -128.0 } {
+                                    set a -128.0
+                                } elseif { $a > 127.0 } {
+                                    set a 127.0
+                                }
+                            }
+                        }
+
+                        # Check the 'b'.
+                        switch -- [string is double -strict $b] {
+                            0       { ::ms::Error "Invalid color channel, '$b'." $caller_info }
+                            default {
+                                if { $b < -128.0 } {
+                                    set b -128.0
+                                } elseif { $b > 127.0 } {
+                                    set b 127.0
+                                }
+                            }
+                        }
+
+                        lappend channels $L $a $b
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ $channels]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ $channels]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::Lab_XYZ $channels]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                rgb   { return [::XYZ_rgb     [::Lab_XYZ   $channels]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
+                XYZ   { return [::XYZ_Lab     $channels] }
+                xyY   { return [::XYZ_xyY     [::Lab_XYZ   $channels]] }
+                Lab   { return $channels }
+                Luv   { return [::XYZ_Luv     [::Lab_XYZ   $channels]] }
+                LCHab { return [::Lab_LCHab   $channels] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::Lab_XYZ $channels]]] }
+            }
+        }
+        Luv {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { L u v } $colors {
+                        # Check the 'L'.
+                        switch -- [string is double -strict $L] {
+                            0       { ::ms::Error "Invalid color channel, '$L'." $caller_info }
+                            default {
+                                if { $L < 0 } {
+                                    set L 0
+                                } elseif { $L > 1.0 } {
+                                    set L 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'u'.
+                        switch -- [string is double -strict $u] {
+                            0       { ::ms::Error "Invalid color channel, '$u'." $caller_info }
+                            default {
+                                if { $u < -134.0 } {
+                                    set u -134.0
+                                } elseif { $u > 220.0 } {
+                                    set u 220.0
+                                }
+                            }
+                        }
+
+                        # Check the 'v'.
+                        switch -- [string is double -strict $v] {
+                            0       { ::ms::Error "Invalid color channel, '$v'." $caller_info }
+                            default {
+                                if { $v < -140.0 } {
+                                    set v -140.0
+                                } elseif { $v > 122.0 } {
+                                    set v 122.0
+                                }
+                            }
+                        }
+
+                        lappend channels $L $u $v
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ $channels]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ $channels]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::Luv_XYZ $channels]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                rgb   { return [::XYZ_rgb     [::Luv_XYZ   $channels]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
+                XYZ   { return [::XYZ_Luv     $channels] }
+                xyY   { return [::XYZ_xyY     [::Luv_XYZ   $channels]] }
+                Lab   { return [::XYZ_Lab     [::Luv_XYZ   $channels]] }
+                Luv   { return $channels }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::Luv_XYZ $channels]]] }
+                LCHuv { return [::Luv_LCHuv   $channels] }
+            }
+        }
+        LCHab {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { L C Hab } $colors {
+                        # Check the 'L'.
+                        switch -- [string is double -strict $L] {
+                            0       { ::ms::Error "Invalid color channel, '$L'." $caller_info }
+                            default {
+                                if { $L < 0 } {
+                                    set L 0
+                                } elseif { $L > 1.0 } {
+                                    set L 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'C'.
+                        switch -- [string is double -strict $C] {
+                            0       { ::ms::Error "Invalid color channel, '$C'." $caller_info }
+                            default {
+                                if { $C < 0 } {
+                                    set C 0
+                                } elseif { $C > 100.0 } {
+                                    set C 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'Hab'.
+                        switch -- [string is double -strict $Hab] {
+                            0       { ::ms::Error "Invalid color channel, '$Hab'." $caller_info }
+                            default {
+                                if { ($Hab < 0) || ($Hab >= 360.0) } {
+                                    set Hab 0
+                                }
+                            }
+                        }
+
+                        lappend channels $L $C $Hab
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                rgb   { return [::XYZ_rgb     [::Lab_XYZ   [::LCHab_Lab $channels]]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                XYZ   { return [::Lab_XYZ     [::LCHab_Lab $channels]] }
+                xyY   { return [::XYZ_xyY     [::Lab_XYZ   [::LCHab_Lab $channels]]] }
+                Lab   { return [::LCHab_Lab   $channels] }
+                Luv   { return [::XYZ_Luv     [::Lab_XYZ   [::LCHab_Lab $channels]]] }
+                LCHab { return $channels }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+            }
+        }
+        LCHuv {
+            # Check the 'colors' provided.
+            switch -- [expr { [llength $colors]%3 }] {
+                0   {
+                    set channels [list ]
+                    foreach { L C Hab } $colors {
+                        # Check the 'L'.
+                        switch -- [string is double -strict $L] {
+                            0       { ::ms::Error "Invalid color channel, '$L'." $caller_info }
+                            default {
+                                if { $L < 0 } {
+                                    set L 0
+                                } elseif { $L > 1.0 } {
+                                    set L 1.0
+                                }
+                            }
+                        }
+
+                        # Check the 'C'.
+                        switch -- [string is double -strict $C] {
+                            0       { ::ms::Error "Invalid color channel, '$C'." $caller_info }
+                            default {
+                                if { $C < 0 } {
+                                    set C 0
+                                } elseif { $C > 100.0 } {
+                                    set C 100.0
+                                }
+                            }
+                        }
+
+                        # Check the 'Huv'.
+                        switch -- [string is double -strict $Huv] {
+                            0       { ::ms::Error "Invalid color channel, '$Huv'." $caller_info }
+                            default {
+                                if { ($Huv < 0) || ($Huv >= 360.0) } {
+                                    set Huv 0
+                                }
+                            }
+                        }
+
+                        lappend channels $L $C $Huv
+                    }
+                }
+                default { ::ms::Error "Invalid number of color channels." $caller_info }
+            }
+
+            # Check the 'to' option.
+            switch -- $to {
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                rgb   { return [::XYZ_rgb     [::Luv_XYZ   [::LCHuv_Luv $channels]]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                XYZ   { return [::Luv_XYZ     [::LCHuv_Luv $channels]] }
+                xyY   { return [::XYZ_xyY     [::Luv_XYZ   [::LCHuv_Luv $channels]]] }
+                Lab   { return [::XYZ_Lab     [::Luv_XYZ   [::LCHuv_Luv $channels]]] }
+                Luv   { return [::LCHuv_Luv   $channels] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                LCHuv { return $channels }
+            }
+        }
     }
 }
 
