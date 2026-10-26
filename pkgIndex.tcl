@@ -161,7 +161,11 @@ package ifneeded mustang $::ms_version {
     package require ::ms::HWB_HSL
     package require ::ms::HWB_HSP
     package require ::ms::HWB_rgb
+    package require ::ms::Lab_LCHab
     package require ::ms::Lab_XYZ
+    package require ::ms::LCHab_Lab
+    package require ::ms::LCHuv_Luv
+    package require ::ms::Luv_LCHuv
     package require ::ms::Luv_XYZ
     package require ::ms::rgb_HSB
     package require ::ms::rgb_HSI
