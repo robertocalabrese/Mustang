@@ -1754,7 +1754,10 @@ proc ::ms::color::BW { HEXs depth } {
         set b_linear [::companding $b inverse]
 
         # Compute the luma of the rgb *linear* color.
-        set luma [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear) }]
+        set a1   [expr { $::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear }]
+        set a2   [expr { $::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear }]
+        set a3   [expr { $::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear }]
+        set luma [expr { $a1+$a2+$a3 }]
 
         # Confront the rgb *linear* color contrast values (against 'black' and 'white').
         if { [expr { ($luma+0.05)*20.0 }] > [expr { 1.05/($luma+0.05) }] } {
@@ -1792,11 +1795,11 @@ proc ::ms::color::Complement { HEXs depth } {
     foreach { red green blue } $channels {
         set min [expr { min($red,$green,$blue) }]
         set max [expr { max($red,$green,$blue) }]
-        set sum [expr { $min+$max} ]
+        set sum [expr { $min+$max }]
 
-        set red   [expr {$sum-$red}]
-        set green [expr {$sum-$green}]
-        set blue  [expr {$sum-$blue}]
+        set red   [expr { $sum-$red }]
+        set green [expr { $sum-$green }]
+        set blue  [expr { $sum-$blue }]
 
         lappend results $red $green $blue
     }
@@ -1842,7 +1845,6 @@ proc ::ms::color::Contrast { color1 color2 depth } {
         }
     }
 
-    # Compute the luma of the first color.
     # Trasform the *non-linear* rgb values into a *linear* rgb ones.
     foreach { r1 g1 b1 } $rgb1 {
         set r1_linear [::companding $r1 inverse]
@@ -1856,9 +1858,17 @@ proc ::ms::color::Contrast { color1 color2 depth } {
         set b2_linear [::companding $b2 inverse]
     }
 
-    # Compute the two colors lumas.
-    set luma1 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b1_linear) }]
-    set luma2 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b2_linear) }]
+    # Compute the luma of the first color.
+    set a1    [expr { $::ms::data(colorspace,$::ms::colorspace,Yr)*$r1_linear }]
+    set a2    [expr { $::ms::data(colorspace,$::ms::colorspace,Yg)*$g1_linear }]
+    set a3    [expr { $::ms::data(colorspace,$::ms::colorspace,Yb)*$b1_linear }]
+    set luma1 [expr { $a1+$a2+$a3 }]
+
+    # Compute the luma of the second color.
+    set b1    [expr { $::ms::data(colorspace,$::ms::colorspace,Yr)*$r2_linear }]
+    set b2    [expr { $::ms::data(colorspace,$::ms::colorspace,Yg)*$g2_linear }]
+    set b3    [expr { $::ms::data(colorspace,$::ms::colorspace,Yb)*$b2_linear }]
+    set luma2 [expr { $b1+$b2+$b3 }]
 
     # Compute the contrast value.
     if { $luma1 > $luma2 } {
@@ -2994,7 +3004,7 @@ proc ::ms::color::Cooldown { HEXs amount depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red  [expr { $red-$amount } ]
+                set red  [expr { $red-$amount  }]
                 set blue [expr { $blue+$amount }]
 
                 # Check that the 'red' channel doesn't exceeds its lower limit.
@@ -3022,7 +3032,7 @@ proc ::ms::color::Cooldown { HEXs amount depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red  [expr { $red-$amount } ]
+                set red  [expr { $red-$amount  }]
                 set blue [expr { $blue+$amount }]
 
                 # Check that the 'red' channel doesn't exceeds its lower limit.
@@ -3050,7 +3060,7 @@ proc ::ms::color::Cooldown { HEXs amount depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red  [expr { $red-$amount } ]
+                set red  [expr { $red-$amount  }]
                 set blue [expr { $blue+$amount }]
 
                 # Check that the 'red' channel doesn't exceeds its lower limit.
@@ -3208,7 +3218,7 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
         }
         Lab {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into Lab color/s.
@@ -3219,15 +3229,15 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness a b } $channels {
-                set lightness [expr { $lightness-$amount }]
+            foreach { L a b } $channels {
+                set L [expr { $L-$amount }]
 
-                # Check if 'lightness' exceeds its lower limit
-                if { $lightness < 0 } {
-                    set lightness 0
+                # Check if 'L' exceeds its lower limit
+                if { $L < 0 } {
+                    set L 0
                 }
 
-                lappend results $lightness $a $b
+                lappend results $L $a $b
             }
 
             # Transform the resulting Lab color/s back into hexadecimal color/s.
@@ -3238,7 +3248,7 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
         }
         Luv {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into Luv color/s.
@@ -3249,15 +3259,15 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness u v } $channels {
-                set lightness [expr { $lightness-$amount }]
+            foreach { L u v } $channels {
+                set L [expr { $L-$amount }]
 
-                # Check if 'lightness' exceeds its lower limit
-                if { $lightness < 0 } {
-                    set lightness 0
+                # Check if 'L' exceeds its lower limit
+                if { $L < 0 } {
+                    set L 0
                 }
 
-                lappend results $lightness $u $v
+                lappend results $L $u $v
             }
 
             # Transform the resulting Luv color/s back into hexadecimal color/s.
@@ -3268,7 +3278,7 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
         }
         LCHab {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into LCHab color/s.
@@ -3279,15 +3289,15 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness C Hab } $channels {
-                set lightness [expr { $lightness-$amount }]
+            foreach { L C Hab } $channels {
+                set L [expr { $L-$amount }]
 
-                # Check if 'lightness' exceeds its lower limit
-                if { $lightness < 0 } {
-                    set lightness 0
+                # Check if 'L' exceeds its lower limit
+                if { $L < 0 } {
+                    set L 0
                 }
 
-                lappend results $lightness $C $Hab
+                lappend results $L $C $Hab
             }
 
             # Transform the resulting LCHab color/s back into hexadecimal color/s.
@@ -3298,7 +3308,7 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
         }
         LCHuv {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into LCHuv color/s.
@@ -3309,15 +3319,15 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness C Huv } $channels {
-                set lightness [expr { $lightness-$amount }]
+            foreach { L C Huv } $channels {
+                set L [expr { $L-$amount }]
 
-                # Check if 'lightness' exceeds its lower limit
-                if { $lightness < 0 } {
-                    set lightness 0
+                # Check if 'L' exceeds its lower limit
+                if { $L < 0 } {
+                    set L 0
                 }
 
-                lappend results $lightness $C $Huv
+                lappend results $L $C $Huv
             }
 
             # Transform the resulting LCHuv color/s back into hexadecimal color/s.
@@ -3382,11 +3392,14 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 set g_linear [::companding $g inverse]
                 set b_linear [::companding $b inverse]
 
-                # Compute the gray linear channel by taking in account the unadapted Y values for the current colorspace.
-                set gray_linear [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear) }]
+                # Compute the gray linear channel (the 'luma') by taking in account the unadapted Y values for the current colorspace.
+                set a1   [expr { $::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear }]
+                set a2   [expr { $::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear }]
+                set a3   [expr { $::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear }]
+                set luma [expr { $a1+$a2+$a3 }]
 
                 # Transform the gray linear channel into a gray non linear one.
-                set gray [::companding $gray_linear normal]
+                set gray [::companding $luma normal]
 
                 lappend results $gray $gray $gray
             }
@@ -3552,31 +3565,94 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 set b_linear [::companding $b inverse]
 
                 if { $severity in [list 0 10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0] } {
-                    set cvd [dict get $::ms::table(cvd) $severity $via]
+                    ######################
+                    ##                  ##
+                    ##     SEVERITY     ##
+                    ##                  ##
+                    ######################
 
-                    set r_severity [expr { ([lindex $cvd 0]*$r_linear)+([lindex $cvd 3]*$g_linear)+([lindex $cvd 6]*$b_linear) }]
-                    set g_severity [expr { ([lindex $cvd 1]*$r_linear)+([lindex $cvd 4]*$g_linear)+([lindex $cvd 7]*$b_linear) }]
-                    set b_severity [expr { ([lindex $cvd 2]*$r_linear)+([lindex $cvd 5]*$g_linear)+([lindex $cvd 8]*$b_linear) }]
+                    set cvd [dict get $::ms::table(cvd) $severity $via]
+                    set a1  [lindex $cvd 0]
+                    set a2  [lindex $cvd 1]
+                    set a3  [lindex $cvd 2]
+                    set b1  [lindex $cvd 3]
+                    set b2  [lindex $cvd 4]
+                    set b3  [lindex $cvd 5]
+                    set c1  [lindex $cvd 6]
+                    set c2  [lindex $cvd 7]
+                    set c3  [lindex $cvd 8]
+
+                    # | a1  b1  c1 |   | r_linear |   | r_severity |
+                    # | a2  b2  c2 | * | g_linear | = | g_severity |
+                    # | a3  b3  c3 |   | b_linear |   | b_severity |
+
+                    set r_severity [expr { ($a1*$r_linear) + ($b1*$g_linear) + ($c1*$b_linear) }]
+                    set g_severity [expr { ($a2*$r_linear) + ($b2*$g_linear) + ($c2*$b_linear) }]
+                    set b_severity [expr { ($a3*$r_linear) + ($b3*$g_linear) + ($c3*$b_linear) }]
                 } else {
                     foreach superior_severity [list 10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0] {
                         if { $severity < $superior_severity } {
+                            ######################
+                            ##                  ##
+                            ##     INFERIOR     ##
+                            ##                  ##
+                            ######################
+
                             set inferior_severity [expr { $superior_severity-10.0 }]
 
                             # Get the matrix from the cvd table, for the severity immediately inferior to the severity provided.
                             set cvd_inferior [dict get $::ms::table(cvd) $inferior_severity $via]
+                            set a1_inferior  [lindex $cvd_inferior 0]
+                            set a2_inferior  [lindex $cvd_inferior 1]
+                            set a3_inferior  [lindex $cvd_inferior 2]
+                            set b1_inferior  [lindex $cvd_inferior 3]
+                            set b2_inferior  [lindex $cvd_inferior 4]
+                            set b3_inferior  [lindex $cvd_inferior 5]
+                            set c1_inferior  [lindex $cvd_inferior 6]
+                            set c2_inferior  [lindex $cvd_inferior 7]
+                            set c3_inferior  [lindex $cvd_inferior 8]
+
+                            # | a1_inferior  b1_inferior  c1_inferior |   | r_linear |   | r_inferior |
+                            # | a2_inferior  b2_inferior  c2_inferior | * | g_linear | = | g_inferior |
+                            # | a3_inferior  b3_inferior  c3_inferior |   | b_linear |   | b_inferior |
+
+                            # Compute the rgb value at the inferior severity.
+                            set r_inferior [expr { ($a1_inferior*$r_linear) + ($b1_inferior*$g_linear) + ($c1_inferior*$b_linear) }]
+                            set g_inferior [expr { ($a2_inferior*$r_linear) + ($b2_inferior*$g_linear) + ($c2_inferior*$b_linear) }]
+                            set b_inferior [expr { ($a3_inferior*$r_linear) + ($b3_inferior*$g_linear) + ($c3_inferior*$b_linear) }]
+
+                            ######################
+                            ##                  ##
+                            ##     SUPERIOR     ##
+                            ##                  ##
+                            ######################
 
                             # Get the matrix from the cvd table, for the severity immediately superior to the severity provided.
                             set cvd_superior [dict get $::ms::table(cvd) $superior_severity $via]
+                            set a1_superior  [lindex $cvd_superior 0]
+                            set a2_superior  [lindex $cvd_superior 1]
+                            set a3_superior  [lindex $cvd_superior 2]
+                            set b1_superior  [lindex $cvd_superior 3]
+                            set b2_superior  [lindex $cvd_superior 4]
+                            set b3_superior  [lindex $cvd_superior 5]
+                            set c1_superior  [lindex $cvd_superior 6]
+                            set c2_superior  [lindex $cvd_superior 7]
+                            set c3_superior  [lindex $cvd_superior 8]
 
-                            # Compute the rgb value at the inferior severity.
-                            set r_inferior [expr { ([lindex $cvd_inferior 0]*$r_linear)+([lindex $cvd_inferior 3]*$g_linear)+([lindex $cvd_inferior 6]*$b_linear) }]
-                            set g_inferior [expr { ([lindex $cvd_inferior 1]*$r_linear)+([lindex $cvd_inferior 4]*$g_linear)+([lindex $cvd_inferior 7]*$b_linear) }]
-                            set b_inferior [expr { ([lindex $cvd_inferior 2]*$r_linear)+([lindex $cvd_inferior 5]*$g_linear)+([lindex $cvd_inferior 8]*$b_linear) }]
+                            # | a1_superior  b1_superior  c1_superior |   | r_linear |   | r_superior |
+                            # | a2_superior  b2_superior  c2_superior | * | g_linear | = | g_superior |
+                            # | a3_superior  b3_superior  c3_superior |   | b_linear |   | b_superior |
 
                             # Compute the rgb value at the superior severity.
-                            set r_superior [expr { ([lindex $cvd_superior 0]*$r_linear)+([lindex $cvd_superior 3]*$g_linear)+([lindex $cvd_superior 6]*$b_linear) }]
-                            set g_superior [expr { ([lindex $cvd_superior 1]*$r_linear)+([lindex $cvd_superior 4]*$g_linear)+([lindex $cvd_superior 7]*$b_linear) }]
-                            set b_superior [expr { ([lindex $cvd_superior 2]*$r_linear)+([lindex $cvd_superior 5]*$g_linear)+([lindex $cvd_superior 8]*$b_linear) }]
+                            set r_superior [expr { ($a1_superior*$r_linear) + ($b1_superior*$g_linear) + ($c1_superior*$b_linear) }]
+                            set g_superior [expr { ($a2_superior*$r_linear) + ($b2_superior*$g_linear) + ($c2_superior*$b_linear) }]
+                            set b_superior [expr { ($a3_superior*$r_linear) + ($b3_superior*$g_linear) + ($c3_superior*$b_linear) }]
+
+                            ######################
+                            ##                  ##
+                            ##     SEVERITY     ##
+                            ##                  ##
+                            ######################
 
                             # Compute the rgb value at severity with a linear interpolation between the inferior and superior rgbs.
                             set r_severity [::lerp $severity $inferior_severity $superior_severity $r_inferior $r_superior]
@@ -4069,9 +4145,9 @@ proc ::ms::color::Inverse { HEXs depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red   [expr { 255-$red }]
+                set red   [expr { 255-$red   }]
                 set green [expr { 255-$green }]
-                set blue  [expr { 255-$blue }]
+                set blue  [expr { 255-$blue  }]
 
                 lappend results $red $green $blue
             }
@@ -4085,9 +4161,9 @@ proc ::ms::color::Inverse { HEXs depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red   [expr { 4095-$red }]
+                set red   [expr { 4095-$red   }]
                 set green [expr { 4095-$green }]
-                set blue  [expr { 4095-$blue }]
+                set blue  [expr { 4095-$blue  }]
 
                 lappend results $red $green $blue
             }
@@ -4101,9 +4177,9 @@ proc ::ms::color::Inverse { HEXs depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red   [expr { 65535-$red }]
+                set red   [expr { 65535-$red   }]
                 set green [expr { 65535-$green }]
-                set blue  [expr { 65535-$blue }]
+                set blue  [expr { 65535-$blue  }]
 
                 lappend results $red $green $blue
             }
@@ -4250,7 +4326,7 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
         }
         Lab {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into Lab color/s.
@@ -4261,15 +4337,15 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness a b } $channels {
-                set lightness [expr { $lightness+$amount }]
+            foreach { L a b } $channels {
+                set L [expr { $L+$amount }]
 
-                # Check if 'lightness' exceeds its upper limit.
-                if { $lightness > 100.0 } {
-                    set lightness 100.0
+                # Check if 'L' exceeds its upper limit.
+                if { $L > 100.0 } {
+                    set L 100.0
                 }
 
-                lappend results $lightness $a $b
+                lappend results $L $a $b
             }
 
             # Transform the resulting Lab color/s back into hexadecimal color/s.
@@ -4280,7 +4356,7 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
         }
         Luv {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into Luv color/s.
@@ -4291,15 +4367,15 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness u v } $channels {
-                set lightness [expr { $lightness+$amount }]
+            foreach { L u v } $channels {
+                set L [expr { $L+$amount }]
 
-                # Check if 'lightness' exceeds its upper limit.
-                if { $lightness > 100.0 } {
-                    set lightness 100.0
+                # Check if 'L' exceeds its upper limit.
+                if { $L > 100.0 } {
+                    set L 100.0
                 }
 
-                lappend results $lightness $u $v
+                lappend results $L $u $v
             }
 
             # Transform the resulting Luv color/s back into hexadecimal color/s.
@@ -4310,7 +4386,7 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
         }
         LCHab {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into LCHab color/s.
@@ -4321,15 +4397,15 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness C Hab } $channels {
-                set lightness [expr { $lightness+$amount }]
+            foreach { L C Hab } $channels {
+                set L [expr { $L+$amount }]
 
-                # Check if 'lightness' exceeds its upper limit.
-                if { $lightness > 100.0 } {
-                    set lightness 100.0
+                # Check if 'L' exceeds its upper limit.
+                if { $L > 100.0 } {
+                    set L 100.0
                 }
 
-                lappend results $lightness $C $Hab
+                lappend results $L $C $Hab
             }
 
             # Transform the resulting LCHab color/s back into hexadecimal color/s.
@@ -4340,7 +4416,7 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
         }
         LCHuv {
-            # Note:  Lightness range [0,100].
+            # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
             # Transform the hexadecimal color/s provided into LCHuv color/s.
@@ -4351,15 +4427,15 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             }
 
             # Execute the command.
-            foreach { lightness C Huv } $channels {
-                set lightness [expr { $lightness+$amount }]
+            foreach { L C Huv } $channels {
+                set L [expr { $L+$amount }]
 
-                # Check if 'lightness' exceeds its upper limit.
-                if { $lightness > 100.0 } {
-                    set lightness 100.0
+                # Check if 'L' exceeds its upper limit.
+                if { $L > 100.0 } {
+                    set L 100.0
                 }
 
-                lappend results $lightness $C $Huv
+                lappend results $L $C $Huv
             }
 
             # Transform the resulting LCHuv color/s back into hexadecimal color/s.
@@ -4548,7 +4624,7 @@ proc ::ms::color::Warmup { HEXs amount depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red  [expr { $red+$amount } ]
+                set red  [expr { $red+$amount  }]
                 set blue [expr { $blue-$amount }]
 
                 # Check that the 'red' channel doesn't exceeds its upper limit.
@@ -4576,7 +4652,7 @@ proc ::ms::color::Warmup { HEXs amount depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red  [expr { $red+$amount } ]
+                set red  [expr { $red+$amount  }]
                 set blue [expr { $blue-$amount }]
 
                 # Check that the 'red' channel doesn't exceeds its upper limit.
@@ -4604,7 +4680,7 @@ proc ::ms::color::Warmup { HEXs amount depth } {
 
             # Execute the command.
             foreach { red green blue } $channels {
-                set red  [expr { $red+$amount } ]
+                set red  [expr { $red+$amount  }]
                 set blue [expr { $blue-$amount }]
 
                 # Check that the 'red' channel doesn't exceeds its upper limit.
@@ -4722,10 +4798,11 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
     }
 }
 
-# Note:  CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
-#           | a1 b1 c1 |
-#           | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
-#           | a3 b3 c3 |
+# CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
+#
+# | a1  b1  c1 |
+# | a2  b2  c2 | = [list a1  a2  a3  b1  b2  b3  c1  c2  c3]
+# | a3  b3  c3 |
 
 # Protanomaly CVD matrices                            a1        a2        a3        b1       b2        b3        c1       c2       c3
 dict set ::ms::table(cvd) 0     Protanomaly     [list 1.0       0         0         0        1.0       0         0        0        1.0]
