@@ -637,30 +637,934 @@ proc ::ms::color::Command { args } {
         ""  { ::ms::Error "Missing action." $caller_info }
     }
 
+    # Set some default values.
+    set amount   1
+    set depth    $::ms::colordepth
+    set severity 100
+    set tempK    6500
+
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
-        balance    { return [::ms::color::Balance.tcl    $args] }
-        bw         { return [::ms::color::Bw.tcl         $args] }
-        complement { return [::ms::color::Complement.tcl $args] }
-        contrast   { return [::ms::color::Contrast.tcl   $args] }
-        convert    { return [::ms::color::Convert.tcl    $args] }
-        cooldown   { return [::ms::color::Cooldown.tcl   $args] }
-        darken     { return [::ms::color::Darken.tcl     $args] }
-        deficiency { return [::ms::color::Deficiency.tcl $args] }
-        desaturate { return [::ms::color::Desaturate.tcl $args] }
-        family     { return [::ms::color::Family.tcl     $args] }
-        gray       -
-        grey       { return [::ms::color::Gray.tcl       $args] }
-        inverse    { return [::ms::color::Inverse.tcl    $args] }
-        lighten    { return [::ms::color::Lighten.tcl    $args] }
-        list       { return [::ms::color::Colorlist.tcl  $args] }
-        saturate   { return [::ms::color::Saturate.tcl   $args] }
-        warmup     { return [::ms::color::Warmup.tcl     $args] }
-        wcga2.0    { return [::ms::color::WCGA_2.0.tcl   $args] }
-        websafe    { return [::ms::color::Websafe.tcl    $args] }
-        default    { ::ms::Error "Invalid action, '$action'." $caller_info }
+        balance {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -tempK {
+                                switch -- [string is integer -strict $value] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        # Truncate it if exceeds its limits [1000,27000].
+                                        if { $value < 1000.0 } {
+                                            set tempK 1000.0
+                                        } elseif { $value > 27000.0 } {
+                                            set tempK 27000.0
+                                        } else {
+                                            set tempK $value
+                                        }
+                                    }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Balance $HEXs $tempK $depth]
+        }
+        bw  {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   {
+                    set hexadecimals [lindex $args 0]
+                    set option       [lindex $args 1]
+                    set value        [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::BW $HEXs $depth]
+        }
+        complement {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   {
+                    set hexadecimals [lindex $args 0]
+                    set option       [lindex $args 1]
+                    set value        [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Complement $HEXs $depth]
+        }
+        contrast {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                2   {
+                    set color1 [lindex $args 0]
+                    set color2 [lindex $args 1]
+                }
+                4   {
+                    set color1 [lindex $args 0]
+                    set color2 [lindex $args 1]
+                    set option [lindex $args 2]
+                    set value  [lindex $args 3]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set hex1 [::ms::Check_Hex $color1 [string cat "HEX" $depth] invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
+            }
+
+            set hex2 [::ms::Check_Hex $color2 [string cat "HEX" $depth] invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
+            }
+
+            # Execute the command.
+            return [::ms::color::Contrast $hex1 $hex2 $depth]
+        }
+        convert {
+
+
+
+
+
+
+
+            return [::ms::color::Convert    $args]
+        }
+        cooldown {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Cooldown $HEXs $amount $depth]
+        }
+        darken {
+            # Set the default 'via' for this action.
+            set via Lab
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   -
+                7   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -via {
+                                switch -nocase -- $via {
+                                    RGB     { set via RGB   }
+                                    HSL     { set via HSL   }
+                                    Lab     { set via Lab   }
+                                    Luv     { set via Luv   }
+                                    LCHab   { set via LCHab }
+                                    LCHuv   { set via LCHuv }
+                                    default { ::ms::Error "Invalid value, '$via'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Darken $HEXs $amount $via $depth]
+        }
+        deficiency {
+            # Set the default 'via' for this action.
+            set via achromatic
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   -
+                7   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -severity {
+                                set severity [string trimright $value %]
+                                switch -- [string is double -strict $severity] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $severity < 0 } {
+                                            set severity 0
+                                        } elseif { $severity > 100.0 } {
+                                            set severity 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -via {
+                                switch -nocase -- $via {
+                                    achromatic    -
+                                    red           -
+                                    green         -
+                                    blue          -
+                                    protanomaly   -
+                                    deuteranomaly -
+                                    tritanomaly   -
+                                    protanopia    -
+                                    deuteranopia  -
+                                    tritanopia    { set via [string tolower $value] }
+                                    default       { ::ms::Error "Invalid value, '$via'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Deficiency $HEXs $severity $via $depth]
+        }
+        desaturate {
+            # Set the default 'via' for this action.
+            set via HSB
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   -
+                7   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -via {
+                                switch -nocase -- $via {
+                                    HSB     { set via HSB }
+                                    HSI     { set via HSI }
+                                    HSL     { set via HSL }
+                                    HSP     { set via HSP }
+                                    default { ::ms::Error "Invalid value, '$via'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Desaturate $HEXs $amount $via $depth]
+        }
+        family {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   {
+                    set hexadecimals [lindex $args 0]
+                    set option       [lindex $args 1]
+                    set value        [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Family $HEXs $depth]
+        }
+        gray -
+        grey {
+            # Set the default 'via' for this action.
+            set via hevc
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -via {
+                                switch -nocase -- $via {
+                                    average      -
+                                    desaturation -
+                                    hevc         -
+                                    max          -
+                                    min          -
+                                    red          -
+                                    green        -
+                                    blue         { set via [string tolower $via] }
+                                    default      { ::ms::Error "Invalid value, '$via'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Gray $HEXs $via $depth]
+        }
+        inverse {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   {
+                    set hexadecimals [lindex $args 0]
+                    set option       [lindex $args 1]
+                    set value        [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Inverse $HEXs $depth]
+        }
+        lighten {
+            # Set the default 'via' for this action.
+            set via Lab
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   -
+                7   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -via {
+                                switch -nocase -- $via {
+                                    RGB     { set via RGB   }
+                                    HSL     { set via HSL   }
+                                    Lab     { set via Lab   }
+                                    Luv     { set via Luv   }
+                                    LCHab   { set via LCHab }
+                                    LCHuv   { set via LCHuv }
+                                    default { ::ms::Error "Invalid value, '$via'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            return [::ms::color::Lighten $HEXs $amount $via $depth]
+        }
+        list {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   {
+                    set palette $args
+                    set family  all
+                }
+                2   {
+                    set palette [lindex $args 0]
+                    set family  [lindex $args 1]
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'palette' name provided.
+            set palette_name [string tolower $palette]
+            if { $palette_name ni $::ms::palette(names) } {
+                ::ms::Error "Invalid palette name, '$palette'." $caller_info
+            }
+
+            # Check the 'family' name provided.
+            switch -nocase -- $family {
+                grey          -
+                gray          { set family Gray          }
+                red           { set family Red           }
+                red-orange    { set family Red-Orange    }
+                orange        { set family Orange        }
+                orange-yellow { set family Orange-Yellow }
+                yellow        { set family Yellow        }
+                yellow-green  { set family Yellow-Green  }
+                green         { set family Green         }
+                green-cyan    { set family Green-Cyan    }
+                cyan          { set family Cyan          }
+                cyan-blue     { set family Cyan-Blue     }
+                blue          { set family Blue          }
+                blue-purple   { set family Blue-Purple   }
+                purple        { set family Purple        }
+                purple-red    { set family Purple-Red    }
+                all           { set family all           }
+                default       { ::ms::Error "Invalid family name, '$family'." $caller_info }
+            }
+
+            # Execute the command.
+            return [lsort -dictionary -increasing -unique $::ms::palette($palette_name,$family,colornames)]
+        }
+        saturate {
+            # Set the default 'via' for this action.
+            set via HSB
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   -
+                7   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -via {
+                                switch -nocase -- $via {
+                                    HSB     { set via HSB }
+                                    HSI     { set via HSI }
+                                    HSL     { set via HSL }
+                                    HSP     { set via HSP }
+                                    default { ::ms::Error "Invalid value, '$via'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Saturate $HEXs $amount $via $depth]
+        }
+        warmup {
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   -
+                5   {
+                    set hexadecimals [lindex  $args 0]
+                    set args         [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Warmup $HEXs $amount $depth]
+        }
+        wcga2.0 {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                2   {
+                    set color1 [lindex $args 0]
+                    set color2 [lindex $args 1]
+                }
+                4   {
+                    set color1 [lindex $args 0]
+                    set color2 [lindex $args 1]
+                    set option [lindex $args 2]
+                    set value  [lindex $args 3]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set hex1 [::ms::Check_Hex $color1 [string cat "HEX" $depth] invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
+            }
+
+            set hex2 [::ms::Check_Hex $color2 [string cat "HEX" $depth] invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
+            }
+
+            # Compute the contrast between the two colors provided.
+            set contrast [::ms::color::Contrast $color1 $color2 $depth]
+
+            # Check if there is enough contrast between the first color (the 'background') and
+            # the second color (the 'foreground') provided, in the four WCGA 2.0 scenarios:
+            #   AA1  --> The text is a paragraph with a large font (> 14 points).
+            #               OK   --> for contrast >= 3.0,
+            #               FAIL --> in any other cases.
+            #   AA2  --> The text is a paragraph with a small font.
+            #               OK   --> for contrast >= 4.5,
+            #               FAIL --> in any other cases.
+            #   AAA1 --> The text is a title with a large font (> 14 points).
+            #               OK   --> for contrast >= 4.5,
+            #               FAIL --> in any other cases.
+            #   AAA2 --> The text is a title with a small font.
+            #               OK   --> for contrast >= 7.0,
+            #               FAIL --> in any other cases.
+            if { $contrast < 3.0 } {
+                return [list AA1 "FAIL" AA2 "FAIL" AAA1 "FAIL" AAA2 "FAIL"]
+            } elseif { $contrast < 4.5 } {
+                return [list AA1 "OK" AA2 "FAIL" AAA1 "FAIL" AAA2 "FAIL"]
+            } elseif { $contrast < 7 } {
+                return [list AA1 "OK" AA2 "OK" AAA1 "OK" AAA2 "FAIL"]
+            } else {
+                return [list AA1 "OK" AA2 "OK" AAA1 "OK" AAA2 "OK"]
+            }
+        }
+        websafe {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set hexadecimals $args }
+                3   {
+                    set hexadecimals [lindex $args 0]
+                    set option       [lindex $args 1]
+                    set value        [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'hexadecimals' provided.
+            set HEXs [list ]
+            foreach hexadecimal $hexadecimals {
+                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
+                    default { lappend HEXs $hexadecimal }
+                }
+            }
+
+            return [::ms::color::Websafe $HEXs $depth]
+        }
+        default { ::ms::Error "Invalid action, '$action'." $caller_info }
     }
 }
 
@@ -670,62 +1574,21 @@ proc ::ms::color::Command { args } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs    Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# tempK          Should be an integer [1000-27000] indicating the balancing temperature.
-#                *tempK* must be provided in Kelvins.
+# tempK   Should be an integer [1000-27000] indicating the balancing temperature.
+#         *tempK* must be provided in Kelvins.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
+# depth   Should be an integer specifing the color depth in which the color/s provided are defined.
+#         Allowed values are **8**, **12** or **16**.
 #
-#                If not provided, defaults to the '::ms::colordepth' value.
-#
-# Returns a list containing the hexadecimals balanced color/s relative to the color/s provided.
-proc ::ms::color::Balance { hexadecimals tempK { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'tempK' provided.
-    switch -- [string is integer -strict $tempK] {
-        0   { ::ms::Error "Invalid value, '$tempK'." $caller_info }
-        1   {
-            # Truncate it if exceeds its limits [1000,27000].
-            if { $tempK < 1000.0 } {
-                set tempK 1000.0
-            } elseif { $tempK > 27000.0 } {
-                set tempK 27000.0
-            }
-        }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
+# Returns a list containing the hexadecimals balanced color/s (for the temperature provided) relative to the color/s provided.
+proc ::ms::color::Balance { HEXs tempK depth } {
     # Transform the hexadecimal color/s (at whichever depth provided) into RGB color/s at 8 bit.
     switch -- $depth {
-        8  { set channels [::HEX8_RGB8  $HEXs] }
-        12 { set channels [::RGB12_RGB8 [::HEX12_RGB12 $HEXs]] }
-        16 { set channels [::RGB16_RGB8 [::HEX16_RGB16 $HEXs]] }
+        8   { set channels [::HEX8_RGB8  $HEXs] }
+        12  { set channels [::RGB12_RGB8 [::HEX12_RGB12 $HEXs]] }
+        16  { set channels [::RGB16_RGB8 [::HEX16_RGB16 $HEXs]] }
     }
 
     # Get the RGB channels equivalent for the temperature provided.
@@ -802,9 +1665,9 @@ proc ::ms::color::Balance { hexadecimals tempK { depth "" } } {
     # Transform the balanced RGB channel/s at 8 bit back into hexadecimal color/s
     # with the same depth as the color/s provided.
     switch -- $depth {
-        8  { return [::RGB8_HEX8   $results] }
-        12 { return [::RGB12_HEX12 [::RGB8_RGB12 $results]] }
-        16 { return [::RGB16_HEX16 [::RGB8_RGB16 $results]] }
+        8   { return [::RGB8_HEX8   $results] }
+        12  { return [::RGB12_HEX12 [::RGB8_RGB12 $results]] }
+        16  { return [::RGB16_HEX16 [::RGB8_RGB16 $results]] }
     }
 }
 
@@ -814,46 +1677,18 @@ proc ::ms::color::Balance { hexadecimals tempK { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs    Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth   Should be an integer specifing the color depth in which the color/s provided are defined.
+#         Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the words **black** or **white**, depending which one has more contrast with the relative color provided.
-proc ::ms::color::BW { hexadecimals { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
+proc ::ms::color::BW { HEXs depth } {
     # Transform the hexadecimal color/s provided into rgb color/s [0,1.0].
     switch -- $depth {
-        8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
-        12 { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
-        16 { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
+        8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
+        12  { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
+        16  { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
     }
 
     # Execute the command.
@@ -874,74 +1709,8 @@ proc ::ms::color::BW { hexadecimals { depth "" } } {
             lappend results white
         }
     }
-}
 
-## Colorlist
-#
-# Return a list containing all the colornames available for the family and palette provided.
-#
-# Where:
-#
-# family    Should be a string specifing the family name.
-#           Allowed values are:
-#
-#              **gray** or **grey**
-#              **red**
-#              **red-orange**
-#              **orange**
-#              **orange-yellow**
-#              **yellow**
-#              **yellow-green**
-#              **green**
-#              **green-cyan**
-#              **cyan**
-#              **cyan-blue**
-#              **blue**
-#              **blue-purple**
-#              **purple**
-#              **purple-red**
-#              **all**
-#
-# palette   Optional, should be a string specifing the palette name.
-#           If not provided, defaults to the 'mustang' palette.
-#
-# Returns a list containing all the colornames available for the family and palette provided.
-proc ::ms::color::Colorlist { family { palette "" } } {
-    # Check the 'palette' name provided.
-    set palette_name [string tolower $palette]
-    switch -- $palette_name {
-        ""      { set palette_name mustang }
-        default {
-            if { $palette_name ni $::ms::palette(names) } {
-                ::ms::Error "Invalid palette name, '$palette'." $caller_info
-            }
-        }
-    }
-
-    # Check the 'family' provided.
-    switch -nocase -- $family {
-        grey          -
-        gray          { set family gray          }
-        red           { set family red           }
-        red-orange    { set family red-orange    }
-        orange        { set family orange        }
-        orange-yellow { set family orange-yellow }
-        yellow        { set family yellow        }
-        yellow-green  { set family yellow-green  }
-        green         { set family green         }
-        green-cyan    { set family green-cyan    }
-        cyan          { set family cyan          }
-        cyan-blue     { set family cyan-blue     }
-        blue          { set family blue          }
-        blue-purple   { set family blue-purple   }
-        purple        { set family purple        }
-        purple-red    { set family purple-red    }
-        all           { set family all           }
-        default       { ::ms::Error "Invalid family name, '$family'." $caller_info }
-    }
-
-    # Execute the command.
-    return [lsort -dictionary -increasing -unique $::ms::palette($palette_name,$family,colornames)]
+    return $results
 }
 
 ## Complement
@@ -950,46 +1719,18 @@ proc ::ms::color::Colorlist { family { palette "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs    Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth   Should be an integer specifing the color depth in which the color/s provided are defined.
+#         Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals complements relative to the color/s provided.
-proc ::ms::color::Complement { hexadecimals { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
+proc ::ms::color::Complement { HEXs depth } {
     # Transform the hexadecimal color/s provided into RGB color/s.
     switch -- $depth {
-        8  { set channels [::HEX8_RGB8   $HEXs] }
-        12 { set channels [::HEX12_RGB12 $HEXs] }
-        16 { set channels [::HEX16_RGB16 $HEXs] }
+        8   { set channels [::HEX8_RGB8   $HEXs] }
+        12  { set channels [::HEX12_RGB12 $HEXs] }
+        16  { set channels [::HEX16_RGB16 $HEXs] }
     }
 
     # Execute the command.
@@ -1008,9 +1749,9 @@ proc ::ms::color::Complement { hexadecimals { depth "" } } {
 
     # Transform the resulting RGB color/s back into hexadecimal color/s.
     switch -- $depth {
-        8  { return [::RGB8_HEX8   $results] }
-        12 { return [::RGB12_HEX12 $results] }
-        16 { return [::RGB16_HEX16 $results] }
+        8   { return [::RGB8_HEX8   $results] }
+        12  { return [::RGB12_HEX12 $results] }
+        16  { return [::RGB16_HEX16 $results] }
     }
 }
 
@@ -1026,40 +1767,11 @@ proc ::ms::color::Complement { hexadecimals { depth "" } } {
 # color2   Should be the second hexadecimal color that will be involved in the process.
 #          This color will be processed as the 'foreground' color.
 #
-# depth    Optional, should be an integer specifing the color depth of the colors provided.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
 #          Allowed values are **8**, **12** or **16**.
 #
-#          If not provided, defaults to the '::ms::colordepth' value.
-#
 # Returns the contrast value [0,21] between the two colors provided.
-proc ::ms::color::Contrast { color1 color2 {depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set hex1 [::ms::Check_Hex $color1 $colormodel invalid]
-    switch -- $result {
-        invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
-    }
-
-    set hex2 [::ms::Check_Hex $color2 $colormodel invalid]
-    switch -- $result {
-        invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
-    }
-
+proc ::ms::color::Contrast { color1 color2 depth } {
     # Transform the hexadecimal color/s into rgb colors [0,1.0].
     switch -- $depth {
         8   {
@@ -1108,77 +1820,36 @@ proc ::ms::color::Contrast { color1 color2 {depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# amount         Should be a floating point value specifing the amount of heat to subtract.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
+# amount   Should be a floating point value specifing the amount of heat to subtract [0,100].
+#          This amount is evaluated as a percentage.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimal cooler color/s relative to the color/s provided.
-proc ::ms::color::Cooldown { hexadecimals amount { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'amount' provided.
-    set amount_value [string trimright $amount %]
-    switch -- [string is double -strict $amount] {
-        0   { ::ms::Error "Invalid value, '$amount'." $caller_info }
-        1   {
-            if { $amount_value < 0 } {
-                set amount_value 0
-            } elseif { $amount_value > 100.0 } {
-                set amount_value 100.0
-            }
-        }
-    }
-    set amount $amount_value
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Cooldown { HEXs amount depth } {
     set results [list ]
-    switch -- $colormodel {
-        HEX8 {
+    switch -- $depth {
+        8   {
             # Transform the amount from [0,100] to [0,255].
             set amount [expr { round($amount*2.55) }]
 
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX8_RGB8 $HEXs]
 
-            # Compute the hotter color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red  [expr { $red-$amount } ]
                 set blue [expr { $blue+$amount }]
 
+                # Check that the 'red' channel doesn't exceeds its lower limit.
                 if { $red < 0 } {
                     set red 0
                 }
 
+                # Check that the 'blue' channel doesn't exceeds its upper limit.
                 if { $blue > 255 } {
                     set blue 255
                 }
@@ -1189,22 +1860,24 @@ proc ::ms::color::Cooldown { hexadecimals amount { depth "" } } {
             # Transform the resulting RGB color/s back into hexadecimal color/s.
             return [::RGB8_HEX8 $results]
         }
-        HEX12 {
+        12  {
             # Transform the amount from [0,100] to [0,4095].
             set amount [expr { round($amount*40.95) }]
 
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX12_RGB12 $HEXs]
 
-            # Compute the hotter color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red  [expr { $red-$amount } ]
                 set blue [expr { $blue+$amount }]
 
+                # Check that the 'red' channel doesn't exceeds its lower limit.
                 if { $red < 0 } {
                     set red 0
                 }
 
+                # Check that the 'blue' channel doesn't exceeds its upper limit.
                 if { $blue > 4095 } {
                     set blue 4095
                 }
@@ -1215,22 +1888,24 @@ proc ::ms::color::Cooldown { hexadecimals amount { depth "" } } {
             # Transform the resulting RGB color/s back into hexadecimal color/s.
             return [::RGB12_HEX12 $results]
         }
-        HEX16 {
+        16  {
             # Transform the amount from [0,100] to [0,65535].
             set amount [expr { round($amount*655.35) }]
 
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX16_RGB16 $HEXs]
 
-            # Compute the hotter color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red  [expr { $red-$amount } ]
                 set blue [expr { $blue+$amount }]
 
+                # Check that the 'red' channel doesn't exceeds its lower limit.
                 if { $red < 0 } {
                     set red 0
                 }
 
+                # Check that the 'blue' channel doesn't exceeds its upper limit.
                 if { $blue > 65535 } {
                     set blue 65535
                 }
@@ -1250,80 +1925,26 @@ proc ::ms::color::Cooldown { hexadecimals amount { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# amount         Should be a floating point value specifing the amount of lightness to subtract.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
+# amount   Should be a floating point value specifing the amount of lightness to subtract [0,100].
+#          This amount is evaluated as a percentage.
 #
-# via            Should be a string indicating the 'via' to use to achieve the results.
-#                Allowed values are:
+# via      Should be a string indicating the 'via' to use to achieve the results.
+#          Allowed values are:
 #
-#                   **RGB**
-#                   **HSL**
-#                   **Lab**
-#                   **Luv**
-#                   **LCHab**
-#                   **LCHuv**
+#             **RGB**
+#             **HSL**
+#             **Lab**
+#             **Luv**
+#             **LCHab**
+#             **LCHuv**
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals darker color/s relative to the color/s provided.
-proc ::ms::color::Darken { hexadecimals amount via { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'amount' provided.
-    set amount_value [string trimright $amount %]
-    switch -- [string is double -strict $amount] {
-        0   { ::ms::Error "Invalid value, '$amount'." $caller_info }
-        1   {
-            if { $amount_value < 0 } {
-                set amount_value 0
-            } elseif { $amount_value > 100.0 } {
-                set amount_value 100.0
-            }
-        }
-    }
-    set amount $amount_value
-
-    # Check the 'via' provided.
-    switch -- $via {
-        RGB     -
-        HSL     -
-        Lab     -
-        Luv     -
-        LCHab   -
-        LCHuv   {}
-        default { ::ms::Error "Invalid value, '$via'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Darken { HEXs amount via depth } {
     set results [list ]
     switch -- $via {
         RGB {
@@ -1342,7 +1963,7 @@ proc ::ms::color::Darken { hexadecimals amount via { depth "" } } {
                     foreach channel $channels {
                         set channel [expr { $channel-$amount }]
 
-                        # Check if 'channel' exceeds its 8 bit lower limit
+                        # Check if 'channel' exceeds its lower limit
                         if { $channel < 0 } {
                             set channel 0
                         }
@@ -1366,7 +1987,7 @@ proc ::ms::color::Darken { hexadecimals amount via { depth "" } } {
                     foreach channel $channels {
                         set channel [expr { $channel-$amount }]
 
-                        # Check if 'channel' exceeds its 12 bit lower limit
+                        # Check if 'channel' exceeds its lower limit
                         if { $channel < 0 } {
                             set channel 0
                         }
@@ -1386,11 +2007,11 @@ proc ::ms::color::Darken { hexadecimals amount via { depth "" } } {
                     # Transform the hexadecimal color/s provided into RGB color/s.
                     set channels [::HEX16_RGB16 $HEXs]
 
-                    # Compute the darken RGB color/s at 16 bit.
+                    # Execute the command.
                     foreach channel $channels {
                         set channel [expr { $channel-$amount }]
 
-                        # Check if 'channel' exceeds its 16 bit lower limit
+                        # Check if 'channel' exceeds its lower limit
                         if { $channel < 0 } {
                             set channel 0
                         }
@@ -1562,93 +2183,35 @@ proc ::ms::color::Darken { hexadecimals amount via { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs       Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# severity       Should be a floating point value specifing how much of the eye cone is damaged.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
-#                Meaningfull only for 'Protanomaly', 'Deuteranomaly' or 'Tritanomaly' vias.
+# severity   Should be a floating point value specifing how much of the eye cone is damaged.
+#            This amount is always evaluated as a percentage.
+#            It's only Meaningfull for 'Protanomaly', 'Deuteranomaly' or 'Tritanomaly' vias.
 #
-# via            Should be a string indicating the 'via' to use to achieve the results.
-#                Allowed values are:
+# via        Should be a string indicating the 'via' to use to achieve the results.
+#            Allowed values are:
 #
-#                   **achromatic**
-#                   **red**
-#                   **green**
-#                   **blue**
-#                   **protanomaly**
-#                   **deuteranomaly**
-#                   **tritanomaly**
-#                   **protanopia**
-#                   **deuteranopia**
-#                   **tritanopia**
+#               **achromatic**
+#               **red**
+#               **green**
+#               **blue**
+#               **protanomaly**
+#               **deuteranomaly**
+#               **tritanomaly**
+#               **protanopia**
+#               **deuteranopia**
+#               **tritanopia**
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth      Should be an integer specifing the color depth in which the color/s provided are defined.
+#            Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals deficiency color/s relative to the color/s provided.
-proc ::ms::color::Deficiency { hexadecimals severity via { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'severity' provided.
-    set severity_value [string trimright $severity %]
-    switch -- [string is double -strict $severity] {
-        0   { ::ms::Error "Invalid value, '$severity'." $caller_info }
-        1   {
-            if { $severity_value < 0 } {
-                set severity_value 0
-            } elseif { $severity_value > 100.0 } {
-                set severity_value 100.0
-            }
-        }
-    }
-    set severity $severity_value
-
-    # Check the 'via' provided.
-    switch -- $via {
-        achromatic    -
-        red           -
-        green         -
-        blue          -
-        protanomaly   -
-        deuteranomaly -
-        tritanomaly   -
-        protanopia    -
-        deuteranopia  -
-        tritanopia    {}
-        default       { ::ms::Error "Invalid value, '$via'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Deficiency { hexadecimals severity via depth } {
     set results [list ]
     switch -- $via {
         achromatic {
-            # Note: All cones are missing.
+            # Note: All cones are missing or completely damaged.
 
             # HEVC --> Human Eye Vision Corrected gray.
 
@@ -1749,7 +2312,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via { depth "" } } {
             }
         }
         Protanopia {
-            # Note: The green and blue cone are present and working, while the red cone is missing.
+            # Note: The green and blue cone are present and working, while the red cone is missing or completely damaged.
 
             # Transform the hexadecimal color/s provided into rgb non linear color/s.
             switch -- $depth {
@@ -1771,7 +2334,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via { depth "" } } {
             }
         }
         Deuteranopia {
-            # Note: The red and blue cone are present and working, while the green cone is missing.
+            # Note: The red and blue cone are present and working, while the green cone is missing or completely damaged.
 
             # Transform the hexadecimal color/s provided into rgb non linear color/s.
             switch -- $depth {
@@ -1793,7 +2356,7 @@ proc ::ms::color::Deficiency { hexadecimals severity via { depth "" } } {
             }
         }
         Tritanopia {
-            # Note: The red and green cone are present and working, while the red cone is missing.
+            # Note: The red and green cone are present and working, while the red cone is missing or completely damaged.
 
             # Transform the hexadecimal color/s provided into rgb non linear color/s.
             switch -- $depth {
@@ -1896,76 +2459,24 @@ proc ::ms::color::Deficiency { hexadecimals severity via { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# amount         Should be a floating point value specifing the amount of saturation to subtract.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
+# amount   Should be a floating point value specifing the amount of saturation to subtract [0,100].
+#          This amount is evaluated as a percentage.
 #
-# via            Should be a string indicating the 'via' to use to achieve the results.
-#                Allowed values are:
+# via      Should be a string indicating the 'via' to use to achieve the results.
+#          Allowed values are:
 #
-#                   **HSB**
-#                   **HSI**
-#                   **HSL**
-#                   **HSP**
+#             **HSB**
+#             **HSI**
+#             **HSL**
+#             **HSP**
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals desaturated color/s relative to the color/s provided.
-proc ::ms::color::Desaturate { hexadecimals amount via { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'amount' provided.
-    set amount_value [string trimright $amount %]
-    switch -- [string is double -strict $amount] {
-        0   { ::ms::Error "Invalid value, '$amount'." $caller_info }
-        1   {
-            if { $amount_value < 0 } {
-                set amount_value 0
-            } elseif { $amount_value > 100.0 } {
-                set amount_value 100.0
-            }
-        }
-    }
-    set amount $amount_value
-
-    # Check the 'via' provided.
-    switch -- $via {
-        HSB     -
-        HSI     -
-        HSL     -
-        HSP     {}
-        default { ::ms::Error "Invalid value, '$via'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Desaturate { HEXs amount via depth } {
     set results [list ]
     switch -- $via {
         HSB {
@@ -2097,46 +2608,18 @@ proc ::ms::color::Desaturate { hexadecimals amount via { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the family of the color/s provided.
-proc ::ms::color::Family { hexadecimals { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
+proc ::ms::color::Family { hexadecimals depth } {
     # Transform the hexadecimal color/s provided into RGB color/s.
     switch -- $depth {
-        8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-        12 { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-        16 { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+        8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
+        12  { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
+        16  { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
     }
 
     # Execute the command.
@@ -2202,91 +2685,166 @@ proc ::ms::color::Family { hexadecimals { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# via            Should be a string indicating the 'via' to use to achieve the results.
-#                Allowed values are:
+# via      Should be a string indicating the 'via' to use to achieve the results.
+#          Allowed values are:
 #
-#                   **average**
-#                   **desaturation**
-#                   **hevc**
-#                   **max**
-#                   **min**
-#                   **red**
-#                   **green**
-#                   **blue**
+#             **average**
+#             **desaturation**
+#             **hevc**
+#             **max**
+#             **min**
+#             **red**
+#             **green**
+#             **blue**
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals gray relative to the color/s provided.
-proc ::ms::color::Gray { hexadecimals via { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'via' provided.
-    switch -- $via {
-        average      -
-        desaturation -
-        hevc         -
-        max          -
-        min          -
-        red          -
-        green        -
-        blue         {}
-        default      { ::ms::Error "Invalid value, '$via'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Transform the hexadecimal color/s provided into RGB color/s.
-    switch -- $depth {
-        8  { set channels [::HEX8_RGB8   $HEXs] }
-        12 { set channels [::HEX12_RGB12 $HEXs] }
-        16 { set channels [::HEX16_RGB16 $HEXs] }
-    }
-
-    # Execute the command.
+proc ::ms::color::Gray { HEXs via depth } {
     set results [list ]
     switch -- $via {
+        red {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
+            # Execute the command.
+            foreach { red green blue } $channels {
+                lappend results $red $red $red
+            }
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
+            }
+        }
+        green {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
+            # Execute the command.
+            foreach { red green blue } $channels {
+                lappend results $green $green $green
+            }
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
+            }
+        }
+        blue {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
+            # Execute the command.
+            foreach { red green blue } $channels {
+                lappend results $blue $blue $blue
+            }
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
+            }
+        }
+        max {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
+            # Execute the command.
+            foreach { red green blue } $channels {
+                set gray [expr { max($red,$green,$blue) }]
+
+                lappend results $gray $gray $gray
+            }
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
+            }
+        }
+        min {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
+            # Execute the command.
+            foreach { red green blue } $channels {
+                set gray [expr { min($red,$green,$blue) }]
+
+                lappend results $gray $gray $gray
+            }
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
+            }
+        }
         average {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
             # Note that for performance reasons instead of diving the sum by '3', we multiply it by '0.33333333333333333'.
+
+            # Execute the command.
             foreach { red green blue } $channels {
                 set gray [expr { round(($red+$green+$blue)*0.33333333333333333) }]
 
                 lappend results $gray $gray $gray
             }
-        }
-        blue {
-            foreach { red green blue } $channels {
-                lappend results $blue $blue $blue
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
             }
         }
         desaturation {
+            # Transform the hexadecimal color/s provided into RGB color/s.
+            switch -- $depth {
+                8   { set channels [::HEX8_RGB8   $HEXs] }
+                12  { set channels [::HEX12_RGB12 $HEXs] }
+                16  { set channels [::HEX16_RGB16 $HEXs] }
+            }
+
             # Note that for performance reasons instead of diving the sum by '2', we multiply it by '0.5'.
+
+            # Execute the command.
             foreach { red green blue } $channels {
                 set min  [expr { min($red,$green,$blue) }]
                 set max  [expr { max($red,$green,$blue) }]
@@ -2294,71 +2852,46 @@ proc ::ms::color::Gray { hexadecimals via { depth "" } } {
 
                 lappend results $gray $gray $gray
             }
-        }
-        green {
-            foreach { red green blue } $channels {
-                lappend results $green $green $green
+
+            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
             }
         }
         hevc {
-            # HEVC --> Human Eye Vision Corrected gray.
+            # Human Eye Vision Corrected gray.
 
             # Transform the RGB color/s into rgb color/s.
             switch -- $depth {
-                8  { set rgbs [::RGB8_rgb  $channels] }
-                12 { set rgbs [::RGB12_rgb $channels] }
-                16 { set rgbs [::RGB16_rgb $channels] }
+                8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
+                12  { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
+                16  { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
             }
 
-            # Compute the gray rgb *linear* color/s.
+            # Execute the command.
             set gray [list ]
-            foreach { r g b } $rgbs {
+            foreach { r g b } $channels {
                 set r_linear [::companding $r inverse]
                 set g_linear [::companding $g inverse]
                 set b_linear [::companding $b inverse]
 
-                # Compute the *linear* gray.
-                set gray_linear [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear) }]
+                set gray_r_linear [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r_linear) }]
+                set gray_g_linear [expr { ($::ms::data(colorspace,$::ms::colorspace,Yg)*$g_linear) }]
+                set gray_b_linear [expr { ($::ms::data(colorspace,$::ms::colorspace,Yb)*$b_linear) }]
+                set gray          [::companding [expr { $gray_r_linear+$gray_g_linear+$gray_b_linear }] normal]
 
-                # Trasform the *linear* gray into *non-linear* gray.
-                set gray [::companding $gray_linear normal]
-
-                lappend grays $gray $gray $gray
+                lappend results $gray $gray $gray
             }
 
             # Transform the gray rgb *non linear* color/s back into RGB color/s.
             switch -- $depth {
-                8  { set results [::rgb_RGB8  $grays] }
-                12 { set results [::rgb_RGB12 $grays] }
-                16 { set results [::rgb_RGB16 $grays] }
+                8   { return [::RGB8_HEX8   [::rgb_RGB8  $results]] }
+                12  { return [::RGB12_HEX12 [::rgb_RGB12 $results]] }
+                16  { return [::RGB16_HEX16 [::rgb_RGB16 $results]] }
             }
         }
-        max {
-            foreach { red green blue } $channels {
-                set gray [expr { max($red,$green,$blue) }]
-
-                lappend results $gray $gray $gray
-            }
-        }
-        min {
-            foreach { red green blue } $channels {
-                set gray [expr { min($red,$green,$blue) }]
-
-                lappend results $gray $gray $gray
-            }
-        }
-        red {
-            foreach { red green blue } $channels {
-                lappend results $red $red $red
-            }
-        }
-    }
-
-    # Transform the resulting RGB color/s back into hexadecimal color/s.
-    switch -- $depth {
-        8  { return [::RGB8_HEX8   $results] }
-        12 { return [::RGB12_HEX12 $results] }
-        16 { return [::RGB16_HEX16 $results] }
     }
 }
 
@@ -2368,49 +2901,20 @@ proc ::ms::color::Gray { hexadecimals via { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals inverse color/s relative to the color/s provided.
-proc ::ms::color::Inverse { hexadecimals { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Inverse { HEXs depth } {
     set results [list ]
     switch -- $depth {
         8   {
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX8_RGB8 $HEXs]
 
-            # Compute the inverse color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red   [expr { 255-$red }]
                 set green [expr { 255-$green }]
@@ -2426,7 +2930,7 @@ proc ::ms::color::Inverse { hexadecimals { depth "" } } {
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX12_RGB12 $HEXs]
 
-            # Compute the inverse color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red   [expr { 4095-$red }]
                 set green [expr { 4095-$green }]
@@ -2442,7 +2946,7 @@ proc ::ms::color::Inverse { hexadecimals { depth "" } } {
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX16_RGB16 $HEXs]
 
-            # Compute the inverse color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red   [expr { 65535-$red }]
                 set green [expr { 65535-$green }]
@@ -2463,80 +2967,26 @@ proc ::ms::color::Inverse { hexadecimals { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# amount         Should be a floating point value specifing the amount of lightness to add.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
+# amount   Should be a floating point value specifing the amount of lightness to add [0,100].
+#          This amount is evaluated as a percentage.
 #
-# via            Should be a string indicating the 'via' to use to achieve the results.
-#                Allowed values are:
+# via      Should be a string indicating the 'via' to use to achieve the results.
+#          Allowed values are:
 #
-#                   **RGB**
-#                   **HSL**
-#                   **Lab**
-#                   **Luv**
-#                   **LCHab**
-#                   **LCHuv**
+#             **RGB**
+#             **HSL**
+#             **Lab**
+#             **Luv**
+#             **LCHab**
+#             **LCHuv**
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals lighter color/s relative to the color/s provided.
-proc ::ms::color::Lighten { hexadecimals amount via { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'amount' provided.
-    set amount_value [string trimright $amount %]
-    switch -- [string is double -strict $amount] {
-        0   { ::ms::Error "Invalid value, '$amount'." $caller_info }
-        1   {
-            if { $amount_value < 0 } {
-                set amount_value 0
-            } elseif { $amount_value > 100.0 } {
-                set amount_value 100.0
-            }
-        }
-    }
-    set amount $amount_value
-
-    # Check the 'via' provided.
-    switch -- $via {
-        RGB     -
-        HSL     -
-        Lab     -
-        Luv     -
-        LCHab   -
-        LCHuv   {}
-        default { ::ms::Error "Invalid value, '$via'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Lighten { HEXs amount via depth } {
     set results [list ]
     switch -- $via {
         RGB {
@@ -2555,7 +3005,7 @@ proc ::ms::color::Lighten { hexadecimals amount via { depth "" } } {
                     foreach channel $channels {
                         set channel [expr { $channel+$amount }]
 
-                        # Check if 'channel' exceeds its 8 bit upper limit.
+                        # Check if 'channel' exceeds its upper limit.
                         if { $channel > 255 } {
                             set channel 255
                         }
@@ -2579,7 +3029,7 @@ proc ::ms::color::Lighten { hexadecimals amount via { depth "" } } {
                     foreach channel $channels {
                         set channel [expr { $channel+$amount }]
 
-                        # Check if 'channel' exceeds its 12 bit upper limit.
+                        # Check if 'channel' exceeds its upper limit.
                         if { $channel > 4095 } {
                             set channel 4095
                         }
@@ -2599,11 +3049,11 @@ proc ::ms::color::Lighten { hexadecimals amount via { depth "" } } {
                     # Transform the hexadecimal color/s provided into RGB color/s.
                     set channels [::HEX16_RGB16 $HEXs]
 
-                    # Compute the darken RGB color/s at 16 bit.
+                    # Execute the command.
                     foreach channel $channels {
                         set channel [expr { $channel+$amount }]
 
-                        # Check if 'channel' exceeds its 16 bit upper limit.
+                        # Check if 'channel' exceeds its upper limit.
                         if { $channel > 65535 } {
                             set channel 65535
                         }
@@ -2775,76 +3225,24 @@ proc ::ms::color::Lighten { hexadecimals amount via { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# amount         Should be a floating point value specifing the amount of saturation to add.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
+# amount   Should be a floating point value specifing the amount of saturation to add [0,100].
+#          This amount is evaluated as a percentage.
 #
-# via            Should be a string indicating the 'via' to use to achieve the results.
-#                Allowed values are:
+# via      Should be a string indicating the 'via' to use to achieve the results.
+#          Allowed values are:
 #
-#                   **HSB**
-#                   **HSI**
-#                   **HSL**
-#                   **HSP**
+#             **HSB**
+#             **HSI**
+#             **HSL**
+#             **HSP**
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals saturated color/s relative to the color/s provided.
-proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'amount' provided.
-    set amount_value [string trimright $amount %]
-    switch -- [string is double -strict $amount] {
-        0   { ::ms::Error "Invalid value, '$amount'." $caller_info }
-        1   {
-            if { $amount_value < 0 } {
-                set amount_value 0
-            } elseif { $amount_value > 100.0 } {
-                set amount_value 100.0
-            }
-        }
-    }
-    set amount $amount_value
-
-    # Check the 'via' provided.
-    switch -- $via {
-        HSB     -
-        HSI     -
-        HSL     -
-        HSP     {}
-        default { ::ms::Error "Invalid value, '$via'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Saturate { HEXs amount via depth } {
     set results [list ]
     switch -- $via {
         HSB {
@@ -2853,9 +3251,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the hexadecimal color/s provided into HSB color/s.
             switch -- $depth {
-                8  { set channels [::rgb_HSB [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSB [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSB [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSB [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
+                12  { set channels [::rgb_HSB [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
+                16  { set channels [::rgb_HSB [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
             }
 
             # Execute the command.
@@ -2872,9 +3270,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the resulting HSB color/s back into hexadecimal color/s.
             switch -- $depth {
-                8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $results]]] }
-                12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $results]]] }
-                16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSB_rgb $results]]] }
+                8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $results]]] }
+                12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $results]]] }
+                16  { return [::RGB16_HEX16 [::rgb_RGB16 [::HSB_rgb $results]]] }
             }
         }
         HSI {
@@ -2883,9 +3281,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the hexadecimal color/s provided into HSI color/s.
             switch -- $depth {
-                8  { set channels [::rgb_HSI [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSI [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSI [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSI [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
+                12  { set channels [::rgb_HSI [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
+                16  { set channels [::rgb_HSI [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
             }
 
             # Execute the command.
@@ -2902,9 +3300,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the resulting HSI color/s back into hexadecimal color/s.
             switch -- $depth {
-                8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $results]]] }
-                12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $results]]] }
-                16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSI_rgb $results]]] }
+                8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $results]]] }
+                12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $results]]] }
+                16  { return [::RGB16_HEX16 [::rgb_RGB16 [::HSI_rgb $results]]] }
             }
         }
         HSL {
@@ -2913,9 +3311,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the hexadecimal color/s provided into HSL color/s.
             switch -- $depth {
-                8  { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
+                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
+                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
             }
 
             # Execute the command.
@@ -2932,9 +3330,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the resulting HSL color/s back into hexadecimal color/s.
             switch -- $depth {
-                8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $results]]] }
-                12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $results]]] }
-                16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSL_rgb $results]]] }
+                8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $results]]] }
+                12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $results]]] }
+                16  { return [::RGB16_HEX16 [::rgb_RGB16 [::HSL_rgb $results]]] }
             }
         }
         HSP {
@@ -2943,9 +3341,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the hexadecimal color/s provided into HSP color/s.
             switch -- $depth {
-                8  { set channels [::rgb_HSP [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSP [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSP [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSP [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
+                12  { set channels [::rgb_HSP [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
+                16  { set channels [::rgb_HSP [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
             }
 
             # Execute the command.
@@ -2962,9 +3360,9 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 
             # Transform the resulting HSP color/s back into hexadecimal color/s.
             switch -- $depth {
-                8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $results]]] }
-                12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $results]]] }
-                16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSP_rgb $results]]] }
+                8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $results]]] }
+                12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $results]]] }
+                16  { return [::RGB16_HEX16 [::rgb_RGB16 [::HSP_rgb $results]]] }
             }
         }
     }
@@ -2976,77 +3374,36 @@ proc ::ms::color::Saturate { hexadecimals amount via { depth "" } } {
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# amount         Should be a floating point value specifing the amount of heat to add.
-#                This amount is always evaluated as a percentage [0,100%] and can be provided with or without the '%' symbol.
+# amount   Should be a floating point value specifing the amount of heat to add [0,100].
+#          This amount is evaluated as a percentage.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimal warmer color/s relative to the color/s provided.
-proc ::ms::color::Warmup { hexadecimals amount { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'amount' provided.
-    set amount_value [string trimright $amount %]
-    switch -- [string is double -strict $amount] {
-        0   { ::ms::Error "Invalid value, '$amount'." $caller_info }
-        1   {
-            if { $amount_value < 0 } {
-                set amount_value 0
-            } elseif { $amount_value > 100.0 } {
-                set amount_value 100.0
-            }
-        }
-    }
-    set amount $amount_value
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
+proc ::ms::color::Warmup { HEXs amount depth } {
     set results [list ]
-    switch -- $colormodel {
-        HEX8 {
+    switch -- $depth {
+        8   {
             # Transform the amount from [0,100] to [0,255].
             set amount [expr { round($amount*2.55) }]
 
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX8_RGB8 $HEXs]
 
-            # Compute the hotter color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red  [expr { $red+$amount } ]
                 set blue [expr { $blue-$amount }]
 
+                # Check that the 'red' channel doesn't exceeds its upper limit.
                 if { $red > 255 } {
                     set red 255
                 }
 
+                # Check that the 'blue' channel doesn't exceeds its lower limit.
                 if { $blue < 0 } {
                     set blue 0
                 }
@@ -3057,22 +3414,24 @@ proc ::ms::color::Warmup { hexadecimals amount { depth "" } } {
             # Transform the resulting RGB color/s back into hexadecimal color/s.
             return [::RGB8_HEX8 $results]
         }
-        HEX12 {
+        12  {
             # Transform the amount from [0,100] to [0,4095].
             set amount [expr { round($amount*40.95) }]
 
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX12_RGB12 $HEXs]
 
-            # Compute the hotter color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red  [expr { $red+$amount } ]
                 set blue [expr { $blue-$amount }]
 
+                # Check that the 'red' channel doesn't exceeds its upper limit.
                 if { $red > 4095 } {
                     set red 4095
                 }
 
+                # Check that the 'blue' channel doesn't exceeds its lower limit.
                 if { $blue < 0 } {
                     set blue 0
                 }
@@ -3083,22 +3442,24 @@ proc ::ms::color::Warmup { hexadecimals amount { depth "" } } {
             # Transform the resulting RGB color/s back into hexadecimal color/s.
             return [::RGB12_HEX12 $results]
         }
-        HEX16 {
+        16  {
             # Transform the amount from [0,100] to [0,65535].
             set amount [expr { round($amount*655.35) }]
 
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX16_RGB16 $HEXs]
 
-            # Compute the hotter color/s.
+            # Execute the command.
             foreach { red green blue } $channels {
                 set red  [expr { $red+$amount } ]
                 set blue [expr { $blue-$amount }]
 
+                # Check that the 'red' channel doesn't exceeds its upper limit.
                 if { $red > 65535 } {
                     set red 65535
                 }
 
+                # Check that the 'blue' channel doesn't exceeds its lower limit.
                 if { $blue < 0 } {
                     set blue 0
                 }
@@ -3112,182 +3473,26 @@ proc ::ms::color::Warmup { hexadecimals amount { depth "" } } {
     }
 }
 
-## WCGA_2.0
-#
-# Compute the WCGA 2.0 scenarios between the two colors provided.
-#
-# WCGA 2.0 scenarios explained:
-#
-#   AA1  --> The text is a paragraph with a large font (> 14 points).
-#               OK   --> for contrast >= 3.0,
-#               FAIL --> in any other cases.
-#   AA2  --> The text is a paragraph with a small font.
-#               OK   --> for contrast >= 4.5,
-#               FAIL --> in any other cases.
-#   AAA1 --> The text is a title with a large font (> 14 points).
-#               OK   --> for contrast >= 4.5,
-#               FAIL --> in any other cases.
-#   AAA2 --> The text is a title with a small font.
-#               OK   --> for contrast >= 7.0,
-#               FAIL --> in any other cases.
-#
-# Where:
-#
-# color1   Should be the first hexadecimal color that will be involved in the process.
-#          This color will be processed as the 'background' color.
-#
-# color2   Should be the second hexadecimal color that will be involved in the process.
-#          This color will be processed as the 'foreground' color.
-#
-# depth    Optional, should be an integer specifing the color depth of the colors provided.
-#          Allowed values are **8**, **12** or **16**.
-#
-#          If not provided, defaults to the '::ms::colordepth' value.
-#
-# Returns a list containing the WCGA 2.0 scenarios results of the contrast between the two colors provided.
-proc ::ms::color::WCGA_2.0 { color1 color2 { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set hex1 [::ms::Check_Hex $color1 $colormodel invalid]
-    switch -- $result {
-        invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
-    }
-
-    set hex2 [::ms::Check_Hex $color2 $colormodel invalid]
-    switch -- $result {
-        invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
-    }
-
-    # Transform the hexadecimal color/s into rgb colors [0,1.0].
-    switch -- $depth {
-        8   {
-            set rgb1 [::RGB8_rgb  [::HEX8_RGB8   $hex1]]
-            set rgb2 [::RGB8_rgb  [::HEX8_RGB8   $hex2]]
-        }
-        12  {
-            set rgb1 [::RGB12_rgb [::HEX12_RGB12 $hex1]]
-            set rgb2 [::RGB12_rgb [::HEX12_RGB12 $hex2]]
-        }
-        16  {
-            set rgb1 [::RGB16_rgb [::HEX16_RGB16 $hex1]]
-            set rgb2 [::RGB16_rgb [::HEX16_RGB16 $hex2]]
-        }
-    }
-
-    # Compute the luma of the first color.
-    # Trasform the *non-linear* rgb values into a *linear* rgb ones.
-    foreach { r1 g1 b1 } $rgb1 {
-        set r1_linear [::companding $r1 inverse]
-        set g1_linear [::companding $g1 inverse]
-        set b1_linear [::companding $b1 inverse]
-    }
-
-    foreach { r2 g2 b2 } $rgb2 {
-        set r2_linear [::companding $r2 inverse]
-        set g2_linear [::companding $g2 inverse]
-        set b2_linear [::companding $b2 inverse]
-    }
-
-    # Compute the two colors lumas.
-    set luma1 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g1_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b1_linear) }]
-    set luma2 [expr { ($::ms::data(colorspace,$::ms::colorspace,Yr)*$r2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yg)*$g2_linear)+($::ms::data(colorspace,$::ms::colorspace,Yb)*$b2_linear) }]
-
-    # Compute the contrast value.
-    if { $luma1 > $luma2 } {
-        set contrast [expr { ($luma1+0.05)/($luma2+0.05) }]
-    } else {
-        set contrast [expr { ($luma2+0.05)/($luma1+0.05) }]
-    }
-
-    # Compute if there is enough contrast between the first color (the 'background') and
-    # the second color (the 'foreground') provided, in the four WCGA 2.0 scenarios:
-    #   AA1  --> The text is a paragraph with a large font (> 14 points).
-    #               OK   --> for contrast >= 3.0,
-    #               FAIL --> in any other cases.
-    #   AA2  --> The text is a paragraph with a small font.
-    #               OK   --> for contrast >= 4.5,
-    #               FAIL --> in any other cases.
-    #   AAA1 --> The text is a title with a large font (> 14 points).
-    #               OK   --> for contrast >= 4.5,
-    #               FAIL --> in any other cases.
-    #   AAA2 --> The text is a title with a small font.
-    #               OK   --> for contrast >= 7.0,
-    #               FAIL --> in any other cases.
-    if { $contrast < 3.0 } {
-        return [list AA1 "FAIL" AA2 "FAIL" AAA1 "FAIL" AAA2 "FAIL"]
-    } elseif { $contrast < 4.5 } {
-        return [list AA1 "OK" AA2 "FAIL" AAA1 "FAIL" AAA2 "FAIL"]
-    } elseif { $contrast < 7 } {
-        return [list AA1 "OK" AA2 "OK" AAA1 "OK" AAA2 "FAIL"]
-    } else {
-        return [list AA1 "OK" AA2 "OK" AAA1 "OK" AAA2 "OK"]
-    }
-}
-
 ## Websafe
 #
 # Compute the hexadecimals websafe color/s relative to the color/s provided.
 #
 # Where:
 #
-# hexadecimals   Should be a list containing all the hexadecimal colors that will be involved in the process.
+# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
 #
-# depth          Optional, should be an integer specifing the color depth of the colors provided.
-#                Allowed values are **8**, **12** or **16**.
-#
-#                If not provided, defaults to the '::ms::colordepth' value.
+# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
+#          Allowed values are **8**, **12** or **16**.
 #
 # Returns a list containing the hexadecimals websafe color/s relative to the color/s provided.
 proc ::ms::color::Websafe { hexadecimals { depth "" } } {
-    # Check the 'depth' provided, if any.
-    switch -- $depth {
-        ""  {
-            # Set the 'colormodel'.
-            switch -- $::ms::colordepth {
-                8   { set colormodel HEX8 }
-                12  { set colormodel HEX12 }
-                16  { set colormodel HEX16 }
-            }
-        }
-        8       { set colormodel HEX8 }
-        12      { set colormodel HEX12 }
-        16      { set colormodel HEX16 }
-        default { ::ms::Error "Invalid value, '$depth'." $caller_info }
-    }
-
-    # Check the 'hexadecimals' provided.
-    set HEXs [list ]
-    foreach hexadecimal $hexadecimals {
-        set result [::ms::Check_Hex $hexadecimal $colormodel invalid]
-        switch -- $result {
-            invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-            default { lappend HEXs $hexadecimal }
-        }
-    }
-
-    # Execute the command.
     set results [list ]
-    switch -- $colormodel {
-        HEX8 {
+    switch -- $depth {
+        8   {
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX8_RGB8 $HEXs]
 
-            # Compute the websafe color/s.
+            # Execute the commands.
             foreach channel $channels {
                 if { $channel <= 25 } {
                     set channel 0
@@ -3309,11 +3514,11 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
             # Transform the resulting RGB color/s back into hexadecimal color/s.
             return [::RGB8_HEX8 $results]
         }
-        HEX12 {
+        12  {
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX12_RGB12 $HEXs]
 
-            # Compute the websafe color/s.
+            # Execute the commands.
             foreach channel $channels {
                 if { $channel <= 409 } {
                     set channel 0
@@ -3335,11 +3540,11 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
             # Transform the resulting RGB color/s back into hexadecimal color/s.
             return [::RGB12_HEX12 $results]
         }
-        HEX16 {
+        16  {
             # Transform the hexadecimal color/s provided into RGB color/s.
             set channels [::HEX16_RGB16 $HEXs]
 
-            # Compute the websafe color/s.
+            # Execute the commands.
             foreach channel $channels {
                 if { $channel <= 6553 } {
                     set channel 0
@@ -3363,19 +3568,6 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Note:  CVD matrix coefficients for Protanomaly, Deuteranomaly and Tritanomaly (ordered by severity [0,100%]):
 #           | a1 b1 c1 |
