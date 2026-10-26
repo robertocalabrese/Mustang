@@ -5949,7 +5949,7 @@ proc ::ms::Load_Colorspace { filepath } {
             # Let's break down the chromaticity xy matrix into its single components.
             #
             # | red_x  green_x  blue_x |
-            # | red_y  green_y  blue_y | = [list red_x red_y green_x green_y blue_x blue_y]
+            # | red_y  green_y  blue_y | = [list red_x  red_y  green_x  green_y  blue_x  blue_y]
             set red_x   [lindex $chromaticity_xy 0]
             set red_y   [lindex $chromaticity_xy 1]
             set green_x [lindex $chromaticity_xy 2]
@@ -6007,14 +6007,22 @@ proc ::ms::Load_Colorspace { filepath } {
     # Set the xyz chromaticity matrix.
     #
     # | red_x  green_x  blue_x |
-    # | red_y  green_y  blue_y | = [list red_x red_y red_z green_x green_y green_z blue_x blue_y blue_z]
+    # | red_y  green_y  blue_y | = [list red_x  red_y  red_z  green_x  green_y  green_z  blue_x  blue_y  blue_z]
     # | red_z  green_z  blue_z |
-    set chromaticity_xyz [list $red_x $red_y $red_z $green_x $green_y $green_z $blue_x $blue_y $blue_z]
+    set chromaticity_xyz [list $red_x \
+                               $red_y \
+                               $red_z \
+                               $green_x \
+                               $green_y \
+                               $green_z \
+                               $blue_x \
+                               $blue_y \
+                               $blue_z];
 
     # Compute the inverse xyz chromaticity matrix.
     #
     # | red_x  green_x  blue_x |-1
-    # | red_y  green_y  blue_y |   --> [list red_x_inverse red_y_inverse red_z_inverse green_x_inverse green_y_inverse green_z_inverse blue_x_inverse blue_y_inverse blue_z_inverse]
+    # | red_y  green_y  blue_y |   --> [list red_x_inverse  red_y_inverse  red_z_inverse  green_x_inverse  green_y_inverse  green_z_inverse  blue_x_inverse  blue_y_inverse  blue_z_inverse]
     # | red_z  green_z  blue_z |
     set chromaticity_xyz_inverse [::inverse_matrix {*}$chromaticity_xyz]
     switch -- $chromaticity_xyz_inverse {
@@ -6087,6 +6095,28 @@ proc ::ms::Load_Colorspace { filepath } {
         set chad_inverse [list 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
     }
 
+    # Get the 'chad' single components.
+    set chad_a1 [lindex $chad 0]
+    set chad_a2 [lindex $chad 1]
+    set chad_a3 [lindex $chad 2]
+    set chad_b1 [lindex $chad 3]
+    set chad_b2 [lindex $chad 4]
+    set chad_b3 [lindex $chad 5]
+    set chad_c1 [lindex $chad 6]
+    set chad_c2 [lindex $chad 7]
+    set chad_c3 [lindex $chad 8]
+
+    # Get the 'chad_inverse' single components.
+    set chad_a1_inverse [lindex $chad_inverse 0]
+    set chad_a2_inverse [lindex $chad_inverse 1]
+    set chad_a3_inverse [lindex $chad_inverse 2]
+    set chad_b1_inverse [lindex $chad_inverse 3]
+    set chad_b2_inverse [lindex $chad_inverse 4]
+    set chad_b3_inverse [lindex $chad_inverse 5]
+    set chad_c1_inverse [lindex $chad_inverse 6]
+    set chad_c2_inverse [lindex $chad_inverse 7]
+    set chad_c3_inverse [lindex $chad_inverse 8]
+
     ############################################
     ##                                        ##
     ##     COMPUTE THE UNADAPTED Y VALUES     ##
@@ -6127,9 +6157,17 @@ proc ::ms::Load_Colorspace { filepath } {
     # Create the XYZ chromaticity matrix.
     #
     # | red_X  green_X  blue_X |
-    # | red_Y  green_Y  blue_Y | = [list red_X red_Y red_Z green_X green_Y green_Z blue_X blue_Y blue_Z]
+    # | red_Y  green_Y  blue_Y | = [list red_X  red_Y  red_Z  green_X  green_Y  green_Z  blue_X  blue_Y  blue_Z]
     # | red_Z  green_Z  blue_Z |
-    set chromaticity_XYZ [list $red_X $red_Y $red_Z $green_X $green_Y $green_Z $blue_X $blue_Y $blue_Z]
+    set chromaticity_XYZ [list $red_X \
+                               $red_Y \
+                               $red_Z \
+                               $green_X \
+                               $green_Y \
+                               $green_Z \
+                               $blue_X \
+                               $blue_Y \
+                               $blue_Z];
 
     # Compute the inverse XYZ chromaticity matrix.
     #
@@ -6193,17 +6231,27 @@ proc ::ms::Load_Colorspace { filepath } {
     # Final step.
     #
     # | red_x  green_x  blue_x |   | sum_r]     | a1  b1  c1 |
-    # | red_y  green_y  blue_y | * | sum_g] --> | a2  b2  c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+    # | red_y  green_y  blue_y | * | sum_g] --> | a2  b2  c2 | --> [list a1  a2  a3  b1  b2  b3  c1  c2  c3]
     # | red_z  green_z  blue_z |   | sum_b]     | a3  b3  c3 |
-    set RGB_XYZ [list [expr { $red_x*$sum_r   }] \
-                      [expr { $red_y*$sum_r   }] \
-                      [expr { $red_z*$sum_r   }] \
-                      [expr { $green_x*$sum_g }] \
-                      [expr { $green_y*$sum_g }] \
-                      [expr { $green_z*$sum_g }] \
-                      [expr { $blue_x*$sum_b  }] \
-                      [expr { $blue_y*$sum_b  }] \
-                      [expr { $blue_z*$sum_b  }]];
+    set a1 [expr { $red_x*$sum_r   }]
+    set b1 [expr { $green_x*$sum_g }]
+    set c1 [expr { $blue_x*$sum_b  }]
+    set a2 [expr { $red_y*$sum_r   }]
+    set b2 [expr { $green_y*$sum_g }]
+    set c2 [expr { $blue_y*$sum_b  }]
+    set a3 [expr { $red_z*$sum_r   }]
+    set b3 [expr { $green_z*$sum_g }]
+    set c3 [expr { $blue_z*$sum_b  }]
+
+    set RGB_XYZ [list $a1 \
+                      $a2 \
+                      $a3 \
+                      $b1 \
+                      $b2 \
+                      $b3 \
+                      $c1 \
+                      $c2 \
+                      $c3];
 
     # Compute the inverse RGB_XYZ matrix.
     set XYZ_RGB [::inverse_matrix {*}$RGB_XYZ]
@@ -6220,6 +6268,79 @@ proc ::ms::Load_Colorspace { filepath } {
             return ""
         }
     }
+
+    # Get the XYZ_RGB single components.
+    set a1_inverse [lindex $XYZ_RGB 0]
+    set a2_inverse [lindex $XYZ_RGB 1]
+    set a3_inverse [lindex $XYZ_RGB 2]
+    set b1_inverse [lindex $XYZ_RGB 3]
+    set b2_inverse [lindex $XYZ_RGB 4]
+    set b3_inverse [lindex $XYZ_RGB 5]
+    set c1_inverse [lindex $XYZ_RGB 6]
+    set c2_inverse [lindex $XYZ_RGB 7]
+    set c3_inverse [lindex $XYZ_RGB 8]
+
+    ##############################################################################
+    ##                                                                          ##
+    ##     COMPUTE THE CHROMATICALLY ADAPTED RGB_XYZ MATRIX AND ITS INVERSE     ##
+    ##                                                                          ##
+    ##############################################################################
+
+    # Compute the chromatically adapted RGB_XYZ matrix coefficients.
+    #
+    # | a1  b1  c1 |   | chad_a1  chad_b1  chad_c1 |   | ca_a1  ca_b1  ca_c1 |
+    # | a2  b2  c2 | * | chad_a2  chad_b2  chad_c2 | = | ca_a2  ca_b2  ca_c2 | = [list ca_a1  ca_a2  ca_a3  ca_b1  ca_b2  ca_b3  ca_c1  ca_c2  ca_c3]
+    # | a3  b3  c3 |   | chad_a3  chad_b3  chad_c3 |   | ca_a3  ca_b3  ca_c3 |
+    set ca_a1 [expr { ($a1*$chad_a1) + ($b1*$chad_a2) + ($c1*$chad_a3) }]
+    set ca_b1 [expr { ($a1*$chad_b1) + ($b1*$chad_b2) + ($c1*$chad_b3) }]
+    set ca_c1 [expr { ($a1*$chad_c1) + ($b1*$chad_c2) + ($c1*$chad_c3) }]
+    set ca_a2 [expr { ($a2*$chad_a1) + ($b2*$chad_a2) + ($c2*$chad_a3) }]
+    set ca_b2 [expr { ($a2*$chad_b1) + ($b2*$chad_b2) + ($c2*$chad_b3) }]
+    set ca_c2 [expr { ($a2*$chad_c1) + ($b2*$chad_c2) + ($c2*$chad_c3) }]
+    set ca_a3 [expr { ($a3*$chad_a1) + ($b3*$chad_a2) + ($c3*$chad_a3) }]
+    set ca_b3 [expr { ($a3*$chad_b1) + ($b3*$chad_b2) + ($c3*$chad_b3) }]
+    set ca_c3 [expr { ($a3*$chad_c1) + ($b3*$chad_c2) + ($c3*$chad_c3) }]
+
+    set RGB_XYZ [list $ca_a1 \
+                      $ca_a2 \
+                      $ca_a3 \
+                      $ca_b1 \
+                      $ca_b2 \
+                      $ca_b3 \
+                      $ca_c1 \
+                      $ca_c2 \
+                      $ca_c3];
+
+    # Compute the chromatically adapted XYZ_RGB matrix coefficients.
+    #
+    # | a1_inverse  b1_inverse  c1_inverse |   | chad_a1_inverse  chad_b1_inverse  chad_c1_inverse |   | ca_a1_inverse  ca_b1_inverse  ca_c1_inverse |
+    # | a2_inverse  b2_inverse  c2_inverse | * | chad_a2_inverse  chad_b2_inverse  chad_c2_inverse | = | ca_a2_inverse  ca_b2_inverse  ca_c2_inverse | = [list ca_a1_inverse  ca_a2_inverse  ca_a3_inverse  ca_b1_inverse  ca_b2_inverse  ca_b3_inverse  ca_c1_inverse  ca_c2_inverse  ca_c3_inverse]
+    # | a3_inverse  b3_inverse  c3_inverse |   | chad_a3_inverse  chad_b3_inverse  chad_c3_inverse |   | ca_a3_inverse  ca_b3_inverse  ca_c3_inverse |
+    set ca_a1_inverse [expr { ($a1_inverse*$chad_a1_inverse) + ($b1_inverse*$chad_a2_inverse) + ($c1_inverse*$chad_a3_inverse) }]
+    set ca_b1_inverse [expr { ($a1_inverse*$chad_b1_inverse) + ($b1_inverse*$chad_b2_inverse) + ($c1_inverse*$chad_b3_inverse) }]
+    set ca_c1_inverse [expr { ($a1_inverse*$chad_c1_inverse) + ($b1_inverse*$chad_c2_inverse) + ($c1_inverse*$chad_c3_inverse) }]
+    set ca_a2_inverse [expr { ($a2_inverse*$chad_a1_inverse) + ($b2_inverse*$chad_a2_inverse) + ($c2_inverse*$chad_a3_inverse) }]
+    set ca_b2_inverse [expr { ($a2_inverse*$chad_b1_inverse) + ($b2_inverse*$chad_b2_inverse) + ($c2_inverse*$chad_b3_inverse) }]
+    set ca_c2_inverse [expr { ($a2_inverse*$chad_c1_inverse) + ($b2_inverse*$chad_c2_inverse) + ($c2_inverse*$chad_c3_inverse) }]
+    set ca_a3_inverse [expr { ($a3_inverse*$chad_a1_inverse) + ($b3_inverse*$chad_a2_inverse) + ($c3_inverse*$chad_a3_inverse) }]
+    set ca_b3_inverse [expr { ($a3_inverse*$chad_b1_inverse) + ($b3_inverse*$chad_b2_inverse) + ($c3_inverse*$chad_b3_inverse) }]
+    set ca_c3_inverse [expr { ($a3_inverse*$chad_c1_inverse) + ($b3_inverse*$chad_c2_inverse) + ($c3_inverse*$chad_c3_inverse) }]
+
+    set XYZ_RGB [list $ca_a1_inverse \
+                      $ca_a2_inverse \
+                      $ca_a3_inverse \
+                      $ca_b1_inverse \
+                      $ca_b2_inverse \
+                      $ca_b3_inverse \
+                      $ca_c1_inverse \
+                      $ca_c2_inverse \
+                      $ca_c3_inverse];
+
+    #################################
+    ##                             ##
+    ##     REGISTER THE VALUES     ##
+    ##                             ##
+    #################################
 
     # Append 'model_name' to the known colorspaces list.
     set ::ms::colorspaces [lappend ::ms::colorspaces $model_name]
