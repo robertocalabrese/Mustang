@@ -121,36 +121,51 @@ interp alias {} ::rgb_XYZ {} ::ms::rgb_XYZ::Conversion
 #   and so on and so forth...
 proc ::ms::rgb_XYZ::Conversion { channels } {
     foreach { r g b } $channels {
-        # Trasform the *non-linear* rgb value into a *linear* rgb one.
-        set r [::ms::companding::Operation $r inverse]
-        set g [::ms::companding::Operation $g inverse]
-        set b [::ms::companding::Operation $b inverse]
+        # Trasform the *non-linear* rgb values into a *linear* rgb values [0,1.0].
+        set r_linear [::companding $r inverse]
+        set g_linear [::companding $g inverse]
+        set b_linear [::companding $b inverse]
 
-        # XYZ = RGB_XYZ matrix (allready chromatically adapted to D50) * rgb
+        # XYZ = RGB_XYZ matrix (already chromatically adapted) * rgb
         #
-        #             | 0.43603515625       0.3851165771484375  0.1430511474609375 |   | a1 b1 c1 |
-        #   RGB_XYZ = | 0.2224884033203125  0.7169036865234375  0.06060791015625   | = | a2 b2 c2 | = [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
-        #             | 0.013916015625      0.0970611572265625  0.7139129638671875 |   | a3 b3 c3 |
-        #
-        #   | X |   | a1 b1 c1 |   | r |
-        #   | Y | = | a2 b2 c2 | * | g |
-        #   | Z |   | a3 b3 c3 |   | b |
+        # | a1  b1  c1 |   | r_linear |   | X |
+        # | a2  b2  c2 | * | g_linear | = | Y |
+        # | a3  b3  c3 |   | b_linear |   | Z |
 
-        # Retrieve the RGB_XYZ coefficients for the current colorspace and the D50 illuminat.
-        set a1 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 0]
-        set a2 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 1]
-        set a3 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 2]
-        set b1 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 3]
-        set b2 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 4]
-        set b3 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 5]
-        set c1 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 6]
-        set c2 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 7]
-        set c3 [lindex $::ms::data($::ms::data(colorspace),D50,RGB_XYZ) 8]
+        # Retrieve the RGB_XYZ coefficients for the current colorspace.
+        set a1 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 0]
+        set a2 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 1]
+        set a3 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 2]
+        set b1 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 3]
+        set b2 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 4]
+        set b3 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 5]
+        set c1 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 6]
+        set c2 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 7]
+        set c3 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 8]
 
         # Transform the *linear* rgb values into XYZ values.
-        set X [expr { ($a1*$r)+($b1*$g)+($c1*$b) }]
-        set Y [expr { ($a2*$r)+($b2*$g)+($c2*$b) }]
-        set Z [expr { ($a3*$r)+($b3*$g)+($c3*$b) }]
+        set X [expr { ($a1*$r_linear) + ($b1*$g_linear) + ($c1*$b_linear) }]
+        set Y [expr { ($a2*$r_linear) + ($b2*$g_linear) + ($c2*$b_linear) }]
+        set Z [expr { ($a3*$r_linear) + ($b3*$g_linear) + ($c3*$b_linear) }]
+
+        # Check that the resulting channels don't exceeds their limits.
+        if { $X < 0 } {
+            set X 0
+        } elseif { $X > 1.999969482421875 } {
+            set X 1.999969482421875
+        }
+
+        if { $Y < 0 } {
+            set Y 0
+        } elseif { $Y > 1.0 } {
+            set Y 1.0
+        }
+
+        if { $Z < 0 } {
+            set Z 0
+        } elseif { $Z > 1.999969482421875 } {
+            set Z 1.999969482421875
+        }
 
         lappend results $X $Y $Z
     }
