@@ -107,9 +107,9 @@ interp alias {} ::HSP_HSI {} ::ms::HSP_HSI::Conversion
 # Note:  For info about the **HSP** color system visit [HSP](https://www.alienryderflex.com/hsp.html).
 #        For info about unadapted values visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
-#           unadapted_Yr = 0.21264461762001413 --> for the sRGB D65
-#           unadapted_Yg = 0.7151663725690272  --> for the sRGB D65
-#           unadapted_Yb = 0.07218900981095855 --> for the sRGB D65
+#           unadapted_Yr = 0.21264461762001413 --> for the 'sRGB D65' colormodel
+#           unadapted_Yg = 0.7151663725690272  --> for the 'sRGB D65' colormodel
+#           unadapted_Yb = 0.07218900981095855 --> for the 'sRGB D65' colormodel
 #
 # Return a list containing the resulting **HSI** colors channels flattened together.
 # Each **HSI** color will be represented by 3 channels values in the following order and ranges:
@@ -176,54 +176,54 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                         0   {
                             # hue < 60.0
 
-                            set a1 [expr { $f*$f*0.7151663725690272 }]
+                            set a1 [expr { $f*$f*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
 
-                            set r [expr { sqrt(($pb*$pb)/($a1+0.21264461762001413)) }]
+                            set r [expr { sqrt(($pb*$pb)/($a1+$::ms::data(colorspace,$::ms::colorspace,Yr))) }]
                             set g [expr { $r*$f }]
                             set b 0
                         }
                         1   {
                             # hue < 120.0
 
-                            set a1 [expr { $f*$f*0.21264461762001413 }]
+                            set a1 [expr { $f*$f*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
 
-                            set g [expr { sqrt(($pb*$pb)/($a1+0.7151663725690272)) }]
+                            set g [expr { sqrt(($pb*$pb)/($a1+$::ms::data(colorspace,$::ms::colorspace,Yg))) }]
                             set r [expr { $g*$f }]
                             set b 0
                         }
                         2   {
                             # hue < 180.0
 
-                            set a1 [expr { $f*$f*0.07218900981095855 }]
+                            set a1 [expr { $f*$f*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
 
-                            set g [expr { sqrt(($pb*$pb)/($a1+0.7151663725690272)) }]
+                            set g [expr { sqrt(($pb*$pb)/($a1+$::ms::data(colorspace,$::ms::colorspace,Yg))) }]
                             set b [expr { $g*$f }]
                             set r 0
                         }
                         3   {
                             # hue < 240.0
 
-                            set a1 [expr { $f*$f*0.7151663725690272 }]
+                            set a1 [expr { $f*$f*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
 
-                            set b [expr { sqrt(($pb*$pb)/($a1+0.07218900981095855)) }]
+                            set b [expr { sqrt(($pb*$pb)/($a1+$::ms::data(colorspace,$::ms::colorspace,Yb))) }]
                             set g [expr { $b*$f }]
                             set r 0
                         }
                         4   {
                             # hue < 300.0
 
-                            set a1 [expr { $f*$f*0.21264461762001413 }]
+                            set a1 [expr { $f*$f*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
 
-                            set b [expr { sqrt(($pb*$pb)/($a1+0.07218900981095855)) }]
+                            set b [expr { sqrt(($pb*$pb)/($a1+$::ms::data(colorspace,$::ms::colorspace,Yb))) }]
                             set r [expr { $b*$f }]
                             set g 0
                         }
                         5   {
                             # hue < 360.0
 
-                            set a1 [expr { $f*$f*0.07218900981095855 }]
+                            set a1 [expr { $f*$f*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
 
-                            set r [expr { sqrt(($pb*$pb)/($a1+0.21264461762001413)) }]
+                            set r [expr { sqrt(($pb*$pb)/($a1+$::ms::data(colorspace,$::ms::colorspace,Yr))) }]
                             set b [expr { $r*$f }]
                             set g 0
                         }
@@ -237,9 +237,9 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                             # hue < 60.0
 
                             set a1   [expr { 1.0+($f*($j-1.0)) }]
-                            set a2   [expr { $j*$j*0.21264461762001413 }]
-                            set a3   [expr { $a1*$a1*0.7151663725690272 }]
-                            set sqrt [expr { sqrt($a2+$a3+0.07218900981095855) }]
+                            set a2   [expr { $j*$j*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
+                            set a3   [expr { $a1*$a1*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
+                            set sqrt [expr { sqrt($a2+$a3+$::ms::data(colorspace,$::ms::colorspace,Yb)) }]
 
                             set b [expr { $pb/$sqrt }]
                             set r [expr { $b*$j }]
@@ -249,9 +249,9 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                             # hue < 120.0
 
                             set a1   [expr { 1.0+($f*($j-1.0)) }]
-                            set a2   [expr { $j*$j*0.7151663725690272 }]
-                            set a3   [expr { $a1*$a1*0.21264461762001413 }]
-                            set sqrt [expr { sqrt($a2+$a3+0.07218900981095855) }]
+                            set a2   [expr { $j*$j*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
+                            set a3   [expr { $a1*$a1*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
+                            set sqrt [expr { sqrt($a2+$a3+$::ms::data(colorspace,$::ms::colorspace,Yb)) }]
 
                             set b [expr { $pb/$sqrt }]
                             set g [expr { $b*$j }]
@@ -261,9 +261,9 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                             # hue < 180.0
 
                             set a1   [expr { 1.0+($f*($j-1.0)) }]
-                            set a2   [expr { $j*$j*0.7151663725690272 }]
-                            set a3   [expr { $a1*$a1*0.07218900981095855 }]
-                            set sqrt [expr { sqrt($a2+$a3+0.21264461762001413) }]
+                            set a2   [expr { $j*$j*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
+                            set a3   [expr { $a1*$a1*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
+                            set sqrt [expr { sqrt($a2+$a3+$::ms::data(colorspace,$::ms::colorspace,Yr)) }]
 
                             set r [expr { $pb/$sqrt }]
                             set g [expr { $r*$j }]
@@ -273,9 +273,9 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                             # hue < 240.0
 
                             set a1   [expr { 1.0+($f*($j-1.0)) }]
-                            set a2   [expr { $j*$j*0.07218900981095855 }]
-                            set a3   [expr { $a1*$a1*0.7151663725690272 }]
-                            set sqrt [expr { sqrt($a2+$a3+0.21264461762001413) }]
+                            set a2   [expr { $j*$j*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
+                            set a3   [expr { $a1*$a1*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
+                            set sqrt [expr { sqrt($a2+$a3+$::ms::data(colorspace,$::ms::colorspace,Yr)) }]
 
                             set r [expr { $pb/$sqrt }]
                             set b [expr { $r*$j }]
@@ -285,9 +285,9 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                             # hue < 300.0
 
                             set a1   [expr { 1.0+($f*($j-1.0)) }]
-                            set a2   [expr { $j*$j*0.07218900981095855 }]
-                            set a3   [expr { $a1*$a1*0.21264461762001413 }]
-                            set sqrt [expr { sqrt($a2+$a3+0.7151663725690272) }]
+                            set a2   [expr { $j*$j*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
+                            set a3   [expr { $a1*$a1*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
+                            set sqrt [expr { sqrt($a2+$a3+$::ms::data(colorspace,$::ms::colorspace,Yg)) }]
 
                             set g [expr { $pb/$sqrt }]
                             set b [expr { $g*$j }]
@@ -297,9 +297,9 @@ proc ::ms::HSP_HSI::Conversion { channels } {
                             # hue < 360.0
 
                             set a1   [expr { 1.0+($f*($j-1.0)) }]
-                            set a2   [expr { $j*$j*0.21264461762001413 }]
-                            set a3   [expr { $a1*$a1*0.07218900981095855 }]
-                            set sqrt [expr { sqrt($a2+$a3+0.7151663725690272) }]
+                            set a2   [expr { $j*$j*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
+                            set a3   [expr { $a1*$a1*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
+                            set sqrt [expr { sqrt($a2+$a3+$::ms::data(colorspace,$::ms::colorspace,Yg)) }]
 
                             set g [expr { $pb/$sqrt }]
                             set r [expr { $g*$j }]

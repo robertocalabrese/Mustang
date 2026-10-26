@@ -140,7 +140,7 @@ proc ::ms::HSI_rgb::Conversion { channels } {
             }
             default {
                 set s  [expr { $saturation*0.01 }]; # range [0,1.0]
-                set i  [expr { $intensity*0.01 }];  # range [0,1.0]
+                set i  [expr { $intensity*0.01  }]; # range [0,1.0]
 
                 set k0 [expr { $i*$s }]
                 set k1 [expr { $i-$k0 }]

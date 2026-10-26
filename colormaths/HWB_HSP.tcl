@@ -102,9 +102,9 @@ interp alias {} ::HWB_HSP {} ::ms::HWB_HSP::Conversion
 #        For info about the **HWB** color system visit [HWB](http://alvyray.com/Papers/CG/HWB_JGTv208.pdf).
 #        For info about unadapted values visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
-#           unadapted_Yr = 0.21264461762001413 --> for the sRGB D65
-#           unadapted_Yg = 0.7151663725690272  --> for the sRGB D65
-#           unadapted_Yb = 0.07218900981095855 --> for the sRGB D65
+#           unadapted_Yr = 0.21264461762001413 --> for the 'sRGB D65' colormodel
+#           unadapted_Yg = 0.7151663725690272  --> for the 'sRGB D65' colormodel
+#           unadapted_Yb = 0.07218900981095855 --> for the 'sRGB D65' colormodel
 #
 # Return a list containing the resulting **HSP** colors channels flattened together.
 # Each **HSP** color will be represented by 3 channels values in the following order and ranges:
@@ -138,7 +138,7 @@ proc ::ms::HWB_HSP::Conversion { channels } {
         switch -nocase -- $hue {
             UNDEF {
                 # It's a gray.
-                lappend results UNDEF 0 [expr { 100.0-$blackness) }]
+                lappend results UNDEF 0 [expr { 100.0-$blackness }]
             }
             default {
                 set w [expr { $whiteness*0.01 }]; # range [0,1.0]
@@ -214,9 +214,9 @@ proc ::ms::HWB_HSP::Conversion { channels } {
                 }
 
                 # Compute the perceived_brightness [0,100.0].
-                set r_part [expr { $r*$r*0.21264461762001413 }]
-                set g_part [expr { $g*$g*0.7151663725690272 }]
-                set b_part [expr { $b*$b*0.07218900981095855 }]
+                set r_part [expr { $r*$r*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
+                set g_part [expr { $g*$g*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
+                set b_part [expr { $b*$b*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
 
                 set perceived_brightness [expr { (sqrt($r_part+$g_part+$b_part))*100.0 }]
 

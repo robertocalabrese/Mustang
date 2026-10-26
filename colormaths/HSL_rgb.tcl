@@ -134,7 +134,7 @@ proc ::ms::HSL_rgb::Conversion { channels } {
             }
             default {
                 set s [expr { $saturation*0.01 }]; # range [0,1.0]
-                set l [expr { $lightness*0.01 }];  # range [0,1.0]
+                set l [expr { $lightness*0.01  }]; # range [0,1.0]
 
                 # Check the lightness value.
                 if { $l >= 0.5 } {
