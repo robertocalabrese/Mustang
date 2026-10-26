@@ -101,9 +101,9 @@ proc ::ms::matrix::Inverse_3x3 { a1 a2 a3 b1 b2 b3 c1 c2 c3 } {
 
     # Compute the matrix of cofactors.
     #
-    # | cofactor_a1 cofactor_b1 cofactor_c1 |
-    # | cofactor_a2 cofactor_b2 cofactor_c2 |
-    # | cofactor_a3 cofactor_b3 cofactor_c3 |
+    # | cofactor_a1  cofactor_b1  cofactor_c1 |
+    # | cofactor_a2  cofactor_b2  cofactor_c2 |
+    # | cofactor_a3  cofactor_b3  cofactor_c3 |
     set cofactor_a1 $minor_a1
     set cofactor_a2 [expr { -1.0*$minor_a2 }]
     set cofactor_a3 $minor_a3
@@ -116,9 +116,9 @@ proc ::ms::matrix::Inverse_3x3 { a1 a2 a3 b1 b2 b3 c1 c2 c3 } {
 
     # Compute the Adjugate, also called Adjoint.
     #
-    # | adjugate_a1 adjugate_b1 adjugate_c1 |
-    # | adjugate_a2 adjugate_b2 adjugate_c2 |
-    # | adjugate_a3 adjugate_b3 adjugate_c3 |
+    # | adjugate_a1  adjugate_b1  adjugate_c1 |
+    # | adjugate_a2  adjugate_b2  adjugate_c2 |
+    # | adjugate_a3  adjugate_b3  adjugate_c3 |
     set adjugate_a1 $cofactor_a1
     set adjugate_a2 $cofactor_b1
     set adjugate_a3 $cofactor_c1
@@ -152,9 +152,9 @@ proc ::ms::matrix::Inverse_3x3 { a1 a2 a3 b1 b2 b3 c1 c2 c3 } {
 
     # Compute the inverse matrix.
     #
-    # | inverse_a1 inverse_b1 inverse_c1 |
-    # | inverse_a2 inverse_b2 inverse_c2 | = [list inverse_a1 inverse_a2 inverse_a3 inverse_b1 inverse_b2 inverse_b3 inverse_c1 inverse_c2 inverse_c3]
-    # | inverse_a3 inverse_b3 inverse_c3 |
+    # | a1_inverse  b1_inverse  c1_inverse |
+    # | a2_inverse  b2_inverse  c2_inverse | = [list a1_inverse  a2_inverse  a3_inverse  b1_inverse  b2_inverse  b3_inverse  c1_inverse  c2_inverse  c3_inverse]
+    # | a3_inverse  b3_inverse  c3_inverse |
     return  [list [expr { $adjugate_a1/$det }] \
                   [expr { $adjugate_a2/$det }] \
                   [expr { $adjugate_a3/$det }] \
