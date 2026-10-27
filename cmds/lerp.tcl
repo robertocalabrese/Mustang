@@ -64,40 +64,37 @@ interp alias {} ::lerp {} ::ms::lerp::Operation
 #
 # Where:
 #
-# value         Should be a double specifing the value in which calculate the function.
+# value          Should be a double specifing the value in which calculate the function.
 #
-# value_min     Should be a double specifing the first allowed value immediately inferior to 'value'.
+# value_min      Should be a double specifing the first allowed value immediately inferior to *value*.
 #
-# value_max     Should be a double specifing the first allowed value immediately superior to 'value'.
+# value_max      Should be a double specifing the first allowed value immediately superior to *value*.
 #
-# function_min  Should be a double specifing the value of the function at 'Min'.
+# function_min   Should be a double specifing the value of the function at *value_min*.
 #
-# function_max  Should be a double specifing the value of the function at 'Max'.
+# function_max   Should be a double specifing the value of the function at *value_max*.
 #
-# INFO: This is the precise method which guarantees v = v1 when t1 = 1.
-#       In mathematics, linear interpolation is a method of curve
-#       fitting using linear polynomials.
-#       Linear interpolation is often used to fill the gaps in a table,
-#       approximating a value of some function f, using two known
-#       values of that function at other points.
+# INFO: This is the precise method which guarantees **v** = **v1** when **t1** = **1**.
+#       In mathematics, linear interpolation is a method of curve fitting using linear polynomials.
+#       Linear interpolation is often used to fill the gaps in a table, approximating a value of some function f,
+#       using two known values of that function at other points.
 #
 # EXAMPLE: Suppose that one has a table listing the population of some
 #          country like this:
 #
-#              1970    -   500000  citizens.
-#              1980    -   1000000 citizens.
-#              1990    -   2000000 citizens.
-#              2000    -   3000000 citizens.
+#             1970 - 500000  citizens.
+#             1980 - 1000000 citizens.
+#             1990 - 2000000 citizens.
+#             2000 - 3000000 citizens.
 #
 #          and that one wanted to estimate the population in 1994.
-#          Linear interpolation is an easy way to do this, just pass to
-#          the 'lerp' command this values:
+#          Linear interpolation is an easy way to do this, just pass to the 'lerp' command this values:
 #
-#              value       will be 1994.
-#              valueMin    will be 1990.
-#              valueMax    will be 2000.
-#              fuctionMin  will be 2000000.
-#              fuctionMax  will be 3000000.
+#             value       will be 1994.
+#             valueMin    will be 1990.
+#             valueMax    will be 2000.
+#             fuctionMin  will be 2000000.
+#             fuctionMax  will be 3000000.
 #
 #          The result will be: 2400000.
 #          This means that in 1994 the estimated population is 2400000.
