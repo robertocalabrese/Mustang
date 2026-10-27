@@ -44,8 +44,8 @@ Model Name: sRGB D65
 
 # The Chromaticity xy values ordered by column.
 #
-# | red_x green_x blue_x |   | 0.64 0.3 0.15 |
-# | red_y green_y blue_y | = | 0.33 0.6 0.06 |
+# | red_x  green_x  blue_x |   | 0.64  0.3  0.15 |
+# | red_y  green_y  blue_y | = | 0.33  0.6  0.06 |
 #
 # See 'https://en.wikipedia.org/wiki/SRGB' for more info.
 
