@@ -67,37 +67,37 @@ interp alias {} ::HEX16_RGB16 {} ::ms::HEX16_RGB16::Conversion
 # hexadecimals   Should be a list that specifies all the **HEX16** colors to convert.
 #                Each **HEX16** color needs to be represented by twelve hexadecimals values in the range [#000000000000,#ffffffffffff]
 #                that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#                    first four hexadecimals --> red   [0000,ffff]
-#                    next  four hexadecimals --> green [0000,ffff]
-#                    last  four hexadecimals --> blue  [0000,ffff]
+#                   first four hexadecimals --> red   [0000,ffff]
+#                   next  four hexadecimals --> green [0000,ffff]
+#                   last  four hexadecimals --> blue  [0000,ffff]
 #
 #                Attention:
-#                    - Each hexadecimal color must start with the '#' symbol.
-#                    - Each hexadecimal letter must be lowercase.
-#                    - Shortforms are not allowed.
-#                    - Textual or theme colornames are not allowed.
-#                    - For performance reasons, the input and output colors will not be checked.
-#                      Please, take the appropriate steps before and after using this procedure or use
-#                      the **color** command instead.
+#                   - Each hexadecimal color must start with the '#' symbol.
+#                   - Each hexadecimal letter must be lowercase.
+#                   - Shortforms are not allowed.
+#                   - Textual or theme colornames are not allowed.
+#                   - For performance reasons, the input and output colors will not be checked.
+#                     Please, take the appropriate steps before and after using this procedure or use
+#                     the **color** command instead.
 #
 #                Examples:
 #
-#                    One input **HEX16** color:
-#                        color        --> #ffffffff0000
-#                        hexadecimals --> [list #ffffffff0000] or just #ffffffff0000
+#                   One input **HEX16** color:
+#                      color        --> #ffffffff0000
+#                      hexadecimals --> [list #ffffffff0000] or just #ffffffff0000
 #
-#                    Two input **HEX16** colors:
-#                        color1       --> #000000000000
-#                        color2       --> #ffffffffffff
-#                        hexadecimals --> [list #000000000000 #ffffffffffff]
+#                   Two input **HEX16** colors:
+#                      color1       --> #000000000000
+#                      color2       --> #ffffffffffff
+#                      hexadecimals --> [list #000000000000 #ffffffffffff]
 #
-#                    Three input **HEX16** colors:
-#                        color1       --> #ffff00000000
-#                        color2       --> #0000ffff0000
-#                        color3       --> #00000000ffff
-#                        hexadecimals --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
+#                   Three input **HEX16** colors:
+#                      color1       --> #ffff00000000
+#                      color2       --> #0000ffff0000
+#                      color3       --> #00000000ffff
+#                      hexadecimals --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
 #
-#                    and so on and so forth...
+#                   and so on and so forth...
 #
 # Return a list containing the resulting **RGB16** colors channels flattened together.
 # Each **RGB16** color will be represented by 3 channels values in the following order and ranges:
@@ -108,19 +108,19 @@ interp alias {} ::HEX16_RGB16 {} ::ms::HEX16_RGB16::Conversion
 # Examples:
 #
 #   One output **RGB16** color:
-#       color    --> [list 4000 17200 21200]
-#       results  --> [list 4000 17200 21200]
+#      color    --> [list 4000 17200 21200]
+#      results  --> [list 4000 17200 21200]
 #
 #   Two output **RGB16** colors:
-#       color1   --> [list 4000 17200 21200]
-#       color2   --> [list 5700 6500  6500 ]
-#       results  --> [list 4000 17200 21200 5700 6500 6500] <-- all colors channels will be flattened together.
+#      color1   --> [list 4000 17200 21200]
+#      color2   --> [list 5700 6500  6500 ]
+#      results  --> [list 4000 17200 21200 5700 6500 6500] <-- all colors channels will be flattened together.
 #
 #   Three output **RGB16** colors:
-#       color1   --> [list 4000 17200 21200]
-#       color2   --> [list 5700 6500  6500 ]
-#       color3   --> [list 2300 21200 12000]
-#       results  --> [list 4000 17200 21200 5700 6500 6500 2300 21200 12000] <-- all colors channels will be flattened together.
+#      color1   --> [list 4000 17200 21200]
+#      color2   --> [list 5700 6500  6500 ]
+#      color3   --> [list 2300 21200 12000]
+#      results  --> [list 4000 17200 21200 5700 6500 6500 2300 21200 12000] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::HEX16_RGB16::Conversion { hexadecimals } {

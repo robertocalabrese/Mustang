@@ -66,9 +66,9 @@ interp alias {} ::HWB_HSL {} ::ms::HWB_HSL::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **HWB** colors to convert.
 #            Each **HWB** color needs to be represented by 3 channels values in the following order and ranges:
-#                H --> Hue       [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
-#                W --> Whiteness [0,100.0]
-#                B --> Blackness [0,100.0]
+#               H --> Hue       [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
+#               W --> Whiteness [0,100.0]
+#               B --> Blackness [0,100.0]
 #
 #            Note that for hues, '360.0' is not included.
 #
@@ -77,28 +77,28 @@ interp alias {} ::HWB_HSL {} ::ms::HWB_HSL::Conversion
 #
 #            Examples:
 #
-#                One input **HWB** color:
-#                    color    --> [list 120 50 50]
-#                    channels --> [list 120 50 50]
+#               One input **HWB** color:
+#                  color    --> [list 120 50 50]
+#                  channels --> [list 120 50 50]
 #
-#                Two input **HWB** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
+#               Two input **HWB** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
 #
-#                Three input **HWB** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    color3   --> [list 270 20 90]
-#                    channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
+#               Three input **HWB** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  color3   --> [list 270 20 90]
+#                  channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 100 = 0.01
 #   6 / 360 = 0.016666666666666666
 #
-# Note:  For info about the **HWB** color system visit [HWB](http://alvyray.com/Papers/CG/HWB_JGTv208.pdf).
+# Note: For info about the **HWB** color system visit [HWB](http://alvyray.com/Papers/CG/HWB_JGTv208.pdf).
 #
 # Return a list containing the resulting **HSL** colors channels flattened together.
 # Each **HSL** color will be represented by 3 channels values in the following order and ranges:
@@ -111,19 +111,19 @@ interp alias {} ::HWB_HSL {} ::ms::HWB_HSL::Conversion
 # Examples:
 #
 #   One output **HSL** color:
-#       color    --> [list 120 50 50]
-#       results  --> [list 120 50 50]
+#      color    --> [list 120 50 50]
+#      results  --> [list 120 50 50]
 #
 #   Two output **HSL** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
 #
 #   Three output **HSL** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       color3   --> [list 270 20 90]
-#       results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      color3   --> [list 270 20 90]
+#      results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::HWB_HSL::Conversion { channels } {

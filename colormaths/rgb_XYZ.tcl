@@ -66,34 +66,34 @@ interp alias {} ::rgb_XYZ {} ::ms::rgb_XYZ::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **rgb** colors to convert.
 #            Each **rgb** color needs to be represented by 3 channels values in the following order and ranges:
-#                r --> red   [0,1.0]
-#                g --> green [0,1.0]
-#                b --> blue  [0,1.0]
+#               r --> red   [0,1.0]
+#               g --> green [0,1.0]
+#               b --> blue  [0,1.0]
 #
-#            Attention, the input and output colors will not be checked.
+#            Attention, the input colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **rgb** color:
-#                    color    --> [list 0.4 0.5 0.2]
-#                    channels --> [list 0.4 0.5 0.2]
+#               One input **rgb** color:
+#                  color    --> [list 0.4 0.5 0.2]
+#                  channels --> [list 0.4 0.5 0.2]
 #
-#                Two input **rgb** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
+#               Two input **rgb** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
 #
-#                Three input **rgb** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    color3   --> [list 0.2 0.2 0.1]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
+#               Three input **rgb** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  color3   --> [list 0.2 0.2 0.1]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
-# Note:  For info about **rgb** to **XYZ** conversions, RGB_XYZ matrices and chromatic adaptations visit [BruceLindbloom](http://www.brucelindbloom.com).
-#        For info about companding operations visit [ICC 4.4 Specifications](https://www.color.org/specification/ICC.1-2022-05.p).
+# Note: For info about **rgb** to **XYZ** conversions, RGB_XYZ matrices and chromatic adaptations visit [BruceLindbloom](http://www.brucelindbloom.com).
+#       For info about companding operations visit [ICC 4.4 Specifications](https://www.color.org/specification/ICC.1-2022-05.p).
 #
 # Return a list containing the resulting **XYZ** colors channels flattened together.
 # Each **XYZ** color will be represented by 3 channels values in the following order and ranges:
@@ -104,19 +104,19 @@ interp alias {} ::rgb_XYZ {} ::ms::rgb_XYZ::Conversion
 # Examples:
 #
 #   One output **XYZ** color:
-#       color    --> [list 0.4 0.5 0.2]
-#       results  --> [list 0.4 0.5 0.2]
+#      color    --> [list 0.4 0.5 0.2]
+#      results  --> [list 0.4 0.5 0.2]
 #
 #   Two output **XYZ** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
 #
 #   Three output **XYZ** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       color3   --> [list 0.2 0.2 0.1]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      color3   --> [list 0.2 0.2 0.1]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::rgb_XYZ::Conversion { channels } {

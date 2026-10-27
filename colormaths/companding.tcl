@@ -75,7 +75,7 @@ interp alias {} companding {} ::ms::companding::Operation
 # A pre-computation has been made in order to increase the performance:
 #    1.0/2.4 = 0.4166666666666667
 #
-# Note:  For info about companding operations visit [ICC 4.4 Specifications](https://www.color.org/specification/ICC.1-2022-05.p).
+# Note: For info about companding operations visit [ICC 4.4 Specifications](https://www.color.org/specification/ICC.1-2022-05.p).
 #
 # Depending on the **op** provided, returns the sRGB companded *linear* channel (op=normal)
 # or the sRGB inverse companded *non linear* channels (op=inverse).

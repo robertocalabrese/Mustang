@@ -66,31 +66,31 @@ interp alias {} ::RGB12_RGB8 {} ::ms::RGB12_RGB8::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **RGB12** colors to convert.
 #            Each **RGB12** color needs to be represented by 3 channels values in the following order and ranges:
-#                R --> Red   [0,4095]
-#                G --> Green [0,4095]
-#                B --> Blue  [0,4095]
+#               R --> Red   [0,4095]
+#               G --> Green [0,4095]
+#               B --> Blue  [0,4095]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **RGB12** color:
-#                    color    --> [list 400 1720 2120]
-#                    channels --> [list 400 1720 2120]
+#               One input **RGB12** color:
+#                  color    --> [list 400 1720 2120]
+#                  channels --> [list 400 1720 2120]
 #
-#                Two input **RGB12** colors:
-#                    color1   --> [list 400 1720 2120]
-#                    color2   --> [list 570 650  650 ]
-#                    channels --> [list 400 1720 2120 570 650 650] <-- all colors channels should be flattened together.
+#               Two input **RGB12** colors:
+#                  color1   --> [list 400 1720 2120]
+#                  color2   --> [list 570 650  650 ]
+#                  channels --> [list 400 1720 2120 570 650 650] <-- all colors channels should be flattened together.
 #
-#                Three input **RGB12** colors:
-#                    color1   --> [list 400 1720 2120]
-#                    color2   --> [list 570 650  650 ]
-#                    color3   --> [list 230 2120 1200]
-#                    channels --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels should be flattened together.
+#               Three input **RGB12** colors:
+#                  color1   --> [list 400 1720 2120]
+#                  color2   --> [list 570 650  650 ]
+#                  color3   --> [list 230 2120 1200]
+#                  channels --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   255 / 4095 = 0.06227106227106227
@@ -104,26 +104,26 @@ interp alias {} ::RGB12_RGB8 {} ::ms::RGB12_RGB8::Conversion
 # Examples:
 #
 #   One output **RGB8** color:
-#       color    --> [list 40 172 212]
-#       results  --> [list 40 172 212]
+#      color    --> [list 40 172 212]
+#      results  --> [list 40 172 212]
 #
 #   Two output **RGB8** colors:
-#       color1   --> [list 40 172 212]
-#       color2   --> [list 57 65  65 ]
-#       results  --> [list 40 172 212 57 65 65] <-- all colors channels will be flattened together.
+#      color1   --> [list 40 172 212]
+#      color2   --> [list 57 65  65 ]
+#      results  --> [list 40 172 212 57 65 65] <-- all colors channels will be flattened together.
 #
 #   Three output **RGB8** colors:
-#       color1   --> [list 40 172 212]
-#       color2   --> [list 57 65  65 ]
-#       color3   --> [list 23 212 120]
-#       results  --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels will be flattened together.
+#      color1   --> [list 40 172 212]
+#      color2   --> [list 57 65  65 ]
+#      color3   --> [list 23 212 120]
+#      results  --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::RGB12_RGB8::Conversion { channels } {
     foreach { red12 green12 blue12 } $channels {
-        set red16   [expr { round($red12*0.06227106227106227) }]
+        set red16   [expr { round($red12*0.06227106227106227)   }]
         set green16 [expr { round($green12*0.06227106227106227) }]
-        set blue16  [expr { round($blue12*0.06227106227106227) }]
+        set blue16  [expr { round($blue12*0.06227106227106227)  }]
 
         lappend results $red16 $green16 $blue16
     }

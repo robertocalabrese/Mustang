@@ -66,36 +66,36 @@ interp alias {} ::XYZ_Luv {} ::ms::XYZ_Luv::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **XYZ** colors to convert.
 #            Each **XYZ** color needs to be represented by 3 channels values in the following order and ranges:
-#                X --> X [0,0.96419999999999995] --> PCS.X D50
-#                Y --> Y [0,1.0]                 --> PCS.Y D50
-#                Z --> Z [0,0.82489999999999997] --> PCS.Z D50
+#               X --> X [0,0.96419999999999995] --> PCS.X D50
+#               Y --> Y [0,1.0]                 --> PCS.Y D50
+#               Z --> Z [0,0.82489999999999997] --> PCS.Z D50
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **XYZ** color:
-#                    color    --> [list 0.4 0.5 0.2]
-#                    channels --> [list 0.4 0.5 0.2]
+#               One input **XYZ** color:
+#                  color    --> [list 0.4 0.5 0.2]
+#                  channels --> [list 0.4 0.5 0.2]
 #
-#                Two input **XYZ** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
+#               Two input **XYZ** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
 #
-#                Three input **XYZ** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    color3   --> [list 0.2 0.2 0.1]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
+#               Three input **XYZ** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  color3   --> [list 0.2 0.2 0.1]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # A pre-computation have been made in order to increase the performance:
 #   1 / 3 = 0.3333333333333333
 #
-# Note:  For info about **XYZ** to **Luv** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
+# Note: For info about **XYZ** to **Luv** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
 # Return a list containing the resulting **Luv** colors channels flattened together.
 # Each **Luv** color will be represented by 3 channels values in the following order and ranges:
@@ -106,19 +106,19 @@ interp alias {} ::XYZ_Luv {} ::ms::XYZ_Luv::Conversion
 # Examples:
 #
 #   One output **Luv** color:
-#       color    --> [list 100 -50 50]
-#       results  --> [list 100 -50 50]
+#      color    --> [list 100 -50 50]
+#      results  --> [list 100 -50 50]
 #
 #   Two output **Luv** colors:
-#       color1   --> [list 100 -50 50]
-#       color2   --> [list 57   80 80]
-#       results  --> [list 100 -50 50 57 80 80] <-- all colors channels will be flattened together.
+#      color1   --> [list 100 -50 50]
+#      color2   --> [list 57   80 80]
+#      results  --> [list 100 -50 50 57 80 80] <-- all colors channels will be flattened together.
 #
 #   Three output **Luv** colors:
-#       color1   --> [list 100 -50 50]
-#       color2   --> [list 57   80 80]
-#       color3   --> [list 23   20 12]
-#       results  --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels will be flattened together.
+#      color1   --> [list 100 -50 50]
+#      color2   --> [list 57   80 80]
+#      color3   --> [list 23   20 12]
+#      results  --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::XYZ_Luv::Conversion { channels } {
@@ -154,7 +154,7 @@ proc ::ms::XYZ_Luv::Conversion { channels } {
             set v1 [expr { (9.0*$Y)/($X+(15.0*$Y)+(3.0*$Z)) }]
 
             set u  [expr { 13.0*$L*($u1-0.20916649040886384) }]
-            set v  [expr { 13.0*$L*($v1-0.4880985308234222) }]
+            set v  [expr { 13.0*$L*($v1-0.4880985308234222)  }]
 
             lappend results $L $u $v
         }

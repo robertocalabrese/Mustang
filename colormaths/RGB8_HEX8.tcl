@@ -66,55 +66,55 @@ interp alias {} ::RGB8_HEX8 {} ::ms::RGB8_HEX8::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **RGB8** colors to convert.
 #            Each **RGB8** color needs to be represented by 3 channels values in the following order and ranges:
-#                R --> Red   [0,255]
-#                G --> Green [0,255]
-#                B --> Blue  [0,255]
+#               R --> Red   [0,255]
+#               G --> Green [0,255]
+#               B --> Blue  [0,255]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **RGB8** color:
-#                    color    --> [list 40 172 212]
-#                    channels --> [list 40 172 212]
+#               One input **RGB8** color:
+#                  color    --> [list 40 172 212]
+#                  channels --> [list 40 172 212]
 #
-#                Two input **RGB8** colors:
-#                    color1   --> [list 40 172 212]
-#                    color2   --> [list 57 65  65 ]
-#                    channels --> [list 40 172 212 57 65 65] <-- all colors channels should be flattened together.
+#               Two input **RGB8** colors:
+#                  color1   --> [list 40 172 212]
+#                  color2   --> [list 57 65  65 ]
+#                  channels --> [list 40 172 212 57 65 65] <-- all colors channels should be flattened together.
 #
-#                Three input **RGB8** colors:
-#                    color1   --> [list 40 172 212]
-#                    color2   --> [list 57 65  65 ]
-#                    color3   --> [list 23 212 120]
-#                    channels --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels should be flattened together.
+#               Three input **RGB8** colors:
+#                  color1   --> [list 40 172 212]
+#                  color2   --> [list 57 65  65 ]
+#                  color3   --> [list 23 212 120]
+#                  channels --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Return a list containing the resulting **HEX8** colors.
 # Each **HEX8** color will be represented by six hexadecimals values in the range [#000000,#ffffff]
 # that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#     first two hexadecimals --> red   [00,ff]
-#     next  two hexadecimals --> green [00,ff]
-#     last  two hexadecimals --> blue  [00,ff]
+#    first two hexadecimals --> red   [00,ff]
+#    next  two hexadecimals --> green [00,ff]
+#    last  two hexadecimals --> blue  [00,ff]
 #
 # Examples:
 #
 #   One output **HEX8** color:
-#       color    --> #ffff00
-#       results  --> [list #ffff00] or just #ffff00
+#      color    --> #ffff00
+#      results  --> [list #ffff00] or just #ffff00
 #
 #   Two output **HEX8** colors:
-#       color1   --> #000000
-#       color2   --> #ffffff
-#       results  --> [list #0000ff #ffffff]
+#      color1   --> #000000
+#      color2   --> #ffffff
+#      results  --> [list #0000ff #ffffff]
 #
 #   Three output **HEX8** colors:
-#       color1   --> #ff0000
-#       color2   --> #00ff00
-#       color3   --> #0000ff
-#       results  --> [list #ff0000 #00ff00 #0000ff]
+#      color1   --> #ff0000
+#      color2   --> #00ff00
+#      color3   --> #0000ff
+#      results  --> [list #ff0000 #00ff00 #0000ff]
 #
 #   and so on and so forth...
 proc ::ms::RGB8_HEX8::Conversion { channels } {

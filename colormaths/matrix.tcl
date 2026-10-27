@@ -75,11 +75,11 @@ interp alias {} ::inverse_matrix {} ::ms::matrix::Inverse_3x3
 # c3    Should be the matrix elements to invert.
 #       All elements of the matrix must be floating point values.
 #       The matrix elements provided must respect the following form and positions:
-#           | a1 b1 c1 |
-#           | a2 b2 c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
-#           | a3 b3 c3 |
+#          | a1 b1 c1 |
+#          | a2 b2 c2 | --> [list a1 a2 a3 b1 b2 b3 c1 c2 c3]
+#          | a3 b3 c3 |
 #
-# Note:  For more info visit <https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html>.
+# Note: For more info visit <https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html>.
 #
 # Returns a list containing the inverted matrix elements or the word **invalid** if it cannot be computed.
 # The list will contain all the nine elements positioned in the following way:

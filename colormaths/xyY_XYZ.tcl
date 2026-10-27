@@ -66,33 +66,33 @@ interp alias {} ::xyY_XYZ {} ::ms::xyY_XYZ::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **xyY** colors to convert.
 #            Each **xyY** color needs to be represented by 3 channels values in the following order and ranges:
-#                x --> x [0,1.0]
-#                y --> y [0,1.0]
-#                Y --> Y [0,1.0]
+#               x --> x [0,1.0]
+#               y --> y [0,1.0]
+#               Y --> Y [0,1.0]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **xyY** color:
-#                    color    --> [list 1.0 0.5 0.7]
-#                    channels --> [list 1.0 0.5 0.7]
+#               One input **xyY** color:
+#                  color    --> [list 1.0 0.5 0.7]
+#                  channels --> [list 1.0 0.5 0.7]
 #
-#                Two input **xyY** colors:
-#                    color1   --> [list 1.0 0.5 0.7]
-#                    color2   --> [list 0.5 0.8 0.8]
-#                    channels --> [list 1.0 0.5 0.7 0.5 0.8 0.8] <-- all colors channels should be flattened together.
+#               Two input **xyY** colors:
+#                  color1   --> [list 1.0 0.5 0.7]
+#                  color2   --> [list 0.5 0.8 0.8]
+#                  channels --> [list 1.0 0.5 0.7 0.5 0.8 0.8] <-- all colors channels should be flattened together.
 #
-#                Three input **xyY** colors:
-#                    color1   --> [list 1.0 0.5 0.7]
-#                    color2   --> [list 0.5 0.8 0.8]
-#                    color3   --> [list 0.2 0.2 0.1]
-#                    channels --> [list 1.0 0.5 0.7 0.5 0.8 0.8 0.2 0.2 0.1] <-- all colors channels should be flattened together.
+#               Three input **xyY** colors:
+#                  color1   --> [list 1.0 0.5 0.7]
+#                  color2   --> [list 0.5 0.8 0.8]
+#                  color3   --> [list 0.2 0.2 0.1]
+#                  channels --> [list 1.0 0.5 0.7 0.5 0.8 0.8 0.2 0.2 0.1] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
-# Note:  For info about **xyY** to **XYZ** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
+# Note: For info about **xyY** to **XYZ** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
 # Return a list containing the resulting **XYZ** colors channels flattened together.
 # Each **XYZ** color will be represented by 3 channels values in the following order and ranges:
@@ -103,19 +103,19 @@ interp alias {} ::xyY_XYZ {} ::ms::xyY_XYZ::Conversion
 # Examples:
 #
 #   One output **XYZ** color:
-#       color    --> [list 0.4 0.5 0.2]
-#       results  --> [list 0.4 0.5 0.2]
+#      color    --> [list 0.4 0.5 0.2]
+#      results  --> [list 0.4 0.5 0.2]
 #
 #   Two output **XYZ** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
 #
 #   Three output **XYZ** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       color3   --> [list 0.2 0.2 0.1]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      color3   --> [list 0.2 0.2 0.1]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::xyY_XYZ::Conversion { channels } {

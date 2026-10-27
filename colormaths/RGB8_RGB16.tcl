@@ -66,31 +66,31 @@ interp alias {} ::RGB8_RGB16 {} ::ms::RGB8_RGB16::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **RGB8** colors to convert.
 #            Each **RGB8** color needs to be represented by 3 channels values in the following order and ranges:
-#                R --> Red   [0,255]
-#                G --> Green [0,255]
-#                B --> Blue  [0,255]
+#               R --> Red   [0,255]
+#               G --> Green [0,255]
+#               B --> Blue  [0,255]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **RGB8** color:
-#                    color    --> [list 40 172 212]
-#                    channels --> [list 40 172 212]
+#               One input **RGB8** color:
+#                  color    --> [list 40 172 212]
+#                  channels --> [list 40 172 212]
 #
-#                Two input **RGB8** colors:
-#                    color1   --> [list 40 172 212]
-#                    color2   --> [list 57 65  65 ]
-#                    channels --> [list 40 172 212 57 65 65] <-- all colors channels should be flattened together.
+#               Two input **RGB8** colors:
+#                  color1   --> [list 40 172 212]
+#                  color2   --> [list 57 65  65 ]
+#                  channels --> [list 40 172 212 57 65 65] <-- all colors channels should be flattened together.
 #
-#                Three input **RGB8** colors:
-#                    color1   --> [list 40 172 212]
-#                    color2   --> [list 57 65  65 ]
-#                    color3   --> [list 23 212 120]
-#                    channels --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels should be flattened together.
+#               Three input **RGB8** colors:
+#                  color1   --> [list 40 172 212]
+#                  color2   --> [list 57 65  65 ]
+#                  color3   --> [list 23 212 120]
+#                  channels --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   65535 / 255 = 257
@@ -104,26 +104,26 @@ interp alias {} ::RGB8_RGB16 {} ::ms::RGB8_RGB16::Conversion
 # Examples:
 #
 #   One output **RGB16** color:
-#       color    --> [list 4000 17200 21200]
-#       results  --> [list 4000 17200 21200]
+#      color    --> [list 4000 17200 21200]
+#      results  --> [list 4000 17200 21200]
 #
 #   Two output **RGB16** colors:
-#       color1   --> [list 4000 17200 21200]
-#       color2   --> [list 5700 6500  6500 ]
-#       results  --> [list 4000 17200 21200 5700 6500 6500] <-- all colors channels will be flattened together.
+#      color1   --> [list 4000 17200 21200]
+#      color2   --> [list 5700 6500  6500 ]
+#      results  --> [list 4000 17200 21200 5700 6500 6500] <-- all colors channels will be flattened together.
 #
 #   Three output **RGB16** colors:
-#       color1   --> [list 4000 17200 21200]
-#       color2   --> [list 5700 6500  6500 ]
-#       color3   --> [list 2300 21200 12000]
-#       results  --> [list 4000 17200 21200 5700 6500 6500 2300 21200 12000] <-- all colors channels will be flattened together.
+#      color1   --> [list 4000 17200 21200]
+#      color2   --> [list 5700 6500  6500 ]
+#      color3   --> [list 2300 21200 12000]
+#      results  --> [list 4000 17200 21200 5700 6500 6500 2300 21200 12000] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::RGB8_RGB16::Conversion { channels } {
     foreach { red8 green8 blue8 } $channels {
-        set red16   [expr { $red8*257 }]
+        set red16   [expr { $red8*257   }]
         set green16 [expr { $green8*257 }]
-        set blue16  [expr { $blue8*257 }]
+        set blue16  [expr { $blue8*257  }]
 
         lappend results $red16 $green16 $blue16
     }

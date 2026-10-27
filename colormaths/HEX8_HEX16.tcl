@@ -67,37 +67,37 @@ interp alias {} ::HEX8_HEX16 {} ::ms::HEX8_HEX16::Conversion
 # hexadecimals   Should be a list that specifies all the **HEX8** colors to convert.
 #                Each **HEX8** color needs to be represented by six hexadecimals values in the range [#000000,#ffffff]
 #                that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#                    first two hexadecimals --> red   [00,ff]
-#                    next  two hexadecimals --> green [00,ff]
-#                    last  two hexadecimals --> blue  [00,ff]
+#                   first two hexadecimals --> red   [00,ff]
+#                   next  two hexadecimals --> green [00,ff]
+#                   last  two hexadecimals --> blue  [00,ff]
 #
 #                Attention:
-#                    - Each hexadecimal color must start with the '#' symbol.
-#                    - Each hexadecimal letter must be lowercase.
-#                    - Shortforms are not allowed.
-#                    - Textual or theme colornames are not allowed.
-#                    - For performance reasons, the input and output colors will not be checked.
-#                      Please, take the appropriate steps before and after using this procedure or use
-#                      the **color** command instead.
+#                   - Each hexadecimal color must start with the '#' symbol.
+#                   - Each hexadecimal letter must be lowercase.
+#                   - Shortforms are not allowed.
+#                   - Textual or theme colornames are not allowed.
+#                   - For performance reasons, the input and output colors will not be checked.
+#                     Please, take the appropriate steps before and after using this procedure or use
+#                     the **color** command instead.
 #
 #                Examples:
 #
-#                    One input **HEX8** color:
-#                        color        --> #ffff00
-#                        hexadecimals --> [list #ffff00] or just #ffff00
+#                   One input **HEX8** color:
+#                      color        --> #ffff00
+#                      hexadecimals --> [list #ffff00] or just #ffff00
 #
-#                    Two input **HEX8** colors:
-#                        color1       --> #000000
-#                        color2       --> #ffffff
-#                        hexadecimals --> [list #000000 #ffffff]
+#                   Two input **HEX8** colors:
+#                      color1       --> #000000
+#                      color2       --> #ffffff
+#                      hexadecimals --> [list #000000 #ffffff]
 #
-#                    Three input **HEX8** colors:
-#                        color1       --> #ff0000
-#                        color2       --> #00ff00
-#                        color3       --> #0000ff
-#                        hexadecimals --> [list #ff0000 #00ff00 #0000ff]
+#                   Three input **HEX8** colors:
+#                      color1       --> #ff0000
+#                      color2       --> #00ff00
+#                      color3       --> #0000ff
+#                      hexadecimals --> [list #ff0000 #00ff00 #0000ff]
 #
-#                    and so on and so forth...
+#                   and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   65535 / 255 = 257
@@ -105,35 +105,35 @@ interp alias {} ::HEX8_HEX16 {} ::ms::HEX8_HEX16::Conversion
 # Return a list containing the resulting **HEX16** colors channels flattened together.
 # Each **HEX16** color will be represented by twelve hexadecimals values in the range [#000000000000,#ffffffffffff]
 # that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#     first four hexadecimals --> red   [0000,ffff]
-#     next  four hexadecimals --> green [0000,ffff]
-#     last  four hexadecimals --> blue  [0000,ffff]
+#   first four hexadecimals --> red   [0000,ffff]
+#   next  four hexadecimals --> green [0000,ffff]
+#   last  four hexadecimals --> blue  [0000,ffff]
 #
 # Examples:
 #
 #   One output **HEX16** color:
-#       color        --> #ffffffff0000
-#       hexadecimals --> [list #ffffffff0000]
+#      color        --> #ffffffff0000
+#      hexadecimals --> [list #ffffffff0000]
 #
 #   Two output **HEX16** colors:
-#       color1       --> #000000000000
-#       color2       --> #ffffffffffff
-#       hexadecimals --> [list #000000000000 #ffffffffffff]
+#      color1       --> #000000000000
+#      color2       --> #ffffffffffff
+#      hexadecimals --> [list #000000000000 #ffffffffffff]
 #
 #   Three output **HEX16** colors:
-#       color1       --> #ffff00000000
-#       color2       --> #0000ffff0000
-#       color3       --> #00000000ffff
-#       hexadecimals --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
+#      color1       --> #ffff00000000
+#      color2       --> #0000ffff0000
+#      color3       --> #00000000ffff
+#      hexadecimals --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
 #
 #   and so on and so forth...
 proc ::ms::HEX8_HEX16::Conversion { hexadecimals } {
     foreach hexadecimal $hexadecimals {
         scan $hexadecimal "#%02x%02x%02x" red8 green8 blue8
 
-        set red16   [expr { $red8*257 }]
+        set red16   [expr { $red8*257   }]
         set green16 [expr { $green8*257 }]
-        set blue16  [expr { $blue8*257 }]
+        set blue16  [expr { $blue8*257  }]
 
         append results [format "#%04x%04x%04x" $red16 $green16 $blue16] " "
     }

@@ -66,33 +66,33 @@ interp alias {} ::LCHuv_Luv {} ::ms::LCHuv_Luv::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **LCHuv** colors to convert.
 #            Each **LCHuv** color needs to be represented by 3 channels values in the following order and ranges:
-#                L   --> Lightness [0,100.0]
-#                C   --> Chroma    [0,260.76809620810593]
-#                Huv --> Huv       [0,360.0[
+#               L   --> Lightness [0,100.0]
+#               C   --> Chroma    [0,260.76809620810593]
+#               Huv --> Huv       [0,360.0[
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One output **LCHuv** color:
-#                    color    --> [list 40 100 80]
-#                    results  --> [list 40 100 80]
+#               One output **LCHuv** color:
+#                  color    --> [list 40 100 80]
+#                  results  --> [list 40 100 80]
 #
-#                Two output **LCHuv** colors:
-#                    color1   --> [list 40 100 80]
-#                    color2   --> [list 50 40  60]
-#                    results  --> [list 40 100 80 50 40 60] <-- all colors channels will be flattened together.
+#               Two output **LCHuv** colors:
+#                  color1   --> [list 40 100 80]
+#                  color2   --> [list 50 40  60]
+#                  results  --> [list 40 100 80 50 40 60] <-- all colors channels will be flattened together.
 #
-#                Three output **LCHuv** colors:
-#                    color1   --> [list 40 100 80]
-#                    color2   --> [list 50 40  60]
-#                    color3   --> [list 80 140 240]
-#                    results  --> [list 40 100 80 50 40 60 80 140 240] <-- all colors channels will be flattened together.
+#               Three output **LCHuv** colors:
+#                  color1   --> [list 40 100 80]
+#                  color2   --> [list 50 40  60]
+#                  color3   --> [list 80 140 240]
+#                  results  --> [list 40 100 80 50 40 60 80 140 240] <-- all colors channels will be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
-# Note:  For info about **LCHuv** to **Luv** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
+# Note: For info about **LCHuv** to **Luv** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
 # Return a list containing the resulting **Luv** colors channels flattened together.
 # Each **Luv** color will be represented by 3 channels values in the following order and ranges:
@@ -103,19 +103,19 @@ interp alias {} ::LCHuv_Luv {} ::ms::LCHuv_Luv::Conversion
 # Examples:
 #
 #   One output **Luv** color:
-#       color    --> [list 100 -50 50]
-#       channels --> [list 100 -50 50]
+#      color    --> [list 100 -50 50]
+#      channels --> [list 100 -50 50]
 #
 #   Two output **Luv** colors:
-#       color1   --> [list 100 -50 50]
-#       color2   --> [list 57   80 80]
-#       channels --> [list 100 -50 50 57 80 80] <-- all colors channels should be flattened together.
+#      color1   --> [list 100 -50 50]
+#      color2   --> [list 57   80 80]
+#      channels --> [list 100 -50 50 57 80 80] <-- all colors channels should be flattened together.
 #
 #   Three output **Luv** colors:
-#       color1   --> [list 100 -50 50]
-#       color2   --> [list 57   80 80]
-#       color3   --> [list 23   20 12]
-#       channels --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels should be flattened together.
+#      color1   --> [list 100 -50 50]
+#      color2   --> [list 57   80 80]
+#      color3   --> [list 23   20 12]
+#      channels --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels should be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::LCHuv_Luv::Conversion { channels } {

@@ -66,31 +66,31 @@ interp alias {} ::rgb_RGB12 {} ::ms::rgb_RGB12::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **rgb** colors to convert.
 #            Each **rgb** color needs to be represented by 3 channels values in the following order and ranges:
-#                r --> red   [0,1.0]
-#                g --> green [0,1.0]
-#                b --> blue  [0,1.0]
+#               r --> red   [0,1.0]
+#               g --> green [0,1.0]
+#               b --> blue  [0,1.0]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **rgb** color:
-#                    color    --> [list 0.4 0.5 0.2]
-#                    channels --> [list 0.4 0.5 0.2]
+#               One input **rgb** color:
+#                  color    --> [list 0.4 0.5 0.2]
+#                  channels --> [list 0.4 0.5 0.2]
 #
-#                Two input **rgb** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
+#               Two input **rgb** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
 #
-#                Three input **rgb** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    color3   --> [list 0.2 0.2 0.1]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
+#               Three input **rgb** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  color3   --> [list 0.2 0.2 0.1]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Return a list containing the resulting **RGB12** colors channels flattened together.
 # Each **RGB12** color will be represented by 3 channels values in the following order and ranges:
@@ -101,19 +101,19 @@ interp alias {} ::rgb_RGB12 {} ::ms::rgb_RGB12::Conversion
 # Examples:
 #
 #   One output **RGB12** color:
-#       color    --> [list 400 1720 2120]
-#       results  --> [list 400 1720 2120]
+#      color    --> [list 400 1720 2120]
+#      results  --> [list 400 1720 2120]
 #
 #   Two output **RGB12** colors:
-#       color1   --> [list 400 1720 2120]
-#       color2   --> [list 570 650  650 ]
-#       results  --> [list 400 1720 2120 570 650 650] <-- all colors channels will be flattened together.
+#      color1   --> [list 400 1720 2120]
+#      color2   --> [list 570 650  650 ]
+#      results  --> [list 400 1720 2120 570 650 650] <-- all colors channels will be flattened together.
 #
 #   Three output **RGB12** colors:
-#       color1   --> [list 400 1720 2120]
-#       color2   --> [list 570 650  650 ]
-#       color3   --> [list 230 2120 1200]
-#       results  --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels will be flattened together.
+#      color1   --> [list 400 1720 2120]
+#      color2   --> [list 570 650  650 ]
+#      color3   --> [list 230 2120 1200]
+#      results  --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::rgb_RGB12::Conversion { channels } {

@@ -66,31 +66,31 @@ interp alias {} ::XYZ_Lab {} ::ms::XYZ_Lab::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **XYZ** colors to convert.
 #            Each **XYZ** color needs to be represented by 3 channels values in the following order and ranges:
-#                X --> X [0,0.96419999999999995] --> PCS.X D50
-#                Y --> Y [0,1.0]                 --> PCS.Y D50
-#                Z --> Z [0,0.82489999999999997] --> PCS.Z D50
+#               X --> X [0,0.96419999999999995] --> PCS.X D50
+#               Y --> Y [0,1.0]                 --> PCS.Y D50
+#               Z --> Z [0,0.82489999999999997] --> PCS.Z D50
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **XYZ** color:
-#                    color    --> [list 0.4 0.5 0.2]
-#                    channels --> [list 0.4 0.5 0.2]
+#               One input **XYZ** color:
+#                  color    --> [list 0.4 0.5 0.2]
+#                  channels --> [list 0.4 0.5 0.2]
 #
-#                Two input **XYZ** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
+#               Two input **XYZ** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels should be flattened together.
 #
-#                Three input **XYZ** colors:
-#                    color1   --> [list 0.4 0.5 0.2]
-#                    color2   --> [list 0.5 0.4 0.6]
-#                    color3   --> [list 0.2 0.2 0.1]
-#                    channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
+#               Three input **XYZ** colors:
+#                  color1   --> [list 0.4 0.5 0.2]
+#                  color2   --> [list 0.5 0.4 0.6]
+#                  color3   --> [list 0.2 0.2 0.1]
+#                  channels --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 3                   = 0.3333333333333333
@@ -99,7 +99,7 @@ interp alias {} ::XYZ_Lab {} ::ms::XYZ_Lab::Conversion
 #   1 / 0.96419999999999995 = 1.0371292263015972
 #   1 / 0.82489999999999997 = 1.212268153715602
 #
-# Note:  For info about **XYZ** to **Lab** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
+# Note: For info about **XYZ** to **Lab** conversions visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
 # Return a list containing the resulting **Lab** colors channels flattened together.
 # Each **Lab** color will be represented by 3 channels values in the following order and ranges:
@@ -110,19 +110,19 @@ interp alias {} ::XYZ_Lab {} ::ms::XYZ_Lab::Conversion
 # Examples:
 #
 #   One output **Lab** color:
-#       color    --> [list 100 -50 50]
-#       results  --> [list 100 -50 50]
+#      color    --> [list 100 -50 50]
+#      results  --> [list 100 -50 50]
 #
 #   Two output **Lab** colors:
-#       color1   --> [list 100 -50 50]
-#       color2   --> [list 57   80 80]
-#       results  --> [list 100 -50 50 57 80 80] <-- all colors channels will be flattened together.
+#      color1   --> [list 100 -50 50]
+#      color2   --> [list 57   80 80]
+#      results  --> [list 100 -50 50 57 80 80] <-- all colors channels will be flattened together.
 #
 #   Three output **Lab** colors:
-#       color1   --> [list 100 -50 50]
-#       color2   --> [list 57   80 80]
-#       color3   --> [list 23   20 12]
-#       results  --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels will be flattened together.
+#      color1   --> [list 100 -50 50]
+#      color2   --> [list 57   80 80]
+#      color3   --> [list 23   20 12]
+#      results  --> [list 100 -50 50 57 80 80 23 20 12] <-- all colors channels will be flattened together.
 proc ::ms::XYZ_Lab::Conversion { channels } {
     # CIE standard:
     #   k --> 903.3
@@ -137,7 +137,7 @@ proc ::ms::XYZ_Lab::Conversion { channels } {
         #       Y_ref = 1.0                  --> PCS.Y D50
         #       Z_ref = 0.82489999999999997  --> PCS.Z D50
         set xr [expr { $X*1.0371292263015972 }]
-        set zr [expr { $Z*1.212268153715602 }]
+        set zr [expr { $Z*1.212268153715602  }]
 
         if { $xr > 0.008856 } {
             set fx [expr { pow($xr,0.3333333333333333) }]
@@ -162,8 +162,8 @@ proc ::ms::XYZ_Lab::Conversion { channels } {
 
         # Compute the lightness [0,100.0], a [-128.0,127.0] and b [-128.0,127.0].
         set L [expr { (116.0*$fy)-16.0 }]
-        set a [expr { 500.0*($fx-$fy) }]
-        set b [expr { 200.0*($fy-$fz) }]
+        set a [expr { 500.0*($fx-$fy)  }]
+        set b [expr { 200.0*($fy-$fz)  }]
 
         lappend results $L $a $b
     }

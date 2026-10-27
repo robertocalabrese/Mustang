@@ -66,31 +66,31 @@ interp alias {} ::RGB16_rgb {} ::ms::RGB16_rgb::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **RGB16** colors to convert.
 #            Each **RGB16** color needs to be represented by 3 channels values in the following order and ranges:
-#                R --> Red   [0,65535]
-#                G --> Green [0,65535]
-#                B --> Blue  [0,65535]
+#               R --> Red   [0,65535]
+#               G --> Green [0,65535]
+#               B --> Blue  [0,65535]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **RGB16** color:
-#                    color    --> [list 4000 17200 21200]
-#                    channels --> [list 4000 17200 21200]
+#               One input **RGB16** color:
+#                  color    --> [list 4000 17200 21200]
+#                  channels --> [list 4000 17200 21200]
 #
-#                Two input **RGB16** colors:
-#                    color1   --> [list 4000 17200 21200]
-#                    color2   --> [list 5700 6500  6500 ]
-#                    channels --> [list 4000 17200 21200 5700 6500 6500] <-- all colors channels should be flattened together.
+#               Two input **RGB16** colors:
+#                  color1   --> [list 4000 17200 21200]
+#                  color2   --> [list 5700 6500  6500 ]
+#                  channels --> [list 4000 17200 21200 5700 6500 6500] <-- all colors channels should be flattened together.
 #
-#                Three input **RGB16** colors:
-#                    color1   --> [list 4000 17200 21200]
-#                    color2   --> [list 5700 6500  6500 ]
-#                    color3   --> [list 2300 21200 12000]
-#                    channels --> [list 4000 17200 21200 5700 6500 6500 2300 21200 12000] <-- all colors channels should be flattened together.
+#               Three input **RGB16** colors:
+#                  color1   --> [list 4000 17200 21200]
+#                  color2   --> [list 5700 6500  6500 ]
+#                  color3   --> [list 2300 21200 12000]
+#                  channels --> [list 4000 17200 21200 5700 6500 6500 2300 21200 12000] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   1 / 65535 = 1.5259021896696422e-5
@@ -104,26 +104,26 @@ interp alias {} ::RGB16_rgb {} ::ms::RGB16_rgb::Conversion
 # Examples:
 #
 #   One output **rgb** color:
-#       color    --> [list 0.4 0.5 0.2]
-#       results  --> [list 0.4 0.5 0.2]
+#      color    --> [list 0.4 0.5 0.2]
+#      results  --> [list 0.4 0.5 0.2]
 #
 #   Two output **rgb** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
 #
 #   Three output **rgb** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       color3   --> [list 0.2 0.2 0.1]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      color3   --> [list 0.2 0.2 0.1]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::RGB16_rgb::Conversion { channels } {
     foreach { red16 green16 blue16 } $channels {
-        set r [expr { $red16*1.5259021896696422e-5 }]
+        set r [expr { $red16*1.5259021896696422e-5   }]
         set g [expr { $green16*1.5259021896696422e-5 }]
-        set b [expr { $blue16*1.5259021896696422e-5 }]
+        set b [expr { $blue16*1.5259021896696422e-5  }]
 
         lappend results $r $g $b
     }

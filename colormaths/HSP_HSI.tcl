@@ -66,9 +66,9 @@ interp alias {} ::HSP_HSI {} ::ms::HSP_HSI::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **HSP** colors to convert.
 #            Each **HSP** color needs to be represented by 3 channels values in the following order and ranges:
-#                H --> Hue                  [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
-#                S --> Saturation           [0,100.0]
-#                P --> Perceived Brightness [0,100.0]
+#               H --> Hue                  [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
+#               S --> Saturation           [0,100.0]
+#               P --> Perceived Brightness [0,100.0]
 #
 #            Note that for hues, '360.0' is not included.
 #
@@ -77,22 +77,22 @@ interp alias {} ::HSP_HSI {} ::ms::HSP_HSI::Conversion
 #
 #            Examples:
 #
-#                One input **HSP** color:
-#                    color    --> [list 120 50 50]
-#                    channels --> [list 120 50 50]
+#               One input **HSP** color:
+#                  color    --> [list 120 50 50]
+#                  channels --> [list 120 50 50]
 #
-#                Two input **HSP** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
+#               Two input **HSP** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
 #
-#                Three input **HSP** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    color3   --> [list 270 20 90]
-#                    channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
+#               Three input **HSP** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  color3   --> [list 270 20 90]
+#                  channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 3   = 0.3333333333333333
@@ -104,12 +104,12 @@ interp alias {} ::HSP_HSI {} ::ms::HSP_HSI::Conversion
 #   1 / 100 = 0.01
 #   1 / 360 = 0.002777777777777778
 #
-# Note:  For info about the **HSP** color system visit [HSP](https://www.alienryderflex.com/hsp.html).
-#        For info about unadapted values visit [BruceLindbloom](http://www.brucelindbloom.com).
+# Note: For info about the **HSP** color system visit [HSP](https://www.alienryderflex.com/hsp.html).
+#       For info about unadapted values visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
-#           unadapted_Yr = 0.21264461762001413 --> for the 'sRGB D65' colormodel
-#           unadapted_Yg = 0.7151663725690272  --> for the 'sRGB D65' colormodel
-#           unadapted_Yb = 0.07218900981095855 --> for the 'sRGB D65' colormodel
+#          unadapted_Yr = 0.21264461762001413 --> for the 'sRGB D65' colormodel
+#          unadapted_Yg = 0.7151663725690272  --> for the 'sRGB D65' colormodel
+#          unadapted_Yb = 0.07218900981095855 --> for the 'sRGB D65' colormodel
 #
 # Return a list containing the resulting **HSI** colors channels flattened together.
 # Each **HSI** color will be represented by 3 channels values in the following order and ranges:
@@ -122,19 +122,19 @@ interp alias {} ::HSP_HSI {} ::ms::HSP_HSI::Conversion
 # Examples:
 #
 #   One output **HSI** color:
-#       color    --> [list 120 50 50]
-#       results  --> [list 120 50 50]
+#      color    --> [list 120 50 50]
+#      results  --> [list 120 50 50]
 #
 #   Two output **HSI** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
 #
 #   Three output **HSI** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       color3   --> [list 270 20 90]
-#       results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      color3   --> [list 270 20 90]
+#      results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::HSP_HSI::Conversion { channels } {

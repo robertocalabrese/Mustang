@@ -67,37 +67,37 @@ interp alias {} ::HEX16_HEX12 {} ::ms::HEX16_HEX12::Conversion
 # hexadecimals   Should be a list that specifies all the **HEX16** colors to convert.
 #                Each **HEX16** color needs to be represented by twelve hexadecimals values in the range [#000000000000,#ffffffffffff]
 #                that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#                    first four hexadecimals --> red   [0000,ffff]
-#                    next  four hexadecimals --> green [0000,ffff]
-#                    last  four hexadecimals --> blue  [0000,ffff]
+#                   first four hexadecimals --> red   [0000,ffff]
+#                   next  four hexadecimals --> green [0000,ffff]
+#                   last  four hexadecimals --> blue  [0000,ffff]
 #
 #                Attention:
-#                    - Each hexadecimal color must start with the '#' symbol.
-#                    - Each hexadecimal letter must be lowercase.
-#                    - Shortforms are not allowed.
-#                    - Textual or theme colornames are not allowed.
-#                    - For performance reasons, the input and output colors will not be checked.
-#                      Please, take the appropriate steps before and after using this procedure or use
-#                      the **color** command instead.
+#                   - Each hexadecimal color must start with the '#' symbol.
+#                   - Each hexadecimal letter must be lowercase.
+#                   - Shortforms are not allowed.
+#                   - Textual or theme colornames are not allowed.
+#                   - For performance reasons, the input and output colors will not be checked.
+#                     Please, take the appropriate steps before and after using this procedure or use
+#                     the **color** command instead.
 #
 #                Examples:
 #
-#                    One input **HEX16** color:
-#                        color        --> #ffffffff0000
-#                        hexadecimals --> [list #ffffffff0000] or just #ffffffff0000
+#                   One input **HEX16** color:
+#                      color        --> #ffffffff0000
+#                      hexadecimals --> [list #ffffffff0000] or just #ffffffff0000
 #
-#                    Two input **HEX16** colors:
-#                        color1       --> #000000000000
-#                        color2       --> #ffffffffffff
-#                        hexadecimals --> [list #000000000000 #ffffffffffff]
+#                   Two input **HEX16** colors:
+#                      color1       --> #000000000000
+#                      color2       --> #ffffffffffff
+#                      hexadecimals --> [list #000000000000 #ffffffffffff]
 #
-#                    Three input **HEX16** colors:
-#                        color1       --> #ffff00000000
-#                        color2       --> #0000ffff0000
-#                        color3       --> #00000000ffff
-#                        hexadecimals --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
+#                   Three input **HEX16** colors:
+#                      color1       --> #ffff00000000
+#                      color2       --> #0000ffff0000
+#                      color3       --> #00000000ffff
+#                      hexadecimals --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
 #
-#                    and so on and so forth...
+#                   and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   4095 / 65535 = 0.06248569466697185
@@ -105,35 +105,35 @@ interp alias {} ::HEX16_HEX12 {} ::ms::HEX16_HEX12::Conversion
 # Return a list containing the resulting **HEX12** colors channels flattened together.
 # Each **HEX12** color will be represented by nine hexadecimals values in the range [#000000000,#fffffffff]
 # that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#     first three hexadecimals --> red   [000,fff]
-#     next  three hexadecimals --> green [000,fff]
-#     last  three hexadecimals --> blue  [000,fff]
+#    first three hexadecimals --> red   [000,fff]
+#    next  three hexadecimals --> green [000,fff]
+#    last  three hexadecimals --> blue  [000,fff]
 #
 # Examples:
 #
 #   One output **HEX12** color:
-#       color        --> #ffffff000
-#       hexadecimals --> [list #ffffff000]
+#      color        --> #ffffff000
+#      hexadecimals --> [list #ffffff000]
 #
 #   Two output **HEX12** colors:
-#       color1       --> #000000000
-#       color2       --> #fffffffff
-#       hexadecimals --> [list #000000000 #fffffffff]
+#      color1       --> #000000000
+#      color2       --> #fffffffff
+#      hexadecimals --> [list #000000000 #fffffffff]
 #
 #   Three output **HEX12** colors:
-#       color1       --> #fff000000
-#       color2       --> #000fff000
-#       color3       --> #000000fff
-#       hexadecimals --> [list #fff000000 #000fff000 #000000fff]
+#      color1       --> #fff000000
+#      color2       --> #000fff000
+#      color3       --> #000000fff
+#      hexadecimals --> [list #fff000000 #000fff000 #000000fff]
 #
 #   and so on and so forth...
 proc ::ms::HEX16_HEX12::Conversion { hexadecimals } {
     foreach hexadecimal $hexadecimals {
         scan $hexadecimal "#%04x%04x%04x" red16 green16 blue16
 
-        set red12   [expr { round($red16*0.06248569466697185) }]
+        set red12   [expr { round($red16*0.06248569466697185)   }]
         set green12 [expr { round($green16*0.06248569466697185) }]
-        set blue12  [expr { round($blue16*0.06248569466697185) }]
+        set blue12  [expr { round($blue16*0.06248569466697185)  }]
 
         append results [format "#%03x%03x%03x" $red12 $green12 $blue12] " "
     }

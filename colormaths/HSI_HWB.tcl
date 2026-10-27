@@ -66,9 +66,9 @@ interp alias {} ::HSI_HWB {} ::ms::HSI_HWB::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **HSI** colors to convert.
 #            Each **HSI** color needs to be represented by 3 channels values in the following order and ranges:
-#                H --> Hue        [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
-#                S --> Saturation [0,100.0]
-#                I --> Intensity  [0,100.0]
+#               H --> Hue        [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
+#               S --> Saturation [0,100.0]
+#               I --> Intensity  [0,100.0]
 #
 #            Note that for hues, '360.0' is not included.
 #
@@ -77,22 +77,22 @@ interp alias {} ::HSI_HWB {} ::ms::HSI_HWB::Conversion
 #
 #            Examples:
 #
-#                One input **HSI** color:
-#                    color    --> [list 120 50 50]
-#                    channels --> [list 120 50 50]
+#               One input **HSI** color:
+#                  color    --> [list 120 50 50]
+#                  channels --> [list 120 50 50]
 #
-#                Two input **HSI** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
+#               Two input **HSI** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
 #
-#                Three input **HSI** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    color3   --> [list 270 20 90]
-#                    channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
+#               Three input **HSI** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  color3   --> [list 270 20 90]
+#                  channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 100 = 0.01
@@ -104,7 +104,7 @@ interp alias {} ::HSI_HWB {} ::ms::HSI_HWB::Conversion
 #   4.1887902047863905 = 240 degrees expressed in radians.
 #   5.235987755982989  = 300 degrees expressed in radians.
 #
-# Note:  For info about the **HWB** color system visit [HWB](http://alvyray.com/Papers/CG/HWB_JGTv208.pdf).
+# Note: For info about the **HWB** color system visit [HWB](http://alvyray.com/Papers/CG/HWB_JGTv208.pdf).
 #
 # Return a list containing the resulting **HWB** colors channels flattened together.
 # Each **HWB** color will be represented by 3 channels values in the following order and ranges:
@@ -117,19 +117,19 @@ interp alias {} ::HSI_HWB {} ::ms::HSI_HWB::Conversion
 # Examples:
 #
 #   One output **HWB** color:
-#       color    --> [list 120 50 50]
-#       results  --> [list 120 50 50]
+#      color    --> [list 120 50 50]
+#      results  --> [list 120 50 50]
 #
 #   Two output **HWB** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
 #
 #   Three output **HWB** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       color3   --> [list 270 20 90]
-#       results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      color3   --> [list 270 20 90]
+#      results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::HSI_HWB::Conversion { channels } {

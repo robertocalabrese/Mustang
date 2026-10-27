@@ -67,37 +67,37 @@ interp alias {} ::HEX12_RGB12 {} ::ms::HEX12_RGB12::Conversion
 # hexadecimals   Should be a list that specifies all the **HEX12** colors to convert.
 #                Each **HEX12** color needs to be represented by nine hexadecimals values in the range [#000000000,#fffffffff]
 #                that specifies its 3 channels values (red, green and blue) in the following order and ranges:
-#                    first three hexadecimals --> red   [000,fff]
-#                    next  three hexadecimals --> green [000,fff]
-#                    last  three hexadecimals --> blue  [000,fff]
+#                   first three hexadecimals --> red   [000,fff]
+#                   next  three hexadecimals --> green [000,fff]
+#                   last  three hexadecimals --> blue  [000,fff]
 #
 #                Attention:
-#                    - Each hexadecimal color must start with the '#' symbol.
-#                    - Each hexadecimal letter must be lowercase.
-#                    - Shortforms are not allowed.
-#                    - Textual or theme colornames are not allowed.
-#                    - For performance reasons, the input and output colors will not be checked.
-#                      Please, take the appropriate steps before and after using this procedure or use
-#                      the **color** command instead.
+#                   - Each hexadecimal color must start with the '#' symbol.
+#                   - Each hexadecimal letter must be lowercase.
+#                   - Shortforms are not allowed.
+#                   - Textual or theme colornames are not allowed.
+#                   - For performance reasons, the input and output colors will not be checked.
+#                     Please, take the appropriate steps before and after using this procedure or use
+#                     the **color** command instead.
 #
 #                Examples:
 #
-#                    One input **HEX12** color:
-#                        color        --> #ffffff000
-#                        hexadecimals --> [list #ffffff000] or just #ffffff000
+#                   One input **HEX12** color:
+#                      color        --> #ffffff000
+#                      hexadecimals --> [list #ffffff000] or just #ffffff000
 #
-#                    Two input **HEX12** colors:
-#                        color1       --> #000000000
-#                        color2       --> #fffffffff
-#                        hexadecimals --> [list #000000000 #fffffffff]
+#                   Two input **HEX12** colors:
+#                      color1       --> #000000000
+#                      color2       --> #fffffffff
+#                      hexadecimals --> [list #000000000 #fffffffff]
 #
-#                    Three input **HEX12** colors:
-#                        color1       --> #fff000000
-#                        color2       --> #000fff000
-#                        color3       --> #000000fff
-#                        hexadecimals --> [list #fff000000 #000fff000 #000000fff]
+#                   Three input **HEX12** colors:
+#                      color1       --> #fff000000
+#                      color2       --> #000fff000
+#                      color3       --> #000000fff
+#                      hexadecimals --> [list #fff000000 #000fff000 #000000fff]
 #
-#                    and so on and so forth...
+#                   and so on and so forth...
 #
 # Return a list containing the resulting **RGB12** colors channels flattened together.
 # Each **RGB12** color will be represented by 3 channels values in the following order and ranges:
@@ -108,19 +108,19 @@ interp alias {} ::HEX12_RGB12 {} ::ms::HEX12_RGB12::Conversion
 # Examples:
 #
 #   One output **RGB12** color:
-#       color    --> [list 400 1720 2120]
-#       results  --> [list 400 1720 2120]
+#      color    --> [list 400 1720 2120]
+#      results  --> [list 400 1720 2120]
 #
 #   Two output **RGB12** colors:
-#       color1   --> [list 400 1720 2120]
-#       color2   --> [list 570 650  650 ]
-#       results  --> [list 400 1720 2120 570 650 650] <-- all colors channels will be flattened together.
+#      color1   --> [list 400 1720 2120]
+#      color2   --> [list 570 650  650 ]
+#      results  --> [list 400 1720 2120 570 650 650] <-- all colors channels will be flattened together.
 #
 #   Three output **RGB12** colors:
-#       color1   --> [list 400 1720 2120]
-#       color2   --> [list 570 650  650 ]
-#       color3   --> [list 230 2120 1200]
-#       results  --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels will be flattened together.
+#      color1   --> [list 400 1720 2120]
+#      color2   --> [list 570 650  650 ]
+#      color3   --> [list 230 2120 1200]
+#      results  --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::HEX12_RGB12::Conversion { hexadecimals } {

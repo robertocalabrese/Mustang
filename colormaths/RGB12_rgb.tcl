@@ -66,31 +66,31 @@ interp alias {} ::RGB12_rgb {} ::ms::RGB12_rgb::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **RGB12** colors to convert.
 #            Each **RGB12** color needs to be represented by 3 channels values in the following order and ranges:
-#                R --> Red   [0,4095]
-#                G --> Green [0,4095]
-#                B --> Blue  [0,4095]
+#               R --> Red   [0,4095]
+#               G --> Green [0,4095]
+#               B --> Blue  [0,4095]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **RGB12** color:
-#                    color    --> [list 400 1720 2120]
-#                    channels --> [list 400 1720 2120]
+#               One input **RGB12** color:
+#                  color    --> [list 400 1720 2120]
+#                  channels --> [list 400 1720 2120]
 #
-#                Two input **RGB12** colors:
-#                    color1   --> [list 400 1720 2120]
-#                    color2   --> [list 570 650  650 ]
-#                    channels --> [list 400 1720 2120 570 650 650] <-- all colors channels should be flattened together.
+#               Two input **RGB12** colors:
+#                  color1   --> [list 400 1720 2120]
+#                  color2   --> [list 570 650  650 ]
+#                  channels --> [list 400 1720 2120 570 650 650] <-- all colors channels should be flattened together.
 #
-#                Three input **RGB12** colors:
-#                    color1   --> [list 400 1720 2120]
-#                    color2   --> [list 570 650  650 ]
-#                    color3   --> [list 230 2120 1200]
-#                    channels --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels should be flattened together.
+#               Three input **RGB12** colors:
+#                  color1   --> [list 400 1720 2120]
+#                  color2   --> [list 570 650  650 ]
+#                  color3   --> [list 230 2120 1200]
+#                  channels --> [list 400 1720 2120 570 650 650 230 2120 1200] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   1 / 4095 = 0.0002442002442002442
@@ -104,26 +104,26 @@ interp alias {} ::RGB12_rgb {} ::ms::RGB12_rgb::Conversion
 # Examples:
 #
 #   One output **rgb** color:
-#       color    --> [list 0.4 0.5 0.2]
-#       results  --> [list 0.4 0.5 0.2]
+#      color    --> [list 0.4 0.5 0.2]
+#      results  --> [list 0.4 0.5 0.2]
 #
 #   Two output **rgb** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
 #
 #   Three output **rgb** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       color3   --> [list 0.2 0.2 0.1]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      color3   --> [list 0.2 0.2 0.1]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::RGB12_rgb::Conversion { channels } {
     foreach { red12 green12 blue12 } $channels {
-        set r [expr { $red12*0.0002442002442002442 }]
+        set r [expr { $red12*0.0002442002442002442   }]
         set g [expr { $green12*0.0002442002442002442 }]
-        set b [expr { $blue12*0.0002442002442002442 }]
+        set b [expr { $blue12*0.0002442002442002442  }]
 
         lappend results $r $g $b
     }

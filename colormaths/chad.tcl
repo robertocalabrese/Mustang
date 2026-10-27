@@ -72,20 +72,20 @@ interp alias {} ::chad {} ::ms::chad::Matrix
 #                   Its X and Z components should be in the range [0,1.999969482421875],
 #                   while its Y component should be '1.0'.
 #
-# Note:  This procedure will use internally the Bradford scaling matrix.
-#        It's the same scaling matrix used by any ICC profile.
+# Note: This procedure will use internally the Bradford scaling matrix.
+#       It's the same scaling matrix used by any ICC profile.
 #
-#        Bradford Matrix:
+#       Bradford Matrix:
 #
-#        | bradford_scaling_a1  bradford_scaling_b1  bradford_scaling_c1 |   |  0.8951000   0.2664000  -0.1614000 |
-#        | bradford_scaling_a2  bradford_scaling_b2  bradford_scaling_c2 | = | -0.7502000   1.7135000   0.0367000 |
-#        | bradford_scaling_a3  bradford_scaling_b3  bradford_scaling_c3 |   |  0.0389000  -0.0685000   1.0296000 |
+#       | bradford_scaling_a1  bradford_scaling_b1  bradford_scaling_c1 |   |  0.8951000   0.2664000  -0.1614000 |
+#       | bradford_scaling_a2  bradford_scaling_b2  bradford_scaling_c2 | = | -0.7502000   1.7135000   0.0367000 |
+#       | bradford_scaling_a3  bradford_scaling_b3  bradford_scaling_c3 |   |  0.0389000  -0.0685000   1.0296000 |
 #
-#        Bradford inverse scaling matrix:
+#       Bradford inverse scaling matrix:
 #
-#        | bradford_inverse_scaling_a1  bradford_inverse_scaling_b1  bradford_inverse_scaling_c1 |   |  0.9869929  -0.1470543  0.1599627 |
-#        | bradford_inverse_scaling_a2  bradford_inverse_scaling_b2  bradford_inverse_scaling_c2 | = |  0.4323053   0.5183603  0.0492912 |
-#        | bradford_inverse_scaling_a3  bradford_inverse_scaling_b3  bradford_inverse_scaling_c3 |   | -0.0085287   0.0400428  0.9684867 |
+#       | bradford_inverse_scaling_a1  bradford_inverse_scaling_b1  bradford_inverse_scaling_c1 |   |  0.9869929  -0.1470543  0.1599627 |
+#       | bradford_inverse_scaling_a2  bradford_inverse_scaling_b2  bradford_inverse_scaling_c2 | = |  0.4323053   0.5183603  0.0492912 |
+#       | bradford_inverse_scaling_a3  bradford_inverse_scaling_b3  bradford_inverse_scaling_c3 |   | -0.0085287   0.0400428  0.9684867 |
 #
 # Returns a list containing all the nine elements of the chromatic adaptation matrix computed,
 # or the word **invalid** if it cannot be computed.
@@ -192,9 +192,9 @@ proc ::ms::chad::Matrix { XYZ_source XYZ_destination } {
     #
     #   Bradford inverse scaling matrix * Intermediate matrix * Bradford scaling matrix = chromatic adaptation matrix
     #
-    #   |  0.9869929  -0.1470543  0.1599627 |   | a1  b1  c1 |   |  0.8951000   0.2664000  -0.1614000 |   | ca_a1  ca_b1  ca_c1 |
-    #   |  0.4323053   0.5183603  0.0492912 | * | a2  b2  c2 | * | -0.7502000   1.7135000   0.0367000 | = | ca_a2  ca_b2  ca_c2 |
-    #   | -0.0085287   0.0400428  0.9684867 |   | a3  b3  c3 |   |  0.0389000  -0.0685000   1.0296000 |   | ca_a3  ca_b3  ca_c3 |
+    #   | bradford_inverse_scaling_a1  bradford_inverse_scaling_b1  bradford_inverse_scaling_c1 |   | a1  b1  c1 |   | bradford_scaling_a1  bradford_scaling_b1  bradford_scaling_c1 |   | ca_a1  ca_b1  ca_c1 |
+    #   | bradford_inverse_scaling_a2  bradford_inverse_scaling_b2  bradford_inverse_scaling_c2 | * | a2  b2  c2 | * | bradford_scaling_a2  bradford_scaling_b2  bradford_scaling_c2 | = | ca_a2  ca_b2  ca_c2 |
+    #   | bradford_inverse_scaling_a3  bradford_inverse_scaling_b3  bradford_inverse_scaling_c3 |   | a3  b3  c3 |   | bradford_scaling_a3  bradford_scaling_b3  bradford_scaling_c3 |   | ca_a3  ca_b3  ca_c3 |
     #
     #   We will break the formula in two parts:
     #
@@ -202,17 +202,17 @@ proc ::ms::chad::Matrix { XYZ_source XYZ_destination } {
     #
     #       Bradford inverse scaling matrix * Intermediate matrix = partial matrix
     #
-    #       |  0.9869929  -0.1470543  0.1599627 |   | a1  b1  c1 |   | partial1  partial2  partial3 |
-    #       |  0.4323053   0.5183603  0.0492912 | * | a2  b2  c2 | = | partial4  partial5  partial6 |
-    #       | -0.0085287   0.0400428  0.9684867 |   | a3  b3  c3 |   | partial7  partial8  partial9 |
+    #       | bradford_inverse_scaling_a1  bradford_inverse_scaling_b1  bradford_inverse_scaling_c1 |   | a1  b1  c1 |   | partial1  partial2  partial3 |
+    #       | bradford_inverse_scaling_a2  bradford_inverse_scaling_b2  bradford_inverse_scaling_c2 | * | a2  b2  c2 | = | partial4  partial5  partial6 |
+    #       | bradford_inverse_scaling_a3  bradford_inverse_scaling_b3  bradford_inverse_scaling_c3 |   | a3  b3  c3 |   | partial7  partial8  partial9 |
     #
     #       Second Step:
     #
     #       partial matrix * Bradford scaling matrix = chromatic adaptation matrix
     #
-    #       | partial1  partial2  partial3 |   |  0.8951000   0.2664000  -0.1614000 |   | ca_a1  ca_b1  ca_c1 |
-    #       | partial4  partial5  partial6 | * | -0.7502000   1.7135000   0.0367000 | = | ca_a2  ca_b2  ca_c2 |
-    #       | partial7  partial8  partial9 |   |  0.0389000  -0.0685000   1.0296000 |   | ca_a3  ca_b3  ca_c3 |
+    #       | partial1  partial2  partial3 |   | bradford_scaling_a1  bradford_scaling_b1  bradford_scaling_c1 |   | ca_a1  ca_b1  ca_c1 |
+    #       | partial4  partial5  partial6 | * | bradford_scaling_a2  bradford_scaling_b2  bradford_scaling_c2 | = | ca_a2  ca_b2  ca_c2 |
+    #       | partial7  partial8  partial9 |   | bradford_scaling_a3  bradford_scaling_b3  bradford_scaling_c3 |   | ca_a3  ca_b3  ca_c3 |
 
     # First step, compute the partial matrix.
     set partial1 [expr { 0.9869929*$a1  }]

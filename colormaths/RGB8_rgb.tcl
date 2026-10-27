@@ -66,31 +66,31 @@ interp alias {} ::RGB8_rgb {} ::ms::RGB8_rgb::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **RGB8** colors to convert.
 #            Each **RGB8** color needs to be represented by 3 channels values in the following order and ranges:
-#                R --> Red   [0,255]
-#                G --> Green [0,255]
-#                B --> Blue  [0,255]
+#               R --> Red   [0,255]
+#               G --> Green [0,255]
+#               B --> Blue  [0,255]
 #
 #            Attention, the input and output colors will not be checked.
 #            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
 #
 #            Examples:
 #
-#                One input **RGB8** color:
-#                    color    --> [list 40 172 212]
-#                    channels --> [list 40 172 212]
+#               One input **RGB8** color:
+#                  color    --> [list 40 172 212]
+#                  channels --> [list 40 172 212]
 #
-#                Two input **RGB8** colors:
-#                    color1   --> [list 40 172 212]
-#                    color2   --> [list 57 65  65 ]
-#                    channels --> [list 40 172 212 57 65 65] <-- all colors channels should be flattened together.
+#               Two input **RGB8** colors:
+#                  color1   --> [list 40 172 212]
+#                  color2   --> [list 57 65  65 ]
+#                  channels --> [list 40 172 212 57 65 65] <-- all colors channels should be flattened together.
 #
-#                Three input **RGB8** colors:
-#                    color1   --> [list 40 172 212]
-#                    color2   --> [list 57 65  65 ]
-#                    color3   --> [list 23 212 120]
-#                    channels --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels should be flattened together.
+#               Three input **RGB8** colors:
+#                  color1   --> [list 40 172 212]
+#                  color2   --> [list 57 65  65 ]
+#                  color3   --> [list 23 212 120]
+#                  channels --> [list 40 172 212 57 65 65 23 212 120] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # A pre-computation has been made in order to increase the performance:
 #   1 / 255 = 0.00392156862745098
@@ -104,26 +104,26 @@ interp alias {} ::RGB8_rgb {} ::ms::RGB8_rgb::Conversion
 # Examples:
 #
 #   One output **rgb** color:
-#       color    --> [list 0.4 0.5 0.2]
-#       results  --> [list 0.4 0.5 0.2]
+#      color    --> [list 0.4 0.5 0.2]
+#      results  --> [list 0.4 0.5 0.2]
 #
 #   Two output **rgb** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6] <-- all colors channels will be flattened together.
 #
 #   Three output **rgb** colors:
-#       color1   --> [list 0.4 0.5 0.2]
-#       color2   --> [list 0.5 0.4 0.6]
-#       color3   --> [list 0.2 0.2 0.1]
-#       results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
+#      color1   --> [list 0.4 0.5 0.2]
+#      color2   --> [list 0.5 0.4 0.6]
+#      color3   --> [list 0.2 0.2 0.1]
+#      results  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::RGB8_rgb::Conversion { channels } {
     foreach { red8 green8 blue8 } $channels {
-        set r [expr { $red8*0.00392156862745098 }]
+        set r [expr { $red8*0.00392156862745098   }]
         set g [expr { $green8*0.00392156862745098 }]
-        set b [expr { $blue8*0.00392156862745098 }]
+        set b [expr { $blue8*0.00392156862745098  }]
 
         lappend results $r $g $b
     }

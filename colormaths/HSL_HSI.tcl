@@ -66,9 +66,9 @@ interp alias {} ::HSL_HSI {} ::ms::HSL_HSI::Conversion
 #
 # channels   Should be a list that specifies all the channels (flattened together) of the **HSL** colors to convert.
 #            Each **HSL** color needs to be represented by 3 channels values in the following order and ranges:
-#                H --> Hue        [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
-#                S --> Saturation [0,100.0]
-#                L --> Lightness  [0,100.0]
+#               H --> Hue        [0,360.0[ or 'UNDEF' for gray colors (meaning 'undefined')
+#               S --> Saturation [0,100.0]
+#               L --> Lightness  [0,100.0]
 #
 #            Note that for hues, '360.0' is not included.
 #
@@ -77,22 +77,22 @@ interp alias {} ::HSL_HSI {} ::ms::HSL_HSI::Conversion
 #
 #            Examples:
 #
-#                One input **HSL** color:
-#                    color    --> [list 120 50 50]
-#                    channels --> [list 120 50 50]
+#               One input **HSL** color:
+#                  color    --> [list 120 50 50]
+#                  channels --> [list 120 50 50]
 #
-#                Two input **HSL** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
+#               Two input **HSL** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  channels --> [list 120 50 50 57 80 80] <-- all colors channels should be flattened together.
 #
-#                Three input **HSL** colors:
-#                    color1   --> [list 120 50 50]
-#                    color2   --> [list 57  80 80]
-#                    color3   --> [list 270 20 90]
-#                    channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
+#               Three input **HSL** colors:
+#                  color1   --> [list 120 50 50]
+#                  color2   --> [list 57  80 80]
+#                  color3   --> [list 270 20 90]
+#                  channels --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels should be flattened together.
 #
-#                and so on and so forth...
+#               and so on and so forth...
 #
 # Some pre-computation have been made in order to increase the performance:
 #   1 / 3   = 0.3333333333333333
@@ -110,19 +110,19 @@ interp alias {} ::HSL_HSI {} ::ms::HSL_HSI::Conversion
 # Examples:
 #
 #   One output **HSI** color:
-#       color    --> [list 120 50 50]
-#       results  --> [list 120 50 50]
+#      color    --> [list 120 50 50]
+#      results  --> [list 120 50 50]
 #
 #   Two output **HSI** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      results  --> [list 120 50 50 57 80 80] <-- all colors channels will be flattened together.
 #
 #   Three output **HSI** colors:
-#       color1   --> [list 120 50 50]
-#       color2   --> [list 57  80 80]
-#       color3   --> [list 270 20 90]
-#       results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
+#      color1   --> [list 120 50 50]
+#      color2   --> [list 57  80 80]
+#      color3   --> [list 270 20 90]
+#      results  --> [list 120 50 50 57 80 80 270 20 90] <-- all colors channels will be flattened together.
 #
 #   and so on and so forth...
 proc ::ms::HSL_HSI::Conversion { channels } {
