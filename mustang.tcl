@@ -605,7 +605,7 @@ proc ::ms::Init {} {
     set ::ms::colorspaces [list ]
 
     # Load any default colorspace files.
-    foreach colorspace [glob -type f -directory [file join $::ms_library colorspaces] -- *.txt] {
+    foreach colorspace [glob -type f -directory [file join $::ms_library colormaths colorspaces] -- *.txt] {
         ::ms::Load_Colorspace $colorspace
     }
 
@@ -615,7 +615,7 @@ proc ::ms::Init {} {
     }
 
     # Check that at least one colorspace file was loaded.
-    switch -- [llength $::ms::colorspace] {
+    switch -- [llength $::ms::colorspaces] {
         0   {
             # If the debug variable is active, signal the problem in the stderr channel.
             switch -nocase -- $::DEBUG {
@@ -631,10 +631,10 @@ proc ::ms::Init {} {
     }
 
     # Order the list of all known colorspace names alphabetically.
-    set ::ms::colorspace [lsort -increasing -dictionary $::ms::colorspace]
+    set ::ms::colorspaces [lsort -increasing -dictionary $::ms::colorspace]
 
     # Set the default colorspace.
-    if { "sRGB D65" in $::ms::colorspace } {
+    if { "sRGB D65" in $::ms::colorspaces } {
         set ::ms::colorspace "sRGB D65"
     } else {
         set ::ms::colorspace [lindex $::ms::colorspace 0]
