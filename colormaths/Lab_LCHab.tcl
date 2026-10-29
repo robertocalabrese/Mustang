@@ -154,6 +154,8 @@ proc ::ms::Lab_LCHab::Conversion { channels } {
 
         lappend results $L $C $Hab
     }
+
+    return $results
 }
 
 #*EOF*
