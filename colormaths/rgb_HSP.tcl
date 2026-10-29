@@ -149,7 +149,7 @@ proc ::ms::rgb_HSP::Conversion { channels } {
                 } else {
                     # b >= g
                     set partial    [expr { ($b-$g)/($r-$g) }]
-                    set hue        [expr { 360.0-(60**$partial) }]
+                    set hue        [expr { 360.0-(60*$partial) }]
                     set saturation [expr { (1.0-($g/$r))*100.0 }]
                 }
             } elseif { $g == $max } {
