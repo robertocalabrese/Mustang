@@ -1371,6 +1371,7 @@ proc ::ms::color::Command { args } {
                                     HSI     -
                                     HSL     -
                                     HSP     -
+                                    HWB     -
                                     XYZ     -
                                     xyY     -
                                     Lab     -
@@ -1395,6 +1396,7 @@ proc ::ms::color::Command { args } {
                                     HSI     -
                                     HSL     -
                                     HSP     -
+                                    HWB     -
                                     XYZ     -
                                     xyY     -
                                     Lab     -
