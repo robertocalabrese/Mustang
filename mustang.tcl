@@ -631,7 +631,7 @@ proc ::ms::Init {} {
     }
 
     # Order the list of all known colorspace names alphabetically.
-    set ::ms::colorspaces [lsort -increasing -dictionary $::ms::colorspace]
+    set ::ms::colorspaces [lsort -increasing -dictionary $::ms::colorspaces]
 
     # Set the default colorspace.
     if { "sRGB D65" in $::ms::colorspaces } {
