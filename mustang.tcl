@@ -597,9 +597,9 @@ proc ::ms::Init {} {
 
     # Set the PCS D50 XYZ value.
     set ::ms::PCS_XYZ [list 0.96419999999999995 1.0 0.82489999999999997]
-    set ::ms::PCS_X   [list $::ms::PCS_XYZ 0]
-    set ::ms::PCS_Y   [list $::ms::PCS_XYZ 1]
-    set ::ms::PCS_Z   [list $::ms::PCS_XYZ 2]
+    set ::ms::PCS_X   [lindex $::ms::PCS_XYZ 0]
+    set ::ms::PCS_Y   [lindex $::ms::PCS_XYZ 1]
+    set ::ms::PCS_Z   [lindex $::ms::PCS_XYZ 2]
 
     # Initialize the list of all known colorspace models.
     set ::ms::colorspaces [list ]
