@@ -2690,9 +2690,9 @@ proc ::ms::palette::Command { window { args "" } } {
 
             # Set the bordercolor of the preview object (black or white).
             switch -- [string length $::ms::data($w,current_hex)] {
-                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+                10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+                default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
             }
 
             # Create the preview object.
@@ -3768,9 +3768,9 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
 
                                     # Set the bordercolor of the preview object (black or white).
                                     switch -- [string length $::ms::data($w,current_hex)] {
-                                        10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-                                        13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-                                        default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                                        7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+                                        10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+                                        default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
                                     }
 
                                     # Apply the changes to the preview object.
@@ -3835,9 +3835,9 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
 
                             # Set the bordercolor of the preview object (black or white).
                             switch -- [string length $::ms::data($w,current_hex)] {
-                                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-                                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-                                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                                7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+                                10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+                                default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
                             }
 
                             # Apply the changes to the preview object.
@@ -4163,9 +4163,9 @@ proc ::ms::palette::Pathname_Cmd { w cmd args } {
 
                             # Set the bordercolor of the preview object (black or white).
                             switch -- [string length $::ms::data($w,current_hex)] {
-                                10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-                                13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-                                default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+                                7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+                                10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+                                default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
                             }
 
                             # Apply the changes to the preview object.
@@ -5037,9 +5037,9 @@ proc ::ms::palette::FocusOut { w } {
 
         # Set the bordercolor of the preview object.
         switch -- [string length $::ms::data($w,current_hex)] {
-            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+            7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+            10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+            default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
         }
 
         # Apply the changes to the preview object.
@@ -5051,9 +5051,9 @@ proc ::ms::palette::FocusOut { w } {
     } else {
         # Set the bordercolor of the preview object.
         switch -- [string length $::ms::data($w,current_hex)] {
-            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+            7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+            10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+            default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
         }
 
         # Apply the changes to the preview object.
@@ -5620,9 +5620,9 @@ proc ::ms::palette::Return { w } {
 
         # Set the bordercolor of the preview object.
         switch -- [string length $::ms::data($w,current_hex)] {
-            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+            7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+            10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+            default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
         }
 
         # Apply the changes to the preview object.
@@ -5634,9 +5634,9 @@ proc ::ms::palette::Return { w } {
     } else {
         # Set the bordercolor of the preview object.
         switch -- [string length $::ms::data($w,current_hex)] {
-            10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-            13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-            default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+            7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+            10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+            default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
         }
 
         # Apply the changes to the preview object.
@@ -5715,10 +5715,10 @@ proc ::ms::palette::Unpost { w } {
 
             # Set the preview color and its bordercolor (black or white).
             set preview_color $::ms::data($w,current_hex)
-            switch -- [string length $::ms::data($w,current_hex)] {
-                10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-                13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-                default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+            switch -- [string length $preview_color] {
+                7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+                10      { set bordercolor [::ms::color::BW $preview_color 12] }
+                default { set bordercolor [::ms::color::BW $preview_color 16] }
             }
         }
     }
@@ -5892,10 +5892,10 @@ proc ::ms::palette::Validate_KeyPress { w string } {
 
                 # Set the preview color and its bordercolor (black or white).
                 set preview_color [lindex $::ms::data($w,hexadecimals) $index]
-                switch -- [string length $::ms::data($w,current_hex)] {
-                    10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-                    13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-                    default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+                switch -- [string length $preview_color] {
+                    7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+                    10      { set bordercolor [::ms::color::BW $preview_color 12] }
+                    default { set bordercolor [::ms::color::BW $preview_color 16] }
                 }
             } else {
                 ::ms::palette::Pathname_Cmd $w state [list invalid]
@@ -6064,9 +6064,9 @@ proc ::ms::palette::Popdown_ArrowDown { w } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6117,9 +6117,9 @@ proc ::ms::palette::Popdown_ArrowUp { w } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6243,9 +6243,9 @@ proc ::ms::palette::Popdown_AutoSelection { w } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6277,9 +6277,9 @@ proc ::ms::palette::Popdown_End { w } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $::ms::data($w,last_available_index)]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6311,9 +6311,9 @@ proc ::ms::palette::Popdown_Home { w } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) 0]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6350,9 +6350,9 @@ proc ::ms::palette::Popdown_Hover { w x y } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6430,9 +6430,9 @@ proc ::ms::palette::Popdown_PageDown { w } {
         # Set the preview color and its bordercolor (black or white).
         set preview_color [lindex $::ms::data($w,hexadecimals) $index]
         switch -- [string length $preview_color] {
-            10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-            13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-            default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+            7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+            10      { set bordercolor [::ms::color::BW $preview_color 12] }
+            default { set bordercolor [::ms::color::BW $preview_color 16] }
         }
 
         # Apply the changes to the preview object.
@@ -6472,9 +6472,9 @@ proc ::ms::palette::Popdown_PageUp { w } {
         # Set the preview color and its bordercolor (black or white).
         set preview_color [lindex $::ms::data($w,hexadecimals) $index]
         switch -- [string length $preview_color] {
-            10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-            13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-            default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+            7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+            10      { set bordercolor [::ms::color::BW $preview_color 12] }
+            default { set bordercolor [::ms::color::BW $preview_color 16] }
         }
 
         # Apply the changes to the preview object.
@@ -6516,9 +6516,9 @@ proc ::ms::palette::Popdown_Select { w } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6722,9 +6722,9 @@ proc ::ms::palette::MouseWheel { w amount } {
 
     # Set the bordercolor of the preview object.
     switch -- [string length $::ms::data($w,current_hex)] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $::ms::data($w,current_hex) 8 ] }
+        7       { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 8 ] }
+        10      { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 12] }
+        default { set bordercolor [::ms::color::BW $::ms::data($w,current_hex) 16] }
     }
 
     # Apply the changes to the preview object.
@@ -6954,9 +6954,9 @@ proc ::ms::palette::Popdown_MouseWheel { w x y amount { what units } } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -7027,9 +7027,9 @@ proc ::ms::palette::Popdown_Shift_MouseWheel { w x y amount { what units } } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -7153,9 +7153,9 @@ proc ::ms::palette::Popdown_Scrollbar_MouseWheel { w amount what } {
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -7239,9 +7239,9 @@ proc ::ms::palette::Popdown_Scrollbar_Touchpad { w counter amount { what units }
     # Set the preview color and its bordercolor (black or white).
     set preview_color [lindex $::ms::data($w,hexadecimals) $index]
     switch -- [string length $preview_color] {
-        10      { set bordercolor [::ms::palette::Black_Or_White $preview_color 12] }
-        13      { set bordercolor [::ms::palette::Black_Or_White $preview_color 16] }
-        default { set bordercolor [::ms::palette::Black_Or_White $preview_color 8 ] }
+        7       { set bordercolor [::ms::color::BW $preview_color 8 ] }
+        10      { set bordercolor [::ms::color::BW $preview_color 12] }
+        default { set bordercolor [::ms::color::BW $preview_color 16] }
     }
 
     # Apply the changes to the preview object.
@@ -7250,76 +7250,6 @@ proc ::ms::palette::Popdown_Scrollbar_Touchpad { w counter amount { what units }
                               -highlightcolor $bordercolor;
 
     return -code break
-}
-
-############################
-##                        ##
-##     BLACK OR WHITE     ##
-##                        ##
-############################
-
-## Black_Or_White
-#
-# Compute which color (**black** or **white**) has more contrast against the hexadecimal color provided.
-#
-# Where:
-#
-# hex     Should be an hexadecimal color in longform with the **#**.
-#
-# depth   Optional, should be the color depth of the hexadecimal provided.
-#         Allowed values are **8**, **12** or **16** bits.
-#            8  --> range [0,255]
-#            12 --> range [0,4095]
-#            16 --> range [0,65535]
-#
-#         If not provided, defaults to **8**.
-#
-# Note: The formula used to compute the contrast is:
-#
-#          (luma_color+0.05)/(luma_black+0.05) > (luma_white+0.05)/(luma_color+0.05) --> black
-#          (luma_color+0.05)/(luma_black+0.05) = (luma_white+0.05)/(luma_color+0.05) --> same contrast (we will choose white in this case)
-#          (luma_color+0.05)/(luma_black+0.05) < (luma_white+0.05)/(luma_color+0.05) --> white
-#
-#       Where:
-#
-#       luma_black = 0
-#       luma_white = 1.0
-#       luma_color = (Unadapted_Yr*$r_linear)+(Unadapted_Yg*$g_linear)+(Unadapted_Yb*$b_linear)
-#
-#       r_linear --> range [0,1.0]
-#       g_linear --> range [0,1.0]
-#       b_linear --> range [0,1.0]
-#
-#       Unadapted_Yr = 0.21264461762001413 --> for the sRGB D65
-#       Unadapted_Yg = 0.7151663725690272  --> for the sRGB D65
-#       Unadapted_Yb = 0.07218900981095855 --> for the sRGB D65
-#
-#
-# Returns the color *black* or *white*, depending which one have more contrast with the color provided.
-# Note that the color returned will always be at **8 bit**, there is no need to translate it to
-# the same depth of the color provided.
-proc ::ms::palette::Black_Or_White { hex { depth 8 } } {
-    # Transform the hexadecimal color into an rgb color [0,1.0].
-    switch -- $depth {
-        8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $hex]] }
-        12 { set channels [::RGB12_rgb [::HEX12_RGB12 $hex]] }
-        16 { set channels [::RGB16_rgb [::HEX16_RGB16 $hex]] }
-    }
-
-    # Trasform the non-linear rgb value into linear rgb ones.
-    set r_linear [::ms::inverse_companding::Operation [lindex $channels 0]]
-    set g_linear [::ms::inverse_companding::Operation [lindex $channels 1]]
-    set b_linear [::ms::inverse_companding::Operation [lindex $channels 2]]
-
-    # Compute the luma of the rgb linear color.
-    set luma [expr { (0.21264461762001413*$r_linear)+(0.7151663725690272*$g_linear)+(0.07218900981095855*$b_linear) }]
-
-    # Confront the contrast value against black with the contrast value against white.
-    if { (($luma+0.05)*20.0) > (1.05/($luma+0.05)) } {
-        return "#000000"
-    } else {
-        return "#ffffff"
-    }
 }
 
 #*EOF*
