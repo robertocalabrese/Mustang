@@ -1383,9 +1383,9 @@ proc ::ms::color::Command { args } {
                             -to {
                                 switch -- $value {
                                     HEX     -
-                                    HEX8    { set from HEX8 }
+                                    HEX8    { set to HEX8 }
                                     RGB     -
-                                    RGB8    { set from RGB8 }
+                                    RGB8    { set to RGB8 }
                                     HEX12   -
                                     HEX16   -
                                     RGB12   -
@@ -1400,7 +1400,7 @@ proc ::ms::color::Command { args } {
                                     Lab     -
                                     Luv     -
                                     LCHab   -
-                                    LCHuv   { set from $value }
+                                    LCHuv   { set to $value }
                                     default { ::ms::Error "Invalid value, '$value'." $caller_info }
                                 }
                             }
