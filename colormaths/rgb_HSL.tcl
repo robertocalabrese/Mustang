@@ -161,6 +161,13 @@ proc ::ms::rgb_HSL::Conversion { channels } {
                 set hue     [expr { (4.0+$segment)*60.0 }]
             }
 
+            # Check that the 'hue' doesn't exceeds its limits.
+            if { $hue >= 360.0 } {
+                set hue [expr { $hue-360.0 }]
+            } elseif { $hue < 0 } {
+                set hue [expr { $hue+360.0 }]
+            }
+
             lappend results $hue $saturation $lightness
         }
     }
