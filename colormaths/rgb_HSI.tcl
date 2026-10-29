@@ -139,7 +139,7 @@ proc ::ms::rgb_HSI::Conversion { channels } {
             # Compute the interim hue [-1.0,1.0].
             set denominator [expr { sqrt(($r*$r)+($g*$g)+($b*$b)-($r*$g)-($r*$b)-($g*$b)) }]
             set numerator   [expr { $r-($g*0.5)-($b*0.5) }]
-            set interim     [expr { $numerator/$denominator }]
+            set interim_hue [expr { $numerator/$denominator }]
             if { $interim_hue < -1.0 } {
                 set interim_hue -1.0
             } elseif { $interim_hue > 1.0 } {
