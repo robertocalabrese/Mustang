@@ -65,552 +65,1013 @@
 
 ## color - Adjust colors.
 #
-## SYNOPSIS:
+#### SYNOPSIS:
 #
-#   color action ?value?...?value? ?option value?...?option value?
+# **color** **balance** *colors* ?**-tempK** *value*? ?**-depth** *value*?
+# **color** **bw** *colors* ?**-depth** *value*?
+# **color** **complement** *colors* ?**-depth** *value*?
+# **color** **contrast** *color1* *color2* ?**-depth** *value*?
+# **color** **convert** *colors* **-from** *value* **-to** *value*
+# **color** **cold** *colors* ?**-amount** *value*? ?**-depth** *value*?
+# **color** **dark** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+# **color** **deficiency** *colors* ?**-severity** *value*? ?**-via** *value*? ?**-depth** *value*?
+# **color** **desaturate** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+# **color** **family** *colors* ?**-depth** *value*?
+# **color** **grey** *colors* ?**-via** *value*? ?**-depth** *value*?
+# **color** **gray** *colors* ?**-via** *value*? ?**-depth** *value*?
+# **color** **inverse** *colors* ?**-depth** *value*?
+# **color** **light** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+# **color** **list** *palette* ?family?
+# **color** **saturate** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+# **color** **hot** *colors* ?**-amount** *value*? ?**-depth** *value*?
+# **color** **wcga2.0** *color1* *color2* ?**-depth** *value*?
+# **color** **websafe** *colors* ?**-depth** *value*?
 #
-## DESCRIPTION:
+#### DESCRIPTION:
 #
-#   The color command is used to deal with colors, in any form supported by Jay (See JAY SUPPORTED COLOR MODELS).
-#   The command can have any of several forms, depending on the action argument:
+# The **color** command is used to perform several *action* with colors.
 #
-#       color balance   colors tempK ?-depth value?
-#           Color balance is the global adjustment of the intensities of the colors (via RGB) to render specific colors correctly,
-#           particularly neutral colors.
+#### COMMAND:
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+# The *color* command can have any of several forms, depending on the *action* argument.
+# The *action* argument is the first argument after the command itself.
+# The legal forms are:
 #
-#               tempK           --> Should be a temperature value in Kelvins [1000K, 27000K] indicating the 'Correlated Color Temperature' (CCT)
-#                                   of the white color to use. Temperature values that exceeds these limits will be truncated.
+#   **color** **balance** *colors* ?**-tempK** *value*? ?**-depth** *value*?
+#      Color balance is the global adjustment of the intensities of the colors (though *tempK*) to render specific colors correctly,
+#      particularly neutral colors.
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-tempK** *value*? --> Should be a temperature value in Kelvins [1000K, 27000K] indicating the **Correlated Color
+#                                  Temperature** (CCT) of the white color to use.
+#                                  Temperature values that exceeds these limits will be truncated.
+#
+#                                  If not provided, defaults to **6500** Kelvins ('D65').
+#
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
+#
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#      Returns a list containing the balanced hexadecimal colors with the same depth as the colors provided.
+#
+#   **color** **bw** *colors* ?**-depth** *value*?
+#      Compute which color (**black** or **white**) has the greatest contrast with the colors provided.
+#      Contrast range is [0,21].
+#
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
+#
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#      Returns a list in which each index element is the color **black** or **white**, depending on which one of these two colors has
+#      the greatest contrast with the same indexed element provided.
+#
+#   **color** **complement** *colors* ?**-depth** *value*?
+#      Returns a list containing the hexadecimal complement colors of the hexadecimal colors provided.
+#
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
+#
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#   **color** **contrast** *color1* *color2* ?**-depth** *value*?
+#      Returns the contrast value [0,21] between the two colors provided.
+#
+#         color1               --> Should be an hexadecimal color (with or without the '#') or a textual colorname known by mustang.
+#                                  For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         color2               --> Should be an hexadecimal color (with or without the '#') or a textual colorname known by mustang.
+#                                  For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
+#
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#   **color** **convert** *colors* **-from** *value* **-to** *value*
+#      Convert the colors provided from the color model specified with the *-from* option to the one specified with the *-to* option.
+#
+#         *colors*          --> Should be a list containing the colors to convert expressed in the colormodel specified with
+#                               the *-from*- option.
+#
+#         **-from** *value* --> Should be a string indicating the color model of the provided colors.
+#                               Allowed color models are every color models supported by mustang.
+#                               For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#                               Attention, colormodels are case sensitive.
+#
+#         **-to** *value*   --> Should be a string indicating the color model of the resulting colors.
+#                               Allowed color models are every color models supported by mustang.
+#                               For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#                               Attention, colormodels are case sensitive.
+#
+#      Returns a list containing the converted colors channels.
+#
+#   **color** **cold** *colors* ?**-amount** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal colder color (by *amount*) for each of the hexadecimal colors provided.
+#
+#         *colors*              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                   known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-amount** *value*? --> Should be a floating point value [0,100.0] indicating the amount of heat (with or without the '%')
+#                                   to subtract. If not provided defaults to **1%**.
+#
+#                                   Note: The amount value is relative to the maximum value reachable by the *red*, *green* and
+#                                         *blue* channels.
+#
+#                                         For example:
+#                                            **1.0%** in the **RGB** color model at **8**  bit [0,255]   corresponds to **2.55**.
+#                                            **1.0%** in the **RGB** color model at **12** bit [0,4095]  corresponds to **40.95**.
+#                                            **1.0%** in the **RGB** color model at **16** bit [0,65535] corresponds to **655.35**.
+#
+#         ?**-depth** *value*?  --> Should be an integer value indicating the bit depth of the colors provided.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#           Returns a list containing the balanced hexadecimal color/s with the same depth as the color/s provided.
+#                                      **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                      **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                      **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#       color bw   colors ?-depth value?
-#           Compute which color ('black' or 'white') has the greatest contrast with the color/s provided.
+#                                   If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#   **color** **dark** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal darker color (by *amount* and *via*) for each of the hexadecimal colors provided.
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         *colors*              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                   known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-amount** *value*? --> Should be a floating point value [0,100.0] indicating the amount of light (with or without the '%')
+#                                   to subtract.
+#
+#                                   Note: The amount value is relative to the maximum value reachable by the *red*, *green* and
+#                                         *blue* channels or by the **L** channel.
+#
+#                                         For example:
+#                                            **1.0%** in the **RGB** color model at **8**  bit [0,255]   corresponds to **2.55**.
+#                                            **1.0%** in the **RGB** color model at **12** bit [0,4095]  corresponds to **40.95**.
+#                                            **1.0%** in the **RGB** color model at **16** bit [0,65535] corresponds to **655.35**.
+#                                            **1.0%** in the **HSL**, **Lab**, **Luv**, **LCHab** and **LCHuv** color models
+#                                                     corrisponds to **1.0** (**L** goes from [0,100.0]).
+#
+#                                   If not provided, defaults to **1%**.
+#
+#         ?**-via** *value*?    --> Should be a string indicating the path to follow to achieve the result.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#           Returns a list in which each index element is the color 'black' or 'white', depending on which one of these two colors has
-#           the greatest contrast with the same indexed element provided.
+#                                      **RGB**
+#                                      **HSL**
+#                                      **Lab**
+#                                      **Luv**
+#                                      **LCHab**
+#                                      **LCHuv**
 #
-#       color complement   colors ?-depth value?
-#           Compute the related complement color/s of the color/s provided.
+#                                   If not provided, defaults to **Lab**.
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
-#
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         ?**-depth** *value*?  --> Should be an integer value indicating the bit depth of the colors provided.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#           Returns a list containing the complement hexadecimal color/s with the same depth as the color/s provided.
+#                                      **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                      **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                      **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#       color contrast   color1 color2 ?-depth value?
-#           Compute the contrast between the two colors provided.
+#                                   If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#               color1          --> Should be an hexadecimal color (with or without the '#') or a textual colorname known by Jay.
-#                                   It will be interpreted as the background color.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#   **color** **deficiency** *colors* ?**-via** *value*? ?**-severity** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal vision deficiency color (**CVD**) for each of the hexadecimal colors provided.
+#      The human eye has 3 cones, each one processing a specific light color (*red*, *green* or *blue*).
+#      People can suffer of missing or damaged cone/s.
 #
-#               color2          --> Should be an hexadecimal color (with or without the '#') or a textual colorname known by Jay.
-#                                   It will be interpreted as the foreground color.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#         *colors*                --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                     known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         ?**-via** *value*?      --> Should be a string indicating the path to follow to achieve the result.
+#                                     Allowed values are:
+#
+#                                        **achromatic**    --> No cones present.
+#                                                              The person affected by this condition will process every color
+#                                                               as a shade of gray. This case is also called *Daltonism*.
+#                                                              This is the default if the **via** option is not provided.
+#
+#                                        **red**           --> Only the red cone is present.
+#                                                              The person affected by this condition can process only the red lights.
+#
+#                                        **green**         --> Only the green cone is present.
+#                                                              The person affected by this condition can process only the green lights.
+#
+#                                        **blue**          --> Only the blue cone is present.
+#                                                              The person affected by this condition can process only the blue lights.
+#
+#                                        **protanopia**    --> Only the green and blue cones are present.
+#                                                              The person affected by this condition cannot process the red lights.
+#
+#                                        **deuteranopia**  --> Only the red and blue cones are present.
+#                                                              The person affected by this condition cannot process the green lights.
+#
+#                                        **tritanopia**    --> Only the red and green cones are present.
+#                                                              The person affected by this condition cannot process the blue lights.
+#
+#                                        **protanomaly**   --> The red cone is damaged.
+#                                                              The person affected by this condition will have a reduced sensitivity
+#                                                              (**severity**) to red lights.
+#
+#                                        **deuteranomaly** --> The green cone is damaged.
+#                                                              The person affected by this condition will have a reduced sensitivity
+#                                                              (**severity**) to green lights.
+#
+#                                        **tritanomaly**   --> The blue cone is damaged.
+#                                                              The person affected by this condition will have a reduced sensitivity
+#                                                              (**severity**) to blue lights.
+#
+#                                     If not provided, defaults to **achromatic**.
+#
+#         ?**-severity** *value*? --> Should be a floating point value [0,100.0] indicating how much of the cone is damaged.
+#                                     Meaningfull only for 'Protanomaly', 'Deuteranomaly' or 'Tritanomaly' vias.
+#                                     If not provided defaults to '100.0'.
+#
+#         ?**-depth** *value*?    --> Should be an integer value indicating the bit depth of the colors provided.
+#                                     Allowed values are:
+#
+#                                        **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                        **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                        **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                     If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#         Returns a list containing the vision deficiencies hexadecimal colors with the same depth as the colors provided.
+#
+#   **color** **desaturate** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal desaturated color (by *amount* and *via*) for each of the hexadecimal colors provided.
+#
+#         *colors*              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                   known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-amount** *value*? --> Should be a floating point value [0,100.0] indicating the amount of saturation (with or without the '%')
+#                                   to subtract.
+#
+#                                   Note: The amount value is relative to the maximum value reachable by the *red*, *green* and
+#                                         *blue* channels or by the **L** channel.
+#
+#                                         For example:
+#                                            **1.0%** in the **HSB**, **HSI**, **HSL** and **HSP** color models corrisponds to **1.0**
+#                                                     (**S** goes from [0,100.0]).
+#
+#                                   If not provided, defaults to **1%**.
+#
+#         ?**-via** *value*?    --> Should be a string indicating the path to follow to achieve the result.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#           Returns a dictionary containing the following keys:
+#                                      **HSB**
+#                                      **HSI**
+#                                      **HSL**
+#                                      **HSP**
 #
-#               -contrast --> The actual contrast [1.0,21.0] between the two colors provided.
-#               -AA1      --> The text is a paragraph with a large font (more than 14 points).
-#               -AA2      --> The text is a paragraph with a small font (less than 14 points).
-#               -AAA1     --> The text is a title with a large font (more than 14 points).
-#               -AAA2     --> The text is a title with a small font (less than 14 points).
+#                                   If not provided defaults to **HSB**.
 #
-#           AA1, AA2, AAA1 and AAA2 are scenarios that follows the 'WCAG 2.0' raccomandations for
-#           color impaired people; their value can be either 'OK' or 'FAIL'.
-#
-#       color convert   colors ?-from value? ?-to value?
-#           Convert the color/s provided from the color model specified in 'from' to the one specified in 'to'.
-#
-#               colors          --> Should be a list containing the color/s to convert in any of the color models supported by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
-#
-#               ?-from value?   --> Should be a string indicating the color model of the provided color/s.
-#                                   Allowed color models are every color models supported by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
-#                                   If not provided defaults to 'HEX8'.
-#
-#               ?-to value?     --> Should be a string indicating the color model of the resulting color/s.
-#                                   Allowed color models are every color models supported by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
-#                                   If not provided defaults to 'RGB8'.
-#
-#           Returns a list containing the converted colors.
-#
-#       color cooldown   colors amount ?-depth value?
-#           Adjust the color/s provided so they will become more colder (via RGB).
-#
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
-#
-#               amount          --> Should be a floating point value [0,100.0] indicating the amount of heat (with or without the %) to subtract.
-#                                   If not provided defaults to '0'.
-#
-#                                   Note:  The amount is relative to the maximum value reachable by the red, green and blue channels.
-#                                          For example:
-#                                               1.0% in an RGB color model at 8  bit is '2.55'.
-#                                               1.0% in an RGB color model at 12 bit is '40.95'.
-#                                               1.0% in an RGB color model at 16 bit is '655.35'.
-#
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         ?**-depth** *value*?  --> Should be an integer value indicating the bit depth of the colors provided.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#           Returns a list containing the cooled down hexadecimal color/s with the same depth as the color/s provided.
+#                                      **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                      **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                      **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#       color darken   colors amount ?-depth value? ?-via value?
-#           Adjust the color/s provided so they will become more darker.
+#                                   If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#   **color** **family** *colors* ?**-depth** *value*?
+#      Return a list containing the families of the colors provided.
 #
-#               amount          --> Should be a floating point value [0,100.0] indicating the amount of heat (with or without the %) to subtract.
-#                                   If not provided defaults to '0'.
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
 #
-#                                   Note:  The amount is relative to the maximum value reachable by the red, green and blue channels for an RGB system,
-#                                          the amount of the lightness in the other available vias.
-#                                          For example:
-#                                               1.0% in an RGB color system at 8  bit is '2.55'.
-#                                               1.0% in an RGB color system at 12 bit is '40.95'.
-#                                               1.0% in an RGB color system at 16 bit is '655.35'.
-#                                               1.0% in an HSL, Lab, Luv, LCHab and LCHuv color system is '1.0'.
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#   **color** **grey** *colors* ?**-via** *value*? ?**-depth** *value*?
+#   **color** **gray** *colors* ?**-via** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal gray color (by *via*) for each of the hexadecimal colors provided.
+#
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-via** *value*?   --> Should be a string indicating the path to follow to achieve the result.
+#                                  Allowed values are:
+#
+#                                     **average**    --> The color *average* channel value will be used as gray channel.
+#                                     **desaturate** --> The color *average value between the maximum and the minimum*
+#                                                        channel values will be used as gray channel.
+#                                     **red**        --> The color *red* channel will be used as gray channel.
+#                                     **green**      --> The color *green* channel will be used as gray channel.
+#                                     **blue**       --> The color *blue* channel will be used as gray channel.
+#                                     **max**        --> The color *maximum* channel value will be used as gray channel.
+#                                     **min**        --> The color *minimum* channel value will be used as gray channel.
+#                                     **hevc**       --> The color *luma* value will be used as gray channel.
+#
+#                                  If not provided, defaults to **average**
+#
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
+#
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#   **color** **inverse** *colors* ?**-depth** *value*?
+#      Returns a list containing the hexadecimal inverse colors of the hexadecimal colors provided.
+#
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
+#
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#   **color** **light** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal lighter color (by *amount* and *via*) for each of the hexadecimal colors provided.
+#
+#         *colors*              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                   known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-amount** *value*? --> Should be a floating point value [0,100.0] indicating the amount of light (with or without the '%')
+#                                   to add.
+#
+#                                   Note: The amount value is relative to the maximum value reachable by the *red*, *green* and
+#                                         *blue* channels or by the **L** channel.
+#
+#                                         For example:
+#                                            **1.0%** in the **RGB** color model at **8**  bit [0,255]   corresponds to **2.55**.
+#                                            **1.0%** in the **RGB** color model at **12** bit [0,4095]  corresponds to **40.95**.
+#                                            **1.0%** in the **RGB** color model at **16** bit [0,65535] corresponds to **655.35**.
+#                                            **1.0%** in the **HSL**, **Lab**, **Luv**, **LCHab** and **LCHuv** color models
+#                                                     corrisponds to **1.0** (**L** goes from [0,100.0]).
+#
+#                                   If not provided, defaults to **1%**.
+#
+#         ?**-via** *value*?    --> Should be a string indicating the path to follow to achieve the result.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#               ?-via value?    --> Should be a string indicating the path to follow to achieve the result.
-#                                   Allowed vias are:
-#                                       RGB,
-#                                       HSL,
-#                                       Lab,
-#                                       Luv,
-#                                       LCHab,
-#                                       LCHuv.
-#                                   If not provided defaults to 'Lab'.
+#                                      **RGB**
+#                                      **HSL**
+#                                      **Lab**
+#                                      **Luv**
+#                                      **LCHab**
+#                                      **LCHuv**
 #
-#           Returns a list containing the darken hexadecimal color/s with the same depth as the color/s provided.
+#                                   If not provided, defaults to **Lab**.
 #
-#       color deficiency   colors ?-depth value? ?-severity value? ?-via value?
-#           Compute the related vision deficiency colors (CVD) of the color/s provided.
-#           The human eye has 3 cones, each one processing a specific light color (red, green or blue).
-#           People can suffer of missing or damaged cone/s.
-#
-#               colors              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                       For more info see JAY SUPPORTED COLOR MODELS.
-#
-#               ?-depth value?      --> Should be an integer value indicating the bit depth of the color/s provided.
-#                                       Allowed values are:
-#                                           8   --> 8 bit.
-#                                           12  --> 10 bit.
-#                                           16  --> 16 bit.
-#                                       If not provided defaults to the value of the variable '::DEPTH'.
-#
-#               ?-severity value?   --> Should be a floating point value [0,100.0] indicating how much of the cone is damaged.
-#                                       Meaningfull only for 'Protanomaly', 'Deuteranomaly' or 'Tritanomaly' vias.
-#                                       If not provided defaults to '100.0'.
-#
-#               ?-via value?        --> Should be a string indicating the path to follow to achieve the result.
-#                                       Allowed vias are:
-#                                           Achromatic    --> No cones present.
-#                                                             The person affected by this condition will process every color as a shade of gray.
-#                                                             This case is also called 'Daltonism'.
-#                                                             This is the default if the via option is not provided.
-#
-#                                           Deuteranomaly --> The green cone is damaged.
-#                                                             The person affected by this condition will have a reduced sensitivity (severity) to green lights.
-#
-#                                           Deuteranopia  --> Only the red and blue cones are present.
-#                                                             The person affected by this condition cannot process the green lights.
-#
-#                                           Green         --> Only the green cone is present.
-#                                                             The person affected by this condition can process only the green lights.
-#
-#                                           Blue          --> Only the blue cone is present.
-#                                                             The person affected by this condition can process only the blue lights.
-#
-#                                           Protanomaly   --> The red cone is damaged.
-#                                                             The person affected by this condition will have a reduced sensitivity (severity) to red lights.
-#
-#                                           Protanopia    --> Only the green and blue cones are present.
-#                                                             The person affected by this condition cannot process the red lights.
-#
-#                                           Red           --> Only the red cone is present.
-#                                                             The person affected by this condition can process only the red lights.
-#
-#                                           Tritanomaly   --> The blue cone is damaged.
-#                                                             The person affected by this condition will have a reduced sensitivity (severity) to blue lights.
-#
-#                                           Tritanopia    --> Only the red and green cones are present.
-#                                                             The person affected by this condition cannot process the blue lights.
-#
-#               Returns a list containing the vision deficiencies hexadecimal color/s with the same depth as the color/s provided.
-#
-#       color desaturation   colors amount ?-depth value? ?-via value?
-#           Adjust the color/s provided so they will become more desaturated.
-#
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
-#
-#               amount          --> Should be a floating point value [0,100.0] indicating the amount of saturation (with or without the %) to subtract.
-#                                   If not provided defaults to '0'.
-#
-#                                   Note:  The amount is relative to the maximum value reachable by the saturation channel in all available vias.
-#                                          For example 1.0% in an HSB, HSI, HSL and HSP color system is '1.0'.
-#
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         ?**-depth** *value*?  --> Should be an integer value indicating the bit depth of the colors provided.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#               ?-via value?    --> Should be a string indicating the path to follow to achieve the result.
-#                                   Allowed vias are:
-#                                       HSB,
-#                                       HSI,
-#                                       HSL,
-#                                       HSP.
-#                                   If not provided defaults to 'HSP'.
+#                                      **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                      **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                      **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#           Returns a list containing the desaturated hexadecimal color/s with the same depth as the color/s provided.
+#                                   If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#       color family   colors ?-depth value?
-#           Return a list containing the families of the color/s provided.
+#   **color** **list** *palette* ?family?
+#      Return a list containing all the colornames available for the palette and family provided.
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#         palette  --> Should be a string indicating the palette involved.
+#                      Allowed values are every palette name contained in the variable '::PALETTES'.
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#         ?family? --> Should be a string indicating the color family to retrieve.
+#                      Allowed values are:
+#                         **all**              --> Returns a list containing all the palette colornames no matter the families.
+#                         **Gray** or **Grey** --> Returns a list containing all the palette colornames belonging to the 'Gray' family
+#                                                  (*white* and *black* included).
+#                         **Red**              --> Returns a list containing all the palette colornames belonging to the 'Red' family.
+#                         **Red-Orange**       --> Returns a list containing all the palette colornames belonging to the 'Red-Orange' family.
+#                         **Orange**           --> Returns a list containing all the palette colornames belonging to the 'Orange' family.
+#                         **Orange-Yellow**    --> Returns a list containing all the palette colornames belonging to the 'Orange-Yellow' family.
+#                         **Yellow**           --> Returns a list containing all the palette colornames belonging to the 'Yellow' family.
+#                         **Yellow-Green**     --> Returns a list containing all the palette colornames belonging to the 'Yellow-Green' family.
+#                         **Green**            --> Returns a list containing all the palette colornames belonging to the 'Green' family.
+#                         **Green-Cyan**       --> Returns a list containing all the palette colornames belonging to the 'Green-Cyan' family.
+#                         **Cyan**             --> Returns a list containing all the palette colornames belonging to the 'Cyan' family.
+#                         **Cyan-Blue**        --> Returns a list containing all the palette colornames belonging to the 'Cyan-Blue' family.
+#                         **Blue**             --> Returns a list containing all the palette colornames belonging to the 'Blue' family.
+#                         **Blue-Purple**      --> Returns a list containing all the palette colornames belonging to the 'Blue-Purple' family.
+#                         **Purple**           --> Returns a list containing all the palette colornames belonging to the 'Purple' family.
+#                         **Purple-Red**       --> Returns a list containing all the palette colornames belonging to the 'Purple-Red' family.
+#
+#                      If not provided, defaults to **all**.
+#
+#   **color** **saturate** *colors* ?**-amount** *value*? ?**-via** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal saturated color (by *amount* and *via*) for each of the hexadecimal colors provided.
+#
+#         *colors*              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                   known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-amount** *value*? --> Should be a floating point value [0,100.0] indicating the amount of saturation (with or without the '%')
+#                                   to add.
+#
+#                                   Note: The amount value is relative to the maximum value reachable by the *red*, *green* and
+#                                         *blue* channels or by the **L** channel.
+#
+#                                         For example:
+#                                            **1.0%** in the **HSB**, **HSI**, **HSL** and **HSP** color models corrisponds to **1.0**
+#                                                     (**S** goes from [0,100.0]).
+#
+#                                   If not provided, defaults to **1%**.
+#
+#         ?**-via** *value*?    --> Should be a string indicating the path to follow to achieve the result.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#       color grey   colors ?-depth value? ?-via value?
-#       color gray   colors ?-depth value? ?-via value?
-#           Compute the related gray color/s of the color/s provided.
+#                                      **HSB**
+#                                      **HSI**
+#                                      **HSL**
+#                                      **HSP**
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#                                   If not provided defaults to **HSB**.
 #
-#               ?-via value?    --> Should be a string indicating the path to follow to achieve the result.
-#                                   Allowed vias are:
-#                                       hevc         --> The resulting gray channels will have the same luma of the color provided.
-#                                                        This is the default if the via option is not provided.
-#                                       average      --> The resulting gray channels will be the average value of the color provided channels (red, green and blue).
-#                                       blue         --> The resulting gray channels will be as the blue channel of the color provided.
-#                                       desaturation --> The resulting gray channels will be a desaturation of the color provided channels (red, green and blue).
-#                                       green        --> The resulting gray channels will be as the green channel of the color provided.
-#                                       max          --> The resulting gray channels will be the maximum value of the color provided channels (red, green and blue).
-#                                       min          --> The resulting gray channels will be the minimum value of the color provided channels (red, green and blue).
-#                                       red          --> The resulting gray channels will be as the red channel of the color provided.
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
+#
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
+#
+#   **color** **hot** *colors* ?**-amount** *value*? ?**-depth** *value*?
+#      Returns a list containing an hexadecimal hotter color (by *amount*) for each of the hexadecimal colors provided.
+#
+#         *colors*              --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                   known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
+#
+#         ?**-amount** *value*? --> Should be a floating point value [0,100.0] indicating the amount of heat (with or without the '%')
+#                                   to subtract. If not provided defaults to **1%**.
+#
+#                                   Note: The amount value is relative to the maximum value reachable by the *red*, *green* and
+#                                         *blue* channels.
+#
+#                                         For example:
+#                                            **1.0%** in the **RGB** color model at **8**  bit [0,255]   corresponds to **2.55**.
+#                                            **1.0%** in the **RGB** color model at **12** bit [0,4095]  corresponds to **40.95**.
+#                                            **1.0%** in the **RGB** color model at **16** bit [0,65535] corresponds to **655.35**.
+#
+#         ?**-depth** *value*?  --> Should be an integer value indicating the bit depth of the colors provided.
 #                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
 #
-#           Returns a list containing the gray hexadecimal color/s with the same depth as the color/s provided.
+#                                      **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                      **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                      **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#       color inverse   colors ?-depth value?
-#           Compute the related inverse color/s of the color/s provided.
+#                                   If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#   **color** **wcga2.0** *color1* *color2* ?**-depth** *value*?
+#      Return the contrast result for the four scenarios depicted in the **WCGA 2.0** recommendations for color impaired people.
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
-#                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
+#         color1               --> Should be an hexadecimal color (with or without the '#') or a textual colorname known by mustang.
+#                                  This color will be assumed to be used as *background* color.
+#                                  For more info see **MUSTANG SUPPORTED COLORMODELS**.
 #
-#           Returns a list containing the inverse hexadecimal color/s with the same depth as the color/s provided.
+#         color2               --> Should be an hexadecimal color (with or without the '#') or a textual colorname known by mustang.
+#                                  This color will be assumed to be used as *foreground* color.
+#                                  For more info see **MUSTANG SUPPORTED COLORMODELS**.
 #
-#       color lighten   colors amount ?-depth value? ?-via value?
-#           Adjust the color/s provided so they will become more light.
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#               amount          --> Should be a floating point value [0,100.0] indicating the amount of heat (with or without the %) to subtract.
-#                                   If not provided defaults to '0'.
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#                                   Note:  The amount is relative to the maximum value reachable by the red, green and blue channels for an RGB system,
-#                                          the amount of the lightness in the other available vias.
-#                                          For example:
-#                                               1.0% in an RGB color system at 8  bit is '2.55'.
-#                                               1.0% in an RGB color system at 12 bit is '40.95'.
-#                                               1.0% in an RGB color system at 16 bit is '655.35'.
-#                                               1.0% in an HSL, Lab, Luv, LCHab and LCHuv color system is '1.0'.
+#      Returns a dictionary containing the following keys and values:
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
-#                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
+#         **-AA1**  --> The text is a paragraph with a large font (more than 14 points).
+#         **-AA2**  --> The text is a paragraph with a small font (less than 14 points).
+#         **-AAA1** --> The text is a title with a large font (more than 14 points).
+#         **-AAA2** --> The text is a title with a small font (less than 14 points).
 #
-#               ?-via value?    --> Should be a string indicating the path to follow to achieve the result.
-#                                   Allowed vias are:
-#                                       RGB,
-#                                       HSL,
-#                                       Lab,
-#                                       Luv,
-#                                       LCHab,
-#                                       LCHuv.
-#                                   If not provided defaults to 'Lab'.
+#      **AA1**, **AA2**, **AAA1** and **AAA2** values can be either 'OK' or 'FAIL'.
 #
-#           Returns a list containing the lighten hexadecimal color/s with the same depth as the color/s provided.
+#   **color** **websafe** *colors* ?**-depth** *value*?
+#      Returns a list containing an hexadecimal websafe color for each of the hexadecimal colors provided.
 #
-#       color list   palette ?-family value?
-#           Return a list containing all the colornames available for the palette and family provided.
+#         *colors*             --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames
+#                                  known by mustang. For more info see **MUSTANG SUPPORTED COLORMODELS**.
 #
-#               palette         --> Should be a string indicating the palette involved.
-#                                   Allowed values are every palette name contained in the variable '::PALETTES'.
+#         ?**-depth** *value*? --> Should be an integer value indicating the bit depth of the colors provided.
+#                                  Allowed values are:
 #
-#               ?-family value? --> Should be a string indicating the color family to retrieve.
-#                                   Allowed values are:
-#                                       all          --> Returns a list containing all the palette colornames.
-#                                                        This is the default if the family option is not provided.
-#                                       gray         --> -
-#                                       grey         --> Returns a list containing all the palette colornames belonging to the 'gray' family (white and black included).
-#                                       red          --> Returns a list containing all the palette colornames belonging to the 'red' family.
-#                                       redorange    --> Returns a list containing all the palette colornames belonging to the 'redorange' family.
-#                                       orange       --> Returns a list containing all the palette colornames belonging to the 'orange' family.
-#                                       orangeyellow --> Returns a list containing all the palette colornames belonging to the 'orangeyellow' family.
-#                                       yellow       --> Returns a list containing all the palette colornames belonging to the 'yellow' family.
-#                                       yellowgreen  --> Returns a list containing all the palette colornames belonging to the 'yellowgreen' family.
-#                                       green        --> Returns a list containing all the palette colornames belonging to the 'green' family.
-#                                       greencyan    --> Returns a list containing all the palette colornames belonging to the 'greencyan' family.
-#                                       cyan         --> Returns a list containing all the palette colornames belonging to the 'cyan' family.
-#                                       cyanblue     --> Returns a list containing all the palette colornames belonging to the 'cyanblue' family.
-#                                       blue         --> Returns a list containing all the palette colornames belonging to the 'blue' family.
-#                                       bluepurple   --> Returns a list containing all the palette colornames belonging to the 'bluepurple' family.
-#                                       purple       --> Returns a list containing all the palette colornames belonging to the 'purple' family.
-#                                       purplered    --> Returns a list containing all the palette colornames belonging to the 'purplered' family.
+#                                     **8**   --> meaning 8  bit colors, with an hexadecimal range of [#000000,#ffffff].
+#                                     **12**  --> meaning 10 bit colors, with an hexadecimal range of [#000000000,#fffffffff].
+#                                     **16**  --> meaning 16 bit colors, with an hexadecimal range of [#000000000000,#ffffffffffff].
 #
-#       color saturation   colors amount ?-depth value? ?-via value?
-#           Adjust the color/s provided so they will become more saturated.
+#                                  If not provided, defaults to the value of the variable **::ms::colordepth**.
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#### MUSTANG SUPPORTED COLORMODELS:
 #
-#               amount          --> Should be a floating point value [0,100.0] indicating the amount of saturation (with or without the %) to add.
-#                                   If not provided defaults to '0'.
+# **HEX** or **HEX8**   Indicates an *hexadecimal* color model at 8 bit and can be provided either as a textual colorname
+#                       (that must be known by mustang) or as an hexadecimal color (with or without the '#') expressed in its
+#                       shortform (with just 3 hexadecimals) or in its longform (with 6 hexadecimals).
+#                       Multiple **HEX8** values must be provided as element of a list.
 #
-#                                   Note:  The amount is relative to the maximum value reachable by the saturation channel in all available vias.
-#                                          For example 1.0% in an HSB, HSI, HSL and HSP color system is '1.0'.
+#                       Each hexadecimal color ranges from [#000000,#ffffff].
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
-#                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
+#                       When returned, an **HEX8** color will be in its longform, prepended with '#'.
 #
-#               ?-via value?    --> Should be a string indicating the path to follow to achieve the result.
-#                                   Allowed vias are:
-#                                       HSB,
-#                                       HSI,
-#                                       HSL,
-#                                       HSP.
-#                                   If not provided defaults to 'HSP'.
+#                       Examples:
 #
-#           Returns a list containing the saturated hexadecimal color/s with the same depth as the color/s provided.
+#                          One input **HEX8** color:
+#                             color  --> #ffff00
+#                             Input  --> [list #ffff00] or just #ffff00
 #
-#       color warmup   colors amount ?-depth value?
-#           Adjust the color/s provided so they will become more hotter.
+#                          Two input **HEX8** colors:
+#                             color1 --> #000000
+#                             color2 --> #ffffff
+#                             Input  --> [list #000000 #ffffff]
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#                          Three input **HEX8** colors:
+#                             color1 --> #ff0000
+#                             color2 --> #00ff00
+#                             color3 --> #0000ff
+#                             Input  --> [list #ff0000 #00ff00 #0000ff]
 #
-#               amount          --> Should be a floating point value [0,100.0] indicating the amount of heat (with or without the %) to add.
-#                                   If not provided defaults to '0'.
+#                          and so on and so forth...
 #
-#                                   Note:  The amount is relative to the maximum value reachable by the red, green and blue channels.
-#                                          For example:
-#                                               1.0% in an RGB color system at 8  bit is '2.55'.
-#                                               1.0% in an RGB color system at 12 bit is '40.95'.
-#                                               1.0% in an RGB color system at 16 bit is '655.35'.
+# **HEX12**             Indicates an *hexadecimal* color model at 12 bit and can be provided either as a textual colorname
+#                       (that must be known by mustang) or as an hexadecimal color (with or without the '#') expressed in its
+#                       shortform (with just 3 hexadecimals) or in its longform (with 9 hexadecimals).
+#                       Multiple **HEX12** values must be provided as element of a list.
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
-#                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
+#                       Each hexadecimal color ranges from [#000000000,#fffffffff].
 #
-#           Returns a list containing the warmed up hexadecimal color/s with the same depth as the color/s provided.
+#                       When returned, an **HEX12** color will be in its longform, prepended with '#'.
 #
-#       color websafe   colors ?-depth value?
-#           Compute the related websafe color/s of the color/s provided.
+#                       Examples:
 #
-#               colors          --> Should be a list containing hexadecimal colors (with or without the '#') or textual colornames known by Jay.
-#                                   For more info see JAY SUPPORTED COLOR MODELS.
+#                          One input **HEX12** color:
+#                             color  --> #ffffff000
+#                             Input  --> [list #ffffff000] or just #ffffff000
 #
-#               ?-depth value?  --> Should be an integer value indicating the bit depth of the color/s provided.
-#                                   Allowed values are:
-#                                       8   --> 8 bit.
-#                                       12  --> 10 bit.
-#                                       16  --> 16 bit.
-#                                   If not provided defaults to the value of the variable '::DEPTH'.
+#                          Two input **HEX12** colors:
+#                             color1 --> #000000000
+#                             color2 --> #fffffffff
+#                             Input  --> [list #000000000 #fffffffff]
 #
-#           Returns a list containing the websafe hexadecimal color/s with the same depth as the color/s provided.
+#                          Three input **HEX12** colors:
+#                             color1 --> #fff000000
+#                             color2 --> #000fff000
+#                             color3 --> #000000fff
+#                             Input  --> [list #fff000000 #000fff000 #000000fff]
 #
-## JAY SUPPORTED COLOR MODELS:
+#                          and so on and so forth...
 #
-#   HEX8        Indicates an 'hexadecimal' color model at 8 bit.
-#               The 'HEX8' color can be provided as an hexadecimal color (with or without the '#') expressed in shortform (with just 3 hexadecimals),
-#               longform (with 6 hexadecimals) or as a textual colorname known by Jay.
-#               Every 'HEX8' color will always be returned as an hexadecimal color in it's longform, prepended with '#'.
-#               Each HEX8 color ranges from [#000000,#ffffff].
-#                   8   --> [#000000,#ffffff]
-#                   12  --> [#000000000,#fffffffff]
-#                   16  --> [#000000000000,#ffffffffffff]
+# **HEX16**             Indicates an *hexadecimal* color model at 16 bit and can be provided either as a textual colorname
+#                       (that must be known by mustang) or as an hexadecimal color (with or without the '#') expressed in its
+#                       shortform (with just 3 hexadecimals) or in its longform (with 12 hexadecimals).
+#                       Multiple **HEX16** values must be provided as element of a list.
 #
-#   HEX12       Indicates an 'hexadecimal' color model at 12 bits.
-#               The 'HEX12' color can be provided as an hexadecimal color (with or without the '#') expressed in shortform (with just 3 hexadecimals),
-#               longform (with 9 hexadecimals) or as a textual colorname known by Jay.
-#               Every 'HEX12' color will always be returned as an hexadecimal color in it's longform, prepended with '#'.
-#               Each HEX12 color ranges from [#000000000,#fffffffff].
+#                       Each hexadecimal color ranges from [#000000000000,#ffffffffffff].
 #
-#   HEX16       Indicates an 'hexadecimal' color model at 16 bits.
-#               The 'HEX16' color can be provided as an hexadecimal color (with or without the '#') expressed in shortform (with just 3 hexadecimals),
-#               longform (with 12 hexadecimals) or as a textual colorname known by Jay.
-#               Every 'HEX16' color will always be returned as an hexadecimal color in it's longform, prepended with '#'.
-#               Each HEX16 color ranges from [#000000000000,#ffffffffffff].
+#                       When returned, an **HEX16** color will be in its longform, prepended with '#'.
 #
-#   RGB8        Indicates an 'RGB' color model at 8 bit, where 'R' is the red component, 'G' is the green component and 'B' is the blue component.
-#               The RGB color is a three element list containing (in order) the red, green and blue component.
-#               Each RGB component ranges from [0,255] and is always expressed as integer.
+#                       Examples:
 #
-#   RGB12       Indicates an 'RGB' color model at 12 bit, where 'R' is the red component, 'G' is the green component and 'B' is the blue component.
-#               The RGB color is a three element list containing (in order) the red, green and blue component.
-#               Each RGB component ranges from [0,4095] and is always expressed as integer.
+#                          One input **HEX16** color:
+#                             color  --> #ffffffff0000
+#                             Input  --> [list #ffffffff0000] or just #ffffffff0000
 #
-#   RGB16       Indicates an 'RGB' color model at 16 bit, where 'R' is the red component, 'G' is the green component and 'B' is the blue component.
-#               The RGB color is a three element list containing (in order) the red, green and blue component.
-#               Each RGB component ranges from [0,65535] and is always expressed as integer.
+#                          Two input **HEX16** colors:
+#                             color1 --> #000000000000
+#                             color2 --> #ffffffffffff
+#                             Input  --> [list #000000000000 #ffffffffffff]
 #
-#   rgb         Indicates an 'rgb' color model, where 'r' is the red component, 'g' is the green component and 'b' is the blue component.
-#               The rgb color is a three element list containing (in order) the red, green and blue component.
-#               Each RGB component ranges from [0,1.0] and is always expressed as floating point.
+#                          Three input **HEX16** colors:
+#                             color1 --> #ffff00000000
+#                             color2 --> #0000ffff0000
+#                             color3 --> #00000000ffff
+#                             Input  --> [list #ffff00000000 #0000ffff0000 #00000000ffff]
 #
-#   HSB         Indicates an 'HSB' color model, where 'H' is the hue component, 'S' is the saturation component and 'B' is brightness component.
-#               The HSB color is a three element list containing (in order) the hue, saturation and brightness components.
-#               The hue component ranges from [0,360.0[. '360.0' is not included.
-#               The saturation component ranges from [0,100.0].
-#               The brightness component ranges from [0,100.0].
-#               Each HSB component is always expressed as floating point.
+#                          and so on and so forth...
 #
-#   HSI         Indicates an 'HSI' color model, where 'H' is the hue component, 'S' is the saturation component and 'I' is intensity component.
-#               The HSI color is a three element list containing (in order) the hue, saturation and intensity components.
-#               The hue component ranges from [0,360.0[. '360.0' is not included.
-#               The saturation component ranges from [0,100.0].
-#               The intensity component ranges from [0,100.0].
-#               Each HSI component is always expressed as floating point.
+# **RGB** or **RGB8**   Indicates an **RGB** color model at 8 bit, where *R*, *G* and *B* represents its *red*, *green* and *blue* channel.
+#                       They must be provided as list with at least 3 elements. Each elements must be an integer value that indicates
+#                       their channel values (in order, the *red*, *green* and *blue* values for each color).
 #
-#   HSL         Indicates an 'HSL' color model, where 'H' is the hue component, 'S' is the saturation component and 'L' is lightness component.
-#               The HSL color is a three element list containing (in order) the hue, saturation and lightness components.
-#               The hue component ranges from [0,360.0[. '360.0' is not included.
-#               The saturation component ranges from [0,100.0].
-#               The lightness component ranges from [0,100.0].
-#               Each HSL component is always expressed as floating point.
+#                       Each channel ranges from [0,255].
 #
-#   HSP         Indicates an 'HSP' color model, where 'H' is the hue component, 'S' is the saturation component and 'P' is perceived brightness component.
-#               The HSP color is a three element list containing (in order) the hue, saturation and perceived brightness components.
-#               The hue component ranges from [0,360.0[. '360.0' is not included.
-#               The saturation component ranges from [0,100.0].
-#               The perceived brightness component ranges from [0,100.0].
-#               Each HSP component is always expressed as floating point.
+#                       Examples:
 #
-#   XYZ         Indicates an 'XYZ' color model, where 'X', 'Y' and 'Z' are the tristimulus values, as defined in the CIEXYZ 1931 color space.
-#               The XYZ color is a three element list containing (in order) the 'X', 'Y' and 'Z' component.
-#               The 'X' component ranges from [0,0.96422].
-#               The 'Y' component ranges from [0,1.0].
-#               The 'Z' component ranges from [0,0.82521].
-#               Each XYZ component is always expressed as floating point.
+#                          One input **RGB8** color:
+#                             color  --> red 40, green 172, blue 212
+#                             Input  --> [list 40 172 212]
 #
-#   xyY         Indicates an 'xyY' color model, where 'x', 'y' are normalized 'X' and 'Y' tristimulus values as defined in the CIEXYZ 1931 color space,
-#               while 'Y' is the actual 'Y' tristimulus value as defined in the CIEXYZ 1931 color space.
-#               The xyY color is a three element list containing (in order) the 'x', 'y' and 'Y' component.
-#               Each xyY component ranges from [0,1.0] and is always expressed as floating point.
+#                          Two input **RGB8** colors:
+#                             color1 --> red 40, green 172, blue 212
+#                             color2 --> red 57, green 65,  blue 65
+#                             Input  --> [list 40 172 212 57 65 65]
 #
-#   Lab         Indicates a 'Lab' color model, where 'L' is the lightness component from black to white, 'a' is the lightness component from green to red
-#               and 'b' is the lightness component from blue to yellow, as defined in the CIELab 1976 color space.
-#               The Lab color is a three element list containing (in order) the 'L', 'a' and 'b' component.
-#               The 'L' component ranges from [0,100.0].
-#               The 'a' component ranges from [-128.0,127.0].
-#               The 'b' component ranges from [-128.0,127.0].
-#               Each Lab component is always expressed as floating point.
+#                          Three input **RGB8** colors:
+#                             color1 --> red 40, green 172, blue 212
+#                             color2 --> red 57, green 65,  blue 65
+#                             color3 --> red 23, green 212, blue 120
+#                             Input  --> [list 40 172 212 57 65 65 23 212 120]
 #
-#   Luv         Indicates a 'Luv' color model, where 'L' is the lightness component from black to white, 'u' and 'v' are two parameters defined in the CIELuv 1976 color space
-#               The Luv color is a three element list containing (in order) the 'L', 'u' and 'v' component.
-#               The 'L' component ranges from [0,100.0].
-#               The 'u' component ranges from [-134.0,220.0].
-#               The 'v' component ranges from [-140.0,122.0].
-#               Each Luv component is always expressed as floating point.
+#                          and so on and so forth...
 #
-#   LCHab       Indicates an 'LCHab' color model (a cylindrical rappresentation of the 'Lab' color model), where 'L' is the lightness component, 'C' is the chroma component
-#               and 'Hab' is the hue component.
-#               The LCHab color is a three element list containing (in order) the 'L', 'C' and 'Hab' component.
-#               The 'L' component ranges from [0,100.0].
-#               The 'C' component ranges from [0,181.01933598375618].
-#               The 'Hab' component ranges from [0,360.0[. '360.0' is not included.
-#               Each LCHab component is always expressed as floating point.
+# **RGB12**             Indicates an **RGB** color model at 12 bit, where *R*, *G* and *B* represents its *red*, *green* and *blue* channel.
+#                       They must be provided as list with at least 3 elements. Each elements must be an integer value that indicates
+#                       their channel values (in order, the *red*, *green* and *blue* values for each color).
 #
-#   LCHuv       Indicates an 'LCHuv' color model (a cylindrical rappresentation of the 'Luv' color model), where 'L' is the lightness component, 'C' is the chroma component
-#               and 'Huv' is the hue component.
-#               The LCHuv color is a three element list containing (in order) the 'L', 'C' and 'Huv' component.
-#               The 'L' component ranges from [0,100.0].
-#               The 'C' component ranges from [0,260.76809620810593].
-#               The 'Huv' component ranges from [0,360.0[. '360.0' is not included.
-#               Each LCHuv component is always expressed as floating point.
+#                       Each channel ranges from [0,4095].
+#
+#                       Examples:
+#
+#                          One input **RGB12** color:
+#                             color  --> red 40, green 1072, blue 2120
+#                             Input  --> [list 40 1072 2120]
+#
+#                          Two input **RGB12** colors:
+#                             color1 --> red 40, green 1072,   blue 2120
+#                             color2 --> red 3557, green 4065, blue 165
+#                             Input  --> [list 40 1072 2120 3557 4065 165]
+#
+#                          Three input **RGB12** colors:
+#                             color1 --> red 40, green 1072,   blue 2120
+#                             color2 --> red 3557, green 4065, blue 165
+#                             color3 --> red 2300, green 2120, blue 1120
+#                             Input  --> [list 40 1072 2120 3557 4065 165 2300 2212 1120]
+#
+#                          and so on and so forth...
+#
+# **RGB16**             Indicates an **RGB** color model at 16 bit, where *R*, *G* and *B* represents its *red*, *green* and *blue* channel.
+#                       They must be provided as list with at least 3 elements. Each elements must be an integer value that indicates
+#                       their channel values (in order, the *red*, *green* and *blue* values for each color).
+#
+#                       Each channel ranges from [0,65535].
+#
+#                       Examples:
+#
+#                          One input **RGB16** color:
+#                             color  --> red 400, green 10720, blue 42120
+#                             Input  --> [list 400 10720 42120]
+#
+#                          Two input **RGB16** colors:
+#                             color1 --> red 400,   green 10720, blue 42120
+#                             color2 --> red 13557, green 54065, blue 4165
+#                             Input  --> [list 400 10720 42120 13557 54065 4165]
+#
+#                          Three input **RGB16** colors:
+#                             color1 --> red 400,   green 10720, blue 42120
+#                             color2 --> red 13557, green 54065, blue 4165
+#                             color3 --> red 42300, green 62120, blue 31120
+#                             Input  --> [list 400 10720 42120 13557 54065 4165 42300 62212 31120]
+#
+#                          and so on and so forth...
+#
+# **rgb**               Indicates an **rgb** color model, where *r*, *g* and *b* represents its *red*, *green* and *blue* channel.
+#                       They must be provided as list with at least 3 elements. Each elements must be a floating point value
+#                       that indicates their channel values (in order, the *red*, *green* and *blue* values for each color).
+#
+#                       Each channel ranges from [0,1.0].
+#
+#                       Examples:
+#
+#                          One input **rgb** color:
+#                             color  --> red 0.4, green 0.25, blue 0.7
+#                             Input  --> [list 0.4 0.25 0.7]
+#
+#                          Two input **rgb** colors:
+#                             color1 --> red 0.4,  green 0.25, blue 0.7
+#                             color2 --> red 0.13, green 0.5,  blue 0.4165
+#                             Input  --> [list 0.4 0.25 0.7 0.13 0.5 0.4165]
+#
+#                          Three input **rgb** colors:
+#                             color1 --> red 0.4,  green 0.25, blue 0.7
+#                             color2 --> red 0.13, green 0.5,  blue 0.4165
+#                             color3 --> red 0.8,  green 1.0,  blue 0.2
+#                             Input  --> [list 0.4 0.25 0.7 0.13 0.5 0.4165 0.8 1.0 0.2]
+#
+#                          and so on and so forth...
+#
+# **HSB**               Indicates an **HSB** color model, where *H*, *S* and *B* represents the *hue*, *saturation* and *brightness* channel.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *hue*, *saturation* and *brightness* values for each color).
+#
+#                       The *hue* channel ranges from [0,360.0[ with *360.0* not included, while the *saturation* and *brightness* channels
+#                       ranges from [0,100.0].
+#
+#                       Examples:
+#
+#                          One input **HSB** color:
+#                             color  --> hue 120.0, saturation 25.0, brightness 70.0
+#                             Input  --> [list 120.0 25.0 70.0]
+#
+#                          Two input **HSB** colors:
+#                             color1 --> hue 120.0, saturation 25.0, brightness 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, brightness 12.5
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5]
+#
+#                          Three input **HSB** colors:
+#                             color1 --> hue 120.0, saturation 25.0, brightness 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, brightness 12.5
+#                             color3 --> hue 240.0, saturation 71.0, brightness 100.0
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5 240.0 71.0 100.0]
+#
+#                          and so on and so forth...
+#
+# **HSI**               Indicates an **HSI** color model, where *H*, *S* and *I* represents the *hue*, *saturation* and *intensity* channel.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *hue*, *saturation* and *intensity* values for each color).
+#
+#                       The *hue* channel ranges from [0,360.0[ with *360.0* not included, while the *saturation* and *intensity* channels
+#                       ranges from [0,100.0].
+#
+#                       Examples:
+#
+#                          One input **HSI** color:
+#                             color  --> hue 120.0, saturation 25.0, intensity 70.0
+#                             Input  --> [list 120.0 25.0 70.0]
+#
+#                          Two input **HSI** colors:
+#                             color1 --> hue 120.0, saturation 25.0, intensity 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, intensity 12.5
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5]
+#
+#                          Three input **HSI** colors:
+#                             color1 --> hue 120.0, saturation 25.0, intensity 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, intensity 12.5
+#                             color3 --> hue 240.0, saturation 71.0, intensity 100.0
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5 240.0 71.0 100.0]
+#
+#                          and so on and so forth...
+#
+# **HSL**               Indicates an **HSL** color model, where *H*, *S* and *L* represents the *hue*, *saturation* and *lightness* channel.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *hue*, *saturation* and *lightness* values for each color).
+#
+#                       The *hue* channel ranges from [0,360.0[ with *360.0* not included, while the *saturation* and *lightness* channels
+#                       ranges from [0,100.0].
+#
+#                       Examples:
+#
+#                          One input **HSL** color:
+#                             color  --> hue 120.0, saturation 25.0, lightness 70.0
+#                             Input  --> [list 120.0 25.0 70.0]
+#
+#                          Two input **HSL** colors:
+#                             color1 --> hue 120.0, saturation 25.0, lightness 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, lightness 12.5
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5]
+#
+#                          Three input **HSL** colors:
+#                             color1 --> hue 120.0, saturation 25.0, lightness 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, lightness 12.5
+#                             color3 --> hue 240.0, saturation 71.0, lightness 100.0
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5 240.0 71.0 100.0]
+#
+#                          and so on and so forth...
+#
+# **HSP**               Indicates an **HSP** color model, where *H*, *S* and *P* represents the *hue*, *saturation* and *perceived brightness* channel.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *hue*, *saturation* and *perceived brightness* values for each color).
+#
+#                       The *hue* channel ranges from [0,360.0[ with *360.0* not included, while the *saturation* and *perceived brightness* channels
+#                       ranges from [0,100.0].
+#
+#                       Examples:
+#
+#                          One input **HSP** color:
+#                             color  --> hue 120.0, saturation 25.0, perceived brightness 70.0
+#                             Input  --> [list 120.0 25.0 70.0]
+#
+#                          Two input **HSP** colors:
+#                             color1 --> hue 120.0, saturation 25.0, perceived brightness 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, perceived brightness 12.5
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5]
+#
+#                          Three input **HSP** colors:
+#                             color1 --> hue 120.0, saturation 25.0, perceived brightness 70.0
+#                             color2 --> hue 60.0,  saturation 50.0, perceived brightness 12.5
+#                             color3 --> hue 240.0, saturation 71.0, perceived brightness 100.0
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5 240.0 71.0 100.0]
+#
+#                          and so on and so forth...
+#
+# **HWB**               Indicates an **HWB** color model, where *H*, *W* and *B* represents the *hue*, *whiteness* and *blackness* channel.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *hue*, *whiteness* and *blackness* values for each color).
+#
+#                       The *hue* channel ranges from [0,360.0[ with *360.0* not included, while the *whiteness* and *blackness* channels
+#                       ranges from [0,100.0].
+#
+#                       Examples:
+#
+#                          One input **HWB** color:
+#                             color  --> hue 120.0, whiteness 25.0, blackness 70.0
+#                             Input  --> [list 120.0 25.0 70.0]
+#
+#                          Two input **HWB** colors:
+#                             color1 --> hue 120.0, whiteness 25.0, blackness 70.0
+#                             color2 --> hue 60.0,  whiteness 50.0, blackness 12.5
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5]
+#
+#                          Three input **HWB** colors:
+#                             color1 --> hue 120.0, whiteness 25.0, blackness 70.0
+#                             color2 --> hue 60.0,  whiteness 50.0, blackness 12.5
+#                             color3 --> hue 240.0, whiteness 71.0, blackness 100.0
+#                             Input  --> [list 120.0 25.0 70.0 60.0 50.0 12.5 240.0 71.0 100.0]
+#
+#                          and so on and so forth...
+#
+# **XYZ**               Indicates an **XYZ** color model, where *X*, *Y* and *Z* are the tristimulus values, as defined in the
+#                       **CIEXYZ 1931** color space.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *X*, *Y* and *Z* values for each color).
+#
+#                       The *Y* channel ranges from [0,1.0], while the *X* and *Z* channels ranges from [0,1.999969482421875].
+#
+#                       Examples:
+#
+#                          One input **XYZ** color:
+#                             color  --> X 0.4, Y 0.5, Z 0.2
+#                             Input  --> [list 0.4 0.5 0.2]
+#
+#                          Two input **XYZ** colors:
+#                             color1 --> X 0.4, Y 0.5, Z 0.2
+#                             color2 --> X 0.5, Y 0.4, Z 0.6
+#                             Input  --> [list 0.4 0.5 0.2 0.5 0.4 0.6]
+#
+#                          Three input **XYZ** colors:
+#                             color1 --> X 0.4, Y 0.5, Z 0.2
+#                             color2 --> X 0.5, Y 0.4, Z 0.6
+#                             color3 --> X 0.2, Y 0.2, Z 0.1
+#                             Input  --> [list 0.4 0.5 0.2 0.5 0.4 0.6 0.2 0.2 0.1]
+#
+#                          and so on and so forth...
+#
+# **xyY**               Indicates an **xyY** color model, where *x*, *y* are normalized *X* and *Y* tristimulus values as defined in the
+#                       **CIEXYZ 1931** color space, while *Y* is the actual *Y* tristimulus value as defined in the **CIEXYZ 1931** color space.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *X*, *Y* and *Z* values for each color).
+#
+#                       The *xyY* channel ranges from [0,1.0].
+#
+#                       Examples:
+#
+#                          One input **xyY** color:
+#                             color  --> x 1.0, y 0.5, Y 0.7
+#                             Input  --> [list 1.0 0.5 0.7]
+#
+#                          Two input **xyY** colors:
+#                             color1 --> x 1.0, y 0.5, Y 0.7
+#                             color2 --> x 0.5, y 0.8, Y 0.8
+#                             Input  --> [list 1.0 0.5 0.7 0.5 0.8 0.8]
+#
+#                          Three input **xyY** colors:
+#                             color1 --> x 1.0, y 0.5, Y 0.7
+#                             color2 --> x 0.5, y 0.8, Y 0.8
+#                             color3 --> x 0.2, y 0.2, Y 0.1
+#                             Input  --> [list 1.0 0.5 0.7 0.5 0.8 0.8 0.2 0.2 0.1]
+#
+#                          and so on and so forth...
+#
+# **Lab**               Indicates a **Lab** color model, where *L* is the lightness from black to white, *a* is the lightness from green to red
+#                       and *b* is the lightness from blue to yellow, as defined in the **CIELab 1976** color space.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *L*, *a* and *b* values for each color).
+#
+#                       The *L* channel ranges from [0,100.0], the *a* channel ranges from [-128.0,127.0] and the *b* channel ranges from [-128.0,127.0].
+#
+#                       Example:
+#
+#                          One input **Lab** color:
+#                             color  --> L 100, a -50, b 50
+#                             Input  --> [list 100 -50 50]
+#
+#                          Two input **Lab** colors:
+#                             color1 --> L 100, a -50, b 50
+#                             color2 --> L 57,  a 80,  b 80
+#                             Input  --> [list 100 -50 50 57 80 80]
+#
+#                          Three input **Lab** colors:
+#                             color1 --> L 100, a -50, b 50
+#                             color2 --> L 57,  a 80,  b 80
+#                             color3 --> L 23,  a 20,  b 12
+#                             Input  --> [list 100 -50 50 57 80 80 23 20 12]
+#
+#                          and so on and so forth...
+#
+# **Luv**               Indicates a **Luv** color model, where *L* is the lightness from black to white and *u* and *v* are two parameters
+#                       defined in the **CIELuv 1976** color space.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *L*, *u* and *v* values for each color).
+#
+#                       The *L* channel ranges from [0,100.0], the *u* channel ranges from [-134.0,220.0] and the *v* channel ranges from [-140.0,122.0].
+#
+#                       Examples:
+#
+#                          One input **Luv** color:
+#                             color  --> L 100, u -50, v 50
+#                             Input  --> [list 100 -50 50]
+#
+#                          Two input **Luv** colors:
+#                             color1 --> L 100, u -50, v 50
+#                             color2 --> L 100, u -50, v 50
+#                             Input  --> [list 100 -50 50 57 80 80]
+#
+#                          Three input **Luv** colors:
+#                             color1 --> L 100, u -50, v 50
+#                             color2 --> L 100, u -50, v 50
+#                             color3 --> L 23,  u 20,  v 12
+#                             Input  --> [list 100 -50 50 57 80 80 23 20 12]
+#
+#                          and so on and so forth...
+#
+# **LCHab**             Indicates an **LCHab** color model (a cylindrical rappresentation of the **Lab** color model),
+#                       where *L* is the *lightness*, *C* is the *chroma* and *Hab* is the *hue*.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *L*, *u* and *v* values for each color).
+#
+#                       The *L* channel ranges from [0,100.0], the *C* channel ranges from [0,181.01933598375618] and the *Hab* channel ranges
+#                       from [0,360.0[, with **360.0** not included.
+#
+#                       Examples:
+#
+#                          One input **LCHab** color:
+#                             color  --> L 40, C 100, Hab 80
+#                             Input  --> [list 40 100 80]
+#
+#                          Two input **LCHab** colors:
+#                             color1 --> L 40, C 100, Hab 80
+#                             color2 --> L 50, C 40,  Hab 60
+#                             Input  --> [list 40 100 80 50 40 60]
+#
+#                          Three input **LCHab** colors:
+#                             color1 --> L 40, C 100, Hab 80
+#                             color2 --> L 50, C 40,  Hab 60
+#                             color3 --> L 80, C 140, Hab 240
+#                             Input  --> [list 40 100 80 50 40 60 80 140 240]
+#
+#                          and so on and so forth...
+#
+# **LCHuv**             Indicates an **LCHuv** color model (a cylindrical rappresentation of the **Luv** color model), where *L* is the
+#                       *lightness*, *C* is the *chroma* and *Huv* is the *hue*.
+#                       They must be provided as a list with at least 3 elements. Each elements must be a floating point value that indicates
+#                       their channel values (in order, the *L*, *u* and *v* values for each color).
+#
+#                       The *L* channel ranges from [0,100.0], the *C* channel ranges from [0,260.76809620810593] and the *Huv* channel ranges
+#                       from [0,360.0[, with **360.0** not included.
+#
+#                       Examples:
+#
+#                          One input **LCHab** color:
+#                             color  --> L 40, C 100, Hab 80
+#                             Input  --> [list 40 100 80]
+#
+#                          Two input **LCHab** colors:
+#                             color1 --> L 40, C 100, Hab 80
+#                             color2 --> L 50, C 40,  Hab 60
+#                             Input  --> [list 40 100 80 50 40 60]
+#
+#                          Three input **LCHab** colors:
+#                             color1 --> L 40, C 100, Hab 80
+#                             color2 --> L 50, C 40,  Hab 60
+#                             color3 --> L 80, C 140, Hab 240
+#                             Input  --> [list 40 100 80 50 40 60 80 140 240]
+#
+#                          and so on and so forth...
 package provide ::ms::color 0.1
 
 # Create the mustang **color** package.
@@ -637,24 +1098,22 @@ proc ::ms::color::Command { args } {
         ""  { ::ms::Error "Missing action." $caller_info }
     }
 
-    # Set some default values.
-    set amount   1
-    set depth    $::ms::colordepth
-    set severity 100
-    set tempK    6500
-
     # Separate the 'action' from the actual 'args'.
     set action [lindex  $args 0]
     set args   [lremove $args 0]
     switch -- $action {
         balance {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+            set tempK 6500
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   -
                 5   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -689,27 +1148,29 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Balance $HEXs $tempK $depth]
+            return [::ms::color::Balance $hexadecimals $tempK $depth]
         }
         bw  {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   {
-                    set hexadecimals [lindex $args 0]
-                    set option       [lindex $args 1]
-                    set value        [lindex $args 2]
+                    set colors [lindex $args 0]
+                    set option [lindex $args 1]
+                    set value  [lindex $args 2]
 
                     # Check the 'option' provided.
                     switch -- $option {
@@ -728,174 +1189,30 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::BW $HEXs $depth]
+            return [::ms::color::BW $hexadecimals $depth]
         }
-        complement {
+        cold {
+            # Set the default options for this action.
+            set amount 1
+            set depth  $::ms::colordepth
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
-                3   {
-                    set hexadecimals [lindex $args 0]
-                    set option       [lindex $args 1]
-                    set value        [lindex $args 2]
-
-                    # Check the 'option' provided.
-                    switch -- $option {
-                        -depth  {}
-                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
-                    }
-
-                    # Check the 'value' provided.
-                    switch -- $value {
-                        8       -
-                        12      -
-                        16      { set depth $value }
-                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
-                switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
-                }
-            }
-
-            # Execute the command.
-            return [::ms::color::Complement $HEXs $depth]
-        }
-        contrast {
-            # Check the number of 'args' provided.
-            switch -- [llength $args] {
-                2   {
-                    set color1 [lindex $args 0]
-                    set color2 [lindex $args 1]
-                }
-                4   {
-                    set color1 [lindex $args 0]
-                    set color2 [lindex $args 1]
-                    set option [lindex $args 2]
-                    set value  [lindex $args 3]
-
-                    # Check the 'option' provided.
-                    switch -- $option {
-                        -depth  {}
-                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
-                    }
-
-                    # Check the 'value' provided.
-                    switch -- $value {
-                        8       -
-                        12      -
-                        16      { set depth $value }
-                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Check the 'hexadecimals' provided.
-            set hex1 [::ms::Check_Hex $color1 [string cat "HEX" $depth] invalid]
-            switch -- $result {
-                invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
-            }
-
-            set hex2 [::ms::Check_Hex $color2 [string cat "HEX" $depth] invalid]
-            switch -- $result {
-                invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
-            }
-
-            # Execute the command.
-            return [::ms::color::Contrast $hex1 $hex2 $depth]
-        }
-        convert {
-            # Check the number of 'args' provided.
-            switch -- [llength $args] {
+                1   { set colors $args }
+                3   -
                 5   {
                     set colors [lindex  $args 0]
                     set args   [lremove $args 0]
-
-                    # Check the 'args' provided.
-                    foreach { option value } $args {
-                        switch -- $option {
-                            -from {
-                                switch -- $value {
-                                    HEX8    -
-                                    HEX12   -
-                                    HEX16   -
-                                    RGB8    -
-                                    RGB12   -
-                                    RGB16   -
-                                    rgb     -
-                                    HSB     -
-                                    HSI     -
-                                    HSL     -
-                                    HSP     -
-                                    XYZ     -
-                                    xyY     -
-                                    Lab     -
-                                    Luv     -
-                                    LCHab   -
-                                    LCHuv   { set from $value }
-                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
-                                }
-                            }
-                            -to {
-                                switch -- $value {
-                                    HEX8    -
-                                    HEX12   -
-                                    HEX16   -
-                                    RGB8    -
-                                    RGB12   -
-                                    RGB16   -
-                                    rgb     -
-                                    HSB     -
-                                    HSI     -
-                                    HSL     -
-                                    HSP     -
-                                    XYZ     -
-                                    xyY     -
-                                    Lab     -
-                                    Luv     -
-                                    LCHab   -
-                                    LCHuv   { set to $value }
-                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
-                                }
-                            }
-                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
-                        }
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Execute the command.
-            return [::ms::color::Convert $colors $from $to $caller_info]
-        }
-        cooldown {
-            # Check the number of 'args' provided.
-            switch -- [llength $args] {
-                1   { set hexadecimals $args }
-                3   -
-                5   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -928,31 +1245,189 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Cooldown $HEXs $amount $depth]
+            return [::ms::color::Cold $hexadecimals $amount $depth]
         }
-        darken {
-            # Set the default 'via' for this action.
-            set via Lab
+        complement {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
 
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
+                3   {
+                    set colors [lindex $args 0]
+                    set option [lindex $args 1]
+                    set value  [lindex $args 2]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Complement $hexadecimals $depth]
+        }
+        contrast {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                2   {
+                    set color1 [lindex $args 0]
+                    set color2 [lindex $args 1]
+                }
+                4   {
+                    set color1 [lindex $args 0]
+                    set color2 [lindex $args 1]
+                    set option [lindex $args 2]
+                    set value  [lindex $args 3]
+
+                    # Check the 'option' provided.
+                    switch -- $option {
+                        -depth  {}
+                        default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                    }
+
+                    # Check the 'value' provided.
+                    switch -- $value {
+                        8       -
+                        12      -
+                        16      { set depth $value }
+                        default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'color1' provided.
+            set hex1 [::ms::Check_Hex $color1 [string cat "HEX" $depth] invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
+            }
+
+            # Check the 'color2' provided.
+            set hex2 [::ms::Check_Hex $color2 [string cat "HEX" $depth] invalid]
+            switch -- $result {
+                invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
+            }
+
+            # Execute the command.
+            return [::ms::color::Contrast $hex1 $hex2 $depth]
+        }
+        convert {
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                5   {
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -from {
+                                switch -- $value {
+                                    HEX     -
+                                    HEX8    { set from HEX8 }
+                                    RGB     -
+                                    RGB8    { set from RGB8 }
+                                    HEX12   -
+                                    HEX16   -
+                                    RGB12   -
+                                    RGB16   -
+                                    rgb     -
+                                    HSB     -
+                                    HSI     -
+                                    HSL     -
+                                    HSP     -
+                                    XYZ     -
+                                    xyY     -
+                                    Lab     -
+                                    Luv     -
+                                    LCHab   -
+                                    LCHuv   { set from $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            -to {
+                                switch -- $value {
+                                    HEX     -
+                                    HEX8    { set from HEX8 }
+                                    RGB     -
+                                    RGB8    { set from RGB8 }
+                                    HEX12   -
+                                    HEX16   -
+                                    RGB12   -
+                                    RGB16   -
+                                    rgb     -
+                                    HSB     -
+                                    HSI     -
+                                    HSL     -
+                                    HSP     -
+                                    XYZ     -
+                                    xyY     -
+                                    Lab     -
+                                    Luv     -
+                                    LCHab   -
+                                    LCHuv   { set from $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Execute the command.
+            return [::ms::color::Convert $colors $from $to $caller_info]
+        }
+        dark {
+            # Set the default options for this action.
+            set amount 1
+            set depth  $::ms::colordepth
+            set via    Lab
+
+            # Check the number of 'args' provided.
+            switch -- [llength $args] {
+                1   { set colors $args }
                 3   -
                 5   -
                 7   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -996,31 +1471,31 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Darken $HEXs $amount $via $depth]
+            return [::ms::color::Dark $hexadecimals $amount $via $depth]
         }
         deficiency {
-            # Set the default 'via' for this action.
-            set via achromatic
+            # Set the default options for this action.
+            set severity 1
+            set via      achromatic
 
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   -
                 5   -
                 7   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -1068,31 +1543,32 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Deficiency $HEXs $severity $via $depth]
+            return [::ms::color::Deficiency $hexadecimals $via $severity $depth]
         }
         desaturate {
-            # Set the default 'via' for this action.
-            set via HSB
+            # Set the default options for this action.
+            set amount 1
+            set depth  $::ms::colordepth
+            set via    HSB
 
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   -
                 5   -
                 7   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -1134,27 +1610,29 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Desaturate $HEXs $amount $via $depth]
+            return [::ms::color::Desaturate $hexadecimals $amount $via $depth]
         }
         family {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   {
-                    set hexadecimals [lindex $args 0]
-                    set option       [lindex $args 1]
-                    set value        [lindex $args 2]
+                    set colors [lindex $args 0]
+                    set option [lindex $args 1]
+                    set value  [lindex $args 2]
 
                     # Check the 'option' provided.
                     switch -- $option {
@@ -1173,31 +1651,31 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Family $HEXs $depth]
+            return [::ms::color::Family $hexadecimals $depth]
         }
         gray -
         grey {
-            # Set the default 'via' for this action.
-            set via hevc
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+            set via   hevc
 
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   -
                 5   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -1230,27 +1708,84 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Gray $HEXs $via $depth]
+            return [::ms::color::Gray $hexadecimals $via $depth]
+        }
+        hot {
+            # Set the default options for this action.
+            set amount 1
+            set depth  $::ms::colordepth
+
+            switch -- [llength $args] {
+                1   { set colors $args }
+                3   -
+                5   {
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
+
+                    # Check the 'args' provided.
+                    foreach { option value } $args {
+                        switch -- $option {
+                            -amount {
+                                set amount [string trimright $value %]
+                                switch -- [string is double -strict $amount] {
+                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                    1   {
+                                        if { $amount < 0 } {
+                                            set amount 0
+                                        } elseif { $amount > 100.0 } {
+                                            set amount 100.0
+                                        }
+                                    }
+                                }
+                            }
+                            -depth {
+                                switch -- $value {
+                                    8       -
+                                    12      -
+                                    16      { set depth $value }
+                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
+                                }
+                            }
+                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
+                        }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
+                switch -- $result {
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
+                }
+            }
+
+            # Execute the command.
+            return [::ms::color::Hot $hexadecimals $amount $depth]
         }
         inverse {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   {
-                    set hexadecimals [lindex $args 0]
-                    set option       [lindex $args 1]
-                    set value        [lindex $args 2]
+                    set colors [lindex $args 0]
+                    set option [lindex $args 1]
+                    set value  [lindex $args 2]
 
                     # Check the 'option' provided.
                     switch -- $option {
@@ -1269,31 +1804,32 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Inverse $HEXs $depth]
+            return [::ms::color::Inverse $hexadecimals $depth]
         }
-        lighten {
-            # Set the default 'via' for this action.
-            set via Lab
+        light {
+            # Set the default options for this action.
+            set amount 1
+            set depth  $::ms::colordepth
+            set via    Lab
 
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   -
                 5   -
                 7   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -1337,17 +1873,16 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
-            return [::ms::color::Lighten $HEXs $amount $via $depth]
+            return [::ms::color::Light $hexadecimals $amount $via $depth]
         }
         list {
             # Check the number of 'args' provided.
@@ -1395,17 +1930,19 @@ proc ::ms::color::Command { args } {
             return [lsort -dictionary -increasing -unique $::ms::palette($palette_name,$family,colornames)]
         }
         saturate {
-            # Set the default 'via' for this action.
-            set via HSB
+            # Set the default options for this action.
+            set amount 1
+            set depth  $::ms::colordepth
+            set via    HSB
 
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   -
                 5   -
                 7   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
+                    set colors [lindex  $args 0]
+                    set args   [lremove $args 0]
 
                     # Check the 'args' provided.
                     foreach { option value } $args {
@@ -1447,72 +1984,22 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Execute the command.
-            return [::ms::color::Saturate $HEXs $amount $via $depth]
-        }
-        warmup {
-            switch -- [llength $args] {
-                1   { set hexadecimals $args }
-                3   -
-                5   {
-                    set hexadecimals [lindex  $args 0]
-                    set args         [lremove $args 0]
-
-                    # Check the 'args' provided.
-                    foreach { option value } $args {
-                        switch -- $option {
-                            -amount {
-                                set amount [string trimright $value %]
-                                switch -- [string is double -strict $amount] {
-                                    0   { ::ms::Error "Invalid value, '$value'." $caller_info }
-                                    1   {
-                                        if { $amount < 0 } {
-                                            set amount 0
-                                        } elseif { $amount > 100.0 } {
-                                            set amount 100.0
-                                        }
-                                    }
-                                }
-                            }
-                            -depth {
-                                switch -- $value {
-                                    8       -
-                                    12      -
-                                    16      { set depth $value }
-                                    default { ::ms::Error "Invalid value, '$value'." $caller_info }
-                                }
-                            }
-                            default { ::ms::Error "Invalid option, '$option'." $caller_info }
-                        }
-                    }
-                }
-                default { ::ms::Error "Invalid number of arguments." $caller_info }
-            }
-
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
-                switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
-                }
-            }
-
-            # Execute the command.
-            return [::ms::color::Warmup $HEXs $amount $depth]
+            return [::ms::color::Saturate $hexadecimals $amount $via $depth]
         }
         wcga2.0 {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
                 2   {
@@ -1542,12 +2029,13 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
+            # Check the 'color1' provided.
             set hex1 [::ms::Check_Hex $color1 [string cat "HEX" $depth] invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid color, '$color1'." $caller_info }
             }
 
+            # Check the 'color2' provided.
             set hex2 [::ms::Check_Hex $color2 [string cat "HEX" $depth] invalid]
             switch -- $result {
                 invalid { ::ms::Error "Invalid color, '$color2'." $caller_info }
@@ -1581,13 +2069,16 @@ proc ::ms::color::Command { args } {
             }
         }
         websafe {
+            # Set the default options for this action.
+            set depth $::ms::colordepth
+
             # Check the number of 'args' provided.
             switch -- [llength $args] {
-                1   { set hexadecimals $args }
+                1   { set colors $args }
                 3   {
-                    set hexadecimals [lindex $args 0]
-                    set option       [lindex $args 1]
-                    set value        [lindex $args 2]
+                    set colors [lindex $args 0]
+                    set option [lindex $args 1]
+                    set value  [lindex $args 2]
 
                     # Check the 'option' provided.
                     switch -- $option {
@@ -1606,17 +2097,16 @@ proc ::ms::color::Command { args } {
                 default { ::ms::Error "Invalid number of arguments." $caller_info }
             }
 
-            # Check the 'hexadecimals' provided.
-            set HEXs [list ]
-            foreach hexadecimal $hexadecimals {
-                set result [::ms::Check_Hex $hexadecimal [string cat "HEX" $depth] invalid]
+            # Check the 'colors' provided.
+            foreach color $colors {
+                set result [::ms::Check_Hex $color [string cat "HEX" $depth] invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
-            return [::ms::color::Websafe $HEXs $depth]
+            return [::ms::color::Websafe $hexadecimals $depth]
         }
         default { ::ms::Error "Invalid action, '$action'." $caller_info }
     }
@@ -1624,29 +2114,29 @@ proc ::ms::color::Command { args } {
 
 ## Balance
 #
-# Compute the hexadecimals balanced color/s (for the temperature provided) relative to the color/s provided.
+# Compute a balanced version (by *tempK*) of the colors provided.
 #
 # Where:
 #
-# HEXs    Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# tempK   Should be an integer [1000-27000] indicating the balancing temperature.
-#         *tempK* must be provided in Kelvins.
+# tempK          Should be an integer [1000-27000] indicating the balancing temperature.
+#                *tempK* must be provided in Kelvins.
 #
-# depth   Should be an integer specifing the color depth in which the color/s provided are defined.
-#         Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals balanced color/s (for the temperature provided) relative to the color/s provided.
-proc ::ms::color::Balance { HEXs tempK depth } {
-    # Transform the hexadecimal color/s (at whichever depth provided) into RGB color/s at 8 bit.
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Balance { hexadecimals tempK depth } {
+    # Transform the hexadecimal colors (at whichever depth provided) into RGB8 colors.
     switch -- $depth {
-        8   { set channels [::HEX8_RGB8  $HEXs] }
-        12  { set channels [::RGB12_RGB8 [::HEX12_RGB12 $HEXs]] }
-        16  { set channels [::RGB16_RGB8 [::HEX16_RGB16 $HEXs]] }
+        8   { set channels [::HEX8_RGB8  $hexadecimals] }
+        12  { set channels [::RGB12_RGB8 [::HEX12_RGB12 $hexadecimals]] }
+        16  { set channels [::RGB16_RGB8 [::HEX16_RGB16 $hexadecimals]] }
     }
 
     # Get the RGB channels equivalent for the temperature provided.
-    set tempK [expr {$tempK*0.01}]
+    set tempK [expr { $tempK*0.01 }]
     if { $tempK <= 66.0 } {
         set temp_red 255
     } else {
@@ -1668,7 +2158,7 @@ proc ::ms::color::Balance { HEXs tempK depth } {
     }
 
     # Note:  In theory instead of '1' we should use '0' but then,
-    #        when we will divide for the temp_channel, we will have a problem.
+    #        when we will divide for the 'temp' channel we will have a problem.
 
     # Adjust the temperature RGB value if exceeds its limits [1,255].
     if { $temp_red < 1 } {
@@ -1690,7 +2180,6 @@ proc ::ms::color::Balance { HEXs tempK depth } {
     }
 
     # Execute the command.
-    set results [list ]
     foreach { red green blue } $channels {
         # | 255.0/temp_red  0                 0               |   | red   |   | balanced_red   |
         # | 0               255.0/temp_green  0               | * | green | = | balanced_green |
@@ -1716,8 +2205,8 @@ proc ::ms::color::Balance { HEXs tempK depth } {
         lappend results $balanced_red $balanced_green $balanced_blue
     }
 
-    # Transform the balanced RGB channel/s at 8 bit back into hexadecimal color/s
-    # with the same depth as the color/s provided.
+    # Transform the balanced RGB8 channels back into hexadecimal colors
+    # with the same depth as the colors provided.
     switch -- $depth {
         8   { return [::RGB8_HEX8   $results] }
         12  { return [::RGB12_HEX12 [::RGB8_RGB12 $results]] }
@@ -1727,26 +2216,26 @@ proc ::ms::color::Balance { HEXs tempK depth } {
 
 ## BW
 #
-# Compute which color (between **black** or **white**) has more contrast with the color/s provided.
+# Compute, for each color provided, which color between **black** and **white** has more contrast with it.
 #
 # Where:
 #
-# HEXs    Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# depth   Should be an integer specifing the color depth in which the color/s provided are defined.
-#         Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the words **black** or **white**, depending which one has more contrast with the relative color provided.
-proc ::ms::color::BW { HEXs depth } {
-    # Transform the hexadecimal color/s provided into rgb color/s [0,1.0].
+# Returns a list in which each index element is the color **black** or **white**, depending on which one of
+# these two colors has the greatest contrast with the same indexed element provided.
+proc ::ms::color::BW { hexadecimals depth } {
+    # Transform the hexadecimal colors provided into rgb colors [0,1.0].
     switch -- $depth {
-        8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
-        12  { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
-        16  { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
+        8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]] }
+        12  { set channels [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]] }
+        16  { set channels [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]] }
     }
 
     # Execute the command.
-    set results [list ]
     foreach { r g b } $channels {
         # Trasform the *non-linear* rgb value into a *linear* rgb one.
         set r_linear [::companding $r inverse]
@@ -1770,41 +2259,118 @@ proc ::ms::color::BW { HEXs depth } {
     return $results
 }
 
-## Complement
+## Cold
 #
-# Compute the hexadecimals complement color/s relative to the color/s provided.
+# Compute a colder version (by *amount*) of the colors provided.
 #
 # Where:
 #
-# HEXs    Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# depth   Should be an integer specifing the color depth in which the color/s provided are defined.
-#         Allowed values are **8**, **12** or **16**.
+# amount         Should be a floating point value specifing the amount of heat to subtract [0,100].
+#                This amount is evaluated as a percentage.
 #
-# Returns a list containing the hexadecimals complements relative to the color/s provided.
-proc ::ms::color::Complement { HEXs depth } {
-    # Transform the hexadecimal color/s provided into RGB color/s.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
+#
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Cold { hexadecimals amount depth } {
+    # Check the color 'depth' provided.
     switch -- $depth {
-        8   { set channels [::HEX8_RGB8   $HEXs] }
-        12  { set channels [::HEX12_RGB12 $HEXs] }
-        16  { set channels [::HEX16_RGB16 $HEXs] }
+        8   {
+            # Set the maximum value for every channel.
+            set upper_limit 255
+
+            # Transform the amount from [0,100] to [0,255].
+            set amount [expr { round($amount*2.55) }]
+
+            # Transform the hexadecimal colors provided into RGB8 colors.
+            set channels [::HEX8_RGB8 $hexadecimals]
+        }
+        12  {
+            # Set the maximum value for every channel.
+            set upper_limit 4095
+
+            # Transform the amount from [0,100] to [0,4095].
+            set amount [expr { round($amount*40.95) }]
+
+            # Transform the hexadecimal colors provided into RGB12 colors.
+            set channels [::HEX12_RGB12 $hexadecimals]
+        }
+        16  {
+            # Set the maximum value for every channel.
+            set upper_limit 65535
+
+            # Transform the amount from [0,100] to [0,65535].
+            set amount [expr { round($amount*655.35) }]
+
+            # Transform the hexadecimal colors provided into RGB16 colors.
+            set channels [::HEX16_RGB16 $hexadecimals]
+        }
     }
 
     # Execute the command.
-    set results [list ]
+    foreach { red green blue } $channels {
+        set red  [expr { $red-$amount  }]
+        set blue [expr { $blue+$amount }]
+
+        # Check that the 'red' channel doesn't exceeds its lower limit.
+        if { $red < 0 } {
+            set red 0
+        }
+
+        # Check that the 'blue' channel doesn't exceeds its upper limit.
+        if { $blue > $upper_limit } {
+            set blue $upper_limit
+        }
+
+        lappend results $red $green $blue
+    }
+
+    # Transform the resulting RGB colors back into hexadecimal colors
+    # with the same color depth of the hexadecimal colors provided.
+    switch -- $depth {
+        8   { return [::RGB8_HEX8   $results] }
+        12  { return [::RGB12_HEX12 $results] }
+        16  { return [::RGB16_HEX16 $results] }
+    }
+}
+
+## Complement
+#
+# Compute the complement colors of the colors provided.
+#
+# Where:
+#
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
+#
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
+#
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Complement { hexadecimals depth } {
+    # Transform the hexadecimal colors provided into RGB colors.
+    switch -- $depth {
+        8   { set channels [::HEX8_RGB8   $hexadecimals] }
+        12  { set channels [::HEX12_RGB12 $hexadecimals] }
+        16  { set channels [::HEX16_RGB16 $hexadecimals] }
+    }
+
+    # Execute the command.
     foreach { red green blue } $channels {
         set min [expr { min($red,$green,$blue) }]
         set max [expr { max($red,$green,$blue) }]
         set sum [expr { $min+$max }]
 
-        set red   [expr { $sum-$red }]
+        set red   [expr { $sum-$red   }]
         set green [expr { $sum-$green }]
-        set blue  [expr { $sum-$blue }]
+        set blue  [expr { $sum-$blue  }]
 
         lappend results $red $green $blue
     }
 
-    # Transform the resulting RGB color/s back into hexadecimal color/s.
+    # Transform the resulting RGB colors back into hexadecimal colors
+    # with the same color depth of the hexadecimal colors provided.
     switch -- $depth {
         8   { return [::RGB8_HEX8   $results] }
         12  { return [::RGB12_HEX12 $results] }
@@ -1818,18 +2384,16 @@ proc ::ms::color::Complement { HEXs depth } {
 #
 # Where:
 #
-# color1   Should be the first hexadecimal color that will be involved in the process.
-#          This color will be processed as the 'background' color.
+# hex1    Should be an hexadecimal color expressed in its longform.
 #
-# color2   Should be the second hexadecimal color that will be involved in the process.
-#          This color will be processed as the 'foreground' color.
+# hex2    Should be an hexadecimal color expressed in its longform.
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth   Should be an integer specifing the color depth in which the colors provided are defined.
+#         Allowed values are **8**, **12** or **16**.
 #
-# Returns the contrast value [0,21] between the two colors provided.
-proc ::ms::color::Contrast { color1 color2 depth } {
-    # Transform the hexadecimal color/s into rgb colors [0,1.0].
+# Returns the contrast value [0,21].
+proc ::ms::color::Contrast { hex1 hex2 depth } {
+    # Transform the hexadecimal colors into rgb colors [0,1.0].
     switch -- $depth {
         8   {
             set rgb1 [::RGB8_rgb  [::HEX8_RGB8   $hex1]]
@@ -1845,13 +2409,14 @@ proc ::ms::color::Contrast { color1 color2 depth } {
         }
     }
 
-    # Trasform the *non-linear* rgb values into a *linear* rgb ones.
+    # Trasform the *non-linear* rgb1 values into a *linear* rgb1 ones.
     foreach { r1 g1 b1 } $rgb1 {
         set r1_linear [::companding $r1 inverse]
         set g1_linear [::companding $g1 inverse]
         set b1_linear [::companding $b1 inverse]
     }
 
+    # Trasform the *non-linear* rgb2 values into a *linear* rgb2 ones.
     foreach { r2 g2 b2 } $rgb2 {
         set r2_linear [::companding $r2 inverse]
         set g2_linear [::companding $g2 inverse]
@@ -1880,169 +2445,129 @@ proc ::ms::color::Contrast { color1 color2 depth } {
 
 ## Convert
 #
-# Covert the color/s provided from one colormodel to another.
+# Covert the colors provided from one colormodel to another.
 #
 # Where:
 #
-# colors        Should be a list containing all the colors to process, exspressed in the 'from' colormodel format.
+# colors        Should be a list containing all the colors to convert.
 #
-# from          Should be a string indicating the colormodel format of the 'colors' provided.
-#               Allowed colormodels are:
-#
-#                  **HEX8**
-#                  **HEX12**
-#                  **HEX16**
-#                  **RGB8**
-#                  **RGB12**
-#                  **RGB16**
-#                  **rgb**
-#                  **HSB**
-#                  **HSI**
-#                  **HSL**
-#                  **HSP**
-#                  **HWB**
-#                  **XYZ**
-#                  **xyY**
-#                  **Lab**
-#                  **Luv**
-#                  **LCHab**
-#                  **LCHuv**
+# from          Should be a string indicating the colormodel format of the **colors** provided.
+#               Allowed colormodels are every colormodel known by mustang.
+#               See **MUSTANG SUPPORTED COLORMODELS** for more info.
 #
 # to            Should be a string indicating the colormodel format of the resulting colors.
-#               Allowed colormodels are:
-#
-#                  **HEX8**
-#                  **HEX12**
-#                  **HEX16**
-#                  **RGB8**
-#                  **RGB12**
-#                  **RGB16**
-#                  **rgb**
-#                  **HSB**
-#                  **HSI**
-#                  **HSL**
-#                  **HSP**
-#                  **HWB**
-#                  **XYZ**
-#                  **xyY**
-#                  **Lab**
-#                  **Luv**
-#                  **LCHab**
-#                  **LCHuv**
+#               Allowed colormodels are every colormodel known by mustang.
+#               See **MUSTANG SUPPORTED COLORMODELS** for more info.
 #
 # caller_info   Optional, should be the information upon the location of the command that generated the error.
 #
 #               If not provided, defaults to an empty string, meaning it will not provided any information
 #               on the command that generated the error.
 #
-# Returns a list containing the resulting colors expressed in the 'to' colormodel format.
+# Returns a list containing the resulting colors expressed in the **to** colormodel format.
 proc ::ms::color::Convert { colors from to { caller_info "" } } {
     # Check the 'from' option.
     switch -- $from {
         HEX8 {
             # Check the 'colors' provided.
-            set HEXs [list ]
-            foreach hexadecimal $colors {
-                set result [::ms::Check_Hex $hexadecimal HEX8 invalid]
+            foreach color $colors {
+                set result [::ms::Check_Hex $color HEX8 invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return $HEXs }
-                HEX12 { return [::HEX8_HEX12 $HEXs] }
-                HEX16 { return [::HEX8_HEX16 $HEXs] }
-                RGB8  { return [::HEX8_RGB8  $HEXs] }
-                RGB12 { return [::RGB8_RGB12 [::HEX8_RGB8 $HEXs]] }
-                RGB16 { return [::RGB8_RGB16 [::HEX8_RGB8 $HEXs]] }
-                rgb   { return [::RGB8_rgb   [::HEX8_RGB8 $HEXs]] }
-                HSB   { return [::rgb_HSB    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
-                HSI   { return [::rgb_HSI    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
-                HSL   { return [::rgb_HSL    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
-                HSP   { return [::rgb_HSP    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
-                HWB   { return [::rgb_HWB    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
-                XYZ   { return [::rgb_XYZ    [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]] }
-                xyY   { return [::XYZ_xyY    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]] }
-                Lab   { return [::XYZ_Lab    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]] }
-                Luv   { return [::XYZ_Luv    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]] }
-                LCHab { return [::Lab_LCHab  [::XYZ_Lab   [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]]] }
-                LCHuv { return [::Luv_LCHuv  [::XYZ_Luv   [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $HEXs]]]]] }
+                HEX8  { return $hexadecimals }
+                HEX12 { return [::HEX8_HEX12 $hexadecimals] }
+                HEX16 { return [::HEX8_HEX16 $hexadecimals] }
+                RGB8  { return [::HEX8_RGB8  $hexadecimals] }
+                RGB12 { return [::RGB8_RGB12 [::HEX8_RGB8 $hexadecimals]] }
+                RGB16 { return [::RGB8_RGB16 [::HEX8_RGB8 $hexadecimals]] }
+                rgb   { return [::RGB8_rgb   [::HEX8_RGB8 $hexadecimals]] }
+                HSB   { return [::rgb_HSB    [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]] }
+                HSI   { return [::rgb_HSI    [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]] }
+                HSL   { return [::rgb_HSL    [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]] }
+                HSP   { return [::rgb_HSP    [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]] }
+                HWB   { return [::rgb_HWB    [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]] }
+                XYZ   { return [::rgb_XYZ    [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]] }
+                xyY   { return [::XYZ_xyY    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]]] }
+                Lab   { return [::XYZ_Lab    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]]] }
+                Luv   { return [::XYZ_Luv    [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]]] }
+                LCHab { return [::Lab_LCHab  [::XYZ_Lab   [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]]]] }
+                LCHuv { return [::Luv_LCHuv  [::XYZ_Luv   [::rgb_XYZ   [::RGB8_rgb  [::HEX8_RGB8 $hexadecimals]]]]] }
             }
         }
         HEX12 {
             # Check the 'colors' provided.
-            set HEXs [list ]
-            foreach hexadecimal $colors {
-                set result [::ms::Check_Hex $hexadecimal HEX12 invalid]
+            foreach color $colors {
+                set result [::ms::Check_Hex $color HEX12 invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::HEX12_HEX8  $HEXs] }
-                HEX12 { return $HEXs }
-                HEX16 { return [::HEX12_HEX16 $HEXs] }
-                RGB8  { return [::RGB12_RGB8  [::HEX12_RGB12 $HEXs]] }
-                RGB12 { return [::HEX12_RGB12 $HEXs] }
-                RGB16 { return [::RGB12_RGB16 [::HEX12_RGB12 $HEXs]] }
-                rgb   { return [::RGB12_rgb   [::HEX12_RGB12 $HEXs]] }
-                HSB   { return [::rgb_HSB     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
-                HSI   { return [::rgb_HSI     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
-                HSL   { return [::rgb_HSL     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
-                HSP   { return [::rgb_HSP     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
-                HWB   { return [::rgb_HWB     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
-                XYZ   { return [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $HEXs]]]]] }
+                HEX8  { return [::HEX12_HEX8  $hexadecimals] }
+                HEX12 { return $hexadecimals }
+                HEX16 { return [::HEX12_HEX16 $hexadecimals] }
+                RGB8  { return [::RGB12_RGB8  [::HEX12_RGB12 $hexadecimals]] }
+                RGB12 { return [::HEX12_RGB12 $hexadecimals] }
+                RGB16 { return [::RGB12_RGB16 [::HEX12_RGB12 $hexadecimals]] }
+                rgb   { return [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]] }
+                HSB   { return [::rgb_HSB     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]] }
+                HSI   { return [::rgb_HSI     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]] }
+                HSL   { return [::rgb_HSL     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]] }
+                HSP   { return [::rgb_HSP     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]] }
+                HWB   { return [::rgb_HWB     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]] }
+                XYZ   { return [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb   [::HEX12_RGB12 $hexadecimals]]]]] }
             }
         }
         HEX16 {
             # Check the 'colors' provided.
-            set HEXs [list ]
-            foreach hexadecimal $colors {
-                set result [::ms::Check_Hex $hexadecimal HEX16 invalid]
+            foreach color $colors {
+                set result [::ms::Check_Hex $color HEX16 invalid]
                 switch -- $result {
-                    invalid { ::ms::Error "Invalid color, '$hexadecimal'." $caller_info }
-                    default { lappend HEXs $hexadecimal }
+                    invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    default { lappend hexadecimals $color }
                 }
             }
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::HEX16_HEX8  $HEXs] }
-                HEX12 { return [::HEX16_HEX12 $HEXs] }
-                HEX16 { return $HEXs }
-                RGB8  { return [::RGB16_RGB8  [::HEX16_RGB16 $HEXs]] }
-                RGB12 { return [::RGB16_RGB12 [::HEX16_RGB16 $HEXs]] }
-                RGB16 { return [::HEX16_RGB16 $HEXs] }
-                rgb   { return [::RGB16_rgb   [::HEX16_RGB16 $HEXs]] }
-                HSB   { return [::rgb_HSB     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
-                HSI   { return [::rgb_HSI     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
-                HSL   { return [::rgb_HSL     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
-                HSP   { return [::rgb_HSP     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
-                HWB   { return [::rgb_HWB     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
-                XYZ   { return [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $HEXs]]]]] }
+                HEX8  { return [::HEX16_HEX8  $hexadecimals] }
+                HEX12 { return [::HEX16_HEX12 $hexadecimals] }
+                HEX16 { return $hexadecimals }
+                RGB8  { return [::RGB16_RGB8  [::HEX16_RGB16 $hexadecimals]] }
+                RGB12 { return [::RGB16_RGB12 [::HEX16_RGB16 $hexadecimals]] }
+                RGB16 { return [::HEX16_RGB16 $hexadecimals] }
+                rgb   { return [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]] }
+                HSB   { return [::rgb_HSB     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]] }
+                HSI   { return [::rgb_HSI     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]] }
+                HSL   { return [::rgb_HSL     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]] }
+                HSP   { return [::rgb_HSP     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]] }
+                HWB   { return [::rgb_HWB     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]] }
+                XYZ   { return [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb   [::HEX16_RGB16 $hexadecimals]]]]] }
             }
         }
         RGB8 {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach channel $colors {
                         switch -- [string is integer -strict $channel] {
                             0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
@@ -2053,7 +2578,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                                     set channel 255
                                 }
 
-                                lappend channels $channel
+                                lappend RGB8 $channel
                             }
                         }
                     }
@@ -2063,31 +2588,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   $channels] }
-                HEX12 { return [::RGB12_HEX12 [::RGB8_RGB12 $channels]] }
-                HEX16 { return [::RGB16_HEX16 [::RGB8_RGB16 $channels]] }
-                RGB8  { return $channels }
-                RGB12 { return [::RGB8_RGB12  $channels] }
-                RGB16 { return [::RGB8_RGB16  $channels] }
-                rgb   { return [::RGB8_rgb    $channels] }
-                HSB   { return [::rgb_HSB     [::RGB8_rgb   $channels]] }
-                HSI   { return [::rgb_HSI     [::RGB8_rgb   $channels]] }
-                HSL   { return [::rgb_HSL     [::RGB8_rgb   $channels]] }
-                HSP   { return [::rgb_HSP     [::RGB8_rgb   $channels]] }
-                HWB   { return [::rgb_HWB     [::RGB8_rgb   $channels]] }
-                XYZ   { return [::rgb_XYZ     [::RGB8_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ    [::RGB8_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ    [::RGB8_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ    [::RGB8_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab    [::rgb_XYZ  [::RGB8_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv    [::rgb_XYZ  [::RGB8_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   $RGB8] }
+                HEX12 { return [::RGB12_HEX12 [::RGB8_RGB12 $RGB8]] }
+                HEX16 { return [::RGB16_HEX16 [::RGB8_RGB16 $RGB8]] }
+                RGB8  { return $RGB8 }
+                RGB12 { return [::RGB8_RGB12  $RGB8] }
+                RGB16 { return [::RGB8_RGB16  $RGB8] }
+                rgb   { return [::RGB8_rgb    $RGB8] }
+                HSB   { return [::rgb_HSB     [::RGB8_rgb   $RGB8]] }
+                HSI   { return [::rgb_HSI     [::RGB8_rgb   $RGB8]] }
+                HSL   { return [::rgb_HSL     [::RGB8_rgb   $RGB8]] }
+                HSP   { return [::rgb_HSP     [::RGB8_rgb   $RGB8]] }
+                HWB   { return [::rgb_HWB     [::RGB8_rgb   $RGB8]] }
+                XYZ   { return [::rgb_XYZ     [::RGB8_rgb   $RGB8]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ    [::RGB8_rgb $RGB8]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ    [::RGB8_rgb $RGB8]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ    [::RGB8_rgb $RGB8]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab    [::rgb_XYZ  [::RGB8_rgb $RGB8]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv    [::rgb_XYZ  [::RGB8_rgb $RGB8]]]] }
             }
         }
         RGB12 {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach channel $colors {
                         switch -- [string is integer -strict $channel] {
                             0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
@@ -2098,7 +2622,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                                     set channel 4095
                                 }
 
-                                lappend channels $channel
+                                lappend RGB12 $channel
                             }
                         }
                     }
@@ -2108,31 +2632,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::RGB12_RGB8  $channels]] }
-                HEX12 { return [::RGB12_HEX12 $channels] }
-                HEX16 { return [::RGB16_HEX16 [::RGB12_RGB16 $channels]] }
-                RGB8  { return [::RGB12_RGB8  $channels] }
-                RGB12 { return $channels }
-                RGB16 { return [::RGB12_RGB16 $channels] }
-                rgb   { return [::RGB12_rgb   $channels] }
-                HSB   { return [::rgb_HSB     [::RGB12_rgb   $channels]] }
-                HSI   { return [::rgb_HSI     [::RGB12_rgb   $channels]] }
-                HSL   { return [::rgb_HSL     [::RGB12_rgb   $channels]] }
-                HSP   { return [::rgb_HSP     [::RGB12_rgb   $channels]] }
-                HWB   { return [::rgb_HWB     [::RGB12_rgb   $channels]] }
-                XYZ   { return [::rgb_XYZ     [::RGB12_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB12_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ   [::RGB12_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ   [::RGB12_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::RGB12_RGB8  $RGB12]] }
+                HEX12 { return [::RGB12_HEX12 $RGB12] }
+                HEX16 { return [::RGB16_HEX16 [::RGB12_RGB16 $RGB12]] }
+                RGB8  { return [::RGB12_RGB8  $RGB12] }
+                RGB12 { return $RGB12 }
+                RGB16 { return [::RGB12_RGB16 $RGB12] }
+                rgb   { return [::RGB12_rgb   $RGB12] }
+                HSB   { return [::rgb_HSB     [::RGB12_rgb   $RGB12]] }
+                HSI   { return [::rgb_HSI     [::RGB12_rgb   $RGB12]] }
+                HSL   { return [::rgb_HSL     [::RGB12_rgb   $RGB12]] }
+                HSP   { return [::rgb_HSP     [::RGB12_rgb   $RGB12]] }
+                HWB   { return [::rgb_HWB     [::RGB12_rgb   $RGB12]] }
+                XYZ   { return [::rgb_XYZ     [::RGB12_rgb   $RGB12]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB12_rgb $RGB12]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB12_rgb $RGB12]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB12_rgb $RGB12]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ   [::RGB12_rgb $RGB12]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ   [::RGB12_rgb $RGB12]]]] }
             }
         }
         RGB16 {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach channel $colors {
                         switch -- [string is integer -strict $channel] {
                             0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
@@ -2143,7 +2666,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                                     set channel 65535
                                 }
 
-                                lappend channels $channel
+                                lappend RGB16 $channel
                             }
                         }
                     }
@@ -2153,31 +2676,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::RGB16_RGB8  $channels]] }
-                HEX12 { return [::RGB12_HEX12 [::RGB16_RGB12 $channels]] }
-                HEX16 { return [::RGB16_HEX16 $channels] }
-                RGB8  { return [::RGB16_RGB8  $channels] }
-                RGB12 { return [::RGB16_RGB12 $channels] }
-                RGB16 { return $channels }
-                rgb   { return [::RGB16_rgb   $channels] }
-                HSB   { return [::rgb_HSB     [::RGB16_rgb   $channels]] }
-                HSI   { return [::rgb_HSI     [::RGB16_rgb   $channels]] }
-                HSL   { return [::rgb_HSL     [::RGB16_rgb   $channels]] }
-                HSP   { return [::rgb_HSP     [::RGB16_rgb   $channels]] }
-                HWB   { return [::rgb_HWB     [::RGB16_rgb   $channels]] }
-                XYZ   { return [::rgb_XYZ     [::RGB16_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB16_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ   [::RGB16_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ   [::RGB16_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::RGB16_RGB8  $RGB16]] }
+                HEX12 { return [::RGB12_HEX12 [::RGB16_RGB12 $RGB16]] }
+                HEX16 { return [::RGB16_HEX16 $RGB16] }
+                RGB8  { return [::RGB16_RGB8  $RGB16] }
+                RGB12 { return [::RGB16_RGB12 $RGB16] }
+                RGB16 { return $RGB16 }
+                rgb   { return [::RGB16_rgb   $RGB16] }
+                HSB   { return [::rgb_HSB     [::RGB16_rgb   $RGB16]] }
+                HSI   { return [::rgb_HSI     [::RGB16_rgb   $RGB16]] }
+                HSL   { return [::rgb_HSL     [::RGB16_rgb   $RGB16]] }
+                HSP   { return [::rgb_HSP     [::RGB16_rgb   $RGB16]] }
+                HWB   { return [::rgb_HWB     [::RGB16_rgb   $RGB16]] }
+                XYZ   { return [::rgb_XYZ     [::RGB16_rgb   $RGB16]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ     [::RGB16_rgb $RGB16]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ     [::RGB16_rgb $RGB16]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ     [::RGB16_rgb $RGB16]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab     [::rgb_XYZ   [::RGB16_rgb $RGB16]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv     [::rgb_XYZ   [::RGB16_rgb $RGB16]]]] }
             }
         }
         rgb {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach channel $colors {
                         switch -- [string is integer -strict $channel] {
                             0       { ::ms::Error "Invalid color channel, '$channel'." $caller_info }
@@ -2188,7 +2710,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                                     set channel 1.0
                                 }
 
-                                lappend channels $channel
+                                lappend rgb $channel
                             }
                         }
                     }
@@ -2198,31 +2720,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  $channels]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 $channels]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 $channels]] }
-                RGB8  { return [::rgb_RGB8    $channels] }
-                RGB12 { return [::rgb_RGB12   $channels] }
-                RGB16 { return [::rgb_RGB16   $channels] }
-                rgb   { return $channels }
-                HSB   { return [::rgb_HSB     $channels] }
-                HSI   { return [::rgb_HSI     $channels] }
-                HSL   { return [::rgb_HSL     $channels] }
-                HSP   { return [::rgb_HSP     $channels] }
-                HWB   { return [::rgb_HWB     $channels] }
-                XYZ   { return [::rgb_XYZ     $channels] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ   $channels]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ   $channels]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ   $channels]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ $channels]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ $channels]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  $rgb]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 $rgb]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 $rgb]] }
+                RGB8  { return [::rgb_RGB8    $rgb] }
+                RGB12 { return [::rgb_RGB12   $rgb] }
+                RGB16 { return [::rgb_RGB16   $rgb] }
+                rgb   { return $rgb }
+                HSB   { return [::rgb_HSB     $rgb] }
+                HSI   { return [::rgb_HSI     $rgb] }
+                HSL   { return [::rgb_HSL     $rgb] }
+                HSP   { return [::rgb_HSP     $rgb] }
+                HWB   { return [::rgb_HWB     $rgb] }
+                XYZ   { return [::rgb_XYZ     $rgb] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   $rgb]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   $rgb]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   $rgb]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ $rgb]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ $rgb]]] }
             }
         }
         HSB {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { hue saturation brightness } $colors {
                         # Check the 'hue'.
                         switch -- [string is double -strict $hue] {
@@ -2258,7 +2779,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $hue $saturation $brightness
+                        lappend HSB $hue $saturation $brightness
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2266,31 +2787,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $channels]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $channels]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSB_rgb $channels]]] }
-                RGB8  { return [::rgb_RGB8    [::HSB_rgb   $channels]] }
-                RGB12 { return [::rgb_RGB12   [::HSB_rgb   $channels]] }
-                RGB16 { return [::rgb_RGB16   [::HSB_rgb   $channels]] }
-                rgb   { return [::HSB_rgb     $channels] }
-                HSB   { return $channels }
-                HSI   { return [::HSB_HSI     $channels] }
-                HSL   { return [::HSB_HSL     $channels] }
-                HSP   { return [::HSB_HSP     $channels] }
-                HWB   { return [::HSB_HWB     $channels] }
-                XYZ   { return [::rgb_XYZ     [::HSB_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSB_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSB_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSB_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSB_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSB_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $HSB]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $HSB]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSB_rgb $HSB]]] }
+                RGB8  { return [::rgb_RGB8    [::HSB_rgb   $HSB]] }
+                RGB12 { return [::rgb_RGB12   [::HSB_rgb   $HSB]] }
+                RGB16 { return [::rgb_RGB16   [::HSB_rgb   $HSB]] }
+                rgb   { return [::HSB_rgb     $HSB] }
+                HSB   { return $HSB }
+                HSI   { return [::HSB_HSI     $HSB] }
+                HSL   { return [::HSB_HSL     $HSB] }
+                HSP   { return [::HSB_HSP     $HSB] }
+                HWB   { return [::HSB_HWB     $HSB] }
+                XYZ   { return [::rgb_XYZ     [::HSB_rgb   $HSB]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSB_rgb $HSB]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSB_rgb $HSB]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSB_rgb $HSB]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSB_rgb $HSB]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSB_rgb $HSB]]]] }
             }
         }
         HSI {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { hue saturation intensity } $colors {
                         # Check the 'hue'.
                         switch -- [string is double -strict $hue] {
@@ -2326,7 +2846,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $hue $saturation $intensity
+                        lappend HSI $hue $saturation $intensity
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2334,31 +2854,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $channels]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $channels]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSI_rgb $channels]]] }
-                RGB8  { return [::rgb_RGB8    [::HSI_rgb   $channels]] }
-                RGB12 { return [::rgb_RGB12   [::HSI_rgb   $channels]] }
-                RGB16 { return [::rgb_RGB16   [::HSI_rgb   $channels]] }
-                rgb   { return [::HSI_rgb     $channels] }
-                HSB   { return [::HSI_HSB     $channels] }
-                HSI   { return $channels }
-                HSL   { return [::HSI_HSL     $channels] }
-                HSP   { return [::HSI_HSP     $channels] }
-                HWB   { return [::HSI_HWB     $channels] }
-                XYZ   { return [::rgb_XYZ     [::HSI_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSI_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSI_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSI_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSI_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSI_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $HSI]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $HSI]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSI_rgb $HSI]]] }
+                RGB8  { return [::rgb_RGB8    [::HSI_rgb   $HSI]] }
+                RGB12 { return [::rgb_RGB12   [::HSI_rgb   $HSI]] }
+                RGB16 { return [::rgb_RGB16   [::HSI_rgb   $HSI]] }
+                rgb   { return [::HSI_rgb     $HSI] }
+                HSB   { return [::HSI_HSB     $HSI] }
+                HSI   { return $HSI }
+                HSL   { return [::HSI_HSL     $HSI] }
+                HSP   { return [::HSI_HSP     $HSI] }
+                HWB   { return [::HSI_HWB     $HSI] }
+                XYZ   { return [::rgb_XYZ     [::HSI_rgb   $HSI]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSI_rgb $HSI]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSI_rgb $HSI]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSI_rgb $HSI]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSI_rgb $HSI]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSI_rgb $HSI]]]] }
             }
         }
         HSL {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { hue saturation lightness } $colors {
                         # Check the 'hue'.
                         switch -- [string is double -strict $hue] {
@@ -2394,7 +2913,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $hue $saturation $lightness
+                        lappend HSL $hue $saturation $lightness
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2402,31 +2921,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $channels]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $channels]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSL_rgb $channels]]] }
-                RGB8  { return [::rgb_RGB8    [::HSL_rgb   $channels]] }
-                RGB12 { return [::rgb_RGB12   [::HSL_rgb   $channels]] }
-                RGB16 { return [::rgb_RGB16   [::HSL_rgb   $channels]] }
-                rgb   { return [::HSL_rgb     $channels] }
-                HSB   { return [::HSL_HSB     $channels] }
-                HSI   { return [::HSL_HSI     $channels] }
-                HSL   { return $channels }
-                HSP   { return [::HSL_HSP     $channels] }
-                HWB   { return [::HSL_HWB     $channels] }
-                XYZ   { return [::rgb_XYZ     [::HSL_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSL_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSL_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSL_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSL_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSL_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $HSL]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $HSL]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSL_rgb $HSL]]] }
+                RGB8  { return [::rgb_RGB8    [::HSL_rgb   $HSL]] }
+                RGB12 { return [::rgb_RGB12   [::HSL_rgb   $HSL]] }
+                RGB16 { return [::rgb_RGB16   [::HSL_rgb   $HSL]] }
+                rgb   { return [::HSL_rgb     $HSL] }
+                HSB   { return [::HSL_HSB     $HSL] }
+                HSI   { return [::HSL_HSI     $HSL] }
+                HSL   { return $HSL }
+                HSP   { return [::HSL_HSP     $HSL] }
+                HWB   { return [::HSL_HWB     $HSL] }
+                XYZ   { return [::rgb_XYZ     [::HSL_rgb   $HSL]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSL_rgb $HSL]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSL_rgb $HSL]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSL_rgb $HSL]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSL_rgb $HSL]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSL_rgb $HSL]]]] }
             }
         }
         HSP {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { hue saturation perceived_brightness } $colors {
                         # Check the 'hue'.
                         switch -- [string is double -strict $hue] {
@@ -2462,7 +2980,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $hue $saturation $perceived_brightness
+                        lappend HSP $hue $saturation $perceived_brightness
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2470,31 +2988,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $channels]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $channels]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSP_rgb $channels]]] }
-                RGB8  { return [::rgb_RGB8    [::HSP_rgb   $channels]] }
-                RGB12 { return [::rgb_RGB12   [::HSP_rgb   $channels]] }
-                RGB16 { return [::rgb_RGB16   [::HSP_rgb   $channels]] }
-                rgb   { return [::HSP_rgb     $channels] }
-                HSB   { return [::HSP_HSB     $channels] }
-                HSI   { return [::HSP_HSI     $channels] }
-                HSL   { return [::HSP_HSL     $channels] }
-                HSP   { return $channels }
-                HWB   { return [::HSP_HWB     $channels] }
-                XYZ   { return [::rgb_XYZ     [::HSP_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSP_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSP_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSP_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSP_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSP_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $HSP]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $HSP]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HSP_rgb $HSP]]] }
+                RGB8  { return [::rgb_RGB8    [::HSP_rgb   $HSP]] }
+                RGB12 { return [::rgb_RGB12   [::HSP_rgb   $HSP]] }
+                RGB16 { return [::rgb_RGB16   [::HSP_rgb   $HSP]] }
+                rgb   { return [::HSP_rgb     $HSP] }
+                HSB   { return [::HSP_HSB     $HSP] }
+                HSI   { return [::HSP_HSI     $HSP] }
+                HSL   { return [::HSP_HSL     $HSP] }
+                HSP   { return $HSP }
+                HWB   { return [::HSP_HWB     $HSP] }
+                XYZ   { return [::rgb_XYZ     [::HSP_rgb   $HSP]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HSP_rgb $HSP]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HSP_rgb $HSP]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HSP_rgb $HSP]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HSP_rgb $HSP]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HSP_rgb $HSP]]]] }
             }
         }
         HWB {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { hue whiteness blackness } $colors {
                         # Check the 'hue'.
                         switch -- [string is double -strict $hue] {
@@ -2530,7 +3047,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $hue $whiteness $blackness
+                        lappend HWB $hue $whiteness $blackness
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2538,31 +3055,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HWB_rgb $channels]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HWB_rgb $channels]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HWB_rgb $channels]]] }
-                RGB8  { return [::rgb_RGB8    [::HWB_rgb   $channels]] }
-                RGB12 { return [::rgb_RGB12   [::HWB_rgb   $channels]] }
-                RGB16 { return [::rgb_RGB16   [::HWB_rgb   $channels]] }
-                rgb   { return [::HWB_rgb     $channels] }
-                HSB   { return [::HWB_HSB     $channels] }
-                HSI   { return [::HWB_HSI     $channels] }
-                HSL   { return [::HWB_HSL     $channels] }
-                HSP   { return [::HWB_HSP     $channels] }
-                HWB   { return $channels }
-                XYZ   { return [::rgb_XYZ     [::HWB_rgb   $channels]] }
-                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HWB_rgb $channels]]] }
-                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HWB_rgb $channels]]] }
-                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HWB_rgb $channels]]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HWB_rgb $channels]]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HWB_rgb $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HWB_rgb $HWB]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HWB_rgb $HWB]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::HWB_rgb $HWB]]] }
+                RGB8  { return [::rgb_RGB8    [::HWB_rgb   $HWB]] }
+                RGB12 { return [::rgb_RGB12   [::HWB_rgb   $HWB]] }
+                RGB16 { return [::rgb_RGB16   [::HWB_rgb   $HWB]] }
+                rgb   { return [::HWB_rgb     $HWB] }
+                HSB   { return [::HWB_HSB     $HWB] }
+                HSI   { return [::HWB_HSI     $HWB] }
+                HSL   { return [::HWB_HSL     $HWB] }
+                HSP   { return [::HWB_HSP     $HWB] }
+                HWB   { return $HWB }
+                XYZ   { return [::rgb_XYZ     [::HWB_rgb   $HWB]] }
+                xyY   { return [::XYZ_xyY     [::rgb_XYZ   [::HWB_rgb $HWB]]] }
+                Lab   { return [::XYZ_Lab     [::rgb_XYZ   [::HWB_rgb $HWB]]] }
+                Luv   { return [::XYZ_Luv     [::rgb_XYZ   [::HWB_rgb $HWB]]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::rgb_XYZ [::HWB_rgb $HWB]]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::rgb_XYZ [::HWB_rgb $HWB]]]] }
             }
         }
         XYZ {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { X Y Z } $colors {
                         # Check the 'X'.
                         switch -- [string is double -strict $X] {
@@ -2600,7 +3116,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $X $Y $Z
+                        lappend XYZ $X $Y $Z
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2608,31 +3124,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb $channels]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb $channels]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb $channels]]] }
-                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   $channels]] }
-                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   $channels]] }
-                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   $channels]] }
-                rgb   { return [::XYZ_rgb     $channels] }
-                HSB   { return [::rgb_HSB     [::XYZ_rgb   $channels]] }
-                HSI   { return [::rgb_HSI     [::XYZ_rgb   $channels]] }
-                HSL   { return [::rgb_HSL     [::XYZ_rgb   $channels]] }
-                HSP   { return [::rgb_HSP     [::XYZ_rgb   $channels]] }
-                HWB   { return [::rgb_HWB     [::XYZ_rgb   $channels]] }
-                XYZ   { return $channels }
-                xyY   { return [::XYZ_xyY     $channels] }
-                Lab   { return [::XYZ_Lab     $channels] }
-                Luv   { return [::XYZ_Luv     $channels] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   $channels]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   $channels]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb $XYZ]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb $XYZ]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb $XYZ]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   $XYZ]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   $XYZ]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   $XYZ]] }
+                rgb   { return [::XYZ_rgb     $XYZ] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   $XYZ]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   $XYZ]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   $XYZ]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   $XYZ]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   $XYZ]] }
+                XYZ   { return $XYZ }
+                xyY   { return [::XYZ_xyY     $XYZ] }
+                Lab   { return [::XYZ_Lab     $XYZ] }
+                Luv   { return [::XYZ_Luv     $XYZ] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   $XYZ]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   $XYZ]] }
             }
         }
         xyY {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { x y Y } $colors {
                         # Check the 'x'.
                         switch -- [string is double -strict $x] {
@@ -2670,7 +3185,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $x $y $Y
+                        lappend xyY $x $y $Y
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2678,31 +3193,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::xyY_XYZ $channels]]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::xyY_XYZ $channels]]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::xyY_XYZ $channels]]]] }
-                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                rgb   { return [::XYZ_rgb     [::xyY_XYZ   $channels]] }
-                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::xyY_XYZ $channels]]] }
-                XYZ   { return [::xyY_XYZ     $channels] }
-                xyY   { return $channels }
-                Lab   { return [::XYZ_Lab     [::xyY_XYZ   $channels]] }
-                Luv   { return [::XYZ_Luv     [::xyY_XYZ   $channels]] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::xyY_XYZ $channels]]] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::xyY_XYZ $channels]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::xyY_XYZ $xyY]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::xyY_XYZ $xyY]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::xyY_XYZ $xyY]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                rgb   { return [::XYZ_rgb     [::xyY_XYZ   $xyY]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::xyY_XYZ $xyY]]] }
+                XYZ   { return [::xyY_XYZ     $xyY] }
+                xyY   { return $xyY }
+                Lab   { return [::XYZ_Lab     [::xyY_XYZ   $xyY]] }
+                Luv   { return [::XYZ_Luv     [::xyY_XYZ   $xyY]] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::xyY_XYZ $xyY]]] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::xyY_XYZ $xyY]]] }
             }
         }
         Lab {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { L a b } $colors {
                         # Check the 'L'.
                         switch -- [string is double -strict $L] {
@@ -2740,7 +3254,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $L $a $b
+                        lappend Lab $L $a $b
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2748,31 +3262,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ $channels]]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ $channels]]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::Lab_XYZ $channels]]]] }
-                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                rgb   { return [::XYZ_rgb     [::Lab_XYZ   $channels]] }
-                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Lab_XYZ $channels]]] }
-                XYZ   { return [::XYZ_Lab     $channels] }
-                xyY   { return [::XYZ_xyY     [::Lab_XYZ   $channels]] }
-                Lab   { return $channels }
-                Luv   { return [::XYZ_Luv     [::Lab_XYZ   $channels]] }
-                LCHab { return [::Lab_LCHab   $channels] }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::Lab_XYZ $channels]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ $Lab]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ $Lab]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::Lab_XYZ $Lab]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                rgb   { return [::XYZ_rgb     [::Lab_XYZ   $Lab]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Lab_XYZ $Lab]]] }
+                XYZ   { return [::XYZ_Lab     $Lab] }
+                xyY   { return [::XYZ_xyY     [::Lab_XYZ   $Lab]] }
+                Lab   { return $Lab }
+                Luv   { return [::XYZ_Luv     [::Lab_XYZ   $Lab]] }
+                LCHab { return [::Lab_LCHab   $Lab] }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::Lab_XYZ $Lab]]] }
             }
         }
         Luv {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { L u v } $colors {
                         # Check the 'L'.
                         switch -- [string is double -strict $L] {
@@ -2810,7 +3323,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $L $u $v
+                        lappend Luv $L $u $v
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2818,31 +3331,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ $channels]]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ $channels]]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::Luv_XYZ $channels]]]] }
-                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                rgb   { return [::XYZ_rgb     [::Luv_XYZ   $channels]] }
-                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Luv_XYZ $channels]]] }
-                XYZ   { return [::XYZ_Luv     $channels] }
-                xyY   { return [::XYZ_xyY     [::Luv_XYZ   $channels]] }
-                Lab   { return [::XYZ_Lab     [::Luv_XYZ   $channels]] }
-                Luv   { return $channels }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::Luv_XYZ $channels]]] }
-                LCHuv { return [::Luv_LCHuv   $channels] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ $Luv]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ $Luv]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb [::Luv_XYZ $Luv]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                rgb   { return [::XYZ_rgb     [::Luv_XYZ   $Luv]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Luv_XYZ $Luv]]] }
+                XYZ   { return [::XYZ_Luv     $Luv] }
+                xyY   { return [::XYZ_xyY     [::Luv_XYZ   $Luv]] }
+                Lab   { return [::XYZ_Lab     [::Luv_XYZ   $Luv]] }
+                Luv   { return $Luv }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::Luv_XYZ $Luv]]] }
+                LCHuv { return [::Luv_LCHuv   $Luv] }
             }
         }
         LCHab {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { L C Hab } $colors {
                         # Check the 'L'.
                         switch -- [string is double -strict $L] {
@@ -2878,7 +3390,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $L $C $Hab
+                        lappend LCHab $L $C $Hab
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2886,31 +3398,30 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]]] }
-                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                rgb   { return [::XYZ_rgb     [::Lab_XYZ   [::LCHab_Lab $channels]]] }
-                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
-                XYZ   { return [::Lab_XYZ     [::LCHab_Lab $channels]] }
-                xyY   { return [::XYZ_xyY     [::Lab_XYZ   [::LCHab_Lab $channels]]] }
-                Lab   { return [::LCHab_Lab   $channels] }
-                Luv   { return [::XYZ_Luv     [::Lab_XYZ   [::LCHab_Lab $channels]]] }
-                LCHab { return $channels }
-                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::Lab_XYZ   [::LCHab_Lab $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                rgb   { return [::XYZ_rgb     [::Lab_XYZ   [::LCHab_Lab $LCHab]]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
+                XYZ   { return [::Lab_XYZ     [::LCHab_Lab $LCHab]] }
+                xyY   { return [::XYZ_xyY     [::Lab_XYZ   [::LCHab_Lab $LCHab]]] }
+                Lab   { return [::LCHab_Lab   $LCHab] }
+                Luv   { return [::XYZ_Luv     [::Lab_XYZ   [::LCHab_Lab $LCHab]]] }
+                LCHab { return $LCHab }
+                LCHuv { return [::Luv_LCHuv   [::XYZ_Luv   [::Lab_XYZ   [::LCHab_Lab $LCHab]]]] }
             }
         }
         LCHuv {
             # Check the 'colors' provided.
             switch -- [expr { [llength $colors]%3 }] {
                 0   {
-                    set channels [list ]
                     foreach { L C Hab } $colors {
                         # Check the 'L'.
                         switch -- [string is double -strict $L] {
@@ -2946,7 +3457,7 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
                             }
                         }
 
-                        lappend channels $L $C $Huv
+                        lappend LCHuv $L $C $Huv
                     }
                 }
                 default { ::ms::Error "Invalid number of color channels." $caller_info }
@@ -2954,263 +3465,128 @@ proc ::ms::color::Convert { colors from to { caller_info "" } } {
 
             # Check the 'to' option.
             switch -- $to {
-                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]]] }
-                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]]] }
-                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]]] }
-                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                rgb   { return [::XYZ_rgb     [::Luv_XYZ   [::LCHuv_Luv $channels]]] }
-                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
-                XYZ   { return [::Luv_XYZ     [::LCHuv_Luv $channels]] }
-                xyY   { return [::XYZ_xyY     [::Luv_XYZ   [::LCHuv_Luv $channels]]] }
-                Lab   { return [::XYZ_Lab     [::Luv_XYZ   [::LCHuv_Luv $channels]]] }
-                Luv   { return [::LCHuv_Luv   $channels] }
-                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::Luv_XYZ   [::LCHuv_Luv $channels]]]] }
+                HEX8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]]] }
+                HEX12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]]] }
+                HEX16 { return [::RGB16_HEX16 [::rgb_RGB16 [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]]] }
+                RGB8  { return [::rgb_RGB8    [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                RGB12 { return [::rgb_RGB12   [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                RGB16 { return [::rgb_RGB16   [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                rgb   { return [::XYZ_rgb     [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]] }
+                HSB   { return [::rgb_HSB     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                HSI   { return [::rgb_HSI     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                HSL   { return [::rgb_HSL     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                HSP   { return [::rgb_HSP     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                HWB   { return [::rgb_HWB     [::XYZ_rgb   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
+                XYZ   { return [::Luv_XYZ     [::LCHuv_Luv $LCHuv]] }
+                xyY   { return [::XYZ_xyY     [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]] }
+                Lab   { return [::XYZ_Lab     [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]] }
+                Luv   { return [::LCHuv_Luv   $LCHuv] }
+                LCHab { return [::Lab_LCHab   [::XYZ_Lab   [::Luv_XYZ   [::LCHuv_Luv $LCHuv]]]] }
                 LCHuv { return $channels }
             }
         }
     }
 }
 
-## Cooldown
+## Dark
 #
-# Compute the hexadecimals cooler color/s relative to the color/s provided.
-#
-# Where:
-#
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
-#
-# amount   Should be a floating point value specifing the amount of heat to subtract [0,100].
-#          This amount is evaluated as a percentage.
-#
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
-#
-# Returns a list containing the hexadecimal cooler color/s relative to the color/s provided.
-proc ::ms::color::Cooldown { HEXs amount depth } {
-    set results [list ]
-    switch -- $depth {
-        8   {
-            # Transform the amount from [0,100] to [0,255].
-            set amount [expr { round($amount*2.55) }]
-
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX8_RGB8 $HEXs]
-
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red  [expr { $red-$amount  }]
-                set blue [expr { $blue+$amount }]
-
-                # Check that the 'red' channel doesn't exceeds its lower limit.
-                if { $red < 0 } {
-                    set red 0
-                }
-
-                # Check that the 'blue' channel doesn't exceeds its upper limit.
-                if { $blue > 255 } {
-                    set blue 255
-                }
-
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB8_HEX8 $results]
-        }
-        12  {
-            # Transform the amount from [0,100] to [0,4095].
-            set amount [expr { round($amount*40.95) }]
-
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX12_RGB12 $HEXs]
-
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red  [expr { $red-$amount  }]
-                set blue [expr { $blue+$amount }]
-
-                # Check that the 'red' channel doesn't exceeds its lower limit.
-                if { $red < 0 } {
-                    set red 0
-                }
-
-                # Check that the 'blue' channel doesn't exceeds its upper limit.
-                if { $blue > 4095 } {
-                    set blue 4095
-                }
-
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB12_HEX12 $results]
-        }
-        16  {
-            # Transform the amount from [0,100] to [0,65535].
-            set amount [expr { round($amount*655.35) }]
-
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX16_RGB16 $HEXs]
-
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red  [expr { $red-$amount  }]
-                set blue [expr { $blue+$amount }]
-
-                # Check that the 'red' channel doesn't exceeds its lower limit.
-                if { $red < 0 } {
-                    set red 0
-                }
-
-                # Check that the 'blue' channel doesn't exceeds its upper limit.
-                if { $blue > 65535 } {
-                    set blue 65535
-                }
-
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB16_HEX16 $results]
-        }
-    }
-}
-
-## Darken
-#
-# Compute the hexadecimals darker color/s relative to the color/s provided.
+# Compute a darker version (by *amount* and *via*) of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# amount   Should be a floating point value specifing the amount of lightness to subtract [0,100].
-#          This amount is evaluated as a percentage.
+# amount         Should be a floating point value specifing the amount of lightness to subtract [0,100].
+#                This amount is evaluated as a percentage.
 #
-# via      Should be a string indicating the 'via' to use to achieve the results.
-#          Allowed values are:
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
 #
-#             **RGB**
-#             **HSL**
-#             **Lab**
-#             **Luv**
-#             **LCHab**
-#             **LCHuv**
+#                   **RGB**
+#                   **HSL**
+#                   **Lab**
+#                   **Luv**
+#                   **LCHab**
+#                   **LCHuv**
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals darker color/s relative to the color/s provided.
-proc ::ms::color::Darken { HEXs amount via depth } {
-    set results [list ]
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Dark { hexadecimals amount via depth } {
+    # Check the 'via' provided.
     switch -- $via {
         RGB {
-            # Check the 'depth' provided.
+            # Check the color 'depth' provided.
             switch -- $depth {
                 8   {
-                    # Note:  RGB range [0,255].
-
                     # Transform the amount from [0,100] to [0,255].
                     set amount [expr { round($amount*2.55) }]
 
-                    # Transform the hexadecimal color/s provided into RGB color/s.
-                    set channels [::HEX8_RGB8 $HEXs]
-
-                    # Execute the command.
-                    foreach channel $channels {
-                        set channel [expr { $channel-$amount }]
-
-                        # Check if 'channel' exceeds its lower limit
-                        if { $channel < 0 } {
-                            set channel 0
-                        }
-
-                        lappend results $channel
-                    }
-
-                    # Transform the resulting RGB color/s back into hexadecimal color/s.
-                    return [::RGB8_HEX8 $results]
+                    # Transform the hexadecimal colors provided into RGB8 colors.
+                    set channels [::HEX8_RGB8 $hexadecimals]
                 }
                 12  {
-                    # Note:  RGB range [0,4095].
-
                     # Transform the amount from [0,100] to [0,4095].
                     set amount [expr { round($amount*40.95) }]
 
-                    # Transform the hexadecimal color/s provided into RGB color/s.
-                    set channels [::HEX12_RGB12 $HEXs]
-
-                    # Execute the command.
-                    foreach channel $channels {
-                        set channel [expr { $channel-$amount }]
-
-                        # Check if 'channel' exceeds its lower limit
-                        if { $channel < 0 } {
-                            set channel 0
-                        }
-
-                        lappend results $channel
-                    }
-
-                    # Transform the resulting RGB color/s back into hexadecimal color/s.
-                    return [::RGB12_HEX12 $results]
+                    # Transform the hexadecimal colors provided into RGB12 colors.
+                    set channels [::HEX12_RGB12 $hexadecimals]
                 }
                 16  {
-                    # Note:  RGB range [0,65535].
-
                     # Transform the amount from [0,100] to [0,65535].
                     set amount [expr { round($amount*655.35) }]
 
-                    # Transform the hexadecimal color/s provided into RGB color/s.
-                    set channels [::HEX16_RGB16 $HEXs]
-
-                    # Execute the command.
-                    foreach channel $channels {
-                        set channel [expr { $channel-$amount }]
-
-                        # Check if 'channel' exceeds its lower limit
-                        if { $channel < 0 } {
-                            set channel 0
-                        }
-
-                        lappend results $channel
-                    }
-
-                    # Transform the resulting RGB color/s back into hexadecimal color/s.
-                    return [::RGB16_HEX16 $results]
+                    # Transform the hexadecimal colors provided into RGB16 colors.
+                    set channels [::HEX16_RGB16 $hexadecimals]
                 }
+            }
+
+            # Execute the command.
+            foreach channel $channels {
+                set channel [expr { $channel-$amount }]
+
+                # Check if 'channel' exceeds its lower limit
+                if { $channel < 0 } {
+                    set channel 0
+                }
+
+                lappend results $channel
+            }
+
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
             }
         }
         HSL {
             # Note:  Lightness range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSL color/s.
+            # Transform the hexadecimal colors provided into HSL colors.
             switch -- $depth {
-                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation lightness } $channels {
-                set lightness [expr { $lightness-$amount }]
+            foreach { H S L } $channels {
+                set L [expr { $L-$amount }]
 
-                # Check if 'lightness' exceeds its lower limit
-                if { $lightness < 0 } {
-                    set lightness 0
+                # Check if 'L' exceeds its lower limit
+                if { $L < 0 } {
+                    set L 0
                 }
 
-                lappend results $hue $saturation $lightness
+                lappend results $H $S $L
             }
 
-            # Transform the resulting HSL color/s back into hexadecimal color/s.
+            # Transform the resulting HSL colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $results]]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $results]]] }
@@ -3221,11 +3597,11 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into Lab color/s.
+            # Transform the hexadecimal colors provided into Lab colors.
             switch -- $depth {
-                8  { set channels [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]] }
-                12 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]] }
-                16 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]] }
+                8  { set channels [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]] }
+                12 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]] }
+                16 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]] }
             }
 
             # Execute the command.
@@ -3240,7 +3616,8 @@ proc ::ms::color::Darken { HEXs amount via depth } {
                 lappend results $L $a $b
             }
 
-            # Transform the resulting Lab color/s back into hexadecimal color/s.
+            # Transform the resulting Lab colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ $results]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ $results]]]] }
@@ -3251,11 +3628,11 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into Luv color/s.
+            # Transform the hexadecimal colors provided into Luv colors.
             switch -- $depth {
-                8  { set channels [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]] }
-                12 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]] }
-                16 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]] }
+                8  { set channels [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]] }
+                12 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]] }
+                16 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]] }
             }
 
             # Execute the command.
@@ -3270,7 +3647,8 @@ proc ::ms::color::Darken { HEXs amount via depth } {
                 lappend results $L $u $v
             }
 
-            # Transform the resulting Luv color/s back into hexadecimal color/s.
+            # Transform the resulting Luv colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ $results]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ $results]]]] }
@@ -3281,11 +3659,11 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into LCHab color/s.
+            # Transform the hexadecimal colors provided into LCHab colors.
             switch -- $depth {
-                8  { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]]] }
-                12 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]]] }
-                16 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]]] }
+                8  { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]]] }
+                12 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]]] }
+                16 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]]] }
             }
 
             # Execute the command.
@@ -3300,7 +3678,8 @@ proc ::ms::color::Darken { HEXs amount via depth } {
                 lappend results $L $C $Hab
             }
 
-            # Transform the resulting LCHab color/s back into hexadecimal color/s.
+            # Transform the resulting LCHab colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ [::LCHab_Lab $results]]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ [::LCHab_Lab $results]]]]] }
@@ -3311,11 +3690,11 @@ proc ::ms::color::Darken { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into LCHuv color/s.
+            # Transform the hexadecimal colors provided into LCHuv colors.
             switch -- $depth {
-                8  { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]]] }
-                12 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]]] }
-                16 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]]] }
+                8  { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]]] }
+                12 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]]] }
+                16 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]]] }
             }
 
             # Execute the command.
@@ -3330,7 +3709,8 @@ proc ::ms::color::Darken { HEXs amount via depth } {
                 lappend results $L $C $Huv
             }
 
-            # Transform the resulting LCHuv color/s back into hexadecimal color/s.
+            # Transform the resulting LCHuv colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ [::LCHuv_Luv $results]]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ [::LCHuv_Luv $results]]]]] }
@@ -3342,47 +3722,47 @@ proc ::ms::color::Darken { HEXs amount via depth } {
 
 ## Deficiency
 #
-# Compute the hexadecimals deficiency color/s relative to the color/s provided.
+# Compute a deficiency version (by *severity* and *via*) of the colors provided.
 #
 # Where:
 #
-# HEXs       Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# severity   Should be a floating point value specifing how much of the eye cone is damaged.
-#            This amount is always evaluated as a percentage.
-#            It's only Meaningfull for 'Protanomaly', 'Deuteranomaly' or 'Tritanomaly' vias.
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
 #
-# via        Should be a string indicating the 'via' to use to achieve the results.
-#            Allowed values are:
+#                   **achromatic**
+#                   **red**
+#                   **green**
+#                   **blue**
+#                   **protanomaly**
+#                   **deuteranomaly**
+#                   **tritanomaly**
+#                   **protanopia**
+#                   **deuteranopia**
+#                   **tritanopia**
 #
-#               **achromatic**
-#               **red**
-#               **green**
-#               **blue**
-#               **protanomaly**
-#               **deuteranomaly**
-#               **tritanomaly**
-#               **protanopia**
-#               **deuteranopia**
-#               **tritanopia**
+# severity       Should be a floating point value specifing how much of the eye cone is damaged.
+#                This amount is always evaluated as a percentage.
+#                It's only Meaningfull for 'Protanomaly', 'Deuteranomaly' or 'Tritanomaly' vias.
 #
-# depth      Should be an integer specifing the color depth in which the color/s provided are defined.
-#            Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals deficiency color/s relative to the color/s provided.
-proc ::ms::color::Deficiency { hexadecimals severity via depth } {
-    set results [list ]
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Deficiency { hexadecimals via severity depth } {
+    # Check the 'via' provided.
     switch -- $via {
         achromatic {
             # Note: All cones are missing or completely damaged.
 
             # HEVC --> Human Eye Vision Corrected gray.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
-                12 { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
-                16 { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
+                8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]] }
+                12 { set channels [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]] }
+                16 { set channels [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]] }
             }
 
             # Execute the command.
@@ -3404,7 +3784,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results $gray $gray $gray
             }
 
-            # Transform the resulting rgb non linear color/s back into hexadecimal color/s.
+            # Transform the resulting rgb non linear colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  $results]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 $results]] }
@@ -3414,11 +3795,11 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
         red {
             # Note: The red cone is the only cone present.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::HEX8_RGB8   $HEXs] }
-                12 { set channels [::HEX12_RGB12 $HEXs] }
-                16 { set channels [::HEX16_RGB16 $HEXs] }
+                8  { set channels [::HEX8_RGB8   $hexadecimals] }
+                12 { set channels [::HEX12_RGB12 $hexadecimals] }
+                16 { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3426,7 +3807,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results $red 0 0
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   $results] }
                 12 { return [::RGB12_HEX12 $results] }
@@ -3436,11 +3818,11 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
         green {
             # Note: The green cone is the only cone present.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::HEX8_RGB8   $HEXs] }
-                12 { set channels [::HEX12_RGB12 $HEXs] }
-                16 { set channels [::HEX16_RGB16 $HEXs] }
+                8  { set channels [::HEX8_RGB8   $hexadecimals] }
+                12 { set channels [::HEX12_RGB12 $hexadecimals] }
+                16 { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3448,7 +3830,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results 0 $green 0
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   $results] }
                 12 { return [::RGB12_HEX12 $results] }
@@ -3458,11 +3841,11 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
         blue {
             # Note: The blue cone is the only cone present.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::HEX8_RGB8   $HEXs] }
-                12 { set channels [::HEX12_RGB12 $HEXs] }
-                16 { set channels [::HEX16_RGB16 $HEXs] }
+                8  { set channels [::HEX8_RGB8   $hexadecimals] }
+                12 { set channels [::HEX12_RGB12 $hexadecimals] }
+                16 { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3470,7 +3853,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results 0 0 $blue
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   $results] }
                 12 { return [::RGB12_HEX12 $results] }
@@ -3480,11 +3864,11 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
         protanopia {
             # Note: The green and blue cone are present and working, while the red cone is missing or completely damaged.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::HEX8_RGB8   $HEXs] }
-                12 { set channels [::HEX12_RGB12 $HEXs] }
-                16 { set channels [::HEX16_RGB16 $HEXs] }
+                8  { set channels [::HEX8_RGB8   $hexadecimals] }
+                12 { set channels [::HEX12_RGB12 $hexadecimals] }
+                16 { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3492,7 +3876,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results 0 $green $blue
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   $results] }
                 12 { return [::RGB12_HEX12 $results] }
@@ -3502,11 +3887,11 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
         deuteranopia {
             # Note: The red and blue cone are present and working, while the green cone is missing or completely damaged.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::HEX8_RGB8   $HEXs] }
-                12 { set channels [::HEX12_RGB12 $HEXs] }
-                16 { set channels [::HEX16_RGB16 $HEXs] }
+                8  { set channels [::HEX8_RGB8   $hexadecimals] }
+                12 { set channels [::HEX12_RGB12 $hexadecimals] }
+                16 { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3514,7 +3899,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results $red 0 $blue
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   $results] }
                 12 { return [::RGB12_HEX12 $results] }
@@ -3524,11 +3910,11 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
         tritanopia {
             # Note: The red and green cone are present and working, while the red cone is missing or completely damaged.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::HEX8_RGB8   $HEXs] }
-                12 { set channels [::HEX12_RGB12 $HEXs] }
-                16 { set channels [::HEX16_RGB16 $HEXs] }
+                8  { set channels [::HEX8_RGB8   $hexadecimals] }
+                12 { set channels [::HEX12_RGB12 $hexadecimals] }
+                16 { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3536,7 +3922,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results $red $green 0
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   $results] }
                 12 { return [::RGB12_HEX12 $results] }
@@ -3550,14 +3937,14 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
             #       Deuteranomaly --> The cones are all present but the green cone is damaged by a certain severity degrees.
             #       Tritanomaly   --> The cones are all present but the blue cone is damaged by a certain severity degrees.
 
-            # Transform the hexadecimal color/s provided into rgb non linear color/s.
+            # Transform the hexadecimal colors provided into rgb non linear colors.
             switch -- $depth {
-                8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
-                12 { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
-                16 { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
+                8  { set channels [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]] }
+                12 { set channels [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]] }
+                16 { set channels [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]] }
             }
 
-            # Compute the rgb non linear color/s.
+            # Compute the rgb non linear colors.
             foreach { r g b } $channels {
                 # Transforming the rgb non linear channels into rgb linear channels.
                 set r_linear [::companding $r inverse]
@@ -3672,7 +4059,8 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
                 lappend results $r $g $b
             }
 
-            # Transform the resulting rgb non linear color/s back into hexadecimal color/s.
+            # Transform the resulting rgb non linear colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  $results]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 $results]] }
@@ -3684,54 +4072,55 @@ proc ::ms::color::Deficiency { hexadecimals severity via depth } {
 
 ## Desaturate
 #
-# Compute the hexadecimals desaturated color/s relative to the color/s provided.
+# Compute a desaturated version (by *amount* and *via*) of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# amount   Should be a floating point value specifing the amount of saturation to subtract [0,100].
-#          This amount is evaluated as a percentage.
+# amount         Should be a floating point value specifing the amount of saturation to subtract [0,100].
+#                This amount is evaluated as a percentage.
 #
-# via      Should be a string indicating the 'via' to use to achieve the results.
-#          Allowed values are:
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
 #
-#             **HSB**
-#             **HSI**
-#             **HSL**
-#             **HSP**
+#                   **HSB**
+#                   **HSI**
+#                   **HSL**
+#                   **HSP**
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals desaturated color/s relative to the color/s provided.
-proc ::ms::color::Desaturate { HEXs amount via depth } {
-    set results [list ]
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Desaturate { hexadecimals amount via depth } {
+    # Check the 'via' provided.
     switch -- $via {
         HSB {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSB color/s.
+            # Transform the hexadecimal colors provided into HSB colors.
             switch -- $depth {
-                8  { set channels [::rgb_HSB [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSB [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSB [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8  { set channels [::rgb_HSB [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12 { set channels [::rgb_HSB [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16 { set channels [::rgb_HSB [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation brightness } $channels {
-                set saturation [expr { $saturation-$amount }]
+            foreach { H S B } $channels {
+                set S [expr { $S-$amount }]
 
-                # Check if 'saturation' exceeds its lower limit.
-                if { $saturation < 0 } {
-                    set saturation 0
+                # Check if 'S' exceeds its lower limit.
+                if { $S < 0 } {
+                    set S 0
                 }
 
-                lappend results $hue $saturation $brightness
+                lappend results $H $S $B
             }
 
-            # Transform the resulting HSB color/s back into hexadecimal color/s.
+            # Transform the resulting HSB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $results]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $results]]] }
@@ -3742,26 +4131,27 @@ proc ::ms::color::Desaturate { HEXs amount via depth } {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSI color/s.
+            # Transform the hexadecimal colors provided into HSI colors.
             switch -- $depth {
-                8  { set channels [::rgb_HSI [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSI [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSI [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8  { set channels [::rgb_HSI [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12 { set channels [::rgb_HSI [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16 { set channels [::rgb_HSI [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation intensity } $channels {
-                set saturation [expr { $saturation-$amount }]
+            foreach { H S I } $channels {
+                set S [expr { $S-$amount }]
 
-                # Check if 'saturation' exceeds its lower limit.
-                if { $saturation < 0 } {
-                    set saturation 0
+                # Check if 'S' exceeds its lower limit.
+                if { $S < 0 } {
+                    set S 0
                 }
 
-                lappend results $hue $saturation $intensity
+                lappend results $H $S $I
             }
 
-            # Transform the resulting HSI color/s back into hexadecimal color/s.
+            # Transform the resulting HSI colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $results]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $results]]] }
@@ -3772,26 +4162,27 @@ proc ::ms::color::Desaturate { HEXs amount via depth } {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSL color/s.
+            # Transform the hexadecimal colors provided into HSL colors.
             switch -- $depth {
-                8  { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8  { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12 { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16 { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation lightness } $channels {
-                set saturation [expr { $saturation-$amount }]
+            foreach { H S L } $channels {
+                set S [expr { $S-$amount }]
 
-                # Check if 'saturation' exceeds its lower limit.
-                if { $saturation < 0 } {
-                    set saturation 0
+                # Check if 'S' exceeds its lower limit.
+                if { $S < 0 } {
+                    set S 0
                 }
 
-                lappend results $hue $saturation $lightness
+                lappend results $H $S $L
             }
 
-            # Transform the resulting HSL color/s back into hexadecimal color/s.
+            # Transform the resulting HSL colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $results]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $results]]] }
@@ -3802,26 +4193,27 @@ proc ::ms::color::Desaturate { HEXs amount via depth } {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSP color/s.
+            # Transform the hexadecimal colors provided into HSP colors.
             switch -- $depth {
-                8  { set channels [::rgb_HSP [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12 { set channels [::rgb_HSP [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16 { set channels [::rgb_HSP [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8  { set channels [::rgb_HSP [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12 { set channels [::rgb_HSP [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16 { set channels [::rgb_HSP [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation perceived_brightness } $channels {
-                set saturation [expr { $saturation-$amount }]
+            foreach { H S P } $channels {
+                set S [expr { $S-$amount }]
 
-                # Check if 'saturation' exceeds its lower limit.
-                if { $saturation < 0 } {
-                    set saturation 0
+                # Check if 'S' exceeds its lower limit.
+                if { $S < 0 } {
+                    set S 0
                 }
 
-                lappend results $hue $saturation $perceived_brightness
+                lappend results $H $S $P
             }
 
-            # Transform the resulting HSP color/s back into hexadecimal color/s.
+            # Transform the resulting HSP colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $results]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $results]]] }
@@ -3833,26 +4225,25 @@ proc ::ms::color::Desaturate { HEXs amount via depth } {
 
 ## Family
 #
-# Compute the family of the color/s provided.
+# Compute the family of each of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the family of the color/s provided.
+# Returns a list containing the family of each of the colors provided.
 proc ::ms::color::Family { hexadecimals depth } {
-    # Transform the hexadecimal color/s provided into RGB color/s.
+    # Transform the hexadecimal colors provided into RGB colors.
     switch -- $depth {
-        8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
-        12  { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
-        16  { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
+        8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]] }
+        12  { set channels [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]] }
+        16  { set channels [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]] }
     }
 
     # Execute the command.
-    set results [list ]
     foreach { r g b } $channels {
         if { ($red == $green) && ($red == $blue) } {
             lappend results Gray
@@ -3910,37 +4301,37 @@ proc ::ms::color::Family { hexadecimals depth } {
 
 ## Gray
 #
-# Compute the hexadecimals gray colors relative to the color/s provided.
+# Compute a gray version (by *via*) of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# via      Should be a string indicating the 'via' to use to achieve the results.
-#          Allowed values are:
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
 #
-#             **average**
-#             **desaturation**
-#             **hevc**
-#             **max**
-#             **min**
-#             **red**
-#             **green**
-#             **blue**
+#                   **average**
+#                   **desaturate**
+#                   **hevc**
+#                   **max**
+#                   **min**
+#                   **red**
+#                   **green**
+#                   **blue**
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals gray relative to the color/s provided.
-proc ::ms::color::Gray { HEXs via depth } {
-    set results [list ]
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Gray { hexadecimals via depth } {
+    # Check the 'via' provided.
     switch -- $via {
         red {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3948,7 +4339,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $red $red $red
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
@@ -3956,11 +4348,11 @@ proc ::ms::color::Gray { HEXs via depth } {
             }
         }
         green {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3968,7 +4360,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $green $green $green
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
@@ -3976,11 +4369,11 @@ proc ::ms::color::Gray { HEXs via depth } {
             }
         }
         blue {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -3988,7 +4381,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $blue $blue $blue
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
@@ -3996,11 +4390,11 @@ proc ::ms::color::Gray { HEXs via depth } {
             }
         }
         max {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -4010,7 +4404,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $gray $gray $gray
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
@@ -4018,11 +4413,11 @@ proc ::ms::color::Gray { HEXs via depth } {
             }
         }
         min {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Execute the command.
@@ -4032,7 +4427,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $gray $gray $gray
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
@@ -4040,11 +4436,11 @@ proc ::ms::color::Gray { HEXs via depth } {
             }
         }
         average {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Note that for performance reasons instead of diving the sum by '3', we multiply it by '0.33333333333333333'.
@@ -4056,19 +4452,20 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $gray $gray $gray
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
                 16  { return [::RGB16_HEX16 $results] }
             }
         }
-        desaturation {
-            # Transform the hexadecimal color/s provided into RGB color/s.
+        desaturate {
+            # Transform the hexadecimal colors provided into RGB colors.
             switch -- $depth {
-                8   { set channels [::HEX8_RGB8   $HEXs] }
-                12  { set channels [::HEX12_RGB12 $HEXs] }
-                16  { set channels [::HEX16_RGB16 $HEXs] }
+                8   { set channels [::HEX8_RGB8   $hexadecimals] }
+                12  { set channels [::HEX12_RGB12 $hexadecimals] }
+                16  { set channels [::HEX16_RGB16 $hexadecimals] }
             }
 
             # Note that for performance reasons instead of diving the sum by '2', we multiply it by '0.5'.
@@ -4082,7 +4479,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $gray $gray $gray
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   $results] }
                 12  { return [::RGB12_HEX12 $results] }
@@ -4092,11 +4490,11 @@ proc ::ms::color::Gray { HEXs via depth } {
         hevc {
             # Human Eye Vision Corrected gray.
 
-            # Transform the RGB color/s into rgb color/s.
+            # Transform the RGB colors into rgb colors.
             switch -- $depth {
-                8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $HEXs]] }
-                12  { set channels [::RGB12_rgb [::HEX12_RGB12 $HEXs]] }
-                16  { set channels [::RGB16_rgb [::HEX16_RGB16 $HEXs]] }
+                8   { set channels [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]] }
+                12  { set channels [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]] }
+                16  { set channels [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]] }
             }
 
             # Execute the command.
@@ -4114,7 +4512,8 @@ proc ::ms::color::Gray { HEXs via depth } {
                 lappend results $gray $gray $gray
             }
 
-            # Transform the gray rgb *non linear* color/s back into RGB color/s.
+            # Transform the gray rgb *non linear* colors back into RGB colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  $results]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 $results]] }
@@ -4124,201 +4523,247 @@ proc ::ms::color::Gray { HEXs via depth } {
     }
 }
 
-## Inverse
+## Hot
 #
-# Compute the hexadecimal inverse color/s relative to the color/s provided.
+# Compute a hotter version (by *amount*) of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# amount         Should be a floating point value specifing the amount of heat to add [0,100].
+#                This amount is evaluated as a percentage.
 #
-# Returns a list containing the hexadecimals inverse color/s relative to the color/s provided.
-proc ::ms::color::Inverse { HEXs depth } {
-    set results [list ]
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
+#
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Hot { hexadecimals amount depth } {
+    # Check the color 'depth' provided.
     switch -- $depth {
         8   {
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX8_RGB8 $HEXs]
+            # Set the maximum value for every channel.
+            set upper_limit 255
 
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red   [expr { 255-$red   }]
-                set green [expr { 255-$green }]
-                set blue  [expr { 255-$blue  }]
+            # Transform the amount from [0,100] to [0,255].
+            set amount [expr { round($amount*2.55) }]
 
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB8_HEX8 $results]
+            # Transform the hexadecimal colors provided into RGB8 colors.
+            set channels [::HEX8_RGB8 $hexadecimals]
         }
         12  {
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX12_RGB12 $HEXs]
+            # Set the maximum value for every channel.
+            set upper_limit 4095
 
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red   [expr { 4095-$red   }]
-                set green [expr { 4095-$green }]
-                set blue  [expr { 4095-$blue  }]
+            # Transform the amount from [0,100] to [0,4095].
+            set amount [expr { round($amount*40.95) }]
 
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB12_HEX12 $results]
+            # Transform the hexadecimal colors provided into RGB12 colors.
+            set channels [::HEX12_RGB12 $hexadecimals]
         }
         16  {
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX16_RGB16 $HEXs]
+            # Set the maximum value for every channel.
+            set upper_limit 65535
 
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red   [expr { 65535-$red   }]
-                set green [expr { 65535-$green }]
-                set blue  [expr { 65535-$blue  }]
+            # Transform the amount from [0,100] to [0,65535].
+            set amount [expr { round($amount*655.35) }]
 
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB16_HEX16 $results]
+            # Transform the hexadecimal colors provided into RGB16 colors.
+            set channels [::HEX16_RGB16 $hexadecimals]
         }
+    }
+
+    # Execute the command.
+    foreach { red green blue } $channels {
+        set red  [expr { $red+$amount  }]
+        set blue [expr { $blue-$amount }]
+
+        # Check that the 'red' channel doesn't exceeds its upper limit.
+        if { $red > $upper_limit } {
+            set red $upper_limit
+        }
+
+        # Check that the 'blue' channel doesn't exceeds its lower limit.
+        if { $blue < 0 } {
+            set blue 0
+        }
+
+        lappend results $red $green $blue
+    }
+
+    # Transform the resulting RGB colors back into hexadecimal colors
+    # with the same color depth of the hexadecimal colors provided.
+    switch -- $depth {
+        8   { return [::RGB8_HEX8   $results] }
+        12  { return [::RGB12_HEX12 $results] }
+        16  { return [::RGB16_HEX16 $results] }
     }
 }
 
-## Lighten
+## Inverse
 #
-# Compute the hexadecimal lighter color/s relative to the color/s provided.
+# Compute the inverse colors of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# amount   Should be a floating point value specifing the amount of lightness to add [0,100].
-#          This amount is evaluated as a percentage.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# via      Should be a string indicating the 'via' to use to achieve the results.
-#          Allowed values are:
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Inverse { hexadecimals depth } {
+    # Check the color 'depth' provided.
+    switch -- $depth {
+        8   {
+            # Set the maximum value for every channel.
+            set upper_limit 255
+
+            # Transform the hexadecimal colors provided into RGB8 colors.
+            set channels [::HEX8_RGB8 $hexadecimals]
+        }
+        12  {
+            # Set the maximum value for every channel.
+            set upper_limit 4095
+
+            # Transform the hexadecimal colors provided into RGB12 colors.
+            set channels [::HEX12_RGB12 $hexadecimals]
+        }
+        16  {
+            # Set the maximum value for every channel.
+            set upper_limit 65535
+
+            # Transform the hexadecimal colors provided into RGB16 colors.
+            set channels [::HEX16_RGB16 $hexadecimals]
+        }
+    }
+
+    # Execute the command.
+    foreach { red green blue } $channels {
+        set red   [expr { $upper_limit-$red   }]
+        set green [expr { $upper_limit-$green }]
+        set blue  [expr { $upper_limit-$blue  }]
+
+        lappend results $red $green $blue
+    }
+
+    # Transform the resulting RGB colors back into hexadecimal colors
+    # with the same color depth of the hexadecimal colors provided.
+    switch -- $depth {
+        8   { return [::RGB8_HEX8   $results] }
+        12  { return [::RGB12_HEX12 $results] }
+        16  { return [::RGB16_HEX16 $results] }
+    }
+}
+
+## Light
 #
-#             **RGB**
-#             **HSL**
-#             **Lab**
-#             **Luv**
-#             **LCHab**
-#             **LCHuv**
+# Compute a lighter version (by *amount* and *via*) of the colors provided.
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# Where:
 #
-# Returns a list containing the hexadecimals lighter color/s relative to the color/s provided.
-proc ::ms::color::Lighten { HEXs amount via depth } {
-    set results [list ]
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
+#
+# amount         Should be a floating point value specifing the amount of lightness to add [0,100].
+#                This amount is evaluated as a percentage.
+#
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
+#
+#                   **RGB**
+#                   **HSL**
+#                   **Lab**
+#                   **Luv**
+#                   **LCHab**
+#                   **LCHuv**
+#
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
+#
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Light { hexadecimals amount via depth } {
+    # Check the 'via' provided.
     switch -- $via {
         RGB {
-            # Check the 'depth' provided.
+            # Check the color 'depth' provided.
             switch -- $depth {
                 8   {
-                    # Note:  RGB range [0,255].
+                    # Set the maximum value for every channel.
+                    set upper_limit 255
 
                     # Transform the amount from [0,100] to [0,255].
                     set amount [expr { round($amount*2.55) }]
 
-                    # Transform the hexadecimal color/s provided into RGB color/s.
-                    set channels [::HEX8_RGB8 $HEXs]
-
-                    # Execute the command.
-                    foreach channel $channels {
-                        set channel [expr { $channel+$amount }]
-
-                        # Check if 'channel' exceeds its upper limit.
-                        if { $channel > 255 } {
-                            set channel 255
-                        }
-
-                        lappend results $channel
-                    }
-
-                    # Transform the resulting RGB color/s back into hexadecimal color/s.
-                    return [::RGB8_HEX8 $results]
+                    # Transform the hexadecimal colors provided into RGB8 colors.
+                    set channels [::HEX8_RGB8 $hexadecimals]
                 }
                 12  {
-                    # Note:  RGB range [0,4095].
+                    # Set the maximum value for every channel.
+                    set upper_limit 4095
 
                     # Transform the amount from [0,100] to [0,4095].
                     set amount [expr { round($amount*40.95) }]
 
-                    # Transform the hexadecimal color/s provided into RGB color/s.
-                    set channels [::HEX12_RGB12 $HEXs]
-
-                    # Execute the command.
-                    foreach channel $channels {
-                        set channel [expr { $channel+$amount }]
-
-                        # Check if 'channel' exceeds its upper limit.
-                        if { $channel > 4095 } {
-                            set channel 4095
-                        }
-
-                        lappend results $channel
-                    }
-
-                    # Transform the resulting RGB color/s back into hexadecimal color/s.
-                    return [::RGB12_HEX12 $results]
+                    # Transform the hexadecimal colors provided into RGB12 colors.
+                    set channels [::HEX12_RGB12 $hexadecimals]
                 }
                 16  {
-                    # Note:  RGB range [0,65535].
+                    # Set the maximum value for every channel.
+                    set upper_limit 65535
 
                     # Transform the amount from [0,100] to [0,65535].
                     set amount [expr { round($amount*655.35) }]
 
-                    # Transform the hexadecimal color/s provided into RGB color/s.
-                    set channels [::HEX16_RGB16 $HEXs]
-
-                    # Execute the command.
-                    foreach channel $channels {
-                        set channel [expr { $channel+$amount }]
-
-                        # Check if 'channel' exceeds its upper limit.
-                        if { $channel > 65535 } {
-                            set channel 65535
-                        }
-
-                        lappend results $channel
-                    }
-
-                    # Transform the resulting RGB color/s back into hexadecimal color/s.
-                    return [::RGB16_HEX16 $results]
+                    # Transform the hexadecimal colors provided into RGB colors.
+                    set channels [::HEX16_RGB16 $hexadecimals]
                 }
+            }
+
+            # Execute the command.
+            foreach channel $channels {
+                set channel [expr { $channel+$amount }]
+
+                # Check if 'channel' exceeds its upper limit.
+                if { $channel > $upper_limit } {
+                    set channel $upper_limit
+                }
+
+                lappend results $channel
+            }
+
+            # Transform the resulting RGB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
+            switch -- $depth {
+                8   { return [::RGB8_HEX8   $results] }
+                12  { return [::RGB12_HEX12 $results] }
+                16  { return [::RGB16_HEX16 $results] }
             }
         }
         HSL {
             # Note:  Lightness range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSL color/s.
+            # Transform the hexadecimal colors provided into HSL colors.
             switch -- $depth {
-                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation lightness } $channels {
-                set lightness [expr { $lightness+$amount }]
+            foreach { H S L } $channels {
+                set L [expr { $L+$amount }]
 
-                # Check if 'lightness' exceeds its upper limit.
-                if { $lightness > 100.0 } {
-                    set lightness 100.0
+                # Check if 'L' exceeds its upper limit.
+                if { $L > 100.0 } {
+                    set L 100.0
                 }
 
-                lappend results $hue $saturation $lightness
+                lappend results $H $S $L
             }
 
-            # Transform the resulting HSL color/s back into hexadecimal color/s.
+            # Transform the resulting HSL colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $results]]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $results]]] }
@@ -4329,11 +4774,11 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into Lab color/s.
+            # Transform the hexadecimal colors provided into Lab colors.
             switch -- $depth {
-                8  { set channels [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]] }
-                12 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]] }
-                16 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]] }
+                8  { set channels [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]] }
+                12 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]] }
+                16 { set channels [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]] }
             }
 
             # Execute the command.
@@ -4348,7 +4793,8 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
                 lappend results $L $a $b
             }
 
-            # Transform the resulting Lab color/s back into hexadecimal color/s.
+            # Transform the resulting Lab colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ $results]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ $results]]]] }
@@ -4359,11 +4805,11 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into Luv color/s.
+            # Transform the hexadecimal colors provided into Luv colors.
             switch -- $depth {
-                8  { set channels [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]] }
-                12 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]] }
-                16 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]] }
+                8  { set channels [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]] }
+                12 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]] }
+                16 { set channels [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]] }
             }
 
             # Execute the command.
@@ -4378,7 +4824,8 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
                 lappend results $L $u $v
             }
 
-            # Transform the resulting Luv color/s back into hexadecimal color/s.
+            # Transform the resulting Luv colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ $results]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ $results]]]] }
@@ -4389,11 +4836,11 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into LCHab color/s.
+            # Transform the hexadecimal colors provided into LCHab colors.
             switch -- $depth {
-                8  { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]]] }
-                12 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]]] }
-                16 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]]] }
+                8  { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]]] }
+                12 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]]] }
+                16 { set channels [::Lab_LCHab [::XYZ_Lab [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]]] }
             }
 
             # Execute the command.
@@ -4408,7 +4855,8 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
                 lappend results $L $C $Hab
             }
 
-            # Transform the resulting LCHab color/s back into hexadecimal color/s.
+            # Transform the resulting LCHab colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Lab_XYZ [::LCHab_Lab $results]]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Lab_XYZ [::LCHab_Lab $results]]]]] }
@@ -4419,11 +4867,12 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
             # Note:  'L' range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into LCHuv color/s.
+            # Transform the hexadecimal colors provided into LCHuv colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
-                8  { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]]]] }
-                12 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $HEXs]]]]] }
-                16 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $HEXs]]]]] }
+                8  { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]]]] }
+                12 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]]]] }
+                16 { set channels [::Luv_LCHuv [::XYZ_Luv [::rgb_XYZ [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]]]] }
             }
 
             # Execute the command.
@@ -4438,7 +4887,8 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
                 lappend results $L $C $Huv
             }
 
-            # Transform the resulting LCHuv color/s back into hexadecimal color/s.
+            # Transform the resulting LCHuv colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8  { return [::RGB8_HEX8   [::rgb_RGB8  [::XYZ_rgb [::Luv_XYZ [::LCHuv_Luv $results]]]]] }
                 12 { return [::RGB12_HEX12 [::rgb_RGB12 [::XYZ_rgb [::Luv_XYZ [::LCHuv_Luv $results]]]]] }
@@ -4450,54 +4900,55 @@ proc ::ms::color::Lighten { HEXs amount via depth } {
 
 ## Saturate
 #
-# Compute the hexadecimals saturated color/s relative to the color/s provided.
+# Compute a saturated version (by *amount* and *via*) of the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# amount   Should be a floating point value specifing the amount of saturation to add [0,100].
-#          This amount is evaluated as a percentage.
+# amount         Should be a floating point value specifing the amount of saturation to add [0,100].
+#                This amount is evaluated as a percentage.
 #
-# via      Should be a string indicating the 'via' to use to achieve the results.
-#          Allowed values are:
+# via            Should be a string indicating the 'via' to use to achieve the results.
+#                Allowed values are:
 #
-#             **HSB**
-#             **HSI**
-#             **HSL**
-#             **HSP**
+#                   **HSB**
+#                   **HSI**
+#                   **HSL**
+#                   **HSP**
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals saturated color/s relative to the color/s provided.
-proc ::ms::color::Saturate { HEXs amount via depth } {
-    set results [list ]
+# Returns a list containing the resulting hexadecimal colors.
+proc ::ms::color::Saturate { hexadecimals amount via depth } {
+    # Check the 'via' provided.
     switch -- $via {
         HSB {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSB color/s.
+            # Transform the hexadecimal colors provided into HSB colors.
             switch -- $depth {
-                8   { set channels [::rgb_HSB [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12  { set channels [::rgb_HSB [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16  { set channels [::rgb_HSB [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSB [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12  { set channels [::rgb_HSB [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16  { set channels [::rgb_HSB [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation brightness } $channels {
-                set saturation [expr { $saturation+$amount }]
+            foreach { H S B } $channels {
+                set S [expr { $S+$amount }]
 
-                # Check if 'saturation' exceeds its upper limit.
-                if { $saturation > 100.0 } {
-                    set saturation 100.0
+                # Check if 'S' exceeds its upper limit.
+                if { $S > 100.0 } {
+                    set S 100.0
                 }
 
-                lappend results $hue $saturation $brightness
+                lappend results $H $S $B
             }
 
-            # Transform the resulting HSB color/s back into hexadecimal color/s.
+            # Transform the resulting HSB colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSB_rgb $results]]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSB_rgb $results]]] }
@@ -4508,26 +4959,27 @@ proc ::ms::color::Saturate { HEXs amount via depth } {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSI color/s.
+            # Transform the hexadecimal colors provided into HSI colors.
             switch -- $depth {
-                8   { set channels [::rgb_HSI [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12  { set channels [::rgb_HSI [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16  { set channels [::rgb_HSI [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSI [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12  { set channels [::rgb_HSI [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16  { set channels [::rgb_HSI [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation intensity } $channels {
-                set saturation [expr { $saturation+$amount }]
+            foreach { H S I } $channels {
+                set S [expr { $S+$amount }]
 
-                # Check if 'saturation' exceeds its upper limit.
-                if { $saturation > 100.0 } {
-                    set saturation 100.0
+                # Check if 'S' exceeds its upper limit.
+                if { $S > 100.0 } {
+                    set S 100.0
                 }
 
-                lappend results $hue $saturation $intensity
+                lappend results $H $S $I
             }
 
-            # Transform the resulting HSI color/s back into hexadecimal color/s.
+            # Transform the resulting HSI colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSI_rgb $results]]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSI_rgb $results]]] }
@@ -4538,26 +4990,27 @@ proc ::ms::color::Saturate { HEXs amount via depth } {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSL color/s.
+            # Transform the hexadecimal colors provided into HSL colors.
             switch -- $depth {
-                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSL [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12  { set channels [::rgb_HSL [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16  { set channels [::rgb_HSL [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation lightness } $channels {
-                set saturation [expr { $saturation+$amount }]
+            foreach { H S L } $channels {
+                set S [expr { $S+$amount }]
 
-                # Check if 'saturation' exceeds its upper limit.
-                if { $saturation > 100.0 } {
-                    set saturation 100.0
+                # Check if 'S' exceeds its upper limit.
+                if { $S > 100.0 } {
+                    set S 100.0
                 }
 
-                lappend results $hue $saturation $lightness
+                lappend results $H $S $L
             }
 
-            # Transform the resulting HSL color/s back into hexadecimal color/s.
+            # Transform the resulting HSL colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSL_rgb $results]]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSL_rgb $results]]] }
@@ -4568,26 +5021,27 @@ proc ::ms::color::Saturate { HEXs amount via depth } {
             # Note:  Saturation range [0,100].
             #        The percentual amount provided will be used as is.
 
-            # Transform the hexadecimal color/s provided into HSP color/s.
+            # Transform the hexadecimal colors provided into HSP colors.
             switch -- $depth {
-                8   { set channels [::rgb_HSP [::RGB8_rgb  [::HEX8_RGB8   $HEXs]]] }
-                12  { set channels [::rgb_HSP [::RGB12_rgb [::HEX12_RGB12 $HEXs]]] }
-                16  { set channels [::rgb_HSP [::RGB16_rgb [::HEX16_RGB16 $HEXs]]] }
+                8   { set channels [::rgb_HSP [::RGB8_rgb  [::HEX8_RGB8   $hexadecimals]]] }
+                12  { set channels [::rgb_HSP [::RGB12_rgb [::HEX12_RGB12 $hexadecimals]]] }
+                16  { set channels [::rgb_HSP [::RGB16_rgb [::HEX16_RGB16 $hexadecimals]]] }
             }
 
             # Execute the command.
-            foreach { hue saturation perceived_brightness } $channels {
-                set saturation [expr { $saturation+$amount }]
+            foreach { H S P } $channels {
+                set S [expr { $S+$amount }]
 
-                # Check if 'saturation' exceeds its upper limit.
-                if { $saturation > 100.0 } {
-                    set saturation 100.0
+                # Check if 'S' exceeds its upper limit.
+                if { $S > 100.0 } {
+                    set S 100.0
                 }
 
-                lappend results $hue $saturation $perceived_brightness
+                lappend results $H $S $P
             }
 
-            # Transform the resulting HSP color/s back into hexadecimal color/s.
+            # Transform the resulting HSP colors back into hexadecimal colors
+            # with the same color depth of the hexadecimal colors provided.
             switch -- $depth {
                 8   { return [::RGB8_HEX8   [::rgb_RGB8  [::HSP_rgb $results]]] }
                 12  { return [::RGB12_HEX12 [::rgb_RGB12 [::HSP_rgb $results]]] }
@@ -4597,129 +5051,24 @@ proc ::ms::color::Saturate { HEXs amount via depth } {
     }
 }
 
-## Warmup
-#
-# Compute the hexadecimals warmer color/s relative to the color/s provided.
-#
-# Where:
-#
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
-#
-# amount   Should be a floating point value specifing the amount of heat to add [0,100].
-#          This amount is evaluated as a percentage.
-#
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
-#
-# Returns a list containing the hexadecimal warmer color/s relative to the color/s provided.
-proc ::ms::color::Warmup { HEXs amount depth } {
-    set results [list ]
-    switch -- $depth {
-        8   {
-            # Transform the amount from [0,100] to [0,255].
-            set amount [expr { round($amount*2.55) }]
-
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX8_RGB8 $HEXs]
-
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red  [expr { $red+$amount  }]
-                set blue [expr { $blue-$amount }]
-
-                # Check that the 'red' channel doesn't exceeds its upper limit.
-                if { $red > 255 } {
-                    set red 255
-                }
-
-                # Check that the 'blue' channel doesn't exceeds its lower limit.
-                if { $blue < 0 } {
-                    set blue 0
-                }
-
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB8_HEX8 $results]
-        }
-        12  {
-            # Transform the amount from [0,100] to [0,4095].
-            set amount [expr { round($amount*40.95) }]
-
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX12_RGB12 $HEXs]
-
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red  [expr { $red+$amount  }]
-                set blue [expr { $blue-$amount }]
-
-                # Check that the 'red' channel doesn't exceeds its upper limit.
-                if { $red > 4095 } {
-                    set red 4095
-                }
-
-                # Check that the 'blue' channel doesn't exceeds its lower limit.
-                if { $blue < 0 } {
-                    set blue 0
-                }
-
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB12_HEX12 $results]
-        }
-        16  {
-            # Transform the amount from [0,100] to [0,65535].
-            set amount [expr { round($amount*655.35) }]
-
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX16_RGB16 $HEXs]
-
-            # Execute the command.
-            foreach { red green blue } $channels {
-                set red  [expr { $red+$amount  }]
-                set blue [expr { $blue-$amount }]
-
-                # Check that the 'red' channel doesn't exceeds its upper limit.
-                if { $red > 65535 } {
-                    set red 65535
-                }
-
-                # Check that the 'blue' channel doesn't exceeds its lower limit.
-                if { $blue < 0 } {
-                    set blue 0
-                }
-
-                lappend results $red $green $blue
-            }
-
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
-            return [::RGB16_HEX16 $results]
-        }
-    }
-}
-
 ## Websafe
 #
-# Compute the hexadecimals websafe color/s relative to the color/s provided.
+# Compute the websafe colors relative to the colors provided.
 #
 # Where:
 #
-# HEXs     Should be a list containing all the hexadecimal colors that will be involved in the process.
+# hexadecimals   Should be a list containing hexadecimal colors expressed in their longform.
 #
-# depth    Should be an integer specifing the color depth in which the color/s provided are defined.
-#          Allowed values are **8**, **12** or **16**.
+# depth          Should be an integer specifing the color depth in which the colors provided are defined.
+#                Allowed values are **8**, **12** or **16**.
 #
-# Returns a list containing the hexadecimals websafe color/s relative to the color/s provided.
+# Returns a list containing the resulting hexadecimal colors.
 proc ::ms::color::Websafe { hexadecimals { depth "" } } {
-    set results [list ]
+    # Check the color 'depth' provided.
     switch -- $depth {
         8   {
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX8_RGB8 $HEXs]
+            # Transform the hexadecimal colors provided into RGB8 colors.
+            set channels [::HEX8_RGB8 $hexadecimals]
 
             # Execute the commands.
             foreach channel $channels {
@@ -4740,12 +5089,12 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
                 lappend results $channel
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB8 colors back into hexadecimal colors.
             return [::RGB8_HEX8 $results]
         }
         12  {
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX12_RGB12 $HEXs]
+            # Transform the hexadecimal colors provided into RGB12 colors.
+            set channels [::HEX12_RGB12 $hexadecimals]
 
             # Execute the commands.
             foreach channel $channels {
@@ -4766,12 +5115,12 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
                 lappend results $channel
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB12 colors back into hexadecimal colors.
             return [::RGB12_HEX12 $results]
         }
         16  {
-            # Transform the hexadecimal color/s provided into RGB color/s.
-            set channels [::HEX16_RGB16 $HEXs]
+            # Transform the hexadecimal colors provided into RGB16 colors.
+            set channels [::HEX16_RGB16 $hexadecimals]
 
             # Execute the commands.
             foreach channel $channels {
@@ -4792,7 +5141,7 @@ proc ::ms::color::Websafe { hexadecimals { depth "" } } {
                 lappend results $channel
             }
 
-            # Transform the resulting RGB color/s back into hexadecimal color/s.
+            # Transform the resulting RGB16 colors back into hexadecimal colors.
             return [::RGB16_HEX16 $results]
         }
     }
