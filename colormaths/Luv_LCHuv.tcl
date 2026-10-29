@@ -70,9 +70,6 @@ interp alias {} ::Luv_LCHuv {} ::ms::Luv_LCHuv::Conversion
 #               u --> u         [-134.0,220.0]
 #               v --> v         [-140.0,122.0]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **Luv** color:

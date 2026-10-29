@@ -70,9 +70,6 @@ interp alias {} ::RGB12_HEX12 {} ::ms::RGB12_HEX12::Conversion
 #               G --> Green [0,4095]
 #               B --> Blue  [0,4095]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **RGB12** color:

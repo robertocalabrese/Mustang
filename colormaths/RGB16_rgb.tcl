@@ -70,9 +70,6 @@ interp alias {} ::RGB16_rgb {} ::ms::RGB16_rgb::Conversion
 #               G --> Green [0,65535]
 #               B --> Blue  [0,65535]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **RGB16** color:

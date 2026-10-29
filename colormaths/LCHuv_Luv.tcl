@@ -70,9 +70,6 @@ interp alias {} ::LCHuv_Luv {} ::ms::LCHuv_Luv::Conversion
 #               C   --> Chroma    [0,260.76809620810593]
 #               Huv --> Huv       [0,360.0[
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One output **LCHuv** color:

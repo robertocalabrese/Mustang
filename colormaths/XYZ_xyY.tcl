@@ -70,9 +70,6 @@ interp alias {} ::XYZ_xyY {} ::ms::XYZ_xyY::Conversion
 #               Y --> Y [0,1.0]                 --> PCS.Y D50
 #               Z --> Z [0,0.82489999999999997] --> PCS.Z D50
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **XYZ** color:

@@ -70,9 +70,6 @@ interp alias {} ::LCHab_Lab {} ::ms::LCHab_Lab::Conversion
 #               C   --> Chroma    [0,181.01933598375618]
 #               Hab --> Hab       [0,360.0[
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **LCHab** color:

@@ -70,9 +70,6 @@ interp alias {} ::xyY_XYZ {} ::ms::xyY_XYZ::Conversion
 #               y --> y [0,1.0]
 #               Y --> Y [0,1.0]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **xyY** color:

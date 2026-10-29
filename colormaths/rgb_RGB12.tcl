@@ -70,9 +70,6 @@ interp alias {} ::rgb_RGB12 {} ::ms::rgb_RGB12::Conversion
 #               g --> green [0,1.0]
 #               b --> blue  [0,1.0]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **rgb** color:

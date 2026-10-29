@@ -72,9 +72,6 @@ interp alias {} ::HSL_HWB {} ::ms::HSL_HWB::Conversion
 #
 #            Note that for hues, '360.0' is not included.
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **HSL** color:

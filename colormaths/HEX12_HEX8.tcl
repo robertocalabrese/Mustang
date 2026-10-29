@@ -76,9 +76,6 @@ interp alias {} ::HEX12_HEX8 {} ::ms::HEX12_HEX8::Conversion
 #                   - Each hexadecimal letter must be lowercase.
 #                   - Shortforms are not allowed.
 #                   - Textual or theme colornames are not allowed.
-#                   - For performance reasons, the input and output colors will not be checked.
-#                     Please, take the appropriate steps before and after using this procedure or use
-#                     the **color** command instead.
 #
 #                Examples:
 #

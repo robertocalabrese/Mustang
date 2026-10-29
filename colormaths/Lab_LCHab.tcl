@@ -70,9 +70,6 @@ interp alias {} ::Lab_LCHab {} ::ms::Lab_LCHab::Conversion
 #               a --> a         [-128.0,127.0]
 #               b --> b         [-128.0,127.0]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **Lab** color:

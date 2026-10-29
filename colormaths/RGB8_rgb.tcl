@@ -70,9 +70,6 @@ interp alias {} ::RGB8_rgb {} ::ms::RGB8_rgb::Conversion
 #               G --> Green [0,255]
 #               B --> Blue  [0,255]
 #
-#            Attention, the input and output colors will not be checked.
-#            Please, take the appropriate steps before and after using this procedure or use the **color** command instead.
-#
 #            Examples:
 #
 #               One input **RGB8** color:
