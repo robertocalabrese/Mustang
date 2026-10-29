@@ -50,7 +50,7 @@
 #
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
-package provide ::lerp 0.1
+package provide ::ms::lerp 0.1
 
 # Create the mustang **XYZ_rgb** package.
 namespace eval ::ms::lerp {}
