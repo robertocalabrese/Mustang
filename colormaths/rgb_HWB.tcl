@@ -149,6 +149,13 @@ proc ::ms::rgb_HWB::Conversion { channels } {
             }
             set hue [expr { (($i-$f)/($max-$min))*60.0 }]
 
+            # Check that the 'hue' doesn't exceeds its limits.
+            if { $hue >= 360.0 } {
+                set hue [expr { $hue-360.0 }]
+            } elseif { $hue < 0 } {
+                set hue [expr { $hue+360.0 }]
+            }
+
             lappend results $hue $whiteness $blackness
         }
     }
