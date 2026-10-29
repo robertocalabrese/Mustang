@@ -130,15 +130,15 @@ proc ::ms::rgb_XYZ::Conversion { channels } {
         # | a3  b3  c3 |   | b_linear |   | Z |
 
         # Retrieve the RGB_XYZ coefficients for the current colorspace.
-        set a1 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 0]
-        set a2 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 1]
-        set a3 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 2]
-        set b1 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 3]
-        set b2 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 4]
-        set b3 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 5]
-        set c1 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 6]
-        set c2 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 7]
-        set c3 [lindex $::ms::data(colorspace,$::ms::data(colorspace),RGB_XYZ) 8]
+        set a1 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 0]
+        set a2 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 1]
+        set a3 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 2]
+        set b1 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 3]
+        set b2 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 4]
+        set b3 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 5]
+        set c1 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 6]
+        set c2 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 7]
+        set c3 [lindex $::ms::data(colorspace,$::ms::colorspace,RGB_XYZ) 8]
 
         # Transform the *linear* rgb values into XYZ values.
         set X [expr { ($a1*$r_linear) + ($b1*$g_linear) + ($c1*$b_linear) }]
