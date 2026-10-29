@@ -177,6 +177,13 @@ proc ::ms::rgb_HSP::Conversion { channels } {
                 }
             }
 
+            # Check that the 'hue' doesn't exceeds its limits.
+            if { $hue >= 360.0 } {
+                set hue [expr { $hue-360.0 }]
+            } elseif { $hue < 0 } {
+                set hue [expr { $hue+360.0 }]
+            }
+
             lappend results $hue $saturation $perceived_brightness
         }
     }
