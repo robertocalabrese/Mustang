@@ -1574,33 +1574,33 @@ _bind _Palette <FocusOut> { ::ms::palette::FocusOut [_winfo parent %W]; break }
 _bind _Palette <KeyPress> { ::ms::palette::KeyPress [_winfo parent %W] %A; break }
 
 # Re-enable some keys.
-_bind _Palette <KeyPress-space>       { ::ttk::entry::Insert [_winfo parent %W] " "; break }
+_bind _Palette <KeyPress-space>       { ::ttk::entry::Insert %W " "; break }
 _bind _Palette <KeyPress-Caps_Lock>   { # Enable binding }
-_bind _Palette <KeyPress-KP_Subtract> { ::ttk::entry::Insert [_winfo parent %W] "-"; break }
+_bind _Palette <KeyPress-KP_Subtract> { ::ttk::entry::Insert %W "-"; break }
 
 # Insert cursor movements.
-_bind _Palette <<LineEnd>>   { ::ttk::entry::Move  [_winfo parent %W] end; break }
-_bind _Palette <<LineStart>> { ::ttk::entry::Move  [_winfo parent %W] home; break }
-_bind _Palette <<NextChar>>  { ::ttk::entry::Move  [_winfo parent %W] nextchar; break }
+_bind _Palette <<LineEnd>>   { ::ttk::entry::Move  %W end; break }
+_bind _Palette <<LineStart>> { ::ttk::entry::Move  %W home; break }
+_bind _Palette <<NextChar>>  { ::ttk::entry::Move  %W nextchar; break }
 _bind _Palette <<NextLine>>  { ::ms::palette::Post [_winfo parent %W]; break }
-_bind _Palette <<NextWord>>  { ::ttk::entry::Move  [_winfo parent %W] nextword; break }
-_bind _Palette <<PrevChar>>  { ::ttk::entry::Move  [_winfo parent %W] prevchar; break }
-_bind _Palette <<PrevWord>>  { ::ttk::entry::Move  [_winfo parent %W] prevword; break }
+_bind _Palette <<NextWord>>  { ::ttk::entry::Move  %W nextword; break }
+_bind _Palette <<PrevChar>>  { ::ttk::entry::Move  %W prevchar; break }
+_bind _Palette <<PrevWord>>  { ::ttk::entry::Move  %W prevword; break }
 
-_bind _Palette <<SelectLineEnd>>   { ::ttk::entry::Extend [_winfo parent %W] end; break }
-_bind _Palette <<SelectLineStart>> { ::ttk::entry::Extend [_winfo parent %W] home; break }
-_bind _Palette <<SelectNextChar>>  { ::ttk::entry::Extend [_winfo parent %W] nextchar; break }
-_bind _Palette <<SelectNextWord>>  { ::ttk::entry::Extend [_winfo parent %W] selectnextword; break }
-_bind _Palette <<SelectPrevChar>>  { ::ttk::entry::Extend [_winfo parent %W] prevchar; break }
-_bind _Palette <<SelectPrevWord>>  { ::ttk::entry::Extend [_winfo parent %W] prevword; break }
+_bind _Palette <<SelectLineEnd>>   { ::ttk::entry::Extend %W end; break }
+_bind _Palette <<SelectLineStart>> { ::ttk::entry::Extend %W home; break }
+_bind _Palette <<SelectNextChar>>  { ::ttk::entry::Extend %W nextchar; break }
+_bind _Palette <<SelectNextWord>>  { ::ttk::entry::Extend %W selectnextword; break }
+_bind _Palette <<SelectPrevChar>>  { ::ttk::entry::Extend %W prevchar; break }
+_bind _Palette <<SelectPrevWord>>  { ::ttk::entry::Extend %W prevword; break }
 
 _bind _Palette <<SelectAll>>  { [_winfo parent %W] selection range 0 end; break }
 _bind _Palette <<SelectNone>> { [_winfo parent %W] selection clear; break }
 
 # Backspace/Delete keys
-_bind _Palette <KeyPress-BackSpace> { ::ttk::entry::Backspace [_winfo parent %W]; break }
-_bind _Palette <KeyPress-Delete>    { ::ttk::entry::Delete    [_winfo parent %W]; break }
-_bind _Palette <KeyPress-KP_Delete> { ::ttk::entry::Delete    [_winfo parent %W]; break }
+_bind _Palette <KeyPress-BackSpace> { ::ttk::entry::Backspace %W; break }
+_bind _Palette <KeyPress-Delete>    { ::ttk::entry::Delete    %W; break }
+_bind _Palette <KeyPress-KP_Delete> { ::ttk::entry::Delete    %W; break }
 
 # Escape
 _bind _Palette <KeyPress-Escape> { ::ms::Escape [_winfo parent %W]; break }
