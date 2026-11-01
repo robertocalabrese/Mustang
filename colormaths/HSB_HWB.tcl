@@ -91,9 +91,6 @@ interp alias {} ::HSB_HWB {} ::ms::HSB_HWB::Conversion
 #
 #               and so on and so forth...
 #
-# A pre-computation have been made in order to increase the performance:
-#   1 / 100 = 0.01
-#
 # Note: For info about the **HWB** color system visit [HWB](http://alvyray.com/Papers/CG/HWB_JGTv208.pdf).
 #
 # Return a list containing the resulting **HWB** colors channels flattened together.
@@ -135,10 +132,9 @@ proc ::ms::HSB_HWB::Conversion { channels } {
                 lappend results UNDEF $brightness $blackness
             }
             default {
-                set s [expr { $saturation*0.01 }]; # range [0,1.0]
-                set b [expr { $brightness*0.01 }]; # range [0,1.0]
+                set saturation [expr { (100.0-$saturation)*$brightness }]
 
-                lappend results $hue [expr { (1.0-$s)*$b*100.0 }] $blackness
+                lappend results $hue $saturation $blackness
             }
         }
     }

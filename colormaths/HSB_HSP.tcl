@@ -91,10 +91,6 @@ interp alias {} ::HSB_HSP {} ::ms::HSB_HSP::Conversion
 #
 #               and so on and so forth...
 #
-# Some pre-computation have been made in order to increase the performance:
-#   6 / 360 = 0.016666666666666666
-#   1 / 100 = 0.01
-#
 # Note: For info about the **HSP** color system visit [HSP](https://www.alienryderflex.com/hsp.html).
 #       For info about unadapted values visit [BruceLindbloom](http://www.brucelindbloom.com).
 #
@@ -129,6 +125,11 @@ interp alias {} ::HSB_HSP {} ::ms::HSB_HSP::Conversion
 #
 #   and so on and so forth...
 proc ::ms::HSB_HSP::Conversion { channels } {
+    # Some pre-computation have been made in order to increase the performance:
+    #   6 / 360 = 0.016666666666666666
+    #   1 / 100 = 0.01
+
+    set results [list ]
     foreach { hue saturation brightness } $channels {
         # Check if it's a gray.
         switch -nocase -- $hue {
@@ -208,9 +209,9 @@ proc ::ms::HSB_HSP::Conversion { channels } {
                 }
 
                 # Compute the perceived_brightness [0,100.0].
-                set r_part [expr { $r*$r*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
-                set g_part [expr { $g*$g*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
-                set b_part [expr { $b*$b*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
+                set r_part [expr { $r*$r*$::ms::Unadapted_Yr }]
+                set g_part [expr { $g*$g*$::ms::Unadapted_Yg }]
+                set b_part [expr { $b*$b*$::ms::Unadapted_Yb }]
 
                 set perceived_brightness [expr { (sqrt($r_part+$g_part+$b_part))*100.0 }]
 

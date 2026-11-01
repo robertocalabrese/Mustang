@@ -123,6 +123,7 @@ interp alias {} ::HWB_HSB {} ::ms::HWB_HSB::Conversion
 #
 #   and so on and so forth...
 proc ::ms::HWB_HSB::Conversion { channels } {
+    set results [list ]
     foreach { hue whiteness blackness } $channels {
         # Compute the brightness [0,100.0].
         set brightness [expr { 100.0-$blackness }]
@@ -134,10 +135,10 @@ proc ::ms::HWB_HSB::Conversion { channels } {
                 lappend results UNDEF 0 $brightness
             }
             default {
-                set w [expr { $whiteness*0.01 }]; # range [0,1.0]
-                set b [expr { $blackness*0.01 }]; # range [0,1.0]
+                # Compute the saturation channel [0,100.0]
+                set saturation [expr { 100.0-($whiteness/(100.0-$blackness)) }]
 
-                lappend results $hue [expr { (1.0-($w/(1.0-$b)))*100.0 }] $brightness
+                lappend results $hue $saturation $brightness
             }
         }
     }

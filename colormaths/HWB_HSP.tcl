@@ -130,6 +130,7 @@ interp alias {} ::HWB_HSP {} ::ms::HWB_HSP::Conversion
 #
 #   and so on and so forth...
 proc ::ms::HWB_HSP::Conversion { channels } {
+    set results [list ]
     foreach { hue whiteness blackness } $channels {
         # Check if it's a gray.
         switch -nocase -- $hue {
@@ -211,9 +212,9 @@ proc ::ms::HWB_HSP::Conversion { channels } {
                 }
 
                 # Compute the perceived_brightness [0,100.0].
-                set r_part [expr { $r*$r*$::ms::data(colorspace,$::ms::colorspace,Yr) }]
-                set g_part [expr { $g*$g*$::ms::data(colorspace,$::ms::colorspace,Yg) }]
-                set b_part [expr { $b*$b*$::ms::data(colorspace,$::ms::colorspace,Yb) }]
+                set r_part [expr { $r*$r*$::ms::Unadapted_Yr }]
+                set g_part [expr { $g*$g*$::ms::Unadapted_Yg }]
+                set b_part [expr { $b*$b*$::ms::Unadapted_Yb }]
 
                 set perceived_brightness [expr { (sqrt($r_part+$g_part+$b_part))*100.0 }]
 
