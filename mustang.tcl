@@ -316,12 +316,6 @@ proc ::ms::Init {} {
         default { set ::ms::colorscheme "light" }
     }
 
-    # It's an integer that specifies the color depth.
-    # The default color depth is '8' bit.
-    #
-    # ['8', '12', '16']
-    set ::ms::colordepth 8
-
     # Set the default focus model to 'explicit'.
     #
     # In an **explicit** focus model the focus changes only when a widget decides
@@ -397,6 +391,50 @@ proc ::ms::Init {} {
     # Set the current theme as the default 'Halo' theme.
     # Theme names are case sensitive.
     set ::ms::theme "Halo"
+
+    #####################################
+    ##                                 ##
+    ##     SET THE COLORSPACE DATA     ##
+    ##                                 ##
+    #####################################
+
+    # Note: The colorspace in which mustang operates is the 'sRGB D65'.
+    #
+    #       sRGB D65 Chromaticity xy values:
+    #
+    #       | red_x  green_x  blue_x |   | 0.64  0.3  0.15 |
+    #       | red_y  green_y  blue_y | = | 0.33  0.6  0.06 |
+    #
+    #       See 'https://en.wikipedia.org/wiki/SRGB' for more info.
+    #
+    #       sRGB Reference White XYZ values:
+    #
+    #       D65 Xrw = 0.95047
+    #       D65 Yrw = 1.0
+    #       D65 Zrw = 1.08883
+    #
+    #       # See 'http://www.brucelindbloom.com/' for more info.
+
+    # Compute the chromaticity XYZ matrix from the chromaticity xyz matrix:
+    #
+    # | red_x  green_x  blue_x |     | red_X  green_X  blue_X |
+    # | red_y  green_y  blue_y | --> | red_Y  green_Y  blue_Y |
+    # | red_z  green_z  blue_z |     | red_Z  green_Z  blue_Z |
+    #
+    # Invert the chromaticity XYZ matrix:
+    #
+    # | red_X  green_X  blue_X |-1    | red_X_inv  green_X_inv  blue_X_inv |
+    # | red_Y  green_Y  blue_Y |  --> | red_Y_inv  green_Y_inv  blue_Y_inv |
+    # | red_Z  green_Z  blue_Z |      | red_Z_inv  green_Z_inv  blue_Z_inv |
+    #
+    # Multiply the inverse chromaticity XYZ matrix for the Reference White (D65):
+    #
+    # | red_X_inv  green_X_inv  blue_X_inv |   | Reference_White_D65_X |     | Unadapted_D65_redY   |
+    # | red_Y_inv  green_Y_inv  blue_Y_inv | * | Reference_White_D65_Y | --> | Unadapted_D65_greenY |
+    # | red_Z_inv  green_Z_inv  blue_Z_inv |   | Reference_White_D65_Z |     | Unadapted_D65_blueY  |
+    set ::ms::Unadapted_Yr 0.21267285140562253
+    set ::ms::Unadapted_Yg 0.715152155287818
+    set ::ms::Unadapted_Yb 0.07217499330655958
 
     ##############################################
     ##                                          ##
@@ -587,57 +625,6 @@ proc ::ms::Init {} {
             # Order the list of all known palette names alphabetically.
             set ::ms::palette(names) [lsort -increasing -dictionary $::ms::palette(names)]
         }
-    }
-
-    ################################################
-    ##                                            ##
-    ##     LOAD ALL THE AVAILABLE COLORSPACES     ##
-    ##                                            ##
-    ################################################
-
-    # Set the PCS D50 XYZ value.
-    set ::ms::PCS_XYZ [list 0.96419999999999995 1.0 0.82489999999999997]
-    set ::ms::PCS_X   [lindex $::ms::PCS_XYZ 0]
-    set ::ms::PCS_Y   [lindex $::ms::PCS_XYZ 1]
-    set ::ms::PCS_Z   [lindex $::ms::PCS_XYZ 2]
-
-    # Initialize the list of all known colorspace models.
-    set ::ms::colorspaces [list ]
-
-    # Load any default colorspace files.
-    foreach colorspace [glob -type f -directory [file join $::ms_library colormaths colorspaces] -- *.txt] {
-        ::ms::Load_Colorspace $colorspace
-    }
-
-    # Load any program, developer or user colorspace files.
-    foreach colorspace [glob -type f -directory $::ms::folder(mustang,colorspaces) -- *.txt] {
-        ::ms::Load_Colorspace $colorspace
-    }
-
-    # Check that at least one colorspace file was loaded.
-    switch -- [llength $::ms::colorspaces] {
-        0   {
-            # If the debug variable is active, signal the problem in the stderr channel.
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { chan puts stdout "Warning, no colorspaces found." }
-            }
-
-            return ""
-        }
-    }
-
-    # Order the list of all known colorspace names alphabetically.
-    set ::ms::colorspaces [lsort -increasing -dictionary $::ms::colorspaces]
-
-    # Set the default colorspace.
-    if { "sRGB D65" in $::ms::colorspaces } {
-        set ::ms::colorspace "sRGB D65"
-    } else {
-        set ::ms::colorspace [lindex $::ms::colorspace 0]
     }
 
     ######################################
@@ -1582,13 +1569,6 @@ proc ::ms::Init {} {
             chan puts $channel "ClickAction: $::ms::clickaction"
             chan puts $channel ""
 
-            chan puts $channel "# It's an integer that specifies the color depth."
-            chan puts $channel "# The default color depth is '8' bit."
-            chan puts $channel "#"
-            chan puts $channel "# \['8', '12' or '16'\]"
-            chan puts $channel "Colordepth: $::ms::colordepth"
-            chan puts $channel ""
-
             chan puts $channel "# Colorscheme"
             chan puts $channel "#"
             chan puts $channel "# It's a string that specifies the colorscheme to use."
@@ -1596,14 +1576,6 @@ proc ::ms::Init {} {
             chan puts $channel "#"
             chan puts $channel "# \['light' or 'dark'\]"
             chan puts $channel "Colorscheme: $::ms::colorscheme"
-            chan puts $channel ""
-
-            chan puts $channel "# Colorspace Model"
-            chan puts $channel "#"
-            chan puts $channel "# It's a string that specifies the colorspace model to use."
-            chan puts $channel "# Colorspace models are case sensitive."
-            chan puts $channel "# The default colorspace model is 'sRGB D65'."
-            chan puts $channel "ColorspaceModel: $::ms::colorspace"
             chan puts $channel ""
 
             chan puts $channel "# Focus Model"
@@ -1842,24 +1814,11 @@ proc ::ms::Init {} {
                                 scroll { set ::ms::clickaction $value }
                             }
                         }
-                        "Colordepth:" {
-                            switch -- $value {
-                                8   -
-                                12  -
-                                16  { set ::ms::colordepth $value }
-                            }
-                        }
                         "Colorscheme:" {
                             set value [string tolower $value]
                             switch -- $value {
                                 dark  -
                                 light { set ::ms::colorscheme $value }
-                            }
-                        }
-                        "ColorspaceModel:" {
-                            set value [string trim $value]
-                            if { $value in $::ms::colorspaces } {
-                                set ::ms::colorspace $value
                             }
                         }
                         "DefaultFont:" {
@@ -2397,9 +2356,7 @@ proc ::ms::Init {} {
     # Register the current values of the mustang special variables as their last valid one.
     set ::ms::temp(accent,last)        $::ms::accent
     set ::ms::temp(clickaction,last)   $::ms::clickaction
-    set ::ms::temp(colordepth,last)    $::ms::colordepth
     set ::ms::temp(colorscheme,last)   $::ms::colorscheme
-    set ::ms::temp(colorspace,last)    $::ms::colorspace
     set ::ms::temp(focusmodel,last)    $::ms::focusmodel
     set ::ms::temp(language,last)      $::ms::language
     set ::ms::temp(middleclick,last)   $::ms::middleclick
@@ -2422,13 +2379,7 @@ proc ::ms::Init {} {
     trace add variable           ::ms::clickaction \
               [list unset write] [list ::ms::Check_And_React];
 
-    trace add variable           ::ms::colordepth \
-              [list unset write] [list ::ms::Check_And_React];
-
     trace add variable           ::ms::colorscheme \
-              [list unset write] [list ::ms::Check_And_React];
-
-    trace add variable           ::ms::colorspace \
               [list unset write] [list ::ms::Check_And_React];
 
     trace add variable           ::ms::focusmodel \
@@ -2500,9 +2451,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
             switch -- $varName {
                 "::ms::accent"      { set ::ms::accent      $::ms::temp(accent,last) }
                 "::ms::clickaction" { set ::ms::clickaction $::ms::temp(clickaction,last) }
-                "::ms::colordepth"  { set ::ms::colordepth  $::ms::temp(colordepth,last) }
                 "::ms::colorscheme" { set ::ms::colorscheme $::ms::temp(colorscheme,last) }
-                "::ms::colorspace"  { set ::ms::colorspace  $::ms::temp(colorspace,last) }
                 "::ms::focusmodel"  { set ::ms::focusmodel  $::ms::temp(focusmodel,last) }
                 "::ms::language"    { set ::ms::language    $::ms::temp(language,last) }
                 "::ms::middleclick" { set ::ms::middleclick $::ms::temp(middleclick,last) }
@@ -2574,21 +2523,6 @@ proc ::ms::Check_And_React { name1 name2 op } {
                         }
                     }
                 }
-                ::ms::colordepth {
-                    # Check that the new 'colordepth' value is a valid one.
-                    switch -- $::ms::colordepth {
-                        8   -
-                        12  -
-                        16  {
-                            # Update the last valid 'colordepth' value.
-                            set ::ms::temp(colordepth,last) $::ms::colordepth
-                        }
-                        default {
-                            # Restore the last valid 'colordepth' value.
-                            set ::ms::colordepth $::ms::temp(colordepth,last)
-                        }
-                    }
-                }
                 ::ms::colorscheme {
                     # Check that the new 'colorscheme' value is a valid one.
                     set ::ms::colorscheme [string tolower $::ms::colorscheme]
@@ -2616,16 +2550,6 @@ proc ::ms::Check_And_React { name1 name2 op } {
                             # Restore the last valid 'colorscheme' value.
                             set ::ms::colorscheme $::ms::temp(colorscheme,last)
                         }
-                    }
-                }
-                ::ms::colorspace {
-                    # Check that the new 'colorspace' provided is a valid value.
-                    if { $::ms::colorspace in $::ms::colorspaces } {
-                        # Update the last valid 'colorspace' value.
-                        set ::ms::temp(colorspace,last) $::ms::colorspace
-                    } else {
-                        # Restore the last valid 'colorspace' value.
-                        set ::ms::colorspace $::ms::temp(colorspace,last)
                     }
                 }
                 ::ms::focusmodel {
@@ -2842,58 +2766,31 @@ proc ::ms::Check_And_React { name1 name2 op } {
 #
 # Where:
 #
-# value      It's a list that specifies the color to validate and optionally some other information about the color.
+# value      It's a list that specifies the color to validate and optionally a palette name.
 #            The number of elements of this list depends on the color type in which *value* is provided.
 #            The allowed color types are:
 #
-#               **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
-#                                           channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
-#                                           hexadecimals), with or without the **#**.
+#               **hexadecimal colors**  --> These colors needs to be specified at **8** bits, without an *alpha* channel (transparency),
+#                                           in shortform (three hexadecimals) or longform (six hexadecimals), with or without the **#**.
 #
-#                                           In this form, the list should have only one or two elements.
-#                                           The first element indicates the color to validate and the second one (optional) indicates
-#                                           the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
-#                                           translated. If only one element is provided (the hexadecimal color) its color model will be
-#                                           assumed to be **HEX8**.
-#
-#                                           Note that **HEX8** can be shortened into **HEX**.
+#                                           In this form, the list should have only one element, the color to validate.
 #
 #                                           After its validation, the color will be returned translated in its equivalent hexadecimal
-#                                           longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#                                           longform (in lowercase characters and with the **#** symbol).
 #
-#                                           See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
-#
-#                                           Note: Hexadecimal colors and color models are case insensitive.
+#                                           Note: Hexadecimal colors are case insensitive.
 #
 #                                           Some examples:
 #
 #                                                "#FFF"            --> The hexadecimal color is "#FFF".
-#                                                                      The color model is **HEX8**.
 #
 #                                                                      The hexadecimal color is translated to '#ffffff'.
 #
-#                                                "#F0F hex12"      --> The hexadecimal color is "#F0F".
-#                                                                      The color model is **HEX12**.
-#
-#                                                                      The hexadecimal color is translated to '#FFF000FFF'.
-#
 #                                                "#FF0000"         --> The hexadecimal color is "#FF0000".
-#                                                                      The color model is **HEX8**.
 #
 #                                                                      The hexadecimal color is translated to '#ff0000'.
 #
-#                                                "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
-#                                                                      The color model is **HEX16**.
-#
-#                                                                      The hexadecimal color is translated to '#0000ffff0000'.
-#
-#                                                "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
-#                                                                      The color model is **HEX8**.
-#
-#                                                                      The hexadecimal color is translated to '#0000ff'.
-#
 #                                                "FFFF00"          --> The hexadecimal color is "FFFF00".
-#                                                                      The color model is **HEX8**.
 #
 #                                                                      The hexadecimal color is translated to '#ffff00'.
 #
@@ -2902,7 +2799,7 @@ proc ::ms::Check_And_React { name1 name2 op } {
 #
 #                                           In this form, the list should have at least one element. More precisely:
 #
-#                                                colorname   --> It's the textual color name that specifies the color.
+#                                                colorname   --> Mandatory. It's the textual color name that specifies the color.
 #                                                                Should always be written first. It can take more than one element of
 #                                                                the list depending on how many words are needed to define it.
 #
@@ -2921,37 +2818,22 @@ proc ::ms::Check_And_React { name1 name2 op } {
 #                                                                See the [palette](/wiki/palettes/index.md) wiki page to know more about
 #                                                                the mustang palettes.
 #
-#                                                colormodel  --> Optional. Should be the hexadecimal color model in which the color name
-#                                                                will be translated.
-#                                                                If present, the color model should always be the last element of the list.
-#
-#                                                                Allowed values are **HEX8**, **HEX12** and **HEX16**.
-#                                                                If not provided, defaults to **HEX8**.
-#
-#                                                                Note that **HEX8** can be shortened into **HEX**.
-#
-#                                                                See the [color model](/wiki/colormodels/index.md) wiki page to know more
-#                                                                about color models.
-#
-#                                           Note: Colornames, palettes and color models are case insensitive.
+#                                           Note: Colornames and palettes are case insensitive.
 #
 #                                           Some examples:
 #
 #                                                "teal"                --> The color name is *teal*.
 #                                                                          The palette name is **mustang**.
-#                                                                          The color model is **HEX8**.
 #
 #                                                                          The color name is translated to "#008080"
 #
 #                                                "medium violet red"   --> The color name is *medium violet red*.
 #                                                                          The palette name is **mustang**.
-#                                                                          The color model is **HEX8**.
 #
 #                                                                          The color name is translated to "#c71585"
 #
 #                                                "sepia MyPalette"     --> The color name is *sepia*.
 #                                                                          The palette name is **MyPalette**.
-#                                                                          The color model is **HEX8**.
 #
 #                                                                          Note that in this example **MyPalette** is a fictional
 #                                                                          palette name that have been loaded into mustang.
@@ -2959,37 +2841,21 @@ proc ::ms::Check_And_React { name1 name2 op } {
 #                                                                          The color name is translated to the hexadecimal color at 8 bit
 #                                                                          associated to the 'sepia' colorname in the palette 'MyPalette'.
 #
-#                                                "light coral hex16"   --> The color name is *light coral*.
-#                                                                          The color model is **HEX16**.
-#                                                                          The palette name is **mustang**.
+#                                                "caribbean green pearl mustang" --> The color name is *caribbean green pearl*.
+#                                                                                    The palette name is **mustang**.
 #
-#                                                                          The color name is translated to "#f0f080808080"
-#
-#                                                "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
-#                                                                                         The palette name is **mustang**.
-#                                                                                         The color model is **HEX8**.
-#
-#                                                                                         The color name is translated to "#6ada8e"
+#                                                                                    The color name is translated to "#6ada8e"
 #
 #                                           After its validation, the color name will be returned translated in its hexadecimal longform
-#                                           equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#                                           equivalent (in lowercase characters and with the **#** symbol).
 #
 #               **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
 #                                           *HighlightAlternate* or *PlaceholderText*.
 #
-#                                           In this form, the list should have only one or two elements.
-#                                           The first element indicates the theme color name to validate and the second one (optional)
-#                                           indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
-#                                           will be translated. If only one element is provided (the theme color name) its color model
-#                                           will be assumed to be **HEX8**.
-#
-#                                           Note that **HEX8** can be shortened into **HEX**.
+#                                           In this form, the list should have only one element, the theme color name to validate.
 #
 #                                           After its validation, the color will be returned translated in its equivalent hexadecimal
-#                                           longform (in lowercase characters and with the **#** symbol) for the color model provided.
-#
-#                                           See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
-#                                           theme color names are allowed.
+#                                           longform (in lowercase characters and with the **#** symbol).
 #
 #                                           Note: Theme colors are case sensitive.
 #
@@ -2999,79 +2865,68 @@ proc ::ms::Check_And_React { name1 name2 op } {
 #
 # Return the validated color or the fallback value.
 proc ::ms::Check_Color { value { fallback invalid } } {
-    # Check if a valid hexadecimal color model has been provided.
-    set colormodel [lindex $value end]
-    switch -nocase -- $colormodel {
-        HEX  -
-        HEX8 {
-            set colormodel HEX8
-            set value      [lrange $value 0 end-1]
-        }
-        HEX12 {
-            set colormodel HEX12
-            set value      [lrange $value 0 end-1]
-        }
-        HEX16 {
-            set colormodel HEX16
-            set value      [lrange $value 0 end-1]
-        }
-        default { set colormodel HEX8 }
-    }
-
     # Check if a valid palette name has been provided.
     set palette [string tolower [lindex $value end]]
+
+    # Check the 'palette' string.
     if { $palette in $::ms::palette(names) } {
         set color [lrange $value 0 end-1]
-    } else {
-        set color $value
 
-        # Check if the 'mustang' palette was actually loaded.
-        if { "mustang" in $::ms::palette(names) } {
-            set palette "mustang"
+        # Check if 'color' is an empty string.
+        switch -- $color {
+            ""  { return $fallback }
+        }
+
+        # Transform each word that compose 'color' in titlecase characters.
+        set colorname [list ]
+        foreach word $color {
+            lappend colorname [string totitle $word]
+        }
+
+        # Check if 'colorname' is known by 'palette'.
+        if { $colorname in $::ms::palette($palette,all,colornames) } {
+            # Return the colorname hexadecimal longform.
+            return $::ms::palette($palette,$colorname,hex)
         } else {
             return $fallback
         }
-    }
+    } else {
+        set color $value
 
-    # Check if 'color' is a valid hexadecimal color.
-    set result [::ms::Check_Hex $color $colormodel invalid]
-    switch -- $result {
-        invalid {
-            # Check if 'color' is an empty string.
-            switch -- [string trim $color] {
-                ""  { return $fallback }
-            }
+        # Check if 'color' is an empty string.
+        switch -- [string trim $color] {
+            ""  { return $fallback }
+        }
 
-            # Transform each word that compose 'color' in titlecase characters.
-            set colorname [list ]
-            foreach word $color {
-                lappend colorname [string totitle $word]
-            }
-
-            # Check if 'colorname' is known by 'palette'.
-            if { $colorname in $::ms::palette($palette,all,colornames) } {
-                # Return the colorname hexadecimal longform expressed in the hexadecimal color model provided.
-                switch -nocase -- $colormodel {
-                    HEX8  { return $::ms::palette($palette,$colorname,hex8) }
-                    HEX12 { return [::HEX8_HEX12 $::ms::palette($palette,$colorname,hex8)] }
-                    HEX16 { return [::HEX8_HEX16 $::ms::palette($palette,$colorname,hex8)] }
+        # Check if 'color' is a valid hexadecimal color.
+        set result [::ms::Check_Hex $color invalid]
+        switch -- $result {
+            invalid {
+                # Transform each word that compose 'color' in titlecase characters.
+                set colorname [list ]
+                foreach word $color {
+                    lappend colorname [string totitle $word]
                 }
-            } else {
-                set hex8 [::ms::Translate_Theme_Color $color invalid]
-                switch -- $hex8 {
-                    invalid { return $fallback }
-                    default {
-                        # Return the colorname hexadecimal longform expressed in the hexadecimal color model provided.
-                        switch -nocase -- $colormodel {
-                            HEX8  { return $hex8 }
-                            HEX12 { return [::HEX8_HEX12 $hex8] }
-                            HEX16 { return [::HEX8_HEX16 $hex8] }
+
+                # Check if 'colorname' is known by 'palette'.
+                if { $colorname in $::ms::palette(mustang,all,colornames) } {
+                    # Return the colorname hexadecimal longform.
+                    return $::ms::palette(mustang,$colorname,hex)
+                } else {
+                    switch -- [llength $color] {
+                        1   {
+                            set result [::ms::Translate_Theme_Color $color invalid]
+                            switch -- $result {
+                                invalid { return $fallback }
+                                default { return $result   }
+                            }
                         }
+                        default { return $fallback }
                     }
                 }
             }
+            default { return $result }
         }
-        default { return $result }
     }
 }
 
@@ -3081,23 +2936,10 @@ proc ::ms::Check_Color { value { fallback invalid } } {
 #
 # Where:
 #
-# color        Should be the color to validate expressed at **8**, **12** or **16** bits,
-#              without any *alpha* channel (transparency), in shortform (three hexadecimals) or longform
-#              (six, nine or twelve hexadecimals), with or without the **#**.
+# color        Should be the color to validate expressed at **8** bits, without any *alpha* channel (transparency),
+#              in shortform (three hexadecimals) or longform (six hexadecimals), with or without the **#**.
 #
 #              *Color* values are case insensitive.
-#
-# colormodel   Optional. Should be a string that specifies the hexadecimal color model
-#              in which *color* will be evaluated.
-#
-#              Allowed values are:
-#                  **HEX** or **HEX8** --> 3 or 6  hexadecimals.
-#                  **HEX12**           --> 3 or 9  hexadecimals.
-#                  **HEX16**           --> 3 or 12 hexadecimals.
-#
-#              *Colormodel* strings are case insensitive.
-#
-#              If not provided, defaults to **HEX8**.
 #
 # fallback     Optional. Should be a string that specifies the fallback value to return if the color provided will
 #              result invalid.
@@ -3106,87 +2948,34 @@ proc ::ms::Check_Color { value { fallback invalid } } {
 #
 # Return the validated color in its hexadecimal longform expressed in the color model specified, or the fallback value.
 # Validated colors will always be returned with lowercase characters.
-proc ::ms::Check_Hex { color { colormodel HEX8 } { fallback invalid } } {
+proc ::ms::Check_Hex { color { fallback invalid } } {
     # Check if the color provided is expressed in a valid hexadecimal form.
     set color [string tolower [string trimleft $color "#"]]
     switch -- [string is xdigit -strict $color] {
         0       { return $fallback }
         default {
-            switch -nocase -- $colormodel {
-                HEX  -
-                HEX8 {
-                    # Check the number of hexadecimals in 'color'.
-                    switch -- [string length $color] {
-                        1   {
-                            return [string cat "#" \
-                                               $color $color \
-                                               $color $color \
-                                               $color $color];
-                        }
-                        3   {
-                            # 'Color' have been provided as a shortform.
-                            set red   [string index $color 0]
-                            set green [string index $color 1]
-                            set blue  [string index $color 2]
-
-                            return [string cat "#" \
-                                               $red   $red \
-                                               $green $green \
-                                               $blue  $blue];
-
-                        }
-                        6       { return [string cat "#" $color] }
-                        default { return $fallback }
-                    }
+            # Check the number of hexadecimals in 'color'.
+            switch -- [string length $color] {
+                1   {
+                    return [string cat "#" \
+                                       $color $color \
+                                       $color $color \
+                                       $color $color];
                 }
-                HEX12 {
-                    # Check the number of hexadecimals in color.
-                    switch -- [string length $color] {
-                        1   {
-                            return [string cat "#" \
-                                               $color $color $color \
-                                               $color $color $color \
-                                               $color $color $color];
-                        }
-                        3   {
-                            # 'Color' have been provided as a shortform.
-                            set red   [string index $color 0]
-                            set green [string index $color 1]
-                            set blue  [string index $color 2]
+                3   {
+                    # 'Color' have been provided as a shortform.
+                    set red   [string index $color 0]
+                    set green [string index $color 1]
+                    set blue  [string index $color 2]
 
-                            return [string cat "#" \
-                                               $red   $red   $red  \
-                                               $green $green $green \
-                                               $blue  $blue  $blue];
-                        }
-                        9       { return [string cat "#" $color] }
-                        default { return $fallback }
-                    }
-                }
-                HEX16 {
-                    # Check the number of hexadecimals in color.
-                    switch -- [string length $color] {
-                        1   {
-                            return [string cat "#" \
-                                               $color $color $color $color \
-                                               $color $color $color $color \
-                                               $color $color $color $color];
-                        }
-                        3   {
-                            # 'Color' have been provided as a shortform.
-                            set red   [string index $color 0]
-                            set green [string index $color 1]
-                            set blue  [string index $color 2]
+                    return [string cat "#" \
+                                       $red   $red \
+                                       $green $green \
+                                       $blue  $blue];
 
-                            return [string cat "#" \
-                                               $red   $red   $red   $red  \
-                                               $green $green $green $green \
-                                               $blue  $blue  $blue  $blue];
-                        }
-                        12      { return [string cat "#" $color] }
-                        default { return $fallback }
-                    }
                 }
+                6       { return [string cat "#" $color] }
+                default { return $fallback }
             }
         }
     }
@@ -5823,543 +5612,6 @@ proc ::ms::Hover { w X Y } {
     return ""
 }
 
-# Load_Colorspace
-#
-# Load a colorspace model file.
-#
-# Where:
-#
-# pathname   Should be the absolute pathname of the colorspace model to load.
-#
-# It doesn't return anything.
-proc ::ms::Load_Colorspace { filepath } {
-    ###############################################
-    ##                                           ##
-    ##     LOAD THE COLORSPACE FILE PROVIDED     ##
-    ##                                           ##
-    ###############################################
-
-    set model_name      ""
-    set chromaticity_xy [list ]
-    set whitepoint_XYZ  [list ]
-
-    try {
-        open $filepath "r"
-    } on error { errortext errorcode } {
-        # If the debug variable is active, signal the problem in the stderr channel.
-        switch -nocase -- $::DEBUG {
-            1       -
-            on      -
-            true    -
-            active  -
-            enabled { chan puts "Unable to read '[file tail $filepath]'. Ignoring." }
-        }
-
-        return ""
-    } on ok { channel } {
-        # Read the entire file.
-        set file_content [split [chan read $channel] "\n"]
-        chan close $channel
-
-        # Scan the file content line by line.
-        foreach line $file_content {
-            set line [split $line ":"]
-            set linestart [lindex $line 0]
-            set linevalue [lindex $line 1]
-
-            # Check if the line starts with the word 'Chromaticity', 'Model Name' or 'Reference White'.
-            # If not, skip the line.
-            switch -nocase -- $linestart {
-                "Chromaticity" {
-                    switch -- [llength $linevalue] {
-                        6   {
-                            # Check each chromaticity value.
-                            foreach value $linevalue {
-                                switch -- [string is double -strict $value] {
-                                    1   {
-                                        if { ($value >= 0) || ($value <= 1.0) } {
-                                            lappend chromaticity_xy $value
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                "Model Name" {
-                    set value [string trim $linevalue]
-                    switch -- $value {
-                        ""      {}
-                        default { set model_name "$value" }
-                    }
-                }
-                "Reference White" {
-                    switch -- [llength $linevalue] {
-                        3   {
-                            # Check each whitepoint value.
-                            foreach value $linevalue {
-                                switch -- [string is double -strict $value] {
-                                    1   {
-                                        if { ($value >= 0) || ($value <= 1.999969482421875) } {
-                                            lappend whitepoint_XYZ $value
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    # Check if a model name was provided.
-    switch -- $model_name {
-        ""  {
-            # If the debug variable is active, signal the problem in the stderr channel.
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { chan puts "The '[file tail $filepath]' model name is invalid or missing. Ignoring." }
-            }
-
-            return ""
-        }
-        default {
-            # If the model name is already known by mustang, ignore the file.
-            if { $model_name in $::ms::colorspaces } {
-                switch -nocase -- $::DEBUG {
-                    1       -
-                    on      -
-                    true    -
-                    active  -
-                    enabled { chan puts "The '[file tail $filepath]' model name is already known. Ignoring." }
-                }
-
-                return ""
-            }
-        }
-    }
-
-    # Check if a chromaticity was provided (it must have 6 valid elements).
-    switch -- [llength $chromaticity_xy] {
-        6   {
-            # Let's break down the chromaticity xy matrix into its single components.
-            #
-            # | red_x  green_x  blue_x |
-            # | red_y  green_y  blue_y | = [list red_x  red_y  green_x  green_y  blue_x  blue_y]
-            set red_x   [lindex $chromaticity_xy 0]
-            set red_y   [lindex $chromaticity_xy 1]
-            set green_x [lindex $chromaticity_xy 2]
-            set green_y [lindex $chromaticity_xy 3]
-            set blue_x  [lindex $chromaticity_xy 4]
-            set blue_y  [lindex $chromaticity_xy 5]
-        }
-        default {
-            # If the debug variable is active, signal the problem in the stderr channel.
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { chan puts "The '[file tail $filepath]' chromaticity values are invalid or some values are missing. Ignoring." }
-            }
-
-            return ""
-        }
-    }
-
-    # Check if a reference white was provided.
-    switch -- [llength $whitepoint_XYZ] {
-        3   {
-            # Let's break down the reference white XYZ into its single components.
-            set whitepoint_X [lindex $whitepoint_XYZ 0]
-            set whitepoint_Y [lindex $whitepoint_XYZ 1]
-            set whitepoint_Z [lindex $whitepoint_XYZ 2]
-        }
-        default {
-            # If the debug variable is active, signal the problem in the stderr channel.
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { chan puts "The '[file tail $filepath]' whitepoint values are invalid or some values are missing. Ignoring." }
-            }
-
-            return ""
-        }
-    }
-
-    #############################################################
-    ##                                                         ##
-    ##     SET THE CHROMATICITY xyz VALUES AND ITS INVERSE     ##
-    ##                                                         ##
-    #############################################################
-
-    # Compute the chromaticity missing 'z' values.
-    set red_z   [expr { 1.0-$red_x-$red_y     }]
-    set green_z [expr { 1.0-$green_x-$green_y }]
-    set blue_z  [expr { 1.0-$blue_x-$blue_y   }]
-
-    # Set the xyz chromaticity matrix.
-    #
-    # | red_x  green_x  blue_x |
-    # | red_y  green_y  blue_y | = [list red_x  red_y  red_z  green_x  green_y  green_z  blue_x  blue_y  blue_z]
-    # | red_z  green_z  blue_z |
-    set chromaticity_xyz [list $red_x \
-                               $red_y \
-                               $red_z \
-                               $green_x \
-                               $green_y \
-                               $green_z \
-                               $blue_x \
-                               $blue_y \
-                               $blue_z];
-
-    # Compute the inverse xyz chromaticity matrix.
-    #
-    # | red_x  green_x  blue_x |-1
-    # | red_y  green_y  blue_y |   --> [list red_x_inverse  red_y_inverse  red_z_inverse  green_x_inverse  green_y_inverse  green_z_inverse  blue_x_inverse  blue_y_inverse  blue_z_inverse]
-    # | red_z  green_z  blue_z |
-    set chromaticity_xyz_inverse [::inverse_matrix {*}$chromaticity_xyz]
-    switch -- $chromaticity_xyz_inverse {
-        invalid {
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { puts stdout "Ignoring '[file tail $filepath]'." }
-            }
-
-            return ""
-        }
-    }
-
-    # Let's break down the inverse xyz chromaticity matrix into its single components.
-    set red_x_inverse   [lindex $chromaticity_xyz_inverse 0]
-    set red_y_inverse   [lindex $chromaticity_xyz_inverse 1]
-    set red_z_inverse   [lindex $chromaticity_xyz_inverse 2]
-    set green_x_inverse [lindex $chromaticity_xyz_inverse 3]
-    set green_y_inverse [lindex $chromaticity_xyz_inverse 4]
-    set green_z_inverse [lindex $chromaticity_xyz_inverse 5]
-    set blue_x_inverse  [lindex $chromaticity_xyz_inverse 6]
-    set blue_y_inverse  [lindex $chromaticity_xyz_inverse 7]
-    set blue_z_inverse  [lindex $chromaticity_xyz_inverse 8]
-
-    #####################################################################
-    ##                                                                 ##
-    ##     COMPUTE THE CHROMATIC ADAPTATION MATRIX AND ITS INVERSE     ##
-    ##                                                                 ##
-    #####################################################################
-
-    # Set the tolerance to 16 bits.
-    set tolerance [expr { 1.0/65535.0 }]
-
-    # Compute the tolerance for the whitespace X coordinate.
-    set max         [expr { max($::ms::PCS_X,$whitepoint_X) }]
-    set min         [expr { min($::ms::PCS_X,$whitepoint_X) }]
-    set tolerance_X [expr { $max-$min }]
-
-    # Compute the tolerance for the whitespace Z coordinate.
-    set max         [expr { max($::ms::PCS_Z,$whitepoint_Z) }]
-    set min         [expr { min($::ms::PCS_Z,$whitepoint_Z) }]
-    set tolerance_Z [expr { $max-$min }]
-
-    # Check if we need to compute the chromatic adaptation matrix ('chad') or not.
-    if { ($tolerance_X >= $tolerance) || ($tolerance_Z >= $tolerance) } {
-        # Compute the chromatic adaptation matrix.
-        set chad [::chad $whitepoint_XYZ $::ms::PCS_XYZ]
-
-        # Compute the chromatic adaptation inverse matrix.
-        set chad_inverse [::inverse_matrix {*}$chad]
-        switch -- $chad_inverse {
-            invalid {
-                switch -nocase -- $::DEBUG {
-                    1       -
-                    on      -
-                    true    -
-                    active  -
-                    enabled { puts stdout "Ignoring '[file tail $filepath]'." }
-                }
-
-                return ""
-            }
-        }
-    } else {
-        # No need of a chromatic adaptation matrix.
-        set chad         [list 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
-        set chad_inverse [list 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
-    }
-
-    # Get the 'chad' single components.
-    set chad_a1 [lindex $chad 0]
-    set chad_a2 [lindex $chad 1]
-    set chad_a3 [lindex $chad 2]
-    set chad_b1 [lindex $chad 3]
-    set chad_b2 [lindex $chad 4]
-    set chad_b3 [lindex $chad 5]
-    set chad_c1 [lindex $chad 6]
-    set chad_c2 [lindex $chad 7]
-    set chad_c3 [lindex $chad 8]
-
-    # Get the 'chad_inverse' single components.
-    set chad_a1_inverse [lindex $chad_inverse 0]
-    set chad_a2_inverse [lindex $chad_inverse 1]
-    set chad_a3_inverse [lindex $chad_inverse 2]
-    set chad_b1_inverse [lindex $chad_inverse 3]
-    set chad_b2_inverse [lindex $chad_inverse 4]
-    set chad_b3_inverse [lindex $chad_inverse 5]
-    set chad_c1_inverse [lindex $chad_inverse 6]
-    set chad_c2_inverse [lindex $chad_inverse 7]
-    set chad_c3_inverse [lindex $chad_inverse 8]
-
-    ############################################
-    ##                                        ##
-    ##     COMPUTE THE UNADAPTED Y VALUES     ##
-    ##                                        ##
-    ############################################
-
-    # Compute the XYZ chromaticity values.
-    if { $red_y == 0 } {
-        set red_X    0
-        set red_Y    0
-        set red_Z    0
-    } else {
-        set red_X    [expr { $red_x/$red_y }]
-        set red_Y    1.0
-        set red_Z    [expr { $red_z/$red_y }]
-    }
-
-    if { $green_y == 0 } {
-        set green_X  0
-        set green_Y  0
-        set green_Z  0
-    } else {
-        set green_X  [expr { $green_x/$green_y }]
-        set green_Y  1.0
-        set green_Z  [expr { $green_z/$green_y }]
-    }
-
-    if { $blue_y == 0 } {
-        set blue_X   0
-        set blue_Y   0
-        set blue_Z   0
-    } else {
-        set blue_X   [expr { $blue_x/$blue_y }]
-        set blue_Y   1.0
-        set blue_Z   [expr { $blue_z/$blue_y }]
-    }
-
-    # Create the XYZ chromaticity matrix.
-    #
-    # | red_X  green_X  blue_X |
-    # | red_Y  green_Y  blue_Y | = [list red_X  red_Y  red_Z  green_X  green_Y  green_Z  blue_X  blue_Y  blue_Z]
-    # | red_Z  green_Z  blue_Z |
-    set chromaticity_XYZ [list $red_X \
-                               $red_Y \
-                               $red_Z \
-                               $green_X \
-                               $green_Y \
-                               $green_Z \
-                               $blue_X \
-                               $blue_Y \
-                               $blue_Z];
-
-    # Compute the inverse XYZ chromaticity matrix.
-    #
-    # | red_X  green_X  blue_X |-1   | red_X_inverse  green_X_inverse  blue_X_inverse |
-    # | red_Y  green_Y  blue_Y |   = | red_Y_inverse  green_Y_inverse  blue_Y_inverse |
-    # | red_Z  green_Z  blue_Z |     | red_Z_inverse  green_Z_inverse  blue_Z_inverse |
-    set chromaticity_XYZ_inverse [::inverse_matrix {*}$chromaticity_XYZ]
-    switch -- $chromaticity_XYZ_inverse {
-        invalid {
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { puts stdout "Ignoring '[file tail $filepath]'." }
-            }
-
-            return ""
-        }
-    }
-
-    # Let's break down the inverse XYZ chromaticity matrix into its single components.
-    set red_X_inverse   [lindex $chromaticity_XYZ_inverse 0]
-    set red_Y_inverse   [lindex $chromaticity_XYZ_inverse 1]
-    set red_Z_inverse   [lindex $chromaticity_XYZ_inverse 2]
-    set green_X_inverse [lindex $chromaticity_XYZ_inverse 3]
-    set green_Y_inverse [lindex $chromaticity_XYZ_inverse 4]
-    set green_Z_inverse [lindex $chromaticity_XYZ_inverse 5]
-    set blue_X_inverse  [lindex $chromaticity_XYZ_inverse 6]
-    set blue_Y_inverse  [lindex $chromaticity_XYZ_inverse 7]
-    set blue_Z_inverse  [lindex $chromaticity_XYZ_inverse 8]
-
-    # Compute the unadapted Y values.
-    #
-    # | red_X_inverse  green_X_inverse  blue_X_inverse |   | whitepoint_X |     | Unadapted_redY   |
-    # | red_Y_inverse  green_Y_inverse  blue_Y_inverse | * | whitepoint_Y | --> | Unadapted_greenY |
-    # | red_Z_inverse  green_Z_inverse  blue_Z_inverse |   | whitepoint_Z |     | Unadapted_blueY  |
-    #
-    # Note: whitepoint_Y = 1.0
-    set unadapted_Y [list [expr { ($red_X_inverse*$whitepoint_X) + $green_X_inverse + ($blue_X_inverse*$whitepoint_Z) }] \
-                          [expr { ($red_Y_inverse*$whitepoint_X) + $green_Y_inverse + ($blue_Y_inverse*$whitepoint_Z) }] \
-                          [expr { ($red_Z_inverse*$whitepoint_X) + $green_Z_inverse + ($blue_Z_inverse*$whitepoint_Z) }]];
-
-    ########################################################
-    ##                                                    ##
-    ##     COMPUTE THE RGB_XYZ MATRIX AND ITS INVERSE     ##
-    ##                                                    ##
-    ########################################################
-
-    # First step.
-    #
-    # | red_x_inverse  green_x_inverse  blue_x_inverse |   | whitepoint_X |     | sum_r |
-    # | red_y_inverse  green_y_inverse  blue_y_inverse | * | whitepoint_Y | --> | sum_g |
-    # | red_z_inverse  green_z_inverse  blue_z_inverse |   | whitepoint_Z |     | sum_b |
-    #
-    # Note:  Whitepoint_Y = 1.0
-    set sum_r [expr { ($red_x_inverse*$whitepoint_X) + $green_x_inverse + ($blue_x_inverse*$whitepoint_Z) }]
-    set sum_g [expr { ($red_y_inverse*$whitepoint_X) + $green_y_inverse + ($blue_y_inverse*$whitepoint_Z) }]
-    set sum_b [expr { ($red_z_inverse*$whitepoint_X) + $green_z_inverse + ($blue_z_inverse*$whitepoint_Z) }]
-
-    # Final step.
-    #
-    # | red_x  green_x  blue_x |   | sum_r]     | a1  b1  c1 |
-    # | red_y  green_y  blue_y | * | sum_g] --> | a2  b2  c2 | --> [list a1  a2  a3  b1  b2  b3  c1  c2  c3]
-    # | red_z  green_z  blue_z |   | sum_b]     | a3  b3  c3 |
-    set a1 [expr { $red_x*$sum_r   }]
-    set b1 [expr { $green_x*$sum_g }]
-    set c1 [expr { $blue_x*$sum_b  }]
-    set a2 [expr { $red_y*$sum_r   }]
-    set b2 [expr { $green_y*$sum_g }]
-    set c2 [expr { $blue_y*$sum_b  }]
-    set a3 [expr { $red_z*$sum_r   }]
-    set b3 [expr { $green_z*$sum_g }]
-    set c3 [expr { $blue_z*$sum_b  }]
-
-    set RGB_XYZ [list $a1 \
-                      $a2 \
-                      $a3 \
-                      $b1 \
-                      $b2 \
-                      $b3 \
-                      $c1 \
-                      $c2 \
-                      $c3];
-
-    # Compute the inverse RGB_XYZ matrix.
-    set XYZ_RGB [::inverse_matrix {*}$RGB_XYZ]
-    switch -- $XYZ_RGB {
-        invalid {
-            switch -nocase -- $::DEBUG {
-                1       -
-                on      -
-                true    -
-                active  -
-                enabled { puts stdout "Ignoring '[file tail $filepath]'." }
-            }
-
-            return ""
-        }
-    }
-
-    # Get the XYZ_RGB single components.
-    set a1_inverse [lindex $XYZ_RGB 0]
-    set a2_inverse [lindex $XYZ_RGB 1]
-    set a3_inverse [lindex $XYZ_RGB 2]
-    set b1_inverse [lindex $XYZ_RGB 3]
-    set b2_inverse [lindex $XYZ_RGB 4]
-    set b3_inverse [lindex $XYZ_RGB 5]
-    set c1_inverse [lindex $XYZ_RGB 6]
-    set c2_inverse [lindex $XYZ_RGB 7]
-    set c3_inverse [lindex $XYZ_RGB 8]
-
-    ##############################################################################
-    ##                                                                          ##
-    ##     COMPUTE THE CHROMATICALLY ADAPTED RGB_XYZ MATRIX AND ITS INVERSE     ##
-    ##                                                                          ##
-    ##############################################################################
-
-    # Compute the chromatically adapted RGB_XYZ matrix coefficients.
-    #
-    # | a1  b1  c1 |   | chad_a1  chad_b1  chad_c1 |   | ca_a1  ca_b1  ca_c1 |
-    # | a2  b2  c2 | * | chad_a2  chad_b2  chad_c2 | = | ca_a2  ca_b2  ca_c2 | = [list ca_a1  ca_a2  ca_a3  ca_b1  ca_b2  ca_b3  ca_c1  ca_c2  ca_c3]
-    # | a3  b3  c3 |   | chad_a3  chad_b3  chad_c3 |   | ca_a3  ca_b3  ca_c3 |
-    set ca_a1 [expr { ($a1*$chad_a1) + ($b1*$chad_a2) + ($c1*$chad_a3) }]
-    set ca_b1 [expr { ($a1*$chad_b1) + ($b1*$chad_b2) + ($c1*$chad_b3) }]
-    set ca_c1 [expr { ($a1*$chad_c1) + ($b1*$chad_c2) + ($c1*$chad_c3) }]
-    set ca_a2 [expr { ($a2*$chad_a1) + ($b2*$chad_a2) + ($c2*$chad_a3) }]
-    set ca_b2 [expr { ($a2*$chad_b1) + ($b2*$chad_b2) + ($c2*$chad_b3) }]
-    set ca_c2 [expr { ($a2*$chad_c1) + ($b2*$chad_c2) + ($c2*$chad_c3) }]
-    set ca_a3 [expr { ($a3*$chad_a1) + ($b3*$chad_a2) + ($c3*$chad_a3) }]
-    set ca_b3 [expr { ($a3*$chad_b1) + ($b3*$chad_b2) + ($c3*$chad_b3) }]
-    set ca_c3 [expr { ($a3*$chad_c1) + ($b3*$chad_c2) + ($c3*$chad_c3) }]
-
-    set RGB_XYZ [list $ca_a1 \
-                      $ca_a2 \
-                      $ca_a3 \
-                      $ca_b1 \
-                      $ca_b2 \
-                      $ca_b3 \
-                      $ca_c1 \
-                      $ca_c2 \
-                      $ca_c3];
-
-    # Compute the chromatically adapted XYZ_RGB matrix coefficients.
-    #
-    # | a1_inverse  b1_inverse  c1_inverse |   | chad_a1_inverse  chad_b1_inverse  chad_c1_inverse |   | ca_a1_inverse  ca_b1_inverse  ca_c1_inverse |
-    # | a2_inverse  b2_inverse  c2_inverse | * | chad_a2_inverse  chad_b2_inverse  chad_c2_inverse | = | ca_a2_inverse  ca_b2_inverse  ca_c2_inverse | = [list ca_a1_inverse  ca_a2_inverse  ca_a3_inverse  ca_b1_inverse  ca_b2_inverse  ca_b3_inverse  ca_c1_inverse  ca_c2_inverse  ca_c3_inverse]
-    # | a3_inverse  b3_inverse  c3_inverse |   | chad_a3_inverse  chad_b3_inverse  chad_c3_inverse |   | ca_a3_inverse  ca_b3_inverse  ca_c3_inverse |
-    set ca_a1_inverse [expr { ($a1_inverse*$chad_a1_inverse) + ($b1_inverse*$chad_a2_inverse) + ($c1_inverse*$chad_a3_inverse) }]
-    set ca_b1_inverse [expr { ($a1_inverse*$chad_b1_inverse) + ($b1_inverse*$chad_b2_inverse) + ($c1_inverse*$chad_b3_inverse) }]
-    set ca_c1_inverse [expr { ($a1_inverse*$chad_c1_inverse) + ($b1_inverse*$chad_c2_inverse) + ($c1_inverse*$chad_c3_inverse) }]
-    set ca_a2_inverse [expr { ($a2_inverse*$chad_a1_inverse) + ($b2_inverse*$chad_a2_inverse) + ($c2_inverse*$chad_a3_inverse) }]
-    set ca_b2_inverse [expr { ($a2_inverse*$chad_b1_inverse) + ($b2_inverse*$chad_b2_inverse) + ($c2_inverse*$chad_b3_inverse) }]
-    set ca_c2_inverse [expr { ($a2_inverse*$chad_c1_inverse) + ($b2_inverse*$chad_c2_inverse) + ($c2_inverse*$chad_c3_inverse) }]
-    set ca_a3_inverse [expr { ($a3_inverse*$chad_a1_inverse) + ($b3_inverse*$chad_a2_inverse) + ($c3_inverse*$chad_a3_inverse) }]
-    set ca_b3_inverse [expr { ($a3_inverse*$chad_b1_inverse) + ($b3_inverse*$chad_b2_inverse) + ($c3_inverse*$chad_b3_inverse) }]
-    set ca_c3_inverse [expr { ($a3_inverse*$chad_c1_inverse) + ($b3_inverse*$chad_c2_inverse) + ($c3_inverse*$chad_c3_inverse) }]
-
-    set XYZ_RGB [list $ca_a1_inverse \
-                      $ca_a2_inverse \
-                      $ca_a3_inverse \
-                      $ca_b1_inverse \
-                      $ca_b2_inverse \
-                      $ca_b3_inverse \
-                      $ca_c1_inverse \
-                      $ca_c2_inverse \
-                      $ca_c3_inverse];
-
-    #################################
-    ##                             ##
-    ##     REGISTER THE VALUES     ##
-    ##                             ##
-    #################################
-
-    # Append 'model_name' to the known colorspaces list.
-    set ::ms::colorspaces [lappend ::ms::colorspaces $model_name]
-
-    # Register the values.
-    set ::ms::data(colorspace,$model_name,chromaticity,xyz) $chromaticity_xyz
-    set ::ms::data(colorspace,$model_name,whitepoint,XYZ)   $whitepoint_XYZ
-    set ::ms::data(colorspace,$model_name,Yr)               [lindex $unadapted_Y 0]
-    set ::ms::data(colorspace,$model_name,Yg)               [lindex $unadapted_Y 1]
-    set ::ms::data(colorspace,$model_name,Yb)               [lindex $unadapted_Y 2]
-    set ::ms::data(colorspace,$model_name,chad)             $chad
-    set ::ms::data(colorspace,$model_name,chad_inverse)     $chad_inverse
-    set ::ms::data(colorspace,$model_name,RGB_XYZ)          $RGB_XYZ
-    set ::ms::data(colorspace,$model_name,XYZ_RGB)          $XYZ_RGB
-    set ::ms::data(colorspace,$model_name,companding)       sRGB
-
-    return ""
-}
-
 ## Load_Palette
 #
 # Load a palette file.
@@ -6416,7 +5668,7 @@ proc ::ms::Load_Palette { filepath } {
                     }
 
                     # Check the hexadecimal value at 8bit.
-                    set result [::ms::Check_Hex [lindex $line 1] HEX8 invalid]
+                    set result [::ms::Check_Hex [lindex $line 1] invalid]
                     switch -- $result {
                         invalid {
                             # Skip the entire line.
@@ -6436,7 +5688,7 @@ proc ::ms::Load_Palette { filepath } {
                     }
 
                     # Register the 'colorname' data.
-                    set ::ms::palette($palette,$colorname,hex8) $hexcolor
+                    set ::ms::palette($palette,$colorname,hex) $hexcolor
 
                     lappend ::ms::palette($palette,$family,colornames) $colorname
                     lappend ::ms::palette($palette,all,colornames)     $colorname
@@ -6611,14 +5863,14 @@ proc ::ms::Load_SVG_Images { theme } {
                         switch -- [string index $parameterValue 0] {
                             "#" {
                                 # Check if the parameter value examined it's a valid hexadecimal color at 8 bit.
-                                set result [::ms::Check_Hex $parameterValue HEX8 invalid]
+                                set result [::ms::Check_Hex $parameterValue invalid]
                                 switch -- $result {
                                     invalid {}
                                     default {
                                         # Check if 'result' is equal to the input color provided.
                                         if { $result eq $input_color } {
                                             # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
-                                            set parameterValue [::ms::Check_Color [list $output_color HEX8] invalid]
+                                            set parameterValue [::ms::Check_Color [list $output_color] invalid]
                                             switch -- $parameterValue {
                                                 invalid {
                                                     # Check the 'initialization' state.
