@@ -124,75 +124,20 @@ package ifneeded mustang $::ms_version {
     }
 
     # Mustang colormaths.
-    package require ::ms::chad
-    package require ::ms::companding
-    package require ::ms::matrix
-    package require ::ms::HEX8_HEX12
-    package require ::ms::HEX8_HEX16
-    package require ::ms::HEX8_RGB8
-    package require ::ms::HEX12_HEX8
-    package require ::ms::HEX12_HEX16
-    package require ::ms::HEX12_RGB12
-    package require ::ms::HEX16_HEX8
-    package require ::ms::HEX16_HEX12
-    package require ::ms::HEX16_RGB16
-    package require ::ms::HSB_HSI
-    package require ::ms::HSB_HSL
+    package require ::ms::HEX_RGB
     package require ::ms::HSB_HSP
     package require ::ms::HSB_HWB
-    package require ::ms::HSB_rgb
-    package require ::ms::HSI_HSB
-    package require ::ms::HSI_HSL
-    package require ::ms::HSI_HSP
-    package require ::ms::HSI_HWB
-    package require ::ms::HSI_rgb
-    package require ::ms::HSL_HSB
-    package require ::ms::HSL_HSI
-    package require ::ms::HSL_HSP
-    package require ::ms::HSL_HWB
-    package require ::ms::HSL_rgb
+    package require ::ms::HSB_RGB
     package require ::ms::HSP_HSB
-    package require ::ms::HSP_HSI
-    package require ::ms::HSP_HSL
     package require ::ms::HSP_HWB
-    package require ::ms::HSP_rgb
+    package require ::ms::HSP_RGB
     package require ::ms::HWB_HSB
-    package require ::ms::HWB_HSI
-    package require ::ms::HWB_HSL
     package require ::ms::HWB_HSP
-    package require ::ms::HWB_rgb
-    package require ::ms::Lab_LCHab
-    package require ::ms::Lab_XYZ
-    package require ::ms::LCHab_Lab
-    package require ::ms::LCHuv_Luv
-    package require ::ms::Luv_LCHuv
-    package require ::ms::Luv_XYZ
-    package require ::ms::rgb_HSB
-    package require ::ms::rgb_HSI
-    package require ::ms::rgb_HSL
-    package require ::ms::rgb_HSP
-    package require ::ms::rgb_HWB
-    package require ::ms::rgb_RGB8
-    package require ::ms::rgb_RGB12
-    package require ::ms::rgb_RGB16
-    package require ::ms::rgb_XYZ
-    package require ::ms::RGB8_HEX8
-    package require ::ms::RGB8_rgb
-    package require ::ms::RGB8_RGB12
-    package require ::ms::RGB8_RGB16
-    package require ::ms::RGB12_HEX12
-    package require ::ms::RGB12_rgb
-    package require ::ms::RGB12_RGB8
-    package require ::ms::RGB12_RGB16
-    package require ::ms::RGB16_HEX16
-    package require ::ms::RGB16_rgb
-    package require ::ms::RGB16_RGB8
-    package require ::ms::RGB16_RGB12
-    package require ::ms::xyY_XYZ
-    package require ::ms::XYZ_Lab
-    package require ::ms::XYZ_Luv
-    package require ::ms::XYZ_rgb
-    package require ::ms::XYZ_xyY
+    package require ::ms::HWB_RGB
+    package require ::ms::RGB_HSB
+    package require ::ms::RGB_HSP
+    package require ::ms::RGB_HWB
+    package require ::ms::RGB_HEX
 
     # Start mustang.
     ::ms::Init
@@ -275,74 +220,19 @@ switch -nocase -glob -- $::tcl_platform(os) {
 }
 
 # Mustang colormaths.
-package ifneeded ::ms::chad               0.1 [list source [file join $::ms_library colormaths "chad.tcl"]]
-package ifneeded ::ms::companding         0.1 [list source [file join $::ms_library colormaths "companding.tcl"]]
-package ifneeded ::ms::matrix             0.1 [list source [file join $::ms_library colormaths "matrix.tcl"]]
-package ifneeded ::ms::HEX8_HEX12         0.1 [list source [file join $::ms_library colormaths "HEX8_HEX12.tcl"]]
-package ifneeded ::ms::HEX8_HEX16         0.1 [list source [file join $::ms_library colormaths "HEX8_HEX16.tcl"]]
-package ifneeded ::ms::HEX8_RGB8          0.1 [list source [file join $::ms_library colormaths "HEX8_RGB8.tcl"]]
-package ifneeded ::ms::HEX12_HEX8         0.1 [list source [file join $::ms_library colormaths "HEX12_HEX8.tcl"]]
-package ifneeded ::ms::HEX12_HEX16        0.1 [list source [file join $::ms_library colormaths "HEX12_HEX16.tcl"]]
-package ifneeded ::ms::HEX12_RGB12        0.1 [list source [file join $::ms_library colormaths "HEX12_RGB12.tcl"]]
-package ifneeded ::ms::HEX16_HEX8         0.1 [list source [file join $::ms_library colormaths "HEX16_HEX8.tcl"]]
-package ifneeded ::ms::HEX16_HEX12        0.1 [list source [file join $::ms_library colormaths "HEX16_HEX12.tcl"]]
-package ifneeded ::ms::HEX16_RGB16        0.1 [list source [file join $::ms_library colormaths "HEX16_RGB16.tcl"]]
-package ifneeded ::ms::HSB_HSI            0.1 [list source [file join $::ms_library colormaths "HSB_HSI.tcl"]]
-package ifneeded ::ms::HSB_HSL            0.1 [list source [file join $::ms_library colormaths "HSB_HSL.tcl"]]
-package ifneeded ::ms::HSB_HSP            0.1 [list source [file join $::ms_library colormaths "HSB_HSP.tcl"]]
-package ifneeded ::ms::HSB_HWB            0.1 [list source [file join $::ms_library colormaths "HSB_HWB.tcl"]]
-package ifneeded ::ms::HSB_rgb            0.1 [list source [file join $::ms_library colormaths "HSB_rgb.tcl"]]
-package ifneeded ::ms::HSI_HSB            0.1 [list source [file join $::ms_library colormaths "HSI_HSB.tcl"]]
-package ifneeded ::ms::HSI_HSL            0.1 [list source [file join $::ms_library colormaths "HSI_HSL.tcl"]]
-package ifneeded ::ms::HSI_HSP            0.1 [list source [file join $::ms_library colormaths "HSI_HSP.tcl"]]
-package ifneeded ::ms::HSI_HWB            0.1 [list source [file join $::ms_library colormaths "HSI_HWB.tcl"]]
-package ifneeded ::ms::HSI_rgb            0.1 [list source [file join $::ms_library colormaths "HSI_rgb.tcl"]]
-package ifneeded ::ms::HSL_HSB            0.1 [list source [file join $::ms_library colormaths "HSL_HSB.tcl"]]
-package ifneeded ::ms::HSL_HSI            0.1 [list source [file join $::ms_library colormaths "HSL_HSI.tcl"]]
-package ifneeded ::ms::HSL_HSP            0.1 [list source [file join $::ms_library colormaths "HSL_HSP.tcl"]]
-package ifneeded ::ms::HSL_HWB            0.1 [list source [file join $::ms_library colormaths "HSL_HWB.tcl"]]
-package ifneeded ::ms::HSL_rgb            0.1 [list source [file join $::ms_library colormaths "HSL_rgb.tcl"]]
-package ifneeded ::ms::HSP_HSB            0.1 [list source [file join $::ms_library colormaths "HSP_HSB.tcl"]]
-package ifneeded ::ms::HSP_HSI            0.1 [list source [file join $::ms_library colormaths "HSP_HSI.tcl"]]
-package ifneeded ::ms::HSP_HSL            0.1 [list source [file join $::ms_library colormaths "HSP_HSL.tcl"]]
-package ifneeded ::ms::HSP_HWB            0.1 [list source [file join $::ms_library colormaths "HSP_HWB.tcl"]]
-package ifneeded ::ms::HSP_rgb            0.1 [list source [file join $::ms_library colormaths "HSP_rgb.tcl"]]
-package ifneeded ::ms::HWB_HSB            0.1 [list source [file join $::ms_library colormaths "HWB_HSB.tcl"]]
-package ifneeded ::ms::HWB_HSI            0.1 [list source [file join $::ms_library colormaths "HWB_HSI.tcl"]]
-package ifneeded ::ms::HWB_HSL            0.1 [list source [file join $::ms_library colormaths "HWB_HSL.tcl"]]
-package ifneeded ::ms::HWB_HSP            0.1 [list source [file join $::ms_library colormaths "HWB_HSP.tcl"]]
-package ifneeded ::ms::HWB_rgb            0.1 [list source [file join $::ms_library colormaths "HWB_rgb.tcl"]]
-package ifneeded ::ms::Lab_LCHab          0.1 [list source [file join $::ms_library colormaths "Lab_LCHab.tcl"]]
-package ifneeded ::ms::Lab_XYZ            0.1 [list source [file join $::ms_library colormaths "Lab_XYZ.tcl"]]
-package ifneeded ::ms::LCHab_Lab          0.1 [list source [file join $::ms_library colormaths "LCHab_Lab.tcl"]]
-package ifneeded ::ms::LCHuv_Luv          0.1 [list source [file join $::ms_library colormaths "LCHuv_Luv.tcl"]]
-package ifneeded ::ms::Luv_LCHuv          0.1 [list source [file join $::ms_library colormaths "Luv_LCHuv.tcl"]]
-package ifneeded ::ms::Luv_XYZ            0.1 [list source [file join $::ms_library colormaths "Luv_XYZ.tcl"]]
-package ifneeded ::ms::rgb_HSB            0.1 [list source [file join $::ms_library colormaths "rgb_HSB.tcl"]]
-package ifneeded ::ms::rgb_HSI            0.1 [list source [file join $::ms_library colormaths "rgb_HSI.tcl"]]
-package ifneeded ::ms::rgb_HSL            0.1 [list source [file join $::ms_library colormaths "rgb_HSL.tcl"]]
-package ifneeded ::ms::rgb_HSP            0.1 [list source [file join $::ms_library colormaths "rgb_HSP.tcl"]]
-package ifneeded ::ms::rgb_HWB            0.1 [list source [file join $::ms_library colormaths "rgb_HWB.tcl"]]
-package ifneeded ::ms::rgb_RGB8           0.1 [list source [file join $::ms_library colormaths "rgb_RGB8.tcl"]]
-package ifneeded ::ms::rgb_RGB12          0.1 [list source [file join $::ms_library colormaths "rgb_RGB12.tcl"]]
-package ifneeded ::ms::rgb_RGB16          0.1 [list source [file join $::ms_library colormaths "rgb_RGB16.tcl"]]
-package ifneeded ::ms::rgb_XYZ            0.1 [list source [file join $::ms_library colormaths "rgb_XYZ.tcl"]]
-package ifneeded ::ms::RGB8_HEX8          0.1 [list source [file join $::ms_library colormaths "RGB8_HEX8.tcl"]]
-package ifneeded ::ms::RGB8_rgb           0.1 [list source [file join $::ms_library colormaths "RGB8_rgb.tcl"]]
-package ifneeded ::ms::RGB8_RGB12         0.1 [list source [file join $::ms_library colormaths "RGB8_RGB12.tcl"]]
-package ifneeded ::ms::RGB8_RGB16         0.1 [list source [file join $::ms_library colormaths "RGB8_RGB16.tcl"]]
-package ifneeded ::ms::RGB12_HEX12        0.1 [list source [file join $::ms_library colormaths "RGB12_HEX12.tcl"]]
-package ifneeded ::ms::RGB12_rgb          0.1 [list source [file join $::ms_library colormaths "RGB12_rgb.tcl"]]
-package ifneeded ::ms::RGB12_RGB8         0.1 [list source [file join $::ms_library colormaths "RGB12_RGB8.tcl"]]
-package ifneeded ::ms::RGB12_RGB16        0.1 [list source [file join $::ms_library colormaths "RGB12_RGB16.tcl"]]
-package ifneeded ::ms::RGB16_HEX16        0.1 [list source [file join $::ms_library colormaths "RGB16_HEX16.tcl"]]
-package ifneeded ::ms::RGB16_rgb          0.1 [list source [file join $::ms_library colormaths "RGB16_rgb.tcl"]]
-package ifneeded ::ms::RGB16_RGB8         0.1 [list source [file join $::ms_library colormaths "RGB16_RGB8.tcl"]]
-package ifneeded ::ms::RGB16_RGB12        0.1 [list source [file join $::ms_library colormaths "RGB16_RGB12.tcl"]]
-package ifneeded ::ms::xyY_XYZ            0.1 [list source [file join $::ms_library colormaths "xyY_XYZ.tcl"]]
-package ifneeded ::ms::XYZ_Lab            0.1 [list source [file join $::ms_library colormaths "XYZ_Lab.tcl"]]
-package ifneeded ::ms::XYZ_Luv            0.1 [list source [file join $::ms_library colormaths "XYZ_Luv.tcl"]]
-package ifneeded ::ms::XYZ_rgb            0.1 [list source [file join $::ms_library colormaths "XYZ_rgb.tcl"]]
-package ifneeded ::ms::XYZ_xyY            0.1 [list source [file join $::ms_library colormaths "XYZ_xyY.tcl"]]
+package ifneeded ::ms::HEX_RGB 0.1 [list source [file join $::ms_library colormaths "HEX_RGB.tcl"]]
+package ifneeded ::ms::HSB_HSP 0.1 [list source [file join $::ms_library colormaths "HSB_HSP.tcl"]]
+package ifneeded ::ms::HSB_HWB 0.1 [list source [file join $::ms_library colormaths "HSB_HWB.tcl"]]
+package ifneeded ::ms::HSB_RGB 0.1 [list source [file join $::ms_library colormaths "HSB_RGB.tcl"]]
+package ifneeded ::ms::HSP_HSB 0.1 [list source [file join $::ms_library colormaths "HSP_HSB.tcl"]]
+package ifneeded ::ms::HSP_HWB 0.1 [list source [file join $::ms_library colormaths "HSP_HWB.tcl"]]
+package ifneeded ::ms::HSP_RGB 0.1 [list source [file join $::ms_library colormaths "HSP_RGB.tcl"]]
+package ifneeded ::ms::HWB_HSB 0.1 [list source [file join $::ms_library colormaths "HWB_HSB.tcl"]]
+package ifneeded ::ms::HWB_HSP 0.1 [list source [file join $::ms_library colormaths "HWB_HSP.tcl"]]
+package ifneeded ::ms::HWB_RGB 0.1 [list source [file join $::ms_library colormaths "HWB_RGB.tcl"]]
+package ifneeded ::ms::RGB_HSB 0.1 [list source [file join $::ms_library colormaths "RGB_HSB.tcl"]]
+package ifneeded ::ms::RGB_HSP 0.1 [list source [file join $::ms_library colormaths "RGB_HSP.tcl"]]
+package ifneeded ::ms::RGB_HWB 0.1 [list source [file join $::ms_library colormaths "RGB_HWB.tcl"]]
+package ifneeded ::ms::RGB_HEX 0.1 [list source [file join $::ms_library colormaths "RGB_HEX.tcl"]]
 
 #*EOF*
