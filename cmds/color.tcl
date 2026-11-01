@@ -1274,13 +1274,7 @@ proc ::ms::color::Cold { hexadecimals amount } {
     # Execute the command.
     set results [list ]
     foreach { red green blue } $channels {
-        set red  [expr { round($red-$amount)  }]
         set blue [expr { round($blue+$amount) }]
-
-        # Check that the 'red' channel doesn't exceeds its lower limit.
-        if { $red < 0 } {
-            set red 0
-        }
 
         # Check that the 'blue' channel doesn't exceeds its upper limit.
         if { $blue > 255 } {
@@ -2336,17 +2330,11 @@ proc ::ms::color::Hot { hexadecimals amount } {
     # Execute the command.
     set results [list ]
     foreach { red green blue } $channels {
-        set red  [expr { $red+$amount  }]
-        set blue [expr { $blue-$amount }]
+        set red [expr { $red+$amount }]
 
         # Check that the 'red' channel doesn't exceeds its upper limit.
-        if { $red > $upper_limit } {
-            set red $upper_limit
-        }
-
-        # Check that the 'blue' channel doesn't exceeds its lower limit.
-        if { $blue < 0 } {
-            set blue 0
+        if { $red > 255 } {
+            set red 255
         }
 
         lappend results $red $green $blue
