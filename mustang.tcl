@@ -392,50 +392,6 @@ proc ::ms::Init {} {
     # Theme names are case sensitive.
     set ::ms::theme "Halo"
 
-    #####################################
-    ##                                 ##
-    ##     SET THE COLORSPACE DATA     ##
-    ##                                 ##
-    #####################################
-
-    # Note: The colorspace in which mustang operates is the 'sRGB D65'.
-    #
-    #       sRGB D65 Chromaticity xy values:
-    #
-    #       | red_x  green_x  blue_x |   | 0.64  0.3  0.15 |
-    #       | red_y  green_y  blue_y | = | 0.33  0.6  0.06 |
-    #
-    #       See 'https://en.wikipedia.org/wiki/SRGB' for more info.
-    #
-    #       sRGB Reference White XYZ values:
-    #
-    #       D65 Xrw = 0.95047
-    #       D65 Yrw = 1.0
-    #       D65 Zrw = 1.08883
-    #
-    #       # See 'http://www.brucelindbloom.com/' for more info.
-
-    # Compute the chromaticity XYZ matrix from the chromaticity xyz matrix:
-    #
-    # | red_x  green_x  blue_x |     | red_X  green_X  blue_X |
-    # | red_y  green_y  blue_y | --> | red_Y  green_Y  blue_Y |
-    # | red_z  green_z  blue_z |     | red_Z  green_Z  blue_Z |
-    #
-    # Invert the chromaticity XYZ matrix:
-    #
-    # | red_X  green_X  blue_X |-1    | red_X_inv  green_X_inv  blue_X_inv |
-    # | red_Y  green_Y  blue_Y |  --> | red_Y_inv  green_Y_inv  blue_Y_inv |
-    # | red_Z  green_Z  blue_Z |      | red_Z_inv  green_Z_inv  blue_Z_inv |
-    #
-    # Multiply the inverse chromaticity XYZ matrix for the Reference White (D65):
-    #
-    # | red_X_inv  green_X_inv  blue_X_inv |   | Reference_White_D65_X |     | Unadapted_D65_redY   |
-    # | red_Y_inv  green_Y_inv  blue_Y_inv | * | Reference_White_D65_Y | --> | Unadapted_D65_greenY |
-    # | red_Z_inv  green_Z_inv  blue_Z_inv |   | Reference_White_D65_Z |     | Unadapted_D65_blueY  |
-    set ::ms::Unadapted_Yr 0.21267285140562253
-    set ::ms::Unadapted_Yg 0.715152155287818
-    set ::ms::Unadapted_Yb 0.07217499330655958
-
     ##############################################
     ##                                          ##
     ##     SET THE OPERATING SYSTEM FOLDERS     ##

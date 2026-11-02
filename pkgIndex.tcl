@@ -54,7 +54,6 @@ package ifneeded mustang $::ms_version {
     package require ::ms::bind
     package require ::ms::bindtags
     package require ::ms::clipboard
-    package require ::ms::color
     package require ::ms::copy
     package require ::ms::cut
     package require ::ms::destroy
@@ -123,22 +122,6 @@ package ifneeded mustang $::ms_version {
         default { package require ::ms::panedwindow }
     }
 
-    # Mustang colormaths.
-    package require ::ms::HEX_RGB
-    package require ::ms::HSB_HSP
-    package require ::ms::HSB_HWB
-    package require ::ms::HSB_RGB
-    package require ::ms::HSP_HSB
-    package require ::ms::HSP_HWB
-    package require ::ms::HSP_RGB
-    package require ::ms::HWB_HSB
-    package require ::ms::HWB_HSP
-    package require ::ms::HWB_RGB
-    package require ::ms::RGB_HSB
-    package require ::ms::RGB_HSP
-    package require ::ms::RGB_HWB
-    package require ::ms::RGB_HEX
-
     # Start mustang.
     ::ms::Init
 
@@ -154,7 +137,6 @@ package ifneeded ::ms::bell      0.1 [list source [file join $::ms_library cmds 
 package ifneeded ::ms::bind      0.1 [list source [file join $::ms_library cmds "bind.tcl"]]
 package ifneeded ::ms::bindtags  0.1 [list source [file join $::ms_library cmds "bindtags.tcl"]]
 package ifneeded ::ms::clipboard 0.1 [list source [file join $::ms_library cmds "clipboard.tcl"]]
-package ifneeded ::ms::color     0.1 [list source [file join $::ms_library cmds "color.tcl"]]
 package ifneeded ::ms::copy      0.1 [list source [file join $::ms_library cmds "copy.tcl"]]
 package ifneeded ::ms::cut       0.1 [list source [file join $::ms_library cmds "cut.tcl"]]
 package ifneeded ::ms::destroy   0.1 [list source [file join $::ms_library cmds "destroy.tcl"]]
@@ -218,21 +200,5 @@ switch -nocase -glob -- $::tcl_platform(os) {
     "Win*"  {}
     default { package ifneeded ::ms::panedwindow 0.1 [list source [file join $::ms_library widgets "panedwindow.tcl"]] }
 }
-
-# Mustang colormaths.
-package ifneeded ::ms::HEX_RGB 0.1 [list source [file join $::ms_library colormaths "HEX_RGB.tcl"]]
-package ifneeded ::ms::HSB_HSP 0.1 [list source [file join $::ms_library colormaths "HSB_HSP.tcl"]]
-package ifneeded ::ms::HSB_HWB 0.1 [list source [file join $::ms_library colormaths "HSB_HWB.tcl"]]
-package ifneeded ::ms::HSB_RGB 0.1 [list source [file join $::ms_library colormaths "HSB_RGB.tcl"]]
-package ifneeded ::ms::HSP_HSB 0.1 [list source [file join $::ms_library colormaths "HSP_HSB.tcl"]]
-package ifneeded ::ms::HSP_HWB 0.1 [list source [file join $::ms_library colormaths "HSP_HWB.tcl"]]
-package ifneeded ::ms::HSP_RGB 0.1 [list source [file join $::ms_library colormaths "HSP_RGB.tcl"]]
-package ifneeded ::ms::HWB_HSB 0.1 [list source [file join $::ms_library colormaths "HWB_HSB.tcl"]]
-package ifneeded ::ms::HWB_HSP 0.1 [list source [file join $::ms_library colormaths "HWB_HSP.tcl"]]
-package ifneeded ::ms::HWB_RGB 0.1 [list source [file join $::ms_library colormaths "HWB_RGB.tcl"]]
-package ifneeded ::ms::RGB_HSB 0.1 [list source [file join $::ms_library colormaths "RGB_HSB.tcl"]]
-package ifneeded ::ms::RGB_HSP 0.1 [list source [file join $::ms_library colormaths "RGB_HSP.tcl"]]
-package ifneeded ::ms::RGB_HWB 0.1 [list source [file join $::ms_library colormaths "RGB_HWB.tcl"]]
-package ifneeded ::ms::RGB_HEX 0.1 [list source [file join $::ms_library colormaths "RGB_HEX.tcl"]]
 
 #*EOF*
