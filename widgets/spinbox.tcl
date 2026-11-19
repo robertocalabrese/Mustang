@@ -2295,8 +2295,25 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
 
-                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
-                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                            # Check if a textvariable was provided.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                }
+                                default {
+                                    # Check if the textvariable current value is a valid value.
+                                    set value [set $::ms::current($w,textvariable)]
+                                    set index [lsearch -nocase $::ms::data($w,values) $value]
+                                    switch -- $index {
+                                        -1  {
+                                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                        }
+                                        default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                                    }
+                                }
+                            }
 
                             # Ignore any 'from', 'increment' and 'to' values eventually provided.
                             set ::ms::current($w,from)      0
@@ -2337,8 +2354,31 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                 set ::ms::data($w,maxlength) $maxlength_to
                             }
 
-                            # Set the current value with the from value.
-                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                            # Check if a textvariable was provided.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Set the current value with the 'from' value.
+                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                }
+                                default {
+                                    # Check if the textvariable current value is a valid value.
+                                    set value [set $::ms::current($w,textvariable)]
+                                    switch -- [string is integer -strict $value] {
+                                        0   {
+                                            # Set the current value with the 'from' value.
+                                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                                        }
+                                        1   {
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Set the current value with the 'from' value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            } else {
+                                                set ::ms::data($w,current_value) $value
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         posinteger {
                             # Set the spinbox type to 'incremental'.
@@ -2371,8 +2411,31 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Set the 'maxlength' internal value.
                             set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
 
-                            # Set the current value with the from value.
-                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                            # Check if a textvariable was provided.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Set the current value with the 'from' value.
+                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                }
+                                default {
+                                    # Check if the textvariable current value is a valid value.
+                                    set value [set $::ms::current($w,textvariable)]
+                                    switch -- [string is integer -strict $value] {
+                                        0   {
+                                            # Set the current value with the 'from' value.
+                                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                                        }
+                                        1   {
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Set the current value with the 'from' value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            } else {
+                                                set ::ms::data($w,current_value) $value
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         posreal {
                             # Set the spinbox type to 'incremental'.
@@ -2403,8 +2466,31 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Set the 'maxlength' internal value.
                             set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
 
-                            # Set the current value with the 'from' value.
-                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                            # Check if a textvariable was provided.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Set the current value with the 'from' value.
+                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                }
+                                default {
+                                    # Check if the textvariable current value is a valid value.
+                                    set value [set $::ms::current($w,textvariable)]
+                                    switch -- [string is double -strict $value] {
+                                        0   {
+                                            # Set the current value with the 'from' value.
+                                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                                        }
+                                        1   {
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Set the current value with the 'from' value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            } else {
+                                                set ::ms::data($w,current_value) $value
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         real {
                             # Set the spinbox type to 'incremental'.
@@ -2436,8 +2522,31 @@ proc ::ms::spinbox::Command { window { args "" } } {
                                 set ::ms::data($w,maxlength) $maxlength_to
                             }
 
-                            # Set the current value with the 'from' value.
-                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                            # Check if a textvariable was provided.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Set the current value with the 'from' value.
+                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                }
+                                default {
+                                    # Check if the textvariable current value is a valid value.
+                                    set value [set $::ms::current($w,textvariable)]
+                                    switch -- [string is double -strict $value] {
+                                        0   {
+                                            # Set the current value with the 'from' value.
+                                            set ::ms::data($w,current_value) $::ms::current($w,from)
+                                        }
+                                        1   {
+                                            if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                # Set the current value with the 'from' value.
+                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                            } else {
+                                                set ::ms::data($w,current_value) $value
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         default {
                             # Set the spinbox type to 'list'.
@@ -2460,8 +2569,25 @@ proc ::ms::spinbox::Command { window { args "" } } {
                             # Register the sorted values in lowercase characters.
                             set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
 
-                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
-                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                            # Check if a textvariable was provided.
+                            switch -- $::ms::current($w,textvariable) {
+                                ""  {
+                                    # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                }
+                                default {
+                                    # Check if the textvariable current value is a valid value.
+                                    set value [set $::ms::current($w,textvariable)]
+                                    set index [lsearch -nocase $::ms::data($w,values) $value]
+                                    switch -- $index {
+                                        -1  {
+                                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                        }
+                                        default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                                    }
+                                }
+                            }
 
                             # Ignore any 'from', 'increment' and 'to' values eventually provided.
                             set ::ms::current($w,from)      0
@@ -2672,8 +2798,25 @@ proc ::ms::spinbox::Command { window { args "" } } {
                         }
                     }
 
-                    # Set the current value as the first one of '::ms::data($w,values)'.
-                    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                    # Check if a textvariable was provided.
+                    switch -- $::ms::current($w,textvariable) {
+                        ""  {
+                            # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                            set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                        }
+                        default {
+                            # Check if the textvariable current value is a valid value.
+                            set value [set $::ms::current($w,textvariable)]
+                            set index [lsearch -nocase $::ms::data($w,values) $value]
+                            switch -- $index {
+                                -1  {
+                                    # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                    set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                }
+                                default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -3590,7 +3733,7 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                             }
 
                             # Check if a new list of values or a new datatype has been provided.
-                            if { ($new_value eq "true") || ($new_datatype eq "true") } {
+                            if { ($new_values eq "true") || ($new_datatype eq "true") } {
                                 # Check if a list of values was provided.
                                 switch -- [llength $::ms::current($w,values)] {
                                     0   {
@@ -3613,8 +3756,25 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                 # Register the sorted values in lowercase characters.
                                                 set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
 
-                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
-                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                # Check if a textvariable was provided.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""  {
+                                                        # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                    }
+                                                    default {
+                                                        # Check if the textvariable current value is a valid value.
+                                                        set value [set $::ms::current($w,textvariable)]
+                                                        set index [lsearch -nocase $::ms::data($w,values) $value]
+                                                        switch -- $index {
+                                                            -1  {
+                                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                            }
+                                                            default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                                                        }
+                                                    }
+                                                }
 
                                                 # Ignore any 'from', 'increment' and 'to' values eventually provided.
                                                 set ::ms::current($w,from)      0
@@ -3655,8 +3815,31 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                     set ::ms::data($w,maxlength) $maxlength_to
                                                 }
 
-                                                # Set the current value with the from value.
-                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                # Check if a textvariable was provided.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""  {
+                                                        # Set the current value with the 'from' value.
+                                                        set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                    }
+                                                    default {
+                                                        # Check if the textvariable current value is a valid value.
+                                                        set value [set $::ms::current($w,textvariable)]
+                                                        switch -- [string is integer -strict $value] {
+                                                            0   {
+                                                                # Set the current value with the 'from' value.
+                                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                            }
+                                                            1   {
+                                                                if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                                    # Set the current value with the 'from' value.
+                                                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                                } else {
+                                                                    set ::ms::data($w,current_value) $value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                             posinteger {
                                                 # Set the spinbox type to 'incremental'.
@@ -3689,8 +3872,31 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                 # Set the 'maxlength' internal value.
                                                 set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
 
-                                                # Set the current value with the from value.
-                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                # Check if a textvariable was provided.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""  {
+                                                        # Set the current value with the 'from' value.
+                                                        set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                    }
+                                                    default {
+                                                        # Check if the textvariable current value is a valid value.
+                                                        set value [set $::ms::current($w,textvariable)]
+                                                        switch -- [string is integer -strict $value] {
+                                                            0   {
+                                                                # Set the current value with the 'from' value.
+                                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                            }
+                                                            1   {
+                                                                if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                                    # Set the current value with the 'from' value.
+                                                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                                } else {
+                                                                    set ::ms::data($w,current_value) $value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                             posreal {
                                                 # Set the spinbox type to 'incremental'.
@@ -3721,8 +3927,31 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                 # Set the 'maxlength' internal value.
                                                 set ::ms::data($w,maxlength) [string length $::ms::current($w,to)]
 
-                                                # Set the current value with the 'from' value.
-                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                # Check if a textvariable was provided.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""  {
+                                                        # Set the current value with the 'from' value.
+                                                        set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                    }
+                                                    default {
+                                                        # Check if the textvariable current value is a valid value.
+                                                        set value [set $::ms::current($w,textvariable)]
+                                                        switch -- [string is double -strict $value] {
+                                                            0   {
+                                                                # Set the current value with the 'from' value.
+                                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                            }
+                                                            1   {
+                                                                if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                                    # Set the current value with the 'from' value.
+                                                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                                } else {
+                                                                    set ::ms::data($w,current_value) $value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                             real {
                                                 # Set the spinbox type to 'incremental'.
@@ -3754,8 +3983,31 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                     set ::ms::data($w,maxlength) $maxlength_to
                                                 }
 
-                                                # Set the current value with the 'from' value.
-                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                # Check if a textvariable was provided.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""  {
+                                                        # Set the current value with the 'from' value.
+                                                        set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                    }
+                                                    default {
+                                                        # Check if the textvariable current value is a valid value.
+                                                        set value [set $::ms::current($w,textvariable)]
+                                                        switch -- [string is double -strict $value] {
+                                                            0   {
+                                                                # Set the current value with the 'from' value.
+                                                                set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                            }
+                                                            1   {
+                                                                if { ($value < $::ms::current($w,from)) || ($value > $::ms::current($w,to)) } {
+                                                                    # Set the current value with the 'from' value.
+                                                                    set ::ms::data($w,current_value) $::ms::current($w,from)
+                                                                } else {
+                                                                    set ::ms::data($w,current_value) $value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                             default {
                                                 # Set the spinbox type to 'list'.
@@ -3778,8 +4030,25 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                 # Register the sorted values in lowercase characters.
                                                 set ::ms::data($w,values,lowercase) [string tolower $::ms::current($w,values)]
 
-                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
-                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                # Check if a textvariable was provided.
+                                                switch -- $::ms::current($w,textvariable) {
+                                                    ""  {
+                                                        # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                    }
+                                                    default {
+                                                        # Check if the textvariable current value is a valid value.
+                                                        set value [set $::ms::current($w,textvariable)]
+                                                        set index [lsearch -nocase $::ms::data($w,values) $value]
+                                                        switch -- $index {
+                                                            -1  {
+                                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                            }
+                                                            default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                                                        }
+                                                    }
+                                                }
 
                                                 # Ignore any 'from', 'increment' and 'to' values eventually provided.
                                                 set ::ms::current($w,from)      0
@@ -3990,10 +4259,34 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                             }
                                         }
 
-                                        # Set the current value as the first one of '::ms::data($w,values)'.
-                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                        # Check if a textvariable was provided.
+                                        switch -- $::ms::current($w,textvariable) {
+                                            ""  {
+                                                # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                            }
+                                            default {
+                                                # Check if the textvariable current value is a valid value.
+                                                set value [set $::ms::current($w,textvariable)]
+                                                set index [lsearch -nocase $::ms::data($w,values) $value]
+                                                switch -- $index {
+                                                    -1  {
+                                                        # Set the current value as the value corresponding to the first item in '::ms::data($w,values)'.
+                                                        set ::ms::data($w,current_value) [lindex $::ms::data($w,values) 0]
+                                                    }
+                                                    default { set ::ms::data($w,current_value) [lindex $::ms::data($w,values) $index] }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
+
+                                # Clear the widget's textarea.
+                                interp invokehidden {} $w delete 0 end
+                                interp invokehidden {} $w selection clear
+
+                                # Set the current index in the spinbox entry.
+                                interp invokehidden {} $w set $::ms::data($w,current_value)
                             }
 
                             ##################################
@@ -4208,16 +4501,6 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                                                          -values $::ms::data($w,values) \
                                                                           -width $::ms::current($w,charwidth) \
                                                                  -xscrollcommand $::ms::current($w,xscrollcommand);
-
-                            # Check the spinbox type.
-                            switch -- $::ms::data($w,type) {
-                                # Clear the widget's textarea.
-                                interp invokehidden {} $w delete 0 end
-                                interp invokehidden {} $w selection clear
-
-                                # Set the current index in the combobox entry.
-                                interp invokehidden {} $w set $::ms::data($w,current_value)
-                            }
 
                             return ""
                         }
@@ -4547,8 +4830,8 @@ proc ::ms::spinbox::Pathname_Cmd { w cmd args } {
                                         return ""
                                     }
                                 }
-                                posreal    -
-                                real       {
+                                posreal -
+                                real    {
                                     # Check that the 'value' provided is a double.
                                     switch -- [string is double -strict $value] {
                                         0   { return "" }
