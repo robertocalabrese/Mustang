@@ -78,6 +78,14 @@ package ifneeded mustang $::ms_version {
     package require ::ms::winfo
     package require ::ms::wm
 
+    # Load all the mustang dialog packages.
+    package require ::ms::dialog::color
+    package require ::ms::dialog::font
+    package require ::ms::dialog::modal
+    package require ::ms::dialog::open
+    package require ::ms::dialog::print
+    package require ::ms::dialog::save
+
     # Note: Windows version of TK don't have the 'send' command.
     switch -nocase -glob -- $::tcl_platform(os) {
         "Win*"  {}
@@ -113,8 +121,8 @@ package ifneeded mustang $::ms_version {
 
     # Note: Panedwindows are disabled for Windows and macOS systems.
     switch -nocase -glob -- $::tcl_platform(os) {
-        Darwin  -
-        "Win*"  {
+        Darwin -
+        "Win*" {
             # Rename the original Tk **panedwindow** and **ttk::panedwindow** commands.
             rename panedwindow      _panedwindow
             rename ttk::panedwindow _ttk_panedwindow
@@ -166,6 +174,14 @@ switch -nocase -glob -- $::tcl_platform(os) {
     "Win*"  {}
     default { package ifneeded ::ms::send 0.1 [list source [file join $::ms_library cmds "send.tcl"]] }
 }
+
+# Mustang dialog packages
+package ifneeded ::ms::dialog::color 0.1 [list source [file join $::ms_library cmds dialog "color.tcl"]]
+package ifneeded ::ms::dialog::font  0.1 [list source [file join $::ms_library cmds dialog "font.tcl"]]
+package ifneeded ::ms::dialog::modal 0.1 [list source [file join $::ms_library cmds dialog "modal.tcl"]]
+package ifneeded ::ms::dialog::open  0.1 [list source [file join $::ms_library cmds dialog "open.tcl"]]
+package ifneeded ::ms::dialog::print 0.1 [list source [file join $::ms_library cmds dialog "print.tcl"]]
+package ifneeded ::ms::dialog::save  0.1 [list source [file join $::ms_library cmds dialog "save.tcl"]]
 
 # Mustang widgets.
 package ifneeded ::ms::button      0.1 [list source [file join $::ms_library widgets "button.tcl"]]
