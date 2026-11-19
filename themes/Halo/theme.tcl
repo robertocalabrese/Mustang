@@ -91,6 +91,16 @@ set ::ms::svg(Halo,svg_dataset) [list arrow_down                          #42424
                                       arrow_up_hover                      #007aff Accent \
                                       arrow_up_invalid                    #fefefe Text \
                                       arrow_up_pressed                    #4f5152 ArrowPressed \
+                                      arrow_left                          #424242 Arrow \
+                                      arrow_left_disabled                 #d8d8d8 ArrowDisabled \
+                                      arrow_left_hover                    #007aff Accent \
+                                      arrow_left_invalid                  #fefefe Text \
+                                      arrow_left_pressed                  #4f5152 ArrowPressed \
+                                      arrow_right                         #424242 Arrow \
+                                      arrow_right_disabled                #d8d8d8 ArrowDisabled \
+                                      arrow_right_hover                   #007aff Accent \
+                                      arrow_right_invalid                 #fefefe Text \
+                                      arrow_right_pressed                 #4f5152 ArrowPressed \
                                       check_off                           #a4a6a8 BordercolorAlternate \
                                       check_off_disabled                  #cccccc BordercolorDisabled \
                                       check_off_hover                     #007aff Accent \
@@ -99,6 +109,8 @@ set ::ms::svg(Halo,svg_dataset) [list arrow_down                          #42424
                                       check_on_disabled                   #cccccc BordercolorDisabled \
                                       check_on_hover                      #007aff Accent \
                                       check_on_pressed                    #0169d9 HighlightAlternate \
+                                      marker                              #424242 Arrow \
+                                      marker_hover                        #007aff Accent \
                                       radio_off                           #a4a6a8 BordercolorAlternate \
                                       radio_off_disabled                  #cccccc BordercolorDisabled \
                                       radio_off_hover                     #007aff Accent \
