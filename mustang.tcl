@@ -153,6 +153,7 @@ package provide ::ms $::ms_version
 # Load the mustang dependancies.
 package require Tk 9.0.1
 package require msgcat
+package require Img
 
 # Create the mustang package.
 namespace eval ::ms {}
@@ -2256,6 +2257,37 @@ proc ::ms::Init {} {
     switch -- $::ms::current(.,class) {
         Toplevel { _bindtags . [list . _Toplevel Toplevel . all] }
         default  { _bindtags . [list . $::ms::current(.,class) _Toplevel Toplevel . all] }
+    }
+
+    #############################################
+    ##                                         ##
+    ##     SET THE COLOR CHOOSER VARIABLES     ##
+    ##                                         ##
+    #############################################
+
+    set ::ms::data(colorchooser,hue_bar,image)          [image create photo -file [file join $::ms_library images "huebar.png"]]
+    set ::ms::data(colorchooser,triangle_marker,height) [image height marker]
+    set ::ms::data(colorchooser,triangle_marker,width)  [image width  marker]
+    set ::ms::data(colorchooser,pad)                    [expr { int($::ms::data(colorchooser,triangle_marker,height)*0.5) }]
+    set ::ms::data(colorchooser,scale)                  [expr { 100.0/360.0 }]
+
+    # Check that the colorbox circle marker radius is an even number.
+    set radius [::ms::Convert_Measure 3m]
+    switch -- [expr { $radius%2 }] {
+        0       { set ::ms::data(colorchooser,circle,radius) $radius }
+        default { set ::ms::data(colorchooser,circle,radius) [expr { $radius+1 }] }
+    }
+
+    # Load all the HSB colorbox images.
+    set hue 0
+    while { $hue < 360 } {
+        # Construct the filepath for the current 'hue' colorbox image.
+        set filepath [file join $::ms_library images HSB [string cat $hue ".tif"]]
+
+        # Create the image.
+        set ::ms::data(colorchooser,$hue,image) [image create photo -file $filepath]
+
+        incr hue
     }
 
     #####################
@@ -5766,7 +5798,7 @@ proc ::ms::Load_SVG_Images { theme } {
                     # Check if the bordercolor examined it's a valid hexadecimal color at 8 bit.
                     if { $bordercolor eq $input_color } {
                         # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
-                        set bordercolor [::ms::Check_Color [list $output_color HEX8] invalid]
+                        set bordercolor [::ms::Check_Color $output_color invalid]
                         switch -- $bordercolor {
                             invalid {
                                 # Check the 'initialization' state.
@@ -5826,7 +5858,7 @@ proc ::ms::Load_SVG_Images { theme } {
                                         # Check if 'result' is equal to the input color provided.
                                         if { $result eq $input_color } {
                                             # Set the parameter value with the output color translated as an hexadecimal at 8 bit.
-                                            set parameterValue [::ms::Check_Color [list $output_color] invalid]
+                                            set parameterValue [::ms::Check_Color $output_color invalid]
                                             switch -- $parameterValue {
                                                 invalid {
                                                     # Check the 'initialization' state.
@@ -6176,6 +6208,97 @@ proc ::ms::Translate_Theme_Color { color { fallback #ffffff }} {
     }
 
     return $fallback
+}
+
+##################################
+##                              ##
+##     COLORMATH PROCEDURES     ##
+##                              ##
+##################################
+
+## Black_Or_White
+#
+# Compute, for each color provided, which color between **black** and **white** has more contrast with it.
+#
+# Where:
+#
+# hexadecimal   Should be an hexadecimal color expressed in its longform with or without the hash sign ('#').
+#
+# Returns a the word **black** or **white**, depending on which one of these two colors has the greatest
+# contrast with the color provided.
+proc ::ms::Black_Or_White { hexadecimal } {
+    # A pre-computation has been made in order to increase the performance:
+    #   1 / 255 = 0.00392156862745098
+
+    # Transform the hexadecimal color provided into 'RGB' channels [0,255].
+    set hexadecimal [string trimleft $hexadecimal "#"]
+    scan $hexadecimal "%02x%02x%02x" red green blue
+
+    # Trasform every 'RGB' channels [0,255] provided into *non linear* 'rgb' channels [0,1.0].
+    set r [expr { $red*0.00392156862745098   }]
+    set g [expr { $green*0.00392156862745098 }]
+    set b [expr { $blue*0.00392156862745098  }]
+
+    # Trasform the *non-linear* 'rgb' channels [0,1.0] into *linear* 'rgb' channels [0,1.0].
+    set r_linear [::ms::Companding $r inverse]
+    set g_linear [::ms::Companding $g inverse]
+    set b_linear [::ms::Companding $b inverse]
+
+    # Compute the luma of the *linear* 'rgb' channels [0,1.0].
+    set a1   [expr { 0.21267285140562253*$r_linear }]
+    set a2   [expr { 0.715152155287818*$g_linear }]
+    set a3   [expr { 0.07217499330655958*$b_linear }]
+    set luma [expr { $a1+$a2+$a3 }]
+
+    # Confront the *linear* 'rgb' channels [0,1.0] contrast values [0,21] (against 'black' and 'white').
+    if { [expr { ($luma+0.05)*20.0 }] > [expr { 1.05/($luma+0.05) }] } {
+        return black
+    } else {
+        return white
+    }
+}
+
+## Companding
+#
+# Performs an **sRGB companding** or **sRGB inverse companding** operation.
+#
+# Where:
+#
+# channel   Depending on the **op** provided, should be the *non linear* channel value to compand (op=normal) or
+#           the *linear* channel value to compand (op=inverse).
+#
+# op        Should be the operation type.
+#           Allowed values are **normal** or **inverse**
+#
+#           If not provided, defaults to **normal**.
+#
+# Note: For info about companding operations visit [ICC 4.4 Specifications](https://www.color.org/specification/ICC.1-2022-05.p).
+#
+# Depending on the **op** provided, returns the sRGB companded *linear* channel (op=normal)
+# or the sRGB inverse companded *non linear* channels (op=inverse).
+proc ::ms::Companding { channel { op normal } } {
+    # A pre-computation has been made in order to increase the performance:
+    #    1.0/2.4 = 0.4166666666666667
+
+    # Check the 'op' provided.
+    switch -- $op {
+        normal {
+            if { $channel > 0.0031308 } {
+                set channel [expr { (0.055*(pow($channel,0.4166666666666667)))+0.945 }]
+            } else {
+                set channel [expr { $channel*12.92 }]
+            }
+        }
+        inverse {
+            if { $channel > 0.04045 } {
+                set channel [expr { pow(($channel+0.055)/1.055,2.4) }]
+            } else {
+                set channel [expr { $channel/12.92 }]
+            }
+        }
+    }
+
+    return $channel
 }
 
 #*EOF*
