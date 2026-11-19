@@ -953,6 +953,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::default($w,class)     $::ms::default(toplevel,class)
             set ::ms::default($w,cmenu)     $::ms::default(toplevel,cmenu)
             set ::ms::default($w,colormap)  $::ms::default(toplevel,colormap)
+            set ::ms::default($w,container) $::ms::default(toplevel,container)
             set ::ms::default($w,height)    $::ms::default(toplevel,height)
             set ::ms::default($w,menu)      $::ms::default(toplevel,menu)
             set ::ms::default($w,screen)    $::ms::default(toplevel,screen)
@@ -960,6 +961,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::default($w,style)     $::ms::default(toplevel,style)
             set ::ms::default($w,takefocus) $::ms::default(toplevel,takefocus)
             set ::ms::default($w,title)     $::ms::default(toplevel,title)
+            set ::ms::default($w,use)       $::ms::default(toplevel,use)
             set ::ms::default($w,visual)    $::ms::default(toplevel,visual)
             set ::ms::default($w,width)     $::ms::default(toplevel,width)
 
@@ -967,6 +969,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::current($w,class)     $::ms::default(toplevel,class)
             set ::ms::current($w,cmenu)     $::ms::default(toplevel,cmenu)
             set ::ms::current($w,colormap)  $::ms::default(toplevel,colormap)
+            set ::ms::current($w,container) $::ms::default(toplevel,container)
             set ::ms::current($w,height)    $::ms::default(toplevel,height)
             set ::ms::current($w,menu)      $::ms::default(toplevel,menu)
             set ::ms::current($w,screen)    $::ms::default(toplevel,screen)
@@ -974,6 +977,7 @@ proc ::ms::toplevel::Command { window { args "" } } {
             set ::ms::current($w,style)     $::ms::default(toplevel,style)
             set ::ms::current($w,takefocus) $::ms::default(toplevel,takefocus)
             set ::ms::current($w,title)     $::ms::default(toplevel,title)
+            set ::ms::current($w,use)       $::ms::default(toplevel,use)
             set ::ms::current($w,visual)    $::ms::default(toplevel,visual)
             set ::ms::current($w,width)     $::ms::default(toplevel,width)
 
