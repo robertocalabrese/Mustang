@@ -63,12 +63,134 @@
 #   [text](https:\\...)  --> Link to an internet page.
 #   [text](/wiki/...)    --> Link to another file in the wiki.
 package provide ::ms::dialog 0.1
+package require ::ms::dialog::color 0.1
 
 # Create the mustang **dialog** package.
 namespace eval ::ms::dialog {}
 
 # Create aliases for the mustang **dialog** command.
-interp alias {} dialog    {} ::tk_dialog
+interp alias {} dialog {} ::ms::dialog::Command
+
+## Command
+#
+# Replace the Tk **dialog** command.
+#
+# Where:
+#
+# args   Should be the arguments of the **dialog** command.
+#
+# Depending on the *action* provided, the return value/s may vary.
+proc ::ms::dialog::Command { args } {
+    # Get the caller information.
+    set caller_info [info frame -1]
+
+    # Synopsis:
+    #
+
+    # Safeguard.
+    unset -nocomplain -- ::wait_for_the_user_choice
+
+    # Get the current focus widget.
+    set current_focus [_focus]
+
+    # Get the parent toplevel.
+    switch -- $current_focus {
+        ""      { set parent_toplevel "." }
+        default { set parent_toplevel [_winfo toplevel $current_focus] }
+    }
+
+    # Separate the 'action' from the actual 'args'.
+    set action [lindex  $args 0]
+    set args   [lremove $args 0]
+    switch -- $action {
+        color {
+            # Check the number of arguments provided.
+            switch -- [llength $args] {
+                1   {
+                    set color [lindex $args 0]
+
+                    # Check that 'color' is a valid hexadecimal or textual color.
+                    set hexadecimal [::ms::Check_Color $color invalid]
+                    switch -- $hexadecimal {
+                        invalid { ::ms::Error "Invalid color, '$color'." $caller_info }
+                    }
+
+                    # Trasform the hexadecimal provided into RGB channels [0,255].
+                    set hexadecimal [string trimleft $hexadecimal "#"]
+                    scan $hexadecimal "%02x%02x%02x" ::ms::data(colorchooser,red) \
+                                                     ::ms::data(colorchooser,green) \
+                                                     ::ms::data(colorchooser,blue);
+
+                    # Transform the RGB channels [0,255] into HSB channels.
+                    set HSB [::ms::dialog::color::RGB_HSB $::ms::data(colorchooser,red) \
+                                                          $::ms::data(colorchooser,green) \
+                                                          $::ms::data(colorchooser,blue)];
+
+                    set hue        [ expr { round([lindex $HSB 0]) }]
+                    set saturation [ expr { round([lindex $HSB 1]) }]
+                    set brightness [ expr { round([lindex $HSB 2]) }]
+
+                    # Check the HSB channels limits.
+                    if { $hue < 0 } {
+                        set ::ms::data(colorchooser,hue) [expr { 360-$hue }]
+                    } elseif { $hue > 359 } {
+                        set ::ms::data(colorchooser,hue) [expr { $hue-360 }]
+                    } else {
+                        set ::ms::data(colorchooser,hue) $hue
+                    }
+
+                    if { $saturation < 0 } {
+                        set ::ms::data(colorchooser,saturation) 0
+                    } elseif { $saturation > 100 } {
+                        set ::ms::data(colorchooser,saturation) 100
+                    } else {
+                        set ::ms::data(colorchooser,saturation) $saturation
+                    }
+
+                    if { $brightness < 0 } {
+                        set ::ms::data(colorchooser,brightness) 0
+                    } elseif { $brightness > 100 } {
+                        set ::ms::data(colorchooser,brightness) 100
+                    } else {
+                        set ::ms::data(colorchooser,brightness) $brightness
+                    }
+
+                    # Register the hexadecimal provided.
+                    set ::ms::data(colorchooser,hexadecimal)       $hexadecimal
+                    set ::ms::data(colorchooser,hexadecimal,start) $hexadecimal
+
+                    # Set the bordercolor for the preview circle widget.
+                    set ::ms::data(colorchooser,bordercolor) [::ms::Black_Or_White $hexadecimal]
+
+                    # Launch the color chooser window maker.
+                    ::ms::dialog::color::WM $parent_toplevel
+
+                    # Waiting for the '::wait_for_the_user_choice' setting.
+                    vwait ::wait_for_the_user_choice
+
+                    # Destroy the color chooser window.
+                    _destroy .colorchooser
+
+                    # Re-establish the original focus widget.
+                    _focus -force $current_focus
+
+                    # Check the user choice.
+                    switch -- $::wait_for_the_user_choice {
+                        cancel { return $::ms::data(colorchooser,hexadecimal,start) }
+                        ok     { return $::ms::data(colorchooser,hexadecimal)       }
+                    }
+                }
+                default { ::ms::Error "Invalid number of arguments." $caller_info }
+            }
+        }
+        font    { set result [::ms::dialog::Font_Chooser  $args] }
+        print   { set result [::ms::dialog::Print         $args] }
+        modal   { set result [::ms::dialog::Modal         $args] }
+        open    { set result [::ms::dialog::Open          $args] }
+        save    { set result [::ms::dialog::Save          $args] }
+        default { ::ms::Error "Invalid action, '$action'." $caller_info }
+    }
+}
 
 ## tk_dialog
 #
