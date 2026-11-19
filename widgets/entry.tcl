@@ -216,13 +216,9 @@
 #                                                The only keys that will work on the keyboard inside the entry will be [a-zA-Z] and
 #                                                the space character.
 #
-#                                 hex8       -
-#                                 hex12      -
-#                                 hex16      --> Only hexadecimal characters will be allowed inside the entry.
+#                                 hex        --> Only hexadecimal characters will be allowed inside the entry.
 #                                                The only keys that will work on the keyboard inside the entry will be [0-9a-fA-F].
 #                                                The has sign '#' will be available only if the **-hash** option is enabled.
-#
-#                                                Note that **hex8** can be shortened into just **hex**.
 #
 #                                 integer    --> Only digits characters and the minus sign will be allowed inside the entry.
 #                                                The only keys that will work on the keyboard inside the entry will be [0-9]
@@ -252,8 +248,8 @@
 #                                 it isn't) and if a maxlength is not **0** a limit check will be performed on it (truncation will happen if
 #                                 the number reaches the from or to value specified).
 #
-#                                 Hexadecimal datatypes (hex8, hex12, hex16) will ensure that the string is a valid hexadecimal color at
-#                                 8, 12 or 16 bits. If the string is an hexadecimal shortform it will be transformed in hexadecimal longform.
+#                                 Hexadecimal datatypes will ensure that the string is a valid hexadecimal color at 8 bits.
+#                                 If the string is an hexadecimal shortform it will be transformed in hexadecimal longform.
 #                                 The hexadecimal color that will result may or may not have the hash sign '#', depending on the value of the
 #                                 **-hash** option specified.
 #
@@ -478,17 +474,9 @@
 #                                    If charwidth is **1**, the maximum amount of characters allowed is **1**.
 #                                    For any other values of charwidth, the maximum amount of characters allowed is **charwidth-1**.
 #
-#                                 If the datatype is **hex8**:
+#                                 If the datatype is **hex**:
 #                                    The maximum amount of characters allowed is **6** if the **-hash** option is **disabled**
 #                                    or **7** if the **-hash** option is **enabled**.
-#
-#                                 If the datatype is **hex12**:
-#                                    The maximum amount of characters allowed is **9** if the **-hash** option is **disabled**
-#                                    or **10** if the **-hash** option is **enabled**.
-#
-#                                 If the datatype is **hex16**:
-#                                    The maximum amount of characters allowed is **12** if the **-hash** option is **disabled**
-#                                    or **13** if the **-hash** option is **enabled**.
 #
 #                                 If the datatype is **integer**, **posinteger**, **posreal** or **real**:
 #                                    The maximum amount of characters allowed depends on who's bigger (in term of number of characters)
@@ -1061,54 +1049,27 @@
 #
 # Each color option accepts colors provided in one of the following forms:
 #
-#   **hexadecimal colors**  --> These colors needs to be specified at **8**, **12** or **16** bits, without an *alpha*
-#                               channel (transparency), in shortform (three hexadecimals) or longform (six, nine or twelve
-#                               hexadecimals), with or without the **#**.
+#   **hexadecimal colors**  --> These colors needs to be specified at **8** bits, without an *alpha* channel (transparency),
+#                               in shortform (three hexadecimals) or longform (six hexadecimals), with or without the **#**.
 #
-#                               In this form, the list should have only one or two elements.
-#                               The first element indicates the color to validate and the second one (optional) indicates
-#                               the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color will be
-#                               translated. If only one element is provided (the hexadecimal color) its color model will be
-#                               assumed to be **HEX8**.
-#
-#                               Note that **HEX8** can be shortened into **HEX**.
+#                               In this form, the list should have only one element, the color to validate.
 #
 #                               After its validation, the color will be returned translated in its equivalent hexadecimal
-#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
+#                               longform (in lowercase characters and with the **#** symbol).
 #
-#                               See the [color model](/wiki/colormodels/index.md) wiki page to know more about color models.
-#
-#                               Note: Hexadecimal colors and color models are case insensitive.
+#                               Note: Hexadecimal colors are case insensitive.
 #
 #                               Some examples:
 #
 #                                    "#FFF"            --> The hexadecimal color is "#FFF".
-#                                                          The color model is **HEX8**.
 #
 #                                                          The hexadecimal color is translated to '#ffffff'.
 #
-#                                    "#F0F hex12"      --> The hexadecimal color is "#F0F".
-#                                                          The color model is **HEX12**.
-#
-#                                                          The hexadecimal color is translated to '#FFF000FFF'.
-#
 #                                    "#FF0000"         --> The hexadecimal color is "#FF0000".
-#                                                          The color model is **HEX8**.
 #
 #                                                          The hexadecimal color is translated to '#ff0000'.
 #
-#                                    "#00FF00 hex16"   --> The hexadecimal color is "#00FF00".
-#                                                          The color model is **HEX16**.
-#
-#                                                          The hexadecimal color is translated to '#0000ffff0000'.
-#
-#                                    "#000000FFF hex"  --> The hexadecimal color is "#000000FFF".
-#                                                          The color model is **HEX8**.
-#
-#                                                          The hexadecimal color is translated to '#0000ff'.
-#
 #                                    "FFFF00"          --> The hexadecimal color is "FFFF00".
-#                                                          The color model is **HEX8**.
 #
 #                                                          The hexadecimal color is translated to '#ffff00'.
 #
@@ -1117,7 +1078,7 @@
 #
 #                               In this form, the list should have at least one element. More precisely:
 #
-#                                    colorname   --> It's the textual color name that specifies the color.
+#                                    colorname   --> Mandatory. It's the textual color name that specifies the color.
 #                                                    Should always be written first. It can take more than one element of
 #                                                    the list depending on how many words are needed to define it.
 #
@@ -1136,37 +1097,22 @@
 #                                                    See the [palette](/wiki/palettes/index.md) wiki page to know more about
 #                                                    the mustang palettes.
 #
-#                                    colormodel  --> Optional. Should be the hexadecimal color model in which the color name
-#                                                    will be translated.
-#                                                    If present, the color model should always be the last element of the list.
-#
-#                                                    Allowed values are **HEX8**, **HEX12** and **HEX16**.
-#                                                    If not provided, defaults to **HEX8**.
-#
-#                                                    Note that **HEX8** can be shortened into **HEX**.
-#
-#                                                    See the [color model](/wiki/colormodels/index.md) wiki page to know more
-#                                                    about color models.
-#
-#                               Note: Colornames, palettes and color models are case insensitive.
+#                               Note: Colornames and palettes are case insensitive.
 #
 #                               Some examples:
 #
 #                                    "teal"                --> The color name is *teal*.
 #                                                              The palette name is **mustang**.
-#                                                              The color model is **HEX8**.
 #
 #                                                              The color name is translated to "#008080"
 #
 #                                    "medium violet red"   --> The color name is *medium violet red*.
 #                                                              The palette name is **mustang**.
-#                                                              The color model is **HEX8**.
 #
 #                                                              The color name is translated to "#c71585"
 #
 #                                    "sepia MyPalette"     --> The color name is *sepia*.
 #                                                              The palette name is **MyPalette**.
-#                                                              The color model is **HEX8**.
 #
 #                                                              Note that in this example **MyPalette** is a fictional
 #                                                              palette name that have been loaded into mustang.
@@ -1174,37 +1120,21 @@
 #                                                              The color name is translated to the hexadecimal color at 8 bit
 #                                                              associated to the 'sepia' colorname in the palette 'MyPalette'.
 #
-#                                    "light coral hex16"   --> The color name is *light coral*.
-#                                                              The color model is **HEX16**.
-#                                                              The palette name is **mustang**.
+#                                    "caribbean green pearl mustang" --> The color name is *caribbean green pearl*.
+#                                                                        The palette name is **mustang**.
 #
-#                                                              The color name is translated to "#f0f080808080"
-#
-#                                    "caribbean green pearl mustang hex8" --> The color name is *caribbean green pearl*.
-#                                                                             The palette name is **mustang**.
-#                                                                             The color model is **HEX8**.
-#
-#                                                                             The color name is translated to "#6ada8e"
+#                                                                        The color name is translated to "#6ada8e"
 #
 #                               After its validation, the color name will be returned translated in its hexadecimal longform
-#                               equivalent (in lowercase characters and with the **#** symbol) for the color model specified.
+#                               equivalent (in lowercase characters and with the **#** symbol).
 #
 #   **theme color names**   --> These colors needs to be specified in textual form like like *Accent*, *Invalid*, *Highlight*,
 #                               *HighlightAlternate* or *PlaceholderText*.
 #
-#                               In this form, the list should have only one or two elements.
-#                               The first element indicates the theme color name to validate and the second one (optional)
-#                               indicates the hexadecimal color model (**HEX8**, **HEX12** or **HEX16**) in which the color
-#                               will be translated. If only one element is provided (the theme color name) its color model
-#                               will be assumed to be **HEX8**.
-#
-#                               Note that **HEX8** can be shortened into **HEX**.
+#                               In this form, the list should have only one element, the theme color name to validate.
 #
 #                               After its validation, the color will be returned translated in its equivalent hexadecimal
-#                               longform (in lowercase characters and with the **#** symbol) for the color model provided.
-#
-#                               See the [theme color](/wiki/theme_colors/index.md) wiki page to know which
-#                               theme color names are allowed.
+#                               longform (in lowercase characters and with the **#** symbol).
 #
 #                               Note: Theme colors are case sensitive.
 #
@@ -1269,13 +1199,13 @@
 #
 #   entry .e5       -charwidth 12 \
 #                     -command [list ::AfterValidate] \
-#                    -datatype hex8 \
+#                    -datatype hex \
 #             -exportselection 1 \
 #                        -from "" \
 #                        -hash enabled \
 #                     -justify right \
 #                   -maxlength enabled \
-#                 -placeholder "hex8 with #" \
+#                 -placeholder "hex with #" \
 #                       -state normal \
 #                       -style TEntry \
 #                   -takefocus 1 \
@@ -1283,13 +1213,13 @@
 #
 #   entry .e6       -charwidth 12 \
 #                     -command [list ::AfterValidate] \
-#                    -datatype hex8 \
+#                    -datatype hex \
 #             -exportselection 1 \
 #                        -from "" \
 #                        -hash disabled \
 #                     -justify right \
 #                   -maxlength enabled \
-#                 -placeholder "hex8 without #" \
+#                 -placeholder "hex without #" \
 #                       -state normal \
 #                       -style TEntry \
 #                   -takefocus 1 \
@@ -1839,15 +1769,12 @@ proc ::ms::entry::Command { window { args "" } } {
                         switch -- $value {
                             alnum      -
                             alpha      -
-                            hex8       -
-                            hex12      -
-                            hex16      -
+                            hex        -
                             integer    -
                             posinteger -
                             posreal    -
                             real       -
                             none       { set ::ms::current($w,datatype) $value }
-                            hex        { set ::ms::current($w,datatype) hex8 }
                         }
                     }
                     -exportselection {
@@ -2179,9 +2106,7 @@ proc ::ms::entry::Command { window { args "" } } {
             switch -- $::ms::current($w,datatype) {
                 alnum      -
                 alpha      -
-                hex8       -
-                hex12      -
-                hex16      -
+                hex        -
                 integer    -
                 posinteger -
                 posreal    -
@@ -2212,25 +2137,11 @@ proc ::ms::entry::Command { window { args "" } } {
                         default { set ::ms::data($w,maxlength) [expr { $::ms::current($w,charwidth)-1 } ]}
                     }
                 }
-                hex8 {
+                hex {
                     # Set the 'maxlength' internal value.
                     switch -- $::ms::current($w,hash) {
                         disabled { set ::ms::data($w,maxlength) 6 }
                         enabled  { set ::ms::data($w,maxlength) 7 }
-                    }
-                }
-                hex12 {
-                    # Set the 'maxlength' internal value.
-                    switch -- $::ms::current($w,hash) {
-                        disabled { set ::ms::data($w,maxlength) 9 }
-                        enabled  { set ::ms::data($w,maxlength) 10 }
-                    }
-                }
-                hex16 {
-                    # Set the 'maxlength' internal value.
-                    switch -- $::ms::current($w,hash) {
-                        disabled { set ::ms::data($w,maxlength) 12 }
-                        enabled  { set ::ms::data($w,maxlength) 13 }
                     }
                 }
                 integer {
@@ -2812,19 +2723,13 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                         switch -- $value {
                                             alnum      -
                                             alpha      -
-                                            hex8       -
-                                            hex12      -
-                                            hex16      -
+                                            hex        -
                                             integer    -
                                             posinteger -
                                             posreal    -
                                             real       -
                                             none       {
                                                 set ::ms::current($w,datatype) $value
-                                                set new_datatype true
-                                            }
-                                            hex        {
-                                                set ::ms::current($w,datatype) hex8
                                                 set new_datatype true
                                             }
                                         }
@@ -3186,25 +3091,11 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                                 default { set ::ms::data($w,maxlength) [expr { $::ms::current($w,charwidth)-1 } ]}
                                             }
                                         }
-                                        hex8 {
+                                        hex {
                                             # Set the 'maxlength' internal value.
                                             switch -- $::ms::current($w,hash) {
                                                 disabled { set ::ms::data($w,maxlength) 6 }
                                                 enabled  { set ::ms::data($w,maxlength) 7 }
-                                            }
-                                        }
-                                        hex12 {
-                                            # Set the 'maxlength' internal value.
-                                            switch -- $::ms::current($w,hash) {
-                                                disabled { set ::ms::data($w,maxlength) 9 }
-                                                enabled  { set ::ms::data($w,maxlength) 10 }
-                                            }
-                                        }
-                                        hex16 {
-                                            # Set the 'maxlength' internal value.
-                                            switch -- $::ms::current($w,hash) {
-                                                disabled { set ::ms::data($w,maxlength) 12 }
-                                                enabled  { set ::ms::data($w,maxlength) 13 }
                                             }
                                         }
                                         integer {
@@ -3820,9 +3711,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
 
                     # If the datatype is not 'none', 'alnum' or 'alpha' validate the current value.
                     switch -- $::ms::current($w,datatype) {
-                        hex8  -
-                        hex12 -
-                        hex16 {
+                        hex {
                             # Check if current value is the empty string.
                             switch -- $value {
                                 ""  {
@@ -3832,7 +3721,7 @@ proc ::ms::entry::Pathname_Cmd { w cmd args } {
                                 }
                                 default {
                                     # Check if the current value is a valid hexadecimal color.
-                                    set value [::ms::Check_Hex $value $::ms::current($w,datatype) invalid]
+                                    set value [::ms::Check_Hex $value invalid]
                                     switch -- $value {
                                         invalid { set value $::ms::data($w,current_value) }
                                         default {
@@ -4749,9 +4638,7 @@ proc ::ms::entry::KeyPress { w key } {
                 }
             }
         }
-        hex8  -
-        hex12 -
-        hex16 {
+        hex {
             # Check if 'key' is a special key.
             switch -- $key {
                 "#" {
@@ -5132,9 +5019,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                         incr i
                     }
                 }
-                hex8  -
-                hex12 -
-                hex16 {
+                hex {
                     # Check the first character of 'value' to see if its an 'hash' sign.
                     set hash [string index $value 0]
                     switch -- $hash {
@@ -5151,7 +5036,7 @@ proc ::ms::entry::Validate_KeyPress { w string } {
                         }
                         default {
                             # Check if 'value' is a valid hexadecimal color.
-                            set result [::ms::Check_Color [list $value $::ms::current($w,datatype)] invalid]
+                            set result [::ms::Check_Color $value invalid]
                             switch -- $result {
                                 invalid {
                                     # Change the widget's dynamic state to 'invalid'.
@@ -5353,9 +5238,7 @@ proc ::ms::entry::Validate_String { w } {
 
             set value $corrected_value
         }
-        hex8  -
-        hex12 -
-        hex16 {
+        hex {
             switch -- [string index $value 0] {
                 "#" {
                     # Check if the hash sign '#' should be included or not.
@@ -5511,15 +5394,13 @@ proc ::ms::entry::Validate_String { w } {
 
     # If the datatype is not 'none', 'alnum' or 'alpha' validate 'value'.
     switch -- $::ms::current($w,datatype) {
-        hex8  -
-        hex12 -
-        hex16 {
+        hex {
             # Check if 'value' is the empty string.
             switch -- $value {
                 ""      {}
                 default {
                     # Check if 'value' is a valid hexadecimal color.
-                    set value [::ms::Check_Hex $value $::ms::current($w,datatype) invalid]
+                    set value [::ms::Check_Hex $value invalid]
                     switch -- $value {
                         invalid { set value $::ms::data($w,current_value) }
                         default {
